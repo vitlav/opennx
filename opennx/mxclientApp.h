@@ -40,6 +40,7 @@ public:
     virtual bool OnInit();
     virtual void OnInitCmdLine(wxCmdLineParser& parser);
     virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
+    virtual int OnExit();
 
 private:
     wxConfigBase *m_pCfg;
@@ -47,6 +48,7 @@ private:
     wxString m_sSessionName;
     wxString m_sResourcePrefix;
     enum mode m_eMode;
+    const unsigned char *m_szMemRes;
 };
 
 DECLARE_APP(mxclientApp)

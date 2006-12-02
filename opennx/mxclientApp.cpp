@@ -24,6 +24,7 @@
 #include <wx/image.h>
 #include <wx/config.h>
 #include <wx/fs_zip.h>
+#include "wx/fs_mem.h"
 #include <wx/sysopt.h>
 
 #include "resource.h"
@@ -34,6 +35,7 @@
 #include "MxWizard.h"
 #include "MxXmlConfig.h"
 
+#include "memres.h"
 
 
 // Create a new application object: this macro will allow wxWindows to create
@@ -53,7 +55,9 @@ IMPLEMENT_APP(mxclientApp)
 
 mxclientApp::mxclientApp()
     : m_pCfg(NULL)
+    , m_szMemRes(NULL)
 {
+    
 #ifdef __WXDEBUG__
 #ifdef __WXMSW__
     m_pCfg = new wxConfig(_T("MxClient-Debug"), _T("Millenux"));
@@ -152,14 +156,21 @@ bool mxclientApp::OnInit()
         return false;
 
     wxFileSystem::AddHandler(new wxZipFSHandler);
+    wxFileSystem::AddHandler(new wxMemoryFSHandler);
     wxInitAllImageHandlers();
     wxBitmap::InitStandardHandlers();
     wxXmlResource::Get()->InitAllHandlers();
-    m_sResourcePrefix = _T("file:");
-    if (!wxFileName::FileExists(m_sResourcePrefix + _T("res/mxclient.xrc")))
-        m_sResourcePrefix = _T("file:mxclient.rsc#zip:");
-    if (!wxXmlResource::Get()->Load(m_sResourcePrefix + _T("res/mxclient.xrc")))
+
+    m_szMemRes = get_mem_res();
+    wxMemoryFSHandler::AddFile(wxT("memrsc"), m_szMemRes, cnt_mem_res);
+    m_sResourcePrefix = wxT("memory:memrsc#zip:");
+    if (!wxXmlResource::Get()->Load(m_sResourcePrefix + wxT("res/mxclient.xrc"))) {
+        if (m_szMemRes) {
+            free_mem_res(m_szMemRes);
+            m_szMemRes = NULL;
+        }
         return false;
+    }
 
     if (m_eMode == MODE_ADMIN) {
         SessionAdmin *sa = new SessionAdmin(NULL);
@@ -185,8 +196,13 @@ bool mxclientApp::OnInit()
 
     if (m_eMode == MODE_WIZARD) {
         MxWizard wz(NULL);
-        if (!wz.Run())
+        if (!wz.Run()) {
+            if (m_szMemRes) {
+                free_mem_res(m_szMemRes);
+                m_szMemRes = NULL;
+            }
             return false;
+        }
         m_sSessionName = wz.sGetConfigName();
     }
 
@@ -203,4 +219,15 @@ bool mxclientApp::OnInit()
     // loop and the application will run. We returne FALSE here, so that the
     // application exits if the dialog is destroyed.
     return false;
+}
+
+/*!
+ * Cleanup for GastroCardApp
+ */
+int mxclientApp::OnExit()
+{
+    if (m_szMemRes)
+        free_mem_res(m_szMemRes);
+    m_szMemRes = NULL;
+    return wxApp::OnExit();
 }

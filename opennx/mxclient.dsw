@@ -3,7 +3,7 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 
 ###############################################################################
 
-Project: "PackedResources"=.\PackedResources.dsp - Package Owner=<4>
+Project: "Translations"=.\Translations.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -11,14 +11,11 @@ Package=<5>
 
 Package=<4>
 {{{
-    Begin Project Dependency
-    Project_Dep_Name mxclient
-    End Project Dependency
 }}}
 
 ###############################################################################
 
-Project: "Translations"=.\Translations.dsp - Package Owner=<4>
+Project: "bin2hdr"=.\bin2hdr.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -38,6 +35,9 @@ Package=<5>
 
 Package=<4>
 {{{
+    Begin Project Dependency
+    Project_Dep_Name bin2hdr
+    End Project Dependency
 }}}
 
 ###############################################################################

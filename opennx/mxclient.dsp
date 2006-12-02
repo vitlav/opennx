@@ -148,7 +148,8 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /GX /Zi /Od /I "$(WXWIN)\lib\vc_dll\mswd" /I "$(WXWIN)\include" /I "$(WXWIN)\contrib\include" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "_MT" /D "_WINDOWS" /D "__WINDOWS__" /D "__WIN32__" /D WINVER=0x0400 /D "__WXMSW__" /D wxUSE_GUI=1 /D "__WXDEBUG__" /D WXDEBUG=1 /D WXUSINGDLL=1 /YX /FD /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /GX /Zi /Od /I "$(WXWIN)\lib\vc_dll\mswd" /I "$(WXWIN)\include" /I "$(WXWIN)\contrib\include" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "_MT" /D "_WINDOWS" /D "__WINDOWS__" /D "__WIN32__" /D WINVER=0x0400 /D "__WXMSW__" /D wxUSE_GUI=1 /D "__WXDEBUG__" /D WXDEBUG=1 /D WXUSINGDLL=1 /FD /GZ /c
+# SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x407 /d "_DEBUG"
 # ADD RSC /l 0x409 /i "$(WXWIN)\include" /d "_DEBUG"
 BSC32=bscmake.exe
@@ -272,6 +273,109 @@ SOURCE=.\LoginDialog.cpp
 # Begin Source File
 
 SOURCE=.\md5.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\mxclient.pjd
+
+!IF  "$(CFG)" == "mxclient - Win32 Release"
+
+# Begin Custom Build
+IntDir=.\Release
+InputPath=.\mxclient.pjd
+
+"memres.h" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	zip -9r $(IntDir)\tmpres.zip res -i *.xrc *.png *.rtf *.html -x *.prv.* 
+	bin2hdr $(IntDir)\tmpres.zip memres.h mem_res 
+	
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "mxclient - Win32 Debug"
+
+# Begin Custom Build
+IntDir=.\Debug
+InputPath=.\mxclient.pjd
+
+"memres.h" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	zip -9r $(IntDir)\tmpres.zip res -i *.xrc *.png *.rtf *.html -x *.prv.* 
+	bin2hdr $(IntDir)\tmpres.zip memres.h mem_res 
+	
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "mxclient - Win32 Debug Unicode"
+
+# Begin Custom Build
+IntDir=.\Debug_Unicode
+InputPath=.\mxclient.pjd
+
+"memres.h" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	zip -9r $(IntDir)\tmpres.zip res -i *.xrc *.png *.rtf *.html -x *.prv.* 
+	bin2hdr $(IntDir)\tmpres.zip memres.h mem_res 
+	
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "mxclient - Win32 Release Unicode"
+
+# Begin Custom Build
+IntDir=.\Release_Unicode
+InputPath=.\mxclient.pjd
+
+"memres.h" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	zip -9r $(IntDir)\tmpres.zip res -i *.xrc *.png *.rtf *.html -x *.prv.* 
+	bin2hdr $(IntDir)\tmpres.zip memres.h mem_res 
+	
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "mxclient - Win32 Debug DLL"
+
+# Begin Custom Build
+IntDir=.\DebugDLL
+InputPath=.\mxclient.pjd
+
+"memres.h" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	zip -9r $(IntDir)\tmpres.zip res -i *.xrc *.png *.rtf *.html -x *.prv.* 
+	bin2hdr $(IntDir)\tmpres.zip memres.h mem_res 
+	
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "mxclient - Win32 Release DLL"
+
+# Begin Custom Build
+IntDir=.\ReleaseDLL
+InputPath=.\mxclient.pjd
+
+"memres.h" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	zip -9r $(IntDir)\tmpres.zip res -i *.xrc *.png *.rtf *.html -x *.prv.* 
+	bin2hdr $(IntDir)\tmpres.zip memres.h mem_res 
+	
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "mxclient - Win32 Debug Unicode DLL"
+
+# Begin Custom Build
+IntDir=.\DebugDLL_Unicode
+InputPath=.\mxclient.pjd
+
+"memres.h" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	zip -9r $(IntDir)\tmpres.zip res -i *.xrc *.png *.rtf *.html -x *.prv.* 
+	bin2hdr $(IntDir)\tmpres.zip memres.h mem_res 
+	
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "mxclient - Win32 Release Unicode DLL"
+
+# Begin Custom Build
+IntDir=.\ReleaseDLL_Unicode
+InputPath=.\mxclient.pjd
+
+"memres.h" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	zip -9r $(IntDir)\tmpres.zip res -i *.xrc *.png *.rtf *.html -x *.prv.* 
+	bin2hdr $(IntDir)\tmpres.zip memres.h mem_res 
+	
+# End Custom Build
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
