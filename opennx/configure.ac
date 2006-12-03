@@ -70,7 +70,8 @@ test ${wxWidgets} = 0 && AC_MSG_ERROR(Could not find wxWidgets library)
 
 LIBS="$LIBS $WX_LIBS"
 CPPFLAGS="$CPPFLAGS $WX_CPPFLAGS"
-CXXFLAGS="$CXXFLAGS $WX_CXXFLAGS -fuse-cxa-atexit"
+#CXXFLAGS="$CXXFLAGS $WX_CXXFLAGS -fuse-cxa-atexit"
+CXXFLAGS="$CXXFLAGS $WX_CXXFLAGS"
 LDFLAGS="$LDFLAGS $WX_LDFLAGS"
 
 AC_ARG_ENABLE([warn],

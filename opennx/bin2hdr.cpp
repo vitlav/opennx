@@ -8,6 +8,11 @@
 
 #define MAXARR 0x00010000
 
+static int iscchar(int c)
+{
+	return (isalnum(c) || (c == '_'));
+}
+
 static void usage()
 {
     fprintf(stderr, "Usage: bin2hdr <infile> <outfile> <identifier>\n");
@@ -59,7 +64,7 @@ int main(int argc, char **argv) {
             strcat((char *)buf, argv[2]);
         strcat((char *)buf, "_");
         for (i = 0; i < (int)strlen((char *)buf); i++) {
-            if (!iscsym(buf[i]))
+            if (!iscchar(buf[i]))
                 buf[i] = '_';
         }
         fprintf(fo, "#ifndef %s\n#define %s\n", buf, buf);

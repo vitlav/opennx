@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: fritz.elfert@millenux.com\n"
-"POT-Creation-Date: 2004-10-05 12:44+0200\n"
+"POT-Creation-Date: 2006-11-29 19:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: AboutDialog.cpp:169 AboutDialog.cpp:171
+#: AboutDialog.cpp:167 AboutDialog.cpp:169
 msgid "Version"
 msgstr ""
 
@@ -25,29 +25,29 @@ msgid "About MXclient"
 msgstr ""
 
 #: AboutDialog_symbols.h:13 RdpImageSettingsDialog_symbols.h:16
-#: RdpPropertyDialog_symbols.h:25 SessionProperties_symbols.h:128
+#: RdpPropertyDialog_symbols.h:25 SessionProperties_symbols.h:127
 #: SmbShareProperties_symbols.h:20 UnixImageSettingsDialog_symbols.h:18
 #: VncImageSettingsDialog_symbols.h:17 VncPropertyDialog_symbols.h:21
 #: X11PropertyDialog_symbols.h:21
 msgid "&OK"
 msgstr ""
 
-#: LogDialog.h:42 LogDialog_symbols.h:12
+#: LogDialog.h:42 LogDialog_symbols.h:11
 msgid "Session Log - MXclient"
 msgstr ""
 
-#: LogDialog_symbols.h:13
+#: LogDialog_symbols.h:12
 msgid "Close"
 msgstr ""
 
-#: LoginDialog.cpp:262 LoginDialog.cpp:310
+#: LoginDialog.cpp:261 LoginDialog.cpp:309
 #, c-format
 msgid ""
 "Could not save session to\n"
 "%s"
 msgstr ""
 
-#: LoginDialog.cpp:263 LoginDialog.cpp:311
+#: LoginDialog.cpp:262 LoginDialog.cpp:310
 msgid "Error saving - MXclient"
 msgstr ""
 
@@ -64,12 +64,12 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: LoginDialog_symbols.h:15 MxWizard_symbols.h:13
+#: LoginDialog_symbols.h:15 MxWizard_symbols.h:12
 msgid "Session"
 msgstr ""
 
-#: LoginDialog_symbols.h:16 MxWizard_symbols.h:38
-#: SessionProperties_symbols.h:18
+#: LoginDialog_symbols.h:16 MxWizard_symbols.h:37
+#: SessionProperties_symbols.h:17
 msgid "Use SmartCard"
 msgstr ""
 
@@ -81,195 +81,195 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: mxclientApp.cpp:119
+#: mxclientApp.cpp:118
 msgid "Start the session administration tool."
 msgstr ""
 
-#: mxclientApp.cpp:121
+#: mxclientApp.cpp:120
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr ""
 
-#: mxclientApp.cpp:123
+#: mxclientApp.cpp:122
 msgid "Guide the user through the steps to configure a session."
 msgstr ""
 
-#: MxWizard.cpp:302
+#: MxWizard.cpp:297
 msgid ""
 "Welcome to the MX Client Connection Wizard which will guide you through the "
 "steps needed to setup your login. Please select the 'Next' button to start."
 msgstr ""
 
-#: MxWizard.cpp:424
+#: MxWizard.cpp:418
 msgid "New Session"
 msgstr ""
 
-#: MxWizard.cpp:427
+#: MxWizard.cpp:421
 #, c-format
 msgid "New Session %d"
 msgstr ""
 
-#: MxWizard.cpp:440
+#: MxWizard.cpp:434
 msgid ""
 "Insert the name of the session. Your configuration settings will be saved "
 "with this name."
 msgstr ""
 
-#: MxWizard.cpp:441
+#: MxWizard.cpp:435
 msgid "Insert the name and port of the server you want to connect."
 msgstr ""
 
-#: MxWizard.cpp:442
+#: MxWizard.cpp:436
 msgid "Select the type of your internet connection."
 msgstr ""
 
-#: MxWizard.cpp:611
+#: MxWizard.cpp:614
 msgid ""
 "Using MX Client, you can run RDP, VNC and X desktops, depending on what your "
 "service provider has made available."
 msgstr ""
 
-#: MxWizard.cpp:666 MxWizard_symbols.h:24 SessionProperties.cpp:403
-#: SessionProperties_symbols.h:23
+#: MxWizard.cpp:663 MxWizard_symbols.h:23 SessionProperties.cpp:401
+#: SessionProperties_symbols.h:22
 msgid "KDE"
 msgstr ""
 
-#: MxWizard.cpp:672 SessionProperties.cpp:409
+#: MxWizard.cpp:669 SessionProperties.cpp:407
 msgid "RDP"
 msgstr ""
 
-#: MxWizard.cpp:680 SessionProperties.cpp:417
+#: MxWizard.cpp:677 SessionProperties.cpp:415
 msgid "RFB"
 msgstr ""
 
-#: MxWizard.cpp:827
+#: MxWizard.cpp:834
 msgid ""
 "MX Client supports authentication using a variety of USB SmartCard tokens. "
 "Enable this option if you intend to use such a token."
 msgstr ""
 
-#: MxWizard.cpp:828
+#: MxWizard.cpp:835
 msgid ""
 "Authorization credentials are always encrypted while establishing a "
 "connection. For increased security, you can enable the following option."
 msgstr ""
 
-#: MxWizard.cpp:1123
+#: MxWizard.cpp:1122
 #, c-format
 msgid ""
 "Congratulations. The connection to '%s' will be saved as '%s'. You may "
 "further configure your session by running the Advanced Configuration dialog."
 msgstr ""
 
-#: MxWizard.cpp:1284
+#: MxWizard.cpp:1283
 msgid "Launch MX Session"
 msgstr ""
 
-#: MxWizard_symbols.h:12
+#: MxWizard_symbols.h:11
 msgid "MX Connection Wizard"
 msgstr ""
 
-#: MxWizard_symbols.h:14 SessionProperties_symbols.h:15
+#: MxWizard_symbols.h:13 SessionProperties_symbols.h:14
 #: VncPropertyDialog_symbols.h:15
 msgid "Host"
 msgstr ""
 
-#: MxWizard_symbols.h:15 SessionAdmin.cpp:162 SessionProperties_symbols.h:16
+#: MxWizard_symbols.h:14 SessionAdmin.cpp:162 SessionProperties_symbols.h:15
 msgid "Port"
 msgstr ""
 
-#: MxWizard_symbols.h:16 SessionProperties_symbols.h:29
+#: MxWizard_symbols.h:15 SessionProperties_symbols.h:28
 msgid "MODEM"
 msgstr ""
 
-#: MxWizard_symbols.h:17 SessionProperties_symbols.h:30
+#: MxWizard_symbols.h:16 SessionProperties_symbols.h:29
 msgid "ISDN"
 msgstr ""
 
-#: MxWizard_symbols.h:18 SessionProperties_symbols.h:31
+#: MxWizard_symbols.h:17 SessionProperties_symbols.h:30
 msgid "ADSL"
 msgstr ""
 
-#: MxWizard_symbols.h:19 SessionProperties_symbols.h:32
+#: MxWizard_symbols.h:18 SessionProperties_symbols.h:31
 msgid "WAN"
 msgstr ""
 
-#: MxWizard_symbols.h:20 SessionProperties_symbols.h:33
+#: MxWizard_symbols.h:19 SessionProperties_symbols.h:32
 msgid "LAN"
 msgstr ""
 
-#: MxWizard_symbols.h:21 SessionProperties_symbols.h:20
+#: MxWizard_symbols.h:20 SessionProperties_symbols.h:19
 msgid "Unix"
 msgstr ""
 
-#: MxWizard_symbols.h:22 SessionProperties_symbols.h:21
+#: MxWizard_symbols.h:21 SessionProperties_symbols.h:20
 msgid "Windows"
 msgstr ""
 
-#: MxWizard_symbols.h:23 SessionProperties_symbols.h:22
+#: MxWizard_symbols.h:22 SessionProperties_symbols.h:21
 msgid "VNC"
 msgstr ""
 
-#: MxWizard_symbols.h:25 SessionProperties_symbols.h:24
+#: MxWizard_symbols.h:24 SessionProperties_symbols.h:23
 msgid "GNOME"
 msgstr ""
 
-#: MxWizard_symbols.h:26 SessionProperties_symbols.h:25
+#: MxWizard_symbols.h:25 SessionProperties_symbols.h:24
 msgid "CDE"
 msgstr ""
 
-#: MxWizard_symbols.h:27 SessionProperties_symbols.h:26
+#: MxWizard_symbols.h:26 SessionProperties_symbols.h:25
 msgid "XFCE"
 msgstr ""
 
-#: MxWizard_symbols.h:28 SessionProperties_symbols.h:27
+#: MxWizard_symbols.h:27 SessionProperties_symbols.h:26
 msgid "Custom"
 msgstr ""
 
-#: MxWizard_symbols.h:29 SessionProperties_symbols.h:28
+#: MxWizard_symbols.h:28 SessionProperties_symbols.h:27
 msgid "Settings..."
 msgstr ""
 
-#: MxWizard_symbols.h:30
+#: MxWizard_symbols.h:29
 msgid "Select the size of your remote desktop."
 msgstr ""
 
-#: MxWizard_symbols.h:31 SessionProperties_symbols.h:35
+#: MxWizard_symbols.h:30 SessionProperties_symbols.h:34
 msgid "640x480"
 msgstr ""
 
-#: MxWizard_symbols.h:32 SessionProperties_symbols.h:36
+#: MxWizard_symbols.h:31 SessionProperties_symbols.h:35
 msgid "800x600"
 msgstr ""
 
-#: MxWizard_symbols.h:33 SessionProperties_symbols.h:37
+#: MxWizard_symbols.h:32 SessionProperties_symbols.h:36
 msgid "1024x768"
 msgstr ""
 
-#: MxWizard_symbols.h:34 SessionProperties_symbols.h:38
+#: MxWizard_symbols.h:33 SessionProperties_symbols.h:37
 msgid "Available Area"
 msgstr ""
 
-#: MxWizard_symbols.h:35 SessionProperties_symbols.h:39
+#: MxWizard_symbols.h:34 SessionProperties_symbols.h:38
 msgid "Fullscreen"
 msgstr ""
 
-#: MxWizard_symbols.h:36 SessionProperties_symbols.h:40
+#: MxWizard_symbols.h:35 SessionProperties_symbols.h:39
 msgid "W"
 msgstr ""
 
-#: MxWizard_symbols.h:37 SessionProperties_symbols.h:41
+#: MxWizard_symbols.h:36 SessionProperties_symbols.h:40
 msgid "H"
 msgstr ""
 
-#: MxWizard_symbols.h:39 SessionProperties_symbols.h:49
+#: MxWizard_symbols.h:38 SessionProperties_symbols.h:48
 msgid "Enable SSL encryption of all traffic"
 msgstr ""
 
-#: MxWizard_symbols.h:40
+#: MxWizard_symbols.h:39
 msgid "Create shortcut on desktop"
 msgstr ""
 
-#: MxWizard_symbols.h:41
+#: MxWizard_symbols.h:40
 msgid "Show the Advanced Configuration dialog"
 msgstr ""
 
@@ -291,7 +291,7 @@ msgid "Use plain X bitmaps"
 msgstr ""
 
 #: RdpImageSettingsDialog_symbols.h:17 RdpPropertyDialog_symbols.h:26
-#: SessionProperties_symbols.h:129 SmbShareProperties_symbols.h:21
+#: SessionProperties_symbols.h:128 SmbShareProperties_symbols.h:21
 #: UnixImageSettingsDialog_symbols.h:19 VncImageSettingsDialog_symbols.h:18
 #: VncPropertyDialog_symbols.h:22 X11PropertyDialog_symbols.h:22
 msgid "&Cancel"
@@ -330,7 +330,7 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: RdpPropertyDialog_symbols.h:21 SessionProperties_symbols.h:17
+#: RdpPropertyDialog_symbols.h:21 SessionProperties_symbols.h:16
 #: VncPropertyDialog_symbols.h:20
 msgid "Remember my password"
 msgstr ""
@@ -347,7 +347,7 @@ msgstr ""
 msgid "Run application"
 msgstr ""
 
-#: SessionAdmin.cpp:161 SessionList.cpp:350 SessionProperties_symbols.h:14
+#: SessionAdmin.cpp:161 SessionList.cpp:193 SessionProperties_symbols.h:13
 #: VncPropertyDialog_symbols.h:13
 msgid "Server"
 msgstr ""
@@ -376,7 +376,7 @@ msgstr ""
 msgid "Choose new MX session directory."
 msgstr ""
 
-#: SessionAdmin.cpp:367 SessionList.cpp:337
+#: SessionAdmin.cpp:367 SessionList.cpp:180
 msgid "terminated"
 msgstr ""
 
@@ -448,408 +448,408 @@ msgstr ""
 msgid "New MX session"
 msgstr ""
 
-#: SessionList.cpp:340
+#: SessionList.cpp:183
 msgid "failed"
 msgstr ""
 
-#: SessionList.cpp:343
+#: SessionList.cpp:186
 msgid "running"
 msgstr ""
 
-#: SessionList.cpp:346
+#: SessionList.cpp:189
 msgid "unknown"
 msgstr ""
 
-#: SessionList.cpp:350
+#: SessionList.cpp:193
 msgid "Client"
 msgstr ""
 
-#: SessionProperties.cpp:337 SmbShareProperties_symbols.h:14
+#: SessionProperties.cpp:335 SmbShareProperties_symbols.h:14
 msgid "Share"
 msgstr ""
 
-#: SessionProperties.cpp:338 SmbShareProperties_symbols.h:16
+#: SessionProperties.cpp:336 SmbShareProperties_symbols.h:16
 msgid "Mount on"
 msgstr ""
 
-#: SessionProperties.cpp:339
+#: SessionProperties.cpp:337
 msgid "Comment"
 msgstr ""
 
-#: SessionProperties.cpp:350 SessionProperties.cpp:804
+#: SessionProperties.cpp:348 SessionProperties.cpp:771
 msgid "Currently not available"
 msgstr ""
 
-#: SessionProperties.cpp:622 SessionProperties_symbols.h:123
+#: SessionProperties.cpp:589 SessionProperties_symbols.h:122
 msgid "Font"
 msgstr ""
 
-#: SessionProperties.cpp:881
+#: SessionProperties.cpp:848
 msgid "Select User MX directory"
 msgstr ""
 
-#: SessionProperties.cpp:898
+#: SessionProperties.cpp:865
 msgid "Select System MX directory"
 msgstr ""
 
-#: SessionProperties.cpp:949
+#: SessionProperties.cpp:916
 #, c-format
 msgid "Really delete Session '%s' ?"
 msgstr ""
 
-#: SessionProperties.cpp:951
+#: SessionProperties.cpp:918
 msgid "Delete Session"
 msgstr ""
 
-#: SessionProperties.h:54 SessionProperties_symbols.h:12
+#: SessionProperties.h:54 SessionProperties_symbols.h:11
 msgid "Session properties - MXclient"
 msgstr ""
 
-#: SessionProperties_symbols.h:13
+#: SessionProperties_symbols.h:12
 msgid "General"
 msgstr ""
 
-#: SessionProperties_symbols.h:19
+#: SessionProperties_symbols.h:18
 msgid "Desktop"
 msgstr ""
 
-#: SessionProperties_symbols.h:34
+#: SessionProperties_symbols.h:33
 msgid "Display"
 msgstr ""
 
-#: SessionProperties_symbols.h:42
+#: SessionProperties_symbols.h:41
 msgid "Use default image encoding"
 msgstr ""
 
-#: SessionProperties_symbols.h:43
+#: SessionProperties_symbols.h:42
 msgid "Use custom settings"
 msgstr ""
 
-#: SessionProperties_symbols.h:44
+#: SessionProperties_symbols.h:43
 msgid "Modify"
 msgstr ""
 
-#: SessionProperties_symbols.h:45
+#: SessionProperties_symbols.h:44
 msgid "Advanced"
 msgstr ""
 
-#: SessionProperties_symbols.h:46
+#: SessionProperties_symbols.h:45
 msgid "Network"
 msgstr ""
 
-#: SessionProperties_symbols.h:47
+#: SessionProperties_symbols.h:46
 msgid "Disable no-delay on TCP connection"
 msgstr ""
 
-#: SessionProperties_symbols.h:48
+#: SessionProperties_symbols.h:47
 msgid "Disable ZLIB stream compression"
 msgstr ""
 
-#: SessionProperties_symbols.h:50
+#: SessionProperties_symbols.h:49
 msgid "Cache"
 msgstr ""
 
-#: SessionProperties_symbols.h:51
+#: SessionProperties_symbols.h:50
 msgid "In memory"
 msgstr ""
 
-#: SessionProperties_symbols.h:52
+#: SessionProperties_symbols.h:51
 msgid "1 Mb"
 msgstr ""
 
-#: SessionProperties_symbols.h:53
+#: SessionProperties_symbols.h:52
 msgid "2 Mb"
 msgstr ""
 
-#: SessionProperties_symbols.h:54
+#: SessionProperties_symbols.h:53
 msgid "4 Mb"
 msgstr ""
 
-#: SessionProperties_symbols.h:55
+#: SessionProperties_symbols.h:54
 msgid "8 Mb"
 msgstr ""
 
-#: SessionProperties_symbols.h:56
+#: SessionProperties_symbols.h:55
 msgid "16 Mb"
 msgstr ""
 
-#: SessionProperties_symbols.h:57
+#: SessionProperties_symbols.h:56
 msgid "32 Mb"
 msgstr ""
 
-#: SessionProperties_symbols.h:58
+#: SessionProperties_symbols.h:57
 msgid "On disk"
 msgstr ""
 
-#: SessionProperties_symbols.h:59
+#: SessionProperties_symbols.h:58
 msgid "0 Mb"
 msgstr ""
 
-#: SessionProperties_symbols.h:60
+#: SessionProperties_symbols.h:59
 msgid "64 Mb"
 msgstr ""
 
-#: SessionProperties_symbols.h:61
+#: SessionProperties_symbols.h:60
 msgid "128 Mb"
 msgstr ""
 
-#: SessionProperties_symbols.h:62
+#: SessionProperties_symbols.h:61
 msgid "Clean all cache files"
 msgstr ""
 
-#: SessionProperties_symbols.h:63
+#: SessionProperties_symbols.h:62
 msgid "Backingstore"
 msgstr ""
 
-#: SessionProperties_symbols.h:64
+#: SessionProperties_symbols.h:63
 msgid "Keyboard"
 msgstr ""
 
-#: SessionProperties_symbols.h:65
+#: SessionProperties_symbols.h:64
 msgid "Keep current keyboard settings"
 msgstr ""
 
-#: SessionProperties_symbols.h:66
+#: SessionProperties_symbols.h:65
 msgid "Use other layout"
 msgstr ""
 
-#: SessionProperties_symbols.h:67
+#: SessionProperties_symbols.h:66
 msgid "Afrikaans"
 msgstr ""
 
-#: SessionProperties_symbols.h:68
+#: SessionProperties_symbols.h:67
 msgid "Albanian"
 msgstr ""
 
-#: SessionProperties_symbols.h:69
+#: SessionProperties_symbols.h:68
 msgid "Arabic"
 msgstr ""
 
-#: SessionProperties_symbols.h:70
+#: SessionProperties_symbols.h:69
 msgid "Basque"
 msgstr ""
 
-#: SessionProperties_symbols.h:71
+#: SessionProperties_symbols.h:70
 msgid "Belarusian"
 msgstr ""
 
-#: SessionProperties_symbols.h:72
+#: SessionProperties_symbols.h:71
 msgid "Bulgarian"
 msgstr ""
 
-#: SessionProperties_symbols.h:73
+#: SessionProperties_symbols.h:72
 msgid "Catalan"
 msgstr ""
 
-#: SessionProperties_symbols.h:74
+#: SessionProperties_symbols.h:73
 msgid "Chinese"
 msgstr ""
 
-#: SessionProperties_symbols.h:75
+#: SessionProperties_symbols.h:74
 msgid "Croatian"
 msgstr ""
 
-#: SessionProperties_symbols.h:76
+#: SessionProperties_symbols.h:75
 msgid "Czech"
 msgstr ""
 
-#: SessionProperties_symbols.h:77
+#: SessionProperties_symbols.h:76
 msgid "Danish"
 msgstr ""
 
-#: SessionProperties_symbols.h:78
+#: SessionProperties_symbols.h:77
 msgid "Dutch"
 msgstr ""
 
-#: SessionProperties_symbols.h:79
+#: SessionProperties_symbols.h:78
 msgid "English (GB)"
 msgstr ""
 
-#: SessionProperties_symbols.h:80
+#: SessionProperties_symbols.h:79
 msgid "English (US)"
 msgstr ""
 
-#: SessionProperties_symbols.h:81
+#: SessionProperties_symbols.h:80
 msgid "Estonian"
 msgstr ""
 
-#: SessionProperties_symbols.h:82
+#: SessionProperties_symbols.h:81
 msgid "Faeorese"
 msgstr ""
 
-#: SessionProperties_symbols.h:83
+#: SessionProperties_symbols.h:82
 msgid "Farsi"
 msgstr ""
 
-#: SessionProperties_symbols.h:84
+#: SessionProperties_symbols.h:83
 msgid "Finnish"
 msgstr ""
 
-#: SessionProperties_symbols.h:85
+#: SessionProperties_symbols.h:84
 msgid "French"
 msgstr ""
 
-#: SessionProperties_symbols.h:86
+#: SessionProperties_symbols.h:85
 msgid "German"
 msgstr ""
 
-#: SessionProperties_symbols.h:87
+#: SessionProperties_symbols.h:86
 msgid "Greek"
 msgstr ""
 
-#: SessionProperties_symbols.h:88
+#: SessionProperties_symbols.h:87
 msgid "Hebrew"
 msgstr ""
 
-#: SessionProperties_symbols.h:89
+#: SessionProperties_symbols.h:88
 msgid "Hungarian"
 msgstr ""
 
-#: SessionProperties_symbols.h:90
+#: SessionProperties_symbols.h:89
 msgid "Icelandic"
 msgstr ""
 
-#: SessionProperties_symbols.h:91
+#: SessionProperties_symbols.h:90
 msgid "Indonesian"
 msgstr ""
 
-#: SessionProperties_symbols.h:92
+#: SessionProperties_symbols.h:91
 msgid "Italian"
 msgstr ""
 
-#: SessionProperties_symbols.h:93
+#: SessionProperties_symbols.h:92
 msgid "Japanese"
 msgstr ""
 
-#: SessionProperties_symbols.h:94
+#: SessionProperties_symbols.h:93
 msgid "Korean"
 msgstr ""
 
-#: SessionProperties_symbols.h:95
+#: SessionProperties_symbols.h:94
 msgid "Latvian"
 msgstr ""
 
-#: SessionProperties_symbols.h:96
+#: SessionProperties_symbols.h:95
 msgid "Lithuanian"
 msgstr ""
 
-#: SessionProperties_symbols.h:97
+#: SessionProperties_symbols.h:96
 msgid "Norwegian"
 msgstr ""
 
-#: SessionProperties_symbols.h:98
+#: SessionProperties_symbols.h:97
 msgid "Polish"
 msgstr ""
 
-#: SessionProperties_symbols.h:99
+#: SessionProperties_symbols.h:98
 msgid "Portugese"
 msgstr ""
 
-#: SessionProperties_symbols.h:100
+#: SessionProperties_symbols.h:99
 msgid "Romanian"
 msgstr ""
 
-#: SessionProperties_symbols.h:101
+#: SessionProperties_symbols.h:100
 msgid "Russian"
 msgstr ""
 
-#: SessionProperties_symbols.h:102
+#: SessionProperties_symbols.h:101
 msgid "Slovak"
 msgstr ""
 
-#: SessionProperties_symbols.h:103
+#: SessionProperties_symbols.h:102
 msgid "Slovenian"
 msgstr ""
 
-#: SessionProperties_symbols.h:104
+#: SessionProperties_symbols.h:103
 msgid "Spanish"
 msgstr ""
 
-#: SessionProperties_symbols.h:105
+#: SessionProperties_symbols.h:104
 msgid "Swedish"
 msgstr ""
 
-#: SessionProperties_symbols.h:106
+#: SessionProperties_symbols.h:105
 msgid "Thai"
 msgstr ""
 
-#: SessionProperties_symbols.h:107
+#: SessionProperties_symbols.h:106
 msgid "Turkish"
 msgstr ""
 
-#: SessionProperties_symbols.h:108
+#: SessionProperties_symbols.h:107
 msgid "Vietnamese"
 msgstr ""
 
-#: SessionProperties_symbols.h:109
+#: SessionProperties_symbols.h:108
 msgid "Services"
 msgstr ""
 
-#: SessionProperties_symbols.h:110
+#: SessionProperties_symbols.h:109
 msgid "Enable printer and file sharing"
 msgstr ""
 
-#: SessionProperties_symbols.h:111
+#: SessionProperties_symbols.h:110
 msgid "Add"
 msgstr ""
 
-#: SessionProperties_symbols.h:112
+#: SessionProperties_symbols.h:111
 msgid "Delete"
 msgstr ""
 
-#: SessionProperties_symbols.h:113
+#: SessionProperties_symbols.h:112
 msgid "Enable multimedia support"
 msgstr ""
 
-#: SessionProperties_symbols.h:114
+#: SessionProperties_symbols.h:113
 msgid "Environment"
 msgstr ""
 
-#: SessionProperties_symbols.h:115
+#: SessionProperties_symbols.h:114
 msgid "User MX directory"
 msgstr ""
 
-#: SessionProperties_symbols.h:116
+#: SessionProperties_symbols.h:115
 msgid "..."
 msgstr ""
 
-#: SessionProperties_symbols.h:117
+#: SessionProperties_symbols.h:116
 msgid "Remove old session files"
 msgstr ""
 
-#: SessionProperties_symbols.h:118
+#: SessionProperties_symbols.h:117
 msgid "System MX directory"
 msgstr ""
 
-#: SessionProperties_symbols.h:119
+#: SessionProperties_symbols.h:118
 msgid "Font server"
 msgstr ""
 
-#: SessionProperties_symbols.h:120
+#: SessionProperties_symbols.h:119
 msgid "Use font server"
 msgstr ""
 
-#: SessionProperties_symbols.h:121
+#: SessionProperties_symbols.h:120
 msgid "Select MX fonts"
 msgstr ""
 
-#: SessionProperties_symbols.h:122
+#: SessionProperties_symbols.h:121
 msgid "Default"
 msgstr ""
 
-#: SessionProperties_symbols.h:124
+#: SessionProperties_symbols.h:123
 msgid "Fixed"
 msgstr ""
 
-#: SessionProperties_symbols.h:125
+#: SessionProperties_symbols.h:124
 msgid "About"
 msgstr ""
 
-#: SessionProperties_symbols.h:126
+#: SessionProperties_symbols.h:125
 msgid "&Delete"
 msgstr ""
 
-#: SessionProperties_symbols.h:127
+#: SessionProperties_symbols.h:126
 msgid "&Apply"
 msgstr ""
 

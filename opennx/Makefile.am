@@ -2,6 +2,9 @@ AUTOMAKE_OPTIONS = foreign dist-bzip2 no-dist-gzip no-installinfo no-installman
 
 SUBDIRS = m4 po
 
+noinst_PROGRAMS = bin2hdr
+bin2hdr_SOURCES = bin2hdr.cpp
+
 bin_PROGRAMS = mxclient
 
 mxclient_SOURCES = AboutDialog.cpp ConnectDialog.cpp Icon.cpp LogDialog.cpp \
@@ -25,25 +28,29 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h ConnectDialog.h \
 	UnixImageSettingsDialog.h UnixImageSettingsDialog_symbols.h \
 	VncImageSettingsDialog.h VncImageSettingsDialog_symbols.h \
 	VncPropertyDialog.h VncPropertyDialog_symbols.h WinShare.h \
-	X11PropertyDialog.h X11PropertyDialog_symbols.h md5.h MxSession.h
+	X11PropertyDialog.h X11PropertyDialog_symbols.h md5.h MxSession.h memres.h
 
 PROGRAM = mxclient
 
+mxclient_LDADD = -lstdc++
+
 bootstrap:
-	gettextize || :
-	aclocal -I m4
-	automake --add-missing
-	autoconf
+	AUTOMAKE_VERSION=1.8 AUTOCONF_VERSION=2.59 autoreconf -is
 
 ACLOCAL_AMFLAGS = -I m4
 
 distclean-local:
 	rm -f po/*~ *.bak *~ \#.* .#*
 
-all-local: mxclient.rsc
+tmpres.zip: res/mxclient.xrc
+	zip -q9r $@ res -i *.png -i *.xrc -i *.ico
 
-mxclient.rsc: res/mxclient.xrc $(mxclient_SOURCES) $(noinst_HEADERS)
-	zip -q9r mxclient.rsc res -i *.png -i *.xrc -i *.ico
+memres.h: tmpres.zip bin2hdr
+	bin2hdr tmpres.zip memres.h mem_res
+
+mxclientApp.cpp: memres.h
+
+CLEANFILES = tmpres.zip
 
 EXTRA_DIST = conf/config.rpath conf/mkinstalldirs  conf/config.rpath conf/mkinstalldirs mxclient.pjd mxclient.dsw \
 	mxclient.dsp mxclient.rc res/mxclient.rc res/mxclient.xrc \
