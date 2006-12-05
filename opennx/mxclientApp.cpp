@@ -26,6 +26,7 @@
 #include <wx/fs_zip.h>
 #include "wx/fs_mem.h"
 #include <wx/sysopt.h>
+#include <wx/tokenzr.h>
 
 #include "resource.h"
 #include "mxclientApp.h"
@@ -60,32 +61,36 @@ mxclientApp::mxclientApp()
     
 #ifdef __WXDEBUG__
 #ifdef __WXMSW__
-    m_pCfg = new wxConfig(_T("MxClient-Debug"), _T("Millenux"));
+    m_pCfg = new wxConfig(wxT("MxClient-Debug"), wxT("Millenux"));
 #else
-    m_pCfg = new wxConfig(_T("MxClient-Debug"), _T("Millenux"), _T(".mxclient-debug"));
+    m_pCfg = new wxConfig(wxT("MxClient-Debug"), wxT("Millenux"), wxT(".mxclient-debug"));
 #endif
 #else
 #ifdef __WXMSW__
-    m_pCfg = new wxConfig(_T("MxClient"), _T("Millenux"));
+    m_pCfg = new wxConfig(wxT("MxClient"), wxT("Millenux"));
 #else
-    m_pCfg = new wxConfig(_T("MxClient"), _T("Millenux"), _T(".mxclient"));
+    m_pCfg = new wxConfig(wxT("MxClient"), wxT("Millenux"), wxT(".mxclient"));
 #endif
 #endif
     wxConfigBase::Set(m_pCfg);
 
     wxString tmp;
-    if (!wxConfigBase::Get()->Read(_T("Config/UserMxDir"), &tmp)) {
-        tmp = ::wxGetHomeDir() + wxFileName::GetPathSeparator() + _T(".nx");
+    if (!wxConfigBase::Get()->Read(wxT("Config/UserMxDir"), &tmp)) {
+        tmp = ::wxGetHomeDir() + wxFileName::GetPathSeparator() + wxT(".nx");
         if (!wxFileName(tmp).DirExists())
             wxFileName(tmp).Mkdir();
-        wxConfigBase::Get()->Write(_T("Config/UserMxDir"), tmp);
+        wxConfigBase::Get()->Write(wxT("Config/UserMxDir"), tmp);
+	wxFileName::Mkdir(tmp +  wxFileName::GetPathSeparator() + wxT("config"), 0750, wxPATH_MKDIR_FULL);
     }
-    if (!wxConfigBase::Get()->Read(_T("Config/SystemMxDir"), &tmp)) {
-        tmp = _T("/usr/NX");
+    if (!wxConfigBase::Get()->Read(wxT("Config/SystemMxDir"), &tmp)) {
+        tmp = wxT("/usr/NX");
 #ifdef __WXMSW__
         int ret = GetModuleFileName(NULL, tmp.GetWriteBuf(1024), 1024);
         tmp.UngetWriteBuf(ret);
         tmp = wxFileName(tmp).GetPath(wxPATH_GET_VOLUME);
+#endif
+#ifdef __OPENBSD__
+        tmp = wxT("/usr/local/NX");
 #endif
 #ifdef __LINUX__
         // Get executable path from /proc/self/exe
@@ -95,16 +100,25 @@ mxclientApp::mxclientApp()
         if (ret == -1)
             ret = 0;
         if (ret == 0)
-            tmp = _T("/usr/NX");
+            tmp = wxT("/usr/NX");
         else
             tmp = wxFileName(tmp).GetPath();
 #endif
-        wxConfigBase::Get()->Write(_T("Config/SystemMxDir"), tmp);
+        wxConfigBase::Get()->Write(wxT("Config/SystemMxDir"), tmp);
     }
     wxConfigBase::Get()->Flush();
-    wxConfigBase::Get()->Read(_T("Config/SystemMxDir"), &tmp);
+    wxConfigBase::Get()->Read(wxT("Config/SystemMxDir"), &tmp);
     // Change to our system dir so we can read our resources
     wxSetWorkingDirectory(tmp);
+    wxString traceTags;
+    if (::wxGetEnv(wxT("WXTRACE"), &traceTags)) {
+        wxStringTokenizer t(traceTags, wxT(",:"));
+        while (t.HasMoreTokens()) {
+            wxString tag = t.GetNextToken();
+            ::wxLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
+            wxLog::AddTraceMask(tag);
+        }
+    }
 }
 
 mxclientApp::~mxclientApp()
@@ -118,11 +132,11 @@ void mxclientApp::OnInitCmdLine(wxCmdLineParser& parser)
     // Init standard options (--help, --verbose);
     wxApp::OnInitCmdLine(parser);
 
-    parser.AddSwitch(_T(""), wxT("admin"),
+    parser.AddSwitch(wxT(""), wxT("admin"),
         _("Start the session administration tool."));
-    parser.AddOption(_T(""), wxT("session"),
+    parser.AddOption(wxT(""), wxT("session"),
         _("Run a session importing configuration settings from FILENAME."));
-    parser.AddSwitch(_T(""), wxT("wizard"),
+    parser.AddSwitch(wxT(""), wxT("wizard"),
         _("Guide the user through the steps to configure a session."));
 }
 
@@ -132,11 +146,11 @@ bool mxclientApp::OnCmdLineParsed(wxCmdLineParser& parser)
         return false;
 
     m_eMode = MODE_CLIENT;
-    if (parser.Found(_T("admin")))
+    if (parser.Found(wxT("admin")))
         m_eMode = MODE_ADMIN;
-    if (parser.Found(_T("wizard")))
+    if (parser.Found(wxT("wizard")))
         m_eMode = MODE_WIZARD;
-    (void)parser.Found(_T("session"), &m_sSessionName);
+    (void)parser.Found(wxT("session"), &m_sSessionName);
 
     return true;
 }
@@ -149,7 +163,7 @@ bool mxclientApp::OnInit()
     m_cLocale.AddCatalog(wxT("mxclient"));
 
     // Don't remap bitmaps to system colors
-    wxSystemOptions::SetOption(_T("msw.remap"), 0);
+    wxSystemOptions::SetOption(wxT("msw.remap"), 0);
 
     // Call to base class needed for initializing command line processing
     if (!wxApp::OnInit())
@@ -184,7 +198,7 @@ bool mxclientApp::OnInit()
     }
 
     if ((m_eMode == MODE_CLIENT) && m_sSessionName.IsEmpty()) {
-        if (!wxConfigBase::Get()->Read(_T("Config/LastSession"), &m_sSessionName))
+        if (!wxConfigBase::Get()->Read(wxT("Config/LastSession"), &m_sSessionName))
             m_eMode = MODE_WIZARD;
     } else {
         if (!m_sSessionName.IsEmpty()) {
@@ -212,7 +226,7 @@ bool mxclientApp::OnInit()
     if (d.ShowModal() == wxID_OK) {
         m_sSessionName = d.GetSSessionName();
         if (!m_sSessionName.IsEmpty())
-            wxConfigBase::Get()->Write(_T("Config/LastSession"), m_sSessionName);
+            wxConfigBase::Get()->Write(wxT("Config/LastSession"), m_sSessionName);
     }
 
     // success: wxApp::OnRun() will be called which will enter the main message

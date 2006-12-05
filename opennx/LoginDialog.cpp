@@ -44,36 +44,36 @@
 
 IMPLEMENT_CLASS( LoginDialog, wxDialog )
 
-/*!
- * LoginDialog event table definition
- */
+    /*!
+     * LoginDialog event table definition
+     */
 
 BEGIN_EVENT_TABLE( LoginDialog, wxDialog )
 
-////@begin LoginDialog event table entries
+    ////@begin LoginDialog event table entries
     EVT_COMBOBOX( XRCID("ID_COMBOBOX_SESSION"), LoginDialog::OnComboboxSessionSelected )
 
     EVT_CHECKBOX( XRCID("ID_CHECKBOX_SMARTCARD"), LoginDialog::OnCheckboxSmartcardClick )
 
     EVT_BUTTON( XRCID("ID_BUTTON_CONFIGURE"), LoginDialog::OnButtonConfigureClick )
 
-    EVT_BUTTON( wxID_OK, LoginDialog::OnOkClick )
+EVT_BUTTON( wxID_OK, LoginDialog::OnOkClick )
 
-////@end LoginDialog event table entries
+    ////@end LoginDialog event table entries
 
 END_EVENT_TABLE()
 
-/*!
- * LoginDialog constructors
- */
+    /*!
+     * LoginDialog constructors
+     */
 
-LoginDialog::LoginDialog( )
-    : m_pCurrentCfg(NULL)
+    LoginDialog::LoginDialog( )
+: m_pCurrentCfg(NULL)
 {
 }
 
-LoginDialog::LoginDialog( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
-    : m_pCurrentCfg(NULL)
+    LoginDialog::LoginDialog( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
+: m_pCurrentCfg(NULL)
 {
     Create(parent, id, caption, pos, size, style);
 }
@@ -87,12 +87,12 @@ LoginDialog::~LoginDialog()
 void LoginDialog::ReadConfigDirectory()
 {
     wxString cfgdir;
-    wxConfigBase::Get()->Read(_T("Config/UserMxDir"), &cfgdir);
-    cfgdir = cfgdir + wxFileName::GetPathSeparator() + _T("config");
+    wxConfigBase::Get()->Read(wxT("Config/UserMxDir"), &cfgdir);
+    cfgdir = cfgdir + wxFileName::GetPathSeparator() + wxT("config");
     m_aConfigFiles.Empty();
     m_aSessionNames.Empty();
 
-    wxDir::GetAllFiles(cfgdir, &m_aConfigFiles, _T("*.conf"), wxDIR_FILES);
+    wxDir::GetAllFiles(cfgdir, &m_aConfigFiles, wxT("*.conf"), wxDIR_FILES);
     size_t i;
     if (m_pCurrentCfg)
         delete m_pCurrentCfg;
@@ -104,7 +104,7 @@ void LoginDialog::ReadConfigDirectory()
                 m_sSessionName = cfg.sGetName();
             m_aSessionNames.Add(cfg.sGetName());
             if (cfg.sGetName() == m_sSessionName) {
-		m_pCurrentCfg = new MxXmlConfig(m_aConfigFiles[i]);
+                m_pCurrentCfg = new MxXmlConfig(m_aConfigFiles[i]);
                 m_sUsername = cfg.sGetUsername();
                 m_sPassword = cfg.sGetPassword();
                 m_bUseSmartCard = cfg.bGetUseSmartCard();
@@ -112,11 +112,11 @@ void LoginDialog::ReadConfigDirectory()
         }
     }
     if (m_aSessionNames.GetCount() == 0) {
-        m_aSessionNames.Add(_T(""));
-        m_sSessionName = _T("");
+        m_aSessionNames.Add(wxT(""));
+        m_sSessionName = wxT("");
     } else {
         if (!m_pCurrentCfg) {
-            m_sSessionName = _T("");
+            m_sSessionName = wxT("");
             ReadConfigDirectory();
         }
     }
@@ -128,14 +128,14 @@ void LoginDialog::ReadConfigDirectory()
 
 bool LoginDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxString& WXUNUSED(caption), const wxPoint& WXUNUSED(pos), const wxSize& WXUNUSED(size), long WXUNUSED(style) )
 {
-////@begin LoginDialog member initialisation
+    ////@begin LoginDialog member initialisation
     m_pCtrlUsername = NULL;
     m_pCtrlPassword = NULL;
     m_pCtrlSessionName = NULL;
     m_pCtrlUseSmartCard = NULL;
-////@end LoginDialog member initialisation
+    ////@end LoginDialog member initialisation
 
-////@begin LoginDialog creation
+    ////@begin LoginDialog creation
     SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
@@ -143,7 +143,7 @@ bool LoginDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
     GetSizer()->Fit(this);
     GetSizer()->SetSizeHints(this);
     Centre();
-////@end LoginDialog creation
+    ////@end LoginDialog creation
     return TRUE;
 }
 
@@ -156,9 +156,9 @@ void LoginDialog::CreateControls()
 
     ReadConfigDirectory();
 
-////@begin LoginDialog content construction
+    ////@begin LoginDialog content construction
 
-    wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_LOGIN"));
+    wxXmlResource::Get()->LoadDialog(this, GetParent(), wxT("ID_DIALOG_LOGIN"));
     if (FindWindow(XRCID("ID_TEXTCTRL_USERNAME")))
         m_pCtrlUsername = wxDynamicCast(FindWindow(XRCID("ID_TEXTCTRL_USERNAME")), wxTextCtrl);
     if (FindWindow(XRCID("ID_TEXTCTRL_PASSWORD")))
@@ -177,16 +177,16 @@ void LoginDialog::CreateControls()
         FindWindow(XRCID("ID_COMBOBOX_SESSION"))->SetValidator( wxGenericValidator(& m_sSessionName) );
     if (FindWindow(XRCID("ID_CHECKBOX_SMARTCARD")))
         FindWindow(XRCID("ID_CHECKBOX_SMARTCARD"))->SetValidator( wxGenericValidator(& m_bUseSmartCard) );
-////@end LoginDialog content construction
+    ////@end LoginDialog content construction
 
     // Create custom windows not generated automatically here.
 
-////@begin LoginDialog content initialisation
+    ////@begin LoginDialog content initialisation
 
-////@end LoginDialog content initialisation
+    ////@end LoginDialog content initialisation
 
     m_pCtrlSessionName->Append(m_aSessionNames);
- }
+}
 
 /*!
  * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_SMARTCARD
@@ -245,7 +245,7 @@ void LoginDialog::OnButtonConfigureClick( wxCommandEvent& event )
             m_pCurrentCfg = new MxXmlConfig(fn);
             break;
         case wxID_CLEAR:
-            ::wxLogDebug(_T("deleting '%s'"), fn.c_str());
+            ::wxLogDebug(wxT("deleting '%s'"), fn.c_str());
             ::wxRemoveFile(fn);
             m_sSessionName.Empty();
             m_pCtrlSessionName->Clear();
@@ -259,10 +259,10 @@ void LoginDialog::OnButtonConfigureClick( wxCommandEvent& event )
             m_pCtrlUseSmartCard->SetValue(m_bUseSmartCard);
             if (!m_pCurrentCfg->SaveToFile())
                 wxMessageBox(wxString::Format(_("Could not save session to\n%s"),
-                m_pCurrentCfg->sGetFileName().c_str()), _("Error saving - MXclient"),
-                wxICON_ERROR | wxOK);
-            wxConfigBase::Get()->Write(_T("Config/UserMxDir"), d.GetsUserMxDir());
-            wxConfigBase::Get()->Write(_T("Config/SystemMxDir"), d.GetsSystemMxDir());
+                            m_pCurrentCfg->sGetFileName().c_str()), _("Error saving - MXclient"),
+                        wxICON_ERROR | wxOK);
+            wxConfigBase::Get()->Write(wxT("Config/UserMxDir"), d.GetsUserMxDir());
+            wxConfigBase::Get()->Write(wxT("Config/SystemMxDir"), d.GetsSystemMxDir());
             break;
     }
     event.Skip();
@@ -276,12 +276,12 @@ void LoginDialog::OnComboboxSessionSelected( wxCommandEvent& event )
 {
     wxString sessionName = event.GetString();
     if (m_pCurrentCfg)
-	delete m_pCurrentCfg;
+        delete m_pCurrentCfg;
     for (size_t i = 0; i < m_aConfigFiles.GetCount(); i++) {
         MxXmlConfig cfg(m_aConfigFiles[i]);
         if (cfg.IsValid()) {
             if (cfg.sGetName() == sessionName) {
-		m_pCurrentCfg = new MxXmlConfig(m_aConfigFiles[i]);
+                m_pCurrentCfg = new MxXmlConfig(m_aConfigFiles[i]);
                 m_pCtrlUsername->SetValue(cfg.sGetUsername());
                 m_pCtrlPassword->SetValue(cfg.sGetPassword());
                 m_pCtrlUseSmartCard->SetValue(cfg.bGetUseSmartCard());
@@ -300,18 +300,19 @@ void LoginDialog::OnOkClick( wxCommandEvent& event )
     if (m_pCurrentCfg) {
         TransferDataFromWindow();
         m_pCurrentCfg->sSetUsername(m_sUsername);
-        m_pCurrentCfg->sSetPassword(m_sPassword);
+        if (m_pCurrentCfg->bGetRememberPassword())
+            m_pCurrentCfg->sSetPassword(m_sPassword);
         m_pCurrentCfg->bSetUseSmartCard(m_bUseSmartCard);
         if (m_bUseSmartCard)
             m_pCurrentCfg->bSetEnableSSL(true);
 
         if (!m_pCurrentCfg->SaveToFile())
             wxMessageBox(wxString::Format(_("Could not save session to\n%s"),
-                m_pCurrentCfg->sGetFileName().c_str()), _("Error saving - MXclient"),
-                wxICON_ERROR | wxOK);
+                        m_pCurrentCfg->sGetFileName().c_str()), _("Error saving - MXclient"),
+                    wxICON_ERROR | wxOK);
         else {
             MxSession s;
-            s.Create(m_pCurrentCfg->sGetFileName());
+            s.Create(m_pCurrentCfg->sGetFileName(), m_sPassword);
         }
     }
     event.Skip();

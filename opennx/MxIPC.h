@@ -22,13 +22,39 @@ class wxRegEx;
 class MxIPC
 {
 public:
+    typedef enum {
+        ActionNone,
+        ActionStatus,
+        ActionNotice,
+        ActionWarning,
+        ActionError,
+        ActionPromptYesNo,
+        ActionSendUsername,
+        ActionSendPassword,
+        ActionNextCommand,
+        ActionPassphraseDialog,
+        ActionSetSessionID,
+        ActionSetProxyCookie,
+        ActionSetProxyIP,
+        ActionSetSessionType,
+        ActionSetSessionCache,
+        ActionSetSessionDisplay,
+        ActionSetAgentCookie,
+        ActionSetSslTunneling,
+        ActionSetSubscription,
+        ActionExit,
+        ActionChildDied,
+        ActionStartProxy,
+    } ChatActions;
+
     MxIPC();
     virtual ~MxIPC();
     bool SshProcess(wxString, wxString);
     bool IsRunning();
     bool Kill();
-    int SshChat(wxString &);
+    const ChatActions SshChat(wxString &);
     void Print(wxString s);
+    int GetResult();
 
 private:
 #ifdef __WXMSW__

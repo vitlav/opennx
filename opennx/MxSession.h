@@ -30,7 +30,7 @@ public:
     wxString GetPIDStr() { return wxString::Format(_T("%d"), m_pid); }
     wxString GetPortStr() { return wxString::Format(_T("%d"), m_port); }
 
-    bool Create(const wxString cfgFileName);
+    bool Create(const wxString cfgFileName, const wxString password);
     bool GetPidFromFile();
     void CheckState();
 

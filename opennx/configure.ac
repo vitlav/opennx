@@ -64,7 +64,7 @@ else
 	AC_MSG_NOTICE([will link against shared wxWidgets libs])
 fi
 
-AM_PATH_WXCONFIG(2.5.3,wxWidgets=1,wxWidgets=0,[std,xrc], $WXPARAMS)
+AM_PATH_WXCONFIG(2.5.3,wxWidgets=1,wxWidgets=0,[xrc,qa,html,adv,core,xml,net], $WXPARAMS)
 
 test ${wxWidgets} = 0 && AC_MSG_ERROR(Could not find wxWidgets library)
 

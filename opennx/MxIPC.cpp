@@ -30,6 +30,11 @@
 
 #include "MxIPC.h"
 
+#ifdef MYTRACETAG
+# undef MYTRACETAG
+#endif
+#define MYTRACETAG wxT("MxIPC")
+
 class AsyncProcess : public wxProcess
 {
 public:
@@ -43,77 +48,100 @@ public:
     bool Start();
     bool IsRunning();
     bool Kill();
-    bool sGetOut(wxString &ret);
-    bool sGetErr(wxString &ret);
+    bool GetMessage(wxString &ret);
     bool Print(wxString);
+    int GetStatus();
 
 private:
     long m_iPid;
     int m_iStatus;
     bool m_bTerminated;
 
-    wxString m_sOut;
-    wxString m_sErr;
     wxString m_sOutBuf;
     wxString m_sErrBuf;
     wxString m_sCmd;
     wxString m_sDir;
 
-    wxStopWatch m_cOutTimer;
-    wxStopWatch m_cErrTimer;
+    wxStopWatch m_cIoTimer;
+    wxMutex m_cMsgMutex;
+    wxArrayString m_aMessages;
 };
 
 bool AsyncProcess::CheckInput()
 {
-    bool ret = false;
+    bool loopi = IsInputAvailable();
+    bool loope = IsErrorAvailable();
+    bool ret;
+    char c;
 
-    if (IsInputAvailable()) {
-        char c = GetInputStream()->GetC();
-        switch (c) {
-            case '\r':
-                break;
-            case '\n':
-                m_sOut = m_sOutBuf;
-                m_sOutBuf = _T("");
-                ret = true;
-                break;
-            default:
-                m_sOutBuf += c;
-                m_cOutTimer.Start(0);
-                break;
+    m_cIoTimer.Start((loopi||loope) ? 0 : 2000);
+    while ((loopi || loope) && (m_cIoTimer.Time() < 1000)) {
+        if (IsInputAvailable()) {
+            c = GetInputStream()->GetC();
+            m_cIoTimer.Start(0);
+            switch (c) {
+                case '\r':
+                    break;
+                case '\n':
+                    m_cMsgMutex.Lock();
+                    m_aMessages.Add(m_sOutBuf);
+                    m_cMsgMutex.Unlock();
+                    m_sOutBuf = wxT("");
+                    loopi = false;
+                    break;
+                default:
+                    m_sOutBuf += c;
+                    break;
+            }
+        }
+        if (IsErrorAvailable()) {
+            c = GetErrorStream()->GetC();
+            m_cIoTimer.Start(0);
+            switch (c) {
+                case '\r':
+                    break;
+                case '\n':
+                    m_cMsgMutex.Lock();
+                    m_aMessages.Add(m_sErrBuf);
+                    m_cMsgMutex.Unlock();
+                    m_sErrBuf = wxT("");
+                    loope = false;
+                    break;
+                default:
+                    m_sErrBuf += c;
+                    break;
+            }
+        }
+    }
+    m_cIoTimer.Pause();
+    if (m_cIoTimer.Time() >= 1000) {
+        if (!m_sErrBuf.IsEmpty()) {
+            m_cMsgMutex.Lock();
+            m_aMessages.Add(m_sErrBuf);
+            m_cMsgMutex.Unlock();
+            m_sErrBuf = wxT("");
+            m_cIoTimer.Start(0);
+            m_cIoTimer.Pause();
+        }
+        if (!m_sOutBuf.IsEmpty()) {
+            m_cMsgMutex.Lock();
+            m_aMessages.Add(m_sOutBuf);
+            m_cMsgMutex.Unlock();
+            m_sOutBuf = wxT("");
+            m_cIoTimer.Start(0);
+            m_cIoTimer.Pause();
         }
     }
 
-    if (IsErrorAvailable()) {
-        char c = GetErrorStream()->GetC();
-        switch (c) {
-            case '\r':
-                break;
-            case '\n':
-                m_sErr = m_sErrBuf;
-                m_sErrBuf = _T("");
-                ret = true;
-                break;
-            default:
-                m_sErrBuf += c;
-                m_cErrTimer.Start(0);
-                break;
-        }
+    if (wxLog::IsAllowedTraceMask(MYTRACETAG)) {
+        m_cMsgMutex.Lock();
+        size_t cnt = m_aMessages.GetCount();
+        ::wxLogTrace(MYTRACETAG, wxT("Messages: %d"), cnt);
+        for (size_t i = 0; i < cnt; i++)
+            ::wxLogTrace(MYTRACETAG, wxT("  m[%d]='%s'"), i, m_aMessages[i].c_str());
+        m_cMsgMutex.Unlock();
     }
-
-    if (!ret) {
-        if ((m_cErrTimer.Time() > 1000) && (!m_sErrBuf.IsEmpty())) {
-            m_sErr = m_sErrBuf;
-            m_sErrBuf = _T("");
-            return true;
-        }
-        if ((m_cOutTimer.Time() > 1000) && (!m_sOutBuf.IsEmpty())) {
-            m_sOut = m_sOutBuf;
-            m_sOutBuf = _T("");
-            return true;
-        }
-    }
-    return ret;
+    return (m_cIoTimer.Time() < 1000);
 }
 
 bool AsyncProcess::Print(wxString s)
@@ -131,11 +159,9 @@ void AsyncProcess::OnTerminate(int pid, int status)
 {
     while (CheckInput())
         ;
-    wxLogDebug(_T("Process %u ('%s') terminated with exit code %d."),
-                pid, m_sCmd.c_str(), status);
+    wxLogTrace(MYTRACETAG, wxT("Process %u terminated with exit code %d."), pid, status);
     m_iStatus = status;
     m_bTerminated = true;
-    delete this;
 }
 
 bool AsyncProcess::Start()
@@ -145,22 +171,25 @@ bool AsyncProcess::Start()
     if (!m_sCmd.IsEmpty()) {
         wxString cwd = ::wxGetCwd();
         wxFileName::SetCwd(m_sDir);
+        m_sOutBuf = wxT("");
+        m_sErrBuf = wxT("");
+        m_aMessages.Empty();
         m_iPid = ::wxExecute(m_sCmd, wxEXEC_ASYNC, this);
         ret = (m_iPid != 0);
         wxFileName::SetCwd(cwd);
         m_bTerminated = !ret;
-        m_sOut = _T("");
-        m_sErr = _T("");
-        m_sOutBuf = _T("");
-        m_sErrBuf = _T("");
     }
     return ret;
 }
 
+int AsyncProcess::GetStatus()
+{
+    return m_iStatus;
+}
+
 bool AsyncProcess::IsRunning()
 {
-    CheckInput();
-    return !m_bTerminated;
+    return CheckInput() || !m_bTerminated;
 }
 
 bool AsyncProcess::Kill()
@@ -176,17 +205,15 @@ bool AsyncProcess::Kill()
     return ret;
 }
 
-bool AsyncProcess::sGetOut(wxString &ret)
+bool AsyncProcess::GetMessage(wxString &ret)
 {
-    ret = m_sOut;
-    m_sOut = _T("");
-    return (!ret.IsEmpty());
-}
-
-bool AsyncProcess::sGetErr(wxString &ret)
-{
-    ret = m_sErr;
-    m_sErr = _T("");
+    m_cMsgMutex.Lock();
+    if (m_aMessages.GetCount() > 0) {
+        ret = m_aMessages[0];
+        m_aMessages.RemoveAt(0);
+    } else
+        ret = wxT("");
+    m_cMsgMutex.Unlock();
     return (!ret.IsEmpty());
 }
 
@@ -194,26 +221,36 @@ MxIPC::MxIPC()
     : m_pProcess(NULL)
     , m_bIsSsh(false)
     , m_iLineCount(0)
-    , m_sMessage(_T(""))
+    , m_sMessage(wxT(""))
 {
 #ifdef __WXMSW__
-  m_MsgSession = ::RegisterWindowMessage(_T("NX_SESSION_MESSAGE"));
-  m_MsgKill = ::RegisterWindowMessage(_T("NxKill"));
+    m_MsgSession = ::RegisterWindowMessage(wxT("NX_SESSION_MESSAGE"));
+    m_MsgKill = ::RegisterWindowMessage(wxT("NxKill"));
 #endif
-  m_re = new wxRegEx();
-  m_re->Compile(_T("\\(yes/no\\)\\?"), wxRE_ADVANCED|wxRE_ICASE);
+    m_re = new wxRegEx();
+    m_re->Compile(wxT("\\(yes/no\\)\\?"), wxRE_ADVANCED|wxRE_ICASE);
 }
 
 MxIPC::~MxIPC()
 {
-    if (m_pProcess)
-        delete m_pProcess;
+    if (m_pProcess) {
+        if (m_pProcess->IsRunning())
+            m_pProcess->Detach();
+        else
+            delete m_pProcess;
+        m_pProcess = NULL;
+    }
     delete m_re;
 }
 
 bool MxIPC::IsRunning()
 {
     return (m_pProcess && m_pProcess->IsRunning());
+}
+
+int MxIPC::GetResult()
+{
+    return m_pProcess ? m_pProcess->GetStatus() : -1;
 }
 
 bool MxIPC::Kill()
@@ -234,7 +271,7 @@ bool MxIPC::SshProcess(wxString dir, wxString cmd)
     m_bIsSsh = true;
     bool ret = false;
     m_iLineCount = 0;
-    m_sMessage = _T("");
+    m_sMessage = wxT("");
     m_pProcess = new AsyncProcess(dir, cmd);
     ret = m_pProcess->Start();
     if (!ret) {
@@ -244,98 +281,318 @@ bool MxIPC::SshProcess(wxString dir, wxString cmd)
     return ret;
 }
 
-int MxIPC::SshChat(wxString &ret)
+static int parseCode(wxString &buf)
 {
-    if (m_bIsSsh && m_pProcess) {
-        wxString tmp;
-        bool gotText = false;
-
-        if (m_pProcess->sGetOut(tmp)) {
-            gotText = true;
-            wxLogDebug(_T("sshOUT: '%s'"), tmp.c_str());
-        } else {
-            if (m_pProcess->sGetErr(tmp)) {
-                gotText = true;
-                wxLogDebug(_T("sshERR: '%s'"), tmp.c_str());
-            }
+    int ret = -1;
+    long n;
+    if (buf.Find(wxT("NX> ")) == 0) {
+        int idx = 0;
+        while (buf.Mid(4+idx, 1).IsNumber()) {
+            if (ret == -1)
+                ret = 0;
+            buf.Mid(4+idx, 1).ToLong(&n);
+            ret *= 10;
+            ret += n;
+            idx++;
         }
+    }
+    return ret;
+}
+
+    const MxIPC::ChatActions
+MxIPC::SshChat(wxString &ret)
+{
+    wxString tmp;
+    int ccode, i;
+    long n;
+    bool gotText = m_pProcess->GetMessage(tmp);
+
+    ret = wxT("");
+    if (m_bIsSsh && (gotText || IsRunning())) {
         if (gotText) {
-            int ccode = 0;
-            int i;
-            long n;
-            if (tmp.Find(_T("NX> ")) == 0) {
-                int idx = 0;
-                while (tmp.Mid(4+idx, 1).IsNumber()) {
-                    tmp.Mid(4+idx, 1).ToLong(&n);
-                    ccode *= 10;
-                    ccode += n;
-                    idx++;
-                }
-            }
+            wxLogTrace(MYTRACETAG, wxT("sshOUT: '%s'"), tmp.c_str());
+            ccode = parseCode(tmp);
+            wxLogTrace(MYTRACETAG, wxT("ccode: %d"), ccode);
             switch (ccode) {
+                case -1:
+                    // No code found
+                    ret = tmp;
+                    if (tmp.Contains(wxT("usage:")))
+                        return ActionError;
+                    if (tmp.Contains(wxT("Connection refused")))
+                        return ActionError;
+                    if (tmp.Contains(wxT("no address associated")))
+                        return ActionError;
+                    if (tmp.Contains(wxT("Warning:")))
+                        return ActionWarning;
+                    if (m_iLineCount) {
+                        m_iLineCount--;
+                        m_sMessage += wxT("\n");
+                        m_sMessage += tmp;
+                        if (m_iLineCount == 0) {
+                            m_re->Replace(&m_sMessage, wxT(""));
+                            ret = m_sMessage + wxT("?");
+                            return ActionPromptYesNo;
+                        }
+                    }
+                    return ActionNone;
+                case 100:
+                    // Server version & licence
+                    ret = tmp.Mid(8);
+                    return ActionStatus;
+                case 101:
+                    // request username
+                    return ActionSendUsername;
+                case 102:
+                    // request password
+                    return ActionSendPassword;
+                case 103:
+                    // Welcome message
+                    ret = tmp.Mid(8);
+                    return ActionStatus;
+                case 105:
+                    // request for next command
+                    return ActionNextCommand;
+                case 106:
+                    // Result: server parameters
+                    // fall thru
+                case 110:
+                    // Result: server status (running|stopped)
+                    // fall thru
+                case 113:
+                    // Announce: changing password
+                    // fall thru
+                case 114:
+                    // Announce: password changed
+                    // fall thru
+                case 122:
+                    // Result: service started
+                    // fall thru
+                case 123:
+                    // Result: service stopped
+                    // fall thru
+                case 127:
+                    // Result: session list
+                    // fall thru
+                case 146:
+                    // Result: user list
+                    // fall thru
+                case 147:
+                    // Result: server capacity reached
+                    // fall thru
+                case 148:
+                    // Result: server capacity not reached
+                    return ActionNone;
+                case 134:
+                    // Accepted protocol: <version>
+                    ret = _("Protocol accepted");
+                    return ActionStatus;
+
+                    /* Codes 200 - 299 are from local nxssh */
                 case 200:
-                    ret = _T("Connected");
-                    return 10;
+                    // Connected to adress ...
+                    // fall thru
+
+#ifdef OBSOLETE_CODE
+                    // Apparently gone
                 case 201:
-                    ret = _T("NX Server not installed or the server access has been disabled");
-                    return -99;
+                    ret = wxT("NX Server not installed or the server access has been disabled");
+                    return ActionError;
+#endif
+
+                case 202:
+                    // Authenticating user ...
+                    ret = tmp.Mid(8);
+                    return ActionStatus;
                 case 203:
-                    i = tmp.Find(_T("pid: "));
-                    if (i >= 0) {
-                        tmp.Mid(i+5).ToLong(&n);
+                    // NXSSH started with pid: ...
+                    ret = tmp.AfterFirst(wxT(':')).Strip(wxString::both);
+                    if (ret.IsNumber()) {
+                        ret.ToLong(&n);
                         m_iSshPid = n;
-                    }   
-                    return -1;
+                    }
+                    ret = tmp.Mid(8);
+                    return ActionNotice;
                 case 204:
-                    ret = _T("NX Server has refused the connection");
-                    return -99;
+                    // Authentication failed
+                    ret = _("Authentication failed");
+                    return ActionError;
                 case 205:
+                    // ?? generic
                     m_iLineCount = 2;
                     m_sMessage = tmp.Mid(8);
-                    return -1;
+                    return ActionNone;
+                case 208:
+                    // Using auth method: ...
+                    ret = tmp.Mid(8);
+                    return ActionNotice;
+                case 209:
+                    // Remote host authentication has changed
+                    ret = tmp.Mid(8);
+                    return ActionWarning;
+                case 210:
+                    // Enter passwhrase for key ...
+                    ret = tmp.Mid(8);
+                    return ActionPassphraseDialog;
+                case 211:
+                    // The authenticity of host ... can't be verified ... (multiline message)
+                    m_iLineCount = 2;
+                    m_sMessage = tmp.Mid(8);
+                    return ActionNone;
+                case 280:
+                case 282:
+                case 285:
+                case 286:
+                case 287:
+                case 288:
+                case 289:
+                    // Debug messages
+                    ret = tmp.Mid(8);
+                    return ActionNotice;
+                case 290:
+                case 291:
+                case 292:
+                case 294:
+                case 295:
+                case 296:
+                case 297:
+                case 298:
+                case 299:
+                    // Subchannel system ?
+                    return ActionNone;
+
+#ifdef OBSOLETE_CODE
+                    // Apparently gone
                 case 300:
                 case 301:
-                    ret = _T("Connection error");
+                    ret = wxT("Connection error");
                     return -99;
                 case 302:
                 case 303:
-                    ret = _T("Connection refused");
+                    ret = wxT("Connection refused");
                     return -99;
                 case 304:
                 case 305:
-                    ret = _T("Host not found");
+                    ret = wxT("Host not found");
                     return -99;
                 case 306:
-                    ret = _T("Network unreachable");
+                    ret = wxT("Network unreachable");
                     return -99;
                 case 307:
                 case 310:
-                    ret = _T("Host key verification failed");
+                    ret = wxT("Host key verification failed");
                     return -99;
+#endif
+
+                case 404:
+                    // Error: wrong password or login
+                    // fall thru
+                case 500:
+                    // Generic error
+                    // fall thru
+                case 503:
+                    // Unknown command
+                    // fall thru
+                case 504:
+                    // Session startup failed
+                    // fall thru
+                case 537:
+                    // Passwords did not match
+                    // fall thru
+                case 599:
+                    // Session limit exceeded
+                    ret = tmp.Mid(8);
+                    return ActionError;
+
+                case 700:
+                    // Session ID
+                    ret = tmp.AfterFirst(wxT(':')).Strip(wxString::both);
+                    return ActionSetSessionID;
+                case 701:
+                    // Session proxy cookie
+                    ret = tmp.AfterFirst(wxT(':')).Strip(wxString::both);
+                    return ActionSetProxyCookie;
+                case 702:
+                    // Session proxy IP
+                    ret = tmp.AfterFirst(wxT(':')).Strip(wxString::both);
+                    return ActionSetProxyIP;
+                case 703:
+                    // Session type
+                    ret = tmp.AfterFirst(wxT(':')).Strip(wxString::both);
+                    return ActionSetSessionType;
+                case 704:
+                    // Session cache
+                    ret = tmp.AfterFirst(wxT(':')).Strip(wxString::both);
+                    return ActionSetSessionCache;
+                case 705:
+                    // Session display
+                    ret = tmp.AfterFirst(wxT(':')).Strip(wxString::both);
+                    return ActionSetSessionDisplay;
+                case 706:
+                    // Session agent cookie
+                    ret = tmp.AfterFirst(wxT(':')).Strip(wxString::both);
+                    return ActionSetAgentCookie;
+                case 707:
+                    // Session ssl tunneling
+                    ret = tmp.AfterFirst(wxT(':')).Strip(wxString::both);
+                    return ActionSetSslTunneling;
+                case 708:
+                    ret = tmp.AfterFirst(wxT(':')).Strip(wxString::both);
+                    return ActionSetSubscription;
+                case 710:
+                    // session running
+                    return ActionStartProxy;
+                case 716:
+                    // terminationg session on user request
+                    // fall thru
+                case 718:
+                    // session restore successful
+                    // fall thru
+                case 719:
+                    // SMB running
+                    // fall thru
+                case 1000:
+                    // nxnode version
+                    // fall thru
+                case 1001:
+                    // Bye
+                    // fall thru
+                case 1002:
+                    // Commit
+                    // fall thru
+                    ret = tmp.Mid(8);
+                    return ActionNotice;
+                case 1004:
+                    // Session status: failed
+                    // fall thru
+                    ret = tmp.Mid(8);
+                    return ActionError;
+                case 1005:
+                    // Session status: suspended
+                    // fall thru
+                    ret = tmp.Mid(8);
+                    return ActionNotice;
+                case 1006:
+                    // Session status: running|closed
+                    // fall thru
+                case 1009:
+                    // Session status: terminating
+                    ret = tmp.Mid(8);
+                    return ActionNotice;
                 case 999:
-                    // Terminated??
-                    ret = _T("??terminated??");
-                    return -99;
+                    // Terminating
+                    return ActionExit;
                 default:
-                    if (m_iLineCount) {
-                        m_iLineCount--;
-                        m_sMessage += _T("\n");
-                        m_sMessage += tmp;
-                        if (m_iLineCount == 0) {
-                            m_re->Replace(&m_sMessage, _T(""));
-                            ret = m_sMessage + _T("?");
-                            return -3;
-                        }
-                        return -1;
-                    }
-                    if (ccode >= 400 && ccode <= 699) {
-                        ret = tmp;
-                        return -99;
-                    }
-                    return -1;
+                    ret = wxString::Format(_("Unexpected response: '%s'"), tmp.c_str());
+                    return ActionError;
             }
         }
-        return -2;
+        return ActionNone;
     }
-    return -1;
+    while (m_pProcess->GetMessage(tmp)) {
+        if (!ret.IsEmpty())
+            ret += wxT('\n');
+        ret += tmp;
+    }
+    return ActionChildDied;
 }

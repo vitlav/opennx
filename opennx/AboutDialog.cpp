@@ -26,6 +26,7 @@
 ////@end includes
 #include "AboutDialog.h"
 #include "Icon.h"
+#include "mxclientApp.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -47,24 +48,29 @@ void extHtmlWindow::OnLinkClicked(const wxHtmlLinkInfo& link)
 {
     wxString href = link.GetHref();
 #ifdef __WXMSW__
-    ShellExecute((HWND)GetHandle(), _T("open"), href.c_str(), NULL, NULL, SW_SHOWNORMAL);
+    ShellExecute((HWND)GetHandle(), wxT("open"), href.c_str(), NULL, NULL, SW_SHOWNORMAL);
     return;
 #endif
 #ifdef __UNIX__
     wxString browser;
-    if (wxGetEnv(_T("BROWSER"), &browser)) {
-        if (wxExecute(browser + _T(" \"") + href + _T("\"")))
+    if (::wxGetEnv(wxT("BROWSER"), &browser)) {
+        if (::wxExecute(browser + wxT(" \"") + href + wxT("\"")) > 0)
             return;
     }
-    if (wxExecute(_T("htmlview \"") + href + _T("\"")))
+    wxLogDebug(wxT("trying 'htmlview \"") + href + wxT("\"i'"));
+    if (::wxExecute(wxT("htmlview \"") + href + wxT("\"")) > 0)
         return;
-    if (wxExecute(_T("kfmklient openURL \"") + href + _T("\"")))
+    wxLogDebug(wxT("trying 'kfmklient openURL \"") + href + wxT("\"'"));
+    if (::wxExecute(wxT("kfmklient openURL \"") + href + wxT("\"")) > 0)
         return;
-    if (wxExecute(_T("gnome-open \"") + href + _T("\"")))
+    wxLogDebug(wxT("trying 'gnome-open \"") + href + wxT("\"'"));
+    if (::wxExecute(wxT("gnome-open \"") + href + wxT("\"")) > 0)
         return;
-    if (wxExecute(_T("firefox -url \"") + href + _T("\"")))
+    wxLogDebug(wxT("trying 'firefox -url \"") + href + wxT("\"'"));
+    if (::wxExecute(wxT("firefox -url \"") + href + wxT("\"")) > 0)
         return;
-    if (wxExecute(_T("mozilla \"") + href + _T("\"")))
+    wxLogDebug(wxT("trying 'mozilla \"") + href + wxT("\"'"));
+    if (::wxExecute(wxT("mozilla \"") + href + wxT("\"")) > 0)
         return;
 #endif
 }
@@ -125,7 +131,7 @@ bool AboutDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
     TCHAR mySelf[MAX_PATH];
     VS_FIXEDFILEINFO *vsFFI;
     UINT vsFFIlen;
-    wxString sVersion = _T("?.?");
+    wxString sVersion = wxT("?.?");
     
     if (GetModuleFileName(NULL, mySelf, sizeof(mySelf))) {
         viSize = GetFileVersionInfoSize(mySelf, &dummy);
@@ -133,13 +139,13 @@ bool AboutDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
             vi = (LPVOID)malloc(viSize);
             if (vi) {
                 if (GetFileVersionInfo(mySelf, dummy, viSize, vi)) {
-                    if (VerQueryValue(vi, _T("\\"), (LPVOID *)&vsFFI, &vsFFIlen)) {
-                        sVersion = wxString::Format(_T("%d.%d"), HIWORD(vsFFI->dwFileVersionMS),
+                    if (VerQueryValue(vi, wxT("\\"), (LPVOID *)&vsFFI, &vsFFIlen)) {
+                        sVersion = wxString::Format(wxT("%d.%d"), HIWORD(vsFFI->dwFileVersionMS),
                             LOWORD(vsFFI->dwFileVersionMS));
                         if (vsFFI->dwFileVersionLS)
-                            sVersion += wxString::Format(_T(".%d"), HIWORD(vsFFI->dwFileVersionLS));
+                            sVersion += wxString::Format(wxT(".%d"), HIWORD(vsFFI->dwFileVersionLS));
                         if (LOWORD(vsFFI->dwFileVersionLS))
-                            sVersion += wxString::Format(_T(".%d"), LOWORD(vsFFI->dwFileVersionLS));
+                            sVersion += wxString::Format(wxT(".%d"), LOWORD(vsFFI->dwFileVersionLS));
                     }
                     
                 }
@@ -161,15 +167,15 @@ bool AboutDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
         fs[i] = fv.GetPointSize();
     m_pAboutHtml->SetFonts(fv.GetFaceName(), ff.GetFaceName(), fs);
     m_pAboutHtml->SetBorders(0);
-    content = _T("<HTML><BODY BGCOLOR=\"#FFFFFF\"><CENTER>");
-    content += _T("<IMG SRC=\"file:mxclient.rsc#zip:res/mxclient.png\"></IMG><P>");
+    content = wxT("<HTML><BODY BGCOLOR=\"#FFFFFF\"><CENTER>");
+    content += wxT("<IMG SRC=\"") + wxGetApp().getResourcePrefix() + wxT("res/mxclient.png\"></IMG><P>");
 #ifdef __WXDEBUG__
-    content += _("Version") + wxString(_T(" <B>")) + sVersion + _T("</B> (DEBUG)<P>");
+    content += _("Version") + wxString(wxT(" <B>")) + sVersion + wxT("</B> (DEBUG)<P>");
 #else
-    content += _("Version") + wxString(_T(" <B>")) + sVersion + _T("</B> (RELEASE)<BR>");
+    content += _("Version") + wxString(wxT(" <B>")) + sVersion + wxT("</B> (RELEASE)<BR>");
 #endif
-    content += _T("Copyright &copy; 2004 <A HREF=\"http://www.millenux.com\">Millenux GmbH</A><BR>");
-    content += _T("</CENTER></BODY></HTML>");
+    content += wxT("Copyright &copy; 2004 <A HREF=\"http://www.millenux.com\">Millenux GmbH</A><BR>");
+    content += wxT("</CENTER></BODY></HTML>");
     m_pAboutHtml->SetPage(content);
     int width, height;
     m_pAboutHtml->GetSize(&width, &height);
@@ -189,7 +195,7 @@ void AboutDialog::CreateControls()
 {    
 ////@begin AboutDialog content construction
 
-    wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_ABOUT"));
+    wxXmlResource::Get()->LoadDialog(this, GetParent(), wxT("ID_DIALOG_ABOUT"));
     m_pAboutHtml = XRCCTRL(*this, "ID_HTMLWINDOW_ABOUT", extHtmlWindow);
 ////@end AboutDialog content construction
 

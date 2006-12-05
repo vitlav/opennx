@@ -31,14 +31,14 @@ class wxConfigBase;
 #include "mxclientApp.h"
 #include "pwcrypt.h"
 
-#define STR_TRUE _T("true")
-#define STR_FALSE _T("false");
-#define STR_ONE _T("1")
-#define STR_ZERO _T("0")
+#define STR_TRUE wxT("true")
+#define STR_FALSE wxT("false");
+#define STR_ONE wxT("1")
+#define STR_ZERO wxT("0")
 
 // We use something the user cannot type here!
-#define DUMMY_MD5_PASSWORD _T("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b")
-#define DUMMY_CLR_PASSWORD _T("\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r")
+#define DUMMY_MD5_PASSWORD wxT("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b")
+#define DUMMY_CLR_PASSWORD wxT("\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r")
 
 WX_DEFINE_OBJARRAY(ArrayOfShareGroups);
 
@@ -59,7 +59,7 @@ bool ShareGroup::operator !=(const ShareGroup &other)
     return (!(*this == other));
 }
 
-MxXmlConfig::MxXmlConfig()
+    MxXmlConfig::MxXmlConfig()
     : m_bValid(false)
     , saved(NULL)
     , m_bRememberPassword(false)
@@ -103,27 +103,27 @@ MxXmlConfig::MxXmlConfig()
     , m_eSessionType(STYPE_UNIX)
     , m_eCacheMemory(CACHEMEM_8MB)
     , m_eCacheDisk(CACHEDISK_32MB)
-    , m_sName(_T(""))
-    , m_sUsername(_T(""))
-    , m_sPassword(_T(""))
-    , m_sBackingstore(_T(""))
-    , m_sServerHost(_T(""))
-    , m_sCommandLine(_T(""))
-    , m_sRdpHostName(_T(""))
-    , m_sRdpUsername(_T(""))
-    , m_sRdpPassword(_T(""))
-    , m_sRdpApplication(_T(""))
-    , m_sVncHostName(_T(""))
-    , m_sVncPassword(_T(""))
-    , m_sFontServerHost(_T(""))
-    , m_sFileName(_T(""))
+    , m_sName(wxT(""))
+    , m_sUsername(wxT(""))
+    , m_sPassword(wxT(""))
+    , m_sBackingstore(wxT(""))
+    , m_sServerHost(wxT(""))
+    , m_sCommandLine(wxT(""))
+    , m_sRdpHostName(wxT(""))
+    , m_sRdpUsername(wxT(""))
+    , m_sRdpPassword(wxT(""))
+    , m_sRdpApplication(wxT(""))
+    , m_sVncHostName(wxT(""))
+    , m_sVncPassword(wxT(""))
+    , m_sFontServerHost(wxT(""))
+    , m_sFileName(wxT(""))
     , m_pMd5Password(NULL)
     , m_pClrPassword(NULL)
 {
     m_iKbdLayoutLanguage = mapLocaleToKeyboard();
 }
 
-MxXmlConfig &
+    MxXmlConfig &
 MxXmlConfig::operator =(const MxXmlConfig &other)
 {
     m_bValid = other.m_bValid;
@@ -198,9 +198,153 @@ MxXmlConfig::operator =(const MxXmlConfig &other)
     return *this;
 }
 
+// Retrieve parameter for startsession command
+    wxString
+MxXmlConfig::sGetSessionParams(const wxString &protocolVersion)
+{
+    wxString ret = wxT("");
+
+    ret += wxString::Format(wxT(" --session=\"%s\""), m_sName.c_str());
+    ret += wxT(" --type=\"");
+    switch (m_eSessionType) {
+        case STYPE_UNIX:
+            ret += wxT("unix-");
+            switch (m_eDesktopType) {
+                case DTYPE_KDE:
+                    ret += wxT("kde\" ");
+                    break;
+                case DTYPE_GNOME:
+                    ret += wxT("gnome\" ");
+                    break;
+                case DTYPE_CDE:
+                    ret += wxT("cde\" ");
+                    break;
+                case DTYPE_XFCE:
+                    ret += wxT("xfce\" ");
+                    break;
+                case DTYPE_CUSTOM:
+                    ret += wxT("custom\" ");
+                    break;
+            }
+            break;
+        case STYPE_WINDOWS:
+            ret += wxT("rdp");
+            break;
+        case STYPE_VNC:
+            ret += wxT("vnc");
+            break;
+    }
+    ret += wxT(" --cache=\"");
+    switch (m_eCacheMemory) {
+        case CACHEMEM_1MB:
+            ret += wxT("1M\"");
+            break;
+        case CACHEMEM_2MB:
+            ret += wxT("2M\"");
+            break;
+        case CACHEMEM_4MB:
+            ret += wxT("4M\"");
+            break;
+        case CACHEMEM_8MB:
+            ret += wxT("8M\"");
+            break;
+        case CACHEMEM_16MB:
+            ret += wxT("16M\"");
+            break;
+        case CACHEMEM_32MB:
+            ret += wxT("32M\"");
+            break;
+    }
+    ret += wxT(" --images=\"");
+    switch (m_eCacheDisk) {
+        case CACHEDISK_0MB:
+            ret += wxT("0\"");
+            break;
+        case CACHEDISK_4MB:
+            ret += wxT("4M\"");
+            break;
+        case CACHEDISK_8MB:
+            ret += wxT("8M\"");
+            break;
+        case CACHEDISK_16MB:
+            ret += wxT("16M\"");
+            break;
+        case CACHEDISK_32MB:
+            ret += wxT("32M\"");
+            break;
+        case CACHEDISK_64MB:
+            ret += wxT("64M\"");
+            break;
+        case CACHEDISK_128MB:
+            ret += wxT("128M\"");
+            break;
+    }
+    ret += wxT(" --link=\"");
+    switch (m_eConnectionSpeed) {
+        case SPEED_MODEM:
+            ret += wxT("modem\"");
+            break;
+        case SPEED_ISDN:
+            ret += wxT("isdn\"");
+            break;
+        case SPEED_ADSL:
+            ret += wxT("adsl\"");
+            break;
+        case SPEED_WAN:
+            ret += wxT("wan\"");
+            break;
+        case SPEED_LAN:
+            ret += wxT("lan\"");
+            break;
+    }
+    ret += wxT(" --geometry=\"");
+    switch (m_eDisplayType) {
+        case DPTYPE_640x480:
+            ret += wxT("640x480\"");
+            break;
+        case DPTYPE_800x600:
+            ret += wxT("800x600\"");
+            break;
+        case DPTYPE_1024x768:
+            ret += wxT("1024x768\"");
+            break;
+        case DPTYPE_AVAILABLE:
+            ret += wxT("available\"");
+            break;
+        case DPTYPE_FULLSCREEN:
+            ret += wxT("fullscreen\"");
+            break;
+        case DPTYPE_CUSTOM:
+            ret += wxString::Format(wxT("%dx%d\""), m_iDisplayWidth, m_iDisplayHeight);
+            break;
+    }
+    int w, h;
+    ::wxDisplaySize(&w, &h);
+    ret += wxString::Format(wxT(" --screeninfo=\"%dx%dx%d%s\""), w, h, ::wxDisplayDepth(), m_bDisableRender ? wxT("") : wxT("+render"));
+    if (m_bKbdLayoutOther)
+        ret += wxString::Format(wxT(" --keyboard=\"pc105/%s\""), isoKbd(m_iKbdLayoutLanguage).c_str());
+    ret += wxString::Format(wxT(" --backingstore=\"%s\""),
+            m_sBackingstore.IsEmpty() ? wxT("0") : m_sBackingstore.c_str());
+    ret += wxString::Format(wxT(" --encryption=\"%d\""), m_bEnableSSL ? 1 : 0);
+#ifdef __UNIX__
+    ret += wxT(" --client=\"linux\"");
+#else
+    ret += wxT(" --client=\"windows\"");
+#endif
+    // FIXME: Add real settings
+    ret += wxT(" --media=\"0\"");
+    ret += wxT(" --composite=\"1\"");
+    ret += wxT(" --strict=\"0\"");
+    ret += wxT(" --nodelay=\"1\"");
+    ret += wxT(" --shmem=\"1\"");
+    ret += wxT(" --shpix=\"1\"");
+    ret += wxT(" --streaming=\"1\"");
+    return ret;
+}
+
 // Compare two arrays of ShareGroup where sequence of elements is irrelevant
 // return true, if arrays are different.
-bool
+    bool
 MxXmlConfig::cmpShareGroups(ArrayOfShareGroups a1, ArrayOfShareGroups a2)
 {
     size_t cnt = a1.GetCount();
@@ -225,7 +369,7 @@ MxXmlConfig::cmpShareGroups(ArrayOfShareGroups a1, ArrayOfShareGroups a2)
 
 // Compare two wxArrayString where sequence of elements is irrelevant
 // return true, if arrays are different.
-bool
+    bool
 MxXmlConfig::cmpUsedShareGroups(wxArrayString a1, wxArrayString a2)
 {
     size_t cnt = a1.GetCount();
@@ -241,7 +385,7 @@ MxXmlConfig::cmpUsedShareGroups(wxArrayString a1, wxArrayString a2)
     return (ca.GetCount() != 0);
 }
 
-bool
+    bool
 MxXmlConfig::operator ==(const MxXmlConfig &other)
 {
     if (m_bValid != other.m_bValid) return false;
@@ -305,7 +449,7 @@ MxXmlConfig::operator ==(const MxXmlConfig &other)
     return true;
 }
 
-MxXmlConfig::MxXmlConfig(const wxString &filename)
+    MxXmlConfig::MxXmlConfig(const wxString &filename)
     : m_bValid(false)
     , saved(NULL)
     , m_bRememberPassword(false)
@@ -349,161 +493,164 @@ MxXmlConfig::MxXmlConfig(const wxString &filename)
     , m_eSessionType(STYPE_UNIX)
     , m_eCacheMemory(CACHEMEM_8MB)
     , m_eCacheDisk(CACHEDISK_32MB)
-    , m_sName(_T(""))
-    , m_sUsername(_T(""))
-    , m_sPassword(_T(""))
-    , m_sBackingstore(_T(""))
-    , m_sServerHost(_T(""))
-    , m_sCommandLine(_T(""))
-    , m_sRdpHostName(_T(""))
-    , m_sRdpUsername(_T(""))
-    , m_sRdpPassword(_T(""))
-    , m_sRdpApplication(_T(""))
-    , m_sVncHostName(_T(""))
-    , m_sVncPassword(_T(""))
-    , m_sFontServerHost(_T(""))
-    , m_sFileName(_T(""))
+    , m_sName(wxT(""))
+    , m_sUsername(wxT(""))
+    , m_sPassword(wxT(""))
+    , m_sBackingstore(wxT(""))
+    , m_sServerHost(wxT(""))
+    , m_sCommandLine(wxT(""))
+    , m_sRdpHostName(wxT(""))
+    , m_sRdpUsername(wxT(""))
+    , m_sRdpPassword(wxT(""))
+    , m_sRdpApplication(wxT(""))
+    , m_sVncHostName(wxT(""))
+    , m_sVncPassword(wxT(""))
+    , m_sFontServerHost(wxT(""))
+    , m_sFileName(wxT(""))
     , m_pMd5Password(NULL)
     , m_pClrPassword(NULL)
 {
     wxString tmp;
     int itmp;
-    
+
     m_iKbdLayoutLanguage = mapLocaleToKeyboard();
-    
-    wxFile *f = new wxFile(filename);
-    if ((!f->IsOpened()) || f->Eof()) {
+
+    {
+        wxLogNull dummy; 
+        wxFile *f = new wxFile(filename);
+        if ((!f->IsOpened()) || f->Eof()) {
+            delete f;
+            return;
+        }
         delete f;
-        return;
     }
-    delete f;
-    ::wxLogDebug(_T("MxXmlConfig: Reading %s"), filename.c_str());
+    ::wxLogDebug(wxT("MxXmlConfig: Reading %s"), filename.c_str());
     wxXmlDocument cfg(filename);
     wxXmlNode *cfgnode = cfg.GetRoot();
-    if (cfgnode && (cfgnode->GetName() == _T("NXClientSettings"))) {
-        if (!(cfgnode->GetPropVal(_T("application"), _T("")) == _T("nxclient")))
+    if (cfgnode && (cfgnode->GetName() == wxT("NXClientSettings"))) {
+        if (!(cfgnode->GetPropVal(wxT("application"), wxT("")) == wxT("nxclient")))
             return;
-        if (!(cfgnode->GetPropVal(_T("version"), _T("")) == _T("1.3")))
+        if (!(cfgnode->GetPropVal(wxT("version"), wxT("")) == wxT("1.3")))
             return;
         cfgnode = cfgnode->GetChildren();
         while (cfgnode) {
-            if (cfgnode->GetName() == _T("group")) {
-                if (cfgnode->GetPropVal(_T("name"), _T("")) == _T("General")) {
+            if (cfgnode->GetName() == wxT("group")) {
+                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("General")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
-                        tmp = getString(opt, _T("Session"));
-                        if (tmp == _T("Unix")) {
+                        tmp = getString(opt, wxT("Session"));
+                        if (tmp == wxT("Unix")) {
                             m_eSessionType = STYPE_UNIX;
                             m_bValid = true;
                         }
-                        if (tmp == _T("Windows")) {
+                        if (tmp == wxT("Windows")) {
                             m_eSessionType = STYPE_WINDOWS;
                             m_bValid = true;
                         }
-                        if (tmp == _T("VNC")) {
+                        if (tmp == wxT("VNC")) {
                             m_eSessionType = STYPE_VNC;
                             m_bValid = true;
                         }
-                        
-                        tmp = getString(opt, _T("Link speed"));
-                        if (tmp == _T("modem"))
+
+                        tmp = getString(opt, wxT("Link speed"));
+                        if (tmp == wxT("modem"))
                             m_eConnectionSpeed = SPEED_MODEM;
-                        if (tmp == _T("isdn"))
+                        if (tmp == wxT("isdn"))
                             m_eConnectionSpeed = SPEED_ISDN;
-                        if (tmp == _T("adsl"))
+                        if (tmp == wxT("adsl"))
                             m_eConnectionSpeed = SPEED_ADSL;
-                        if (tmp == _T("wan"))
+                        if (tmp == wxT("wan"))
                             m_eConnectionSpeed = SPEED_WAN;
-                        if (tmp == _T("lan"))
+                        if (tmp == wxT("lan"))
                             m_eConnectionSpeed = SPEED_LAN;
-                        
-                        tmp = getString(opt, _T("Desktop"));
-                        if (tmp == _T("RDP"))
+
+                        tmp = getString(opt, wxT("Desktop"));
+                        if (tmp == wxT("RDP"))
                             m_eDesktopType = DTYPE_RDP;
-                        if (tmp == _T("RFB"))
+                        if (tmp == wxT("RFB"))
                             m_eDesktopType = DTYPE_RFB;
-                        if (tmp == _T("KDE"))
+                        if (tmp == wxT("KDE"))
                             m_eDesktopType = DTYPE_KDE;
-                        if (tmp == _T("Gnome"))
+                        if (tmp == wxT("Gnome"))
                             m_eDesktopType = DTYPE_GNOME;
-                        if (tmp == _T("CDE"))
+                        if (tmp == wxT("CDE"))
                             m_eDesktopType = DTYPE_CDE;
-                        if (tmp == _T("XFCE"))
+                        if (tmp == wxT("XFCE"))
                             m_eDesktopType = DTYPE_XFCE;
-                        if (tmp == _T("Console"))
+                        if (tmp == wxT("Console"))
                             m_eDesktopType = DTYPE_CUSTOM;
-                        
-                        tmp = getString(opt, _T("Resolution"));
+
+                        tmp = getString(opt, wxT("Resolution"));
                         if (!tmp.IsEmpty())
                             m_eDisplayType = DPTYPE_CUSTOM;
-                        if (tmp == _T("640x480"))
+                        if (tmp == wxT("640x480"))
                             m_eDisplayType = DPTYPE_640x480;
-                        if (tmp == _T("800x600"))
+                        if (tmp == wxT("800x600"))
                             m_eDisplayType = DPTYPE_800x600;
-                        if (tmp == _T("1024x768"))
+                        if (tmp == wxT("1024x768"))
                             m_eDisplayType = DPTYPE_1024x768;
-                        if (tmp == _T("available"))
+                        if (tmp == wxT("available"))
                             m_eDisplayType = DPTYPE_AVAILABLE;
-                        if (tmp == _T("fullscreen"))
+                        if (tmp == wxT("fullscreen"))
                             m_eDisplayType = DPTYPE_FULLSCREEN;
-                        
-                        itmp = getLong(opt, _T("Use default image encoding"), -1);
+
+                        itmp = getLong(opt, wxT("Use default image encoding"), -1);
                         if (itmp != -1)
                             m_bUseCustomImageEncoding = (itmp == 0) ? false : true;
-                        
-                        m_sBackingstore = getString(opt, _T("Backingstore"), m_sBackingstore);
-                        
+
+                        m_sBackingstore = getString(opt, wxT("Backingstore"), m_sBackingstore);
+
                         // X11 props
-                        m_sCommandLine = getString(opt, _T("Command line"), m_sCommandLine);
-                        m_bRunConsole = getBool(opt, _T("Only console"), m_bRunConsole);
-                        m_bRunXclients = getBool(opt, _T("Run default script"), m_bRunXclients);
-                        m_bVirtualDesktop = getBool(opt, _T("Virtual desktop"), m_bVirtualDesktop);
-                        m_bDisableTaint = !getBool(opt, _T("Use taint"), !m_bDisableTaint);
-                        m_bDisableRender = !getBool(opt, _T("Use render"), !m_bDisableRender);
-                        m_bUseSmartCard = getBool(opt, _T("Use smartcard"), m_bUseSmartCard);
-                        
-                        m_bRememberPassword = getBool(opt, _T("Remember password"), m_bRememberPassword);
-                        m_iDisplayHeight = getLong(opt, _T("Resolution height"), m_iDisplayHeight);
-                        m_iDisplayWidth = getLong(opt, _T("Resolution width"), m_iDisplayWidth);
-                        m_sServerHost = getString(opt, _T("Server host"), m_sServerHost);
-                        m_iServerPort = getLong(opt, _T("Server port"), m_iServerPort);
+                        m_sCommandLine = getString(opt, wxT("Command line"), m_sCommandLine);
+                        m_bRunConsole = getBool(opt, wxT("Only console"), m_bRunConsole);
+                        m_bRunXclients = getBool(opt, wxT("Run default script"), m_bRunXclients);
+                        m_bVirtualDesktop = getBool(opt, wxT("Virtual desktop"), m_bVirtualDesktop);
+                        m_bDisableTaint = !getBool(opt, wxT("Use taint"), !m_bDisableTaint);
+                        m_bDisableRender = !getBool(opt, wxT("Use render"), !m_bDisableRender);
+                        m_bUseSmartCard = getBool(opt, wxT("Use smartcard"), m_bUseSmartCard);
+
+                        m_bRememberPassword = getBool(opt, wxT("Remember password"), m_bRememberPassword);
+                        m_iDisplayHeight = getLong(opt, wxT("Resolution height"), m_iDisplayHeight);
+                        m_iDisplayWidth = getLong(opt, wxT("Resolution width"), m_iDisplayWidth);
+                        m_sServerHost = getString(opt, wxT("Server host"), m_sServerHost);
+                        m_iServerPort = getLong(opt, wxT("Server port"), m_iServerPort);
                         opt = opt->GetNext();
                     }
                     cfgnode = cfgnode->GetNext();
                     continue;
                 }
-                if (cfgnode->GetPropVal(_T("name"), _T("")) == _T("Login")) {
+                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Login")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
-                        m_sUsername = getString(opt, _T("User"), m_sUsername);
-                        m_pMd5Password = getStringNew(opt, _T("Auth"), m_pMd5Password);
-                        m_pClrPassword = getStringNew(opt, _T("Password"), m_pClrPassword);
+                        m_sUsername = getString(opt, wxT("User"), m_sUsername);
+                        m_pMd5Password = getStringNew(opt, wxT("Auth"), m_pMd5Password);
+                        m_pClrPassword = getStringNew(opt, wxT("Password"), m_pClrPassword);
                         // TODO: decode
                         opt = opt->GetNext();
                     }
                     cfgnode = cfgnode->GetNext();
                     continue;
                 }
-                if (cfgnode->GetPropVal(_T("name"), _T("")) == _T("Environment")) {
+                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Environment")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
-                        m_bUseFontServer = getBool(opt, _T("Use font server"), m_bUseFontServer);
-                        m_iFontServerPort = getLong(opt, _T("Font server port"), m_iFontServerPort);
-                        m_sFontServerHost = getString(opt, _T("Font server host"), m_sFontServerHost);
+                        m_bUseFontServer = getBool(opt, wxT("Use font server"), m_bUseFontServer);
+                        m_iFontServerPort = getLong(opt, wxT("Font server port"), m_iFontServerPort);
+                        m_sFontServerHost = getString(opt, wxT("Font server host"), m_sFontServerHost);
                         opt = opt->GetNext();
                     }
                     cfgnode = cfgnode->GetNext();
                     continue;
                 }
-                if (cfgnode->GetPropVal(_T("name"), _T("")) == _T("Images")) {
+                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Images")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
-                        m_iRdpImageCompression = getLong(opt, _T("Windows images compression"), m_iRdpImageCompression);
-                        m_iVncImageEncoding = getLong(opt, _T("Image Encoding Type"), m_iVncImageEncoding);
-                        m_bUseTightJpeg = getBool(opt, _T("Image JPEG Encoding"), m_bUseTightJpeg);
-                        m_iJpegQuality = getLong(opt, _T("JPEG Quality"), m_iJpegQuality);
-                        m_bUsePNG = getBool(opt, _T("Use PNG Compression"), m_bUsePNG);
-                        itmp = getLong(opt, _T("Image Compression Type"), -1);
+                        m_iRdpImageCompression = getLong(opt, wxT("Windows images compression"), m_iRdpImageCompression);
+                        m_iVncImageEncoding = getLong(opt, wxT("Image Encoding Type"), m_iVncImageEncoding);
+                        m_bUseTightJpeg = getBool(opt, wxT("Image JPEG Encoding"), m_bUseTightJpeg);
+                        m_iJpegQuality = getLong(opt, wxT("JPEG Quality"), m_iJpegQuality);
+                        m_bUsePNG = getBool(opt, wxT("Use PNG Compression"), m_bUsePNG);
+                        itmp = getLong(opt, wxT("Image Compression Type"), -1);
                         switch (itmp) {
                             case 0:
                                 m_bUseJpeg = true;
@@ -526,86 +673,86 @@ MxXmlConfig::MxXmlConfig(const wxString &filename)
                     cfgnode = cfgnode->GetNext();
                     continue;
                 }
-                if (cfgnode->GetPropVal(_T("name"), _T("")) == _T("Services")) {
+                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Services")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
-                        m_bEnableMultimedia = getBool(opt, _T("Audio"), m_bEnableMultimedia);
-                        m_bEnableSmbSharing = getBool(opt, _T("Shares"), m_bEnableSmbSharing);
+                        m_bEnableMultimedia = getBool(opt, wxT("Audio"), m_bEnableMultimedia);
+                        m_bEnableSmbSharing = getBool(opt, wxT("Shares"), m_bEnableSmbSharing);
                         opt = opt->GetNext();
                     }
                     cfgnode = cfgnode->GetNext();
                     continue;
                 }
-                if (cfgnode->GetPropVal(_T("name"), _T("")) == _T("share chosen")) {
+                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("share chosen")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
-                        if (opt->GetPropVal(_T("key"), _T("")) == _T("Share number"))
-                            m_iUsedShareGroups = getLong(opt, _T("Share number"), m_iUsedShareGroups);
+                        if (opt->GetPropVal(wxT("key"), wxT("")) == wxT("Share number"))
+                            m_iUsedShareGroups = getLong(opt, wxT("Share number"), m_iUsedShareGroups);
                         else
-                            m_aUsedShareGroups.Add(opt->GetPropVal(_T("value"), _T("")));
+                            m_aUsedShareGroups.Add(opt->GetPropVal(wxT("value"), wxT("")));
                         opt = opt->GetNext();
                     }
                     cfgnode = cfgnode->GetNext();
                     continue;
                 }
-                if (cfgnode->GetPropVal(_T("name"), _T("")) == _T("Advanced")) {
+                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Advanced")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
-                        m_bKbdLayoutOther = !getBool(opt, _T("Current keyboard"), !m_bKbdLayoutOther);
-                        m_bDisableTcpNoDelay = getBool(opt, _T("Disable TCP no-delay"), m_bDisableTcpNoDelay);
-                        m_bDisableZlibCompression = getBool(opt, _T("Disable ZLIB stream compression"),
-                            m_bDisableZlibCompression);
-                        m_bEnableSSL = getBool(opt, _T("Enable SSL encryption"), m_bEnableSSL);
-                        itmp = getLong(opt, _T("Cache size"), -1);
+                        m_bKbdLayoutOther = !getBool(opt, wxT("Current keyboard"), !m_bKbdLayoutOther);
+                        m_bDisableTcpNoDelay = getBool(opt, wxT("Disable TCP no-delay"), m_bDisableTcpNoDelay);
+                        m_bDisableZlibCompression = getBool(opt, wxT("Disable ZLIB stream compression"),
+                                m_bDisableZlibCompression);
+                        m_bEnableSSL = getBool(opt, wxT("Enable SSL encryption"), m_bEnableSSL);
+                        itmp = getLong(opt, wxT("Cache size"), -1);
                         switch (itmp) {
-                        case 1:
-                            m_eCacheMemory = CACHEMEM_1MB;
-                            break;
-                        case 2:
-                            m_eCacheMemory = CACHEMEM_2MB;
-                            break;
-                        case 4:
-                            m_eCacheMemory = CACHEMEM_4MB;
-                            break;
-                        case 8:
-                            m_eCacheMemory = CACHEMEM_8MB;
-                            break;
-                        case 16:
-                            m_eCacheMemory = CACHEMEM_16MB;
-                            break;
-                        case 32:
-                            m_eCacheMemory = CACHEMEM_32MB;
-                            break;
-                        }
-                        if (wxGetEnv(_T("THINCLIENT"), NULL))
-                            m_eCacheDisk = CACHEDISK_0MB;
-                        else {
-                            itmp = getLong(opt, _T("Cache size on disk"), -1);
-                            switch (itmp) {
-                            case 0:
-                                m_eCacheDisk = CACHEDISK_0MB;
+                            case 1:
+                                m_eCacheMemory = CACHEMEM_1MB;
+                                break;
+                            case 2:
+                                m_eCacheMemory = CACHEMEM_2MB;
                                 break;
                             case 4:
-                                m_eCacheDisk = CACHEDISK_4MB;
+                                m_eCacheMemory = CACHEMEM_4MB;
                                 break;
                             case 8:
-                                m_eCacheDisk = CACHEDISK_8MB;
+                                m_eCacheMemory = CACHEMEM_8MB;
                                 break;
                             case 16:
-                                m_eCacheDisk = CACHEDISK_16MB;
+                                m_eCacheMemory = CACHEMEM_16MB;
                                 break;
                             case 32:
-                                m_eCacheDisk = CACHEDISK_32MB;
+                                m_eCacheMemory = CACHEMEM_32MB;
                                 break;
-                            case 64:
-                                m_eCacheDisk = CACHEDISK_64MB;
-                                break;
-                            case 128:
-                                m_eCacheDisk = CACHEDISK_128MB;
-                                break;
+                        }
+                        if (wxGetEnv(wxT("THINCLIENT"), NULL))
+                            m_eCacheDisk = CACHEDISK_0MB;
+                        else {
+                            itmp = getLong(opt, wxT("Cache size on disk"), -1);
+                            switch (itmp) {
+                                case 0:
+                                    m_eCacheDisk = CACHEDISK_0MB;
+                                    break;
+                                case 4:
+                                    m_eCacheDisk = CACHEDISK_4MB;
+                                    break;
+                                case 8:
+                                    m_eCacheDisk = CACHEDISK_8MB;
+                                    break;
+                                case 16:
+                                    m_eCacheDisk = CACHEDISK_16MB;
+                                    break;
+                                case 32:
+                                    m_eCacheDisk = CACHEDISK_32MB;
+                                    break;
+                                case 64:
+                                    m_eCacheDisk = CACHEDISK_64MB;
+                                    break;
+                                case 128:
+                                    m_eCacheDisk = CACHEDISK_128MB;
+                                    break;
                             }
                         }
-                        itmp = getLong(opt, _T("Other keyboard"), -1);
+                        itmp = getLong(opt, wxT("Other keyboard"), -1);
                         if (itmp != -1)
                             m_iKbdLayoutLanguage = mapMxLanguage(itmp);
                         opt = opt->GetNext();
@@ -613,29 +760,29 @@ MxXmlConfig::MxXmlConfig(const wxString &filename)
                     cfgnode = cfgnode->GetNext();
                     continue;
                 }
-                if (cfgnode->GetPropVal(_T("name"), _T("")) == _T("Windows Session")) {
+                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Windows Session")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
-                        m_bRdpRememberPassword = getBool(opt, _T("Remember"), m_bRdpRememberPassword);
-                        m_bRdpRunApplication = getBool(opt, _T("Run application"), m_bRdpRunApplication);
-                        m_iRdpAuthType = getLong(opt, _T("Authentication"), m_iRdpAuthType);
-                        m_sRdpHostName = getString(opt, _T("Server"), m_sRdpHostName);
-                        m_sRdpUsername = getString(opt, _T("User"), m_sRdpUsername);
-                        m_sRdpPassword = getPassword(opt, _T("Password"), m_sRdpPassword);
-                        m_sRdpApplication = getString(opt, _T("Application"), m_sRdpApplication);
+                        m_bRdpRememberPassword = getBool(opt, wxT("Remember"), m_bRdpRememberPassword);
+                        m_bRdpRunApplication = getBool(opt, wxT("Run application"), m_bRdpRunApplication);
+                        m_iRdpAuthType = getLong(opt, wxT("Authentication"), m_iRdpAuthType);
+                        m_sRdpHostName = getString(opt, wxT("Server"), m_sRdpHostName);
+                        m_sRdpUsername = getString(opt, wxT("User"), m_sRdpUsername);
+                        m_sRdpPassword = getPassword(opt, wxT("Password"), m_sRdpPassword);
+                        m_sRdpApplication = getString(opt, wxT("Application"), m_sRdpApplication);
                         opt = opt->GetNext();
                     }
                     cfgnode = cfgnode->GetNext();
                     continue;
                 }
-                if (cfgnode->GetPropVal(_T("name"), _T("")) == _T("VNC Session")) {
+                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("VNC Session")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
-                        m_bVncRememberPassword = getBool(opt, _T("Remember"), m_bVncRememberPassword);
-                        m_sVncHostName = getString(opt, _T("Server"), m_sVncHostName);
-                        m_sVncPassword = getPassword(opt, _T("Password"), m_sVncPassword);
-                        tmp = getString(opt, _T("Display"));
-                        if (tmp.Left(1) == _T(":")) {
+                        m_bVncRememberPassword = getBool(opt, wxT("Remember"), m_bVncRememberPassword);
+                        m_sVncHostName = getString(opt, wxT("Server"), m_sVncHostName);
+                        m_sVncPassword = getPassword(opt, wxT("Password"), m_sVncPassword);
+                        tmp = getString(opt, wxT("Display"));
+                        if (tmp.Left(1) == wxT(":")) {
                             tmp = tmp.Mid(1);
                             if (tmp.IsNumber()) {
                                 long l;
@@ -653,44 +800,44 @@ MxXmlConfig::MxXmlConfig(const wxString &filename)
                 {
                     int shareOptions = 0;
                     ShareGroup s;
-                    s.m_sGroupName = cfgnode->GetPropVal(_T("name"), _T(""));
+                    s.m_sGroupName = cfgnode->GetPropVal(wxT("name"), wxT(""));
                     s.m_iType = SharedResource::SHARE_UNKNOWN;
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
-                        if (opt->GetPropVal(_T("key"), _T("")) == _T("Alias")) {
+                        if (opt->GetPropVal(wxT("key"), wxT("")) == wxT("Alias")) {
                             shareOptions++;
-                            s.m_sMountPoint = getString(opt, _T("Alias"), _T(""));
+                            s.m_sMountPoint = getString(opt, wxT("Alias"), wxT(""));
                         }
-                        if (opt->GetPropVal(_T("key"), _T("")) == _T("Sharename")) {
+                        if (opt->GetPropVal(wxT("key"), wxT("")) == wxT("Sharename")) {
                             shareOptions++;
-                            s.m_sName = getString(opt, _T("Sharename"), _T(""));
+                            s.m_sName = getString(opt, wxT("Sharename"), wxT(""));
                         }
-                        if (opt->GetPropVal(_T("key"), _T("")) == _T("Username")) {
+                        if (opt->GetPropVal(wxT("key"), wxT("")) == wxT("Username")) {
                             shareOptions++;
-                            s.m_sUsername = getString(opt, _T("Username"), _T(""));
+                            s.m_sUsername = getString(opt, wxT("Username"), wxT(""));
                         }
-                        if (opt->GetPropVal(_T("key"), _T("")) == _T("Password")) {
+                        if (opt->GetPropVal(wxT("key"), wxT("")) == wxT("Password")) {
                             shareOptions++;
-                            s.m_sPassword = getPassword(opt, _T("Password"), _T(""));
+                            s.m_sPassword = getPassword(opt, wxT("Password"), wxT(""));
                         }
-                        if (opt->GetPropVal(_T("key"), _T("")) == _T("Type")) {
+                        if (opt->GetPropVal(wxT("key"), wxT("")) == wxT("Type")) {
                             shareOptions++;
-                            wxString tmp = getString(opt, _T("Type"), _T(""));
-                            if (tmp == _T("Disk"))
+                            wxString tmp = getString(opt, wxT("Type"), wxT(""));
+                            if (tmp == wxT("Disk"))
                                 s.m_iType = SharedResource::SHARE_DISK;
-                            if (tmp == _T("Printer"))
+                            if (tmp == wxT("Printer"))
                                 s.m_iType = SharedResource::SHARE_PRINTER;
                         }
-                        if (opt->GetPropVal(_T("key"), _T("")) == _T("Mounted now")) {
+                        if (opt->GetPropVal(wxT("key"), wxT("")) == wxT("Mounted now")) {
                             shareOptions++;
-                            s.m_bMountNow = getBool(opt, _T("Mounted now"), false);
+                            s.m_bMountNow = getBool(opt, wxT("Mounted now"), false);
                         }
                         opt = opt->GetNext();
                     }
                     if (shareOptions >= 5)
                         m_aShareGroups.Add(s);
                 }
-                
+
             }
             cfgnode = cfgnode->GetNext();
         }
@@ -704,58 +851,58 @@ MxXmlConfig::MxXmlConfig(const wxString &filename)
             m_sPassword = DUMMY_CLR_PASSWORD;
         }
     } else {
-        m_sUsername = _T("");
-        m_sPassword = _T("");
+        m_sUsername = wxT("");
+        m_sPassword = wxT("");
     }
 }
 
 MxXmlConfig::~MxXmlConfig()
 {
     if (saved)
-	delete saved;
+        delete saved;
     if (m_pMd5Password)
         delete m_pMd5Password;
     if (m_pClrPassword)
         delete m_pClrPassword;
 }
 
-void 
+    void 
 MxXmlConfig::bAddOption(wxXmlNode *group, const wxString &name, bool val)
 {
-    wxXmlNode *n = new wxXmlNode(wxXML_ELEMENT_NODE, _T("option"));
-    n->AddProperty(new wxXmlProperty(_T("key"), name, NULL));
-    n->AddProperty(new wxXmlProperty(_T("value"), val ? _T("true") : _T("false"), NULL));
+    wxXmlNode *n = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("option"));
+    n->AddProperty(new wxXmlProperty(wxT("key"), name, NULL));
+    n->AddProperty(new wxXmlProperty(wxT("value"), val ? wxT("true") : wxT("false"), NULL));
     group->AddChild(n);
 }
 
-void
+    void
 MxXmlConfig::iAddOption(wxXmlNode *group, const wxString &name, long val)
 {
-    wxXmlNode *n = new wxXmlNode(wxXML_ELEMENT_NODE, _T("option"));
-    n->AddProperty(new wxXmlProperty(_T("key"), name, NULL));
-    n->AddProperty(new wxXmlProperty(_T("value"), wxString::Format(_T("%d"), val), NULL));
+    wxXmlNode *n = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("option"));
+    n->AddProperty(new wxXmlProperty(wxT("key"), name, NULL));
+    n->AddProperty(new wxXmlProperty(wxT("value"), wxString::Format(wxT("%d"), val), NULL));
     group->AddChild(n);
 }
 
-void
+    void
 MxXmlConfig::sAddOption(wxXmlNode *group, const wxString &name, wxString &val)
 {
-    wxXmlNode *n = new wxXmlNode(wxXML_ELEMENT_NODE, _T("option"));
-    n->AddProperty(new wxXmlProperty(_T("key"), name, NULL));
-    n->AddProperty(new wxXmlProperty(_T("value"), val, NULL));
+    wxXmlNode *n = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("option"));
+    n->AddProperty(new wxXmlProperty(wxT("key"), name, NULL));
+    n->AddProperty(new wxXmlProperty(wxT("value"), val, NULL));
     group->AddChild(n);
 }
 
-wxXmlNode *
+    wxXmlNode *
 MxXmlConfig::AddGroup(wxXmlNode *parent, const wxString &name)
 {
-    wxXmlNode *n = new wxXmlNode(wxXML_ELEMENT_NODE, _T("group"));
-    n->AddProperty(new wxXmlProperty(_T("name"), name, NULL));
+    wxXmlNode *n = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("group"));
+    n->AddProperty(new wxXmlProperty(wxT("name"), name, NULL));
     parent->AddChild(n);
     return n;
 }
 
-bool
+    bool
 MxXmlConfig::SaveToFile()
 {
     wxXmlDocument cfg;
@@ -764,242 +911,242 @@ MxXmlConfig::SaveToFile()
     wxString optval;
     size_t i;
 
-    r = new wxXmlNode(wxXML_ELEMENT_NODE, _T("NXClientSettings"));
-    r->AddProperty(new wxXmlProperty(_T("application"), _T("nxclient"), NULL));
-    r->AddProperty(new wxXmlProperty(_T("version"), _T("1.3"), NULL));
+    r = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("NXClientSettings"));
+    r->AddProperty(new wxXmlProperty(wxT("application"), wxT("nxclient"), NULL));
+    r->AddProperty(new wxXmlProperty(wxT("version"), wxT("1.3"), NULL));
     cfg.SetRoot(r);
 
-    g = AddGroup(r, _T("General"));
+    g = AddGroup(r, wxT("General"));
     switch (m_eSessionType) {
         case STYPE_UNIX:
-            optval = _T("Unix");
+            optval = wxT("Unix");
             break;
         case STYPE_WINDOWS:
-            optval = _T("Windows");
+            optval = wxT("Windows");
             break;
         case STYPE_VNC:
-            optval = _T("VNC");
+            optval = wxT("VNC");
             break;
     }
-    sAddOption(g, _T("Session"), optval);
+    sAddOption(g, wxT("Session"), optval);
     switch (m_eConnectionSpeed) {
         case SPEED_MODEM:
-            optval = _T("modem");
+            optval = wxT("modem");
             break;
         case SPEED_ISDN:
-            optval = _T("isdn");
+            optval = wxT("isdn");
             break;
         case SPEED_ADSL:
-            optval = _T("adsl");
+            optval = wxT("adsl");
             break;
         case SPEED_WAN:
-            optval = _T("wan");
+            optval = wxT("wan");
             break;
         case SPEED_LAN:
-            optval = _T("lan");
+            optval = wxT("lan");
             break;
     }
-    sAddOption(g, _T("Link speed"), optval);
+    sAddOption(g, wxT("Link speed"), optval);
     switch (m_eDesktopType) {
         case DTYPE_RDP:
-            optval = _T("RDP");
+            optval = wxT("RDP");
             break;
         case DTYPE_RFB:
-            optval = _T("RFB");
+            optval = wxT("RFB");
             break;
         case DTYPE_KDE:
-            optval = _T("KDE");
+            optval = wxT("KDE");
             break;
         case DTYPE_GNOME:
-            optval = _T("Gnome");
+            optval = wxT("Gnome");
             break;
         case DTYPE_CDE:
-            optval = _T("CDE");
+            optval = wxT("CDE");
             break;
         case DTYPE_XFCE:
-            optval = _T("XFCE");
+            optval = wxT("XFCE");
             break;
         case DTYPE_CUSTOM:
-            optval = _T("Console");
+            optval = wxT("Console");
             break;
     }
-    sAddOption(g, _T("Desktop"), optval);
+    sAddOption(g, wxT("Desktop"), optval);
     switch (m_eDisplayType) {
         case DPTYPE_CUSTOM:
-            optval = wxString::Format(_T("%dx%d"),
-                m_iDisplayWidth, m_iDisplayHeight);
+            optval = wxString::Format(wxT("%dx%d"),
+                    m_iDisplayWidth, m_iDisplayHeight);
             break;
         case DPTYPE_640x480:
-            optval = _T("640x480");
+            optval = wxT("640x480");
             break;
         case DPTYPE_800x600:
-            optval = _T("800x600");
+            optval = wxT("800x600");
             break;
         case DPTYPE_1024x768:
-            optval = _T("1024x768");
+            optval = wxT("1024x768");
             break;
         case DPTYPE_AVAILABLE:
-            optval = _T("available");
+            optval = wxT("available");
             break;
         case DPTYPE_FULLSCREEN:
-            optval = _T("fullscreen");
+            optval = wxT("fullscreen");
             break;
     }
-    sAddOption(g, _T("Resolution"), optval);
-    iAddOption(g, _T("Use default image encoding"), m_bUseCustomImageEncoding ? 1 : 0);
-    sAddOption(g, _T("Backingstore"), m_sBackingstore);
-    sAddOption(g, _T("Command line"), m_sCommandLine);
-    bAddOption(g, _T("Only console"), m_bRunConsole);
-    bAddOption(g, _T("Run default script"), m_bRunXclients);
-    bAddOption(g, _T("Use taint"), !m_bDisableTaint);
-    bAddOption(g, _T("Virtual desktop"), m_bVirtualDesktop);
-    bAddOption(g, _T("Remember password"), m_bRememberPassword);
-    bAddOption(g, _T("Use render"), !m_bDisableRender);
-    bAddOption(g, _T("Use smartcard"), m_bUseSmartCard);
-    iAddOption(g, _T("Resolution height"), m_iDisplayHeight);
-    iAddOption(g, _T("Resolution width"), m_iDisplayWidth);
-    sAddOption(g, _T("Server host"), m_sServerHost);
-    iAddOption(g, _T("Server port"), m_iServerPort);
+    sAddOption(g, wxT("Resolution"), optval);
+    iAddOption(g, wxT("Use default image encoding"), m_bUseCustomImageEncoding ? 1 : 0);
+    sAddOption(g, wxT("Backingstore"), m_sBackingstore);
+    sAddOption(g, wxT("Command line"), m_sCommandLine);
+    bAddOption(g, wxT("Only console"), m_bRunConsole);
+    bAddOption(g, wxT("Run default script"), m_bRunXclients);
+    bAddOption(g, wxT("Use taint"), !m_bDisableTaint);
+    bAddOption(g, wxT("Virtual desktop"), m_bVirtualDesktop);
+    bAddOption(g, wxT("Remember password"), m_bRememberPassword);
+    bAddOption(g, wxT("Use render"), !m_bDisableRender);
+    bAddOption(g, wxT("Use smartcard"), m_bUseSmartCard);
+    iAddOption(g, wxT("Resolution height"), m_iDisplayHeight);
+    iAddOption(g, wxT("Resolution width"), m_iDisplayWidth);
+    sAddOption(g, wxT("Server host"), m_sServerHost);
+    iAddOption(g, wxT("Server port"), m_iServerPort);
 
-    g = AddGroup(r, _T("Login"));
-    sAddOption(g, _T("User"), m_sUsername);
+    g = AddGroup(r, wxT("Login"));
+    sAddOption(g, wxT("User"), m_sUsername);
     if (m_bRememberPassword) {
         if ((m_sPassword != DUMMY_MD5_PASSWORD) &&
-            (m_sPassword != DUMMY_CLR_PASSWORD)   ) {
+                (m_sPassword != DUMMY_CLR_PASSWORD)   ) {
             optval = cryptString(m_sPassword);
-            sAddOption(g, _T("Auth"), optval);
+            sAddOption(g, wxT("Auth"), optval);
         } else {
             if (m_pMd5Password)
-                sAddOption(g, _T("Auth"), *m_pMd5Password);
+                sAddOption(g, wxT("Auth"), *m_pMd5Password);
             if (m_pClrPassword)
-                sAddOption(g, _T("Password"), *m_pClrPassword);
+                sAddOption(g, wxT("Password"), *m_pClrPassword);
         }
     } else {
-        optval = _T("");
-        sAddOption(g, _T("Auth"), optval);
-        sAddOption(g, _T("Password"), optval);
+        optval = wxT("");
+        sAddOption(g, wxT("Auth"), optval);
+        sAddOption(g, wxT("Password"), optval);
     }
 
-    g = AddGroup(r, _T("Environment"));
-    bAddOption(g, _T("Use font server"), m_bUseFontServer);
-    sAddOption(g, _T("Font server host"), m_sFontServerHost);
-    iAddOption(g, _T("Font server port"), m_iFontServerPort);
+    g = AddGroup(r, wxT("Environment"));
+    bAddOption(g, wxT("Use font server"), m_bUseFontServer);
+    sAddOption(g, wxT("Font server host"), m_sFontServerHost);
+    iAddOption(g, wxT("Font server port"), m_iFontServerPort);
 
-    g = AddGroup(r, _T("Images"));
-    iAddOption(g, _T("Windows images compression"), m_iRdpImageCompression);
-    iAddOption(g, _T("Image Encoding Type"), m_iVncImageEncoding);
-    iAddOption(g, _T("JPEG Quality"), m_iJpegQuality);
-    bAddOption(g, _T("Use PNG Compression"), m_bUsePNG);
-    bAddOption(g, _T("Image JPEG Encoding"), m_bUseTightJpeg);
+    g = AddGroup(r, wxT("Images"));
+    iAddOption(g, wxT("Windows images compression"), m_iRdpImageCompression);
+    iAddOption(g, wxT("Image Encoding Type"), m_iVncImageEncoding);
+    iAddOption(g, wxT("JPEG Quality"), m_iJpegQuality);
+    bAddOption(g, wxT("Use PNG Compression"), m_bUsePNG);
+    bAddOption(g, wxT("Image JPEG Encoding"), m_bUseTightJpeg);
     if ((m_bUsePlainX || m_bUsePNG) && (!m_bUseJpeg))
-        optval = _T("2");
+        optval = wxT("2");
     else if (m_bUseJpeg && m_bUseJpegQuality)
-        optval = _T("1");
+        optval = wxT("1");
     else
-        optval = _T("0");
-    sAddOption(g, _T("Image Compression Type"), optval);
+        optval = wxT("0");
+    sAddOption(g, wxT("Image Compression Type"), optval);
 
-    g = AddGroup(r, _T("Services"));
-    bAddOption(g, _T("Audio"), m_bEnableMultimedia);
-    bAddOption(g, _T("Shares"), m_bEnableSmbSharing);
+    g = AddGroup(r, wxT("Services"));
+    bAddOption(g, wxT("Audio"), m_bEnableMultimedia);
+    bAddOption(g, wxT("Shares"), m_bEnableSmbSharing);
 
     if (m_aUsedShareGroups.GetCount()) {
-        g = AddGroup(r, _T("share chosen"));
-        iAddOption(g, _T("Share number"), m_iUsedShareGroups);
+        g = AddGroup(r, wxT("share chosen"));
+        iAddOption(g, wxT("Share number"), m_iUsedShareGroups);
         for (i = 0; i < m_aUsedShareGroups.GetCount(); i++) {
-            optval = wxString::Format(_T("Share%d"), i);
+            optval = wxString::Format(wxT("Share%d"), i);
             sAddOption(g, optval, m_aUsedShareGroups[i]); 
         }
     }
 
-    g = AddGroup(r, _T("Advanced"));
-    bAddOption(g, _T("Current keyboard"), !m_bKbdLayoutOther);
-    bAddOption(g, _T("Disable TCP no-delay"), m_bDisableTcpNoDelay);
-    bAddOption(g, _T("Disable ZLIB stream compression"), m_bDisableZlibCompression);
-    bAddOption(g, _T("Enable SSL encryption"), m_bEnableSSL);
+    g = AddGroup(r, wxT("Advanced"));
+    bAddOption(g, wxT("Current keyboard"), !m_bKbdLayoutOther);
+    bAddOption(g, wxT("Disable TCP no-delay"), m_bDisableTcpNoDelay);
+    bAddOption(g, wxT("Disable ZLIB stream compression"), m_bDisableZlibCompression);
+    bAddOption(g, wxT("Enable SSL encryption"), m_bEnableSSL);
     switch (m_eCacheMemory) {
         case CACHEMEM_1MB:
-            optval = _T("1");
+            optval = wxT("1");
             break;
         case CACHEMEM_2MB:
-            optval = _T("2");
+            optval = wxT("2");
             break;
         case CACHEMEM_4MB:
-            optval = _T("4");
+            optval = wxT("4");
             break;
         case CACHEMEM_8MB:
-            optval = _T("8");
+            optval = wxT("8");
             break;
         case CACHEMEM_16MB:
-            optval = _T("16");
+            optval = wxT("16");
             break;
         case CACHEMEM_32MB:
-            optval = _T("32");
+            optval = wxT("32");
             break;
     }
-    sAddOption(g, _T("Cache size"), optval);
+    sAddOption(g, wxT("Cache size"), optval);
     switch (m_eCacheDisk) {
         case CACHEDISK_0MB:
-            optval = _T("0");
+            optval = wxT("0");
             break;
         case CACHEDISK_4MB:
-            optval = _T("4");
+            optval = wxT("4");
             break;
         case CACHEDISK_8MB:
-            optval = _T("8");
+            optval = wxT("8");
             break;
         case CACHEDISK_16MB:
-            optval = _T("16");
+            optval = wxT("16");
             break;
         case CACHEDISK_32MB:
-            optval = _T("32");
+            optval = wxT("32");
             break;
         case CACHEDISK_64MB:
-            optval = _T("64");
+            optval = wxT("64");
             break;
         case CACHEDISK_128MB:
-            optval = _T("128");
+            optval = wxT("128");
             break;
     }
-    sAddOption(g, _T("Cache size on disk"), optval);
-    iAddOption(g, _T("Other keyboard"), mapNxLanguage(m_iKbdLayoutLanguage));
+    sAddOption(g, wxT("Cache size on disk"), optval);
+    iAddOption(g, wxT("Other keyboard"), mapNxLanguage(m_iKbdLayoutLanguage));
 
-    g = AddGroup(r, _T("Windows Session"));
-    bAddOption(g, _T("Remember"), m_bRdpRememberPassword);
-    bAddOption(g, _T("Run application"), m_bRdpRunApplication);
-    iAddOption(g, _T("Authentication"), m_iRdpAuthType);
-    sAddOption(g, _T("Server"), m_sRdpHostName);
-    sAddOption(g, _T("User"), m_sRdpUsername);
-    optval = m_bRdpRememberPassword ? encodeString(m_sRdpPassword) : _T("");
-    sAddOption(g, _T("Password"), optval);
-    sAddOption(g, _T("Application"), m_sRdpApplication);
+    g = AddGroup(r, wxT("Windows Session"));
+    bAddOption(g, wxT("Remember"), m_bRdpRememberPassword);
+    bAddOption(g, wxT("Run application"), m_bRdpRunApplication);
+    iAddOption(g, wxT("Authentication"), m_iRdpAuthType);
+    sAddOption(g, wxT("Server"), m_sRdpHostName);
+    sAddOption(g, wxT("User"), m_sRdpUsername);
+    optval = m_bRdpRememberPassword ? encodeString(m_sRdpPassword) : wxT("");
+    sAddOption(g, wxT("Password"), optval);
+    sAddOption(g, wxT("Application"), m_sRdpApplication);
 
-    g = AddGroup(r, _T("VNC Session"));
-    bAddOption(g, _T("Remember"), m_bVncRememberPassword);
-    sAddOption(g, _T("Server"), m_sVncHostName);
-    optval = m_bVncRememberPassword ? encodeString(m_sVncPassword) : _T("");
-    sAddOption(g, _T("Password"), optval);
-    optval = wxString::Format(_T(":%d"), m_iVncDisplayNumber);
-    sAddOption(g, _T("Display"), optval);
+    g = AddGroup(r, wxT("VNC Session"));
+    bAddOption(g, wxT("Remember"), m_bVncRememberPassword);
+    sAddOption(g, wxT("Server"), m_sVncHostName);
+    optval = m_bVncRememberPassword ? encodeString(m_sVncPassword) : wxT("");
+    sAddOption(g, wxT("Password"), optval);
+    optval = wxString::Format(wxT(":%d"), m_iVncDisplayNumber);
+    sAddOption(g, wxT("Display"), optval);
 
     for (i = 0; i < m_aShareGroups.GetCount(); i++) {
         g = AddGroup(r, m_aShareGroups[i].m_sGroupName);
-        sAddOption(g, _T("Alias"), m_aShareGroups[i].m_sMountPoint);
-        sAddOption(g, _T("Sharename"), m_aShareGroups[i].m_sName);
-        sAddOption(g, _T("Username"), m_aShareGroups[i].m_sUsername);
+        sAddOption(g, wxT("Alias"), m_aShareGroups[i].m_sMountPoint);
+        sAddOption(g, wxT("Sharename"), m_aShareGroups[i].m_sName);
+        sAddOption(g, wxT("Username"), m_aShareGroups[i].m_sUsername);
         optval = encodeString(m_aShareGroups[i].m_sPassword);
-        sAddOption(g, _T("Password"), optval);
+        sAddOption(g, wxT("Password"), optval);
         switch (m_aShareGroups[i].m_iType) {
             case SharedResource::SHARE_DISK:
-                optval = _T("Disk");
-                sAddOption(g, _T("Type"), optval);
+                optval = wxT("Disk");
+                sAddOption(g, wxT("Type"), optval);
                 break;
             case SharedResource::SHARE_PRINTER:
-                optval = _T("Printer");
-                sAddOption(g, _T("Type"), optval);
+                optval = wxT("Printer");
+                sAddOption(g, wxT("Type"), optval);
                 break;
         }
-        bAddOption(g, _T("Mounted now"), m_aShareGroups[i].m_bMountNow);
+        bAddOption(g, wxT("Mounted now"), m_aShareGroups[i].m_bMountNow);
     }
 
     // Must write to memory first, to get rid of the standard XML
@@ -1014,13 +1161,13 @@ MxXmlConfig::SaveToFile()
         if (secondline++) {
             // Replace 1st line with non-standard NXclient doctype
             len -= (secondline - data);
-            ::wxLogDebug(_T("writing cfg '%s'"), m_sFileName.c_str());
+            ::wxLogDebug(wxT("writing cfg '%s'"), m_sFileName.c_str());
             wxFileOutputStream fos(m_sFileName);
             if (!fos.Ok()) {
                 delete data;
                 return false;
             }
-	    // NO _T() here!!
+            // NO wxT() here!!
             fos.Write("<!DOCTYPE NXClientSettings>\n", 28);
             if (fos.LastWrite() != 28) {
                 delete data;
@@ -1044,7 +1191,7 @@ MxXmlConfig::SaveToFile()
 void MxXmlConfig::saveState()
 {
     if (saved)
-	delete saved;
+        delete saved;
     saved = new MxXmlConfig();
     *saved = *this;
 }
@@ -1052,7 +1199,7 @@ void MxXmlConfig::saveState()
 bool MxXmlConfig::checkChanged()
 {
     if (!saved)
-	return true;
+        return true;
     return (!(*this == *saved));
 }
 
@@ -1060,9 +1207,9 @@ bool MxXmlConfig::getBool(wxXmlNode *opt, const wxString &key, bool defval)
 {
     bool val = defval;
 
-    if (opt->GetName() == _T("option")) {
-        if (opt->GetPropVal(_T("key"), _T("")) == key) {
-            wxString tmp = opt->GetPropVal(_T("value"), _T(""));
+    if (opt->GetName() == wxT("option")) {
+        if (opt->GetPropVal(wxT("key"), wxT("")) == key) {
+            wxString tmp = opt->GetPropVal(wxT("value"), wxT(""));
             if (!tmp.IsEmpty())
                 val = ((tmp == STR_TRUE) || (tmp == STR_ONE));
         }
@@ -1074,9 +1221,9 @@ long MxXmlConfig::getLong(wxXmlNode *opt, const wxString &key, long defval)
 {
     long val = defval;
 
-    if (opt->GetName() == _T("option")) {
-        if (opt->GetPropVal(_T("key"), _T("")) == key) {
-            wxString tmp = opt->GetPropVal(_T("value"), _T(""));
+    if (opt->GetName() == wxT("option")) {
+        if (opt->GetPropVal(wxT("key"), wxT("")) == key) {
+            wxString tmp = opt->GetPropVal(wxT("value"), wxT(""));
             if (tmp.IsNumber())
                 tmp.ToLong(&val, 0);
         }
@@ -1088,9 +1235,9 @@ wxString MxXmlConfig::getString(wxXmlNode *opt, const wxString &key, const wxStr
 {
     wxString tmp = defval;
 
-    if (opt->GetName() == _T("option")) {
-        if (opt->GetPropVal(_T("key"), _T("")) == key)
-            tmp = opt->GetPropVal(_T("value"), defval);
+    if (opt->GetName() == wxT("option")) {
+        if (opt->GetPropVal(wxT("key"), wxT("")) == key)
+            tmp = opt->GetPropVal(wxT("value"), defval);
     }
     return tmp;
 }
@@ -1099,10 +1246,10 @@ wxString *MxXmlConfig::getStringNew(wxXmlNode *opt, const wxString &key, wxStrin
 {
     wxString *val = defval;
 
-    if (opt->GetName() == _T("option")) {
-        if (opt->GetPropVal(_T("key"), _T("")) == key) {
-            if (opt->HasProp(_T("value"))) {
-                val = new wxString(opt->GetPropVal(_T("value"), defval ? *defval : _T("")));
+    if (opt->GetName() == wxT("option")) {
+        if (opt->GetPropVal(wxT("key"), wxT("")) == key) {
+            if (opt->HasProp(wxT("value"))) {
+                val = new wxString(opt->GetPropVal(wxT("value"), defval ? *defval : wxT("")));
                 if (defval)
                     delete defval;
             }
@@ -1115,12 +1262,12 @@ wxString MxXmlConfig::getPassword(wxXmlNode *opt, const wxString &key, const wxS
 {
     wxString val = defval;
     wxString *enc = getStringNew(opt, key, NULL);
-    if (enc && enc->Left(1) == _T(":") && enc->Right(1) == _T(":") && enc->Length() > 1) {
+    if (enc && enc->Left(1) == wxT(":") && enc->Right(1) == wxT(":") && enc->Length() > 1) {
         int idx = 1;
-        wxString newpw = _T("");
+        wxString newpw = wxT("");
         enc->Remove(0, 1);
         while (enc->Length()) {
-            int p = enc->Find(_T(":"));
+            int p = enc->Find(wxT(":"));
             if (p != -1) {
                 long l;
                 enc->Left(p).ToLong(&l);
@@ -1346,7 +1493,7 @@ int MxXmlConfig::mapLocaleToKeyboard()
 }
 
 // Map keyboard language code from NXclient to MXclient
-int
+    int
 MxXmlConfig::mapMxLanguage(int origNXlang)
 {
     switch (origNXlang) {
@@ -1373,8 +1520,26 @@ MxXmlConfig::mapMxLanguage(int origNXlang)
     return 0;
 }
 
+// Map keyboard language iso code
+    wxString 
+MxXmlConfig::isoKbd(int lang)
+{
+    const wxChar *iso_codes[] =
+    {
+        wxT("af"), wxT("sq"), wxT("ar"), wxT("eu"), wxT(""), wxT("bg"), wxT("ca"), wxT("zh"),
+        wxT("hr"), wxT("cs"), wxT("da"), wxT("nl"), wxT("en"), wxT("en_US"), wxT("et"), wxT("fo"),
+        wxT("fa"), wxT("fi"), wxT("fr"), wxT("de"), wxT("el"), wxT("he"), wxT("hu"), wxT("is"),
+        wxT("id"), wxT("it"), wxT("ja"), wxT("ko"), wxT("lv"), wxT("lt"), wxT("no"), wxT("pl"),
+        wxT("pt"), wxT("ro"), wxT("ru"), wxT("sk"), wxT("sl"), wxT("es"), wxT("sv"), wxT("th"),
+        wxT("tr"), wxT("vi")
+    };
+    wxString ret;
+    if ((lang >= 0) && (lang <= 41))
+        ret = iso_codes[lang];
+}
+
 // Map keyboard language code from MXclient to NXclient
-int 
+    int 
 MxXmlConfig::mapNxLanguage(int origMXlang)
 {
     switch (origMXlang) {

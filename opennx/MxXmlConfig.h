@@ -101,6 +101,8 @@ public:
     bool checkChanged();
     bool SaveToFile();
 
+    wxString sGetSessionParams(const wxString &);
+
     bool IsValid() { return m_bValid; }
     bool bGetRememberPassword() { return m_bRememberPassword; }
     bool bGetUseCustomImageEncoding() { return m_bUseCustomImageEncoding; }
@@ -238,6 +240,7 @@ private:
     int mapMxLanguage(int);
     int mapNxLanguage(int);
     int mapLocaleToKeyboard();
+    wxString isoKbd(int);
     bool cmpShareGroups(ArrayOfShareGroups, ArrayOfShareGroups);
     bool cmpUsedShareGroups(wxArrayString, wxArrayString);
     void bAddOption(wxXmlNode *, const wxString &, bool);

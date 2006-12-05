@@ -50,7 +50,7 @@ memres.h: tmpres.zip bin2hdr
 
 mxclientApp.cpp: memres.h
 
-CLEANFILES = tmpres.zip
+CLEANFILES = tmpres.zip *~
 
 EXTRA_DIST = conf/config.rpath conf/mkinstalldirs  conf/config.rpath conf/mkinstalldirs mxclient.pjd mxclient.dsw \
 	mxclient.dsp mxclient.rc res/mxclient.rc res/mxclient.xrc \

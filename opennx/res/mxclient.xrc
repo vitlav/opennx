@@ -18,7 +18,7 @@
                         <border>5</border>
                         <object class="wxStaticBitmap" name="wxID_STATIC">
                             <size>293,78</size>
-                            <bitmap>file:mxclient.rsc#zip:res/mxclient.png</bitmap>
+                            <bitmap>memory:memrsc#zip:res/mxclient.png</bitmap>
                         </object>
                     </object>
                 </object>
@@ -159,7 +159,7 @@
                                     <border>5</border>
                                     <object class="wxStaticBitmap" name="wxID_STATIC">
                                         <size>293,78</size>
-                                        <bitmap>file:mxclient.rsc#zip:res/mxclient.png</bitmap>
+                                        <bitmap>memory:memrsc#zip:res/mxclient.png</bitmap>
                                     </object>
                                 </object>
                             </object>
@@ -751,7 +751,7 @@
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
                                                         <size>32,32</size>
-                                                        <bitmap>file:mxclient.rsc#zip:res/sharing.png</bitmap>
+                                                        <bitmap>memory:memrsc#zip:res/sharing.png</bitmap>
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
@@ -810,7 +810,7 @@
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
                                                         <size>32,32</size>
-                                                        <bitmap>file:mxclient.rsc#zip:res/multimedia.png</bitmap>
+                                                        <bitmap>memory:memrsc#zip:res/multimedia.png</bitmap>
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
@@ -2001,7 +2001,7 @@ this share.</label>
                 <label>&amp;File</label>
                 <object class="wxMenuItem" name="ID_MENU_SESSION_NEW">
                     <label>New MX Session...</label>
-                    <bitmap>file:mxclient.rsc#zip:res/session_new_16.png</bitmap>
+                    <bitmap>memory:memrsc#zip:res/session_new_16.png</bitmap>
                 </object>
                 <object class="wxMenuItem" name="ID_MENU_FILE_CHDIR">
                     <label>Change MX directory...</label>
@@ -2016,38 +2016,38 @@ this share.</label>
                 <label>&amp;Session</label>
                 <object class="wxMenuItem" name="ID_MENU_SESSION_TERMINATE">
                     <label>Terminate session</label>
-                    <bitmap>file:mxclient.rsc#zip:res/session_terminate_16.png</bitmap>
+                    <bitmap>memory:memrsc#zip:res/session_terminate_16.png</bitmap>
                 </object>
                 <object class="wxMenuItem" name="ID_MENU_SESSION_PSTATS">
                     <label>View partial statistics</label>
-                    <bitmap>file:mxclient.rsc#zip:res/session_pstats_16.png</bitmap>
+                    <bitmap>memory:memrsc#zip:res/session_pstats_16.png</bitmap>
                 </object>
                 <object class="wxMenuItem" name="ID_MENU_SESSION_FSTATS">
                     <label>View full statistics</label>
-                    <bitmap>file:mxclient.rsc#zip:res/session_fstats_16.png</bitmap>
+                    <bitmap>memory:memrsc#zip:res/session_fstats_16.png</bitmap>
                 </object>
                 <object class="wxMenuItem" name="ID_MENU_SESSION_LOG">
                     <label>View session log</label>
-                    <bitmap>file:mxclient.rsc#zip:res/session_log_16.png</bitmap>
+                    <bitmap>memory:memrsc#zip:res/session_log_16.png</bitmap>
                 </object>
                 <object class="separator">
                 </object>
                 <object class="wxMenuItem" name="ID_MENU_SESSION_REMOVE">
                     <label>Remove session</label>
-                    <bitmap>file:mxclient.rsc#zip:res/remove_16.png</bitmap>
+                    <bitmap>memory:memrsc#zip:res/remove_16.png</bitmap>
                 </object>
                 <object class="separator">
                 </object>
                 <object class="wxMenuItem" name="ID_MENU_SESSION_KILL">
                     <label>Kill application</label>
-                    <bitmap>file:mxclient.rsc#zip:res/kill_16.png</bitmap>
+                    <bitmap>memory:memrsc#zip:res/kill_16.png</bitmap>
                 </object>
             </object>
             <object class="wxMenu">
                 <label>Options</label>
                 <object class="wxMenuItem" name="ID_MENU_REFRESH">
                     <label>Refresh session list</label>
-                    <bitmap>file:mxclient.rsc#zip:res/refresh_16.png</bitmap>
+                    <bitmap>memory:memrsc#zip:res/refresh_16.png</bitmap>
                 </object>
             </object>
             <object class="wxMenu">
@@ -2061,41 +2061,41 @@ this share.</label>
             <style>wxTB_FLAT|wxTB_DOCKABLE|wxTB_HORIZONTAL</style>
             <bitmapsize>16,16</bitmapsize>
             <object class="tool" name="ID_TOOL_SESSION_NEW">
-                <bitmap>file:mxclient.rsc#zip:res/session_new_16.png</bitmap>
+                <bitmap>memory:memrsc#zip:res/session_new_16.png</bitmap>
                 <tooltip>New MX session</tooltip>
             </object>
             <object class="separator">
             </object>
             <object class="tool" name="ID_TOOL_SESSION_TERMINATE">
-                <bitmap>file:mxclient.rsc#zip:res/session_terminate_16.png</bitmap>
+                <bitmap>memory:memrsc#zip:res/session_terminate_16.png</bitmap>
                 <tooltip>Terminate session</tooltip>
             </object>
             <object class="tool" name="ID_TOOL_SESSION_PSTATS">
-                <bitmap>file:mxclient.rsc#zip:res/session_pstats_16.png</bitmap>
+                <bitmap>memory:memrsc#zip:res/session_pstats_16.png</bitmap>
                 <tooltip>View partial statistics</tooltip>
             </object>
             <object class="tool" name="ID_TOOL_SESSION_FSTATS">
-                <bitmap>file:mxclient.rsc#zip:res/session_fstats_16.png</bitmap>
+                <bitmap>memory:memrsc#zip:res/session_fstats_16.png</bitmap>
                 <tooltip>View full statistics</tooltip>
             </object>
             <object class="tool" name="ID_TOOL_SESSION_LOG">
-                <bitmap>file:mxclient.rsc#zip:res/session_log_16.png</bitmap>
+                <bitmap>memory:memrsc#zip:res/session_log_16.png</bitmap>
                 <tooltip>View session log</tooltip>
             </object>
             <object class="tool" name="ID_TOOL_REFRESH">
-                <bitmap>file:mxclient.rsc#zip:res/refresh_16.png</bitmap>
+                <bitmap>memory:memrsc#zip:res/refresh_16.png</bitmap>
                 <tooltip>Refresh session list</tooltip>
             </object>
             <object class="separator">
             </object>
             <object class="tool" name="ID_TOOL_SESSION_REMOVE">
-                <bitmap>file:mxclient.rsc#zip:res/remove_16.png</bitmap>
+                <bitmap>memory:memrsc#zip:res/remove_16.png</bitmap>
                 <tooltip>Remove session</tooltip>
             </object>
             <object class="separator">
             </object>
             <object class="tool" name="ID_TOOL_SESSION_KILL">
-                <bitmap>file:mxclient.rsc#zip:res/kill_16.png</bitmap>
+                <bitmap>memory:memrsc#zip:res/kill_16.png</bitmap>
                 <tooltip>Kill application</tooltip>
             </object>
         </object>
@@ -2106,7 +2106,7 @@ this share.</label>
     </object>
     <object class="wxWizard" name="ID_WIZARD" subclass="MxWizard">
         <title>MX Connection Wizard</title>
-        <bitmap>file:mxclient.rsc#zip:res/wizard.png</bitmap>
+        <bitmap>memory:memrsc#zip:res/wizard.png</bitmap>
         <object class="wxWizardPageSimple" name="ID_WIZARDPAGE_WELCOME" subclass="WizardPageWelcome">
             <style>wxTAB_TRAVERSAL</style>
             <object class="wxFlexGridSizer">
@@ -2613,7 +2613,7 @@ this share.</label>
                         <border>5</border>
                         <object class="wxStaticBitmap" name="wxID_STATIC">
                             <size>293,78</size>
-                            <bitmap>file:mxclient.rsc#zip:res/mxclient.png</bitmap>
+                            <bitmap>memory:memrsc#zip:res/mxclient.png</bitmap>
                         </object>
                     </object>
                 </object>

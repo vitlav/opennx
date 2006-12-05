@@ -74,6 +74,9 @@ SessionList::SessionList(wxString dir, wxListCtrl* ctrl)
 
 SessionList::~SessionList()
 {
+    m_thread->Delete();
+    while (m_thread->IsRunning())
+        wxThread::Sleep(100);
     if (m_dir != NULL)
         delete m_dir;
     delete m_re;
@@ -260,9 +263,13 @@ void SessionList::ShowSesssionLog(int idx)
 
 wxThread::ExitCode SessionList::Entry()
 {
+    int cnt = 0;
     while (!m_thread->TestDestroy()) {
-        ScanDir();
-        wxThread::Sleep(5000);
+	if (cnt-- == 0) {
+            ScanDir();
+	    cnt = 20;
+	}
+        wxThread::Sleep(100);
     }
     return 0;
 }

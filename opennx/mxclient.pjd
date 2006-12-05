@@ -22,7 +22,7 @@
 	<value name="extract_strings" type="bool">TRUE</value>
 	<value name="user_name" type="string">Fritz Elfert</value>
 	<value name="copyright_string" type="string">Copyright 2004 Millenux GmbH</value>
-	<value name="resource_prefix" type="string">file:mxclient.rsc#zip:</value>
+	<value name="resource_prefix" type="string">memory:memrsc#zip:</value>
 	<value name="use_two_step_construction" type="bool">FALSE</value>
 	<value name="current_platform" type="string">&lt;All platforms&gt;</value>
 	<value name="target_wx_version" type="string"></value>
