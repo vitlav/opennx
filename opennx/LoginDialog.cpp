@@ -38,6 +38,11 @@
 ////@begin XPM images
 ////@end XPM images
 
+#ifdef MYTRACETAG
+# undef MYTRACETAG
+#endif
+#define MYTRACETAG wxT("LoginDialog")
+
 /*!
  * LoginDialog type definition
  */
@@ -245,7 +250,7 @@ void LoginDialog::OnButtonConfigureClick( wxCommandEvent& event )
             m_pCurrentCfg = new MxXmlConfig(fn);
             break;
         case wxID_CLEAR:
-            ::wxLogDebug(wxT("deleting '%s'"), fn.c_str());
+            ::wxLogTrace(MYTRACETAG, wxT("deleting '%s'"), fn.c_str());
             ::wxRemoveFile(fn);
             m_sSessionName.Empty();
             m_pCtrlSessionName->Clear();

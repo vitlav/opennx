@@ -32,35 +32,40 @@
 #include <wx/filename.h>
 #include <wx/listctrl.h>
 
+#ifdef MYTRACETAG
+# undef MYTRACETAG
+#endif
+#define MYTRACETAG wxT("SessionList")
+
 class SessionTraverser : public wxDirTraverser
 {
-public:
-    SessionTraverser(wxArrayString& dirs) : m_dirs(dirs) { }
-    
-    virtual wxDirTraverseResult OnFile(const wxString& WXUNUSED(filename))
-    {
-        return wxDIR_CONTINUE;
-    }
-    
-    virtual wxDirTraverseResult OnDir(const wxString& dirpath)
-    {
-        wxString name = wxFileName::FileName(dirpath).GetFullName();
-        m_dirs.Add(name);
-        return wxDIR_IGNORE;
-    }
-    
-private:
-    wxArrayString& m_dirs;
+    public:
+        SessionTraverser(wxArrayString& dirs) : m_dirs(dirs) { }
+
+        virtual wxDirTraverseResult OnFile(const wxString& WXUNUSED(filename))
+        {
+            return wxDIR_CONTINUE;
+        }
+
+        virtual wxDirTraverseResult OnDir(const wxString& dirpath)
+        {
+            wxString name = wxFileName::FileName(dirpath).GetFullName();
+            m_dirs.Add(name);
+            return wxDIR_IGNORE;
+        }
+
+    private:
+        wxArrayString& m_dirs;
 };
 
 WX_DECLARE_STRING_HASH_MAP(MxSession, SessionHash);
 
-SessionList::SessionList(wxString dir, wxListCtrl* ctrl)
+    SessionList::SessionList(wxString dir, wxListCtrl* ctrl)
     : wxThreadHelper()
     , m_dirName(dir)
     , m_dir(NULL)
     , m_reValid(false)
-    , m_listctrl(ctrl)
+                      , m_listctrl(ctrl)
 {
     m_sessions = new SessionHash();
     m_re = new wxRegEx();
@@ -109,12 +114,12 @@ void SessionList::ScanDir()
         if (m_dirName.IsEmpty())
             return;
         if (!wxDir::Exists(m_dirName)) {
-	    m_dirName = _T("");
+            m_dirName = _T("");
             return;
         }
         m_dir = new wxDir(m_dirName);
     }
-    ::wxLogDebug(_T("SessionList: scanning %s"), m_dirName.c_str());
+    ::wxLogTrace(MYTRACETAG, _T("SessionList: scanning %s"), m_dirName.c_str());
 
     // get the names of all session directories
     wxArrayString sdirs;
@@ -155,12 +160,12 @@ void SessionList::ScanDir()
                 long port;
 
                 m_re->GetMatch(tmp,5).ToLong(&port);
-                ::wxLogDebug(_T("State='%s', Type='%s', Host='%s', Port=%d, MD5='%s'"),
-                    m_re->GetMatch(tmp,2).c_str(), m_re->GetMatch(tmp,3).c_str(),
-                    m_re->GetMatch(tmp,4).c_str(), port, md5.c_str());
+                ::wxLogTrace(MYTRACETAG, _T("State='%s', Type='%s', Host='%s', Port=%d, MD5='%s'"),
+                        m_re->GetMatch(tmp,2).c_str(), m_re->GetMatch(tmp,3).c_str(),
+                        m_re->GetMatch(tmp,4).c_str(), port, md5.c_str());
                 // Create new hash entry
                 MxSession s(m_dirName + wxFileName::GetPathSeparator() + tmp,
-                    m_re->GetMatch(tmp,2), m_re->GetMatch(tmp,3), m_re->GetMatch(tmp,4), port, md5);
+                        m_re->GetMatch(tmp,2), m_re->GetMatch(tmp,3), m_re->GetMatch(tmp,4), port, md5);
                 (*m_sessions)[md5] = s;
                 if (m_listctrl != NULL) {
                     long idx;
@@ -196,7 +201,7 @@ void SessionList::ScanDir()
                     m_listctrl->SetItem(idx, 6, (s.m_type == MxSession::Server) ? _("Server") : _("Client"));
 
                     // Data
-//                    m_listctrl->SetItemData(idx, (long)(*m_sessions)[md5].m_md5.c_str());
+                    //                    m_listctrl->SetItemData(idx, (long)(*m_sessions)[md5].m_md5.c_str());
                     m_listctrl->SetItemData(idx, (long)s.m_md5.c_str());
                     wxMutexGuiLeave();
 
@@ -214,11 +219,11 @@ void SessionList::ScanDir()
         finished = true;
         for (it = m_sessions->begin(); it != m_sessions->end(); ++it) {
             if (!it->second.m_touched) {
-                ::wxLogDebug(_T("Session '%s' disappeared"), it->second.m_md5.c_str());
+                ::wxLogTrace(MYTRACETAG, _T("Session '%s' disappeared"), it->second.m_md5.c_str());
                 finished = false;
                 if (m_listctrl != NULL) {
                     long item;
-                    
+
                     wxMutexGuiEnter();
 
                     item = m_listctrl->FindItem(-1, it->second.m_md5);
@@ -245,7 +250,7 @@ void SessionList::ScanDir()
         wxMutexGuiLeave();
     }
 
-    ::wxLogDebug(_T("SessionList: Now %d sessions"), m_sessions->size());
+    ::wxLogTrace(MYTRACETAG, _T("SessionList: Now %d sessions"), m_sessions->size());
 }
 
 void SessionList::ShowSesssionLog(int idx)
@@ -265,10 +270,10 @@ wxThread::ExitCode SessionList::Entry()
 {
     int cnt = 0;
     while (!m_thread->TestDestroy()) {
-	if (cnt-- == 0) {
+        if (cnt-- == 0) {
             ScanDir();
-	    cnt = 20;
-	}
+            cnt = 20;
+        }
         wxThread::Sleep(100);
     }
     return 0;

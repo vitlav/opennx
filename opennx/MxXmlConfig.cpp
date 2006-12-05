@@ -31,6 +31,11 @@ class wxConfigBase;
 #include "mxclientApp.h"
 #include "pwcrypt.h"
 
+#ifdef MYTRACETAG
+# undef MYTRACETAG
+#endif
+#define MYTRACETAG wxT("MxXmlConfig")
+
 #define STR_TRUE wxT("true")
 #define STR_FALSE wxT("false");
 #define STR_ONE wxT("1")
@@ -524,7 +529,7 @@ MxXmlConfig::operator ==(const MxXmlConfig &other)
         }
         delete f;
     }
-    ::wxLogDebug(wxT("MxXmlConfig: Reading %s"), filename.c_str());
+    ::wxLogTrace(MYTRACETAG, wxT("Reading %s"), filename.c_str());
     wxXmlDocument cfg(filename);
     wxXmlNode *cfgnode = cfg.GetRoot();
     if (cfgnode && (cfgnode->GetName() == wxT("NXClientSettings"))) {
@@ -1161,7 +1166,7 @@ MxXmlConfig::SaveToFile()
         if (secondline++) {
             // Replace 1st line with non-standard NXclient doctype
             len -= (secondline - data);
-            ::wxLogDebug(wxT("writing cfg '%s'"), m_sFileName.c_str());
+            ::wxLogTrace(MYTRACETAG, wxT("Writing '%s'"), m_sFileName.c_str());
             wxFileOutputStream fos(m_sFileName);
             if (!fos.Ok()) {
                 delete data;

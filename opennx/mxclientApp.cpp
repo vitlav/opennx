@@ -38,6 +38,10 @@
 
 #include "memres.h"
 
+#ifdef MYTRACETAG
+# undef MYTRACETAG
+#endif
+#define MYTRACETAG wxT("mxClientApp")
 
 // Create a new application object: this macro will allow wxWindows to create
 // the application object during program execution (it's better than using a

@@ -28,8 +28,15 @@
 #include "Icon.h"
 #include "mxclientApp.h"
 
+#include <wx/tokenzr.h>
+
 ////@begin XPM images
 ////@end XPM images
+
+#ifdef MYTRACETAG
+# undef MYTRACETAG
+#endif
+#define MYTRACETAG wxT("AboutDialog")
 
 // Like wxHtmlWindow, but all links are opened in
 // an external browser.
@@ -37,12 +44,32 @@ class extHtmlWindow : public wxHtmlWindow
 {
     DECLARE_DYNAMIC_CLASS( extHtmlWindow )
 
-public:
-    extHtmlWindow() : wxHtmlWindow() { }
-    virtual void OnLinkClicked(const wxHtmlLinkInfo&);
+    public:
+        extHtmlWindow() : wxHtmlWindow() { }
+        virtual void OnLinkClicked(const wxHtmlLinkInfo&);
 };
 
 IMPLEMENT_DYNAMIC_CLASS( extHtmlWindow, wxHtmlWindow )
+
+#ifdef __UNIX__
+    static bool
+which(wxString cmd)
+{
+    if (!(cmd.StartsWith(wxT("/")) || cmd.StartsWith(wxT("./")))) {
+        wxString path;
+        if (::wxGetEnv(wxT("PATH"), &path)) {
+            wxStringTokenizer t(path, wxT(":"));
+            while (t.HasMoreTokens()) {
+                wxString tst = t.GetNextToken() + wxT("/") + cmd;
+                if (::access(tst.fn_str(), R_OK|X_OK) == 0)
+                    return true;
+            }
+        }
+    } else
+        return (::access(cmd.fn_str(), R_OK|X_OK) == 0);
+    return false;
+}
+#endif
 
 void extHtmlWindow::OnLinkClicked(const wxHtmlLinkInfo& link)
 {
@@ -54,24 +81,29 @@ void extHtmlWindow::OnLinkClicked(const wxHtmlLinkInfo& link)
 #ifdef __UNIX__
     wxString browser;
     if (::wxGetEnv(wxT("BROWSER"), &browser)) {
-        if (::wxExecute(browser + wxT(" \"") + href + wxT("\"")) > 0)
-            return;
+        ::wxExecute(browser + wxT(" \"") + href + wxT("\""));
+        return;
     }
-    wxLogDebug(wxT("trying 'htmlview \"") + href + wxT("\"i'"));
-    if (::wxExecute(wxT("htmlview \"") + href + wxT("\"")) > 0)
+    if (which(wxT("htmlview"))) {
+        ::wxExecute(wxT("htmlview \"") + href + wxT("\""));
         return;
-    wxLogDebug(wxT("trying 'kfmklient openURL \"") + href + wxT("\"'"));
-    if (::wxExecute(wxT("kfmklient openURL \"") + href + wxT("\"")) > 0)
+    }
+    if (which(wxT("kfmclient"))) {
+        ::wxExecute(wxT("kfmklient openURL \"") + href + wxT("\""));
         return;
-    wxLogDebug(wxT("trying 'gnome-open \"") + href + wxT("\"'"));
-    if (::wxExecute(wxT("gnome-open \"") + href + wxT("\"")) > 0)
+    }
+    if (which(wxT("gnome-open"))) {
+        ::wxExecute(wxT("gnome-open \"") + href + wxT("\""));
         return;
-    wxLogDebug(wxT("trying 'firefox -url \"") + href + wxT("\"'"));
-    if (::wxExecute(wxT("firefox -url \"") + href + wxT("\"")) > 0)
+    }
+    if (which(wxT("firefox"))) {
+        ::wxExecute(wxT("firefox -url \"") + href + wxT("\""));
         return;
-    wxLogDebug(wxT("trying 'mozilla \"") + href + wxT("\"'"));
-    if (::wxExecute(wxT("mozilla \"") + href + wxT("\"")) > 0)
+    }
+    if (which(wxT("mozilla"))) {
+        ::wxExecute(wxT("mozilla \"") + href + wxT("\""));
         return;
+    }
 #endif
 }
 
@@ -81,20 +113,20 @@ void extHtmlWindow::OnLinkClicked(const wxHtmlLinkInfo& link)
 
 IMPLEMENT_DYNAMIC_CLASS( AboutDialog, wxDialog )
 
-/*!
- * AboutDialog event table definition
- */
+    /*!
+     * AboutDialog event table definition
+     */
 
 BEGIN_EVENT_TABLE( AboutDialog, wxDialog )
 
-////@begin AboutDialog event table entries
-////@end AboutDialog event table entries
+    ////@begin AboutDialog event table entries
+    ////@end AboutDialog event table entries
 
 END_EVENT_TABLE()
 
-/*!
- * AboutDialog constructors
- */
+    /*!
+     * AboutDialog constructors
+     */
 
 AboutDialog::AboutDialog( )
 {
@@ -111,11 +143,11 @@ AboutDialog::AboutDialog( wxWindow* parent, wxWindowID id, const wxString& capti
 
 bool AboutDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxString& WXUNUSED(caption), const wxPoint& WXUNUSED(pos), const wxSize& WXUNUSED(size), long WXUNUSED(style) )
 {
-////@begin AboutDialog member initialisation
+    ////@begin AboutDialog member initialisation
     m_pAboutHtml = NULL;
-////@end AboutDialog member initialisation
+    ////@end AboutDialog member initialisation
 
-////@begin AboutDialog creation
+    ////@begin AboutDialog creation
     SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
@@ -123,7 +155,7 @@ bool AboutDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
     GetSizer()->Fit(this);
     GetSizer()->SetSizeHints(this);
     Centre();
-////@end AboutDialog creation
+    ////@end AboutDialog creation
 #ifdef __WXMSW__
     DWORD dummy;
     DWORD viSize;
@@ -132,7 +164,7 @@ bool AboutDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
     VS_FIXEDFILEINFO *vsFFI;
     UINT vsFFIlen;
     wxString sVersion = wxT("?.?");
-    
+
     if (GetModuleFileName(NULL, mySelf, sizeof(mySelf))) {
         viSize = GetFileVersionInfoSize(mySelf, &dummy);
         if (viSize) {
@@ -141,13 +173,13 @@ bool AboutDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
                 if (GetFileVersionInfo(mySelf, dummy, viSize, vi)) {
                     if (VerQueryValue(vi, wxT("\\"), (LPVOID *)&vsFFI, &vsFFIlen)) {
                         sVersion = wxString::Format(wxT("%d.%d"), HIWORD(vsFFI->dwFileVersionMS),
-                            LOWORD(vsFFI->dwFileVersionMS));
+                                LOWORD(vsFFI->dwFileVersionMS));
                         if (vsFFI->dwFileVersionLS)
                             sVersion += wxString::Format(wxT(".%d"), HIWORD(vsFFI->dwFileVersionLS));
                         if (LOWORD(vsFFI->dwFileVersionLS))
                             sVersion += wxString::Format(wxT(".%d"), LOWORD(vsFFI->dwFileVersionLS));
                     }
-                    
+
                 }
                 free(vi);
             }
@@ -193,17 +225,17 @@ bool AboutDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
 
 void AboutDialog::CreateControls()
 {    
-////@begin AboutDialog content construction
+    ////@begin AboutDialog content construction
 
     wxXmlResource::Get()->LoadDialog(this, GetParent(), wxT("ID_DIALOG_ABOUT"));
     m_pAboutHtml = XRCCTRL(*this, "ID_HTMLWINDOW_ABOUT", extHtmlWindow);
-////@end AboutDialog content construction
+    ////@end AboutDialog content construction
 
     // Create custom windows not generated automatically here.
 
-////@begin AboutDialog content initialisation
+    ////@begin AboutDialog content initialisation
 
-////@end AboutDialog content initialisation
+    ////@end AboutDialog content initialisation
 }
 
 /*!
