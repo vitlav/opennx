@@ -195,8 +195,9 @@ bool MxSession::Create(const wxString cfgFileName, const wxString password)
         wxConfigBase::Get()->Read(wxT("Config/SystemMxDir"), &appDir);
         wxFileName fn(appDir);
 
-        // FE. nxssh is a fork of a stone-old openssh and therefore complains about newer options in .ssh/config
-        // e.g.: ForwardDynamic. Therefore we disable the use of a cfg at all.
+        // FE. nxssh is a fork of a stone-old openssh and therefore complains
+        // about newer options in .ssh/config e.g.: ForwardDynamic.
+        // Therefore we disable the use of a cfg at all.
         cmd += wxT("-F /dev/null ");
 
         int proxyPort = -1;
@@ -236,11 +237,8 @@ bool MxSession::Create(const wxString cfgFileName, const wxString password)
 
         MxIPC ssh;
         cmd += wxString::Format(wxT("nx@%s"), cfg.sGetServerHost().c_str());
-#ifdef __OPENBSD__
-        cmd = wxT("/usr/local/bin/nxssh ") + cmd;
-#else
         cmd = wxString::Format(wxT("%s/bin/nxssh "), fn.GetShortPath().c_str()) + cmd;
-#endif
+
         if (ssh.SshProcess(appDir + wxT("/bin"), cmd)) {
             bool gotError = false;
             int p;
@@ -249,7 +247,8 @@ bool MxSession::Create(const wxString cfgFileName, const wxString password)
             wxString scmd;
 
             ConnectDialog d(NULL);
-            d.SetStatusText(wxString::Format(wxT("Connecting to %s ..."), cfg.sGetServerHost().c_str()));
+            d.SetStatusText(wxString::Format(wxT("Connecting to %s ..."),
+                        cfg.sGetServerHost().c_str()));
             d.Show(true);
             while (!(d.bGetAbort() || gotError)) {
                 int p = ssh.SshChat(tmp);
@@ -272,46 +271,47 @@ bool MxSession::Create(const wxString cfgFileName, const wxString password)
                         break;
                     case MxIPC::ActionPromptYesNo:
                         if (wxMessageBox(tmp, _("Warning"), wxYES_NO|wxICON_EXCLAMATION) == wxYES)
-                            ssh.Print(wxT("yes\n"));
+                            ssh.Print(wxT("yes"));
                         else
-                            ssh.Print(wxT("no\n"));
+                            ssh.Print(wxT("no"));
                         break;
                     case MxIPC::ActionSendUsername:
                         d.SetStatusText(_("Sending username"));
-                        ssh.Print(cfg.sGetUsername() + wxT("\n"));
-                        ::wxLogTrace(MYTRACETAG, wxT("sending user '%s'"), cfg.sGetUsername().c_str());
+                        ssh.Print(cfg.sGetUsername());
                         break;
                     case MxIPC::ActionSendPassword:
                         d.SetStatusText(_("Sending password"));
-                        ssh.Print(password + wxT("\n"));
-                        ::wxLogTrace(MYTRACETAG, wxT("sending pass '%s'"), password.c_str());
+                        ssh.Print(password);
                         break;
                     case MxIPC::ActionNextCommand:
                         p += 10;
                         d.SetProgress(p);
                         switch (++state) {
                             case STATE_HELLO:
-                                ssh.Print(wxT("HELLO NXCLIENT - Version 1.4.0\n"));
+                                ssh.Print(wxT("HELLO NXCLIENT - Version 1.4.0"));
                                 break;
                             case STATE_SHELLMODE:
-                                ssh.Print(wxT("SET SHELL_MODE SHELL\n"));
+                                ssh.Print(wxT("SET SHELL_MODE SHELL"));
                                 break;
                             case STATE_START_LOGIN:
-                                ssh.Print(wxT("login\n"));
+                                ssh.Print(wxT("login"));
                                 break;
                             case STATE_START_SESSION:
-                                scmd = wxT("startsession ") + cfg.sGetSessionParams(wxT(""));
+                                scmd = wxT("startsession ") +
+                                    cfg.sGetSessionParams(wxT(""));
 #ifdef __UNIX__
                                 if (!x11_auth_cookie.IsEmpty())
-                                    scmd += wxString::Format(wxT(" --cookie=\"%s\""), x11_auth_cookie.c_str());
+                                    scmd += wxString::Format(wxT(" --cookie=\"%s\""),
+                                            x11_auth_cookie.c_str());
 #endif
-                                ssh.Print(scmd + wxT("\n"));
+                                ssh.Print(scmd);
                                 break;
                         }
                         break;
                     case MxIPC::ActionPassphraseDialog:
-                        ::wxMessageBox(wxT("NOT IMPLMENTED"), wxT("iMxIPC::ActionPassphraseDialog"));
-                        ssh.Print(wxT("notimplemented\n"));
+                        ::wxMessageBox(wxT("NOT IMPLMENTED"),
+                                wxT("iMxIPC::ActionPassphraseDialog"));
+                        ssh.Print(wxT("notimplemented"));
                         break;
                     case MxIPC::ActionSetSessionID:
                         sSessionID = tmp;
@@ -365,20 +365,23 @@ bool MxSession::Create(const wxString cfgFileName, const wxString password)
                             fname += wxString::Format(wxT("S-%s"), sSessionID.c_str());
                             {
                                 wxFileName::Mkdir(fname, 0777, wxPATH_MKDIR_FULL);
-                                fname += wxFileName::GetPathSeparator() + wxT("options");
-                                wxFile f(fname,wxFile::write_excl);
+                                fname += wxFileName::GetPathSeparator();
+                                fname += wxT("options");
+                                wxFile f(fname, wxFile::write_excl);
                                 if (f.IsOpened()) {
                                     f.Write(o);
                                     f.Close();
                                     wxString pcmd;
                                     wxConfigBase::Get()->Read(wxT("Config/SystemMxDir"), &pcmd);
                                     pcmd += wxFileName::GetPathSeparator();
+                                    pcmd += wxT("bin");
+                                    pcmd += wxFileName::GetPathSeparator();
                                     pcmd += wxString::Format(wxT("nxproxy -S options=%s:%s"),
                                             fname.c_str(), sSessionDisplay.c_str());
-                                    wxExecute(pcmd, 0);
+                                    ::wxExecute(pcmd, wxEXEC_SYNC);
                                 }
                             }
-                            ssh.Print(wxT("exit\n"));
+                            ssh.Print(wxT("exit"));
                             return true;
                         }
                         break;

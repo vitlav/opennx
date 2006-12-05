@@ -13,7 +13,7 @@
 #include "wx/wxprec.h"
 
 #ifndef WX_PRECOMP
-	#include "wx/wx.h"
+#include "wx/wx.h"
 #endif
 
 #ifdef __UNIX__
@@ -50,19 +50,19 @@
 // not wxApp)
 IMPLEMENT_APP(mxclientApp)
 
-// ============================================================================
-// implementation
-// ============================================================================
+    // ============================================================================
+    // implementation
+    // ============================================================================
 
-// ----------------------------------------------------------------------------
-// the application class
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    // the application class
+    // ----------------------------------------------------------------------------
 
-mxclientApp::mxclientApp()
+    mxclientApp::mxclientApp()
     : m_pCfg(NULL)
-    , m_szMemRes(NULL)
+      , m_szMemRes(NULL)
 {
-    
+
 #ifdef __WXDEBUG__
 #ifdef __WXMSW__
     m_pCfg = new wxConfig(wxT("MxClient-Debug"), wxT("Millenux"));
@@ -84,7 +84,7 @@ mxclientApp::mxclientApp()
         if (!wxFileName(tmp).DirExists())
             wxFileName(tmp).Mkdir();
         wxConfigBase::Get()->Write(wxT("Config/UserMxDir"), tmp);
-	wxFileName::Mkdir(tmp +  wxFileName::GetPathSeparator() + wxT("config"), 0750, wxPATH_MKDIR_FULL);
+        wxFileName::Mkdir(tmp +  wxFileName::GetPathSeparator() + wxT("config"), 0750, wxPATH_MKDIR_FULL);
     }
     if (!wxConfigBase::Get()->Read(wxT("Config/SystemMxDir"), &tmp)) {
         tmp = wxT("/usr/NX");
@@ -98,9 +98,9 @@ mxclientApp::mxclientApp()
 #endif
 #ifdef __LINUX__
         // Get executable path from /proc/self/exe
-	char ldst[PATH_MAX];
+        char ldst[PATH_MAX];
         int ret = readlink("/proc/self/exe", ldst, PATH_MAX);
-	tmp = wxConvLocal.cMB2WX(ldst);
+        tmp = wxConvLocal.cMB2WX(ldst);
         if (ret == -1)
             ret = 0;
         if (ret == 0)
@@ -114,6 +114,13 @@ mxclientApp::mxclientApp()
     wxConfigBase::Get()->Read(wxT("Config/SystemMxDir"), &tmp);
     // Change to our system dir so we can read our resources
     wxSetWorkingDirectory(tmp);
+#ifdef __UNIX__
+    wxString lpath;
+    if (::wxGetEnv(wxT("LD_LIBRARY_PATH"), &lpath))
+        lpath += wxT(":");
+    lpath = tmp + wxT("/lib");
+    wxSetEnv(wxT("LD_LIBRARY_PATH"), lpath);
+#endif
     wxString traceTags;
     if (::wxGetEnv(wxT("WXTRACE"), &traceTags)) {
         wxStringTokenizer t(traceTags, wxT(",:"));
@@ -137,11 +144,11 @@ void mxclientApp::OnInitCmdLine(wxCmdLineParser& parser)
     wxApp::OnInitCmdLine(parser);
 
     parser.AddSwitch(wxT(""), wxT("admin"),
-        _("Start the session administration tool."));
+            _("Start the session administration tool."));
     parser.AddOption(wxT(""), wxT("session"),
-        _("Run a session importing configuration settings from FILENAME."));
+            _("Run a session importing configuration settings from FILENAME."));
     parser.AddSwitch(wxT(""), wxT("wizard"),
-        _("Guide the user through the steps to configure a session."));
+            _("Guide the user through the steps to configure a session."));
 }
 
 bool mxclientApp::OnCmdLineParsed(wxCmdLineParser& parser)

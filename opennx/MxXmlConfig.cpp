@@ -1255,6 +1255,10 @@ wxString *MxXmlConfig::getStringNew(wxXmlNode *opt, const wxString &key, wxStrin
         if (opt->GetPropVal(wxT("key"), wxT("")) == key) {
             if (opt->HasProp(wxT("value"))) {
                 val = new wxString(opt->GetPropVal(wxT("value"), defval ? *defval : wxT("")));
+                if (val && val->IsEmpty() && (!defval)) {
+                    delete val;
+                    val = NULL;
+                }
                 if (defval)
                     delete defval;
             }

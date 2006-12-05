@@ -133,6 +133,7 @@ bool AsyncProcess::CheckInput()
         }
     }
 
+#if 0
     if (wxLog::IsAllowedTraceMask(MYTRACETAG)) {
         m_cMsgMutex.Lock();
         size_t cnt = m_aMessages.GetCount();
@@ -141,21 +142,26 @@ bool AsyncProcess::CheckInput()
             ::wxLogTrace(MYTRACETAG, wxT("  m[%d]='%s'"), i, m_aMessages[i].c_str());
         m_cMsgMutex.Unlock();
     }
+#endif
     return (m_cIoTimer.Time() < 1000);
 }
 
-bool AsyncProcess::Print(wxString s)
+    bool
+AsyncProcess::Print(wxString s)
 {
     wxOutputStream *os = GetOutputStream();
     if (os) {
         wxTextOutputStream tos(*os);
+        ::wxLogTrace(MYTRACETAG, wxT("Sending: %s"), s.c_str());
+        s += wxT("\n");
         tos << s.c_str();
         return true;
     }
     return false;
 }
 
-void AsyncProcess::OnTerminate(int pid, int status)
+    void
+AsyncProcess::OnTerminate(int pid, int status)
 {
     while (CheckInput())
         ;
