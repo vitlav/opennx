@@ -1545,6 +1545,7 @@ MxXmlConfig::isoKbd(int lang)
     wxString ret;
     if ((lang >= 0) && (lang <= 41))
         ret = iso_codes[lang];
+    return ret;
 }
 
 // Map keyboard language code from MXclient to NXclient

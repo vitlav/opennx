@@ -241,7 +241,6 @@ bool MxSession::Create(const wxString cfgFileName, const wxString password)
 
         if (ssh.SshProcess(appDir + wxT("/bin"), cmd)) {
             bool gotError = false;
-            int p;
             int state = 0;
             wxString tmp;
             wxString scmd;

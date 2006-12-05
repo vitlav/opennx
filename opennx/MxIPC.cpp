@@ -71,7 +71,6 @@ bool AsyncProcess::CheckInput()
 {
     bool loopi = IsInputAvailable();
     bool loope = IsErrorAvailable();
-    bool ret;
     char c;
 
     m_cIoTimer.Start((loopi||loope) ? 0 : 2000);
@@ -309,7 +308,7 @@ static int parseCode(wxString &buf)
 MxIPC::SshChat(wxString &ret)
 {
     wxString tmp;
-    int ccode, i;
+    int ccode;
     long n;
     bool gotText = m_pProcess->GetMessage(tmp);
 
