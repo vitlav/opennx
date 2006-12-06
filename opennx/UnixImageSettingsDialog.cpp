@@ -98,9 +98,11 @@ bool UnixImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id),
     SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
-    SetIcon(this->GetIconResource(wxT("res/nx.png")));
-    GetSizer()->Fit(this);
-    GetSizer()->SetSizeHints(this);
+    SetIcon(GetIconResource(wxT("res/nx.png")));
+    if (GetSizer())
+    {
+        GetSizer()->SetSizeHints(this);
+    }
     Centre();
 ////@end UnixImageSettingsDialog creation
     return TRUE;
@@ -113,32 +115,36 @@ bool UnixImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id),
 void UnixImageSettingsDialog::CreateControls()
 {    
 ////@begin UnixImageSettingsDialog content construction
-
-    wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_IMAGE_X11"));
-    if (FindWindow(XRCID("ID_CHECKBOX_X11_JPEG_CUSTOMQUALITY")))
-        m_pCtrlUseJpegQuality = wxDynamicCast(FindWindow(XRCID("ID_CHECKBOX_X11_JPEG_CUSTOMQUALITY")), wxCheckBox);
-    if (FindWindow(XRCID("ID_SLIDER_X11_JPEG_QALITY")))
-        m_pCtrlJpegQuality = wxDynamicCast(FindWindow(XRCID("ID_SLIDER_X11_JPEG_QALITY")), wxSlider);
-
+    if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_IMAGE_X11")))
+        wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
+    m_pCtrlUseJpegQuality = XRCCTRL(*this, "ID_CHECKBOX_X11_JPEG_CUSTOMQUALITY", wxCheckBox);
+    m_pCtrlJpegQuality = XRCCTRL(*this, "ID_SLIDER_X11_JPEG_QALITY", wxSlider);
     // Set validators
     if (FindWindow(XRCID("ID_RADIOBUTTON_X11_PNG")))
-        FindWindow(XRCID("ID_RADIOBUTTON_X11_PNG"))->SetValidator( wxGenericValidator(& m_bUsePNG) );
+        FindWindow(XRCID("ID_RADIOBUTTON_X11_PNG"))->SetValidator( wxGenericValidator(& m_bImageEncodingPNG) );
     if (FindWindow(XRCID("ID_RADIOBUTTON_X11_PLAIN")))
-        FindWindow(XRCID("ID_RADIOBUTTON_X11_PLAIN"))->SetValidator( wxGenericValidator(& m_bUsePlainX) );
+        FindWindow(XRCID("ID_RADIOBUTTON_X11_PLAIN"))->SetValidator( wxGenericValidator(& m_bImageEncodingPlainX) );
     if (FindWindow(XRCID("ID_RADIOBUTTON_X11_JPEG")))
-        FindWindow(XRCID("ID_RADIOBUTTON_X11_JPEG"))->SetValidator( wxGenericValidator(& m_bUseJpeg) );
+        FindWindow(XRCID("ID_RADIOBUTTON_X11_JPEG"))->SetValidator( wxGenericValidator(& m_bImageEncodingJpeg) );
     if (FindWindow(XRCID("ID_CHECKBOX_X11_JPEG_CUSTOMQUALITY")))
         FindWindow(XRCID("ID_CHECKBOX_X11_JPEG_CUSTOMQUALITY"))->SetValidator( wxGenericValidator(& m_bUseJpegQuality) );
     if (FindWindow(XRCID("ID_SLIDER_X11_JPEG_QALITY")))
         FindWindow(XRCID("ID_SLIDER_X11_JPEG_QALITY"))->SetValidator( wxGenericValidator(& m_iJpegQuality) );
-    if (FindWindow(XRCID("ID_CHECKBOX_X11_DISABLE_RENDER")))
-        FindWindow(XRCID("ID_CHECKBOX_X11_DISABLE_RENDER"))->SetValidator( wxGenericValidator(& m_bDisableRender) );
+    if (FindWindow(XRCID("ID_CHECKBOX_PERF_DISABLERENDER")))
+        FindWindow(XRCID("ID_CHECKBOX_PERF_DISABLERENDER"))->SetValidator( wxGenericValidator(& m_bDisableRender) );
+    if (FindWindow(XRCID("ID_CHECKBOX_PERF_DISABLEBACKINGSTORE")))
+        FindWindow(XRCID("ID_CHECKBOX_PERF_DISABLEBACKINGSTORE"))->SetValidator( wxGenericValidator(& m_bDisableBackingstore) );
+    if (FindWindow(XRCID("ID_CHECKBOX_PERF_DISABLECOMPOSITE")))
+        FindWindow(XRCID("ID_CHECKBOX_PERF_DISABLECOMPOSITE"))->SetValidator( wxGenericValidator(& m_bDisableComposite) );
+    if (FindWindow(XRCID("ID_CHECKBOX_PERF_DISABLESHMEM")))
+        FindWindow(XRCID("ID_CHECKBOX_PERF_DISABLESHMEM"))->SetValidator( wxGenericValidator(& m_bDisableShmem) );
+    if (FindWindow(XRCID("ID_CHECKBOX_PERF_DISABLESHPIX")))
+        FindWindow(XRCID("ID_CHECKBOX_PERF_DISABLESHPIX"))->SetValidator( wxGenericValidator(& m_bDisableShpix) );
 ////@end UnixImageSettingsDialog content construction
 
     // Create custom windows not generated automatically here.
 
 ////@begin UnixImageSettingsDialog content initialisation
-
 ////@end UnixImageSettingsDialog content initialisation
 }
 
@@ -159,6 +165,7 @@ wxBitmap UnixImageSettingsDialog::GetBitmapResource( const wxString& WXUNUSED(na
 {
     // Bitmap retrieval
 ////@begin UnixImageSettingsDialog bitmap retrieval
+    wxUnusedVar(name);
     return wxNullBitmap;
 ////@end UnixImageSettingsDialog bitmap retrieval
 }
@@ -191,5 +198,6 @@ void UnixImageSettingsDialog::OnOkClick( wxCommandEvent& event )
     }
     event.Skip();
 }
+
 
 

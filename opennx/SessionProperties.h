@@ -26,6 +26,7 @@
 #include "wx/notebook.h"
 #include "wx/valgen.h"
 #include "wx/spinctrl.h"
+#include "wx/valtext.h"
 #include "wx/listctrl.h"
 ////@end includes
 
@@ -157,9 +158,6 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_CACHECLEAN
     void OnButtonCachecleanClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_BACKINGSTORE
-    void OnComboboxBackingstoreSelected( wxCommandEvent& event );
-
     /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_KBDKEEP
     void OnRadiobuttonKbdkeepSelected( wxCommandEvent& event );
 
@@ -171,6 +169,9 @@ public:
 
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_SMB
     void OnCheckboxSmbClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_CUPS
+    void OnCheckboxCupsClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRL_SMB_SHARES
     void OnListctrlSmbSharesSelected( wxListEvent& event );
@@ -202,14 +203,8 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BROWSE_SYSDIR
     void OnButtonBrowseSysdirClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_FONTSRV
-    void OnCheckboxFontsrvClick( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_FSHOST
-    void OnTextctrlFshostUpdated( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_FSPORT
-    void OnTextctrlFsportUpdated( wxCommandEvent& event );
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BROWSE_CUPSD
+    void OnButtonBrowseCupsdClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_FONT_DEFAULT
     void OnButtonFontDefaultClick( wxCommandEvent& event );
@@ -250,7 +245,7 @@ private:
 ////@begin SessionProperties member variables
     wxNotebook* m_pNoteBook;
     wxTextCtrl* m_pCtrlHostname;
-    wxTextCtrl* m_pCtrlPort;
+    wxSpinCtrl* m_pCtrlPort;
     wxComboBox* m_pCtrlSessionType;
     wxComboBox* m_pCtrlDesktopType;
     wxButton* m_pCtrlDesktopSettings;
@@ -261,23 +256,24 @@ private:
     wxRadioButton* m_pCtrlImageEncCustom;
     wxButton* m_pCtrlImageSettings;
     wxCheckBox* m_pCtrlEnableSSL;
-    wxComboBox* m_pCtrlBackingStore;
+    wxTextCtrl* m_pCtrlProxyHost;
+    wxSpinCtrl* m_pCtrlProxyPort;
     wxRadioButton* m_pCtrlKeyboardCurrent;
     wxRadioButton* m_pCtrlKeyboardOther;
     wxComboBox* m_pCtrlKeyboardLayout;
     wxCheckBox* m_pCtrlSmbEnable;
+    wxCheckBox* m_pCtrlCupsEnable;
     wxListCtrl* m_pCtrlSmbShares;
     wxButton* m_pCtrlShareAdd;
     wxButton* m_pCtrlShareModify;
     wxButton* m_pCtrlShareDelete;
     wxTextCtrl* m_pCtrlUserMxDir;
     wxTextCtrl* m_pCtrlSystemMxDir;
-    wxCheckBox* m_pCtrlUseFontserver;
-    wxTextCtrl* m_pCtrlFontserverHost;
-    wxTextCtrl* m_pCtrlFontserverPort;
+    wxTextCtrl* m_pCtrlCupsServer;
     wxButton* m_pCtrlFontDefault;
     wxButton* m_pCtrlFontFixed;
     wxButton* m_pCtrlApplyButton;
+private:
     int m_iPort;
     wxString m_sHostName;
     int m_iDisplayWidth;
@@ -300,13 +296,15 @@ private:
     wxString m_sUserMxDir;
     wxString m_sSystemMxDir;
     bool m_bRemoveOldSessionFiles;
-    bool m_bUseFontServer;
-    wxString m_sFontServer;
+    wxString m_sCupsServer;
     int m_iFontServerPort;
     bool m_bUseDefaultImageEncoding;
     bool m_bUseCustomImageEncoding;
     int m_iKbdLayoutLanguage;
     int m_iDesktopTypeDialog;
+    int m:iProxyPort;
+    wxString m_sProxyHost;
+    bool m_bUseProxy;
 ////@end SessionProperties member variables
 
     void SetFontLabel(wxButton *, const wxFont &);

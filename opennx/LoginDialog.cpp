@@ -60,9 +60,11 @@ BEGIN_EVENT_TABLE( LoginDialog, wxDialog )
 
     EVT_CHECKBOX( XRCID("ID_CHECKBOX_SMARTCARD"), LoginDialog::OnCheckboxSmartcardClick )
 
+    EVT_CHECKBOX( XRCID("ID_CHECKBOX_GUESTLOGIN"), LoginDialog::OnCheckboxGuestloginClick )
+
     EVT_BUTTON( XRCID("ID_BUTTON_CONFIGURE"), LoginDialog::OnButtonConfigureClick )
 
-EVT_BUTTON( wxID_OK, LoginDialog::OnOkClick )
+    EVT_BUTTON( wxID_OK, LoginDialog::OnOkClick )
 
     ////@end LoginDialog event table entries
 
@@ -138,15 +140,18 @@ bool LoginDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
     m_pCtrlPassword = NULL;
     m_pCtrlSessionName = NULL;
     m_pCtrlUseSmartCard = NULL;
+    m_pCtrlGuestLogin = NULL;
     ////@end LoginDialog member initialisation
 
     ////@begin LoginDialog creation
     SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
-    SetIcon(this->GetIconResource(wxT("res/nx.png")));
-    GetSizer()->Fit(this);
-    GetSizer()->SetSizeHints(this);
+    SetIcon(GetIconResource(wxT("res/nx.png")));
+    if (GetSizer())
+    {
+        GetSizer()->SetSizeHints(this);
+    }
     Centre();
     ////@end LoginDialog creation
     return TRUE;
@@ -162,17 +167,13 @@ void LoginDialog::CreateControls()
     ReadConfigDirectory();
 
     ////@begin LoginDialog content construction
-
-    wxXmlResource::Get()->LoadDialog(this, GetParent(), wxT("ID_DIALOG_LOGIN"));
-    if (FindWindow(XRCID("ID_TEXTCTRL_USERNAME")))
-        m_pCtrlUsername = wxDynamicCast(FindWindow(XRCID("ID_TEXTCTRL_USERNAME")), wxTextCtrl);
-    if (FindWindow(XRCID("ID_TEXTCTRL_PASSWORD")))
-        m_pCtrlPassword = wxDynamicCast(FindWindow(XRCID("ID_TEXTCTRL_PASSWORD")), wxTextCtrl);
-    if (FindWindow(XRCID("ID_COMBOBOX_SESSION")))
-        m_pCtrlSessionName = wxDynamicCast(FindWindow(XRCID("ID_COMBOBOX_SESSION")), wxComboBox);
-    if (FindWindow(XRCID("ID_CHECKBOX_SMARTCARD")))
-        m_pCtrlUseSmartCard = wxDynamicCast(FindWindow(XRCID("ID_CHECKBOX_SMARTCARD")), wxCheckBox);
-
+    if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_LOGIN")))
+        wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
+    m_pCtrlUsername = XRCCTRL(*this, "ID_TEXTCTRL_USERNAME", wxTextCtrl);
+    m_pCtrlPassword = XRCCTRL(*this, "ID_TEXTCTRL_PASSWORD", wxTextCtrl);
+    m_pCtrlSessionName = XRCCTRL(*this, "ID_COMBOBOX_SESSION", wxComboBox);
+    m_pCtrlUseSmartCard = XRCCTRL(*this, "ID_CHECKBOX_SMARTCARD", wxCheckBox);
+    m_pCtrlGuestLogin = XRCCTRL(*this, "ID_CHECKBOX_GUESTLOGIN", wxCheckBox);
     // Set validators
     if (FindWindow(XRCID("ID_TEXTCTRL_USERNAME")))
         FindWindow(XRCID("ID_TEXTCTRL_USERNAME"))->SetValidator( wxGenericValidator(& m_sUsername) );
@@ -182,12 +183,13 @@ void LoginDialog::CreateControls()
         FindWindow(XRCID("ID_COMBOBOX_SESSION"))->SetValidator( wxGenericValidator(& m_sSessionName) );
     if (FindWindow(XRCID("ID_CHECKBOX_SMARTCARD")))
         FindWindow(XRCID("ID_CHECKBOX_SMARTCARD"))->SetValidator( wxGenericValidator(& m_bUseSmartCard) );
+    if (FindWindow(XRCID("ID_CHECKBOX_GUESTLOGIN")))
+        FindWindow(XRCID("ID_CHECKBOX_GUESTLOGIN"))->SetValidator( wxGenericValidator(& m_bGuestLogin) );
     ////@end LoginDialog content construction
 
     // Create custom windows not generated automatically here.
 
     ////@begin LoginDialog content initialisation
-
     ////@end LoginDialog content initialisation
 
     m_pCtrlSessionName->Append(m_aSessionNames);
@@ -199,10 +201,32 @@ void LoginDialog::CreateControls()
 
 void LoginDialog::OnCheckboxSmartcardClick( wxCommandEvent& event )
 {
-    // Insert custom code here
     event.Skip();
 }
 
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_GUESTLOGIN
+ */
+
+void LoginDialog::OnCheckboxGuestloginClick( wxCommandEvent& event )
+{
+    if (m_pCtrlGuestLogin->IsChecked()) {
+        m_sTmpUsername = m_pCtrlUsername->GetValue();
+        m_pCtrlUsername->SetValue(wxT(""));
+        m_pCtrlUsername->Enable(false);
+        m_sTmpPassowd = m_pCtrlPassword->GetValue();
+        m_pCtrlPassword->SetValue(wxT(""));
+        m_pCtrlUsername->Enable(false);
+    } else {
+        m_pCtrlUsername->SetValue(m_sTmpUsername);
+        m_pCtrlUsername->Enable(true);
+        m_sTmpPassowd = m_pCtrlPassword->GetValue();
+        m_pCtrlPassword->SetValue(m_sTmpPassword);
+        m_pCtrlUsername->Enable(true);
+    }
+    event.Skip();
+}
 
 /*!
  * Should we show tooltips?

@@ -99,8 +99,6 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
 
     EVT_BUTTON( XRCID("ID_BUTTON_CACHECLEAN"), SessionProperties::OnButtonCachecleanClick )
 
-    EVT_COMBOBOX( XRCID("ID_COMBOBOX_BACKINGSTORE"), SessionProperties::OnComboboxBackingstoreSelected )
-
     EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_KBDKEEP"), SessionProperties::OnRadiobuttonKbdkeepSelected )
 
     EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_KBDOTHER"), SessionProperties::OnRadiobuttonKbdotherSelected )
@@ -108,6 +106,8 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
     EVT_COMBOBOX( XRCID("ID_COMBOBOX_KBDLAYOUT"), SessionProperties::OnComboboxKbdlayoutSelected )
 
     EVT_CHECKBOX( XRCID("ID_CHECKBOX_SMB"), SessionProperties::OnCheckboxSmbClick )
+
+    EVT_CHECKBOX( XRCID("ID_CHECKBOX_CUPS"), SessionProperties::OnCheckboxCupsClick )
 
     EVT_LIST_ITEM_SELECTED( XRCID("ID_LISTCTRL_SMB_SHARES"), SessionProperties::OnListctrlSmbSharesSelected )
     EVT_LIST_ITEM_ACTIVATED( XRCID("ID_LISTCTRL_SMB_SHARES"), SessionProperties::OnListctrlSmbSharesItemActivated )
@@ -128,11 +128,7 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
 
     EVT_BUTTON( XRCID("ID_BUTTON_BROWSE_SYSDIR"), SessionProperties::OnButtonBrowseSysdirClick )
 
-    EVT_CHECKBOX( XRCID("ID_CHECKBOX_FONTSRV"), SessionProperties::OnCheckboxFontsrvClick )
-
-    EVT_TEXT( XRCID("ID_TEXTCTRL_FSHOST"), SessionProperties::OnTextctrlFshostUpdated )
-
-    EVT_TEXT( XRCID("ID_TEXTCTRL_FSPORT"), SessionProperties::OnTextctrlFsportUpdated )
+    EVT_BUTTON( XRCID("ID_BUTTON_BROWSE_CUPSD"), SessionProperties::OnButtonBrowseCupsdClick )
 
     EVT_BUTTON( XRCID("ID_BUTTON_FONT_DEFAULT"), SessionProperties::OnButtonFontDefaultClick )
 
@@ -255,20 +251,20 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlImageEncCustom = NULL;
     m_pCtrlImageSettings = NULL;
     m_pCtrlEnableSSL = NULL;
-    m_pCtrlBackingStore = NULL;
+    m_pCtrlProxyHost = NULL;
+    m_pCtrlProxyPort = NULL;
     m_pCtrlKeyboardCurrent = NULL;
     m_pCtrlKeyboardOther = NULL;
     m_pCtrlKeyboardLayout = NULL;
     m_pCtrlSmbEnable = NULL;
+    m_pCtrlCupsEnable = NULL;
     m_pCtrlSmbShares = NULL;
     m_pCtrlShareAdd = NULL;
     m_pCtrlShareModify = NULL;
     m_pCtrlShareDelete = NULL;
     m_pCtrlUserMxDir = NULL;
     m_pCtrlSystemMxDir = NULL;
-    m_pCtrlUseFontserver = NULL;
-    m_pCtrlFontserverHost = NULL;
-    m_pCtrlFontserverPort = NULL;
+    m_pCtrlCupsServer = NULL;
     m_pCtrlFontDefault = NULL;
     m_pCtrlFontFixed = NULL;
     m_pCtrlApplyButton = NULL;
@@ -318,8 +314,10 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));
-    GetSizer()->Fit(this);
-    GetSizer()->SetSizeHints(this);
+    if (GetSizer())
+    {
+        GetSizer()->SetSizeHints(this);
+    }
     Centre();
 ////@end SessionProperties creation
 
@@ -460,11 +458,11 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
 void SessionProperties::CreateControls()
 {
 ////@begin SessionProperties content construction
-
-    wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_PROPERTIES"));
+    if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_PROPERTIES")))
+        wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
     m_pNoteBook = XRCCTRL(*this, "ID_NOTEBOOK", wxNotebook);
     m_pCtrlHostname = XRCCTRL(*this, "ID_TEXTCTRL_HOST", wxTextCtrl);
-    m_pCtrlPort = XRCCTRL(*this, "ID_TEXTCTRL_PORT", wxTextCtrl);
+    m_pCtrlPort = XRCCTRL(*this, "ID_TEXTCTRL_PORT", wxSpinCtrl);
     m_pCtrlSessionType = XRCCTRL(*this, "ID_COMBOBOX_DPROTO", wxComboBox);
     m_pCtrlDesktopType = XRCCTRL(*this, "ID_COMBOBOX_DTYPE", wxComboBox);
     m_pCtrlDesktopSettings = XRCCTRL(*this, "ID_BUTTON_DSETTINGS", wxButton);
@@ -475,20 +473,20 @@ void SessionProperties::CreateControls()
     m_pCtrlImageEncCustom = XRCCTRL(*this, "ID_RADIOBUTTON_IMG_CUSTOM", wxRadioButton);
     m_pCtrlImageSettings = XRCCTRL(*this, "ID_BUTTON_IMG_CUSTOM", wxButton);
     m_pCtrlEnableSSL = XRCCTRL(*this, "ID_CHECKBOX_ENABLESSL", wxCheckBox);
-    m_pCtrlBackingStore = XRCCTRL(*this, "ID_COMBOBOX_BACKINGSTORE", wxComboBox);
+    m_pCtrlProxyHost = XRCCTRL(*this, "ID_TEXTCTRL_PROXYHOST", wxTextCtrl);
+    m_pCtrlProxyPort = XRCCTRL(*this, "ID_SPINCTRL_PROXYPORT", wxSpinCtrl);
     m_pCtrlKeyboardCurrent = XRCCTRL(*this, "ID_RADIOBUTTON_KBDKEEP", wxRadioButton);
     m_pCtrlKeyboardOther = XRCCTRL(*this, "ID_RADIOBUTTON_KBDOTHER", wxRadioButton);
     m_pCtrlKeyboardLayout = XRCCTRL(*this, "ID_COMBOBOX_KBDLAYOUT", wxComboBox);
     m_pCtrlSmbEnable = XRCCTRL(*this, "ID_CHECKBOX_SMB", wxCheckBox);
+    m_pCtrlCupsEnable = XRCCTRL(*this, "ID_CHECKBOX_CUPS", wxCheckBox);
     m_pCtrlSmbShares = XRCCTRL(*this, "ID_LISTCTRL_SMB_SHARES", wxListCtrl);
     m_pCtrlShareAdd = XRCCTRL(*this, "ID_BUTTON_SMB_ADD", wxButton);
     m_pCtrlShareModify = XRCCTRL(*this, "ID_BUTTON_SMB_MODIFY", wxButton);
     m_pCtrlShareDelete = XRCCTRL(*this, "ID_BUTTON_SMB_DELETE", wxButton);
     m_pCtrlUserMxDir = XRCCTRL(*this, "ID_TEXTCTRL_USERDIR", wxTextCtrl);
     m_pCtrlSystemMxDir = XRCCTRL(*this, "ID_TEXTCTRL_SYSDIR", wxTextCtrl);
-    m_pCtrlUseFontserver = XRCCTRL(*this, "ID_CHECKBOX_FONTSRV", wxCheckBox);
-    m_pCtrlFontserverHost = XRCCTRL(*this, "ID_TEXTCTRL_FSHOST", wxTextCtrl);
-    m_pCtrlFontserverPort = XRCCTRL(*this, "ID_TEXTCTRL_FSPORT", wxTextCtrl);
+    m_pCtrlCupsServer = XRCCTRL(*this, "ID_TEXTCTRL_CUPSD", wxTextCtrl);
     m_pCtrlFontDefault = XRCCTRL(*this, "ID_BUTTON_FONT_DEFAULT", wxButton);
     m_pCtrlFontFixed = XRCCTRL(*this, "ID_BUTTON_FONT_FIXED", wxButton);
     m_pCtrlApplyButton = XRCCTRL(*this, "wxID_APPLY", wxButton);
@@ -496,7 +494,7 @@ void SessionProperties::CreateControls()
     if (FindWindow(XRCID("ID_TEXTCTRL_HOST")))
         FindWindow(XRCID("ID_TEXTCTRL_HOST"))->SetValidator( MxValidator(MxValidator::MXVAL_HOST, & m_sHostName) );
     if (FindWindow(XRCID("ID_TEXTCTRL_PORT")))
-        FindWindow(XRCID("ID_TEXTCTRL_PORT"))->SetValidator( MxValidator(MxValidator::MXVAL_NUMERIC, & m_iPort) );
+        FindWindow(XRCID("ID_TEXTCTRL_PORT"))->SetValidator( wxGenericValidator(& m_iPort) );
     if (FindWindow(XRCID("ID_CHECKBOX_PWSAVE")))
         FindWindow(XRCID("ID_CHECKBOX_PWSAVE"))->SetValidator( wxGenericValidator(& m_bRememberPassword) );
     if (FindWindow(XRCID("ID_CHECKBOX_SMARTCARD")))
@@ -521,6 +519,12 @@ void SessionProperties::CreateControls()
         FindWindow(XRCID("ID_CHECKBOX_DISABLEZCOMP"))->SetValidator( wxGenericValidator(& m_bDisableZlibCompression) );
     if (FindWindow(XRCID("ID_CHECKBOX_ENABLESSL")))
         FindWindow(XRCID("ID_CHECKBOX_ENABLESSL"))->SetValidator( wxGenericValidator(& m_bEnableSSL) );
+    if (FindWindow(XRCID("ID_CHECKBOX_HTTPPROXY")))
+        FindWindow(XRCID("ID_CHECKBOX_HTTPPROXY"))->SetValidator( wxGenericValidator(& m_bUseProxy) );
+    if (FindWindow(XRCID("ID_TEXTCTRL_PROXYHOST")))
+        FindWindow(XRCID("ID_TEXTCTRL_PROXYHOST"))->SetValidator( wxTextValidator(wxFILTER_NONE, & m_sProxyHost) );
+    if (FindWindow(XRCID("ID_SPINCTRL_PROXYPORT")))
+        FindWindow(XRCID("ID_SPINCTRL_PROXYPORT"))->SetValidator( wxGenericValidator(& m:iProxyPort) );
     if (FindWindow(XRCID("ID_COMBOBOX_CACHEMEM")))
         FindWindow(XRCID("ID_COMBOBOX_CACHEMEM"))->SetValidator( wxGenericValidator(& m_iCacheMem) );
     if (FindWindow(XRCID("ID_COMBOBOX_CACHEDISK")))
@@ -531,6 +535,8 @@ void SessionProperties::CreateControls()
         FindWindow(XRCID("ID_COMBOBOX_KBDLAYOUT"))->SetValidator( wxGenericValidator(& m_iKbdLayoutLanguage) );
     if (FindWindow(XRCID("ID_CHECKBOX_SMB")))
         FindWindow(XRCID("ID_CHECKBOX_SMB"))->SetValidator( wxGenericValidator(& m_bEnableSmbSharing) );
+    if (FindWindow(XRCID("ID_CHECKBOX_CUPS")))
+        FindWindow(XRCID("ID_CHECKBOX_CUPS"))->SetValidator( wxGenericValidator(& m_bEnableSmbSharing) );
     if (FindWindow(XRCID("ID_CHECKBOX_MMEDIA")))
         FindWindow(XRCID("ID_CHECKBOX_MMEDIA"))->SetValidator( wxGenericValidator(& m_bEnableMultimedia) );
     if (FindWindow(XRCID("ID_TEXTCTRL_USERDIR")))
@@ -539,18 +545,13 @@ void SessionProperties::CreateControls()
         FindWindow(XRCID("ID_CHECKBOX_REMOVEOLDSF"))->SetValidator( wxGenericValidator(& m_bRemoveOldSessionFiles) );
     if (FindWindow(XRCID("ID_TEXTCTRL_SYSDIR")))
         FindWindow(XRCID("ID_TEXTCTRL_SYSDIR"))->SetValidator( MxValidator(& m_sSystemMxDir) );
-    if (FindWindow(XRCID("ID_CHECKBOX_FONTSRV")))
-        FindWindow(XRCID("ID_CHECKBOX_FONTSRV"))->SetValidator( wxGenericValidator(& m_bUseFontServer) );
-    if (FindWindow(XRCID("ID_TEXTCTRL_FSHOST")))
-        FindWindow(XRCID("ID_TEXTCTRL_FSHOST"))->SetValidator( MxValidator(MxValidator::MXVAL_HOST, & m_sFontServer) );
-    if (FindWindow(XRCID("ID_TEXTCTRL_FSPORT")))
-        FindWindow(XRCID("ID_TEXTCTRL_FSPORT"))->SetValidator( MxValidator(MxValidator::MXVAL_NUMERIC, & m_iFontServerPort) );
+    if (FindWindow(XRCID("ID_TEXTCTRL_CUPSD")))
+        FindWindow(XRCID("ID_TEXTCTRL_CUPSD"))->SetValidator( MxValidator(& m_sCupsServer) );
 ////@end SessionProperties content construction
 
     // Create custom windows not generated automatically here.
 
 ////@begin SessionProperties content initialisation
-
 ////@end SessionProperties content initialisation
 }
 
@@ -951,16 +952,6 @@ void SessionProperties::OnApplyClick( wxCommandEvent& event )
     event.Skip();
 }
 
-/*!
- * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_FONTSRV
- */
-
-void SessionProperties::OnCheckboxFontsrvClick( wxCommandEvent& event )
-{
-    UpdateDialogConstraints(true);
-    CheckChanged();
-    event.Skip();
-}
 
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_ABOUT
@@ -1114,15 +1105,6 @@ void SessionProperties::OnComboboxCachediskSelected( wxCommandEvent& event )
     event.Skip();
 }
 
-/*!
- * wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_BACKINGSTORE
- */
-
-void SessionProperties::OnComboboxBackingstoreSelected( wxCommandEvent& event )
-{
-    CheckChanged();
-    event.Skip();
-}
 
 /*!
  * wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_KBDLAYOUT
@@ -1189,27 +1171,7 @@ void SessionProperties::OnTextctrlSysdirUpdated( wxCommandEvent& event )
     event.Skip();
 }
 
-/*!
- * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_FSHOST
- */
 
-void SessionProperties::OnTextctrlFshostUpdated( wxCommandEvent& event )
-{
-    if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlFontserverHost))
-        CheckChanged();
-    event.Skip();
-}
-
-/*!
- * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_FSPORT
- */
-
-void SessionProperties::OnTextctrlFsportUpdated( wxCommandEvent& event )
-{
-    if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlFontserverPort))
-        CheckChanged();
-    event.Skip();
-}
 
 /*!
  * wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRL_SMB_SHARES
@@ -1230,6 +1192,35 @@ void SessionProperties::OnListctrlSmbSharesItemActivated( wxListEvent& event )
 {
     wxCommandEvent e;
     OnButtonSmbModifyClick(e);
+    event.Skip();
+}
+
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_CUPS
+ */
+
+void SessionProperties::OnCheckboxCupsClick( wxCommandEvent& event )
+{
+////@begin wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_CUPS in SessionProperties.
+    // Before editing this code, remove the block markers.
+    event.Skip();
+////@end wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_CUPS in SessionProperties. 
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BROWSE_CUPSD
+ */
+
+void SessionProperties::OnButtonBrowseCupsdClick( wxCommandEvent& event )
+{
+    const wxString& dir = wxDirSelector(_("Select System CUPS daemon"),
+        m_sSystemMxDir, 0, wxDefaultPosition, this);
+    if (!dir.IsEmpty()) {
+        m_pCtrlSystemMxDir->SetValue(dir);
+        CheckChanged();
+    }
     event.Skip();
 }
 

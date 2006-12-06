@@ -90,7 +90,6 @@ private:
 
 ////@begin UnixImageSettingsDialog member function declarations
 
-
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
 
@@ -104,12 +103,17 @@ private:
 ////@begin UnixImageSettingsDialog member variables
     wxCheckBox* m_pCtrlUseJpegQuality;
     wxSlider* m_pCtrlJpegQuality;
-    bool m_bUsePNG;
-    bool m_bUsePlainX;
-    bool m_bUseJpeg;
+private:
+    bool m_bImageEncodingPNG;
+    bool m_bImageEncodingPlainX;
+    bool m_bImageEncodingJpeg;
     bool m_bUseJpegQuality;
     int m_iJpegQuality;
     bool m_bDisableRender;
+    bool m_bDisableBackingstore;
+    bool m_bDisableComposite;
+    bool m_bDisableShmem;
+    bool m_bDisableShpix;
 ////@end UnixImageSettingsDialog member variables
 
     MxXmlConfig *m_pCfg;

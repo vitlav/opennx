@@ -127,9 +127,11 @@ bool RdpPropertyDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
-    SetIcon(this->GetIconResource(wxT("res/nx.png")));
-    GetSizer()->Fit(this);
-    GetSizer()->SetSizeHints(this);
+    SetIcon(GetIconResource(wxT("res/nx.png")));
+    if (GetSizer())
+    {
+        GetSizer()->SetSizeHints(this);
+    }
     Centre();
 ////@end RdpPropertyDialog creation
     return TRUE;
@@ -142,24 +144,19 @@ bool RdpPropertyDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
 void RdpPropertyDialog::CreateControls()
 {    
 ////@begin RdpPropertyDialog content construction
-
-    wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_SETTINGS_RDP"));
-    if (FindWindow(XRCID("ID_RADIOBUTTON_RDP_AUTOLOGIN")))
-        m_pCtrlAutologin = wxDynamicCast(FindWindow(XRCID("ID_RADIOBUTTON_RDP_AUTOLOGIN")), wxRadioButton);
-    if (FindWindow(XRCID("ID_TEXTCTRL_RDP_USERNAME")))
-        m_pCtrlUsername = wxDynamicCast(FindWindow(XRCID("ID_TEXTCTRL_RDP_USERNAME")), wxTextCtrl);
-    if (FindWindow(XRCID("ID_TEXTCTRL_RDP_PASSWORD")))
-        m_pCtrlPassword = wxDynamicCast(FindWindow(XRCID("ID_TEXTCTRL_RDP_PASSWORD")), wxTextCtrl);
-    if (FindWindow(XRCID("ID_CHECKBOX_RDP_REMEMBER_PWD")))
-        m_pCtrlRememberPassword = wxDynamicCast(FindWindow(XRCID("ID_CHECKBOX_RDP_REMEMBER_PWD")), wxCheckBox);
-    if (FindWindow(XRCID("ID_RADIOBUTTON_RDP_RUNAPP")))
-        m_pCtrlRunApplication = wxDynamicCast(FindWindow(XRCID("ID_RADIOBUTTON_RDP_RUNAPP")), wxRadioButton);
-    if (FindWindow(XRCID("ID_TEXTCTRL_RDP_APPLICATION")))
-        m_pCtrlApplicationString = wxDynamicCast(FindWindow(XRCID("ID_TEXTCTRL_RDP_APPLICATION")), wxTextCtrl);
-
+    if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_SETTINGS_RDP")))
+        wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
+    m_pCtrlAutologin = XRCCTRL(*this, "ID_RADIOBUTTON_RDP_AUTOLOGIN", wxRadioButton);
+    m_pCtrlUsername = XRCCTRL(*this, "ID_TEXTCTRL_RDP_USERNAME", wxTextCtrl);
+    m_pCtrlPassword = XRCCTRL(*this, "ID_TEXTCTRL_RDP_PASSWORD", wxTextCtrl);
+    m_pCtrlRememberPassword = XRCCTRL(*this, "ID_CHECKBOX_RDP_REMEMBER_PWD", wxCheckBox);
+    m_pCtrlRunApplication = XRCCTRL(*this, "ID_RADIOBUTTON_RDP_RUNAPP", wxRadioButton);
+    m_pCtrlApplicationString = XRCCTRL(*this, "ID_TEXTCTRL_RDP_APPLICATION", wxTextCtrl);
     // Set validators
     if (FindWindow(XRCID("ID_TEXTCTRL_RDP_HOST")))
         FindWindow(XRCID("ID_TEXTCTRL_RDP_HOST"))->SetValidator( wxGenericValidator(& m_sHostname) );
+    if (FindWindow(XRCID("ID_TEXTCTRL_RDP_DOMAIN")))
+        FindWindow(XRCID("ID_TEXTCTRL_RDP_DOMAIN"))->SetValidator( wxTextValidator(wxFILTER_NONE, & m_sRdpDomain) );
     if (FindWindow(XRCID("ID_RADIOBUTTON_RDP_WINLOGON")))
         FindWindow(XRCID("ID_RADIOBUTTON_RDP_WINLOGON"))->SetValidator( wxGenericValidator(& m_bShowWinLogon) );
     if (FindWindow(XRCID("ID_RADIOBUTTON_RDP_MXAUTH")))
@@ -183,7 +180,6 @@ void RdpPropertyDialog::CreateControls()
     // Create custom windows not generated automatically here.
 
 ////@begin RdpPropertyDialog content initialisation
-
 ////@end RdpPropertyDialog content initialisation
     UpdateDialogConstraints();
 }
@@ -205,6 +201,7 @@ wxBitmap RdpPropertyDialog::GetBitmapResource( const wxString& WXUNUSED(name) )
 {
     // Bitmap retrieval
 ////@begin RdpPropertyDialog bitmap retrieval
+    wxUnusedVar(name);
     return wxNullBitmap;
 ////@end RdpPropertyDialog bitmap retrieval
 }

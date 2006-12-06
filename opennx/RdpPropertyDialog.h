@@ -24,6 +24,7 @@
 #include "RdpPropertyDialog_symbols.h"
 #include "wx/xrc/xmlres.h"
 #include "wx/valgen.h"
+#include "wx/valtext.h"
 ////@end includes
 
 /*!
@@ -105,7 +106,6 @@ private:
 public:
 ////@begin RdpPropertyDialog member function declarations
 
-
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
 
@@ -124,6 +124,7 @@ private:
     wxCheckBox* m_pCtrlRememberPassword;
     wxRadioButton* m_pCtrlRunApplication;
     wxTextCtrl* m_pCtrlApplicationString;
+private:
     wxString m_sHostname;
     wxString m_sUsername;
     wxString m_sPassword;
@@ -134,6 +135,7 @@ private:
     bool m_bUseMxAuth;
     bool m_bRunDesktop;
     bool m_bRunApplication;
+    wxString m_sRdpDomain;
 ////@end RdpPropertyDialog member variables
 
     MxXmlConfig *m_pCfg;

@@ -88,6 +88,9 @@ private:
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_SMARTCARD
     void OnCheckboxSmartcardClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_GUESTLOGIN
+    void OnCheckboxGuestloginClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_CONFIGURE
     void OnButtonConfigureClick( wxCommandEvent& event );
 
@@ -98,10 +101,6 @@ private:
 
 public:
 ////@begin LoginDialog member function declarations
-
-    wxString GetSSessionName() const { return m_sSessionName ; }
-    void SetSSessionName(wxString value) { m_sSessionName = value ; }
-
 
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
@@ -121,10 +120,13 @@ private:
     wxTextCtrl* m_pCtrlPassword;
     wxComboBox* m_pCtrlSessionName;
     wxCheckBox* m_pCtrlUseSmartCard;
+    wxCheckBox* m_pCtrlGuestLogin;
+private:
     wxString m_sUsername;
     wxString m_sPassword;
     bool m_bUseSmartCard;
     wxString m_sSessionName;
+    bool m_bGuestLogin;
 ////@end LoginDialog member variables
 
     MxXmlConfig *m_pCurrentCfg;
