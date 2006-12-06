@@ -21,7 +21,7 @@
   ghost@aladdin.com
 
  */
-/*$Id: md5.c 741 2004-06-29 16:13:25Z felfert $ */
+/*$Id$ */
 /*
   Independent implementation of MD5 (RFC 1321).
 

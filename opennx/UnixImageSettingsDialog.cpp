@@ -4,7 +4,7 @@
 // Author:      Fritz Elfert
 // Modified by: 
 // Created:     06/25/04 00:38:55
-// RCS-ID:      $Id: UnixImageSettingsDialog.cpp 812 2004-08-05 21:10:01Z felfert $
+// RCS-ID:      $Id$
 // Copyright:   Copyright 2004 Millenux GmbH
 // Licence:     LGPL
 /////////////////////////////////////////////////////////////////////////////

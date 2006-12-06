@@ -1,4 +1,4 @@
-// $Id: MxValidator.cpp 823 2004-08-08 03:25:27Z felfert $
+// $Id$
 
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
 #pragma implementation "MxValidator.h"

@@ -4,7 +4,7 @@
 // Author:      Fritz Elfert
 // Modified by: 
 // Created:     08/01/04 16:35:50
-// RCS-ID:      $Id: SmbShareProperties.cpp 811 2004-08-05 20:54:14Z felfert $
+// RCS-ID:      $Id$
 // Copyright:   Copyright 2004 Millenux GmbH
 // Licence:     LGPL
 /////////////////////////////////////////////////////////////////////////////

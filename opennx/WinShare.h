@@ -1,4 +1,4 @@
-// $Id: WinShare.h 795 2004-08-03 18:30:08Z felfert $
+// $Id$
 #ifndef _WINSHARE_H_
 #define _WINSHARE_H_
 

@@ -4,7 +4,7 @@
 // Author:      Fritz Elfert
 // Modified by: 
 // Created:     06/13/04 22:47:28
-// RCS-ID:      $Id: VncPropertyDialog.cpp 811 2004-08-05 20:54:14Z felfert $
+// RCS-ID:      $Id$
 // Copyright:   Copyright 2004 Millenux GmbH
 // Licence:     LGPL
 /////////////////////////////////////////////////////////////////////////////

@@ -4,7 +4,7 @@
 // Author:      Fritz Elfert
 // Modified by: 
 // Created:     06/13/04 22:48:26
-// RCS-ID:      $Id: VncImageSettingsDialog.h 799 2004-08-04 04:19:35Z felfert $
+// RCS-ID:      $Id$
 // Copyright:   Copyright 2004 Millenux GmbH
 // Licence:     LGPL
 /////////////////////////////////////////////////////////////////////////////

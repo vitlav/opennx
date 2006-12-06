@@ -4,7 +4,7 @@
 // Author:      Fritz Elfert
 // Modified by: 
 // Created:     06/13/04 22:54:56
-// RCS-ID:      $Id: SessionList.cpp 901 2004-12-10 21:59:33Z felfert $
+// RCS-ID:      $Id$
 // Copyright:   Copyright 2004 Millenux GmbH
 // Licence:     LGPL
 /////////////////////////////////////////////////////////////////////////////

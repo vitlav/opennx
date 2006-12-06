@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-// $Id: LogDialog_symbols.h 901 2004-12-10 21:59:33Z felfert $
+// $Id$
 //
 // Purpose:     Symbols file
 // Author:      Fritz Elfert

@@ -1,4 +1,4 @@
-// $Id: MxValidator.h 821 2004-08-08 00:32:08Z felfert $
+// $Id$
 
 #ifndef _MXVALIDATOR_H_
 #define _MXVALIDATOR_H_

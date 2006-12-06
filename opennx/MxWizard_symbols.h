@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-// $Id: MxWizard_symbols.h 890 2004-11-10 23:23:15Z felfert $
+// $Id$
 //
 // Purpose:     Symbols file
 // Author:      Fritz Elfert

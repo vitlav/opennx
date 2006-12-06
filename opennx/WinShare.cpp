@@ -1,4 +1,4 @@
-// $Id: WinShare.cpp 877 2004-10-05 10:31:54Z felfert $
+// $Id$
 
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
 #pragma implementation "WinShare.h"

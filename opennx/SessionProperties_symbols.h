@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-// $Id: SessionProperties_symbols.h 883 2004-11-04 21:15:18Z felfert $
+// $Id$
 //
 // Purpose:     Symbols file
 // Author:      Fritz Elfert

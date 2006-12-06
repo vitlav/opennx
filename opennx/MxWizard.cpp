@@ -1,9 +1,9 @@
 /////////////////////////////////////////////////////////////////////////////
-// $Id: MxWizard.cpp 899 2004-12-09 19:38:35Z felfert $
+// $Id$
 //
 // Author:      Fritz Elfert
 // Created:     06/15/04 03:21:04
-// RCS-ID:      $Id: MxWizard.cpp 899 2004-12-09 19:38:35Z felfert $
+// RCS-ID:      $Id$
 // Copyright:   Copyright 2004 Millenux GmbH
 // Licence:     LGPL
 /////////////////////////////////////////////////////////////////////////////
