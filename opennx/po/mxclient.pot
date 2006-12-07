@@ -21,7 +21,7 @@ msgid "Version"
 msgstr ""
 
 #: AboutDialog.h:44 AboutDialog_symbols.h:12
-msgid "About MXclient"
+msgid "About OpenNX"
 msgstr ""
 
 #: AboutDialog_symbols.h:13 RdpImageSettingsDialog_symbols.h:16
@@ -33,7 +33,7 @@ msgid "&OK"
 msgstr ""
 
 #: LogDialog.h:42 LogDialog_symbols.h:11
-msgid "Session Log - MXclient"
+msgid "Session Log - OpenNX"
 msgstr ""
 
 #: LogDialog_symbols.h:12
@@ -48,11 +48,11 @@ msgid ""
 msgstr ""
 
 #: LoginDialog.cpp:262 LoginDialog.cpp:310
-msgid "Error saving - MXclient"
+msgid "Error saving - OpenNX"
 msgstr ""
 
 #: LoginDialog.h:46 LoginDialog_symbols.h:12
-msgid "Login - MXclient"
+msgid "Login - OpenNX"
 msgstr ""
 
 #: LoginDialog_symbols.h:13
@@ -81,15 +81,15 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: mxclientApp.cpp:118
+#: opennxApp.cpp:118
 msgid "Start the session administration tool."
 msgstr ""
 
-#: mxclientApp.cpp:120
+#: opennxApp.cpp:120
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr ""
 
-#: mxclientApp.cpp:122
+#: opennxApp.cpp:122
 msgid "Guide the user through the steps to configure a session."
 msgstr ""
 
@@ -274,7 +274,7 @@ msgid "Show the Advanced Configuration dialog"
 msgstr ""
 
 #: RdpImageSettingsDialog.h:45 RdpImageSettingsDialog_symbols.h:12
-msgid "RDP Image Settings - MXclient"
+msgid "RDP Image Settings - OpenNX"
 msgstr ""
 
 #: RdpImageSettingsDialog_symbols.h:13
@@ -298,7 +298,7 @@ msgid "&Cancel"
 msgstr ""
 
 #: RdpPropertyDialog.h:45 RdpPropertyDialog_symbols.h:12
-msgid "RDP Session Settings - MXclient"
+msgid "RDP Session Settings - OpenNX"
 msgstr ""
 
 #: RdpPropertyDialog_symbols.h:13
@@ -502,7 +502,7 @@ msgid "Delete Session"
 msgstr ""
 
 #: SessionProperties.h:54 SessionProperties_symbols.h:11
-msgid "Session properties - MXclient"
+msgid "Session properties - OpenNX"
 msgstr ""
 
 #: SessionProperties_symbols.h:12
@@ -854,7 +854,7 @@ msgid "&Apply"
 msgstr ""
 
 #: SmbShareProperties.cpp:157
-msgid "Modify SMB Share - MXclient"
+msgid "Modify SMB Share - OpenNX"
 msgstr ""
 
 #: SmbShareProperties.cpp:224
@@ -866,7 +866,7 @@ msgid "Invalid mountpoint"
 msgstr ""
 
 #: SmbShareProperties.h:46 SmbShareProperties_symbols.h:12
-msgid "New SMB Share - MXclient"
+msgid "New SMB Share - OpenNX"
 msgstr ""
 
 #: SmbShareProperties_symbols.h:13
@@ -887,7 +887,7 @@ msgid ""
 msgstr ""
 
 #: UnixImageSettingsDialog.h:45 UnixImageSettingsDialog_symbols.h:12
-msgid "Unix Image Settings - MXclient"
+msgid "Unix Image Settings - OpenNX"
 msgstr ""
 
 #: UnixImageSettingsDialog_symbols.h:13
@@ -907,7 +907,7 @@ msgid "Disable render extension"
 msgstr ""
 
 #: VncImageSettingsDialog.h:45 VncImageSettingsDialog_symbols.h:12
-msgid "VNC Image Settings - MXclient"
+msgid "VNC Image Settings - OpenNX"
 msgstr ""
 
 #: VncImageSettingsDialog_symbols.h:13
@@ -923,7 +923,7 @@ msgid "Enable JPEG encoding"
 msgstr ""
 
 #: VncPropertyDialog.h:45 VncPropertyDialog_symbols.h:12
-msgid "VNC Session Settings - MXclient"
+msgid "VNC Session Settings - OpenNX"
 msgstr ""
 
 #: VncPropertyDialog_symbols.h:14
@@ -942,7 +942,7 @@ msgid ""
 msgstr ""
 
 #: X11PropertyDialog.h:44 X11PropertyDialog_symbols.h:12
-msgid "X11 Session Settings - MXclient"
+msgid "X11 Session Settings - OpenNX"
 msgstr ""
 
 #: X11PropertyDialog_symbols.h:13

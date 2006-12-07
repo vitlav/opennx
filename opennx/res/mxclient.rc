@@ -45,14 +45,14 @@ BEGIN
         BEGIN
             VALUE "Comments", "\0"
             VALUE "CompanyName", "Millenux GmbH\0"
-            VALUE "FileDescription", "mxclient\0"
+            VALUE "FileDescription", "opennx\0"
             VALUE "FileVersion", "0, 1, 0, 0\0"
-            VALUE "InternalName", "mxclient\0"
+            VALUE "InternalName", "opennx\0"
             VALUE "LegalCopyright", "Copyright © 2005 Millenux GmbH\0"
             VALUE "LegalTrademarks", "\0"
-            VALUE "OriginalFilename", "mxclient.exe\0"
+            VALUE "OriginalFilename", "opennx.exe\0"
             VALUE "PrivateBuild", "\0"
-            VALUE "ProductName", "Millenux mxclient\0"
+            VALUE "ProductName", "Millenux opennx\0"
             VALUE "ProductVersion", "0, 1, 0, 0\0"
             VALUE "SpecialBuild", "\0"
         END

@@ -2,9 +2,9 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(Opennx, 0.1, fritz.elfert@millenux.com)
+AC_INIT(opennx, 0.3, fritz.elfert@innovidata.com)
 AC_CONFIG_AUX_DIR([conf])
-AC_CONFIG_SRCDIR([OpennxApp.cpp])
+AC_CONFIG_SRCDIR([opennxApp.cpp])
 AM_INIT_AUTOMAKE
 
 # Checks for programs.

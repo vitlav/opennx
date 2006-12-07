@@ -1,6 +1,6 @@
-# English translations for mxclient package.
+# English translations for opennx package.
 # Copyright (C) 2006 Millenux GmbH
-# This file is distributed under the same license as the mxclient package.
+# This file is distributed under the same license as the opennx package.
 # Automatically generated, 2006.
 # 
 # All this catalog "translates" are quotation characters.
@@ -27,7 +27,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: mxclient 0.1\n"
+"Project-Id-Version: opennx 0.1\n"
 "Report-Msgid-Bugs-To: fritz.elfert@millenux.com\n"
 "POT-Creation-Date: 2004-10-05 12:44+0200\n"
 "PO-Revision-Date: 2004-10-05 12:44+0200\n"
@@ -43,8 +43,8 @@ msgid "Version"
 msgstr "Version"
 
 #: AboutDialog.h:44 AboutDialog_symbols.h:12
-msgid "About MXclient"
-msgstr "About MXclient"
+msgid "About OpenNX"
+msgstr "About OpenNX"
 
 #: AboutDialog_symbols.h:13 RdpImageSettingsDialog_symbols.h:16
 #: RdpPropertyDialog_symbols.h:25 SessionProperties_symbols.h:128
@@ -55,8 +55,8 @@ msgid "&OK"
 msgstr "&OK"
 
 #: LogDialog.h:42 LogDialog_symbols.h:12
-msgid "Session Log - MXclient"
-msgstr "Session Log - MXclient"
+msgid "Session Log - OpenNX"
+msgstr "Session Log - OpenNX"
 
 #: LogDialog_symbols.h:13
 msgid "Close"
@@ -72,12 +72,12 @@ msgstr ""
 "%s"
 
 #: LoginDialog.cpp:263 LoginDialog.cpp:311
-msgid "Error saving - MXclient"
-msgstr "Error saving - MXclient"
+msgid "Error saving - OpenNX"
+msgstr "Error saving - OpenNX"
 
 #: LoginDialog.h:46 LoginDialog_symbols.h:12
-msgid "Login - MXclient"
-msgstr "Login - MXclient"
+msgid "Login - OpenNX"
+msgstr "Login - OpenNX"
 
 #: LoginDialog_symbols.h:13
 msgid "Login"
@@ -105,15 +105,15 @@ msgstr "Configure..."
 msgid "Cancel"
 msgstr "Cancel"
 
-#: mxclientApp.cpp:119
+#: opennxApp.cpp:119
 msgid "Start the session administration tool."
 msgstr "Start the session administration tool."
 
-#: mxclientApp.cpp:121
+#: opennxApp.cpp:121
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr "Run a session importing configuration settings from FILENAME."
 
-#: mxclientApp.cpp:123
+#: opennxApp.cpp:123
 msgid "Guide the user through the steps to configure a session."
 msgstr "Guide the user through the steps to configure a session."
 
@@ -310,8 +310,8 @@ msgid "Show the Advanced Configuration dialog"
 msgstr "Show the Advanced Configuration dialog"
 
 #: RdpImageSettingsDialog.h:45 RdpImageSettingsDialog_symbols.h:12
-msgid "RDP Image Settings - MXclient"
-msgstr "RDP Image Settings - MXclient"
+msgid "RDP Image Settings - OpenNX"
+msgstr "RDP Image Settings - OpenNX"
 
 #: RdpImageSettingsDialog_symbols.h:13
 msgid "Use RDP image encoding"
@@ -334,8 +334,8 @@ msgid "&Cancel"
 msgstr "&Cancel"
 
 #: RdpPropertyDialog.h:45 RdpPropertyDialog_symbols.h:12
-msgid "RDP Session Settings - MXclient"
-msgstr "RDP Session Settings - MXclient"
+msgid "RDP Session Settings - OpenNX"
+msgstr "RDP Session Settings - OpenNX"
 
 #: RdpPropertyDialog_symbols.h:13
 msgid "Windows Terminal Server"
@@ -539,8 +539,8 @@ msgid "Delete Session"
 msgstr "Delete Session"
 
 #: SessionProperties.h:54 SessionProperties_symbols.h:12
-msgid "Session properties - MXclient"
-msgstr "Session properties - MXclient"
+msgid "Session properties - OpenNX"
+msgstr "Session properties - OpenNX"
 
 #: SessionProperties_symbols.h:13
 msgid "General"
@@ -891,8 +891,8 @@ msgid "&Apply"
 msgstr "&Apply"
 
 #: SmbShareProperties.cpp:157
-msgid "Modify SMB Share - MXclient"
-msgstr "Modify SMB Share - MXclient"
+msgid "Modify SMB Share - OpenNX"
+msgstr "Modify SMB Share - OpenNX"
 
 #: SmbShareProperties.cpp:224
 msgid "Mountpoint is already used. Please chose another mountpoint"
@@ -903,8 +903,8 @@ msgid "Invalid mountpoint"
 msgstr "Invalid mountpoint"
 
 #: SmbShareProperties.h:46 SmbShareProperties_symbols.h:12
-msgid "New SMB Share - MXclient"
-msgstr "New SMB Share - MXclient"
+msgid "New SMB Share - OpenNX"
+msgstr "New SMB Share - OpenNX"
 
 #: SmbShareProperties_symbols.h:13
 msgid "Please select the name of the shared resource on the\\nlocal computer."
@@ -929,8 +929,8 @@ msgstr ""
 "\\nthis share."
 
 #: UnixImageSettingsDialog.h:45 UnixImageSettingsDialog_symbols.h:12
-msgid "Unix Image Settings - MXclient"
-msgstr "Unix Image Settings - MXclient"
+msgid "Unix Image Settings - OpenNX"
+msgstr "Unix Image Settings - OpenNX"
 
 #: UnixImageSettingsDialog_symbols.h:13
 msgid "Use PNG image compression"
@@ -949,8 +949,8 @@ msgid "Disable render extension"
 msgstr "Disable render extension"
 
 #: VncImageSettingsDialog.h:45 VncImageSettingsDialog_symbols.h:12
-msgid "VNC Image Settings - MXclient"
-msgstr "VNC Image Settings - MXclient"
+msgid "VNC Image Settings - OpenNX"
+msgstr "VNC Image Settings - OpenNX"
 
 #: VncImageSettingsDialog_symbols.h:13
 msgid "Use RFB Hextile encoding"
@@ -965,8 +965,8 @@ msgid "Enable JPEG encoding"
 msgstr "Enable JPEG encoding"
 
 #: VncPropertyDialog.h:45 VncPropertyDialog_symbols.h:12
-msgid "VNC Session Settings - MXclient"
-msgstr "VNC Session Settings - MXclient"
+msgid "VNC Session Settings - OpenNX"
+msgstr "VNC Session Settings - OpenNX"
 
 #: VncPropertyDialog_symbols.h:14
 msgid ""
@@ -987,8 +987,8 @@ msgstr ""
 "Please specify a password. MX will use it to login to the\\nremote VNC server"
 
 #: X11PropertyDialog.h:44 X11PropertyDialog_symbols.h:12
-msgid "X11 Session Settings - MXclient"
-msgstr "X11 Session Settings - MXclient"
+msgid "X11 Session Settings - OpenNX"
+msgstr "X11 Session Settings - OpenNX"
 
 #: X11PropertyDialog_symbols.h:13
 msgid "Application"

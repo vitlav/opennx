@@ -11,8 +11,8 @@ LoginDialog.cpp
 LoginDialog.h
 LoginDialog_symbols.h
 md5.h
-mxclientApp.cpp
-mxclientApp.h
+opennxApp.cpp
+opennxApp.h
 MxIPC.cpp
 MxIPC.h
 MxValidator.cpp
