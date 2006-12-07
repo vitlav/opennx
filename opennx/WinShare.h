@@ -14,33 +14,48 @@ class DllData;
 
 class SharedResource : public wxObject
 {
-public:
-    typedef enum {
-        SHARE_UNKNOWN,
-        SHARE_DISK,
-        SHARE_PRINTER,
-    } ShareType;
+    public:
+        typedef enum {
+            SHARE_UNKNOWN,
+            SHARE_SMB_DISK,
+            SHARE_SMB_PRINTER,
+            SHARE_CUPS_PRINTER,
+        } ShareType;
 
-    SharedResource() : wxObject() {}
-    virtual ~SharedResource() {}
+        SharedResource() : wxObject() {}
+        virtual ~SharedResource() {}
 
-    wxString name;
-    wxString description;
-    ShareType sharetype;
+        wxString name;
+        wxString description;
+        ShareType sharetype;
 };
 
 WX_DECLARE_OBJARRAY(SharedResource, ArrayOfShares);
 
+class CupsShare {
+    public:
+        CupsShare();
+        ~CupsShare();
+
+        ArrayOfShares GetShares();
+        bool IsAvailable();
+
+    private:
+        DllData *dllPrivate;
+        ArrayOfShares m_shares;
+};
+
 class WinShare {
-public:
-    WinShare();
-    ~WinShare();
+    public:
+        WinShare();
+        ~WinShare();
 
-    ArrayOfShares GetShares();
+        ArrayOfShares GetShares();
+        bool IsAvailable();
 
-private:
-    DllData *dllPrivate;
-    ArrayOfShares m_shares;
+    private:
+        DllData *dllPrivate;
+        ArrayOfShares m_shares;
 };
 
 #endif

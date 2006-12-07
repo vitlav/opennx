@@ -6,8 +6,8 @@
     <string name="title">""</string>
     <string name="author">""</string>
     <string name="description">""</string>
-    <long name="doc_count">438</long>
-    <string name="xrc_filename">"res/mxclient.xrc"</string>
+    <long name="doc_count">439</long>
+    <string name="xrc_filename">"res/opennx.xrc"</string>
     <bool name="convert_images_to_xpm">0</bool>
     <bool name="inline_images">0</bool>
     <bool name="generate_cpp_for_xrc">1</bool>
@@ -15,30 +15,24 @@
     <bool name="translate_strings">1</bool>
     <bool name="extract_strings">1</bool>
     <string name="user_name">"Fritz Elfert"</string>
-    <string name="copyright_string">"Copyright 2004 Millenux GmbH, 2006 InnoviData GmbH"</string>
+    <string name="copyright_string">"Copyright 2006 InnoviData GmbH"</string>
     <string name="resource_prefix">"memory:memrsc#zip:"</string>
     <bool name="use_two_step_construction">0</bool>
     <bool name="use_enums">0</bool>
     <string name="current_platform">"&lt;All platforms&gt;"</string>
     <string name="target_wx_version">"2.6.3"</string>
-    <string name="cpp_header_comment">"/////////////////////////////////////////////////////////////////////////////
-// $Id$
+    <string name="cpp_header_comment">"// $Id$
 //
 // Author:      %AUTHOR%
-// Created:     %DATE%
 // Copyright:   %COPYRIGHT%
 // Licence:     LGPL
-/////////////////////////////////////////////////////////////////////////////
 
 "</string>
-    <string name="cpp_implementation_comment">"/////////////////////////////////////////////////////////////////////////////
-// $Id$
+    <string name="cpp_implementation_comment">"// $Id$
 //
 // Author:      %AUTHOR%
-// Created:     %DATE%
 // Copyright:   %COPYRIGHT%
 // Licence:     LGPL
-/////////////////////////////////////////////////////////////////////////////
 
 "</string>
     <string name="cpp_function_comment">"/*!
@@ -46,15 +40,11 @@
  */
 
 "</string>
-    <string name="cpp_symbols_file_comment">"/////////////////////////////////////////////////////////////////////////////
-// $Id$
+    <string name="cpp_symbols_file_comment">"// $Id$
 //
-// Purpose:     Symbols file
 // Author:      %AUTHOR%
-// Created:     %DATE%
 // Copyright:   %COPYRIGHT%
 // Licence:     LGPL
-/////////////////////////////////////////////////////////////////////////////
 
 "</string>
     <string name="cpp_header_preamble">"#if defined(__GNUG__) &amp;&amp; !defined(NO_GCC_PRAGMA)
@@ -164,6 +154,63 @@
         <string name="wxWidgets build command">"%AUTO%"</string>
         <string name="wxWidgets clean command">"%AUTO%"</string>
         <string name="PATH variable">"%AUTO%"</string>
+        <document>
+          <string name="title">"GCC Release"</string>
+          <string name="type">"gcc-config-data-document"</string>
+          <string name="filename">""</string>
+          <string name="icon-name">""</string>
+          <long name="is-transient">0</long>
+          <long name="owns-file">1</long>
+          <long name="title-mode">0</long>
+          <long name="locked">0</long>
+          <string name="template-name">"GCC"</string>
+          <bool name="dirty">1</bool>
+          <string name="Compiler name">"GCC"</string>
+          <string name="Build mode">"Release"</string>
+          <string name="Unicode mode">"ANSI"</string>
+          <string name="Shared mode">"Static"</string>
+          <string name="Modularity">"Modular"</string>
+          <string name="GUI mode">"GUI"</string>
+          <string name="Toolkit">"wxGTK+2"</string>
+          <string name="Runtime linking">"Dynamic"</string>
+          <string name="Use exceptions">"Yes"</string>
+          <string name="Use ODBC">"No"</string>
+          <string name="Use OpenGL">"No"</string>
+          <string name="Use wx-config">"Yes"</string>
+          <string name="Use installed wxWidgets">"No"</string>
+          <string name="Enable universal binaries">"No"</string>
+          <string name="wxWidgets version">"%WXVERSION%"</string>
+          <string name="Executable name">"%EXECUTABLE%"</string>
+          <string name="Program arguments">""</string>
+          <string name="Working path">"%AUTO%"</string>
+          <string name="Output path">"%AUTO%"</string>
+          <string name="Objects path">"%AUTO%"</string>
+          <string name="Compiler location">"%AUTO%"</string>
+          <string name="wxWidgets location">"%AUTO%"</string>
+          <string name="C++ command">"%AUTO%"</string>
+          <string name="Resource compiler">"%AUTO%"</string>
+          <string name="Make command">"%AUTO%"</string>
+          <string name="Project makefile">"%AUTO%"</string>
+          <string name="wxWidgets makefile">"%AUTO%"</string>
+          <string name="Compiler bin path">"%AUTO%"</string>
+          <string name="Compiler include path">"%AUTO%"</string>
+          <string name="Compiler lib path">"%AUTO%"</string>
+          <string name="Preprocessor flags">"%AUTO%"</string>
+          <string name="Optimizations">"%AUTO%"</string>
+          <string name="Warnings">"%AUTO%"</string>
+          <string name="Debug flags">"%AUTO%"</string>
+          <string name="Libraries">"%AUTO%"</string>
+          <string name="Library path">"%AUTO%"</string>
+          <string name="Linker flags">"%AUTO%"</string>
+          <string name="Include path">"%AUTO%"</string>
+          <string name="Resource flags">"%AUTO%"</string>
+          <string name="Resource path">"%AUTO%"</string>
+          <string name="wxWidgets build path">"%AUTO%"</string>
+          <string name="wxWidgets build command">"%AUTO%"</string>
+          <string name="wxWidgets clean command">"%AUTO%"</string>
+          <string name="PATH variable">"%AUTO%"</string>
+          <string name="Command for wx-config">"%AUTO%"</string>
+        </document>
       </document>
     </document>
   </data>
@@ -217,7 +264,7 @@
           <string name="proxy-Implementation filename">"LoginDialog.cpp"</string>
           <string name="proxy-Header filename">"LoginDialog.h"</string>
           <string name="proxy-XRC filename">""</string>
-          <string name="proxy-Title">"Login - MXclient"</string>
+          <string name="proxy-Title">"Login - OpenNX"</string>
           <bool name="proxy-Centre">1</bool>
           <string name="proxy-Icon">"res/nx.png"</string>
           <bool name="proxy-Dialog units">1</bool>
@@ -274,6 +321,14 @@
             <string name="proxy-type">"wbBoxSizerProxy"</string>
             <string name="proxy-Orientation">"Vertical"</string>
             <string name="proxy-Member variable name">""</string>
+            <string name="proxy-AlignH">"Centre"</string>
+            <string name="proxy-AlignV">"Centre"</string>
+            <long name="proxy-Stretch factor">0</long>
+            <long name="proxy-Border">5</long>
+            <bool name="proxy-wxLEFT">1</bool>
+            <bool name="proxy-wxRIGHT">1</bool>
+            <bool name="proxy-wxTOP">1</bool>
+            <bool name="proxy-wxBOTTOM">1</bool>
             <bool name="proxy-wxSHAPED">0</bool>
             <bool name="proxy-wxADJUST_MINSIZE">0</bool>
             <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -1220,7 +1275,7 @@
           <string name="proxy-Implementation filename">"SessionProperties.cpp"</string>
           <string name="proxy-Header filename">"SessionProperties.h"</string>
           <string name="proxy-XRC filename">""</string>
-          <string name="proxy-Title">"Session properties - MXclient"</string>
+          <string name="proxy-Title">"Session properties - OpenNX"</string>
           <bool name="proxy-Centre">1</bool>
           <string name="proxy-Icon">"res/nx.png"</string>
           <bool name="proxy-Dialog units">1</bool>
@@ -1890,7 +1945,8 @@
                           <long name="title-mode">0</long>
                           <long name="locked">0</long>
                           <string name="proxy-type">"wbSpinCtrlProxy"</string>
-                          <string name="event-handler-0">"wxEVT_COMMAND_TEXT_UPDATED|OnTextctrlPortUpdated"</string>
+                          <string name="event-handler-0">"wxEVT_COMMAND_SPINCTRL_UPDATED|OnSpinctrlPortUpdated"</string>
+                          <string name="event-handler-1">"wxEVT_COMMAND_TEXT_UPDATED|OnTextctrlPortUpdated"</string>
                           <string name="proxy-Id name">"ID_SPINCTRL_PORT"</string>
                           <long name="proxy-Id value">10013</long>
                           <string name="proxy-Class">"wxSpinCtrl"</string>
@@ -1907,7 +1963,7 @@
                           <bool name="proxy-Enabled">1</bool>
                           <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                           <string name="proxy-Data variable">"m_iPort"</string>
-                          <string name="proxy-Data validator">"wxGenericValidator(&amp; %VARIABLE%)"</string>
+                          <string name="proxy-Data validator">"MxValidator(&amp; %VARIABLE%)"</string>
                           <bool name="proxy-wxSP_ARROW_KEYS">1</bool>
                           <bool name="proxy-wxSP_WRAP">0</bool>
                           <bool name="proxy-wxNO_BORDER">0</bool>
@@ -3003,6 +3059,7 @@
                           <long name="locked">0</long>
                           <string name="proxy-type">"wbSpinCtrlProxy"</string>
                           <string name="event-handler-0">"wxEVT_COMMAND_SPINCTRL_UPDATED|OnSpinctrlWidthUpdated"</string>
+                          <string name="event-handler-1">"wxEVT_COMMAND_TEXT_UPDATED|OnSpinctrlWidthTextUpdated"</string>
                           <string name="proxy-Id name">"ID_SPINCTRL_WIDTH"</string>
                           <long name="proxy-Id value">10021</long>
                           <string name="proxy-Class">"wxSpinCtrl"</string>
@@ -3019,7 +3076,7 @@
                           <bool name="proxy-Enabled">1</bool>
                           <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                           <string name="proxy-Data variable">"m_iDisplayWidth"</string>
-                          <string name="proxy-Data validator">"wxGenericValidator(&amp; %VARIABLE%)"</string>
+                          <string name="proxy-Data validator">"MxValidator(&amp; %VARIABLE%)"</string>
                           <bool name="proxy-wxSP_ARROW_KEYS">1</bool>
                           <bool name="proxy-wxSP_WRAP">1</bool>
                           <bool name="proxy-wxNO_BORDER">0</bool>
@@ -3119,6 +3176,7 @@
                           <long name="locked">0</long>
                           <string name="proxy-type">"wbSpinCtrlProxy"</string>
                           <string name="event-handler-0">"wxEVT_COMMAND_SPINCTRL_UPDATED|OnSpinctrlHeightUpdated"</string>
+                          <string name="event-handler-1">"wxEVT_COMMAND_TEXT_UPDATED|OnSpinctrlHeightTextUpdated"</string>
                           <string name="proxy-Id name">"ID_SPINCTRL_HEIGHT"</string>
                           <long name="proxy-Id value">10022</long>
                           <string name="proxy-Class">"wxSpinCtrl"</string>
@@ -3135,7 +3193,7 @@
                           <bool name="proxy-Enabled">1</bool>
                           <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                           <string name="proxy-Data variable">"m_iDisplayHeight"</string>
-                          <string name="proxy-Data validator">"wxGenericValidator(&amp; %VARIABLE%)"</string>
+                          <string name="proxy-Data validator">"MxValidator(&amp; %VARIABLE%)"</string>
                           <bool name="proxy-wxSP_ARROW_KEYS">1</bool>
                           <bool name="proxy-wxSP_WRAP">0</bool>
                           <bool name="proxy-wxNO_BORDER">0</bool>
@@ -3670,6 +3728,7 @@
                         <long name="locked">0</long>
                         <string name="created">"6/12/2006"</string>
                         <string name="proxy-type">"wbCheckBoxProxy"</string>
+                        <string name="event-handler-0">"wxEVT_COMMAND_CHECKBOX_CLICKED|OnCheckboxHttpproxyClick"</string>
                         <string name="proxy-Id name">"ID_CHECKBOX_HTTPPROXY"</string>
                         <long name="proxy-Id value">10120</long>
                         <string name="proxy-Class">"wxCheckBox"</string>
@@ -3838,6 +3897,7 @@
                           <long name="locked">0</long>
                           <string name="created">"6/12/2006"</string>
                           <string name="proxy-type">"wbTextCtrlProxy"</string>
+                          <string name="event-handler-0">"wxEVT_COMMAND_TEXT_UPDATED|OnTextctrlProxyhostUpdated"</string>
                           <string name="proxy-Id name">"ID_TEXTCTRL_PROXYHOST"</string>
                           <long name="proxy-Id value">10121</long>
                           <string name="proxy-Class">"wxTextCtrl"</string>
@@ -3853,7 +3913,7 @@
                           <bool name="proxy-Enabled">0</bool>
                           <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                           <string name="proxy-Data variable">"m_sProxyHost"</string>
-                          <string name="proxy-Data validator">"MxValidator(&amp; %VARIABLE%)"</string>
+                          <string name="proxy-Data validator">"MxValidator(MxValidator::MXVAL_HOST, &amp; %VARIABLE%)"</string>
                           <bool name="proxy-wxTE_MULTILINE">0</bool>
                           <bool name="proxy-wxTE_PROCESS_ENTER">0</bool>
                           <bool name="proxy-wxTE_PROCESS_TAB">0</bool>
@@ -3967,6 +4027,8 @@
                           <long name="locked">0</long>
                           <string name="created">"6/12/2006"</string>
                           <string name="proxy-type">"wbSpinCtrlProxy"</string>
+                          <string name="event-handler-0">"wxEVT_COMMAND_SPINCTRL_UPDATED|OnSpinctrlProxyportUpdated"</string>
+                          <string name="event-handler-1">"wxEVT_COMMAND_TEXT_UPDATED|OnSpinctrlProxyportTextUpdated"</string>
                           <string name="proxy-Id name">"ID_SPINCTRL_PROXYPORT"</string>
                           <long name="proxy-Id value">10123</long>
                           <string name="proxy-Class">"wxSpinCtrl"</string>
@@ -3983,7 +4045,7 @@
                           <bool name="proxy-Enabled">0</bool>
                           <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                           <string name="proxy-Data variable">"m_iProxyPort"</string>
-                          <string name="proxy-Data validator">"wxGenericValidator(&amp; %VARIABLE%)"</string>
+                          <string name="proxy-Data validator">"MxValidator(&amp; %VARIABLE%)"</string>
                           <bool name="proxy-wxSP_ARROW_KEYS">1</bool>
                           <bool name="proxy-wxSP_WRAP">0</bool>
                           <bool name="proxy-wxNO_BORDER">0</bool>
@@ -5012,10 +5074,12 @@
                         <long name="locked">0</long>
                         <string name="created">"6/12/2006"</string>
                         <string name="proxy-type">"wbSpinCtrlProxy"</string>
+                        <string name="event-handler-0">"wxEVT_COMMAND_SPINCTRL_UPDATED|OnSpinctrlCupsportUpdated"</string>
+                        <string name="event-handler-1">"wxEVT_COMMAND_TEXT_UPDATED|OnSpinctrlCupsportTextUpdated"</string>
                         <string name="proxy-Id name">"ID_SPINCTRL_CUPSPORT"</string>
                         <long name="proxy-Id value">10032</long>
                         <string name="proxy-Class">"wxSpinCtrl"</string>
-                        <string name="proxy-Member variable name">""</string>
+                        <string name="proxy-Member variable name">"m_pCtrlCupsPort"</string>
                         <long name="proxy-Minimum value">1</long>
                         <long name="proxy-Maximum value">65535</long>
                         <long name="proxy-Initial value">631</long>
@@ -5028,7 +5092,7 @@
                         <bool name="proxy-Enabled">0</bool>
                         <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                         <string name="proxy-Data variable">"m_iCupsPort"</string>
-                        <string name="proxy-Data validator">"wxGenericValidator(&amp; %VARIABLE%)"</string>
+                        <string name="proxy-Data validator">"MxValidator(&amp; %VARIABLE%)"</string>
                         <bool name="proxy-wxSP_ARROW_KEYS">1</bool>
                         <bool name="proxy-wxSP_WRAP">0</bool>
                         <bool name="proxy-wxNO_BORDER">0</bool>
@@ -5400,6 +5464,7 @@
                         <long name="title-mode">0</long>
                         <long name="locked">0</long>
                         <string name="proxy-type">"wbCheckBoxProxy"</string>
+                        <string name="event-handler-0">"wxEVT_COMMAND_CHECKBOX_CLICKED|OnCheckboxMmediaClick"</string>
                         <string name="proxy-Id name">"ID_CHECKBOX_MMEDIA"</string>
                         <long name="proxy-Id value">10056</long>
                         <string name="proxy-Class">"wxCheckBox"</string>
@@ -6019,6 +6084,7 @@
                           <long name="title-mode">0</long>
                           <long name="locked">0</long>
                           <string name="proxy-type">"wbTextCtrlProxy"</string>
+                          <string name="event-handler-0">"wxEVT_COMMAND_TEXT_UPDATED|OnTextctrlCupspathUpdated"</string>
                           <string name="proxy-Id name">"ID_TEXTCTRL_CUPSPATH"</string>
                           <long name="proxy-Id value">10046</long>
                           <string name="proxy-Class">"wxTextCtrl"</string>
@@ -6735,7 +6801,7 @@
           <string name="proxy-Implementation filename">"VncPropertyDialog.cpp"</string>
           <string name="proxy-Header filename">"VncPropertyDialog.h"</string>
           <string name="proxy-XRC filename">""</string>
-          <string name="proxy-Title">"VNC Session Settings - MXclient"</string>
+          <string name="proxy-Title">"VNC Session Settings - OpenNX"</string>
           <bool name="proxy-Centre">1</bool>
           <string name="proxy-Icon">"res/nx.png"</string>
           <bool name="proxy-Dialog units">1</bool>
@@ -6792,6 +6858,14 @@
             <string name="proxy-type">"wbBoxSizerProxy"</string>
             <string name="proxy-Orientation">"Vertical"</string>
             <string name="proxy-Member variable name">""</string>
+            <string name="proxy-AlignH">"Centre"</string>
+            <string name="proxy-AlignV">"Centre"</string>
+            <long name="proxy-Stretch factor">0</long>
+            <long name="proxy-Border">5</long>
+            <bool name="proxy-wxLEFT">1</bool>
+            <bool name="proxy-wxRIGHT">1</bool>
+            <bool name="proxy-wxTOP">1</bool>
+            <bool name="proxy-wxBOTTOM">1</bool>
             <bool name="proxy-wxSHAPED">0</bool>
             <bool name="proxy-wxADJUST_MINSIZE">0</bool>
             <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -7659,7 +7733,7 @@ remote VNC server"</string>
           <string name="proxy-Implementation filename">"RdpPropertyDialog.cpp"</string>
           <string name="proxy-Header filename">"RdpPropertyDialog.h"</string>
           <string name="proxy-XRC filename">""</string>
-          <string name="proxy-Title">"RDP Session Settings - MXclient"</string>
+          <string name="proxy-Title">"RDP Session Settings - OpenNX"</string>
           <bool name="proxy-Centre">1</bool>
           <string name="proxy-Icon">"res/nx.png"</string>
           <bool name="proxy-Dialog units">1</bool>
@@ -7716,6 +7790,14 @@ remote VNC server"</string>
             <string name="proxy-type">"wbBoxSizerProxy"</string>
             <string name="proxy-Orientation">"Vertical"</string>
             <string name="proxy-Member variable name">""</string>
+            <string name="proxy-AlignH">"Centre"</string>
+            <string name="proxy-AlignV">"Centre"</string>
+            <long name="proxy-Stretch factor">0</long>
+            <long name="proxy-Border">5</long>
+            <bool name="proxy-wxLEFT">1</bool>
+            <bool name="proxy-wxRIGHT">1</bool>
+            <bool name="proxy-wxTOP">1</bool>
+            <bool name="proxy-wxBOTTOM">1</bool>
             <bool name="proxy-wxSHAPED">0</bool>
             <bool name="proxy-wxADJUST_MINSIZE">0</bool>
             <bool name="proxy-wxFIXED_MINSIZE">1</bool>
@@ -8972,7 +9054,7 @@ remote VNC server"</string>
           <string name="proxy-Implementation filename">"X11PropertyDialog.cpp"</string>
           <string name="proxy-Header filename">"X11PropertyDialog.h"</string>
           <string name="proxy-XRC filename">""</string>
-          <string name="proxy-Title">"X11 Session Settings - MXclient"</string>
+          <string name="proxy-Title">"X11 Session Settings - OpenNX"</string>
           <bool name="proxy-Centre">1</bool>
           <string name="proxy-Icon">"res/nx.png"</string>
           <bool name="proxy-Dialog units">1</bool>
@@ -9084,6 +9166,14 @@ remote VNC server"</string>
             <string name="proxy-type">"wbBoxSizerProxy"</string>
             <string name="proxy-Orientation">"Vertical"</string>
             <string name="proxy-Member variable name">""</string>
+            <string name="proxy-AlignH">"Centre"</string>
+            <string name="proxy-AlignV">"Centre"</string>
+            <long name="proxy-Stretch factor">0</long>
+            <long name="proxy-Border">5</long>
+            <bool name="proxy-wxLEFT">1</bool>
+            <bool name="proxy-wxRIGHT">1</bool>
+            <bool name="proxy-wxTOP">1</bool>
+            <bool name="proxy-wxBOTTOM">1</bool>
             <bool name="proxy-wxSHAPED">0</bool>
             <bool name="proxy-wxADJUST_MINSIZE">0</bool>
             <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -9873,7 +9963,7 @@ remote VNC server"</string>
           <string name="proxy-Implementation filename">"VncImageSettingsDialog.cpp"</string>
           <string name="proxy-Header filename">"VncImageSettingsDialog.h"</string>
           <string name="proxy-XRC filename">""</string>
-          <string name="proxy-Title">"VNC Image Settings - MXclient"</string>
+          <string name="proxy-Title">"VNC Image Settings - OpenNX"</string>
           <bool name="proxy-Centre">1</bool>
           <string name="proxy-Icon">"res/nx.png"</string>
           <bool name="proxy-Dialog units">1</bool>
@@ -9985,6 +10075,14 @@ remote VNC server"</string>
             <string name="proxy-type">"wbBoxSizerProxy"</string>
             <string name="proxy-Orientation">"Vertical"</string>
             <string name="proxy-Member variable name">""</string>
+            <string name="proxy-AlignH">"Centre"</string>
+            <string name="proxy-AlignV">"Centre"</string>
+            <long name="proxy-Stretch factor">0</long>
+            <long name="proxy-Border">5</long>
+            <bool name="proxy-wxLEFT">1</bool>
+            <bool name="proxy-wxRIGHT">1</bool>
+            <bool name="proxy-wxTOP">1</bool>
+            <bool name="proxy-wxBOTTOM">1</bool>
             <bool name="proxy-wxSHAPED">0</bool>
             <bool name="proxy-wxADJUST_MINSIZE">0</bool>
             <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -10479,7 +10577,7 @@ remote VNC server"</string>
           <string name="proxy-Implementation filename">"RdpImageSettingsDialog.cpp"</string>
           <string name="proxy-Header filename">"RdpImageSettingsDialog.h"</string>
           <string name="proxy-XRC filename">""</string>
-          <string name="proxy-Title">"RDP Image Settings - MXclient"</string>
+          <string name="proxy-Title">"RDP Image Settings - OpenNX"</string>
           <bool name="proxy-Centre">1</bool>
           <string name="proxy-Icon">"res/nx.png"</string>
           <bool name="proxy-Dialog units">1</bool>
@@ -10537,6 +10635,14 @@ remote VNC server"</string>
             <string name="proxy-type">"wbBoxSizerProxy"</string>
             <string name="proxy-Orientation">"Vertical"</string>
             <string name="proxy-Member variable name">""</string>
+            <string name="proxy-AlignH">"Centre"</string>
+            <string name="proxy-AlignV">"Centre"</string>
+            <long name="proxy-Stretch factor">0</long>
+            <long name="proxy-Border">5</long>
+            <bool name="proxy-wxLEFT">1</bool>
+            <bool name="proxy-wxRIGHT">1</bool>
+            <bool name="proxy-wxTOP">1</bool>
+            <bool name="proxy-wxBOTTOM">1</bool>
             <bool name="proxy-wxSHAPED">0</bool>
             <bool name="proxy-wxADJUST_MINSIZE">0</bool>
             <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -11530,7 +11636,7 @@ remote VNC server"</string>
           <string name="proxy-Implementation filename">"UnixImageSettingsDialog.cpp"</string>
           <string name="proxy-Header filename">"UnixImageSettingsDialog.h"</string>
           <string name="proxy-XRC filename">""</string>
-          <string name="proxy-Title">"Unix Image Settings - MXclient"</string>
+          <string name="proxy-Title">"Unix Image Settings - OpenNX"</string>
           <bool name="proxy-Centre">1</bool>
           <string name="proxy-Icon">"res/nx.png"</string>
           <bool name="proxy-Dialog units">1</bool>
@@ -11587,6 +11693,14 @@ remote VNC server"</string>
             <string name="proxy-type">"wbBoxSizerProxy"</string>
             <string name="proxy-Orientation">"Vertical"</string>
             <string name="proxy-Member variable name">""</string>
+            <string name="proxy-AlignH">"Centre"</string>
+            <string name="proxy-AlignV">"Centre"</string>
+            <long name="proxy-Stretch factor">0</long>
+            <long name="proxy-Border">5</long>
+            <bool name="proxy-wxLEFT">1</bool>
+            <bool name="proxy-wxRIGHT">1</bool>
+            <bool name="proxy-wxTOP">1</bool>
+            <bool name="proxy-wxBOTTOM">1</bool>
             <bool name="proxy-wxSHAPED">0</bool>
             <bool name="proxy-wxADJUST_MINSIZE">0</bool>
             <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -12508,7 +12622,7 @@ remote VNC server"</string>
           <string name="proxy-Implementation filename">"SmbShareProperties.cpp"</string>
           <string name="proxy-Header filename">"SmbShareProperties.h"</string>
           <string name="proxy-XRC filename">""</string>
-          <string name="proxy-Title">"New SMB Share - MXclient"</string>
+          <string name="proxy-Title">"New SMB Share - OpenNX"</string>
           <bool name="proxy-Centre">1</bool>
           <string name="proxy-Icon">"res/nx.png"</string>
           <bool name="proxy-Dialog units">1</bool>
@@ -12565,6 +12679,14 @@ remote VNC server"</string>
             <string name="proxy-type">"wbBoxSizerProxy"</string>
             <string name="proxy-Orientation">"Vertical"</string>
             <string name="proxy-Member variable name">""</string>
+            <string name="proxy-AlignH">"Centre"</string>
+            <string name="proxy-AlignV">"Centre"</string>
+            <long name="proxy-Stretch factor">0</long>
+            <long name="proxy-Border">5</long>
+            <bool name="proxy-wxLEFT">1</bool>
+            <bool name="proxy-wxRIGHT">1</bool>
+            <bool name="proxy-wxTOP">1</bool>
+            <bool name="proxy-wxBOTTOM">1</bool>
             <bool name="proxy-wxSHAPED">0</bool>
             <bool name="proxy-wxADJUST_MINSIZE">0</bool>
             <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -13704,7 +13826,7 @@ this share."</string>
           <string name="proxy-XRC filename">""</string>
           <string name="proxy-Title">"MX Session Administrator"</string>
           <bool name="proxy-Centre">1</bool>
-          <string name="proxy-Icon">"res/mxclient-admin.png"</string>
+          <string name="proxy-Icon">"res/opennx-admin.png"</string>
           <bool name="proxy-Dialog units">0</bool>
           <string name="proxy-Help text">""</string>
           <string name="proxy-Tooltip text">""</string>
@@ -14468,7 +14590,7 @@ this share."</string>
           <string name="proxy-Title">"MX Connection Wizard"</string>
           <string name="proxy-Bitmap">"res/wizard.png"</string>
           <bool name="proxy-Centre">1</bool>
-          <string name="proxy-Icon">"res/mxclient-wizard.png"</string>
+          <string name="proxy-Icon">"res/opennx-wizard.png"</string>
           <string name="proxy-Help text">""</string>
           <string name="proxy-Tooltip text">""</string>
           <string name="proxy-Background colour">""</string>
@@ -17274,7 +17396,7 @@ this share."</string>
           <string name="proxy-Implementation filename">"LogDialog.cpp"</string>
           <string name="proxy-Header filename">"LogDialog.h"</string>
           <string name="proxy-XRC filename">""</string>
-          <string name="proxy-Title">"Session Log - MXclient"</string>
+          <string name="proxy-Title">"Session Log - OpenNX"</string>
           <bool name="proxy-Centre">1</bool>
           <string name="proxy-Icon">"res/nx.png"</string>
           <bool name="proxy-Dialog units">1</bool>
@@ -17331,6 +17453,14 @@ this share."</string>
             <string name="proxy-type">"wbBoxSizerProxy"</string>
             <string name="proxy-Orientation">"Vertical"</string>
             <string name="proxy-Member variable name">""</string>
+            <string name="proxy-AlignH">"Centre"</string>
+            <string name="proxy-AlignV">"Centre"</string>
+            <long name="proxy-Stretch factor">0</long>
+            <long name="proxy-Border">5</long>
+            <bool name="proxy-wxLEFT">1</bool>
+            <bool name="proxy-wxRIGHT">1</bool>
+            <bool name="proxy-wxTOP">1</bool>
+            <bool name="proxy-wxBOTTOM">1</bool>
             <bool name="proxy-wxSHAPED">0</bool>
             <bool name="proxy-wxADJUST_MINSIZE">0</bool>
             <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -17459,7 +17589,7 @@ this share."</string>
           </document>
         </document>
         <document>
-          <string name="title">"About MXclient"</string>
+          <string name="title">"About OpenNX"</string>
           <string name="type">"dialog-document"</string>
           <string name="filename">""</string>
           <string name="icon-name">"dialog"</string>
@@ -17481,7 +17611,7 @@ this share."</string>
           <string name="proxy-Implementation filename">"AboutDialog.cpp"</string>
           <string name="proxy-Header filename">"AboutDialog.h"</string>
           <string name="proxy-XRC filename">""</string>
-          <string name="proxy-Title">"About MXclient"</string>
+          <string name="proxy-Title">"About OpenNX"</string>
           <bool name="proxy-Centre">1</bool>
           <string name="proxy-Icon">"res/nx.png"</string>
           <bool name="proxy-Dialog units">1</bool>
@@ -17538,6 +17668,14 @@ this share."</string>
             <string name="proxy-type">"wbBoxSizerProxy"</string>
             <string name="proxy-Orientation">"Vertical"</string>
             <string name="proxy-Member variable name">""</string>
+            <string name="proxy-AlignH">"Centre"</string>
+            <string name="proxy-AlignV">"Centre"</string>
+            <long name="proxy-Stretch factor">0</long>
+            <long name="proxy-Border">5</long>
+            <bool name="proxy-wxLEFT">1</bool>
+            <bool name="proxy-wxRIGHT">1</bool>
+            <bool name="proxy-wxTOP">1</bool>
+            <bool name="proxy-wxBOTTOM">1</bool>
             <bool name="proxy-wxSHAPED">0</bool>
             <bool name="proxy-wxADJUST_MINSIZE">0</bool>
             <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -17766,6 +17904,14 @@ this share."</string>
             <string name="proxy-type">"wbBoxSizerProxy"</string>
             <string name="proxy-Orientation">"Vertical"</string>
             <string name="proxy-Member variable name">""</string>
+            <string name="proxy-AlignH">"Centre"</string>
+            <string name="proxy-AlignV">"Centre"</string>
+            <long name="proxy-Stretch factor">0</long>
+            <long name="proxy-Border">5</long>
+            <bool name="proxy-wxLEFT">1</bool>
+            <bool name="proxy-wxRIGHT">1</bool>
+            <bool name="proxy-wxTOP">1</bool>
+            <bool name="proxy-wxBOTTOM">1</bool>
             <bool name="proxy-wxSHAPED">0</bool>
             <bool name="proxy-wxADJUST_MINSIZE">0</bool>
             <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -18104,6 +18250,14 @@ this share."</string>
             <string name="proxy-type">"wbBoxSizerProxy"</string>
             <string name="proxy-Orientation">"Vertical"</string>
             <string name="proxy-Member variable name">""</string>
+            <string name="proxy-AlignH">"Centre"</string>
+            <string name="proxy-AlignV">"Centre"</string>
+            <long name="proxy-Stretch factor">0</long>
+            <long name="proxy-Border">5</long>
+            <bool name="proxy-wxLEFT">1</bool>
+            <bool name="proxy-wxRIGHT">1</bool>
+            <bool name="proxy-wxTOP">1</bool>
+            <bool name="proxy-wxBOTTOM">1</bool>
             <bool name="proxy-wxSHAPED">0</bool>
             <bool name="proxy-wxADJUST_MINSIZE">0</bool>
             <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -18380,9 +18534,9 @@ this share."</string>
           <long name="zoom-level">100</long>
         </document>
         <document>
-          <string name="title">"mxclient-admin.png"</string>
+          <string name="title">"opennx-admin.png"</string>
           <string name="type">"image-document"</string>
-          <string name="filename">"res/mxclient-admin.png"</string>
+          <string name="filename">"res/opennx-admin.png"</string>
           <string name="icon-name">"image"</string>
           <long name="is-transient">0</long>
           <long name="owns-file">0</long>
@@ -18392,9 +18546,9 @@ this share."</string>
           <long name="zoom-level">100</long>
         </document>
         <document>
-          <string name="title">"mxclient-wizard.png"</string>
+          <string name="title">"opennx-wizard.png"</string>
           <string name="type">"image-document"</string>
-          <string name="filename">"res/mxclient-wizard.png"</string>
+          <string name="filename">"res/opennx-wizard.png"</string>
           <string name="icon-name">"image"</string>
           <long name="is-transient">0</long>
           <long name="owns-file">0</long>
@@ -18632,9 +18786,9 @@ this share."</string>
           <long name="zoom-level">100</long>
         </document>
         <document>
-          <string name="title">"mxclient.png"</string>
+          <string name="title">"opennx.png"</string>
           <string name="type">"image-document"</string>
-          <string name="filename">"res/mxclient.png"</string>
+          <string name="filename">"res/opennx.png"</string>
           <string name="icon-name">"image"</string>
           <long name="is-transient">0</long>
           <long name="owns-file">0</long>

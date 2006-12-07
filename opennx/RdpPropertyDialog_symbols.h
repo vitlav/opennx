@@ -8,7 +8,7 @@
 // Licence:     LGPL
 /////////////////////////////////////////////////////////////////////////////
 
-#define ID_DIALOG_SETTINGS_RDP_SYMBOL_0 _("RDP Session Settings - MXclient")
+#define ID_DIALOG_SETTINGS_RDP_SYMBOL_0 _("RDP Session Settings - OpenNX")
 #define ID_DIALOG_SETTINGS_RDP_SYMBOL_1 _("Server")
 #define ID_DIALOG_SETTINGS_RDP_SYMBOL_2 _("Domain")
 #define ID_DIALOG_SETTINGS_RDP_SYMBOL_3 _("Authentication")

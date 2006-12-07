@@ -9,8 +9,6 @@
 
 #include "wx/validate.h"
 
-class SessionProperties;
-
 class KeyTypeCallback
 {
 public:

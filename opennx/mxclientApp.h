@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-// Name:        mxclientApp.h
+// Name:        opennxApp.h
 // Purpose:     NoMachine Client reloaded
 // Author:      Fritz Elfert
 // Modified by: 
@@ -9,15 +9,15 @@
 // Licence:     LGPL
 /////////////////////////////////////////////////////////////////////////////
 
-#ifndef mxclientApp_H
-#define mxclientApp_H
+#ifndef opennxApp_H
+#define opennxApp_H
 
 #include <wx/intl.h>
 
 class wxConfigBase;
 
 // Define a new application type, each program should derive a class from wxApp
-class mxclientApp : public wxApp
+class opennxApp : public wxApp
 {
 public:
     enum mode {
@@ -26,8 +26,8 @@ public:
         MODE_WIZARD,
     };
 
-    mxclientApp();
-    virtual ~mxclientApp();
+    opennxApp();
+    virtual ~opennxApp();
     wxLocale *GetLocale() { return &m_cLocale; }
     const wxString &GetResourcePrefix() { return m_sResourcePrefix; }
     const wxString &GetVersion() { return m_sVersion; }
@@ -54,8 +54,8 @@ private:
     const unsigned char *m_szMemRes;
 };
 
-DECLARE_APP(mxclientApp)
+DECLARE_APP(opennxApp)
 
-#endif // mxclientApp_H
+#endif // opennxApp_H
 
 

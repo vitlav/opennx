@@ -10,7 +10,7 @@
 #define APSTUDIO_HIDDEN_SYMBOLS
 #include "windows.h"
 #undef APSTUDIO_HIDDEN_SYMBOLS
-#include "res/mxclient.rc"
+#include "res/opennx.rc"
 #define APSTUDIO_HIDDEN_SYMBOLS
 #include "wx/msw/wx.rc"
 /////////////////////////////////////////////////////////////////////////////
@@ -41,7 +41,7 @@ BEGIN
     "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
     "#include ""windows.h""\r\n"
     "#undef ""APSTUDIO_HIDDEN_SYMBOLS""\r\n"
-    "#include ""res/mxclient.rc""\r\n"
+    "#include ""res/opennx.rc""\r\n"
     "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
     "#include ""wx/msw/wx.rc""\0"
 END

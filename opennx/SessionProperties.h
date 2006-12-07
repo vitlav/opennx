@@ -24,8 +24,8 @@
 #include "SessionProperties_symbols.h"
 #include "wx/xrc/xmlres.h"
 #include "wx/notebook.h"
-#include "wx/valgen.h"
 #include "wx/spinctrl.h"
+#include "wx/valgen.h"
 #include "wx/listctrl.h"
 ////@end includes
 
@@ -51,7 +51,7 @@ class MxXmlConfig;
 ////@begin control identifiers
 #define ID_DIALOG_PROPERTIES 10006
 #define SYMBOL_SESSIONPROPERTIES_STYLE wxCAPTION|wxSYSTEM_MENU|wxCLOSE_BOX
-#define SYMBOL_SESSIONPROPERTIES_TITLE _("Session properties - MXclient")
+#define SYMBOL_SESSIONPROPERTIES_TITLE _("Session properties - OpenNX")
 #define SYMBOL_SESSIONPROPERTIES_IDNAME ID_DIALOG_PROPERTIES
 #define SYMBOL_SESSIONPROPERTIES_SIZE wxDefaultSize
 #define SYMBOL_SESSIONPROPERTIES_POSITION wxDefaultPosition
@@ -90,8 +90,19 @@ public:
 private:
     /// Creates the controls and sizers
     void CreateControls();
+    /**
+     * Checks for any changes and Enables/Disables the Apply-Button
+     */
     void CheckChanged();
+    /**
+     * Handler for OnChar events.
+     */
     void KeyTyped();
+    /**
+     * Installs event handler for OnChar event in all wxTextCtrl and wxSpinCtrl
+     * childs.
+     */
+    void InstallOnCharHandlers(wxWindow *w = NULL); 
 
 public:
 
@@ -99,6 +110,9 @@ public:
 
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_HOST
     void OnTextctrlHostUpdated( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINCTRL_PORT
+    void OnSpinctrlPortUpdated( wxSpinEvent& event );
 
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_PORT
     void OnTextctrlPortUpdated( wxCommandEvent& event );
@@ -130,8 +144,14 @@ public:
     /// wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINCTRL_WIDTH
     void OnSpinctrlWidthUpdated( wxSpinEvent& event );
 
+    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_WIDTH
+    void OnSpinctrlWidthTextUpdated( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINCTRL_HEIGHT
     void OnSpinctrlHeightUpdated( wxSpinEvent& event );
+
+    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_HEIGHT
+    void OnSpinctrlHeightTextUpdated( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_IMG_DEFAULT
     void OnRadiobuttonImgDefaultSelected( wxCommandEvent& event );
@@ -150,6 +170,18 @@ public:
 
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_ENABLESSL
     void OnCheckboxEnablesslClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_HTTPPROXY
+    void OnCheckboxHttpproxyClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_PROXYHOST
+    void OnTextctrlProxyhostUpdated( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINCTRL_PROXYPORT
+    void OnSpinctrlProxyportUpdated( wxSpinEvent& event );
+
+    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_PROXYPORT
+    void OnSpinctrlProxyportTextUpdated( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_CACHEMEM
     void OnComboboxCachememSelected( wxCommandEvent& event );
@@ -175,6 +207,12 @@ public:
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_CUPSENABLE
     void OnCheckboxCupsenableClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINCTRL_CUPSPORT
+    void OnSpinctrlCupsportUpdated( wxSpinEvent& event );
+
+    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_CUPSPORT
+    void OnSpinctrlCupsportTextUpdated( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRL_SMB_SHARES
     void OnListctrlSmbSharesSelected( wxListEvent& event );
 
@@ -190,6 +228,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SMB_DELETE
     void OnButtonSmbDeleteClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_MMEDIA
+    void OnCheckboxMmediaClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_USERDIR
     void OnTextctrlUserdirUpdated( wxCommandEvent& event );
 
@@ -204,6 +245,9 @@ public:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BROWSE_SYSDIR
     void OnButtonBrowseSysdirClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_CUPSPATH
+    void OnTextctrlCupspathUpdated( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BROWSE_CUPSPATH
     void OnButtonBrowseCupspathClick( wxCommandEvent& event );
@@ -265,6 +309,7 @@ private:
     wxComboBox* m_pCtrlKeyboardLayout;
     wxCheckBox* m_pCtrlSmbEnable;
     wxCheckBox* m_pCtrlCupsEnable;
+    wxSpinCtrl* m_pCtrlCupsPort;
     wxListCtrl* m_pCtrlSmbShares;
     wxButton* m_pCtrlShareAdd;
     wxButton* m_pCtrlShareModify;

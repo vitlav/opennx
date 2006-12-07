@@ -290,7 +290,7 @@ void LoginDialog::OnButtonConfigureClick( wxCommandEvent& event )
             m_pCtrlUseSmartCard->SetValue(m_bUseSmartCard);
             if (!m_pCurrentCfg->SaveToFile())
                 wxMessageBox(wxString::Format(_("Could not save session to\n%s"),
-                            m_pCurrentCfg->sGetFileName().c_str()), _("Error saving - MXclient"),
+                            m_pCurrentCfg->sGetFileName().c_str()), _("Error saving - OpenNX"),
                         wxICON_ERROR | wxOK);
             wxConfigBase::Get()->Write(wxT("Config/UserMxDir"), d.GetsUserMxDir());
             wxConfigBase::Get()->Write(wxT("Config/SystemMxDir"), d.GetsSystemMxDir());
@@ -339,7 +339,7 @@ void LoginDialog::OnOkClick( wxCommandEvent& event )
 
         if (!m_pCurrentCfg->SaveToFile())
             wxMessageBox(wxString::Format(_("Could not save session to\n%s"),
-                        m_pCurrentCfg->sGetFileName().c_str()), _("Error saving - MXclient"),
+                        m_pCurrentCfg->sGetFileName().c_str()), _("Error saving - OpenNX"),
                     wxICON_ERROR | wxOK);
         else {
             MxSession s;

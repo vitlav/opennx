@@ -8,7 +8,7 @@
 // Licence:     LGPL
 /////////////////////////////////////////////////////////////////////////////
 
-#define ID_DIALOG_LOGIN_SYMBOL_0 _("Login - MXclient")
+#define ID_DIALOG_LOGIN_SYMBOL_0 _("Login - OpenNX")
 #define ID_DIALOG_LOGIN_SYMBOL_1 _("Login")
 #define ID_DIALOG_LOGIN_SYMBOL_2 _("Password")
 #define ID_DIALOG_LOGIN_SYMBOL_3 _("Session")

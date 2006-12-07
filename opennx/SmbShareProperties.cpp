@@ -150,7 +150,7 @@ void SmbShareProperties::CreateControls()
         m_sMountPoint = sg.m_sMountPoint;
         m_sUsername = sg.m_sUsername;
         m_sPassword = sg.m_sPassword;
-        SetTitle(_("Modify SMB Share - MXclient"));
+        SetTitle(_("Modify SMB Share - OpenNX"));
     } else {
         WinShare s;
         

@@ -21,7 +21,7 @@
 #include <wx/image.h>
 #include <wx/filesys.h>
 
-#include "mxclientApp.h"
+#include "opennxApp.h"
 
 static char * broken_xpm[] = {
 "14 16 17 1",

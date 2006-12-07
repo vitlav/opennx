@@ -1,14 +1,10 @@
-/////////////////////////////////////////////////////////////////////////////
 // $Id$
 //
-// Purpose:     Symbols file
 // Author:      Fritz Elfert
-// Created:     Thu 07 Dec 2006 05:20:38 CET
-// Copyright:   Copyright 2004 Millenux GmbH, 2006 InnoviData GmbH
+// Copyright:   Copyright 2006 InnoviData GmbH
 // Licence:     LGPL
-/////////////////////////////////////////////////////////////////////////////
 
-#define ID_DIALOG_PROPERTIES_SYMBOL_0 _("Session properties - MXclient")
+#define ID_DIALOG_PROPERTIES_SYMBOL_0 _("Session properties - OpenNX")
 #define ID_DIALOG_PROPERTIES_SYMBOL_1 _("General")
 #define ID_DIALOG_PROPERTIES_SYMBOL_2 _("Server")
 #define ID_DIALOG_PROPERTIES_SYMBOL_3 _("Host")

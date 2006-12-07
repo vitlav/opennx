@@ -8,7 +8,7 @@
 // Licence:     LGPL
 /////////////////////////////////////////////////////////////////////////////
 
-#define ID_DIALOG_IMAGE_X11_SYMBOL_0 _("Unix Image Settings - MXclient")
+#define ID_DIALOG_IMAGE_X11_SYMBOL_0 _("Unix Image Settings - OpenNX")
 #define ID_DIALOG_IMAGE_X11_SYMBOL_1 _("Encoding")
 #define ID_DIALOG_IMAGE_X11_SYMBOL_2 _("Use PNG image compression")
 #define ID_DIALOG_IMAGE_X11_SYMBOL_3 _("Use plain X bitmaps")

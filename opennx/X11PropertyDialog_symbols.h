@@ -8,7 +8,7 @@
 // Licence:     LGPL
 /////////////////////////////////////////////////////////////////////////////
 
-#define ID_DIALOG_SETTINGS_X11_SYMBOL_0 _("X11 Session Settings - MXclient")
+#define ID_DIALOG_SETTINGS_X11_SYMBOL_0 _("X11 Session Settings - OpenNX")
 #define ID_DIALOG_SETTINGS_X11_SYMBOL_1 _("Application")
 #define ID_DIALOG_SETTINGS_X11_SYMBOL_2 _("Run console")
 #define ID_DIALOG_SETTINGS_X11_SYMBOL_3 _("Run default X client script on server")

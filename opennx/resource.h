@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Developer Studio generated include file.
-// Used by mxclient.rc
+// Used by opennx.rc
 //
 
 // Next default values for new objects

@@ -30,7 +30,7 @@
 ////@end includes
 
 #include "TextViewer.h"
-#include "mxclientApp.h"
+#include "opennxApp.h"
 
 ////@begin XPM images
 ////@end XPM images

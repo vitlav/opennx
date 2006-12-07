@@ -29,7 +29,7 @@
 #include <wx/tokenzr.h>
 
 #include "resource.h"
-#include "mxclientApp.h"
+#include "opennxApp.h"
 #include "SessionAdmin.h"
 #include "SessionProperties.h"
 #include "LoginDialog.h"
@@ -41,17 +41,17 @@
 #ifdef MYTRACETAG
 # undef MYTRACETAG
 #endif
-#define MYTRACETAG wxT("mxClientApp")
+#define MYTRACETAG wxT("opennxApp")
 
 // Create a new application object: this macro will allow wxWindows to create
 // the application object during program execution (it's better than using a
 // static object for many reasons) and also declares the accessor function
-// wxGetApp() which will return the reference of the right type (i.e. mxclientApp and
+// wxGetApp() which will return the reference of the right type (i.e. opennxApp and
 // not wxApp)
-IMPLEMENT_APP(mxclientApp);
+IMPLEMENT_APP(opennxApp);
 
 wxString
-mxclientApp::LoadFileFromResource(const wxString &loc, bool bUseLocale /* = true */)
+opennxApp::LoadFileFromResource(const wxString &loc, bool bUseLocale /* = true */)
 {
     bool tryloop = true;
     wxString ret;
@@ -89,22 +89,22 @@ mxclientApp::LoadFileFromResource(const wxString &loc, bool bUseLocale /* = true
     return ret;
 }
 
-mxclientApp::mxclientApp()
+opennxApp::opennxApp()
     : m_pCfg(NULL)
     , m_szMemRes(NULL)
 {
 
 #ifdef __WXDEBUG__
 # ifdef __WXMSW__
-    m_pCfg = new wxConfig(wxT("MxClient-Debug"), wxT("Millenux"));
+    m_pCfg = new wxConfig(wxT("OpenNX-Debug"), wxT("Millenux"));
 # else
-    m_pCfg = new wxConfig(wxT("MxClient-Debug"), wxT("Millenux"), wxT(".mxclient-debug"));
+    m_pCfg = new wxConfig(wxT("OpenNX-Debug"), wxT("Millenux"), wxT(".opennx-debug"));
 # endif
 #else
 # ifdef __WXMSW__
-    m_pCfg = new wxConfig(wxT("MxClient"), wxT("Millenux"));
+    m_pCfg = new wxConfig(wxT("OpenNX"), wxT("Millenux"));
 # else
-    m_pCfg = new wxConfig(wxT("MxClient"), wxT("Millenux"), wxT(".mxclient"));
+    m_pCfg = new wxConfig(wxT("OpenNX"), wxT("Millenux"), wxT(".opennx"));
 # endif
 #endif
     wxConfigBase::Set(m_pCfg);
@@ -196,13 +196,13 @@ mxclientApp::mxclientApp()
     }
 }
 
-mxclientApp::~mxclientApp()
+opennxApp::~opennxApp()
 {
     if (m_pCfg)
         delete m_pCfg;
 }
 
-void mxclientApp::OnInitCmdLine(wxCmdLineParser& parser)
+void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
 {
     // Init standard options (--help, --verbose);
     wxApp::OnInitCmdLine(parser);
@@ -215,7 +215,7 @@ void mxclientApp::OnInitCmdLine(wxCmdLineParser& parser)
             _("Guide the user through the steps to configure a session."));
 }
 
-bool mxclientApp::OnCmdLineParsed(wxCmdLineParser& parser)
+bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
 {
     if (!wxApp::OnCmdLineParsed(parser))
         return false;
@@ -231,11 +231,11 @@ bool mxclientApp::OnCmdLineParsed(wxCmdLineParser& parser)
 }
 
 // 'Main program' equivalent: the program execution "starts" here
-bool mxclientApp::OnInit()
+bool opennxApp::OnInit()
 {
     m_cLocale.AddCatalogLookupPathPrefix(wxT("locale"));
     m_cLocale.Init();
-    m_cLocale.AddCatalog(wxT("mxclient"));
+    m_cLocale.AddCatalog(wxT("opennx"));
 
     // Don't remap bitmaps to system colors
     wxSystemOptions::SetOption(wxT("msw.remap"), 0);
@@ -253,7 +253,7 @@ bool mxclientApp::OnInit()
     m_szMemRes = get_mem_res();
     wxMemoryFSHandler::AddFile(wxT("memrsc"), m_szMemRes, cnt_mem_res);
     m_sResourcePrefix = wxT("memory:memrsc#zip:");
-    if (!wxXmlResource::Get()->Load(m_sResourcePrefix + wxT("res/mxclient.xrc"))) {
+    if (!wxXmlResource::Get()->Load(m_sResourcePrefix + wxT("res/opennx.xrc"))) {
         if (m_szMemRes) {
             free_mem_res(m_szMemRes);
             m_szMemRes = NULL;
@@ -313,7 +313,7 @@ bool mxclientApp::OnInit()
 /*!
  * Cleanup for GastroCardApp
  */
-int mxclientApp::OnExit()
+int opennxApp::OnExit()
 {
     if (m_szMemRes)
         free_mem_res(m_szMemRes);

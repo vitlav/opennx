@@ -164,9 +164,9 @@ OutDir=.\locale
 InputPath=.\po\de.po
 InputName=de
 
-"$(OutDir)/$(InputName)/mxclient.mo" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+"$(OutDir)/$(InputName)/Opennx.mo" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	if not exist $(OutDir)\$(InputName) mkdir $(OutDir)\$(InputName) 
-	msgfmt -c -o $(OutDir)/$(InputName)/mxclient.mo $(InputPath) 
+	msgfmt -c -o $(OutDir)/$(InputName)/Opennx.mo $(InputPath) 
 	
 # End Custom Build
 
@@ -178,9 +178,9 @@ OutDir=.\locale
 InputPath=.\po\de.po
 InputName=de
 
-"$(OutDir)/$(InputName)/mxclient.mo" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+"$(OutDir)/$(InputName)/Opennx.mo" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	if not exist $(OutDir)\$(InputName) mkdir $(OutDir)\$(InputName) 
-	msgfmt -c -o $(OutDir)/$(InputName)/mxclient.mo $(InputPath) 
+	msgfmt -c -o $(OutDir)/$(InputName)/Opennx.mo $(InputPath) 
 	
 # End Custom Build
 
@@ -192,9 +192,9 @@ OutDir=.\locale
 InputPath=.\po\de.po
 InputName=de
 
-"$(OutDir)/$(InputName)/mxclient.mo" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+"$(OutDir)/$(InputName)/Opennx.mo" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	if not exist $(OutDir)\$(InputName) mkdir $(OutDir)\$(InputName) 
-	msgfmt -c -o $(OutDir)/$(InputName)/mxclient.mo $(InputPath) 
+	msgfmt -c -o $(OutDir)/$(InputName)/Opennx.mo $(InputPath) 
 	
 # End Custom Build
 
@@ -206,9 +206,9 @@ OutDir=.\locale
 InputPath=.\po\de.po
 InputName=de
 
-"$(OutDir)/$(InputName)/mxclient.mo" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+"$(OutDir)/$(InputName)/Opennx.mo" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	if not exist $(OutDir)\$(InputName) mkdir $(OutDir)\$(InputName) 
-	msgfmt -c -o $(OutDir)/$(InputName)/mxclient.mo $(InputPath) 
+	msgfmt -c -o $(OutDir)/$(InputName)/Opennx.mo $(InputPath) 
 	
 # End Custom Build
 
@@ -221,9 +221,9 @@ OutDir=.\locale
 InputPath=.\po\de.po
 InputName=de
 
-"$(OutDir)/$(InputName)/mxclient.mo" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+"$(OutDir)/$(InputName)/Opennx.mo" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	if not exist $(OutDir)\$(InputName) mkdir $(OutDir)\$(InputName) 
-	msgfmt -c -o $(OutDir)/$(InputName)/mxclient.mo $(InputPath) 
+	msgfmt -c -o $(OutDir)/$(InputName)/Opennx.mo $(InputPath) 
 	
 # End Custom Build
 
@@ -236,9 +236,9 @@ OutDir=.\locale
 InputPath=.\po\de.po
 InputName=de
 
-"$(OutDir)/$(InputName)/mxclient.mo" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+"$(OutDir)/$(InputName)/Opennx.mo" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	if not exist $(OutDir)\$(InputName) mkdir $(OutDir)\$(InputName) 
-	msgfmt -c -o $(OutDir)/$(InputName)/mxclient.mo $(InputPath) 
+	msgfmt -c -o $(OutDir)/$(InputName)/Opennx.mo $(InputPath) 
 	
 # End Custom Build
 
@@ -251,9 +251,9 @@ OutDir=.\locale
 InputPath=.\po\de.po
 InputName=de
 
-"$(OutDir)/$(InputName)/mxclient.mo" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+"$(OutDir)/$(InputName)/Opennx.mo" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	if not exist $(OutDir)\$(InputName) mkdir $(OutDir)\$(InputName) 
-	msgfmt -c -o $(OutDir)/$(InputName)/mxclient.mo $(InputPath) 
+	msgfmt -c -o $(OutDir)/$(InputName)/Opennx.mo $(InputPath) 
 	
 # End Custom Build
 
@@ -266,9 +266,9 @@ OutDir=.\locale
 InputPath=.\po\de.po
 InputName=de
 
-"$(OutDir)/$(InputName)/mxclient.mo" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+"$(OutDir)/$(InputName)/Opennx.mo" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	if not exist $(OutDir)\$(InputName) mkdir $(OutDir)\$(InputName) 
-	msgfmt -c -o $(OutDir)/$(InputName)/mxclient.mo $(InputPath) 
+	msgfmt -c -o $(OutDir)/$(InputName)/Opennx.mo $(InputPath) 
 	
 # End Custom Build
 

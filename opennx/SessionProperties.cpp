@@ -61,6 +61,7 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
 ////@begin SessionProperties event table entries
     EVT_TEXT( XRCID("ID_TEXTCTRL_HOST"), SessionProperties::OnTextctrlHostUpdated )
 
+    EVT_SPINCTRL( XRCID("ID_SPINCTRL_PORT"), SessionProperties::OnSpinctrlPortUpdated )
     EVT_TEXT( XRCID("ID_SPINCTRL_PORT"), SessionProperties::OnTextctrlPortUpdated )
 
     EVT_CHECKBOX( XRCID("ID_CHECKBOX_PWSAVE"), SessionProperties::OnCheckboxPwsaveClick )
@@ -80,8 +81,10 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
     EVT_COMBOBOX( XRCID("ID_COMBOBOX_DISPTYPE"), SessionProperties::OnComboboxDisptypeSelected )
 
     EVT_SPINCTRL( XRCID("ID_SPINCTRL_WIDTH"), SessionProperties::OnSpinctrlWidthUpdated )
+    EVT_TEXT( XRCID("ID_SPINCTRL_WIDTH"), SessionProperties::OnSpinctrlWidthTextUpdated )
 
     EVT_SPINCTRL( XRCID("ID_SPINCTRL_HEIGHT"), SessionProperties::OnSpinctrlHeightUpdated )
+    EVT_TEXT( XRCID("ID_SPINCTRL_HEIGHT"), SessionProperties::OnSpinctrlHeightTextUpdated )
 
     EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_IMG_DEFAULT"), SessionProperties::OnRadiobuttonImgDefaultSelected )
 
@@ -94,6 +97,13 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
     EVT_CHECKBOX( XRCID("ID_CHECKBOX_DISABLEZCOMP"), SessionProperties::OnCheckboxDisablezcompClick )
 
     EVT_CHECKBOX( XRCID("ID_CHECKBOX_ENABLESSL"), SessionProperties::OnCheckboxEnablesslClick )
+
+    EVT_CHECKBOX( XRCID("ID_CHECKBOX_HTTPPROXY"), SessionProperties::OnCheckboxHttpproxyClick )
+
+    EVT_TEXT( XRCID("ID_TEXTCTRL_PROXYHOST"), SessionProperties::OnTextctrlProxyhostUpdated )
+
+    EVT_SPINCTRL( XRCID("ID_SPINCTRL_PROXYPORT"), SessionProperties::OnSpinctrlProxyportUpdated )
+    EVT_TEXT( XRCID("ID_SPINCTRL_PROXYPORT"), SessionProperties::OnSpinctrlProxyportTextUpdated )
 
     EVT_COMBOBOX( XRCID("ID_COMBOBOX_CACHEMEM"), SessionProperties::OnComboboxCachememSelected )
 
@@ -111,6 +121,9 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
 
     EVT_CHECKBOX( XRCID("ID_CHECKBOX_CUPSENABLE"), SessionProperties::OnCheckboxCupsenableClick )
 
+    EVT_SPINCTRL( XRCID("ID_SPINCTRL_CUPSPORT"), SessionProperties::OnSpinctrlCupsportUpdated )
+    EVT_TEXT( XRCID("ID_SPINCTRL_CUPSPORT"), SessionProperties::OnSpinctrlCupsportTextUpdated )
+
     EVT_LIST_ITEM_SELECTED( XRCID("ID_LISTCTRL_SMB_SHARES"), SessionProperties::OnListctrlSmbSharesSelected )
     EVT_LIST_ITEM_ACTIVATED( XRCID("ID_LISTCTRL_SMB_SHARES"), SessionProperties::OnListctrlSmbSharesItemActivated )
 
@@ -119,6 +132,8 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
     EVT_BUTTON( XRCID("ID_BUTTON_SMB_MODIFY"), SessionProperties::OnButtonSmbModifyClick )
 
     EVT_BUTTON( XRCID("ID_BUTTON_SMB_DELETE"), SessionProperties::OnButtonSmbDeleteClick )
+
+    EVT_CHECKBOX( XRCID("ID_CHECKBOX_MMEDIA"), SessionProperties::OnCheckboxMmediaClick )
 
     EVT_TEXT( XRCID("ID_TEXTCTRL_USERDIR"), SessionProperties::OnTextctrlUserdirUpdated )
 
@@ -129,6 +144,8 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
     EVT_TEXT( XRCID("ID_TEXTCTRL_SYSDIR"), SessionProperties::OnTextctrlSysdirUpdated )
 
     EVT_BUTTON( XRCID("ID_BUTTON_BROWSE_SYSDIR"), SessionProperties::OnButtonBrowseSysdirClick )
+
+    EVT_TEXT( XRCID("ID_TEXTCTRL_CUPSPATH"), SessionProperties::OnTextctrlCupspathUpdated )
 
     EVT_BUTTON( XRCID("ID_BUTTON_BROWSE_CUPSPATH"), SessionProperties::OnButtonBrowseCupspathClick )
 
@@ -215,9 +232,12 @@ void SessionProperties::CheckChanged()
         // variables on 'Services' tab
         m_pCfg->bSetEnableSmbSharing(m_bEnableSmbSharing);
         m_pCfg->bSetEnableMultimedia(m_bEnableMultimedia);
+        m_pCfg->bSetUseCups(m_bUseCups);
+        m_pCfg->iSetCupsPort(m_iCupsPort);
 
         // variabless on 'Environment' tab
         m_pCfg->bSetRemoveOldSessionFiles(m_bRemoveOldSessionFiles);
+        m_pCfg->sSetCupsPath(m_sCupsPath);
 
         bool changed = m_pCfg->checkChanged();
         changed |= (m_sSavedUserMxDir != m_sUserMxDir);
@@ -257,6 +277,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlKeyboardLayout = NULL;
     m_pCtrlSmbEnable = NULL;
     m_pCtrlCupsEnable = NULL;
+    m_pCtrlCupsPort = NULL;
     m_pCtrlSmbShares = NULL;
     m_pCtrlShareAdd = NULL;
     m_pCtrlShareModify = NULL;
@@ -349,7 +370,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
                 for (si = 0; si < sa.GetCount(); si++) {
                     if (sa[si].name == sg[i].m_sName) {
                         comment = sa[si].description;
-                        iconidx = (sa[si].sharetype == SharedResource::SHARE_DISK) ? 1 : 2;
+                        iconidx = (sa[si].sharetype == SharedResource::SHARE_SMB_DISK) ? 1 : 2;
                         break;
                     }
                 }
@@ -380,15 +401,46 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_sSavedUserMxDir = m_sUserMxDir;
     m_sSavedSystemMxDir = m_sSystemMxDir;
 
-    ((MxValidator *)(m_pCtrlHostname->GetValidator()))->SetKeyTyped(this);
-    ((MxValidator *)(m_pCtrlUserMxDir->GetValidator()))->SetKeyTyped(this);
-    ((MxValidator *)(m_pCtrlSystemMxDir->GetValidator()))->SetKeyTyped(this);
-    ((MxValidator *)(m_pCtrlCupsPath->GetValidator()))->SetKeyTyped(this);
-    ((MxValidator *)(m_pCtrlProxyHost->GetValidator()))->SetKeyTyped(this);
+    // Hook into OnChar events of wxTextCtrl's and wxSpinCtrl's
+    InstallOnCharHandlers();
 
     return TRUE;
 }
 
+/**
+ * Installs event handler for OnChar event in all wxTextCtrl and wxSpinCtrl
+ * childs.
+ */
+void SessionProperties::InstallOnCharHandlers(wxWindow *w /* = NULL*/)
+{
+    if (!w)
+        w = this;
+    wxWindowList& children = w->GetChildren();
+    wxWindowList::Node *node;
+    for (node = children.GetFirst(); node; node = node->GetNext()) {
+        w = node->GetData();
+        if (w->IsKindOf(CLASSINFO(wxTextCtrl)) || w->IsKindOf(CLASSINFO(wxSpinCtrl))) {
+            wxValidator *v = w->GetValidator();
+            if (v) {
+                if (v->IsKindOf(CLASSINFO(MxValidator)))
+                    wxDynamicCast(v, MxValidator)->SetKeyTyped(this);
+                else
+                    ::wxLogError(wxT("Detected %s window with validator other than MxValidator!"),
+                        w->IsKindOf(CLASSINFO(wxTextCtrl)) ? "wxTextCtrl" : "wxSpinCtrl");
+            } else
+                ::wxLogError(wxT("Detected %s window without validator!"),
+                    w->IsKindOf(CLASSINFO(wxTextCtrl)) ? "wxTextCtrl" : "wxSpinCtrl");
+        } else {
+            if (!w->GetChildren().IsEmpty())
+                InstallOnCharHandlers(w);
+        }
+    }
+} 
+
+/**
+* Handle dialog constraints (i.e.: Enable/Disable various controls depending
+* on other controls.
+*/ 
 void SessionProperties::UpdateDialogConstraints(bool getValues)
 {
     if (getValues)
@@ -439,10 +491,12 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
     m_pCtrlImageSettings->Enable(m_bUseCustomImageEncoding);
 
     // 'Services' tab
-    m_pCtrlSmbShares->Enable(m_bEnableSmbSharing||m_bUseCups);
-    m_pCtrlShareAdd->Enable(m_bEnableSmbSharing||m_bUseCups);
-    m_pCtrlShareDelete->Enable(m_bEnableSmbSharing && (m_pCtrlSmbShares->GetSelectedItemCount() > 0));
-    m_pCtrlShareModify->Enable(m_bEnableSmbSharing && (m_pCtrlSmbShares->GetSelectedItemCount() > 0));
+    bool bTmp = m_bEnableSmbSharing || m_bUseCups;
+    m_pCtrlSmbShares->Enable(bTmp);
+    m_pCtrlShareAdd->Enable(bTmp);
+    m_pCtrlShareDelete->Enable(bTmp && (m_pCtrlSmbShares->GetSelectedItemCount() > 0));
+    m_pCtrlShareModify->Enable(bTmp && (m_pCtrlSmbShares->GetSelectedItemCount() > 0));
+    m_pCtrlCupsPort->Enable(m_bUseCups);
 
     // 'Advanced' tab
     m_pCtrlKeyboardLayout->Enable(m_bKbdLayoutOther);
@@ -481,6 +535,7 @@ void SessionProperties::CreateControls()
     m_pCtrlKeyboardLayout = XRCCTRL(*this, "ID_COMBOBOX_KBDLAYOUT", wxComboBox);
     m_pCtrlSmbEnable = XRCCTRL(*this, "ID_CHECKBOX_SMB", wxCheckBox);
     m_pCtrlCupsEnable = XRCCTRL(*this, "ID_CHECKBOX_CUPSENABLE", wxCheckBox);
+    m_pCtrlCupsPort = XRCCTRL(*this, "ID_SPINCTRL_CUPSPORT", wxSpinCtrl);
     m_pCtrlSmbShares = XRCCTRL(*this, "ID_LISTCTRL_SMB_SHARES", wxListCtrl);
     m_pCtrlShareAdd = XRCCTRL(*this, "ID_BUTTON_SMB_ADD", wxButton);
     m_pCtrlShareModify = XRCCTRL(*this, "ID_BUTTON_SMB_MODIFY", wxButton);
@@ -495,7 +550,7 @@ void SessionProperties::CreateControls()
     if (FindWindow(XRCID("ID_TEXTCTRL_HOST")))
         FindWindow(XRCID("ID_TEXTCTRL_HOST"))->SetValidator( MxValidator(MxValidator::MXVAL_HOST, & m_sHostName) );
     if (FindWindow(XRCID("ID_SPINCTRL_PORT")))
-        FindWindow(XRCID("ID_SPINCTRL_PORT"))->SetValidator( wxGenericValidator(& m_iPort) );
+        FindWindow(XRCID("ID_SPINCTRL_PORT"))->SetValidator( MxValidator(& m_iPort) );
     if (FindWindow(XRCID("ID_CHECKBOX_PWSAVE")))
         FindWindow(XRCID("ID_CHECKBOX_PWSAVE"))->SetValidator( wxGenericValidator(& m_bRememberPassword) );
     if (FindWindow(XRCID("ID_CHECKBOX_SMARTCARD")))
@@ -509,9 +564,9 @@ void SessionProperties::CreateControls()
     if (FindWindow(XRCID("ID_COMBOBOX_DISPTYPE")))
         FindWindow(XRCID("ID_COMBOBOX_DISPTYPE"))->SetValidator( wxGenericValidator(& m_iDisplayType) );
     if (FindWindow(XRCID("ID_SPINCTRL_WIDTH")))
-        FindWindow(XRCID("ID_SPINCTRL_WIDTH"))->SetValidator( wxGenericValidator(& m_iDisplayWidth) );
+        FindWindow(XRCID("ID_SPINCTRL_WIDTH"))->SetValidator( MxValidator(& m_iDisplayWidth) );
     if (FindWindow(XRCID("ID_SPINCTRL_HEIGHT")))
-        FindWindow(XRCID("ID_SPINCTRL_HEIGHT"))->SetValidator( wxGenericValidator(& m_iDisplayHeight) );
+        FindWindow(XRCID("ID_SPINCTRL_HEIGHT"))->SetValidator( MxValidator(& m_iDisplayHeight) );
     if (FindWindow(XRCID("ID_RADIOBUTTON_IMG_CUSTOM")))
         FindWindow(XRCID("ID_RADIOBUTTON_IMG_CUSTOM"))->SetValidator( wxGenericValidator(& m_bUseCustomImageEncoding) );
     if (FindWindow(XRCID("ID_CHECKBOX_DISABLETCPNODEL")))
@@ -523,9 +578,9 @@ void SessionProperties::CreateControls()
     if (FindWindow(XRCID("ID_CHECKBOX_HTTPPROXY")))
         FindWindow(XRCID("ID_CHECKBOX_HTTPPROXY"))->SetValidator( wxGenericValidator(& m_bUseProxy) );
     if (FindWindow(XRCID("ID_TEXTCTRL_PROXYHOST")))
-        FindWindow(XRCID("ID_TEXTCTRL_PROXYHOST"))->SetValidator( MxValidator(& m_sProxyHost) );
+        FindWindow(XRCID("ID_TEXTCTRL_PROXYHOST"))->SetValidator( MxValidator(MxValidator::MXVAL_HOST, & m_sProxyHost) );
     if (FindWindow(XRCID("ID_SPINCTRL_PROXYPORT")))
-        FindWindow(XRCID("ID_SPINCTRL_PROXYPORT"))->SetValidator( wxGenericValidator(& m_iProxyPort) );
+        FindWindow(XRCID("ID_SPINCTRL_PROXYPORT"))->SetValidator( MxValidator(& m_iProxyPort) );
     if (FindWindow(XRCID("ID_COMBOBOX_CACHEMEM")))
         FindWindow(XRCID("ID_COMBOBOX_CACHEMEM"))->SetValidator( wxGenericValidator(& m_iCacheMem) );
     if (FindWindow(XRCID("ID_COMBOBOX_CACHEDISK")))
@@ -539,7 +594,7 @@ void SessionProperties::CreateControls()
     if (FindWindow(XRCID("ID_CHECKBOX_CUPSENABLE")))
         FindWindow(XRCID("ID_CHECKBOX_CUPSENABLE"))->SetValidator( wxGenericValidator(& m_bUseCups) );
     if (FindWindow(XRCID("ID_SPINCTRL_CUPSPORT")))
-        FindWindow(XRCID("ID_SPINCTRL_CUPSPORT"))->SetValidator( wxGenericValidator(& m_iCupsPort) );
+        FindWindow(XRCID("ID_SPINCTRL_CUPSPORT"))->SetValidator( MxValidator(& m_iCupsPort) );
     if (FindWindow(XRCID("ID_CHECKBOX_MMEDIA")))
         FindWindow(XRCID("ID_CHECKBOX_MMEDIA"))->SetValidator( wxGenericValidator(& m_bEnableMultimedia) );
     if (FindWindow(XRCID("ID_TEXTCTRL_USERDIR")))
@@ -751,8 +806,15 @@ void SessionProperties::OnRadiobuttonKbdotherSelected( wxCommandEvent& event )
 
 void SessionProperties::OnCheckboxSmbClick( wxCommandEvent& event )
 {
-    UpdateDialogConstraints(true);
-    CheckChanged();
+    WinShare s;
+    if (s.IsAvailable()) {
+        UpdateDialogConstraints(true);
+        CheckChanged();
+    } else {
+        ::wxLogWarning(_("No local samba server is running."));
+        wxDynamicCast(event.GetEventObject(), wxCheckBox)->SetValue(false);
+        //wxDynamicCast(event.GetEventObject(), wxCheckBox)->Enable(false);
+    }
     event.Skip();
 }
 
@@ -770,7 +832,7 @@ void SessionProperties::OnButtonSmbAddClick( wxCommandEvent& event )
         size_t sgidx = m_pCfg->aGetShareGroups().GetCount() - 1;
         ArrayOfShares sa = s.GetShares();
         ShareGroup sg = m_pCfg->aGetShareGroups().Item(sgidx);
-        int iconidx = (sg.m_iType == SharedResource::SHARE_DISK) ? 1 : 2;
+        int iconidx = (sg.m_iType == SharedResource::SHARE_SMB_DISK) ? 1 : 2;
         size_t si;
         wxString comment = _("Currently not available");
         for (si = 0; si < sa.GetCount(); si++) {
@@ -915,12 +977,9 @@ void SessionProperties::OnButtonFontFixedClick( wxCommandEvent& event )
 
 void SessionProperties::OnDeleteClick( wxCommandEvent& event )
 {
-
-
     if (wxMessageBox(wxString::Format(_("Really delete Session '%s' ?"),
-				      m_pCfg->sGetName().c_str()),
-		     _("Delete Session"),
-                     wxICON_QUESTION|wxYES_NO|wxNO_DEFAULT) == wxYES) {
+                    m_pCfg->sGetName().c_str()), _("Delete Session"),
+                wxICON_QUESTION|wxYES_NO|wxNO_DEFAULT) == wxYES) {
 #ifdef __WXMSW__
         TCHAR dtPath[MAX_PATH];
         if (SHGetSpecialFolderPath(NULL, dtPath, CSIDL_DESKTOPDIRECTORY, FALSE))
@@ -929,14 +988,14 @@ void SessionProperties::OnDeleteClick( wxCommandEvent& event )
 #ifdef __UNIX__
         const char* dtPaths[] = { "Desktop", "KDesktop", ".gnome-desktop", NULL };
         const char **p = dtPaths;
-        
+
         while (*p) {
             wxRemoveFile(wxString::Format(_T("%s/%s/%s.desktop"),
-                ::wxGetHomeDir().c_str(), *p, m_pCfg->sGetName().c_str()));
+                        ::wxGetHomeDir().c_str(), *p, m_pCfg->sGetName().c_str()));
             p++;
         }
 #endif
-
+        ::wxLogDebug(wxT("TODO: really delete .nxs file"));
         EndModal(wxID_CLEAR);
     }
     event.Skip();
@@ -1142,17 +1201,6 @@ void SessionProperties::OnTextctrlHostUpdated( wxCommandEvent& event )
 }
 
 /*!
- * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_PORT
- */
-
-void SessionProperties::OnTextctrlPortUpdated( wxCommandEvent& event )
-{
-    if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlPort))
-        CheckChanged();
-    event.Skip();
-}
-
-/*!
  * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_USERDIR
  */
 
@@ -1205,8 +1253,16 @@ void SessionProperties::OnListctrlSmbSharesItemActivated( wxListEvent& event )
 
 void SessionProperties::OnCheckboxCupsenableClick( wxCommandEvent& event )
 {
-    UpdateDialogConstraints(true);
-    CheckChanged();
+    CupsShare s;
+    if (s.IsAvailable()) {
+        UpdateDialogConstraints(true);
+        CheckChanged();
+    } else {
+        ::wxLogWarning(_("No cups server available."));
+        wxDynamicCast(event.GetEventObject(), wxCheckBox)->SetValue(false);
+        //wxDynamicCast(event.GetEventObject(), wxCheckBox)->Enable(false);
+        m_bUseCups = false;
+    }
     event.Skip();
 }
 
@@ -1219,7 +1275,7 @@ void SessionProperties::OnButtonBrowseCupspathClick( wxCommandEvent& event )
 {
     wxFileName fn(m_sCupsPath);
     const wxString& file = ::wxFileSelector(_("Select System CUPS daemon"),
-        fn.GetPath(), fn.GetName(), wxT(""), wxT("*"), wxOPEN|wxFILE_MUST_EXIST, this);
+            fn.GetPath(), fn.GetName(), wxT(""), wxT("*"), wxOPEN|wxFILE_MUST_EXIST, this);
     if (!file.IsEmpty()) {
         m_pCtrlCupsPath->SetValue(file);
         CheckChanged();
@@ -1234,10 +1290,142 @@ void SessionProperties::OnButtonBrowseCupspathClick( wxCommandEvent& event )
 
 void SessionProperties::OnButtonKeymanageClick( wxCommandEvent& event )
 {
-////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_KEYMANAGE in SessionProperties.
+    ////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_KEYMANAGE in SessionProperties.
     // Before editing this code, remove the block markers.
     event.Skip();
-////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_KEYMANAGE in SessionProperties. 
+    ////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_KEYMANAGE in SessionProperties. 
 }
 
 
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_MMEDIA
+ */
+
+void SessionProperties::OnCheckboxMmediaClick( wxCommandEvent& event )
+{
+    UpdateDialogConstraints(true);
+    CheckChanged();
+    event.Skip();
+}
+
+
+/*!
+ * wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINCTRL_PORT
+ */
+
+void SessionProperties::OnSpinctrlPortUpdated( wxSpinEvent& event )
+{
+    CheckChanged();
+    event.Skip();
+}
+
+
+/*!
+ * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_PORT
+ */
+
+void SessionProperties::OnTextctrlPortUpdated( wxCommandEvent& event )
+{
+    if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlPort))
+        CheckChanged();
+    event.Skip();
+}
+
+
+/*!
+ * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_WIDTH
+ */
+
+void SessionProperties::OnSpinctrlWidthTextUpdated( wxCommandEvent& event )
+{
+    if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlDisplayWidth))
+        CheckChanged();
+    event.Skip();
+}
+
+/*!
+ * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_HEIGHT
+ */
+
+void SessionProperties::OnSpinctrlHeightTextUpdated( wxCommandEvent& event )
+{
+    if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlDisplayHeight))
+        CheckChanged();
+    event.Skip();
+}
+
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_HTTPPROXY
+ */
+
+void SessionProperties::OnCheckboxHttpproxyClick( wxCommandEvent& event )
+{
+    UpdateDialogConstraints(true);
+    CheckChanged();
+    event.Skip();
+}
+
+/*!
+ * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_PROXYHOST
+ */
+
+void SessionProperties::OnTextctrlProxyhostUpdated( wxCommandEvent& event )
+{
+    if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlProxyHost))
+        CheckChanged();
+    event.Skip();
+}
+
+/*!
+ * wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINCTRL_PROXYPORT
+ */
+
+void SessionProperties::OnSpinctrlProxyportUpdated( wxSpinEvent& event )
+{
+    CheckChanged();
+    event.Skip();
+}
+
+/*!
+ * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_PROXYPORT
+ */
+
+void SessionProperties::OnSpinctrlProxyportTextUpdated( wxCommandEvent& event )
+{
+    if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlProxyPort))
+        CheckChanged();
+    event.Skip();
+}
+
+/*!
+ * wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINCTRL_CUPSPORT
+ */
+
+void SessionProperties::OnSpinctrlCupsportUpdated( wxSpinEvent& event )
+{
+    CheckChanged();
+    event.Skip();
+}
+
+/*!
+ * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_CUPSPORT
+ */
+
+void SessionProperties::OnSpinctrlCupsportTextUpdated( wxCommandEvent& event )
+{
+    if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlCupsPort))
+        CheckChanged();
+    event.Skip();
+}
+
+/*!
+ * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_CUPSPATH
+ */
+
+void SessionProperties::OnTextctrlCupspathUpdated( wxCommandEvent& event )
+{
+    if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlCupsPath))
+        CheckChanged();
+    event.Skip();
+}

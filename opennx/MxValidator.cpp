@@ -35,7 +35,7 @@
   #include "wx/slider.h"
 #endif
  
-  #include "wx/spinctrl.h"
+#include "wx/spinctrl.h"
 
 #if wxUSE_SPINBTN 
   #include "wx/spinbutt.h"

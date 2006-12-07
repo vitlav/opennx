@@ -1,30 +1,30 @@
-# Microsoft Developer Studio Project File - Name="mxclient" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="Opennx" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Console Application" 0x0103
 
-CFG=mxclient - Win32 Release Unicode DLL
+CFG=Opennx - Win32 Release Unicode DLL
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "mxclient.mak".
+!MESSAGE NMAKE /f "Opennx.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "mxclient.mak" CFG="mxclient - Win32 Release Unicode DLL"
+!MESSAGE NMAKE /f "Opennx.mak" CFG="Opennx - Win32 Release Unicode DLL"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "mxclient - Win32 Release" (based on "Win32 (x86) Console Application")
-!MESSAGE "mxclient - Win32 Debug" (based on "Win32 (x86) Console Application")
-!MESSAGE "mxclient - Win32 Debug Unicode" (based on "Win32 (x86) Console Application")
-!MESSAGE "mxclient - Win32 Release Unicode" (based on "Win32 (x86) Console Application")
-!MESSAGE "mxclient - Win32 Debug DLL" (based on "Win32 (x86) Console Application")
-!MESSAGE "mxclient - Win32 Release DLL" (based on "Win32 (x86) Console Application")
-!MESSAGE "mxclient - Win32 Debug Unicode DLL" (based on "Win32 (x86) Console Application")
-!MESSAGE "mxclient - Win32 Release Unicode DLL" (based on "Win32 (x86) Console Application")
+!MESSAGE "Opennx - Win32 Release" (based on "Win32 (x86) Console Application")
+!MESSAGE "Opennx - Win32 Debug" (based on "Win32 (x86) Console Application")
+!MESSAGE "Opennx - Win32 Debug Unicode" (based on "Win32 (x86) Console Application")
+!MESSAGE "Opennx - Win32 Release Unicode" (based on "Win32 (x86) Console Application")
+!MESSAGE "Opennx - Win32 Debug DLL" (based on "Win32 (x86) Console Application")
+!MESSAGE "Opennx - Win32 Release DLL" (based on "Win32 (x86) Console Application")
+!MESSAGE "Opennx - Win32 Debug Unicode DLL" (based on "Win32 (x86) Console Application")
+!MESSAGE "Opennx - Win32 Release Unicode DLL" (based on "Win32 (x86) Console Application")
 !MESSAGE 
 
 # Begin Project
@@ -34,7 +34,7 @@ CFG=mxclient - Win32 Release Unicode DLL
 CPP=cl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "mxclient - Win32 Release"
+!IF  "$(CFG)" == "Opennx - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -59,7 +59,7 @@ LINK32=link.exe
 # ADD LINK32 wxzlib.lib wxpng.lib wxtiff.lib wxjpeg.lib wxexpat.lib wxregex.lib wxbase26.lib wxmsw26_core.lib wxbase26_xml.lib wxmsw26_xrc.lib wxbase26_net.lib wxmsw26_adv.lib wxmsw26_html.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib winmm.lib version.lib /nologo /subsystem:windows /machine:I386 /libpath:"$(WXWIN)\lib\vc_lib"
 # SUBTRACT LINK32 /pdb:none
 
-!ELSEIF  "$(CFG)" == "mxclient - Win32 Debug"
+!ELSEIF  "$(CFG)" == "Opennx - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -84,12 +84,12 @@ LINK32=link.exe
 # ADD LINK32 wxzlibd.lib wxpngd.lib wxtiffd.lib wxjpegd.lib wxexpatd.lib wxregexd.lib wxbase26d.lib wxmsw26d_core.lib wxbase26d_xml.lib wxmsw26d_xrc.lib wxbase26d_net.lib wxmsw26d_adv.lib wxmsw26d_html.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib winmm.lib version.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept /libpath:"$(WXWIN)\lib\vc_lib"
 # SUBTRACT LINK32 /pdb:none
 
-!ELSEIF  "$(CFG)" == "mxclient - Win32 Debug Unicode"
+!ELSEIF  "$(CFG)" == "Opennx - Win32 Debug Unicode"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "mxclient___Win32_Debug_Unicode"
-# PROP BASE Intermediate_Dir "mxclient___Win32_Debug_Unicode"
+# PROP BASE Output_Dir "Opennx___Win32_Debug_Unicode"
+# PROP BASE Intermediate_Dir "Opennx___Win32_Debug_Unicode"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
@@ -109,12 +109,12 @@ LINK32=link.exe
 # ADD LINK32 wxzlibd.lib wxpngd.lib wxtiffd.lib wxjpegd.lib wxexpatd.lib wxregexud.lib wxbase26ud.lib wxmsw26ud_core.lib wxbase26ud_xml.lib wxmsw26ud_xrc.lib wxbase26ud_net.lib wxmsw26ud_adv.lib wxmsw26ud_html.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib winmm.lib version.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept /libpath:"$(WXWIN)\lib\vc_lib"
 # SUBTRACT LINK32 /pdb:none
 
-!ELSEIF  "$(CFG)" == "mxclient - Win32 Release Unicode"
+!ELSEIF  "$(CFG)" == "Opennx - Win32 Release Unicode"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "mxclient___Win32_Release_Unicode"
-# PROP BASE Intermediate_Dir "mxclient___Win32_Release_Unicode"
+# PROP BASE Output_Dir "Opennx___Win32_Release_Unicode"
+# PROP BASE Intermediate_Dir "Opennx___Win32_Release_Unicode"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
@@ -134,12 +134,12 @@ LINK32=link.exe
 # ADD LINK32 wxzlib.lib wxpng.lib wxtiff.lib wxjpeg.lib wxexpat.lib wxregexu.lib wxbase26u.lib wxmsw26u_core.lib wxbase26u_xml.lib wxmsw26u_xrc.lib wxbase26u_net.lib wxmsw26u_adv.lib wxmsw26u_html.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib winmm.lib version.lib /nologo /subsystem:windows /incremental:no /debug /machine:I386 /pdbtype:sept /libpath:"$(WXWIN)\lib\vc_lib"
 # SUBTRACT LINK32 /pdb:none
 
-!ELSEIF  "$(CFG)" == "mxclient - Win32 Debug DLL"
+!ELSEIF  "$(CFG)" == "Opennx - Win32 Debug DLL"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "mxclient___Win32_Debug_DLL"
-# PROP BASE Intermediate_Dir "mxclient___Win32_Debug_DLL"
+# PROP BASE Output_Dir "Opennx___Win32_Debug_DLL"
+# PROP BASE Intermediate_Dir "Opennx___Win32_Debug_DLL"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
@@ -160,12 +160,12 @@ LINK32=link.exe
 # ADD LINK32 wxzlibd.lib wxpngd.lib wxtiffd.lib wxjpegd.lib wxexpatd.lib wxregexd.lib wxbase26d.lib wxmsw26d_core.lib wxbase26d_xml.lib wxmsw26d_xrc.lib wxbase26d_net.lib wxmsw26d_adv.lib wxmsw26d_html.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib winmm.lib version.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept /libpath:"$(WXWIN)\lib\vc_dll"
 # SUBTRACT LINK32 /pdb:none
 
-!ELSEIF  "$(CFG)" == "mxclient - Win32 Release DLL"
+!ELSEIF  "$(CFG)" == "Opennx - Win32 Release DLL"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "mxclient___Win32_Release_DLL"
-# PROP BASE Intermediate_Dir "mxclient___Win32_Release_DLL"
+# PROP BASE Output_Dir "Opennx___Win32_Release_DLL"
+# PROP BASE Intermediate_Dir "Opennx___Win32_Release_DLL"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
@@ -185,12 +185,12 @@ LINK32=link.exe
 # ADD LINK32 wxzlib.lib wxpng.lib wxtiff.lib wxjpeg.lib wxexpat.lib wxregex.lib wxbase26.lib wxmsw26_core.lib wxbase26_xml.lib wxmsw26_xrc.lib wxbase26_net.lib wxmsw26_adv.lib wxmsw26_html.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib winmm.lib version.lib /nologo /subsystem:windows /incremental:no /debug /machine:I386 /pdbtype:sept /libpath:"$(WXWIN)\lib\vc_dll"
 # SUBTRACT LINK32 /pdb:none
 
-!ELSEIF  "$(CFG)" == "mxclient - Win32 Debug Unicode DLL"
+!ELSEIF  "$(CFG)" == "Opennx - Win32 Debug Unicode DLL"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "mxclient___Win32_Debug_Unicode_DLL"
-# PROP BASE Intermediate_Dir "mxclient___Win32_Debug_Unicode_DLL"
+# PROP BASE Output_Dir "Opennx___Win32_Debug_Unicode_DLL"
+# PROP BASE Intermediate_Dir "Opennx___Win32_Debug_Unicode_DLL"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
@@ -210,12 +210,12 @@ LINK32=link.exe
 # ADD LINK32 wxzlibd.lib wxpngd.lib wxtiffd.lib wxjpegd.lib wxexpatd.lib wxregexud.lib wxbase26ud.lib wxmsw26ud_core.lib wxbase26ud_xml.lib wxmsw26ud_xrc.lib wxbase26ud_net.lib wxmsw26ud_adv.lib wxmsw26ud_html.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib winmm.lib version.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept /libpath:"$(WXWIN)\lib\vc_dll"
 # SUBTRACT LINK32 /pdb:none
 
-!ELSEIF  "$(CFG)" == "mxclient - Win32 Release Unicode DLL"
+!ELSEIF  "$(CFG)" == "Opennx - Win32 Release Unicode DLL"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "mxclient___Win32_Release_Unicode_DLL"
-# PROP BASE Intermediate_Dir "mxclient___Win32_Release_Unicode_DLL"
+# PROP BASE Output_Dir "Opennx___Win32_Release_Unicode_DLL"
+# PROP BASE Intermediate_Dir "Opennx___Win32_Release_Unicode_DLL"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
@@ -239,14 +239,14 @@ LINK32=link.exe
 
 # Begin Target
 
-# Name "mxclient - Win32 Release"
-# Name "mxclient - Win32 Debug"
-# Name "mxclient - Win32 Debug Unicode"
-# Name "mxclient - Win32 Release Unicode"
-# Name "mxclient - Win32 Debug DLL"
-# Name "mxclient - Win32 Release DLL"
-# Name "mxclient - Win32 Debug Unicode DLL"
-# Name "mxclient - Win32 Release Unicode DLL"
+# Name "Opennx - Win32 Release"
+# Name "Opennx - Win32 Debug"
+# Name "Opennx - Win32 Debug Unicode"
+# Name "Opennx - Win32 Release Unicode"
+# Name "Opennx - Win32 Debug DLL"
+# Name "Opennx - Win32 Release DLL"
+# Name "Opennx - Win32 Debug Unicode DLL"
+# Name "Opennx - Win32 Release Unicode DLL"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
@@ -276,13 +276,13 @@ SOURCE=.\md5.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mxclient.pjd
+SOURCE=.\Opennx.pjd
 
-!IF  "$(CFG)" == "mxclient - Win32 Release"
+!IF  "$(CFG)" == "Opennx - Win32 Release"
 
 # Begin Custom Build
 IntDir=.\Release
-InputPath=.\mxclient.pjd
+InputPath=.\Opennx.pjd
 
 "memres.h" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	zip -9r $(IntDir)\tmpres.zip res -i *.xrc *.png *.rtf *.html -x *.prv.* 
@@ -290,11 +290,11 @@ InputPath=.\mxclient.pjd
 	
 # End Custom Build
 
-!ELSEIF  "$(CFG)" == "mxclient - Win32 Debug"
+!ELSEIF  "$(CFG)" == "Opennx - Win32 Debug"
 
 # Begin Custom Build
 IntDir=.\Debug
-InputPath=.\mxclient.pjd
+InputPath=.\Opennx.pjd
 
 "memres.h" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	zip -9r $(IntDir)\tmpres.zip res -i *.xrc *.png *.rtf *.html -x *.prv.* 
@@ -302,11 +302,11 @@ InputPath=.\mxclient.pjd
 	
 # End Custom Build
 
-!ELSEIF  "$(CFG)" == "mxclient - Win32 Debug Unicode"
+!ELSEIF  "$(CFG)" == "Opennx - Win32 Debug Unicode"
 
 # Begin Custom Build
 IntDir=.\Debug_Unicode
-InputPath=.\mxclient.pjd
+InputPath=.\Opennx.pjd
 
 "memres.h" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	zip -9r $(IntDir)\tmpres.zip res -i *.xrc *.png *.rtf *.html -x *.prv.* 
@@ -314,11 +314,11 @@ InputPath=.\mxclient.pjd
 	
 # End Custom Build
 
-!ELSEIF  "$(CFG)" == "mxclient - Win32 Release Unicode"
+!ELSEIF  "$(CFG)" == "Opennx - Win32 Release Unicode"
 
 # Begin Custom Build
 IntDir=.\Release_Unicode
-InputPath=.\mxclient.pjd
+InputPath=.\Opennx.pjd
 
 "memres.h" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	zip -9r $(IntDir)\tmpres.zip res -i *.xrc *.png *.rtf *.html -x *.prv.* 
@@ -326,11 +326,11 @@ InputPath=.\mxclient.pjd
 	
 # End Custom Build
 
-!ELSEIF  "$(CFG)" == "mxclient - Win32 Debug DLL"
+!ELSEIF  "$(CFG)" == "Opennx - Win32 Debug DLL"
 
 # Begin Custom Build
 IntDir=.\DebugDLL
-InputPath=.\mxclient.pjd
+InputPath=.\Opennx.pjd
 
 "memres.h" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	zip -9r $(IntDir)\tmpres.zip res -i *.xrc *.png *.rtf *.html -x *.prv.* 
@@ -338,11 +338,11 @@ InputPath=.\mxclient.pjd
 	
 # End Custom Build
 
-!ELSEIF  "$(CFG)" == "mxclient - Win32 Release DLL"
+!ELSEIF  "$(CFG)" == "Opennx - Win32 Release DLL"
 
 # Begin Custom Build
 IntDir=.\ReleaseDLL
-InputPath=.\mxclient.pjd
+InputPath=.\Opennx.pjd
 
 "memres.h" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	zip -9r $(IntDir)\tmpres.zip res -i *.xrc *.png *.rtf *.html -x *.prv.* 
@@ -350,11 +350,11 @@ InputPath=.\mxclient.pjd
 	
 # End Custom Build
 
-!ELSEIF  "$(CFG)" == "mxclient - Win32 Debug Unicode DLL"
+!ELSEIF  "$(CFG)" == "Opennx - Win32 Debug Unicode DLL"
 
 # Begin Custom Build
 IntDir=.\DebugDLL_Unicode
-InputPath=.\mxclient.pjd
+InputPath=.\Opennx.pjd
 
 "memres.h" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	zip -9r $(IntDir)\tmpres.zip res -i *.xrc *.png *.rtf *.html -x *.prv.* 
@@ -362,11 +362,11 @@ InputPath=.\mxclient.pjd
 	
 # End Custom Build
 
-!ELSEIF  "$(CFG)" == "mxclient - Win32 Release Unicode DLL"
+!ELSEIF  "$(CFG)" == "Opennx - Win32 Release Unicode DLL"
 
 # Begin Custom Build
 IntDir=.\ReleaseDLL_Unicode
-InputPath=.\mxclient.pjd
+InputPath=.\Opennx.pjd
 
 "memres.h" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	zip -9r $(IntDir)\tmpres.zip res -i *.xrc *.png *.rtf *.html -x *.prv.* 
@@ -379,11 +379,11 @@ InputPath=.\mxclient.pjd
 # End Source File
 # Begin Source File
 
-SOURCE=.\mxclient.rc
+SOURCE=.\Opennx.rc
 # End Source File
 # Begin Source File
 
-SOURCE=.\mxclientApp.cpp
+SOURCE=.\OpennxApp.cpp
 # ADD CPP /YX
 # End Source File
 # Begin Source File
@@ -508,7 +508,7 @@ SOURCE=.\md5.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\mxclientApp.h
+SOURCE=.\OpennxApp.h
 # End Source File
 # Begin Source File
 
@@ -688,7 +688,7 @@ SOURCE=.\wx\msw\magnif1.cur
 # End Source File
 # Begin Source File
 
-SOURCE=.\res\mxclient.xrc
+SOURCE=.\res\Opennx.xrc
 # End Source File
 # Begin Source File
 

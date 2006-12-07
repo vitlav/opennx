@@ -106,7 +106,7 @@ bool MxWizard::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxPoint&
     ////@begin MxWizard creation
     SetParent(parent);
     CreateControls();
-    SetIcon(GetIconResource(wxT("res/mxclient-wizard.png")));
+    SetIcon(GetIconResource(wxT("res/opennx-wizard.png")));
     ////@end MxWizard creation
     return TRUE;
 }
@@ -1296,7 +1296,7 @@ void WizardPageFinish::OnWizardpageFinishPageChanging( wxWizardEvent& event )
             TCHAR dtPath[MAX_PATH];
             if (SHGetSpecialFolderPath(NULL, dtPath, CSIDL_DESKTOPDIRECTORY, FALSE)) {
                 wxString linkPath = wxString::Format(_T("%s\\%s.lnk"), dtPath, cfg->sGetName().mb_str());
-                wxString targetPath = wxString::Format(_T("%s\\mxclient.exe"), appDir.mb_str());
+                wxString targetPath = wxString::Format(_T("%s\\opennx.exe"), appDir.mb_str());
                 wxString desc = _("Launch MX Session");
                 wxString args = wxString::Format(_T("--session=\"%s\""), cfg->sGetFileName().mb_str());
                 HRESULT hres;
@@ -1333,7 +1333,7 @@ void WizardPageFinish::OnWizardpageFinishPageChanging( wxWizardEvent& event )
             dtEntry += _T("Name=") + cfg->sGetName() + _T("\n");
             dtEntry += _T("GenericName=MX Client\n");
             dtEntry += _T("GenericName[de]=MX Client\n");
-            dtEntry += _T("Exec=") + appDir + _T("/mxclient --session=\"")
+            dtEntry += _T("Exec=") + appDir + _T("/opennx --session=\"")
                 + cfg->sGetFileName() + _T("\"\n");
             dtEntry += _T("Icon=") + appDir + _T("/nx-desktop.png\n");
 

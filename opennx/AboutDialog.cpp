@@ -27,7 +27,7 @@
 #include "AboutDialog.h"
 #include "TextViewer.h"
 #include "Icon.h"
-#include "mxclientApp.h"
+#include "opennxApp.h"
 
 ////@begin XPM images
 ////@end XPM images

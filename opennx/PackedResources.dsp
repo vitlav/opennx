@@ -151,15 +151,15 @@ MTL=midl.exe
 # Name "PackedResources - Win32 Debug DLL"
 # Begin Source File
 
-SOURCE=.\res\mxclient.xrc
+SOURCE=.\res\Opennx.xrc
 
 !IF  "$(CFG)" == "PackedResources - Win32 Release"
 
 # Begin Custom Build
 OutDir=.\Release
 ProjDir=.
-InputPath=.\res\mxclient.xrc
-InputName=mxclient
+InputPath=.\res\Opennx.xrc
+InputName=Opennx
 
 "$(ProjDir)\$(InputName).rsc" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	zip -9r $(OutDir)\$(InputName).rsc res -i *.png -i *.xrc
@@ -171,8 +171,8 @@ InputName=mxclient
 # Begin Custom Build
 OutDir=.\Debug
 ProjDir=.
-InputPath=.\res\mxclient.xrc
-InputName=mxclient
+InputPath=.\res\Opennx.xrc
+InputName=Opennx
 
 "$(ProjDir)\$(InputName).rsc" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	zip -9r $(OutDir)\$(InputName).rsc res -i *.png -i *.xrc
@@ -184,8 +184,8 @@ InputName=mxclient
 # Begin Custom Build
 OutDir=.\Debug_Unicode
 ProjDir=.
-InputPath=.\res\mxclient.xrc
-InputName=mxclient
+InputPath=.\res\Opennx.xrc
+InputName=Opennx
 
 "$(ProjDir)\$(InputName).rsc" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	zip -9r $(OutDir)\$(InputName).rsc res -i *.png -i *.xrc
@@ -197,8 +197,8 @@ InputName=mxclient
 # Begin Custom Build
 OutDir=.\Release_Unicode
 ProjDir=.
-InputPath=.\res\mxclient.xrc
-InputName=mxclient
+InputPath=.\res\Opennx.xrc
+InputName=Opennx
 
 "$(ProjDir)\$(InputName).rsc" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	zip -9r $(OutDir)\$(InputName).rsc res -i *.png -i *.xrc
@@ -210,8 +210,8 @@ InputName=mxclient
 # Begin Custom Build
 OutDir=.\ReleaseDLL_Unicode
 ProjDir=.
-InputPath=.\res\mxclient.xrc
-InputName=mxclient
+InputPath=.\res\Opennx.xrc
+InputName=Opennx
 
 "$(ProjDir)\$(InputName).rsc" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	zip -9r $(OutDir)\$(InputName).rsc res -i *.png -i *.xrc
@@ -223,8 +223,8 @@ InputName=mxclient
 # Begin Custom Build
 OutDir=.\DebugDLL_Unicode
 ProjDir=.
-InputPath=.\res\mxclient.xrc
-InputName=mxclient
+InputPath=.\res\Opennx.xrc
+InputName=Opennx
 
 "$(ProjDir)\$(InputName).rsc" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	zip -9r $(OutDir)\$(InputName).rsc res -i *.png -i *.xrc
@@ -236,8 +236,8 @@ InputName=mxclient
 # Begin Custom Build
 OutDir=.\ReleaseDLL
 ProjDir=.
-InputPath=.\res\mxclient.xrc
-InputName=mxclient
+InputPath=.\res\Opennx.xrc
+InputName=Opennx
 
 "$(ProjDir)\$(InputName).rsc" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	zip -9r $(OutDir)\$(InputName).rsc res -i *.png -i *.xrc
@@ -249,8 +249,8 @@ InputName=mxclient
 # Begin Custom Build
 OutDir=.\DebugDLL
 ProjDir=.
-InputPath=.\res\mxclient.xrc
-InputName=mxclient
+InputPath=.\res\Opennx.xrc
+InputName=Opennx
 
 "$(ProjDir)\$(InputName).rsc" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	zip -9r $(OutDir)\$(InputName).rsc res -i *.png -i *.xrc

@@ -28,7 +28,7 @@ class wxConfigBase;
 
 #include "MxXmlConfig.h"
 #include "WinShare.h"
-#include "mxclientApp.h"
+#include "opennxApp.h"
 #include "pwcrypt.h"
 
 #ifdef MYTRACETAG
@@ -852,9 +852,9 @@ MxXmlConfig::operator ==(const MxXmlConfig &other)
                             shareOptions++;
                             wxString tmp = getString(opt, wxT("Type"), wxT(""));
                             if (tmp == wxT("Disk"))
-                                s.m_iType = SharedResource::SHARE_DISK;
+                                s.m_iType = SharedResource::SHARE_SMB_DISK;
                             if (tmp == wxT("Printer"))
-                                s.m_iType = SharedResource::SHARE_PRINTER;
+                                s.m_iType = SharedResource::SHARE_SMB_PRINTER;
                         }
                         if (opt->GetPropVal(wxT("key"), wxT("")) == wxT("Mounted now")) {
                             shareOptions++;
@@ -1197,11 +1197,11 @@ MxXmlConfig::SaveToFile()
         optval = encodeString(m_aShareGroups[i].m_sPassword);
         sAddOption(g, wxT("Password"), optval);
         switch (m_aShareGroups[i].m_iType) {
-            case SharedResource::SHARE_DISK:
+            case SharedResource::SHARE_SMB_DISK:
                 optval = wxT("Disk");
                 sAddOption(g, wxT("Type"), optval);
                 break;
-            case SharedResource::SHARE_PRINTER:
+            case SharedResource::SHARE_SMB_PRINTER:
                 optval = wxT("Printer");
                 sAddOption(g, wxT("Type"), optval);
                 break;
@@ -1556,7 +1556,7 @@ int MxXmlConfig::mapLocaleToKeyboard()
     return ret;
 }
 
-// Map keyboard language code from NXclient to MXclient
+// Map keyboard language code from NXclient to OpenNX
     int
 MxXmlConfig::mapMxLanguage(int origNXlang)
 {
@@ -1603,7 +1603,7 @@ MxXmlConfig::isoKbd(int lang)
     return ret;
 }
 
-// Map keyboard language code from MXclient to NXclient
+// Map keyboard language code from OpenNX to NXclient
     int 
 MxXmlConfig::mapNxLanguage(int origMXlang)
 {

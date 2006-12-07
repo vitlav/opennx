@@ -130,7 +130,7 @@ bool SessionAdmin::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxSt
 ////@begin SessionAdmin creation
     SetParent(parent);
     CreateControls();
-    SetIcon(GetIconResource(wxT("res/mxclient-admin.png")));
+    SetIcon(GetIconResource(wxT("res/opennx-admin.png")));
     Centre();
 ////@end SessionAdmin creation
 

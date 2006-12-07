@@ -8,7 +8,7 @@
 // Licence:     LGPL
 /////////////////////////////////////////////////////////////////////////////
 
-#define ID_DIALOG_SHARE_ADD_SYMBOL_0 _("New SMB Share - MXclient")
+#define ID_DIALOG_SHARE_ADD_SYMBOL_0 _("New SMB Share - OpenNX")
 #define ID_DIALOG_SHARE_ADD_SYMBOL_1 _("Please select the name of the shared resource on the\nlocal computer.")
 #define ID_DIALOG_SHARE_ADD_SYMBOL_2 _("Share")
 #define ID_DIALOG_SHARE_ADD_SYMBOL_3 _("Please specify the resource name on the remote\nmachine with which this share will be made available.")

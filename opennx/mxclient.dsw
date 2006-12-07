@@ -27,7 +27,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "mxclient"=.\mxclient.dsp - Package Owner=<4>
+Project: "opennx"=.\opennx.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
