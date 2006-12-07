@@ -95,7 +95,7 @@ public:
     static bool ShowToolTips();
 
 ////@begin AboutDialog member variables
-    extHtmlWindow* m_pAboutHtml;
+    extHtmlWindow* m_pHtmlWindow;
 ////@end AboutDialog member variables
 };
 

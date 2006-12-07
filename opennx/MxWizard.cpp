@@ -118,8 +118,16 @@ bool MxWizard::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxPoint&
 void MxWizard::CreateControls()
 {
     ////@begin MxWizard content construction
+    if (!wxXmlResource::Get()->LoadObject(this, GetParent(), _T("ID_WIZARD"), wxT("wxWizard")))
+        wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
 
-    wxXmlResource::Get()->LoadObject(this, GetParent(), _T("ID_WIZARD"), wxT("wxWizard"));
+    for (wxWindowList::Node* node = GetChildren().GetFirst(); node; node = node->GetNext())
+    {
+        wxWizardPage* page = wxDynamicCast(node->GetData(), wxWizardPage);
+        if (page)
+            GetPageAreaSizer()->Add(page);
+    }
+
     m_pPageWelcome = XRCCTRL(*this, "ID_WIZARDPAGE_WELCOME", WizardPageWelcome);
     m_pPageSession = XRCCTRL(*this, "ID_WIZARDPAGE_SESSION", WizardPageSession);
     m_pPageDesktop = XRCCTRL(*this, "ID_WIZARDPAGE_DESKTOP", WizardPageDesktop);
@@ -130,7 +138,6 @@ void MxWizard::CreateControls()
     // Create custom windows not generated automatically here.
 
     ////@begin MxWizard content initialisation
-
     ////@end MxWizard content initialisation
     nextButton = wxDynamicCast(FindWindowById(wxID_FORWARD, this), wxButton);
     m_pPageWelcome->Create(NULL);
@@ -266,7 +273,7 @@ IMPLEMENT_DYNAMIC_CLASS( WizardPageWelcome, wxWizardPageSimple )
 BEGIN_EVENT_TABLE( WizardPageWelcome, wxWizardPageSimple )
 
     ////@begin WizardPageWelcome event table entries
-EVT_WIZARD_PAGE_CHANGED( -1, WizardPageWelcome::OnWizardpageWelcomePageChanged )
+    EVT_WIZARD_PAGE_CHANGED( -1, WizardPageWelcome::OnWizardpageWelcomePageChanged )
 
     ////@end WizardPageWelcome event table entries
 
@@ -296,6 +303,7 @@ bool WizardPageWelcome::Create( wxWizard* WXUNUSED(parent) )
     ////@end WizardPageWelcome member initialisation
 
     ////@begin WizardPageWelcome creation
+    CreateControls();
     ////@end WizardPageWelcome creation
     CreateControls();
     initHtml(m_pWelcomeText,
@@ -310,14 +318,12 @@ bool WizardPageWelcome::Create( wxWizard* WXUNUSED(parent) )
 void WizardPageWelcome::CreateControls()
 {
     ////@begin WizardPageWelcome content construction
-
     m_pWelcomeText = XRCCTRL(*this, "ID_HTMLWINDOW_WELCOME", wxHtmlWindow);
     ////@end WizardPageWelcome content construction
 
     // Create custom windows not generated automatically here.
 
     ////@begin WizardPageWelcome content initialisation
-
     ////@end WizardPageWelcome content initialisation
 }
 
@@ -334,10 +340,11 @@ bool WizardPageWelcome::ShowToolTips()
  * Get bitmap resources
  */
 
-wxBitmap WizardPageWelcome::GetBitmapResource( const wxString& WXUNUSED(name) )
+wxBitmap WizardPageWelcome::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
     ////@begin WizardPageWelcome bitmap retrieval
+    wxUnusedVar(name);
     return wxNullBitmap;
     ////@end WizardPageWelcome bitmap retrieval
 }
@@ -346,10 +353,11 @@ wxBitmap WizardPageWelcome::GetBitmapResource( const wxString& WXUNUSED(name) )
  * Get icon resources
  */
 
-wxIcon WizardPageWelcome::GetIconResource( const wxString& WXUNUSED(name) )
+wxIcon WizardPageWelcome::GetIconResource( const wxString& name )
 {
     // Icon retrieval
     ////@begin WizardPageWelcome icon retrieval
+    wxUnusedVar(name);
     return wxNullIcon;
     ////@end WizardPageWelcome icon retrieval
 }
@@ -368,7 +376,7 @@ BEGIN_EVENT_TABLE( WizardPageSession, wxWizardPageSimple )
 
     ////@begin WizardPageSession event table entries
     EVT_WIZARD_PAGE_CHANGED( -1, WizardPageSession::OnWizardpageSessionPageChanged )
-EVT_WIZARD_PAGE_CHANGING( -1, WizardPageSession::OnWizardpageSessionPageChanging )
+    EVT_WIZARD_PAGE_CHANGING( -1, WizardPageSession::OnWizardpageSessionPageChanging )
 
     EVT_TEXT( XRCID("ID_TEXTCTRL_SESSION_NAME"), WizardPageSession::OnTextctrlSessionNameUpdated )
 
@@ -400,7 +408,7 @@ bool WizardPageSession::ConfigExists(wxString &sessionName)
     wxString cfgfn;
     wxConfigBase::Get()->Read(_T("Config/UserMxDir"), &cfgfn);
     cfgfn = cfgfn + wxFileName::GetPathSeparator() + _T("config");
-    cfgfn = cfgfn + wxFileName::GetPathSeparator() + sessionName + _T(".conf");
+    cfgfn = cfgfn + wxFileName::GetPathSeparator() + sessionName + _T(".nxs");
     return wxFileName::FileExists(cfgfn);
 }
 
@@ -408,7 +416,7 @@ bool WizardPageSession::ConfigExists(wxString &sessionName)
  * WizardPageSession creator
  */
 
-bool WizardPageSession::Create( wxWizard* WXUNUSED(parent) )
+bool WizardPageSession::Create( wxWizard* parent )
 {
     ////@begin WizardPageSession member initialisation
     m_iPort = 22;
@@ -431,6 +439,7 @@ bool WizardPageSession::Create( wxWizard* WXUNUSED(parent) )
 
     ////@begin WizardPageSession creation
     SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY);
+    CreateControls();
     ////@end WizardPageSession creation
     CreateControls();
     wxDynamicCast(m_pCtrlSessionName->GetValidator(), MxValidator)->SetKeyTyped(wxDynamicCast(GetParent(), MxWizard));
@@ -449,7 +458,6 @@ bool WizardPageSession::Create( wxWizard* WXUNUSED(parent) )
 void WizardPageSession::CreateControls()
 {
     ////@begin WizardPageSession content construction
-
     m_pText1 = XRCCTRL(*this, "ID_HTMLWINDOW_TEXT1", wxHtmlWindow);
     m_pCtrlSessionName = XRCCTRL(*this, "ID_TEXTCTRL_SESSION_NAME", wxTextCtrl);
     m_pText2 = XRCCTRL(*this, "ID_HTMLWINDOW_TEXT2", wxHtmlWindow);
@@ -470,7 +478,6 @@ void WizardPageSession::CreateControls()
     // Create custom windows not generated automatically here.
 
     ////@begin WizardPageSession content initialisation
-
     ////@end WizardPageSession content initialisation
 }
 
@@ -487,10 +494,11 @@ bool WizardPageSession::ShowToolTips()
  * Get bitmap resources
  */
 
-wxBitmap WizardPageSession::GetBitmapResource( const wxString& WXUNUSED(name) )
+wxBitmap WizardPageSession::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
     ////@begin WizardPageSession bitmap retrieval
+    wxUnusedVar(name);
     return wxNullBitmap;
     ////@end WizardPageSession bitmap retrieval
 }
@@ -499,10 +507,11 @@ wxBitmap WizardPageSession::GetBitmapResource( const wxString& WXUNUSED(name) )
  * Get icon resources
  */
 
-wxIcon WizardPageSession::GetIconResource( const wxString& WXUNUSED(name) )
+wxIcon WizardPageSession::GetIconResource( const wxString& name )
 {
     // Icon retrieval
     ////@begin WizardPageSession icon retrieval
+    wxUnusedVar(name);
     return wxNullIcon;
     ////@end WizardPageSession icon retrieval
 }
@@ -528,7 +537,7 @@ void WizardPageSession::CheckNextEnable()
         wxString cfgfn;
         wxConfigBase::Get()->Read(_T("Config/UserMxDir"), &cfgfn);
         cfgfn = cfgfn + wxFileName::GetPathSeparator() + _T("config");
-        cfgfn = cfgfn + wxFileName::GetPathSeparator() + m_pCtrlSessionName->GetValue() + _T(".conf");
+        cfgfn = cfgfn + wxFileName::GetPathSeparator() + m_pCtrlSessionName->GetValue() + _T(".nxs");
         if (wxFileName::FileExists(cfgfn))
             enable = false;
     }
@@ -552,7 +561,7 @@ BEGIN_EVENT_TABLE( WizardPageDesktop, wxWizardPageSimple )
 
     ////@begin WizardPageDesktop event table entries
     EVT_WIZARD_PAGE_CHANGED( -1, WizardPageDesktop::OnWizardpageDesktopPageChanged )
-EVT_WIZARD_PAGE_CHANGING( -1, WizardPageDesktop::OnWizardpageDesktopPageChanging )
+    EVT_WIZARD_PAGE_CHANGING( -1, WizardPageDesktop::OnWizardpageDesktopPageChanging )
 
     EVT_COMBOBOX( XRCID("ID_COMBOBOX_DPROTO"), WizardPageDesktop::OnComboboxDprotoSelected )
 
@@ -596,7 +605,7 @@ WizardPageDesktop::WizardPageDesktop( wxWizard* parent )
  * WizardPageDesktop creator
  */
 
-bool WizardPageDesktop::Create( wxWizard* WXUNUSED(parent) )
+bool WizardPageDesktop::Create( wxWizard* parent )
 {
     ////@begin WizardPageDesktop member initialisation
     m_iSessionType = MxXmlConfig::STYPE_UNIX;
@@ -614,6 +623,7 @@ bool WizardPageDesktop::Create( wxWizard* WXUNUSED(parent) )
 
     ////@begin WizardPageDesktop creation
     SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY);
+    CreateControls();
     ////@end WizardPageDesktop creation
     CreateControls();
     initHtml(m_pText1, _("Using MX Client, you can run RDP, VNC and X desktops, depending on what your service provider has made available."));
@@ -631,7 +641,6 @@ bool WizardPageDesktop::Create( wxWizard* WXUNUSED(parent) )
 void WizardPageDesktop::CreateControls()
 {
     ////@begin WizardPageDesktop content construction
-
     m_pText1 = XRCCTRL(*this, "ID_HTMLWINDOW_TEXT1", wxHtmlWindow);
     m_pCtrlDesktopType = XRCCTRL(*this, "ID_COMBOBOX_DTYPE", wxComboBox);
     m_pCtrlDesktopSettings = XRCCTRL(*this, "ID_BUTTON_DSETTINGS", wxButton);
@@ -653,7 +662,6 @@ void WizardPageDesktop::CreateControls()
     // Create custom windows not generated automatically here.
 
     ////@begin WizardPageDesktop content initialisation
-
     ////@end WizardPageDesktop content initialisation
 }
 
@@ -712,10 +720,11 @@ bool WizardPageDesktop::ShowToolTips()
  * Get bitmap resources
  */
 
-wxBitmap WizardPageDesktop::GetBitmapResource( const wxString& WXUNUSED(name) )
+wxBitmap WizardPageDesktop::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
     ////@begin WizardPageDesktop bitmap retrieval
+    wxUnusedVar(name);
     return wxNullBitmap;
     ////@end WizardPageDesktop bitmap retrieval
 }
@@ -724,10 +733,11 @@ wxBitmap WizardPageDesktop::GetBitmapResource( const wxString& WXUNUSED(name) )
  * Get icon resources
  */
 
-wxIcon WizardPageDesktop::GetIconResource( const wxString& WXUNUSED(name) )
+wxIcon WizardPageDesktop::GetIconResource( const wxString& name )
 {
     // Icon retrieval
     ////@begin WizardPageDesktop icon retrieval
+    wxUnusedVar(name);
     return wxNullIcon;
     ////@end WizardPageDesktop icon retrieval
 }
@@ -797,7 +807,7 @@ BEGIN_EVENT_TABLE( WizardPageSecurity, wxWizardPageSimple )
 
     ////@begin WizardPageSecurity event table entries
     EVT_WIZARD_PAGE_CHANGED( -1, WizardPageSecurity::OnWizardpageSecurityPageChanged )
-EVT_WIZARD_PAGE_CHANGING( -1, WizardPageSecurity::OnWizardpageSecurityPageChanging )
+    EVT_WIZARD_PAGE_CHANGING( -1, WizardPageSecurity::OnWizardpageSecurityPageChanging )
 
     EVT_CHECKBOX( XRCID("ID_CHECKBOX_SCARD"), WizardPageSecurity::OnCheckboxScardClick )
 
@@ -822,7 +832,7 @@ WizardPageSecurity::WizardPageSecurity( wxWizard* parent )
  * WizardPage creator
  */
 
-bool WizardPageSecurity::Create( wxWizard* WXUNUSED(parent) )
+bool WizardPageSecurity::Create( wxWizard* parent )
 {
     ////@begin WizardPageSecurity member initialisation
     m_bUseSmartCard = false;
@@ -834,6 +844,7 @@ bool WizardPageSecurity::Create( wxWizard* WXUNUSED(parent) )
 
     ////@begin WizardPageSecurity creation
     SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY);
+    CreateControls();
     ////@end WizardPageSecurity creation
     CreateControls();
     initHtml(m_pText1, _("MX Client supports authentication using a variety of USB SmartCard tokens. Enable this option if you intend to use such a token."));
@@ -848,7 +859,6 @@ bool WizardPageSecurity::Create( wxWizard* WXUNUSED(parent) )
 void WizardPageSecurity::CreateControls()
 {
     ////@begin WizardPageSecurity content construction
-
     m_pText1 = XRCCTRL(*this, "ID_HTMLWINDOW_TEXT1", wxHtmlWindow);
     m_pText2 = XRCCTRL(*this, "ID_HTMLWINDOW_TEXT2", wxHtmlWindow);
     m_pCtrlEnableSSL = XRCCTRL(*this, "ID_CHECKBOX_SSLENABLE", wxCheckBox);
@@ -862,7 +872,6 @@ void WizardPageSecurity::CreateControls()
     // Create custom windows not generated automatically here.
 
     ////@begin WizardPageSecurity content initialisation
-
     ////@end WizardPageSecurity content initialisation
 }
 
@@ -879,10 +888,11 @@ bool WizardPageSecurity::ShowToolTips()
  * Get bitmap resources
  */
 
-wxBitmap WizardPageSecurity::GetBitmapResource( const wxString& WXUNUSED(name) )
+wxBitmap WizardPageSecurity::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
     ////@begin WizardPageSecurity bitmap retrieval
+    wxUnusedVar(name);
     return wxNullBitmap;
     ////@end WizardPageSecurity bitmap retrieval
 }
@@ -891,10 +901,11 @@ wxBitmap WizardPageSecurity::GetBitmapResource( const wxString& WXUNUSED(name) )
  * Get icon resources
  */
 
-wxIcon WizardPageSecurity::GetIconResource( const wxString& WXUNUSED(name) )
+wxIcon WizardPageSecurity::GetIconResource( const wxString& name )
 {
     // Icon retrieval
     ////@begin WizardPageSecurity icon retrieval
+    wxUnusedVar(name);
     return wxNullIcon;
     ////@end WizardPageSecurity icon retrieval
 }
@@ -913,7 +924,7 @@ BEGIN_EVENT_TABLE( WizardPageFinish, wxWizardPageSimple )
 
     ////@begin WizardPageFinish event table entries
     EVT_WIZARD_PAGE_CHANGED( -1, WizardPageFinish::OnWizardpageFinishPageChanged )
-EVT_WIZARD_PAGE_CHANGING( -1, WizardPageFinish::OnWizardpageFinishPageChanging )
+    EVT_WIZARD_PAGE_CHANGING( -1, WizardPageFinish::OnWizardpageFinishPageChanging )
 
     ////@end WizardPageFinish event table entries
 
@@ -936,7 +947,7 @@ WizardPageFinish::WizardPageFinish( wxWizard* parent )
  * WizardPageFinish creator
  */
 
-bool WizardPageFinish::Create( wxWizard* WXUNUSED(parent) )
+bool WizardPageFinish::Create( wxWizard* parent )
 {
     ////@begin WizardPageFinish member initialisation
     m_bCreateShortcut = true;
@@ -945,6 +956,7 @@ bool WizardPageFinish::Create( wxWizard* WXUNUSED(parent) )
     ////@end WizardPageFinish member initialisation
 
     ////@begin WizardPageFinish creation
+    CreateControls();
     ////@end WizardPageFinish creation
     CreateControls();
     return TRUE;
@@ -957,7 +969,6 @@ bool WizardPageFinish::Create( wxWizard* WXUNUSED(parent) )
 void WizardPageFinish::CreateControls()
 {
     ////@begin WizardPageFinish content construction
-
     m_pText1 = XRCCTRL(*this, "ID_HTMLWINDOW_TEXT1", wxHtmlWindow);
     // Set validators
     if (FindWindow(XRCID("ID_CHECKBOX_SHORTCUT")))
@@ -969,7 +980,6 @@ void WizardPageFinish::CreateControls()
     // Create custom windows not generated automatically here.
 
     ////@begin WizardPageFinish content initialisation
-
     ////@end WizardPageFinish content initialisation
 }
 
@@ -986,10 +996,11 @@ bool WizardPageFinish::ShowToolTips()
  * Get bitmap resources
  */
 
-wxBitmap WizardPageFinish::GetBitmapResource( const wxString& WXUNUSED(name) )
+wxBitmap WizardPageFinish::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
     ////@begin WizardPageFinish bitmap retrieval
+    wxUnusedVar(name);
     return wxNullBitmap;
     ////@end WizardPageFinish bitmap retrieval
 }
@@ -998,10 +1009,11 @@ wxBitmap WizardPageFinish::GetBitmapResource( const wxString& WXUNUSED(name) )
  * Get icon resources
  */
 
-wxIcon WizardPageFinish::GetIconResource( const wxString& WXUNUSED(name) )
+wxIcon WizardPageFinish::GetIconResource( const wxString& name )
 {
     // Icon retrieval
     ////@begin WizardPageFinish icon retrieval
+    wxUnusedVar(name);
     return wxNullIcon;
     ////@end WizardPageFinish icon retrieval
 }
@@ -1207,7 +1219,7 @@ void WizardPageSession::OnWizardpageSessionPageChanging( wxWizardEvent& event )
         wxString cfgfn;
         wxConfigBase::Get()->Read(_T("Config/UserMxDir"), &cfgfn);
         cfgfn = cfgfn + wxFileName::GetPathSeparator() + _T("config");
-        cfgfn = cfgfn + wxFileName::GetPathSeparator() + m_pCtrlSessionName->GetValue() + _T(".conf");
+        cfgfn = cfgfn + wxFileName::GetPathSeparator() + m_pCtrlSessionName->GetValue() + _T(".nxs");
         cfg->sSetFileName(cfgfn);
     }
     event.Skip();

@@ -118,7 +118,7 @@ bool VncImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), 
     SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
-    SetIcon(this->GetIconResource(wxT("res/nx.png")));
+    SetIcon(GetIconResource(wxT("res/nx.png")));
     Centre();
 ////@end VncImageSettingsDialog creation
     return TRUE;
@@ -131,17 +131,12 @@ bool VncImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), 
 void VncImageSettingsDialog::CreateControls()
 {    
 ////@begin VncImageSettingsDialog content construction
-
-    wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_IMAGE_VNC"));
-    if (FindWindow(XRCID("ID_RADIOBUTTON_VNC_HEXTILE")))
-        m_pCtrlUseHextile = wxDynamicCast(FindWindow(XRCID("ID_RADIOBUTTON_VNC_HEXTILE")), wxRadioButton);
-    if (FindWindow(XRCID("ID_RADIOBUTTON_VNC_TIGHT")))
-        m_pCtrlUseTight = wxDynamicCast(FindWindow(XRCID("ID_RADIOBUTTON_VNC_TIGHT")), wxRadioButton);
-    if (FindWindow(XRCID("ID_CHECKBOX_VNC_JPEG")))
-        m_pCtrlVncJpeg = wxDynamicCast(FindWindow(XRCID("ID_CHECKBOX_VNC_JPEG")), wxCheckBox);
-    if (FindWindow(XRCID("ID_RADIOBUTTON_VNC_PLAINX")))
-        m_pCtrlUsePlainX = wxDynamicCast(FindWindow(XRCID("ID_RADIOBUTTON_VNC_PLAINX")), wxRadioButton);
-
+    if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_IMAGE_VNC")))
+        wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
+    m_pCtrlUseHextile = XRCCTRL(*this, "ID_RADIOBUTTON_VNC_HEXTILE", wxRadioButton);
+    m_pCtrlUseTight = XRCCTRL(*this, "ID_RADIOBUTTON_VNC_TIGHT", wxRadioButton);
+    m_pCtrlVncJpeg = XRCCTRL(*this, "ID_CHECKBOX_VNC_JPEG", wxCheckBox);
+    m_pCtrlUsePlainX = XRCCTRL(*this, "ID_RADIOBUTTON_VNC_PLAINX", wxRadioButton);
     // Set validators
     if (FindWindow(XRCID("ID_RADIOBUTTON_VNC_HEXTILE")))
         FindWindow(XRCID("ID_RADIOBUTTON_VNC_HEXTILE"))->SetValidator( wxGenericValidator(& m_bUseHextile) );
@@ -156,7 +151,6 @@ void VncImageSettingsDialog::CreateControls()
     // Create custom windows not generated automatically here.
 
 ////@begin VncImageSettingsDialog content initialisation
-
 ////@end VncImageSettingsDialog content initialisation
     UpdateDialogConstraints();
 }
@@ -174,10 +168,11 @@ bool VncImageSettingsDialog::ShowToolTips()
  * Get bitmap resources
  */
 
-wxBitmap VncImageSettingsDialog::GetBitmapResource( const wxString& WXUNUSED(name) )
+wxBitmap VncImageSettingsDialog::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
 ////@begin VncImageSettingsDialog bitmap retrieval
+    wxUnusedVar(name);
     return wxNullBitmap;
 ////@end VncImageSettingsDialog bitmap retrieval
 }

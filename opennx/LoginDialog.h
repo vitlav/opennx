@@ -45,7 +45,7 @@ class MxXmlConfig;
 #define SYMBOL_LOGINDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_LOGINDIALOG_TITLE _("Login - MXclient")
 #define SYMBOL_LOGINDIALOG_IDNAME ID_DIALOG_LOGIN
-#define SYMBOL_LOGINDIALOG_SIZE wxSize(400, 300)
+#define SYMBOL_LOGINDIALOG_SIZE wxSize(200, 150)
 #define SYMBOL_LOGINDIALOG_POSITION wxDefaultPosition
 ////@end control identifiers
 
@@ -102,6 +102,9 @@ private:
 public:
 ////@begin LoginDialog member function declarations
 
+    wxString GetSessionName() const { return m_sSessionName ; }
+    void SetSessionName(wxString value) { m_sSessionName = value ; }
+
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
 
@@ -127,6 +130,8 @@ private:
     bool m_bUseSmartCard;
     wxString m_sSessionName;
     bool m_bGuestLogin;
+    wxString m_sTmpUsername;
+    wxString m_sTmpPassword;
 ////@end LoginDialog member variables
 
     MxXmlConfig *m_pCurrentCfg;

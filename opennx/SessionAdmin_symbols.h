@@ -1,12 +1,11 @@
 /////////////////////////////////////////////////////////////////////////////
-// Name:        SessionAdmin_symbols.h
-// Purpose:     String symbols
+// $Id$
+//
+// Purpose:     Symbols file
 // Author:      Fritz Elfert
-// Modified by: 
-// Created:     Mon 09 Aug 2004 08:04:38 AM CEST
-// RCS-ID:      
-// Copyright:   Copyright 2004 Millenux GmbH
-// Licence:     
+// Created:     Wed 06 Dec 2006 15:00:39 CET
+// Copyright:   Copyright 2004 Millenux GmbH, 2006 InnoviData GmbH
+// Licence:     LGPL
 /////////////////////////////////////////////////////////////////////////////
 
 #define ID_FRAME_ADMIN_SYMBOL_0 _("MX Session Administrator")

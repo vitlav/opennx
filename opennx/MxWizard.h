@@ -52,12 +52,12 @@ class MxXmlConfig;
 
 ////@begin control identifiers
 #define ID_WIZARD 10126
-#define SYMBOL_MXWIZARD_IDNAME ID_WIZARD
 #define ID_WIZARDPAGE_WELCOME 10127
 #define ID_WIZARDPAGE_SESSION 10128
 #define ID_WIZARDPAGE_DESKTOP 10133
 #define ID_WIZARDPAGE_SECURITY 10020
 #define ID_WIZARDPAGE_FINISH 10142
+#define SYMBOL_MXWIZARD_IDNAME ID_WIZARD
 ////@end control identifiers
 
 /*!

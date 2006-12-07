@@ -48,35 +48,99 @@
 // static object for many reasons) and also declares the accessor function
 // wxGetApp() which will return the reference of the right type (i.e. mxclientApp and
 // not wxApp)
-IMPLEMENT_APP(mxclientApp)
+IMPLEMENT_APP(mxclientApp);
 
-    // ============================================================================
-    // implementation
-    // ============================================================================
+wxString
+mxclientApp::LoadFileFromResource(const wxString &loc, bool bUseLocale /* = true */)
+{
+    bool tryloop = true;
+    wxString ret;
+    wxString cloc = bUseLocale ? m_cLocale.GetCanonicalName() : wxT("");
+    wxFileSystem fs;
+    wxFSFile *f;
 
-    // ----------------------------------------------------------------------------
-    // the application class
-    // ----------------------------------------------------------------------------
+    do {
+        wxString tryloc = loc;
 
-    mxclientApp::mxclientApp()
+        if (!cloc.IsEmpty()) {
+            tryloc = wxFileName(loc).GetPath(wxPATH_GET_SEPARATOR|wxPATH_GET_VOLUME)
+                + cloc + wxT("_") + wxFileName(loc).GetFullName();
+            cloc = cloc.BeforeLast(_T('_'));
+        } else
+            tryloop = false;
+
+        // try plain loc first
+        f = fs.OpenFile(tryloc);
+        
+        if (!f)
+            f = fs.OpenFile(GetResourcePrefix() + tryloc);
+        
+        if (f) {
+            wxInputStream *is = f->GetStream();
+            size_t size = is->GetSize();
+            char *buf = new char[size+2];
+            is->Read(buf, size);
+            delete f;
+            buf[size] = buf[size+1] = 0;
+            ret = wxConvLocal.cMB2WX(buf);
+            delete []buf;
+        }
+    } while (ret.IsEmpty() && tryloop);
+    return ret;
+}
+
+mxclientApp::mxclientApp()
     : m_pCfg(NULL)
-      , m_szMemRes(NULL)
+    , m_szMemRes(NULL)
 {
 
 #ifdef __WXDEBUG__
-#ifdef __WXMSW__
+# ifdef __WXMSW__
     m_pCfg = new wxConfig(wxT("MxClient-Debug"), wxT("Millenux"));
-#else
+# else
     m_pCfg = new wxConfig(wxT("MxClient-Debug"), wxT("Millenux"), wxT(".mxclient-debug"));
-#endif
+# endif
 #else
-#ifdef __WXMSW__
+# ifdef __WXMSW__
     m_pCfg = new wxConfig(wxT("MxClient"), wxT("Millenux"));
-#else
+# else
     m_pCfg = new wxConfig(wxT("MxClient"), wxT("Millenux"), wxT(".mxclient"));
-#endif
+# endif
 #endif
     wxConfigBase::Set(m_pCfg);
+
+#ifdef __WXMSW__
+    DWORD dummy;
+    DWORD viSize;
+    LPVOID vi;
+    TCHAR mySelf[MAX_PATH];
+    VS_FIXEDFILEINFO *vsFFI;
+    UINT vsFFIlen;
+    m_sVersion = wxT("?.?");
+
+    if (GetModuleFileName(NULL, mySelf, sizeof(mySelf))) {
+        viSize = GetFileVersionInfoSize(mySelf, &dummy);
+        if (viSize) {
+            vi = (LPVOID)malloc(viSize);
+            if (vi) {
+                if (GetFileVersionInfo(mySelf, dummy, viSize, vi)) {
+                    if (VerQueryValue(vi, wxT("\\"), (LPVOID *)&vsFFI, &vsFFIlen)) {
+                        m_sVersion = wxString::Format(wxT("%d.%d"), HIWORD(vsFFI->dwFileVersionMS),
+                                LOWORD(vsFFI->dwFileVersionMS));
+                        if (vsFFI->dwFileVersionLS)
+                            m_sVersion += wxString::Format(wxT(".%d"), HIWORD(vsFFI->dwFileVersionLS));
+                        if (LOWORD(vsFFI->dwFileVersionLS))
+                            m_sVersion += wxString::Format(wxT(".%d"), LOWORD(vsFFI->dwFileVersionLS));
+                    }
+
+                }
+                free(vi);
+            }
+        }
+    }
+#else
+    m_sVersion = wxT(PACKAGE_VERSION);
+#endif
 
     wxString tmp;
     if (!wxConfigBase::Get()->Read(wxT("Config/UserMxDir"), &tmp)) {
@@ -98,15 +162,15 @@ IMPLEMENT_APP(mxclientApp)
 #endif
 #ifdef __LINUX__
         // Get executable path from /proc/self/exe
-        char ldst[PATH_MAX];
+        char ldst[PATH_MAX+1];
         int ret = readlink("/proc/self/exe", ldst, PATH_MAX);
-        tmp = wxConvLocal.cMB2WX(ldst);
         if (ret == -1)
             ret = 0;
+        ldst[ret] = '\0';
         if (ret == 0)
             tmp = wxT("/usr/NX");
         else
-            tmp = wxFileName(tmp).GetPath();
+            tmp = wxFileName(wxConvLocal.cMB2WX(ldst)).GetPath();
 #endif
         wxConfigBase::Get()->Write(wxT("Config/SystemMxDir"), tmp);
     }
@@ -232,10 +296,10 @@ bool mxclientApp::OnInit()
     }
 
     LoginDialog d;
-    d.SetSSessionName(m_sSessionName);
+    d.SetSessionName(m_sSessionName);
     d.Create(NULL);
     if (d.ShowModal() == wxID_OK) {
-        m_sSessionName = d.GetSSessionName();
+        m_sSessionName = d.GetSessionName();
         if (!m_sSessionName.IsEmpty())
             wxConfigBase::Get()->Write(wxT("Config/LastSession"), m_sSessionName);
     }

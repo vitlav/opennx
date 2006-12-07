@@ -28,8 +28,10 @@ public:
 
     mxclientApp();
     virtual ~mxclientApp();
-    wxLocale *getLocale() { return &m_cLocale; }
-    const wxString &getResourcePrefix() { return m_sResourcePrefix; }
+    wxLocale *GetLocale() { return &m_cLocale; }
+    const wxString &GetResourcePrefix() { return m_sResourcePrefix; }
+    const wxString &GetVersion() { return m_sVersion; }
+    wxString LoadFileFromResource(const wxString &loc, bool bUseLocale = true);
 
     // override base class virtuals
     // ----------------------------
@@ -47,6 +49,7 @@ private:
     wxLocale m_cLocale;
     wxString m_sSessionName;
     wxString m_sResourcePrefix;
+    wxString m_sVersion;
     enum mode m_eMode;
     const unsigned char *m_szMemRes;
 };

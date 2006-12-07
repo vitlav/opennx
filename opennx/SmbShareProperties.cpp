@@ -105,9 +105,11 @@ bool SmbShareProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), cons
     SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
-    SetIcon(this->GetIconResource(wxT("res/nx.png")));
-    GetSizer()->Fit(this);
-    GetSizer()->SetSizeHints(this);
+    SetIcon(GetIconResource(wxT("res/nx.png")));
+    if (GetSizer())
+    {
+        GetSizer()->SetSizeHints(this);
+    }
     Centre();
 ////@end SmbShareProperties creation
     return TRUE;
@@ -120,17 +122,12 @@ bool SmbShareProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), cons
 void SmbShareProperties::CreateControls()
 {    
 ////@begin SmbShareProperties content construction
-
-    wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_SHARE_ADD"));
-    if (FindWindow(XRCID("ID_COMBOBOX_SHARE_LOCALNAME")))
-        m_pCtrlLocalShares = wxDynamicCast(FindWindow(XRCID("ID_COMBOBOX_SHARE_LOCALNAME")), wxComboBox);
-    if (FindWindow(XRCID("ID_TEXTCTRL_SHARE_MOUNTPOINT")))
-        m_pCtrlMountPoint = wxDynamicCast(FindWindow(XRCID("ID_TEXTCTRL_SHARE_MOUNTPOINT")), wxTextCtrl);
-    if (FindWindow(XRCID("ID_TEXTCTRL_SHARE_USERNAME")))
-        m_pCtrlUsername = wxDynamicCast(FindWindow(XRCID("ID_TEXTCTRL_SHARE_USERNAME")), wxTextCtrl);
-    if (FindWindow(XRCID("ID_TEXTCTRL_SHARE_PASSWORD")))
-        m_pCtrlPassword = wxDynamicCast(FindWindow(XRCID("ID_TEXTCTRL_SHARE_PASSWORD")), wxTextCtrl);
-
+    if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_SHARE_ADD")))
+        wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
+    m_pCtrlLocalShares = XRCCTRL(*this, "ID_COMBOBOX_SHARE_LOCALNAME", wxComboBox);
+    m_pCtrlMountPoint = XRCCTRL(*this, "ID_TEXTCTRL_SHARE_MOUNTPOINT", wxTextCtrl);
+    m_pCtrlUsername = XRCCTRL(*this, "ID_TEXTCTRL_SHARE_USERNAME", wxTextCtrl);
+    m_pCtrlPassword = XRCCTRL(*this, "ID_TEXTCTRL_SHARE_PASSWORD", wxTextCtrl);
     // Set validators
     if (FindWindow(XRCID("ID_TEXTCTRL_SHARE_MOUNTPOINT")))
         FindWindow(XRCID("ID_TEXTCTRL_SHARE_MOUNTPOINT"))->SetValidator( MxValidator(& m_sMountPoint) );
@@ -143,7 +140,6 @@ void SmbShareProperties::CreateControls()
     // Create custom windows not generated automatically here.
 
 ////@begin SmbShareProperties content initialisation
-
 ////@end SmbShareProperties content initialisation
 
     if (m_iCurrentShare != -1) {
@@ -277,10 +273,11 @@ bool SmbShareProperties::ShowToolTips()
  * Get bitmap resources
  */
 
-wxBitmap SmbShareProperties::GetBitmapResource( const wxString& WXUNUSED(name) )
+wxBitmap SmbShareProperties::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
 ////@begin SmbShareProperties bitmap retrieval
+    wxUnusedVar(name);
     return wxNullBitmap;
 ////@end SmbShareProperties bitmap retrieval
 }

@@ -3,8 +3,8 @@
 //
 // Purpose:     Symbols file
 // Author:      Fritz Elfert
-// Created:     11/10/04 23:41:14
-// Copyright:   Copyright 2004 Millenux GmbH
+// Created:     Wed 06 Dec 2006 15:11:16 CET
+// Copyright:   Copyright 2004 Millenux GmbH, 2006 InnoviData GmbH
 // Licence:     LGPL
 /////////////////////////////////////////////////////////////////////////////
 

@@ -93,6 +93,7 @@ bool X11PropertyDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlRunCustomCommand = NULL;
     m_pCtrlCustomCommand = NULL;
     m_pCtrlWinFloating = NULL;
+    m_pCtrlDisableXagent = NULL;
     m_pCtrlDisableTaint = NULL;
 ////@end X11PropertyDialog member initialisation
     wxASSERT_MSG(m_pCfg, _T("X11PropertyDialog::Create: No configuration"));
@@ -110,7 +111,7 @@ bool X11PropertyDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
-    SetIcon(this->GetIconResource(wxT("res/nx.png")));
+    SetIcon(GetIconResource(wxT("res/nx.png")));
     Centre();
 ////@end X11PropertyDialog creation
     return TRUE;
@@ -123,17 +124,13 @@ bool X11PropertyDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
 void X11PropertyDialog::CreateControls()
 {    
 ////@begin X11PropertyDialog content construction
-
-    wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_SETTINGS_X11"));
-    if (FindWindow(XRCID("ID_RADIOBUTTON_X11_CUSTOMCMD")))
-        m_pCtrlRunCustomCommand = wxDynamicCast(FindWindow(XRCID("ID_RADIOBUTTON_X11_CUSTOMCMD")), wxRadioButton);
-    if (FindWindow(XRCID("ID_TEXTCTRL_X11_CUSTOMCMD")))
-        m_pCtrlCustomCommand = wxDynamicCast(FindWindow(XRCID("ID_TEXTCTRL_X11_CUSTOMCMD")), wxTextCtrl);
-    if (FindWindow(XRCID("ID_RADIOBUTTON_X11_WIN_FLOATING")))
-        m_pCtrlWinFloating = wxDynamicCast(FindWindow(XRCID("ID_RADIOBUTTON_X11_WIN_FLOATING")), wxRadioButton);
-    if (FindWindow(XRCID("ID_CHECKBOX_X11_DISABLE_TAINT")))
-        m_pCtrlDisableTaint = wxDynamicCast(FindWindow(XRCID("ID_CHECKBOX_X11_DISABLE_TAINT")), wxCheckBox);
-
+    if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_SETTINGS_X11")))
+        wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
+    m_pCtrlRunCustomCommand = XRCCTRL(*this, "ID_RADIOBUTTON_X11_CUSTOMCMD", wxRadioButton);
+    m_pCtrlCustomCommand = XRCCTRL(*this, "ID_TEXTCTRL_X11_CUSTOMCMD", wxTextCtrl);
+    m_pCtrlWinFloating = XRCCTRL(*this, "ID_RADIOBUTTON_X11_WIN_FLOATING", wxRadioButton);
+    m_pCtrlDisableXagent = XRCCTRL(*this, "ID_CHECKBOX_X11_DISABLE_XAGENT", wxCheckBox);
+    m_pCtrlDisableTaint = XRCCTRL(*this, "ID_CHECKBOX_X11_DISABLE_TAINT", wxCheckBox);
     // Set validators
     if (FindWindow(XRCID("ID_RADIOBUTTON_X11_CONSOLE")))
         FindWindow(XRCID("ID_RADIOBUTTON_X11_CONSOLE"))->SetValidator( wxGenericValidator(& m_bRunConsole) );
@@ -147,6 +144,8 @@ void X11PropertyDialog::CreateControls()
         FindWindow(XRCID("ID_RADIOBUTTON_X11_VDESKTOP"))->SetValidator( wxGenericValidator(& m_bVirtualDesktop) );
     if (FindWindow(XRCID("ID_RADIOBUTTON_X11_WIN_FLOATING")))
         FindWindow(XRCID("ID_RADIOBUTTON_X11_WIN_FLOATING"))->SetValidator( wxGenericValidator(& m_bFloatingWindow) );
+    if (FindWindow(XRCID("ID_CHECKBOX_X11_DISABLE_XAGENT")))
+        FindWindow(XRCID("ID_CHECKBOX_X11_DISABLE_XAGENT"))->SetValidator( wxGenericValidator(& m_bDisableXagent) );
     if (FindWindow(XRCID("ID_CHECKBOX_X11_DISABLE_TAINT")))
         FindWindow(XRCID("ID_CHECKBOX_X11_DISABLE_TAINT"))->SetValidator( wxGenericValidator(& m_bDisableTaint) );
 ////@end X11PropertyDialog content construction
@@ -154,7 +153,6 @@ void X11PropertyDialog::CreateControls()
     // Create custom windows not generated automatically here.
 
 ////@begin X11PropertyDialog content initialisation
-
 ////@end X11PropertyDialog content initialisation
     UpdateDialogConstraints(false);
 }
@@ -172,10 +170,11 @@ bool X11PropertyDialog::ShowToolTips()
  * Get bitmap resources
  */
 
-wxBitmap X11PropertyDialog::GetBitmapResource( const wxString& WXUNUSED(name) )
+wxBitmap X11PropertyDialog::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
 ////@begin X11PropertyDialog bitmap retrieval
+    wxUnusedVar(name);
     return wxNullBitmap;
 ////@end X11PropertyDialog bitmap retrieval
 }

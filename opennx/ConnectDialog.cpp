@@ -79,8 +79,11 @@ bool ConnectDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxS
     SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
-    GetSizer()->Fit(this);
-    GetSizer()->SetSizeHints(this);
+    SetIcon(GetIconResource(wxT("res/nx.png")));
+    if (GetSizer())
+    {
+        GetSizer()->SetSizeHints(this);
+    }
     Centre();
 ////@end ConnectDialog creation
     return TRUE;
@@ -93,18 +96,15 @@ bool ConnectDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxS
 void ConnectDialog::CreateControls()
 {    
 ////@begin ConnectDialog content construction
-
-    wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_CONNECT"));
-    if (FindWindow(XRCID("ID_STATIC_STATUS")))
-        m_pCtrlStatus = wxDynamicCast(FindWindow(XRCID("ID_STATIC_STATUS")), wxStaticText);
-    if (FindWindow(XRCID("ID_GAUGE")))
-        m_pCtrlProgress = wxDynamicCast(FindWindow(XRCID("ID_GAUGE")), wxGauge);
+    if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_CONNECT")))
+        wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
+    m_pCtrlStatus = XRCCTRL(*this, "ID_STATIC_STATUS", wxStaticText);
+    m_pCtrlProgress = XRCCTRL(*this, "ID_GAUGE", wxGauge);
 ////@end ConnectDialog content construction
 
     // Create custom windows not generated automatically here.
 
 ////@begin ConnectDialog content initialisation
-
 ////@end ConnectDialog content initialisation
 }
 

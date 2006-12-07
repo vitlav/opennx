@@ -96,9 +96,11 @@ bool VncPropertyDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
-    SetIcon(this->GetIconResource(wxT("res/nx.png")));
-    GetSizer()->Fit(this);
-    GetSizer()->SetSizeHints(this);
+    SetIcon(GetIconResource(wxT("res/nx.png")));
+    if (GetSizer())
+    {
+        GetSizer()->SetSizeHints(this);
+    }
     Centre();
 ////@end VncPropertyDialog creation
     return TRUE;
@@ -111,13 +113,10 @@ bool VncPropertyDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
 void VncPropertyDialog::CreateControls()
 {    
 ////@begin VncPropertyDialog content construction
-
-    wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_SETTINGS_VNC"));
-    if (FindWindow(XRCID("ID_TEXTCTRL_VNC_PASSWD")))
-        m_pCtrlPassword = wxDynamicCast(FindWindow(XRCID("ID_TEXTCTRL_VNC_PASSWD")), wxTextCtrl);
-    if (FindWindow(XRCID("ID_CHECKBOX_VNC_REMEMBER_PWD")))
-        m_pCtrlRememberPassword = wxDynamicCast(FindWindow(XRCID("ID_CHECKBOX_VNC_REMEMBER_PWD")), wxCheckBox);
-
+    if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_SETTINGS_VNC")))
+        wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
+    m_pCtrlPassword = XRCCTRL(*this, "ID_TEXTCTRL_VNC_PASSWD", wxTextCtrl);
+    m_pCtrlRememberPassword = XRCCTRL(*this, "ID_CHECKBOX_VNC_REMEMBER_PWD", wxCheckBox);
     // Set validators
     if (FindWindow(XRCID("ID_TEXTCTRL_VNC_HOST")))
         FindWindow(XRCID("ID_TEXTCTRL_VNC_HOST"))->SetValidator( wxTextValidator(wxFILTER_NONE, & m_sHostname) );
@@ -132,7 +131,6 @@ void VncPropertyDialog::CreateControls()
     // Create custom windows not generated automatically here.
 
 ////@begin VncPropertyDialog content initialisation
-
 ////@end VncPropertyDialog content initialisation
 }
 
@@ -149,10 +147,11 @@ bool VncPropertyDialog::ShowToolTips()
  * Get bitmap resources
  */
 
-wxBitmap VncPropertyDialog::GetBitmapResource( const wxString& WXUNUSED(name) )
+wxBitmap VncPropertyDialog::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
 ////@begin VncPropertyDialog bitmap retrieval
+    wxUnusedVar(name);
     return wxNullBitmap;
 ////@end VncPropertyDialog bitmap retrieval
 }

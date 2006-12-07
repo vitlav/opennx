@@ -47,9 +47,13 @@ IMPLEMENT_CLASS( RdpImageSettingsDialog, wxDialog )
 BEGIN_EVENT_TABLE( RdpImageSettingsDialog, wxDialog )
 
 ////@begin RdpImageSettingsDialog event table entries
-    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_RDP_ENCODING"), RdpImageSettingsDialog::OnRadiobuttonRdpEncodingSelected )
+    EVT_COMMAND_SCROLL_THUMBRELEASE( XRCID("ID_SLIDER_RDP_COLORS"), RdpImageSettingsDialog::OnSliderRdpColorsScrollThumbRelease )
 
-    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_RDP_PLAINX"), RdpImageSettingsDialog::OnRadiobuttonRdpPlainxSelected )
+    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_RDP_IMGRDP"), RdpImageSettingsDialog::OnRadiobuttonRdpImgrdpSelected )
+
+    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_RDP_IMGRGB"), RdpImageSettingsDialog::OnRadiobuttonRdpImgrgbSelected )
+
+    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_RDP_IMGPLAINX"), RdpImageSettingsDialog::OnRadiobuttonRdpImgplainxSelected )
 
     EVT_BUTTON( wxID_OK, RdpImageSettingsDialog::OnOkClick )
 
@@ -84,6 +88,7 @@ void RdpImageSettingsDialog::SetConfig(MxXmlConfig *cfg)
 bool RdpImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxString& WXUNUSED(caption), const wxPoint& WXUNUSED(pos), const wxSize& WXUNUSED(size), long WXUNUSED(style) )
 {
 ////@begin RdpImageSettingsDialog member initialisation
+    m_iRdpColors = 0;
     m_pCtrlRdpEncoding = NULL;
     m_pCtrlRdpCompressed = NULL;
     m_pCtrlPlainX = NULL;
@@ -113,7 +118,11 @@ bool RdpImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), 
     SetExtraStyle(GetExtraStyle()|wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
-    SetIcon(this->GetIconResource(wxT("res/nx.png")));
+    SetIcon(GetIconResource(wxT("res/nx.png")));
+    if (GetSizer())
+    {
+        GetSizer()->SetSizeHints(this);
+    }
     Centre();
 ////@end RdpImageSettingsDialog creation
 
@@ -128,28 +137,29 @@ bool RdpImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), 
 void RdpImageSettingsDialog::CreateControls()
 {    
 ////@begin RdpImageSettingsDialog content construction
-
-    wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_IMAGE_RDP"));
-    if (FindWindow(XRCID("ID_RADIOBUTTON_RDP_ENCODING")))
-        m_pCtrlRdpEncoding = wxDynamicCast(FindWindow(XRCID("ID_RADIOBUTTON_RDP_ENCODING")), wxRadioButton);
-    if (FindWindow(XRCID("ID_CHECKBOX_RDP_COMPRESS")))
-        m_pCtrlRdpCompressed = wxDynamicCast(FindWindow(XRCID("ID_CHECKBOX_RDP_COMPRESS")), wxCheckBox);
-    if (FindWindow(XRCID("ID_RADIOBUTTON_RDP_PLAINX")))
-        m_pCtrlPlainX = wxDynamicCast(FindWindow(XRCID("ID_RADIOBUTTON_RDP_PLAINX")), wxRadioButton);
-
+    if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_IMAGE_RDP")))
+        wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
+    m_pCtrlRdpEncoding = XRCCTRL(*this, "ID_RADIOBUTTON_RDP_IMGRDP", wxRadioButton);
+    m_pCtrlRdpCompressed = XRCCTRL(*this, "ID_CHECKBOX_RDP_IMGRDPCOMP", wxCheckBox);
+    m_pCtrlPlainX = XRCCTRL(*this, "ID_RADIOBUTTON_RDP_IMGPLAINX", wxRadioButton);
     // Set validators
-    if (FindWindow(XRCID("ID_RADIOBUTTON_RDP_ENCODING")))
-        FindWindow(XRCID("ID_RADIOBUTTON_RDP_ENCODING"))->SetValidator( wxGenericValidator(& m_bRdpEncoding) );
-    if (FindWindow(XRCID("ID_CHECKBOX_RDP_COMPRESS")))
-        FindWindow(XRCID("ID_CHECKBOX_RDP_COMPRESS"))->SetValidator( wxGenericValidator(& m_bRdpCompressed) );
-    if (FindWindow(XRCID("ID_RADIOBUTTON_RDP_PLAINX")))
-        FindWindow(XRCID("ID_RADIOBUTTON_RDP_PLAINX"))->SetValidator( wxGenericValidator(& m_bRdpPlainX) );
+    if (FindWindow(XRCID("ID_SLIDER_RDP_COLORS")))
+        FindWindow(XRCID("ID_SLIDER_RDP_COLORS"))->SetValidator( wxGenericValidator(& m_iRdpColors) );
+    if (FindWindow(XRCID("ID_RADIOBUTTON_RDP_IMGRDP")))
+        FindWindow(XRCID("ID_RADIOBUTTON_RDP_IMGRDP"))->SetValidator( wxGenericValidator(& m_bRdpEncoding) );
+    if (FindWindow(XRCID("ID_CHECKBOX_RDP_IMGRDPCOMP")))
+        FindWindow(XRCID("ID_CHECKBOX_RDP_IMGRDPCOMP"))->SetValidator( wxGenericValidator(& m_bRdpCompressed) );
+    if (FindWindow(XRCID("ID_RADIOBUTTON_RDP_IMGRGB")))
+        FindWindow(XRCID("ID_RADIOBUTTON_RDP_IMGRGB"))->SetValidator( wxGenericValidator(& m_bRdpRgb) );
+    if (FindWindow(XRCID("ID_RADIOBUTTON_RDP_IMGPLAINX")))
+        FindWindow(XRCID("ID_RADIOBUTTON_RDP_IMGPLAINX"))->SetValidator( wxGenericValidator(& m_bRdpPlainX) );
+    if (FindWindow(XRCID("ID_CHECKBOX_RDP_IMGCACHE")))
+        FindWindow(XRCID("ID_CHECKBOX_RDP_IMGCACHE"))->SetValidator( wxGenericValidator(& m_bRdbCache) );
 ////@end RdpImageSettingsDialog content construction
 
     // Create custom windows not generated automatically here.
 
 ////@begin RdpImageSettingsDialog content initialisation
-
 ////@end RdpImageSettingsDialog content initialisation
 }
 
@@ -166,10 +176,11 @@ bool RdpImageSettingsDialog::ShowToolTips()
  * Get bitmap resources
  */
 
-wxBitmap RdpImageSettingsDialog::GetBitmapResource( const wxString& WXUNUSED(name) )
+wxBitmap RdpImageSettingsDialog::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
 ////@begin RdpImageSettingsDialog bitmap retrieval
+    wxUnusedVar(name);
     return wxNullBitmap;
 ////@end RdpImageSettingsDialog bitmap retrieval
 }
@@ -188,7 +199,7 @@ wxIcon RdpImageSettingsDialog::GetIconResource( const wxString& name )
  * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_PLAINX
  */
 
-void RdpImageSettingsDialog::OnRadiobuttonRdpPlainxSelected( wxCommandEvent& event )
+void RdpImageSettingsDialog::OnRadiobuttonRdpImgplainxSelected( wxCommandEvent& event )
 {
     m_bRdpPlainX = true;
     m_bRdpEncoding = false;
@@ -201,7 +212,7 @@ void RdpImageSettingsDialog::OnRadiobuttonRdpPlainxSelected( wxCommandEvent& eve
  * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_ENCODING
  */
 
-void RdpImageSettingsDialog::OnRadiobuttonRdpEncodingSelected( wxCommandEvent& event )
+void RdpImageSettingsDialog::OnRadiobuttonRdpImgrdpSelected( wxCommandEvent& event )
 {
     m_bRdpPlainX = false;
     m_bRdpEncoding = true;
@@ -216,6 +227,21 @@ void RdpImageSettingsDialog::UpdateDialogConstraints()
 }
 
 /*!
+ * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_IMGRGB
+ */
+
+void RdpImageSettingsDialog::OnRadiobuttonRdpImgrgbSelected( wxCommandEvent& event )
+{
+    m_bRdpPlainX = false;
+    m_bRdpEncoding = false;
+    m_pCtrlPlainX->SetValue(false);
+    m_pCtrlRdpEncoding->SetValue(false);
+    UpdateDialogConstraints();
+    event.Skip();
+}
+
+
+/*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
  */
 
@@ -226,6 +252,22 @@ void RdpImageSettingsDialog::OnOkClick( wxCommandEvent& event )
         TransferDataFromWindow();
         m_pCfg->iSetRdpImageCompression(m_bRdpPlainX ? 0 : (m_bRdpCompressed ? 1 : 2));
     }
+    event.Skip();
+}
+
+
+/*!
+ * wxEVT_SCROLL_THUMBRELEASE event handler for ID_SLIDER_RDP_COLORS
+ */
+
+void RdpImageSettingsDialog::OnSliderRdpColorsScrollThumbRelease( wxScrollEvent& event )
+{
+    wxSlider *sl = wxDynamicCast(event.GetEventObject(), wxSlider);
+    // Stick slider to nearest integer position
+    int p = event.GetPosition();
+    ::wxLogDebug(wxT("p: %d, sl: %d"), p, sl->GetValue());
+    sl->SetValue((p > 0) ?  p - 1 : p + 1);
+    sl->SetValue(p);
     event.Skip();
 }
 

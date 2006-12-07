@@ -44,7 +44,7 @@ class MxXmlConfig;
 #define SYMBOL_UNIXIMAGESETTINGSDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_UNIXIMAGESETTINGSDIALOG_TITLE _("Unix Image Settings - MXclient")
 #define SYMBOL_UNIXIMAGESETTINGSDIALOG_IDNAME ID_DIALOG_IMAGE_X11
-#define SYMBOL_UNIXIMAGESETTINGSDIALOG_SIZE wxSize(228, 150)
+#define SYMBOL_UNIXIMAGESETTINGSDIALOG_SIZE wxSize(114, 75)
 #define SYMBOL_UNIXIMAGESETTINGSDIALOG_POSITION wxDefaultPosition
 ////@end control identifiers
 
@@ -84,7 +84,7 @@ private:
 ////@begin UnixImageSettingsDialog event handler declarations
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
-    void OnOkClick( wxCommandEvent& event );
+    void OnOKClick( wxCommandEvent& event );
 
 ////@end UnixImageSettingsDialog event handler declarations
 

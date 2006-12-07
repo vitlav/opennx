@@ -96,7 +96,6 @@ private:
 
 ////@begin VncImageSettingsDialog member function declarations
 
-
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
 

@@ -99,7 +99,7 @@ void LoginDialog::ReadConfigDirectory()
     m_aConfigFiles.Empty();
     m_aSessionNames.Empty();
 
-    wxDir::GetAllFiles(cfgdir, &m_aConfigFiles, wxT("*.conf"), wxDIR_FILES);
+    wxDir::GetAllFiles(cfgdir, &m_aConfigFiles, wxT("*.nxs"), wxDIR_FILES);
     size_t i;
     if (m_pCurrentCfg)
         delete m_pCurrentCfg;
@@ -136,6 +136,8 @@ void LoginDialog::ReadConfigDirectory()
 bool LoginDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxString& WXUNUSED(caption), const wxPoint& WXUNUSED(pos), const wxSize& WXUNUSED(size), long WXUNUSED(style) )
 {
     ////@begin LoginDialog member initialisation
+    m_sTmpUsername = wxT("");
+    m_sTmpPassword = wxT("");
     m_pCtrlUsername = NULL;
     m_pCtrlPassword = NULL;
     m_pCtrlSessionName = NULL;
@@ -215,13 +217,13 @@ void LoginDialog::OnCheckboxGuestloginClick( wxCommandEvent& event )
         m_sTmpUsername = m_pCtrlUsername->GetValue();
         m_pCtrlUsername->SetValue(wxT(""));
         m_pCtrlUsername->Enable(false);
-        m_sTmpPassowd = m_pCtrlPassword->GetValue();
+        m_sTmpPassword = m_pCtrlPassword->GetValue();
         m_pCtrlPassword->SetValue(wxT(""));
         m_pCtrlUsername->Enable(false);
     } else {
         m_pCtrlUsername->SetValue(m_sTmpUsername);
         m_pCtrlUsername->Enable(true);
-        m_sTmpPassowd = m_pCtrlPassword->GetValue();
+        m_sTmpPassword = m_pCtrlPassword->GetValue();
         m_pCtrlPassword->SetValue(m_sTmpPassword);
         m_pCtrlUsername->Enable(true);
     }

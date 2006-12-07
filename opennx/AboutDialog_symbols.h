@@ -1,12 +1,11 @@
 /////////////////////////////////////////////////////////////////////////////
-// Name:        AboutDialog_symbols.h
+// $Id$
+//
 // Purpose:     Symbols file
 // Author:      Fritz Elfert
-// Modified by: 
-// Created:     11/04/04 04:31:24
-// RCS-ID:      
-// Copyright:   Copyright 2004 Millenux GmbH
-// Licence:     
+// Created:     Thu 07 Dec 2006 04:00:17 CET
+// Copyright:   Copyright 2004 Millenux GmbH, 2006 InnoviData GmbH
+// Licence:     LGPL
 /////////////////////////////////////////////////////////////////////////////
 
 #define ID_DIALOG_ABOUT_SYMBOL_0 _("About MXclient")

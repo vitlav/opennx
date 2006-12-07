@@ -12,7 +12,7 @@ mxclient_SOURCES = AboutDialog.cpp ConnectDialog.cpp Icon.cpp LogDialog.cpp \
 	MxValidator.cpp MxWizard.cpp MxXmlConfig.cpp pwcrypt.cpp \
 	RdpImageSettingsDialog.cpp RdpPropertyDialog.cpp SessionAdmin.cpp \
 	SessionList.cpp SessionProperties.cpp SmbShareProperties.cpp \
-	UnixImageSettingsDialog.cpp VncImageSettingsDialog.cpp \
+	TextViewer.cpp UnixImageSettingsDialog.cpp VncImageSettingsDialog.cpp \
 	VncPropertyDialog.cpp wxprec.cpp WinShare.cpp X11PropertyDialog.cpp \
 	md5.c
 
@@ -25,6 +25,7 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h ConnectDialog.h \
 	SessionAdmin.h SessionAdmin_symbols.h SessionList.h \
 	SessionProperties.h SessionProperties_symbols.h \
 	SmbShareProperties.h SmbShareProperties_symbols.h \
+	TextViewer.h TextViewer_symbols.h \
 	UnixImageSettingsDialog.h UnixImageSettingsDialog_symbols.h \
 	VncImageSettingsDialog.h VncImageSettingsDialog_symbols.h \
 	VncPropertyDialog.h VncPropertyDialog_symbols.h WinShare.h \
@@ -46,7 +47,7 @@ tmpres.zip: res/mxclient.xrc
 	zip -q9r $@ res -i *.png -i *.xrc -i *.ico
 
 memres.h: tmpres.zip bin2hdr
-	bin2hdr tmpres.zip memres.h mem_res
+	./bin2hdr tmpres.zip memres.h mem_res
 
 mxclientApp.cpp: memres.h
 

@@ -26,7 +26,6 @@
 #include "wx/notebook.h"
 #include "wx/valgen.h"
 #include "wx/spinctrl.h"
-#include "wx/valtext.h"
 #include "wx/listctrl.h"
 ////@end includes
 
@@ -101,11 +100,14 @@ public:
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_HOST
     void OnTextctrlHostUpdated( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_PORT
+    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_PORT
     void OnTextctrlPortUpdated( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_PWSAVE
     void OnCheckboxPwsaveClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_KEYMANAGE
+    void OnButtonKeymanageClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_SMARTCARD
     void OnCheckboxSmartcardClick( wxCommandEvent& event );
@@ -170,8 +172,8 @@ public:
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_SMB
     void OnCheckboxSmbClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_CUPS
-    void OnCheckboxCupsClick( wxCommandEvent& event );
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_CUPSENABLE
+    void OnCheckboxCupsenableClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRL_SMB_SHARES
     void OnListctrlSmbSharesSelected( wxListEvent& event );
@@ -203,8 +205,8 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BROWSE_SYSDIR
     void OnButtonBrowseSysdirClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BROWSE_CUPSD
-    void OnButtonBrowseCupsdClick( wxCommandEvent& event );
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BROWSE_CUPSPATH
+    void OnButtonBrowseCupspathClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_FONT_DEFAULT
     void OnButtonFontDefaultClick( wxCommandEvent& event );
@@ -215,8 +217,8 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_ABOUT
     void OnButtonAboutClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_CLEAR
-    void OnClearClick( wxCommandEvent& event );
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_DELETE
+    void OnDeleteClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_APPLY
     void OnApplyClick( wxCommandEvent& event );
@@ -269,7 +271,7 @@ private:
     wxButton* m_pCtrlShareDelete;
     wxTextCtrl* m_pCtrlUserMxDir;
     wxTextCtrl* m_pCtrlSystemMxDir;
-    wxTextCtrl* m_pCtrlCupsServer;
+    wxTextCtrl* m_pCtrlCupsPath;
     wxButton* m_pCtrlFontDefault;
     wxButton* m_pCtrlFontFixed;
     wxButton* m_pCtrlApplyButton;
@@ -296,15 +298,16 @@ private:
     wxString m_sUserMxDir;
     wxString m_sSystemMxDir;
     bool m_bRemoveOldSessionFiles;
-    wxString m_sCupsServer;
-    int m_iFontServerPort;
+    wxString m_sCupsPath;
+    int m_iCupsPort;
     bool m_bUseDefaultImageEncoding;
     bool m_bUseCustomImageEncoding;
     int m_iKbdLayoutLanguage;
     int m_iDesktopTypeDialog;
-    int m:iProxyPort;
+    int m_iProxyPort;
     wxString m_sProxyHost;
     bool m_bUseProxy;
+    bool m_bUseCups;
 ////@end SessionProperties member variables
 
     void SetFontLabel(wxButton *, const wxFont &);

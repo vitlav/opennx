@@ -43,7 +43,7 @@ class MxXmlConfig;
 #define SYMBOL_X11PROPERTYDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_X11PROPERTYDIALOG_TITLE _("X11 Session Settings - MXclient")
 #define SYMBOL_X11PROPERTYDIALOG_IDNAME ID_DIALOG_SETTINGS_X11
-#define SYMBOL_X11PROPERTYDIALOG_SIZE wxSize(228, 150)
+#define SYMBOL_X11PROPERTYDIALOG_SIZE wxSize(114, 75)
 #define SYMBOL_X11PROPERTYDIALOG_POSITION wxDefaultPosition
 ////@end control identifiers
 
@@ -107,7 +107,6 @@ private:
 public:
 ////@begin X11PropertyDialog member function declarations
 
-
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
 
@@ -122,7 +121,9 @@ public:
     wxRadioButton* m_pCtrlRunCustomCommand;
     wxTextCtrl* m_pCtrlCustomCommand;
     wxRadioButton* m_pCtrlWinFloating;
+    wxCheckBox* m_pCtrlDisableXagent;
     wxCheckBox* m_pCtrlDisableTaint;
+private:
     bool m_bRunConsole;
     bool m_bRunXclients;
     bool m_bRunCustom;
@@ -130,6 +131,7 @@ public:
     bool m_bFloatingWindow;
     bool m_bDisableTaint;
     wxString m_sCustomCommand;
+    bool m_bDisableXagent;
 ////@end X11PropertyDialog member variables
 
     MxXmlConfig *m_pCfg;

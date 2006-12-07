@@ -45,7 +45,7 @@ class MxXmlConfig;
 #define SYMBOL_SMBSHAREPROPERTIES_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_SMBSHAREPROPERTIES_TITLE _("New SMB Share - MXclient")
 #define SYMBOL_SMBSHAREPROPERTIES_IDNAME ID_DIALOG_SHARE_ADD
-#define SYMBOL_SMBSHAREPROPERTIES_SIZE wxSize(228, 150)
+#define SYMBOL_SMBSHAREPROPERTIES_SIZE wxSize(114, 75)
 #define SYMBOL_SMBSHAREPROPERTIES_POSITION wxDefaultPosition
 ////@end control identifiers
 
@@ -103,7 +103,6 @@ private:
 ////@end SmbShareProperties event handler declarations
 
 ////@begin SmbShareProperties member function declarations
-
 
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );

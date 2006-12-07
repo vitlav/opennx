@@ -1,12 +1,11 @@
 /////////////////////////////////////////////////////////////////////////////
-// Name:        X11PropertyDialog_symbols.h
-// Purpose:     String symbols
+// $Id$
+//
+// Purpose:     Symbols file
 // Author:      Fritz Elfert
-// Modified by: 
-// Created:     Mon 09 Aug 2004 08:04:38 AM CEST
-// RCS-ID:      
-// Copyright:   Copyright 2004 Millenux GmbH
-// Licence:     
+// Created:     Thu 07 Dec 2006 03:46:24 CET
+// Copyright:   Copyright 2004 Millenux GmbH, 2006 InnoviData GmbH
+// Licence:     LGPL
 /////////////////////////////////////////////////////////////////////////////
 
 #define ID_DIALOG_SETTINGS_X11_SYMBOL_0 _("X11 Session Settings - MXclient")
@@ -17,6 +16,7 @@
 #define ID_DIALOG_SETTINGS_X11_SYMBOL_5 _("Options")
 #define ID_DIALOG_SETTINGS_X11_SYMBOL_6 _("New virtual desktop")
 #define ID_DIALOG_SETTINGS_X11_SYMBOL_7 _("Floating window")
-#define ID_DIALOG_SETTINGS_X11_SYMBOL_8 _("Disable taint of X replies")
-#define ID_DIALOG_SETTINGS_X11_SYMBOL_9 _("&OK")
-#define ID_DIALOG_SETTINGS_X11_SYMBOL_10 _("&Cancel")
+#define ID_DIALOG_SETTINGS_X11_SYMBOL_8 _("Disable X agent encoding")
+#define ID_DIALOG_SETTINGS_X11_SYMBOL_9 _("Disable taint of X replies")
+#define ID_DIALOG_SETTINGS_X11_SYMBOL_10 _("&OK")
+#define ID_DIALOG_SETTINGS_X11_SYMBOL_11 _("&Cancel")

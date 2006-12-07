@@ -47,7 +47,7 @@ IMPLEMENT_CLASS( UnixImageSettingsDialog, wxDialog )
 BEGIN_EVENT_TABLE( UnixImageSettingsDialog, wxDialog )
 
 ////@begin UnixImageSettingsDialog event table entries
-    EVT_BUTTON( wxID_OK, UnixImageSettingsDialog::OnOkClick )
+    EVT_BUTTON( wxID_OK, UnixImageSettingsDialog::OnOKClick )
 
 ////@end UnixImageSettingsDialog event table entries
 
@@ -86,9 +86,9 @@ bool UnixImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id),
 
     wxASSERT_MSG(m_pCfg, _T("UnixImageSettingsDialog::Create: No configuration"));
     if (m_pCfg) {
-        m_bUsePNG = m_pCfg->bGetUsePNG();
-        m_bUsePlainX = m_pCfg->bGetUsePlainX();
-        m_bUseJpeg = m_pCfg->bGetUseJpeg();
+        m_bImageEncodingPNG = m_pCfg->bGetImageEncodingPNG();
+        m_bImageEncodingPlainX = m_pCfg->bGetImageEncodingPlainX();
+        m_bImageEncodingJpeg = m_pCfg->bGetImageEncodingJpeg();
         m_bUseJpegQuality = m_pCfg->bGetUseJpegQuality();
         m_bDisableRender = m_pCfg->bGetDisableRender();
         m_iJpegQuality = m_pCfg->iGetJpegQuality();
@@ -161,7 +161,7 @@ bool UnixImageSettingsDialog::ShowToolTips()
  * Get bitmap resources
  */
 
-wxBitmap UnixImageSettingsDialog::GetBitmapResource( const wxString& WXUNUSED(name) )
+wxBitmap UnixImageSettingsDialog::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
 ////@begin UnixImageSettingsDialog bitmap retrieval
@@ -184,20 +184,19 @@ wxIcon UnixImageSettingsDialog::GetIconResource( const wxString& name )
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
  */
 
-void UnixImageSettingsDialog::OnOkClick( wxCommandEvent& event )
+void UnixImageSettingsDialog::OnOKClick( wxCommandEvent& event )
 {
     wxASSERT_MSG(m_pCfg, _T("UnixImageSettingsDialog::OnOkClick: No configuration"));
     if (m_pCfg) {
         TransferDataFromWindow();
-        m_pCfg->bSetUsePNG(m_bUsePNG);
-        m_pCfg->bSetUsePlainX(m_bUsePlainX);
-        m_pCfg->bSetUseJpeg(m_bUseJpeg);
+        m_pCfg->bSetImageEncodingPNG(m_bImageEncodingPNG);
+        m_pCfg->bSetImageEncodingPlainX(m_bImageEncodingPlainX);
+        m_pCfg->bSetImageEncodingJpeg(m_bImageEncodingJpeg);
         m_pCfg->bSetUseJpegQuality(m_bUseJpegQuality);
         m_pCfg->bSetDisableRender(m_bDisableRender);
         m_pCfg->iSetJpegQuality(m_iJpegQuality);
     }
     event.Skip();
 }
-
 
 

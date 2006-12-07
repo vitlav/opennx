@@ -83,5 +83,10 @@ AC_ARG_ENABLE([warn],
 	]
 )
 
+CUPS_DEFAULT_PATH=
+AC_PATH_PROG([cupsd],[cupsd],[],[$PATH:/usr/sbin:/usr/local/sbin])
+test -n "$cupsd" && CUPS_DEFAULT_PATH=$cupsd
+AC_DEFINE_UNQUOTED(CUPS_DEFAULT_PATH,"$CUPS_DEFAULT_PATH")
+
 AC_CONFIG_FILES([Makefile po/Makefile.in m4/Makefile])
 AC_OUTPUT

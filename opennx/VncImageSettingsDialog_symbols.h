@@ -1,12 +1,11 @@
 /////////////////////////////////////////////////////////////////////////////
-// Name:        VncImageSettingsDialog_symbols.h
-// Purpose:     String symbols
+// $Id$
+//
+// Purpose:     Symbols file
 // Author:      Fritz Elfert
-// Modified by: 
-// Created:     Mon 09 Aug 2004 08:04:38 AM CEST
-// RCS-ID:      
-// Copyright:   Copyright 2004 Millenux GmbH
-// Licence:     
+// Created:     Thu 07 Dec 2006 03:46:24 CET
+// Copyright:   Copyright 2004 Millenux GmbH, 2006 InnoviData GmbH
+// Licence:     LGPL
 /////////////////////////////////////////////////////////////////////////////
 
 #define ID_DIALOG_IMAGE_VNC_SYMBOL_0 _("VNC Image Settings - MXclient")

@@ -44,7 +44,7 @@ class MxXmlConfig;
 #define SYMBOL_VNCPROPERTYDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_VNCPROPERTYDIALOG_TITLE _("VNC Session Settings - MXclient")
 #define SYMBOL_VNCPROPERTYDIALOG_IDNAME ID_DIALOG_SETTINGS_VNC
-#define SYMBOL_VNCPROPERTYDIALOG_SIZE wxSize(400, 300)
+#define SYMBOL_VNCPROPERTYDIALOG_SIZE wxSize(200, 150)
 #define SYMBOL_VNCPROPERTYDIALOG_POSITION wxDefaultPosition
 ////@end control identifiers
 
@@ -88,7 +88,6 @@ private:
 
 public:
 ////@begin VncPropertyDialog member function declarations
-
 
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );

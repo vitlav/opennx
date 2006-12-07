@@ -77,7 +77,7 @@ bool ShareGroup::operator !=(const ShareGroup &other)
     , m_bEnableSmbSharing(false)
     , m_bEnableMultimedia(false)
     , m_bRemoveOldSessionFiles(true)
-    , m_bUseFontServer(false)
+    , m_bUseCups(false)
     , m_bRunConsole(false)
     , m_bRunXclients(false)
     , m_bVirtualDesktop(false)
@@ -86,16 +86,22 @@ bool ShareGroup::operator !=(const ShareGroup &other)
     , m_bRdpRunApplication(false)
     , m_bVncRememberPassword(false)
     , m_bVncUseMxAuth(false)
-    , m_bUsePNG(false)
-    , m_bUsePlainX(false)
-    , m_bUseJpeg(true)
+    , m_bImageEncodingPNG(false)
+    , m_bImageEncodingPlainX(false)
+    , m_bImageEncodingJpeg(true)
     , m_bUseJpegQuality(false)
     , m_bDisableRender(false)
     , m_bUseTightJpeg(false)
+    , m_bDisableBackingstore(false)
+    , m_bDisableXagent(false)
+    , m_bDisableJpeg(false)
+    , m_bDisableImageCompression(false)
+    , m_bDisableComposite(false)
+    , m_bDisableStreaming(false)
     , m_iDisplayHeight(480)
     , m_iDisplayWidth(640)
     , m_iServerPort(22)
-    , m_iFontServerPort(7100)
+    , m_iCupsPort(631)
     , m_iRdpAuthType(1)
     , m_iVncDisplayNumber(0)
     , m_iRdpImageCompression(1)
@@ -111,7 +117,6 @@ bool ShareGroup::operator !=(const ShareGroup &other)
     , m_sName(wxT(""))
     , m_sUsername(wxT(""))
     , m_sPassword(wxT(""))
-    , m_sBackingstore(wxT(""))
     , m_sServerHost(wxT(""))
     , m_sCommandLine(wxT(""))
     , m_sRdpHostName(wxT(""))
@@ -120,7 +125,7 @@ bool ShareGroup::operator !=(const ShareGroup &other)
     , m_sRdpApplication(wxT(""))
     , m_sVncHostName(wxT(""))
     , m_sVncPassword(wxT(""))
-    , m_sFontServerHost(wxT(""))
+    , m_sCupsPath(wxT(CUPS_DEFAULT_PATH))
     , m_sFileName(wxT(""))
     , m_pMd5Password(NULL)
     , m_pClrPassword(NULL)
@@ -143,7 +148,7 @@ MxXmlConfig::operator =(const MxXmlConfig &other)
     m_bEnableSmbSharing = other.m_bEnableSmbSharing;
     m_bEnableMultimedia = other.m_bEnableMultimedia;
     m_bRemoveOldSessionFiles = other.m_bRemoveOldSessionFiles;
-    m_bUseFontServer = other.m_bUseFontServer;
+    m_bUseCups = other.m_bUseCups;
     m_bRunConsole = other.m_bRunConsole;
     m_bRunXclients = other.m_bRunXclients;
     m_bVirtualDesktop = other.m_bVirtualDesktop;
@@ -152,16 +157,16 @@ MxXmlConfig::operator =(const MxXmlConfig &other)
     m_bRdpRunApplication = other.m_bRdpRunApplication;
     m_bVncRememberPassword = other.m_bVncRememberPassword;
     m_bVncUseMxAuth = other.m_bVncUseMxAuth;
-    m_bUsePNG = other.m_bUsePNG;
-    m_bUsePlainX = other.m_bUsePlainX;
-    m_bUseJpeg = other.m_bUseJpeg;
+    m_bImageEncodingPNG = other.m_bImageEncodingPNG;
+    m_bImageEncodingPlainX = other.m_bImageEncodingPlainX;
+    m_bImageEncodingJpeg = other.m_bImageEncodingJpeg;
     m_bUseJpegQuality = other.m_bUseJpegQuality;
     m_bDisableRender = other.m_bDisableRender;
     m_bUseTightJpeg = other.m_bUseTightJpeg;
     m_iDisplayHeight = other.m_iDisplayHeight;
     m_iDisplayWidth = other.m_iDisplayWidth;
     m_iServerPort = other.m_iServerPort;
-    m_iFontServerPort = other.m_iFontServerPort;
+    m_iCupsPort = other.m_iCupsPort;
     m_iRdpAuthType = other.m_iRdpAuthType;
     m_iVncDisplayNumber = other.m_iVncDisplayNumber;
     m_iRdpImageCompression = other.m_iRdpImageCompression;
@@ -178,7 +183,12 @@ MxXmlConfig::operator =(const MxXmlConfig &other)
     m_sName = other.m_sName;
     m_sUsername = other.m_sUsername;
     m_sPassword = other.m_sPassword;
-    m_sBackingstore = other.m_sBackingstore;
+    m_bDisableBackingstore = other.m_bDisableBackingstore;
+    m_bDisableXagent = other.m_bDisableXagent;
+    m_bDisableJpeg = other.m_bDisableJpeg;
+    m_bDisableImageCompression = other.m_bDisableImageCompression;
+    m_bDisableComposite = other.m_bDisableComposite;
+    m_bDisableStreaming = other.m_bDisableStreaming;
     m_sServerHost = other.m_sServerHost;
     m_sCommandLine = other.m_sCommandLine;
     m_sRdpHostName = other.m_sRdpHostName;
@@ -187,7 +197,7 @@ MxXmlConfig::operator =(const MxXmlConfig &other)
     m_sRdpApplication = other.m_sRdpApplication;
     m_sVncHostName = other.m_sVncHostName;
     m_sVncPassword = other.m_sVncPassword;
-    m_sFontServerHost = other.m_sFontServerHost;
+    m_sCupsPath = other.m_sCupsPath;
     m_aShareGroups = other.m_aShareGroups;
     m_aUsedShareGroups = other.m_aUsedShareGroups;
     if (other.m_pMd5Password) {
@@ -328,8 +338,7 @@ MxXmlConfig::sGetSessionParams(const wxString &protocolVersion)
     ret += wxString::Format(wxT(" --screeninfo=\"%dx%dx%d%s\""), w, h, ::wxDisplayDepth(), m_bDisableRender ? wxT("") : wxT("+render"));
     if (m_bKbdLayoutOther)
         ret += wxString::Format(wxT(" --keyboard=\"pc105/%s\""), isoKbd(m_iKbdLayoutLanguage).c_str());
-    ret += wxString::Format(wxT(" --backingstore=\"%s\""),
-            m_sBackingstore.IsEmpty() ? wxT("0") : m_sBackingstore.c_str());
+    ret += wxString::Format(wxT(" --backingstore=\"%d\""), m_bDisableBackingstore ? 1 : 0);
     ret += wxString::Format(wxT(" --encryption=\"%d\""), m_bEnableSSL ? 1 : 0);
 #ifdef __UNIX__
     ret += wxT(" --client=\"linux\"");
@@ -404,7 +413,7 @@ MxXmlConfig::operator ==(const MxXmlConfig &other)
     if (m_bEnableSmbSharing != other.m_bEnableSmbSharing) return false;
     if (m_bEnableMultimedia != other.m_bEnableMultimedia) return false;
     if (m_bRemoveOldSessionFiles != other.m_bRemoveOldSessionFiles) return false;
-    if (m_bUseFontServer != other.m_bUseFontServer) return false;
+    if (m_bUseCups != other.m_bUseCups) return false;
     if (m_bRunConsole != other.m_bRunConsole) return false;
     if (m_bRunXclients != other.m_bRunXclients) return false;
     if (m_bVirtualDesktop != other.m_bVirtualDesktop) return false;
@@ -413,16 +422,22 @@ MxXmlConfig::operator ==(const MxXmlConfig &other)
     if (m_bRdpRunApplication != other.m_bRdpRunApplication) return false;
     if (m_bVncRememberPassword != other.m_bVncRememberPassword) return false;
     if (m_bVncUseMxAuth != other.m_bVncUseMxAuth) return false;
-    if (m_bUsePNG != other.m_bUsePNG) return false;
-    if (m_bUsePlainX != other.m_bUsePlainX) return false;
-    if (m_bUseJpeg != other.m_bUseJpeg) return false;
+    if (m_bImageEncodingPNG != other.m_bImageEncodingPNG) return false;
+    if (m_bImageEncodingPlainX != other.m_bImageEncodingPlainX) return false;
+    if (m_bImageEncodingJpeg != other.m_bImageEncodingJpeg) return false;
     if (m_bUseJpegQuality != other.m_bUseJpegQuality) return false;
     if (m_bDisableRender != other.m_bDisableRender) return false;
     if (m_bUseTightJpeg != other.m_bUseTightJpeg) return false;
+    if (m_bDisableBackingstore != other.m_bDisableBackingstore) return false;
+    if (m_bDisableXagent != other.m_bDisableXagent) return false;
+    if (m_bDisableJpeg != other.m_bDisableJpeg) return false;
+    if (m_bDisableImageCompression != other.m_bDisableImageCompression) return false;
+    if (m_bDisableComposite != other.m_bDisableComposite) return false;
+    if (m_bDisableStreaming != other.m_bDisableStreaming) return false;
     if (m_iDisplayHeight != other.m_iDisplayHeight) return false;
     if (m_iDisplayWidth != other.m_iDisplayWidth) return false;
     if (m_iServerPort != other.m_iServerPort) return false;
-    if (m_iFontServerPort != other.m_iFontServerPort) return false;
+    if (m_iCupsPort != other.m_iCupsPort) return false;
     if (m_iRdpAuthType != other.m_iRdpAuthType) return false;
     if (m_iVncDisplayNumber != other.m_iVncDisplayNumber) return false;
     if (m_iRdpImageCompression != other.m_iRdpImageCompression) return false;
@@ -439,7 +454,6 @@ MxXmlConfig::operator ==(const MxXmlConfig &other)
     if (m_sName != other.m_sName) return false;
     if (m_sUsername != other.m_sUsername) return false;
     if (m_sPassword != other.m_sPassword) return false;
-    if (m_sBackingstore != other.m_sBackingstore) return false;
     if (m_sServerHost != other.m_sServerHost) return false;
     if (m_sCommandLine != other.m_sCommandLine) return false;
     if (m_sRdpHostName != other.m_sRdpHostName) return false;
@@ -448,7 +462,7 @@ MxXmlConfig::operator ==(const MxXmlConfig &other)
     if (m_sRdpApplication != other.m_sRdpApplication) return false;
     if (m_sVncHostName != other.m_sVncHostName) return false;
     if (m_sVncPassword != other.m_sVncPassword) return false;
-    if (m_sFontServerHost != other.m_sFontServerHost) return false;
+    if (m_sCupsPath != other.m_sCupsPath) return false;
     if (cmpUsedShareGroups(m_aUsedShareGroups, other.m_aUsedShareGroups)) return false;
     if (cmpShareGroups(m_aShareGroups, other.m_aShareGroups)) return false;
     return true;
@@ -467,7 +481,7 @@ MxXmlConfig::operator ==(const MxXmlConfig &other)
     , m_bEnableSmbSharing(false)
     , m_bEnableMultimedia(false)
     , m_bRemoveOldSessionFiles(true)
-    , m_bUseFontServer(false)
+    , m_bUseCups(false)
     , m_bRunConsole(false)
     , m_bRunXclients(false)
     , m_bVirtualDesktop(false)
@@ -476,16 +490,22 @@ MxXmlConfig::operator ==(const MxXmlConfig &other)
     , m_bRdpRunApplication(false)
     , m_bVncRememberPassword(false)
     , m_bVncUseMxAuth(false)
-    , m_bUsePNG(false)
-    , m_bUsePlainX(false)
-    , m_bUseJpeg(true)
+    , m_bImageEncodingPNG(false)
+    , m_bImageEncodingPlainX(false)
+    , m_bImageEncodingJpeg(true)
     , m_bUseJpegQuality(false)
     , m_bDisableRender(false)
     , m_bUseTightJpeg(false)
+    , m_bDisableBackingstore(false)
+    , m_bDisableXagent(false)
+    , m_bDisableJpeg(false)
+    , m_bDisableImageCompression(false)
+    , m_bDisableComposite(false)
+    , m_bDisableStreaming(false)
     , m_iDisplayHeight(480)
     , m_iDisplayWidth(640)
     , m_iServerPort(22)
-    , m_iFontServerPort(7100)
+    , m_iCupsPort(631)
     , m_iRdpAuthType(1)
     , m_iVncDisplayNumber(0)
     , m_iRdpImageCompression(1)
@@ -501,7 +521,6 @@ MxXmlConfig::operator ==(const MxXmlConfig &other)
     , m_sName(wxT(""))
     , m_sUsername(wxT(""))
     , m_sPassword(wxT(""))
-    , m_sBackingstore(wxT(""))
     , m_sServerHost(wxT(""))
     , m_sCommandLine(wxT(""))
     , m_sRdpHostName(wxT(""))
@@ -510,7 +529,7 @@ MxXmlConfig::operator ==(const MxXmlConfig &other)
     , m_sRdpApplication(wxT(""))
     , m_sVncHostName(wxT(""))
     , m_sVncPassword(wxT(""))
-    , m_sFontServerHost(wxT(""))
+    , m_sCupsPath(wxT(CUPS_DEFAULT_PATH))
     , m_sFileName(wxT(""))
     , m_pMd5Password(NULL)
     , m_pClrPassword(NULL)
@@ -540,19 +559,21 @@ MxXmlConfig::operator ==(const MxXmlConfig &other)
         cfgnode = cfgnode->GetChildren();
         while (cfgnode) {
             if (cfgnode->GetName() == wxT("group")) {
+
+                // Tab "General"
                 if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("General")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
                         tmp = getString(opt, wxT("Session"));
-                        if (tmp == wxT("Unix")) {
+                        if (tmp.CmpNoCase(wxT("unix")) == 0) {
                             m_eSessionType = STYPE_UNIX;
                             m_bValid = true;
                         }
-                        if (tmp == wxT("Windows")) {
+                        if (tmp.CmpNoCase(wxT("windows")) == 0) {
                             m_eSessionType = STYPE_WINDOWS;
                             m_bValid = true;
                         }
-                        if (tmp == wxT("VNC")) {
+                        if (tmp.CmpNoCase(wxT("vnc")) == 0) {
                             m_eSessionType = STYPE_VNC;
                             m_bValid = true;
                         }
@@ -570,19 +591,19 @@ MxXmlConfig::operator ==(const MxXmlConfig &other)
                             m_eConnectionSpeed = SPEED_LAN;
 
                         tmp = getString(opt, wxT("Desktop"));
-                        if (tmp == wxT("RDP"))
+                        if (tmp.CmpNoCase(wxT("RDP")) == 0)
                             m_eDesktopType = DTYPE_RDP;
-                        if (tmp == wxT("RFB"))
+                        if (tmp.CmpNoCase(wxT("RFB")) == 0)
                             m_eDesktopType = DTYPE_RFB;
-                        if (tmp == wxT("KDE"))
+                        if (tmp.CmpNoCase(wxT("KDE")) == 0)
                             m_eDesktopType = DTYPE_KDE;
-                        if (tmp == wxT("Gnome"))
+                        if (tmp.CmpNoCase(wxT("Gnome")) == 0)
                             m_eDesktopType = DTYPE_GNOME;
-                        if (tmp == wxT("CDE"))
+                        if (tmp.CmpNoCase(wxT("CDE")) == 0)
                             m_eDesktopType = DTYPE_CDE;
-                        if (tmp == wxT("XFCE"))
+                        if (tmp.CmpNoCase(wxT("XFCE")) == 0)
                             m_eDesktopType = DTYPE_XFCE;
-                        if (tmp == wxT("Console"))
+                        if (tmp.CmpNoCase(wxT("Console")) == 0)
                             m_eDesktopType = DTYPE_CUSTOM;
 
                         tmp = getString(opt, wxT("Resolution"));
@@ -599,12 +620,8 @@ MxXmlConfig::operator ==(const MxXmlConfig &other)
                         if (tmp == wxT("fullscreen"))
                             m_eDisplayType = DPTYPE_FULLSCREEN;
 
-                        itmp = getLong(opt, wxT("Use default image encoding"), -1);
-                        if (itmp != -1)
-                            m_bUseCustomImageEncoding = (itmp == 0) ? false : true;
-
-                        m_sBackingstore = getString(opt, wxT("Backingstore"), m_sBackingstore);
-
+                        // this is 0/1 in NX but getBool can handle that
+                        m_bUseCustomImageEncoding = getBool(opt, wxT("Use default image encoding"), m_bUseCustomImageEncoding);
                         // X11 props
                         m_sCommandLine = getString(opt, wxT("Command line"), m_sCommandLine);
                         m_bRunConsole = getBool(opt, wxT("Only console"), m_bRunConsole);
@@ -624,82 +641,7 @@ MxXmlConfig::operator ==(const MxXmlConfig &other)
                     cfgnode = cfgnode->GetNext();
                     continue;
                 }
-                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Login")) {
-                    wxXmlNode *opt = cfgnode->GetChildren();
-                    while (opt) {
-                        m_sUsername = getString(opt, wxT("User"), m_sUsername);
-                        m_pMd5Password = getStringNew(opt, wxT("Auth"), m_pMd5Password);
-                        m_pClrPassword = getStringNew(opt, wxT("Password"), m_pClrPassword);
-                        // TODO: decode
-                        opt = opt->GetNext();
-                    }
-                    cfgnode = cfgnode->GetNext();
-                    continue;
-                }
-                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Environment")) {
-                    wxXmlNode *opt = cfgnode->GetChildren();
-                    while (opt) {
-                        m_bUseFontServer = getBool(opt, wxT("Use font server"), m_bUseFontServer);
-                        m_iFontServerPort = getLong(opt, wxT("Font server port"), m_iFontServerPort);
-                        m_sFontServerHost = getString(opt, wxT("Font server host"), m_sFontServerHost);
-                        opt = opt->GetNext();
-                    }
-                    cfgnode = cfgnode->GetNext();
-                    continue;
-                }
-                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Images")) {
-                    wxXmlNode *opt = cfgnode->GetChildren();
-                    while (opt) {
-                        m_iRdpImageCompression = getLong(opt, wxT("Windows images compression"), m_iRdpImageCompression);
-                        m_iVncImageEncoding = getLong(opt, wxT("Image Encoding Type"), m_iVncImageEncoding);
-                        m_bUseTightJpeg = getBool(opt, wxT("Image JPEG Encoding"), m_bUseTightJpeg);
-                        m_iJpegQuality = getLong(opt, wxT("JPEG Quality"), m_iJpegQuality);
-                        m_bUsePNG = getBool(opt, wxT("Use PNG Compression"), m_bUsePNG);
-                        itmp = getLong(opt, wxT("Image Compression Type"), -1);
-                        switch (itmp) {
-                            case 0:
-                                m_bUseJpeg = true;
-                                m_bUseJpegQuality = false;
-                                m_bUsePlainX = false;
-                                break;
-                            case 1:
-                                m_bUseJpeg = true;
-                                m_bUseJpegQuality = true;
-                                m_bUsePlainX = false;
-                                break;
-                            case 2:
-                                m_bUseJpeg = false;
-                                m_bUseJpegQuality = false;
-                        }
-                        opt = opt->GetNext();
-                        if (!opt)
-                            m_bUsePlainX = !m_bUsePNG;
-                    }
-                    cfgnode = cfgnode->GetNext();
-                    continue;
-                }
-                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Services")) {
-                    wxXmlNode *opt = cfgnode->GetChildren();
-                    while (opt) {
-                        m_bEnableMultimedia = getBool(opt, wxT("Audio"), m_bEnableMultimedia);
-                        m_bEnableSmbSharing = getBool(opt, wxT("Shares"), m_bEnableSmbSharing);
-                        opt = opt->GetNext();
-                    }
-                    cfgnode = cfgnode->GetNext();
-                    continue;
-                }
-                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("share chosen")) {
-                    wxXmlNode *opt = cfgnode->GetChildren();
-                    while (opt) {
-                        if (opt->GetPropVal(wxT("key"), wxT("")) == wxT("Share number"))
-                            m_iUsedShareGroups = getLong(opt, wxT("Share number"), m_iUsedShareGroups);
-                        else
-                            m_aUsedShareGroups.Add(opt->GetPropVal(wxT("value"), wxT("")));
-                        opt = opt->GetNext();
-                    }
-                    cfgnode = cfgnode->GetNext();
-                    continue;
-                }
+
                 if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Advanced")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
@@ -765,6 +707,87 @@ MxXmlConfig::operator ==(const MxXmlConfig &other)
                     cfgnode = cfgnode->GetNext();
                     continue;
                 }
+
+                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Login")) {
+                    wxXmlNode *opt = cfgnode->GetChildren();
+                    while (opt) {
+                        m_sUsername = getString(opt, wxT("User"), m_sUsername);
+                        m_pMd5Password = getStringNew(opt, wxT("Auth"), m_pMd5Password);
+                        m_pClrPassword = getStringNew(opt, wxT("Password"), m_pClrPassword);
+                        // TODO: decode
+                        opt = opt->GetNext();
+                    }
+                    cfgnode = cfgnode->GetNext();
+                    continue;
+                }
+
+                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Environment")) {
+                    wxXmlNode *opt = cfgnode->GetChildren();
+                    while (opt) {
+                        m_sCupsPath = getString(opt, wxT("CUPSD path"), m_sCupsPath);
+                        opt = opt->GetNext();
+                    }
+                    cfgnode = cfgnode->GetNext();
+                    continue;
+                }
+
+                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Images")) {
+                    wxXmlNode *opt = cfgnode->GetChildren();
+                    while (opt) {
+                        m_iRdpImageCompression = getLong(opt, wxT("Windows images compression"), m_iRdpImageCompression);
+                        m_iVncImageEncoding = getLong(opt, wxT("Image Encoding Type"), m_iVncImageEncoding);
+                        m_bUseTightJpeg = getBool(opt, wxT("Image JPEG Encoding"), m_bUseTightJpeg);
+                        m_iJpegQuality = getLong(opt, wxT("JPEG Quality"), m_iJpegQuality);
+                        m_bImageEncodingPNG = getBool(opt, wxT("Use PNG Compression"), m_bImageEncodingPNG);
+                        itmp = getLong(opt, wxT("Image Compression Type"), -1);
+                        switch (itmp) {
+                            case 0:
+                                m_bImageEncodingJpeg = true;
+                                m_bUseJpegQuality = false;
+                                m_bImageEncodingPlainX = false;
+                                break;
+                            case 1:
+                                m_bImageEncodingJpeg = true;
+                                m_bUseJpegQuality = true;
+                                m_bImageEncodingPlainX = false;
+                                break;
+                            case 2:
+                                m_bImageEncodingJpeg = false;
+                                m_bUseJpegQuality = false;
+                        }
+                        opt = opt->GetNext();
+                        if (!opt)
+                            m_bImageEncodingPlainX = !m_bImageEncodingPNG;
+                    }
+                    cfgnode = cfgnode->GetNext();
+                    continue;
+                }
+
+                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Services")) {
+                    wxXmlNode *opt = cfgnode->GetChildren();
+                    while (opt) {
+                        m_bEnableMultimedia = getBool(opt, wxT("Audio"), m_bEnableMultimedia);
+                        m_bEnableSmbSharing = getBool(opt, wxT("Shares"), m_bEnableSmbSharing);
+                        m_bUseCups = getBool(opt, wxT("IPPPrinting"), m_bUseCups);
+                        m_iCupsPort = getLong(opt, wxT("IPPPort"), m_iCupsPort);
+                        opt = opt->GetNext();
+                    }
+                    cfgnode = cfgnode->GetNext();
+                    continue;
+                }
+                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("share chosen")) {
+                    wxXmlNode *opt = cfgnode->GetChildren();
+                    while (opt) {
+                        if (opt->GetPropVal(wxT("key"), wxT("")) == wxT("Share number"))
+                            m_iUsedShareGroups = getLong(opt, wxT("Share number"), m_iUsedShareGroups);
+                        else
+                            m_aUsedShareGroups.Add(opt->GetPropVal(wxT("value"), wxT("")));
+                        opt = opt->GetNext();
+                    }
+                    cfgnode = cfgnode->GetNext();
+                    continue;
+                }
+
                 if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Windows Session")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
@@ -872,7 +895,7 @@ MxXmlConfig::~MxXmlConfig()
 }
 
     void 
-MxXmlConfig::bAddOption(wxXmlNode *group, const wxString &name, bool val)
+MxXmlConfig::bAddOption(wxXmlNode *group, const wxString &name, const bool val)
 {
     wxXmlNode *n = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("option"));
     n->AddProperty(new wxXmlProperty(wxT("key"), name, NULL));
@@ -881,7 +904,16 @@ MxXmlConfig::bAddOption(wxXmlNode *group, const wxString &name, bool val)
 }
 
     void
-MxXmlConfig::iAddOption(wxXmlNode *group, const wxString &name, long val)
+MxXmlConfig::iAddOptionBool(wxXmlNode *group, const wxString &name, const bool val)
+{
+    wxXmlNode *n = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("option"));
+    n->AddProperty(new wxXmlProperty(wxT("key"), name, NULL));
+    n->AddProperty(new wxXmlProperty(wxT("value"), wxString::Format(wxT("%d"), val ? 1 : 0), NULL));
+    group->AddChild(n);
+}
+
+    void
+MxXmlConfig::iAddOption(wxXmlNode *group, const wxString &name, const long val)
 {
     wxXmlNode *n = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("option"));
     n->AddProperty(new wxXmlProperty(wxT("key"), name, NULL));
@@ -890,7 +922,7 @@ MxXmlConfig::iAddOption(wxXmlNode *group, const wxString &name, long val)
 }
 
     void
-MxXmlConfig::sAddOption(wxXmlNode *group, const wxString &name, wxString &val)
+MxXmlConfig::sAddOption(wxXmlNode *group, const wxString &name, const wxString &val)
 {
     wxXmlNode *n = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("option"));
     n->AddProperty(new wxXmlProperty(wxT("key"), name, NULL));
@@ -921,19 +953,41 @@ MxXmlConfig::SaveToFile()
     r->AddProperty(new wxXmlProperty(wxT("version"), wxT("1.3"), NULL));
     cfg.SetRoot(r);
 
-    g = AddGroup(r, wxT("General"));
-    switch (m_eSessionType) {
-        case STYPE_UNIX:
-            optval = wxT("Unix");
+    g = AddGroup(r, wxT("General")); // SessionProperties, Tab "General"
+    bAddOption(g, wxT("Automatic reconnect"), true); // Not (yet?) configurable
+    sAddOption(g, wxT("Command line"), m_sCommandLine);
+    optval = wxT("application");
+    if (m_bRunConsole)
+        optval = wxT("console");
+    if (m_bRunXclients)
+        optval = wxT("default");
+    sAddOption(g, wxT("Custom Unix Desktop"), optval);
+    switch (m_eDesktopType) {
+        case DTYPE_RDP:
+            optval = wxT("rdp");
             break;
-        case STYPE_WINDOWS:
-            optval = wxT("Windows");
+        case DTYPE_RFB:
+            optval = wxT("rfb");
             break;
-        case STYPE_VNC:
-            optval = wxT("VNC");
+        case DTYPE_KDE:
+            optval = wxT("kde");
+            break;
+        case DTYPE_GNOME:
+            optval = wxT("gnome");
+            break;
+        case DTYPE_CDE:
+            optval = wxT("cde");
+            break;
+        case DTYPE_XFCE:
+            optval = wxT("xfce");
+            break;
+        case DTYPE_CUSTOM:
+            optval = wxT("console");
             break;
     }
-    sAddOption(g, wxT("Session"), optval);
+    sAddOption(g, wxT("Desktop"), optval);
+    bAddOption(g, wxT("Disable SHM"), false); // Not in original GUI but in config ?!
+    bAddOption(g, wxT("Disable emulate shared pixmaps"), false); // Not in original GUI but in config ?!
     switch (m_eConnectionSpeed) {
         case SPEED_MODEM:
             optval = wxT("modem");
@@ -952,30 +1006,7 @@ MxXmlConfig::SaveToFile()
             break;
     }
     sAddOption(g, wxT("Link speed"), optval);
-    switch (m_eDesktopType) {
-        case DTYPE_RDP:
-            optval = wxT("RDP");
-            break;
-        case DTYPE_RFB:
-            optval = wxT("RFB");
-            break;
-        case DTYPE_KDE:
-            optval = wxT("KDE");
-            break;
-        case DTYPE_GNOME:
-            optval = wxT("Gnome");
-            break;
-        case DTYPE_CDE:
-            optval = wxT("CDE");
-            break;
-        case DTYPE_XFCE:
-            optval = wxT("XFCE");
-            break;
-        case DTYPE_CUSTOM:
-            optval = wxT("Console");
-            break;
-    }
-    sAddOption(g, wxT("Desktop"), optval);
+    bAddOption(g, wxT("Remember password"), m_bRememberPassword);
     switch (m_eDisplayType) {
         case DPTYPE_CUSTOM:
             optval = wxString::Format(wxT("%dx%d"),
@@ -998,20 +1029,58 @@ MxXmlConfig::SaveToFile()
             break;
     }
     sAddOption(g, wxT("Resolution"), optval);
-    iAddOption(g, wxT("Use default image encoding"), m_bUseCustomImageEncoding ? 1 : 0);
-    sAddOption(g, wxT("Backingstore"), m_sBackingstore);
-    sAddOption(g, wxT("Command line"), m_sCommandLine);
-    bAddOption(g, wxT("Only console"), m_bRunConsole);
-    bAddOption(g, wxT("Run default script"), m_bRunXclients);
-    bAddOption(g, wxT("Use taint"), !m_bDisableTaint);
-    bAddOption(g, wxT("Virtual desktop"), m_bVirtualDesktop);
-    bAddOption(g, wxT("Remember password"), m_bRememberPassword);
-    bAddOption(g, wxT("Use render"), !m_bDisableRender);
-    bAddOption(g, wxT("Use smartcard"), m_bUseSmartCard);
     iAddOption(g, wxT("Resolution height"), m_iDisplayHeight);
     iAddOption(g, wxT("Resolution width"), m_iDisplayWidth);
     sAddOption(g, wxT("Server host"), m_sServerHost);
     iAddOption(g, wxT("Server port"), m_iServerPort);
+    switch (m_eSessionType) {
+        case STYPE_UNIX:
+            optval = wxT("unix");
+            break;
+        case STYPE_WINDOWS:
+            optval = wxT("windows");
+            break;
+        case STYPE_VNC:
+            optval = wxT("vnc");
+            break;
+    }
+    sAddOption(g, wxT("Session"), optval);
+    iAddOption(g, wxT("Use default image encoding"), m_bUseCustomImageEncoding);
+    bAddOption(g, wxT("Use render"), !m_bDisableRender);
+    bAddOption(g, wxT("Use taint"), !m_bDisableTaint);
+    bAddOption(g, wxT("Virtual desktop"), m_bVirtualDesktop);
+    bAddOption(g, wxT("XAgent encoding"), !m_bDisableXagent);
+    bAddOption(g, wxT("displaySaveOnExit"), true); // Not in original GUI but in config ?!
+    iAddOption(g, wxT("xdm broadcast port"), 177); // Not in original GUI but in config ?!
+    sAddOption(g, wxT("xdm list host"), wxT("localhost")); // Not in original GUI but in config ?!
+    iAddOption(g, wxT("xdm list port"), 177); // Not in original GUI but in config ?!
+    sAddOption(g, wxT("xdm mode"), wxT("server_decide")); // Not in original GUI but in config ?!
+    sAddOption(g, wxT("xdm query host"), wxT("localhost")); // Not in original GUI but in config ?!
+    iAddOption(g, wxT("xdm query port"), 177); // Not in original GUI but in config ?!
+    bAddOption(g, wxT("Use smartcard"), m_bUseSmartCard); // Not in original
+
+    // == UnixImageSettingsDialog, RdpImageSettingsDialog, VncImageSettingsDialog
+    g = AddGroup(r, wxT("Images"));
+    iAddOption(g, wxT("Disable JPEG Compression"), m_bDisableJpeg ? 1 : 0);
+    bAddOption(g, wxT("Disable all image optimisations"), m_bDisableImageCompression);
+    bAddOption(g, wxT("Disable backingstore"), m_bDisableBackingstore);
+    bAddOption(g, wxT("Disable coposite"), m_bDisableComposite);
+    bAddOption(g, wxT("Disable image streaming"), m_bDisableStreaming);
+    if ((m_bImageEncodingPlainX || m_bImageEncodingPNG) && (!m_bImageEncodingJpeg))
+        optval = wxT("2");
+    else if (m_bImageEncodingJpeg && m_bUseJpegQuality)
+        optval = wxT("1");
+    else
+        optval = wxT("0");
+    sAddOption(g, wxT("Image Compression Type"), optval);
+    iAddOption(g, wxT("Image Encoding Type"), m_iVncImageEncoding);
+    bAddOption(g, wxT("Image JPEG Encoding"), m_bUseTightJpeg);
+    iAddOption(g, wxT("JPEG Quality"), m_iJpegQuality);
+    bAddOption(g, wxT("RDP optimization for low-bandwidth link"), false); // ??
+    sAddOption(g, wxT("Reduce colors to"), wxT("")); // ??
+    bAddOption(g, wxT("Use PNG Compression"), m_bImageEncodingPNG);
+    iAddOption(g, wxT("VNC images compression"), 0); // Not in original GUI but in config ?!
+    iAddOption(g, wxT("Windows Image Compression"), m_iRdpImageCompression);
 
     g = AddGroup(r, wxT("Login"));
     sAddOption(g, wxT("User"), m_sUsername);
@@ -1033,27 +1102,13 @@ MxXmlConfig::SaveToFile()
     }
 
     g = AddGroup(r, wxT("Environment"));
-    bAddOption(g, wxT("Use font server"), m_bUseFontServer);
-    sAddOption(g, wxT("Font server host"), m_sFontServerHost);
-    iAddOption(g, wxT("Font server port"), m_iFontServerPort);
-
-    g = AddGroup(r, wxT("Images"));
-    iAddOption(g, wxT("Windows images compression"), m_iRdpImageCompression);
-    iAddOption(g, wxT("Image Encoding Type"), m_iVncImageEncoding);
-    iAddOption(g, wxT("JPEG Quality"), m_iJpegQuality);
-    bAddOption(g, wxT("Use PNG Compression"), m_bUsePNG);
-    bAddOption(g, wxT("Image JPEG Encoding"), m_bUseTightJpeg);
-    if ((m_bUsePlainX || m_bUsePNG) && (!m_bUseJpeg))
-        optval = wxT("2");
-    else if (m_bUseJpeg && m_bUseJpegQuality)
-        optval = wxT("1");
-    else
-        optval = wxT("0");
-    sAddOption(g, wxT("Image Compression Type"), optval);
+    sAddOption(g, wxT("CUPSD path"), m_sCupsPath);
 
     g = AddGroup(r, wxT("Services"));
     bAddOption(g, wxT("Audio"), m_bEnableMultimedia);
     bAddOption(g, wxT("Shares"), m_bEnableSmbSharing);
+    bAddOption(g, wxT("IPPPrinting"), m_bUseCups);
+    iAddOption(g, wxT("IPPPort"), m_iCupsPort);
 
     if (m_aUsedShareGroups.GetCount()) {
         g = AddGroup(r, wxT("share chosen"));
@@ -1296,7 +1351,7 @@ int MxXmlConfig::mapLocaleToKeyboard()
 {
     int ret = 0;
 
-    switch (wxGetApp().getLocale()->GetLanguage()) {
+    switch (wxGetApp().GetLocale()->GetLanguage()) {
         case wxLANGUAGE_AFRIKAANS:
             ret = 0;
             break;

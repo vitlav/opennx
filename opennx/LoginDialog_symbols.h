@@ -3,7 +3,7 @@
 //
 // Purpose:     Symbols file
 // Author:      Fritz Elfert
-// Created:     Wed 06 Dec 2006 01:19:50 CET
+// Created:     Thu 07 Dec 2006 05:20:37 CET
 // Copyright:   Copyright 2004 Millenux GmbH, 2006 InnoviData GmbH
 // Licence:     LGPL
 /////////////////////////////////////////////////////////////////////////////

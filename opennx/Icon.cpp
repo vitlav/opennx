@@ -90,7 +90,7 @@ wxBitmap CreateBitmapFromFile(const wxString &filename, int width, int height)
             if (t != -1) {
                 wxBitmap rbm;
                 wxFileSystem fs;
-                wxFSFile *f = fs.OpenFile(::wxGetApp().getResourcePrefix() + filename);
+                wxFSFile *f = fs.OpenFile(::wxGetApp().GetResourcePrefix() + filename);
                 if (f) {
                     wxInputStream *s = f->GetStream();
                     if (s && s->IsOk()) {

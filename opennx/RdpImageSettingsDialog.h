@@ -80,11 +80,17 @@ private:
 
 ////@begin RdpImageSettingsDialog event handler declarations
 
-    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_ENCODING
-    void OnRadiobuttonRdpEncodingSelected( wxCommandEvent& event );
+    /// wxEVT_SCROLL_THUMBRELEASE event handler for ID_SLIDER_RDP_COLORS
+    void OnSliderRdpColorsScrollThumbRelease( wxScrollEvent& event );
 
-    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_PLAINX
-    void OnRadiobuttonRdpPlainxSelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_IMGRDP
+    void OnRadiobuttonRdpImgrdpSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_IMGRGB
+    void OnRadiobuttonRdpImgrgbSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_IMGPLAINX
+    void OnRadiobuttonRdpImgplainxSelected( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
     void OnOkClick( wxCommandEvent& event );
@@ -92,7 +98,6 @@ private:
 ////@end RdpImageSettingsDialog event handler declarations
 
 ////@begin RdpImageSettingsDialog member function declarations
-
 
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
@@ -110,9 +115,13 @@ private:
     wxRadioButton* m_pCtrlRdpEncoding;
     wxCheckBox* m_pCtrlRdpCompressed;
     wxRadioButton* m_pCtrlPlainX;
+private:
     bool m_bRdpPlainX;
     bool m_bRdpEncoding;
     bool m_bRdpCompressed;
+    bool m_bRdpRgb;
+    bool m_bRdbCache;
+    int m_iRdpColors;
 ////@end RdpImageSettingsDialog member variables
 
     MxXmlConfig *m_pCfg;

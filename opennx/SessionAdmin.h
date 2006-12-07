@@ -152,7 +152,6 @@ public:
     wxString GetMxDirectory() const { return m_MxDirectory ; }
     void SetMxDirectory(wxString value) { m_MxDirectory = value ; }
 
-
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
 

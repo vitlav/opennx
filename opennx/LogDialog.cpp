@@ -77,8 +77,10 @@ bool LogDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStrin
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));
-    GetSizer()->Fit(this);
-    GetSizer()->SetSizeHints(this);
+    if (GetSizer())
+    {
+        GetSizer()->SetSizeHints(this);
+    }
     Centre();
 ////@end LogDialog creation
     if (!m_sFileName.IsEmpty())
@@ -93,15 +95,14 @@ bool LogDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStrin
 void LogDialog::CreateControls()
 {    
 ////@begin LogDialog content construction
-
-    wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_LOG"));
+    if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_LOG")))
+        wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
     m_TextCtrl = XRCCTRL(*this, "ID_TEXTCTRL", wxTextCtrl);
 ////@end LogDialog content construction
 
     // Create custom windows not generated automatically here.
 
 ////@begin LogDialog content initialisation
-
 ////@end LogDialog content initialisation
 }
 
@@ -139,12 +140,11 @@ bool LogDialog::ShowToolTips()
  * Get bitmap resources
  */
 
-wxBitmap LogDialog::GetBitmapResource( const wxString& WXUNUSED(name) )
+wxBitmap LogDialog::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
-////@begin LogDialog bitmap retrieval
+    wxUnusedVar(name);
     return wxNullBitmap;
-////@end LogDialog bitmap retrieval
 }
 
 /*!

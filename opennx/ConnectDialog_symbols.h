@@ -1,12 +1,11 @@
 /////////////////////////////////////////////////////////////////////////////
-// Name:        ConnectDialog_symbols.h
+// $Id$
+//
 // Purpose:     Symbols file
 // Author:      Fritz Elfert
-// Modified by: 
-// Created:     10/12/04 11:21:44
-// RCS-ID:      
-// Copyright:   Copyright 2004 Millenux GmbH
-// Licence:     
+// Created:     Thu 07 Dec 2006 05:20:39 CET
+// Copyright:   Copyright 2004 Millenux GmbH, 2006 InnoviData GmbH
+// Licence:     LGPL
 /////////////////////////////////////////////////////////////////////////////
 
 #define ID_DIALOG_CONNECT_SYMBOL_0 _("Connecting")

@@ -130,7 +130,7 @@ bool SessionAdmin::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxSt
 ////@begin SessionAdmin creation
     SetParent(parent);
     CreateControls();
-    SetIcon(this->GetIconResource(wxT("res/mxclient-admin.png")));
+    SetIcon(GetIconResource(wxT("res/mxclient-admin.png")));
     Centre();
 ////@end SessionAdmin creation
 
@@ -145,16 +145,14 @@ bool SessionAdmin::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxSt
 void SessionAdmin::CreateControls()
 {    
 ////@begin SessionAdmin content construction
-
-    wxXmlResource::Get()->LoadFrame(this, GetParent(), _T("ID_FRAME_ADMIN"));
-    if (FindWindow(XRCID("ID_LISTCTRL")))
-        m_SessionListCtrl = wxDynamicCast(FindWindow(XRCID("ID_LISTCTRL")), wxListCtrl);
+    if (!wxXmlResource::Get()->LoadFrame(this, GetParent(), wxT("ID_FRAME_ADMIN")))
+        wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
+    m_SessionListCtrl = XRCCTRL(*this, "ID_LISTCTRL", wxListCtrl);
 ////@end SessionAdmin content construction
 
     // Create custom windows not generated automatically here.
 
 ////@begin SessionAdmin content initialisation
-
 ////@end SessionAdmin content initialisation
 
     SessionToolsEnable(false);

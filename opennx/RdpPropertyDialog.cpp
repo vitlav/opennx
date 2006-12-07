@@ -197,7 +197,7 @@ bool RdpPropertyDialog::ShowToolTips()
  * Get bitmap resources
  */
 
-wxBitmap RdpPropertyDialog::GetBitmapResource( const wxString& WXUNUSED(name) )
+wxBitmap RdpPropertyDialog::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
 ////@begin RdpPropertyDialog bitmap retrieval
