@@ -1,11 +1,23 @@
-/////////////////////////////////////////////////////////////////////////////
 // $Id$
 //
-// Author:      Fritz Elfert
-// Created:     06/13/04 22:54:56
-// Copyright:   Copyright 2004 Millenux GmbH
-// Licence:     LGPL
-/////////////////////////////////////////////////////////////////////////////
+// Copyright (C) 2006 The OpenNX Team
+// Author: Fritz Elfert
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU Library General Public License as
+// published by the Free Software Foundation; either version 2 of the
+// License, or (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU Library General Public
+// License along with this program; if not, write to the
+// Free Software Foundation, Inc.,
+// 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+//
 
 #if defined(__GNUG__) && !defined(__APPLE__)
 #pragma implementation "SessionList.h"
@@ -352,14 +364,18 @@ bool MySession::Create(const wxString cfgFileName, const wxString password)
                         {
                             wxString fname;
                             wxConfigBase::Get()->Read(wxT("Config/UserMxDir"), &fname);
-                            wxString o = wxString::Format(wxT("cookie=%s,root=%s,session=%s,id=%s,"),
-                                    sProxyCookie.c_str(), fname.c_str(), cfg.sGetName().c_str(),
-                                    sSessionID.c_str());
+                            wxString o = wxString::Format(wxT("nx,cookie=%s,root=%s,product=%s,"),
+                                    sProxyCookie.c_str(), fname.c_str(), sSubscription.c_str());
+                            o += wxString::Format, sSessionID.c_str());
+                                    id=%s,session=session"),
+                                    sProxyCookie.c_str(), fname.c_str(), sSubscription.c_str(), sSessionID.c_str());
+#if 0
                             if (bSslTunneling)
                                 o += wxString::Format(wxT("listen=20000:%s"), sSessionDisplay.c_str());
                             else
                                 o += wxString::Format(wxT("connect=%s:%s"),
                                         cfg.sGetServerHost().c_str(), sSessionDisplay.c_str());
+#endif
                             fname += wxFileName::GetPathSeparator();
                             fname += wxString::Format(wxT("S-%s"), sSessionID.c_str());
                             {

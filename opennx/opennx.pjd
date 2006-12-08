@@ -23,16 +23,46 @@
     <string name="target_wx_version">"2.6.3"</string>
     <string name="cpp_header_comment">"// $Id$
 //
-// Author:      %AUTHOR%
-// Copyright:   %COPYRIGHT%
-// Licence:     LGPL
+// %COPYRIGHT%
+// Author: %AUTHOR%
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU Library General Public License as
+// published by the Free Software Foundation; either version 2 of the
+// License, or (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU Library General Public
+// License along with this program; if not, write to the
+// Free Software Foundation, Inc.,
+// 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+//
 
 "</string>
     <string name="cpp_implementation_comment">"// $Id$
 //
-// Author:      %AUTHOR%
-// Copyright:   %COPYRIGHT%
-// Licence:     LGPL
+// %COPYRIGHT%
+// Author: %AUTHOR%
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU Library General Public License as
+// published by the Free Software Foundation; either version 2 of the
+// License, or (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU Library General Public
+// License along with this program; if not, write to the
+// Free Software Foundation, Inc.,
+// 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+//
 
 "</string>
     <string name="cpp_function_comment">"/*!
@@ -42,9 +72,24 @@
 "</string>
     <string name="cpp_symbols_file_comment">"// $Id$
 //
-// Author:      %AUTHOR%
-// Copyright:   %COPYRIGHT%
-// Licence:     LGPL
+// %COPYRIGHT%
+// Author: %AUTHOR%
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU Library General Public License as
+// published by the Free Software Foundation; either version 2 of the
+// License, or (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU Library General Public
+// License along with this program; if not, write to the
+// Free Software Foundation, Inc.,
+// 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+//
 
 "</string>
     <string name="cpp_header_preamble">"#if defined(__GNUG__) &amp;&amp; !defined(NO_GCC_PRAGMA)
