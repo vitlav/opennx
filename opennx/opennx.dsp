@@ -404,7 +404,7 @@ SOURCE=.\MyWizard.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MxXmlConfig.cpp
+SOURCE=.\MyXmlConfig.cpp
 # End Source File
 # Begin Source File
 
@@ -532,7 +532,7 @@ SOURCE=.\MyWizard_symbols.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\MxXmlConfig.h
+SOURCE=.\MyXmlConfig.h
 # End Source File
 # Begin Source File
 
