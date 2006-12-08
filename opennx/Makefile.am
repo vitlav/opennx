@@ -1,4 +1,4 @@
-AUTOMAKE_OPTIONS = foreign dist-bzip2 no-dist-gzip no-installinfo no-installman
+AUTOMAKE_OPTIONS = foreign no-installinfo no-installman
 
 SUBDIRS = m4 po
 
@@ -52,6 +52,8 @@ memres.h: tmpres.zip bin2hdr
 opennxApp.cpp: memres.h
 
 CLEANFILES = tmpres.zip *~
+
+MAINTAINERCLEANFILES = Makefile.in configure
 
 EXTRA_DIST = conf/config.rpath conf/mkinstalldirs  conf/config.rpath conf/mkinstalldirs opennx.pjd opennx.dsw \
 	opennx.dsp opennx.rc res/opennx.rc res/opennx.xrc \

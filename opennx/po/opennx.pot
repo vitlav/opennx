@@ -64,11 +64,11 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: LoginDialog_symbols.h:15 MxWizard_symbols.h:12
+#: LoginDialog_symbols.h:15 MyWizard_symbols.h:12
 msgid "Session"
 msgstr ""
 
-#: LoginDialog_symbols.h:16 MxWizard_symbols.h:37
+#: LoginDialog_symbols.h:16 MyWizard_symbols.h:37
 #: SessionProperties_symbols.h:17
 msgid "Use SmartCard"
 msgstr ""
@@ -93,183 +93,183 @@ msgstr ""
 msgid "Guide the user through the steps to configure a session."
 msgstr ""
 
-#: MxWizard.cpp:297
+#: MyWizard.cpp:297
 msgid ""
 "Welcome to the MX Client Connection Wizard which will guide you through the "
 "steps needed to setup your login. Please select the 'Next' button to start."
 msgstr ""
 
-#: MxWizard.cpp:418
+#: MyWizard.cpp:418
 msgid "New Session"
 msgstr ""
 
-#: MxWizard.cpp:421
+#: MyWizard.cpp:421
 #, c-format
 msgid "New Session %d"
 msgstr ""
 
-#: MxWizard.cpp:434
+#: MyWizard.cpp:434
 msgid ""
 "Insert the name of the session. Your configuration settings will be saved "
 "with this name."
 msgstr ""
 
-#: MxWizard.cpp:435
+#: MyWizard.cpp:435
 msgid "Insert the name and port of the server you want to connect."
 msgstr ""
 
-#: MxWizard.cpp:436
+#: MyWizard.cpp:436
 msgid "Select the type of your internet connection."
 msgstr ""
 
-#: MxWizard.cpp:614
+#: MyWizard.cpp:614
 msgid ""
 "Using MX Client, you can run RDP, VNC and X desktops, depending on what your "
 "service provider has made available."
 msgstr ""
 
-#: MxWizard.cpp:663 MxWizard_symbols.h:23 SessionProperties.cpp:401
+#: MyWizard.cpp:663 MyWizard_symbols.h:23 SessionProperties.cpp:401
 #: SessionProperties_symbols.h:22
 msgid "KDE"
 msgstr ""
 
-#: MxWizard.cpp:669 SessionProperties.cpp:407
+#: MyWizard.cpp:669 SessionProperties.cpp:407
 msgid "RDP"
 msgstr ""
 
-#: MxWizard.cpp:677 SessionProperties.cpp:415
+#: MyWizard.cpp:677 SessionProperties.cpp:415
 msgid "RFB"
 msgstr ""
 
-#: MxWizard.cpp:834
+#: MyWizard.cpp:834
 msgid ""
 "MX Client supports authentication using a variety of USB SmartCard tokens. "
 "Enable this option if you intend to use such a token."
 msgstr ""
 
-#: MxWizard.cpp:835
+#: MyWizard.cpp:835
 msgid ""
 "Authorization credentials are always encrypted while establishing a "
 "connection. For increased security, you can enable the following option."
 msgstr ""
 
-#: MxWizard.cpp:1122
+#: MyWizard.cpp:1122
 #, c-format
 msgid ""
 "Congratulations. The connection to '%s' will be saved as '%s'. You may "
 "further configure your session by running the Advanced Configuration dialog."
 msgstr ""
 
-#: MxWizard.cpp:1283
+#: MyWizard.cpp:1283
 msgid "Launch MX Session"
 msgstr ""
 
-#: MxWizard_symbols.h:11
+#: MyWizard_symbols.h:11
 msgid "MX Connection Wizard"
 msgstr ""
 
-#: MxWizard_symbols.h:13 SessionProperties_symbols.h:14
+#: MyWizard_symbols.h:13 SessionProperties_symbols.h:14
 #: VncPropertyDialog_symbols.h:15
 msgid "Host"
 msgstr ""
 
-#: MxWizard_symbols.h:14 SessionAdmin.cpp:162 SessionProperties_symbols.h:15
+#: MyWizard_symbols.h:14 SessionAdmin.cpp:162 SessionProperties_symbols.h:15
 msgid "Port"
 msgstr ""
 
-#: MxWizard_symbols.h:15 SessionProperties_symbols.h:28
+#: MyWizard_symbols.h:15 SessionProperties_symbols.h:28
 msgid "MODEM"
 msgstr ""
 
-#: MxWizard_symbols.h:16 SessionProperties_symbols.h:29
+#: MyWizard_symbols.h:16 SessionProperties_symbols.h:29
 msgid "ISDN"
 msgstr ""
 
-#: MxWizard_symbols.h:17 SessionProperties_symbols.h:30
+#: MyWizard_symbols.h:17 SessionProperties_symbols.h:30
 msgid "ADSL"
 msgstr ""
 
-#: MxWizard_symbols.h:18 SessionProperties_symbols.h:31
+#: MyWizard_symbols.h:18 SessionProperties_symbols.h:31
 msgid "WAN"
 msgstr ""
 
-#: MxWizard_symbols.h:19 SessionProperties_symbols.h:32
+#: MyWizard_symbols.h:19 SessionProperties_symbols.h:32
 msgid "LAN"
 msgstr ""
 
-#: MxWizard_symbols.h:20 SessionProperties_symbols.h:19
+#: MyWizard_symbols.h:20 SessionProperties_symbols.h:19
 msgid "Unix"
 msgstr ""
 
-#: MxWizard_symbols.h:21 SessionProperties_symbols.h:20
+#: MyWizard_symbols.h:21 SessionProperties_symbols.h:20
 msgid "Windows"
 msgstr ""
 
-#: MxWizard_symbols.h:22 SessionProperties_symbols.h:21
+#: MyWizard_symbols.h:22 SessionProperties_symbols.h:21
 msgid "VNC"
 msgstr ""
 
-#: MxWizard_symbols.h:24 SessionProperties_symbols.h:23
+#: MyWizard_symbols.h:24 SessionProperties_symbols.h:23
 msgid "GNOME"
 msgstr ""
 
-#: MxWizard_symbols.h:25 SessionProperties_symbols.h:24
+#: MyWizard_symbols.h:25 SessionProperties_symbols.h:24
 msgid "CDE"
 msgstr ""
 
-#: MxWizard_symbols.h:26 SessionProperties_symbols.h:25
+#: MyWizard_symbols.h:26 SessionProperties_symbols.h:25
 msgid "XFCE"
 msgstr ""
 
-#: MxWizard_symbols.h:27 SessionProperties_symbols.h:26
+#: MyWizard_symbols.h:27 SessionProperties_symbols.h:26
 msgid "Custom"
 msgstr ""
 
-#: MxWizard_symbols.h:28 SessionProperties_symbols.h:27
+#: MyWizard_symbols.h:28 SessionProperties_symbols.h:27
 msgid "Settings..."
 msgstr ""
 
-#: MxWizard_symbols.h:29
+#: MyWizard_symbols.h:29
 msgid "Select the size of your remote desktop."
 msgstr ""
 
-#: MxWizard_symbols.h:30 SessionProperties_symbols.h:34
+#: MyWizard_symbols.h:30 SessionProperties_symbols.h:34
 msgid "640x480"
 msgstr ""
 
-#: MxWizard_symbols.h:31 SessionProperties_symbols.h:35
+#: MyWizard_symbols.h:31 SessionProperties_symbols.h:35
 msgid "800x600"
 msgstr ""
 
-#: MxWizard_symbols.h:32 SessionProperties_symbols.h:36
+#: MyWizard_symbols.h:32 SessionProperties_symbols.h:36
 msgid "1024x768"
 msgstr ""
 
-#: MxWizard_symbols.h:33 SessionProperties_symbols.h:37
+#: MyWizard_symbols.h:33 SessionProperties_symbols.h:37
 msgid "Available Area"
 msgstr ""
 
-#: MxWizard_symbols.h:34 SessionProperties_symbols.h:38
+#: MyWizard_symbols.h:34 SessionProperties_symbols.h:38
 msgid "Fullscreen"
 msgstr ""
 
-#: MxWizard_symbols.h:35 SessionProperties_symbols.h:39
+#: MyWizard_symbols.h:35 SessionProperties_symbols.h:39
 msgid "W"
 msgstr ""
 
-#: MxWizard_symbols.h:36 SessionProperties_symbols.h:40
+#: MyWizard_symbols.h:36 SessionProperties_symbols.h:40
 msgid "H"
 msgstr ""
 
-#: MxWizard_symbols.h:38 SessionProperties_symbols.h:48
+#: MyWizard_symbols.h:38 SessionProperties_symbols.h:48
 msgid "Enable SSL encryption of all traffic"
 msgstr ""
 
-#: MxWizard_symbols.h:39
+#: MyWizard_symbols.h:39
 msgid "Create shortcut on desktop"
 msgstr ""
 
-#: MxWizard_symbols.h:40
+#: MyWizard_symbols.h:40
 msgid "Show the Advanced Configuration dialog"
 msgstr ""
 
