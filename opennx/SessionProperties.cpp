@@ -41,7 +41,7 @@
 #include "AboutDialog.h"
 #include "SmbShareProperties.h"
 #include "MxXmlConfig.h"
-#include "MxValidator.h"
+#include "MyValidator.h"
 #include "Icon.h"
 
 ////@begin XPM images
@@ -422,10 +422,10 @@ void SessionProperties::InstallOnCharHandlers(wxWindow *w /* = NULL*/)
         if (w->IsKindOf(CLASSINFO(wxTextCtrl)) || w->IsKindOf(CLASSINFO(wxSpinCtrl))) {
             wxValidator *v = w->GetValidator();
             if (v) {
-                if (v->IsKindOf(CLASSINFO(MxValidator)))
-                    wxDynamicCast(v, MxValidator)->SetKeyTyped(this);
+                if (v->IsKindOf(CLASSINFO(MyValidator)))
+                    wxDynamicCast(v, MyValidator)->SetKeyTyped(this);
                 else
-                    ::wxLogError(wxT("Detected %s window with validator other than MxValidator!"),
+                    ::wxLogError(wxT("Detected %s window with validator other than MyValidator!"),
                         w->IsKindOf(CLASSINFO(wxTextCtrl)) ? "wxTextCtrl" : "wxSpinCtrl");
             } else
                 ::wxLogError(wxT("Detected %s window without validator!"),
@@ -548,9 +548,9 @@ void SessionProperties::CreateControls()
     m_pCtrlApplyButton = XRCCTRL(*this, "wxID_APPLY", wxButton);
     // Set validators
     if (FindWindow(XRCID("ID_TEXTCTRL_HOST")))
-        FindWindow(XRCID("ID_TEXTCTRL_HOST"))->SetValidator( MxValidator(MxValidator::MXVAL_HOST, & m_sHostName) );
+        FindWindow(XRCID("ID_TEXTCTRL_HOST"))->SetValidator( MyValidator(MyValidator::MXVAL_HOST, & m_sHostName) );
     if (FindWindow(XRCID("ID_SPINCTRL_PORT")))
-        FindWindow(XRCID("ID_SPINCTRL_PORT"))->SetValidator( MxValidator(& m_iPort) );
+        FindWindow(XRCID("ID_SPINCTRL_PORT"))->SetValidator( MyValidator(& m_iPort) );
     if (FindWindow(XRCID("ID_CHECKBOX_PWSAVE")))
         FindWindow(XRCID("ID_CHECKBOX_PWSAVE"))->SetValidator( wxGenericValidator(& m_bRememberPassword) );
     if (FindWindow(XRCID("ID_CHECKBOX_SMARTCARD")))
@@ -564,9 +564,9 @@ void SessionProperties::CreateControls()
     if (FindWindow(XRCID("ID_COMBOBOX_DISPTYPE")))
         FindWindow(XRCID("ID_COMBOBOX_DISPTYPE"))->SetValidator( wxGenericValidator(& m_iDisplayType) );
     if (FindWindow(XRCID("ID_SPINCTRL_WIDTH")))
-        FindWindow(XRCID("ID_SPINCTRL_WIDTH"))->SetValidator( MxValidator(& m_iDisplayWidth) );
+        FindWindow(XRCID("ID_SPINCTRL_WIDTH"))->SetValidator( MyValidator(& m_iDisplayWidth) );
     if (FindWindow(XRCID("ID_SPINCTRL_HEIGHT")))
-        FindWindow(XRCID("ID_SPINCTRL_HEIGHT"))->SetValidator( MxValidator(& m_iDisplayHeight) );
+        FindWindow(XRCID("ID_SPINCTRL_HEIGHT"))->SetValidator( MyValidator(& m_iDisplayHeight) );
     if (FindWindow(XRCID("ID_RADIOBUTTON_IMG_CUSTOM")))
         FindWindow(XRCID("ID_RADIOBUTTON_IMG_CUSTOM"))->SetValidator( wxGenericValidator(& m_bUseCustomImageEncoding) );
     if (FindWindow(XRCID("ID_CHECKBOX_DISABLETCPNODEL")))
@@ -578,9 +578,9 @@ void SessionProperties::CreateControls()
     if (FindWindow(XRCID("ID_CHECKBOX_HTTPPROXY")))
         FindWindow(XRCID("ID_CHECKBOX_HTTPPROXY"))->SetValidator( wxGenericValidator(& m_bUseProxy) );
     if (FindWindow(XRCID("ID_TEXTCTRL_PROXYHOST")))
-        FindWindow(XRCID("ID_TEXTCTRL_PROXYHOST"))->SetValidator( MxValidator(MxValidator::MXVAL_HOST, & m_sProxyHost) );
+        FindWindow(XRCID("ID_TEXTCTRL_PROXYHOST"))->SetValidator( MyValidator(MyValidator::MXVAL_HOST, & m_sProxyHost) );
     if (FindWindow(XRCID("ID_SPINCTRL_PROXYPORT")))
-        FindWindow(XRCID("ID_SPINCTRL_PROXYPORT"))->SetValidator( MxValidator(& m_iProxyPort) );
+        FindWindow(XRCID("ID_SPINCTRL_PROXYPORT"))->SetValidator( MyValidator(& m_iProxyPort) );
     if (FindWindow(XRCID("ID_COMBOBOX_CACHEMEM")))
         FindWindow(XRCID("ID_COMBOBOX_CACHEMEM"))->SetValidator( wxGenericValidator(& m_iCacheMem) );
     if (FindWindow(XRCID("ID_COMBOBOX_CACHEDISK")))
@@ -594,17 +594,17 @@ void SessionProperties::CreateControls()
     if (FindWindow(XRCID("ID_CHECKBOX_CUPSENABLE")))
         FindWindow(XRCID("ID_CHECKBOX_CUPSENABLE"))->SetValidator( wxGenericValidator(& m_bUseCups) );
     if (FindWindow(XRCID("ID_SPINCTRL_CUPSPORT")))
-        FindWindow(XRCID("ID_SPINCTRL_CUPSPORT"))->SetValidator( MxValidator(& m_iCupsPort) );
+        FindWindow(XRCID("ID_SPINCTRL_CUPSPORT"))->SetValidator( MyValidator(& m_iCupsPort) );
     if (FindWindow(XRCID("ID_CHECKBOX_MMEDIA")))
         FindWindow(XRCID("ID_CHECKBOX_MMEDIA"))->SetValidator( wxGenericValidator(& m_bEnableMultimedia) );
     if (FindWindow(XRCID("ID_TEXTCTRL_USERDIR")))
-        FindWindow(XRCID("ID_TEXTCTRL_USERDIR"))->SetValidator( MxValidator(& m_sUserMxDir) );
+        FindWindow(XRCID("ID_TEXTCTRL_USERDIR"))->SetValidator( MyValidator(& m_sUserMxDir) );
     if (FindWindow(XRCID("ID_CHECKBOX_REMOVEOLDSF")))
         FindWindow(XRCID("ID_CHECKBOX_REMOVEOLDSF"))->SetValidator( wxGenericValidator(& m_bRemoveOldSessionFiles) );
     if (FindWindow(XRCID("ID_TEXTCTRL_SYSDIR")))
-        FindWindow(XRCID("ID_TEXTCTRL_SYSDIR"))->SetValidator( MxValidator(& m_sSystemMxDir) );
+        FindWindow(XRCID("ID_TEXTCTRL_SYSDIR"))->SetValidator( MyValidator(& m_sSystemMxDir) );
     if (FindWindow(XRCID("ID_TEXTCTRL_CUPSPATH")))
-        FindWindow(XRCID("ID_TEXTCTRL_CUPSPATH"))->SetValidator( MxValidator(& m_sCupsPath) );
+        FindWindow(XRCID("ID_TEXTCTRL_CUPSPATH"))->SetValidator( MyValidator(& m_sCupsPath) );
 ////@end SessionProperties content construction
 
     // Create custom windows not generated automatically here.

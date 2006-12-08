@@ -32,7 +32,7 @@
 
 #include "MxWizard.h"
 #include "MxXmlConfig.h"
-#include "MxValidator.h"
+#include "MyValidator.h"
 #include "X11PropertyDialog.h"
 #include "RdpPropertyDialog.h"
 #include "VncPropertyDialog.h"
@@ -442,9 +442,9 @@ bool WizardPageSession::Create( wxWizard* parent )
     CreateControls();
     ////@end WizardPageSession creation
     CreateControls();
-    wxDynamicCast(m_pCtrlSessionName->GetValidator(), MxValidator)->SetKeyTyped(wxDynamicCast(GetParent(), MxWizard));
-    wxDynamicCast(m_pCtrlHostName->GetValidator(), MxValidator)->SetKeyTyped(wxDynamicCast(GetParent(), MxWizard));
-    wxDynamicCast(m_pCtrlPort->GetValidator(), MxValidator)->SetKeyTyped(wxDynamicCast(GetParent(), MxWizard));
+    wxDynamicCast(m_pCtrlSessionName->GetValidator(), MyValidator)->SetKeyTyped(wxDynamicCast(GetParent(), MxWizard));
+    wxDynamicCast(m_pCtrlHostName->GetValidator(), MyValidator)->SetKeyTyped(wxDynamicCast(GetParent(), MxWizard));
+    wxDynamicCast(m_pCtrlPort->GetValidator(), MyValidator)->SetKeyTyped(wxDynamicCast(GetParent(), MxWizard));
     initHtml(m_pText1, _("Insert the name of the session. Your configuration settings will be saved with this name."));
     initHtml(m_pText2, _("Insert the name and port of the server you want to connect."));
     initHtml(m_pText3, _("Select the type of your internet connection."));
@@ -466,11 +466,11 @@ void WizardPageSession::CreateControls()
     m_pText3 = XRCCTRL(*this, "ID_HTMLWINDOW_TEXT3", wxHtmlWindow);
     // Set validators
     if (FindWindow(XRCID("ID_TEXTCTRL_SESSION_NAME")))
-        FindWindow(XRCID("ID_TEXTCTRL_SESSION_NAME"))->SetValidator( MxValidator(MxValidator::MXVAL_FILENAME, & m_sSessionName) );
+        FindWindow(XRCID("ID_TEXTCTRL_SESSION_NAME"))->SetValidator( MyValidator(MyValidator::MXVAL_FILENAME, & m_sSessionName) );
     if (FindWindow(XRCID("ID_TEXTCTRL_SVRNAME")))
-        FindWindow(XRCID("ID_TEXTCTRL_SVRNAME"))->SetValidator( MxValidator(MxValidator::MXVAL_HOST, & m_sHostName) );
+        FindWindow(XRCID("ID_TEXTCTRL_SVRNAME"))->SetValidator( MyValidator(MyValidator::MXVAL_HOST, & m_sHostName) );
     if (FindWindow(XRCID("ID_TEXTCTRL_SVRPORT")))
-        FindWindow(XRCID("ID_TEXTCTRL_SVRPORT"))->SetValidator( MxValidator(MxValidator::MXVAL_NUMERIC, & m_iPort) );
+        FindWindow(XRCID("ID_TEXTCTRL_SVRPORT"))->SetValidator( MyValidator(MyValidator::MXVAL_NUMERIC, & m_iPort) );
     if (FindWindow(XRCID("ID_SLIDER")))
         FindWindow(XRCID("ID_SLIDER"))->SetValidator( wxGenericValidator(& m_iConnectionSpeed) );
     ////@end WizardPageSession content construction

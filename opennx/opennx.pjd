@@ -1841,7 +1841,7 @@
                           <bool name="proxy-Enabled">1</bool>
                           <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                           <string name="proxy-Data variable">"m_sHostName"</string>
-                          <string name="proxy-Data validator">"MxValidator(MxValidator::MXVAL_HOST, &amp; %VARIABLE%)"</string>
+                          <string name="proxy-Data validator">"MyValidator(MyValidator::MXVAL_HOST, &amp; %VARIABLE%)"</string>
                           <bool name="proxy-wxTE_MULTILINE">0</bool>
                           <bool name="proxy-wxTE_PROCESS_ENTER">0</bool>
                           <bool name="proxy-wxTE_PROCESS_TAB">0</bool>
@@ -1971,7 +1971,7 @@
                           <bool name="proxy-Enabled">1</bool>
                           <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                           <string name="proxy-Data variable">"m_iPort"</string>
-                          <string name="proxy-Data validator">"MxValidator(&amp; %VARIABLE%)"</string>
+                          <string name="proxy-Data validator">"MyValidator(&amp; %VARIABLE%)"</string>
                           <bool name="proxy-wxSP_ARROW_KEYS">1</bool>
                           <bool name="proxy-wxSP_WRAP">0</bool>
                           <bool name="proxy-wxNO_BORDER">0</bool>
@@ -3084,7 +3084,7 @@
                           <bool name="proxy-Enabled">1</bool>
                           <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                           <string name="proxy-Data variable">"m_iDisplayWidth"</string>
-                          <string name="proxy-Data validator">"MxValidator(&amp; %VARIABLE%)"</string>
+                          <string name="proxy-Data validator">"MyValidator(&amp; %VARIABLE%)"</string>
                           <bool name="proxy-wxSP_ARROW_KEYS">1</bool>
                           <bool name="proxy-wxSP_WRAP">1</bool>
                           <bool name="proxy-wxNO_BORDER">0</bool>
@@ -3201,7 +3201,7 @@
                           <bool name="proxy-Enabled">1</bool>
                           <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                           <string name="proxy-Data variable">"m_iDisplayHeight"</string>
-                          <string name="proxy-Data validator">"MxValidator(&amp; %VARIABLE%)"</string>
+                          <string name="proxy-Data validator">"MyValidator(&amp; %VARIABLE%)"</string>
                           <bool name="proxy-wxSP_ARROW_KEYS">1</bool>
                           <bool name="proxy-wxSP_WRAP">0</bool>
                           <bool name="proxy-wxNO_BORDER">0</bool>
@@ -3921,7 +3921,7 @@
                           <bool name="proxy-Enabled">0</bool>
                           <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                           <string name="proxy-Data variable">"m_sProxyHost"</string>
-                          <string name="proxy-Data validator">"MxValidator(MxValidator::MXVAL_HOST, &amp; %VARIABLE%)"</string>
+                          <string name="proxy-Data validator">"MyValidator(MyValidator::MXVAL_HOST, &amp; %VARIABLE%)"</string>
                           <bool name="proxy-wxTE_MULTILINE">0</bool>
                           <bool name="proxy-wxTE_PROCESS_ENTER">0</bool>
                           <bool name="proxy-wxTE_PROCESS_TAB">0</bool>
@@ -4053,7 +4053,7 @@
                           <bool name="proxy-Enabled">0</bool>
                           <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                           <string name="proxy-Data variable">"m_iProxyPort"</string>
-                          <string name="proxy-Data validator">"MxValidator(&amp; %VARIABLE%)"</string>
+                          <string name="proxy-Data validator">"MyValidator(&amp; %VARIABLE%)"</string>
                           <bool name="proxy-wxSP_ARROW_KEYS">1</bool>
                           <bool name="proxy-wxSP_WRAP">0</bool>
                           <bool name="proxy-wxNO_BORDER">0</bool>
@@ -5100,7 +5100,7 @@
                         <bool name="proxy-Enabled">0</bool>
                         <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                         <string name="proxy-Data variable">"m_iCupsPort"</string>
-                        <string name="proxy-Data validator">"MxValidator(&amp; %VARIABLE%)"</string>
+                        <string name="proxy-Data validator">"MyValidator(&amp; %VARIABLE%)"</string>
                         <bool name="proxy-wxSP_ARROW_KEYS">1</bool>
                         <bool name="proxy-wxSP_WRAP">0</bool>
                         <bool name="proxy-wxNO_BORDER">0</bool>
@@ -5693,7 +5693,7 @@
                           <bool name="proxy-Enabled">1</bool>
                           <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                           <string name="proxy-Data variable">"m_sUserMxDir"</string>
-                          <string name="proxy-Data validator">"MxValidator(&amp; %VARIABLE%)"</string>
+                          <string name="proxy-Data validator">"MyValidator(&amp; %VARIABLE%)"</string>
                           <bool name="proxy-wxTE_MULTILINE">0</bool>
                           <bool name="proxy-wxTE_PROCESS_ENTER">0</bool>
                           <bool name="proxy-wxTE_PROCESS_TAB">0</bool>
@@ -5927,7 +5927,7 @@
                           <bool name="proxy-Enabled">1</bool>
                           <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                           <string name="proxy-Data variable">"m_sSystemMxDir"</string>
-                          <string name="proxy-Data validator">"MxValidator(&amp; %VARIABLE%)"</string>
+                          <string name="proxy-Data validator">"MyValidator(&amp; %VARIABLE%)"</string>
                           <bool name="proxy-wxTE_MULTILINE">0</bool>
                           <bool name="proxy-wxTE_PROCESS_ENTER">0</bool>
                           <bool name="proxy-wxTE_PROCESS_TAB">0</bool>
@@ -6108,7 +6108,7 @@
                           <bool name="proxy-Enabled">1</bool>
                           <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                           <string name="proxy-Data variable">"m_sCupsPath"</string>
-                          <string name="proxy-Data validator">"MxValidator(&amp; %VARIABLE%)"</string>
+                          <string name="proxy-Data validator">"MyValidator(&amp; %VARIABLE%)"</string>
                           <bool name="proxy-wxTE_MULTILINE">0</bool>
                           <bool name="proxy-wxTE_PROCESS_ENTER">0</bool>
                           <bool name="proxy-wxTE_PROCESS_TAB">0</bool>
@@ -13183,7 +13183,7 @@ machine with which this share will be made available."</string>
                   <bool name="proxy-Enabled">1</bool>
                   <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                   <string name="proxy-Data variable">"m_sMountPoint"</string>
-                  <string name="proxy-Data validator">"MxValidator(&amp; %VARIABLE%)"</string>
+                  <string name="proxy-Data validator">"MyValidator(&amp; %VARIABLE%)"</string>
                   <bool name="proxy-wxTE_MULTILINE">0</bool>
                   <bool name="proxy-wxTE_PROCESS_ENTER">0</bool>
                   <bool name="proxy-wxTE_PROCESS_TAB">0</bool>
@@ -13453,7 +13453,7 @@ this share."</string>
                   <bool name="proxy-Enabled">1</bool>
                   <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                   <string name="proxy-Data variable">"m_sUsername"</string>
-                  <string name="proxy-Data validator">"MxValidator(&amp; %VARIABLE%)"</string>
+                  <string name="proxy-Data validator">"MyValidator(&amp; %VARIABLE%)"</string>
                   <bool name="proxy-wxTE_MULTILINE">0</bool>
                   <bool name="proxy-wxTE_PROCESS_ENTER">0</bool>
                   <bool name="proxy-wxTE_PROCESS_TAB">0</bool>
@@ -13583,7 +13583,7 @@ this share."</string>
                   <bool name="proxy-Enabled">1</bool>
                   <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                   <string name="proxy-Data variable">"m_sPassword"</string>
-                  <string name="proxy-Data validator">"MxValidator(&amp; %VARIABLE%)"</string>
+                  <string name="proxy-Data validator">"MyValidator(&amp; %VARIABLE%)"</string>
                   <bool name="proxy-wxTE_MULTILINE">0</bool>
                   <bool name="proxy-wxTE_PROCESS_ENTER">0</bool>
                   <bool name="proxy-wxTE_PROCESS_TAB">0</bool>
@@ -15033,7 +15033,7 @@ this share."</string>
                   <bool name="proxy-Enabled">1</bool>
                   <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                   <string name="proxy-Data variable">"m_sSessionName"</string>
-                  <string name="proxy-Data validator">"MxValidator(MxValidator::MXVAL_FILENAME, &amp; %VARIABLE%)"</string>
+                  <string name="proxy-Data validator">"MyValidator(MyValidator::MXVAL_FILENAME, &amp; %VARIABLE%)"</string>
                   <bool name="proxy-wxTE_MULTILINE">0</bool>
                   <bool name="proxy-wxTE_PROCESS_ENTER">0</bool>
                   <bool name="proxy-wxTE_PROCESS_TAB">0</bool>
@@ -15252,7 +15252,7 @@ this share."</string>
                   <bool name="proxy-Enabled">1</bool>
                   <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                   <string name="proxy-Data variable">"m_sHostName"</string>
-                  <string name="proxy-Data validator">"MxValidator(MxValidator::MXVAL_HOST, &amp; %VARIABLE%)"</string>
+                  <string name="proxy-Data validator">"MyValidator(MyValidator::MXVAL_HOST, &amp; %VARIABLE%)"</string>
                   <bool name="proxy-wxTE_MULTILINE">0</bool>
                   <bool name="proxy-wxTE_PROCESS_ENTER">0</bool>
                   <bool name="proxy-wxTE_PROCESS_TAB">0</bool>
@@ -15382,7 +15382,7 @@ this share."</string>
                   <bool name="proxy-Enabled">1</bool>
                   <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                   <string name="proxy-Data variable">"m_iPort"</string>
-                  <string name="proxy-Data validator">"MxValidator(MxValidator::MXVAL_NUMERIC, &amp; %VARIABLE%)"</string>
+                  <string name="proxy-Data validator">"MyValidator(MyValidator::MXVAL_NUMERIC, &amp; %VARIABLE%)"</string>
                   <bool name="proxy-wxTE_MULTILINE">0</bool>
                   <bool name="proxy-wxTE_PROCESS_ENTER">0</bool>
                   <bool name="proxy-wxTE_PROCESS_TAB">0</bool>

@@ -4,7 +4,7 @@
 #define _MXVALIDATOR_H_
 
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
-#pragma interface "MxValidator.h"
+#pragma interface "MyValidator.h"
 #endif
 
 #include "wx/validate.h"
@@ -15,9 +15,9 @@ public:
     virtual void KeyTyped() = 0;
 };
 
-class MxValidator : public wxValidator
+class MyValidator : public wxValidator
 {
-    DECLARE_DYNAMIC_CLASS(MxValidator)
+    DECLARE_DYNAMIC_CLASS(MyValidator)
 
 public:
 
@@ -26,24 +26,24 @@ public:
         MXVAL_NUMERIC,
         MXVAL_HOST,
         MXVAL_FILENAME,
-    } MxValidatorType;
+    } MyValidatorType;
 
 
-    MxValidator() { };
-    MxValidator(bool*);
-    MxValidator(int*);
-    MxValidator(wxString*);
-    MxValidator(wxArrayInt*);
-    MxValidator(const MxValidator&);
+    MyValidator() { };
+    MyValidator(bool*);
+    MyValidator(int*);
+    MyValidator(wxString*);
+    MyValidator(wxArrayInt*);
+    MyValidator(const MyValidator&);
     
-    MxValidator(MxValidatorType, bool*);
-    MxValidator(MxValidatorType, int*);
-    MxValidator(MxValidatorType, wxString*);
-    MxValidator(MxValidatorType, wxArrayInt*);
-    MxValidator(MxValidatorType, const MxValidator&);
+    MyValidator(MyValidatorType, bool*);
+    MyValidator(MyValidatorType, int*);
+    MyValidator(MyValidatorType, wxString*);
+    MyValidator(MyValidatorType, wxArrayInt*);
+    MyValidator(MyValidatorType, const MyValidator&);
     
-    virtual wxObject *Clone() const { return new MxValidator(*this); }
-    bool Copy(const MxValidator& val);
+    virtual wxObject *Clone() const { return new MyValidator(*this); }
+    bool Copy(const MyValidator& val);
 
     // Called when the value in the window must be validated.
     // This function can pop up an error message.
@@ -57,7 +57,7 @@ public:
     
     void SetKeyTyped(KeyTypeCallback *);
 
-    ~MxValidator();
+    ~MyValidator();
 
     void OnChar(wxKeyEvent& event);
 
@@ -74,7 +74,7 @@ protected:
 
 private:
 
-    MxValidatorType m_type;
+    MyValidatorType m_type;
 };
 
 #endif

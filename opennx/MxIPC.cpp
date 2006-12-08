@@ -8,7 +8,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #if defined(__GNUG__) && !defined(__APPLE__)
-#pragma implementation "MxIPC.h"
+#pragma implementation "MyIPC.h"
 #endif
 
 // For compilers that support precompilation, includes "wx/wx.h".
@@ -28,12 +28,12 @@
 #include <wx/regex.h>
 #include <wx/timer.h>
 
-#include "MxIPC.h"
+#include "MyIPC.h"
 
 #ifdef MYTRACETAG
 # undef MYTRACETAG
 #endif
-#define MYTRACETAG wxT("MxIPC")
+#define MYTRACETAG wxT("MyIPC")
 
 class AsyncProcess : public wxProcess
 {
@@ -222,7 +222,7 @@ bool AsyncProcess::GetMessage(wxString &ret)
     return (!ret.IsEmpty());
 }
 
-MxIPC::MxIPC()
+MyIPC::MyIPC()
     : m_pProcess(NULL)
     , m_bIsSsh(false)
     , m_iLineCount(0)
@@ -236,7 +236,7 @@ MxIPC::MxIPC()
     m_re->Compile(wxT("\\(yes/no\\)\\?"), wxRE_ADVANCED|wxRE_ICASE);
 }
 
-MxIPC::~MxIPC()
+MyIPC::~MyIPC()
 {
     if (m_pProcess) {
         if (m_pProcess->IsRunning())
@@ -248,30 +248,30 @@ MxIPC::~MxIPC()
     delete m_re;
 }
 
-bool MxIPC::IsRunning()
+bool MyIPC::IsRunning()
 {
     return (m_pProcess && m_pProcess->IsRunning());
 }
 
-int MxIPC::GetResult()
+int MyIPC::GetResult()
 {
     return m_pProcess ? m_pProcess->GetStatus() : -1;
 }
 
-bool MxIPC::Kill()
+bool MyIPC::Kill()
 {
     bool ret (m_pProcess && m_pProcess->Kill());
     m_pProcess = NULL;
     return ret;
 }
 
-void MxIPC::Print(wxString s)
+void MyIPC::Print(wxString s)
 {
     if (m_pProcess)
         m_pProcess->Print(s);
 }
 
-bool MxIPC::SshProcess(wxString dir, wxString cmd)
+bool MyIPC::SshProcess(wxString dir, wxString cmd)
 {
     m_bIsSsh = true;
     bool ret = false;
@@ -304,8 +304,8 @@ static int parseCode(wxString &buf)
     return ret;
 }
 
-    const MxIPC::ChatActions
-MxIPC::SshChat(wxString &ret)
+    const MyIPC::ChatActions
+MyIPC::SshChat(wxString &ret)
 {
     wxString tmp;
     int ccode;

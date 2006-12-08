@@ -30,7 +30,7 @@
 #include "RdpPropertyDialog.h"
 #include "Icon.h"
 #include "MxXmlConfig.h"
-#include "MxValidator.h"
+#include "MyValidator.h"
 
 ////@begin XPM images
 ////@end XPM images

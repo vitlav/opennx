@@ -42,7 +42,7 @@ class wxListCtrl;
 class wxFont;
 class MxXmlConfig;
 
-#include "MxValidator.h"
+#include "MyValidator.h"
 
 /*!
  * Control identifiers
@@ -74,7 +74,7 @@ class SessionProperties: public wxDialog, KeyTypeCallback
     DECLARE_CLASS( SessionProperties )
     DECLARE_EVENT_TABLE()
 
-    friend class MxValidator;
+    friend class MyValidator;
 
 public:
     /// Constructors

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-// Name:        MxIPC.h
+// Name:        MyIPC.h
 // Purpose:     
 // Author:      Fritz Elfert
 // Modified by: 
@@ -13,13 +13,13 @@
 #define _MXIPC_H_
 
 #if defined(__GNUG__) && !defined(__APPLE__)
-#pragma interface "MxIPC.cpp"
+#pragma interface "MyIPC.cpp"
 #endif
 
 class AsyncProcess;
 class wxRegEx;
 
-class MxIPC
+class MyIPC
 {
 public:
     typedef enum {
@@ -47,8 +47,8 @@ public:
         ActionStartProxy,
     } ChatActions;
 
-    MxIPC();
-    virtual ~MxIPC();
+    MyIPC();
+    virtual ~MyIPC();
     bool SshProcess(wxString, wxString);
     bool IsRunning();
     bool Kill();

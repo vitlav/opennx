@@ -27,7 +27,7 @@
 ////@begin includes
 ////@end includes
 
-#include "MxValidator.h"
+#include "MyValidator.h"
 #include "MxXmlConfig.h"
 #include "WinShare.h"
 #include "SmbShareProperties.h"
@@ -130,11 +130,11 @@ void SmbShareProperties::CreateControls()
     m_pCtrlPassword = XRCCTRL(*this, "ID_TEXTCTRL_SHARE_PASSWORD", wxTextCtrl);
     // Set validators
     if (FindWindow(XRCID("ID_TEXTCTRL_SHARE_MOUNTPOINT")))
-        FindWindow(XRCID("ID_TEXTCTRL_SHARE_MOUNTPOINT"))->SetValidator( MxValidator(& m_sMountPoint) );
+        FindWindow(XRCID("ID_TEXTCTRL_SHARE_MOUNTPOINT"))->SetValidator( MyValidator(& m_sMountPoint) );
     if (FindWindow(XRCID("ID_TEXTCTRL_SHARE_USERNAME")))
-        FindWindow(XRCID("ID_TEXTCTRL_SHARE_USERNAME"))->SetValidator( MxValidator(& m_sUsername) );
+        FindWindow(XRCID("ID_TEXTCTRL_SHARE_USERNAME"))->SetValidator( MyValidator(& m_sUsername) );
     if (FindWindow(XRCID("ID_TEXTCTRL_SHARE_PASSWORD")))
-        FindWindow(XRCID("ID_TEXTCTRL_SHARE_PASSWORD"))->SetValidator( MxValidator(& m_sPassword) );
+        FindWindow(XRCID("ID_TEXTCTRL_SHARE_PASSWORD"))->SetValidator( MyValidator(& m_sPassword) );
 ////@end SmbShareProperties content construction
 
     // Create custom windows not generated automatically here.

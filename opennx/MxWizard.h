@@ -29,7 +29,7 @@
 #include "wx/spinctrl.h"
 ////@end includes
 
-#include "MxValidator.h"
+#include "MyValidator.h"
 
 /*!
  * Forward declarations

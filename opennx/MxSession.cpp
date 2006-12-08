@@ -25,7 +25,7 @@
 #include "ConnectDialog.h"
 #include "MxSession.h"
 #include "MxXmlConfig.h"
-#include "MxIPC.h"
+#include "MyIPC.h"
 
 #include <wx/filename.h>
 #include <wx/regex.h>
@@ -235,7 +235,7 @@ bool MxSession::Create(const wxString cfgFileName, const wxString password)
         }
 #endif
 
-        MxIPC ssh;
+        MyIPC ssh;
         cmd += wxString::Format(wxT("nx@%s"), cfg.sGetServerHost().c_str());
         cmd = wxString::Format(wxT("%s/bin/nxssh "), fn.GetShortPath().c_str()) + cmd;
 
@@ -253,36 +253,36 @@ bool MxSession::Create(const wxString cfgFileName, const wxString password)
                 int p = ssh.SshChat(tmp);
                 ::wxLogTrace(MYTRACETAG, wxT("chat1 ret=%d, tmp='%s'"), p, tmp.c_str());
                 switch (p) {
-                    case MxIPC::ActionNone:
+                    case MyIPC::ActionNone:
                         break;
-                    case MxIPC::ActionStatus:
+                    case MyIPC::ActionStatus:
                         d.SetStatusText(tmp);
                         break;
-                    case MxIPC::ActionNotice:
+                    case MyIPC::ActionNotice:
                         ::wxLogMessage(tmp);
                         break;
-                    case MxIPC::ActionWarning:
+                    case MyIPC::ActionWarning:
                         ::wxLogWarning(tmp);
                         break;
-                    case MxIPC::ActionError:
+                    case MyIPC::ActionError:
                         ::wxLogError(tmp);
                         gotError = true;
                         break;
-                    case MxIPC::ActionPromptYesNo:
+                    case MyIPC::ActionPromptYesNo:
                         if (wxMessageBox(tmp, _("Warning"), wxYES_NO|wxICON_EXCLAMATION) == wxYES)
                             ssh.Print(wxT("yes"));
                         else
                             ssh.Print(wxT("no"));
                         break;
-                    case MxIPC::ActionSendUsername:
+                    case MyIPC::ActionSendUsername:
                         d.SetStatusText(_("Sending username"));
                         ssh.Print(cfg.sGetUsername());
                         break;
-                    case MxIPC::ActionSendPassword:
+                    case MyIPC::ActionSendPassword:
                         d.SetStatusText(_("Sending password"));
                         ssh.Print(password);
                         break;
-                    case MxIPC::ActionNextCommand:
+                    case MyIPC::ActionNextCommand:
                         p += 10;
                         d.SetProgress(p);
                         switch (++state) {
@@ -307,48 +307,48 @@ bool MxSession::Create(const wxString cfgFileName, const wxString password)
                                 break;
                         }
                         break;
-                    case MxIPC::ActionPassphraseDialog:
+                    case MyIPC::ActionPassphraseDialog:
                         ::wxMessageBox(wxT("NOT IMPLMENTED"),
-                                wxT("iMxIPC::ActionPassphraseDialog"));
+                                wxT("iMyIPC::ActionPassphraseDialog"));
                         ssh.Print(wxT("notimplemented"));
                         break;
-                    case MxIPC::ActionSetSessionID:
+                    case MyIPC::ActionSetSessionID:
                         sSessionID = tmp;
                         break;
-                    case MxIPC::ActionSetProxyCookie:
+                    case MyIPC::ActionSetProxyCookie:
                         sProxyCookie = tmp;
                         break;
-                    case MxIPC::ActionSetProxyIP:
+                    case MyIPC::ActionSetProxyIP:
                         sProxyIP = tmp;
                         break;
-                    case MxIPC::ActionSetSessionType:
+                    case MyIPC::ActionSetSessionType:
                         sSessionType = tmp;
                         break;
-                    case MxIPC::ActionSetSessionCache:
+                    case MyIPC::ActionSetSessionCache:
                         sSessionCache = tmp;
                         break;
-                    case MxIPC::ActionSetSessionDisplay:
+                    case MyIPC::ActionSetSessionDisplay:
                         sSessionDisplay = tmp;
                         break;
-                    case MxIPC::ActionSetAgentCookie:
+                    case MyIPC::ActionSetAgentCookie:
                         sAgentCookie = tmp;
                         break;
-                    case MxIPC::ActionSetSslTunneling:
+                    case MyIPC::ActionSetSslTunneling:
                         bSslTunneling = (tmp == wxT("1"));
                         break;
-                    case MxIPC::ActionSetSubscription:
+                    case MyIPC::ActionSetSubscription:
                         sSubscription = tmp;
                         break;
-                    case MxIPC::ActionExit:
+                    case MyIPC::ActionExit:
                         return true;
-                    case MxIPC::ActionChildDied:
+                    case MyIPC::ActionChildDied:
                         if (!tmp.IsEmpty())
                             ::wxLogError(tmp);
                         ::wxLogError(_("Called command was: ") + cmd);
                         ::wxLogError(_("nxssh terminated with status %d."), ssh.GetResult());
                         gotError = true;
                         break;
-                    case MxIPC::ActionStartProxy:
+                    case MyIPC::ActionStartProxy:
                         {
                             wxString fname;
                             wxConfigBase::Get()->Read(wxT("Config/UserMxDir"), &fname);

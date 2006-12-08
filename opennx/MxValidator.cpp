@@ -1,7 +1,7 @@
 // $Id$
 
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
-#pragma implementation "MxValidator.h"
+#pragma implementation "MyValidator.h"
 #endif
 
 // For compilers that support precompilation, includes "wx.h".
@@ -44,27 +44,27 @@
   #include "wx/checklst.h"
 #endif
 
-#include "MxValidator.h"
+#include "MyValidator.h"
 #include "SessionProperties.h"
 
-IMPLEMENT_DYNAMIC_CLASS(MxValidator, wxValidator)
+IMPLEMENT_DYNAMIC_CLASS(MyValidator, wxValidator)
 
-BEGIN_EVENT_TABLE(MxValidator, wxValidator)
-    EVT_CHAR(MxValidator::OnChar)
+BEGIN_EVENT_TABLE(MyValidator, wxValidator)
+    EVT_CHAR(MyValidator::OnChar)
 END_EVENT_TABLE()
 
-MxValidator::~MxValidator()
+MyValidator::~MyValidator()
 {
 }
 
-MxValidator::MxValidator(MxValidatorType t, const MxValidator &v)
+MyValidator::MyValidator(MyValidatorType t, const MyValidator &v)
     : wxValidator()
     , m_type(t)
 {
     Copy(v);
 }
 
-MxValidator::MxValidator(MxValidatorType t, bool *val)
+MyValidator::MyValidator(MyValidatorType t, bool *val)
     : wxValidator()
     , m_type(t)
 {
@@ -72,7 +72,7 @@ MxValidator::MxValidator(MxValidatorType t, bool *val)
     m_pBool = val;
 }
 
-MxValidator::MxValidator(MxValidatorType t, int *val)
+MyValidator::MyValidator(MyValidatorType t, int *val)
     : wxValidator()
     , m_type(t)
 {
@@ -80,7 +80,7 @@ MxValidator::MxValidator(MxValidatorType t, int *val)
     m_pInt = val;
 }
 
-MxValidator::MxValidator(MxValidatorType t, wxString *val)
+MyValidator::MyValidator(MyValidatorType t, wxString *val)
     : wxValidator()
     , m_type(t)
 {
@@ -88,7 +88,7 @@ MxValidator::MxValidator(MxValidatorType t, wxString *val)
     m_pString = val;
 }
 
-MxValidator::MxValidator(MxValidatorType t, wxArrayInt *val)
+MyValidator::MyValidator(MyValidatorType t, wxArrayInt *val)
     : wxValidator()
     , m_type(t)
 {
@@ -96,14 +96,14 @@ MxValidator::MxValidator(MxValidatorType t, wxArrayInt *val)
     m_pArrayInt = val;
 }
 
-MxValidator::MxValidator(const MxValidator &v)
+MyValidator::MyValidator(const MyValidator &v)
     : wxValidator()
     , m_type(v.m_type)
 {
     Copy(v);
 }
 
-MxValidator::MxValidator(bool *val)
+MyValidator::MyValidator(bool *val)
     : wxValidator()
     , m_type(MXVAL_ANY)
 {
@@ -111,7 +111,7 @@ MxValidator::MxValidator(bool *val)
     m_pBool = val;
 }
 
-MxValidator::MxValidator(int *val)
+MyValidator::MyValidator(int *val)
     : wxValidator()
     , m_type(MXVAL_ANY)
 {
@@ -119,7 +119,7 @@ MxValidator::MxValidator(int *val)
     m_pInt = val;
 }
 
-MxValidator::MxValidator(wxString *val)
+MyValidator::MyValidator(wxString *val)
     : wxValidator()
     , m_type(MXVAL_ANY)
 {
@@ -127,7 +127,7 @@ MxValidator::MxValidator(wxString *val)
     m_pString = val;
 }
 
-MxValidator::MxValidator(wxArrayInt *val)
+MyValidator::MyValidator(wxArrayInt *val)
     : wxValidator()
     , m_type(MXVAL_ANY)
 {
@@ -135,7 +135,7 @@ MxValidator::MxValidator(wxArrayInt *val)
     m_pArrayInt = val;
 }
 
-void MxValidator::Init()
+void MyValidator::Init()
 {
     m_pBool = NULL;
     m_pInt = NULL;
@@ -144,7 +144,7 @@ void MxValidator::Init()
     m_ktc = NULL;
 }
 
-bool MxValidator::Copy(const MxValidator& v)
+bool MyValidator::Copy(const MyValidator& v)
 {
     wxValidator::Copy(v);
 
@@ -157,7 +157,7 @@ bool MxValidator::Copy(const MxValidator& v)
     return TRUE;
 }
 
-bool MxValidator::TransferToWindow(void)
+bool MyValidator::TransferToWindow(void)
 {
     if ( !m_validatorWindow )
         return FALSE;
@@ -387,7 +387,7 @@ bool MxValidator::TransferToWindow(void)
   return FALSE;
 }
 
-bool MxValidator::TransferFromWindow(void)
+bool MyValidator::TransferFromWindow(void)
 {
   if ( !m_validatorWindow )
     return FALSE;
@@ -605,12 +605,12 @@ bool MxValidator::TransferFromWindow(void)
   return FALSE;
 }
 
-void MxValidator::SetKeyTyped(KeyTypeCallback *cb)
+void MyValidator::SetKeyTyped(KeyTypeCallback *cb)
 {
     m_ktc = cb;
 }
 
-void MxValidator::OnChar(wxKeyEvent& event)
+void MyValidator::OnChar(wxKeyEvent& event)
 {
     if (m_validatorWindow) {
         int keyCode = event.GetKeyCode();
