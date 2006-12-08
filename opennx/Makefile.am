@@ -53,8 +53,11 @@ opennxApp.cpp: memres.h
 
 CLEANFILES = tmpres.zip *~
 
-MAINTAINERCLEANFILES = Makefile.in configure
+MAINTAINERCLEANFILES = Makefile.in configure aclocal.m4 conf/config.guess \
+	conf/config.sub  conf/depcomp  conf/install-sh  conf/missing
 
-EXTRA_DIST = conf/config.rpath conf/mkinstalldirs  conf/config.rpath conf/mkinstalldirs opennx.pjd opennx.dsw \
+DISTCLEANFILES = res/*.prv.*
+
+EXTRA_DIST = conf conf/mkinstalldirs  conf/config.rpath conf/mkinstalldirs opennx.pjd opennx.dsw \
 	opennx.dsp opennx.rc res/opennx.rc res/opennx.xrc \
 	Translations.dsp PackedResources.dsp
