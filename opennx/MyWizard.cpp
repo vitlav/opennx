@@ -145,8 +145,8 @@ void MyWizard::CreateControls()
     m_pPageDesktop->Create(NULL);
     m_pPageSecurity->Create(NULL);
     m_pPageFinish->Create(NULL);
-    wxWindowListNode* node = GetChildren().GetFirst();
-    while (node) {
+
+    for (wxWindowList::Node* node = GetChildren().GetFirst(); node; node = node->GetNext()) {
         wxWizardPage* p = wxDynamicCast(node->GetData(), wxWizardPage);
         if (p) {
             int w, h;
@@ -156,7 +156,6 @@ void MyWizard::CreateControls()
             if (h > minH)
                 minH = h;
         }
-        node = node->GetNext();
     }
 }
 
