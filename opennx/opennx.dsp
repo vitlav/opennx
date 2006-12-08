@@ -48,7 +48,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /MD /W4 /GX /O2 /I "$(WXWIN)\lib\vc_lib\msw" /I "$(WXWIN)\include" /I "$(WXWIN)\contrib\include" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /D "_MT" /D "_WINDOWS" /D "__WINDOWS__" /D "__WIN32__" /D WINVER=0x0400 /D "__WXMSW__" /D wxUSE_GUI=1 /YX /FD /c
+# ADD CPP /nologo /MD /W4 /GX /O2 /I "$(WXWIN)\lib\vc_lib\msw" /I "$(WXWIN)\include" /I "$(WXWIN)\contrib\include" /D "NDEBUG" /D "WIN32" /D "_CONSOLE" /D "_MBCS" /D "_MT" /D "_WINDOWS" /D "__WINDOWS__" /D "__WIN32__" /D WINVER=0x0400 /D "__WXMSW__" /D wxUSE_GUI=1 /D CUPS_DEFAULT_PATH=\"\" /YX /FD /c
 # ADD BASE RSC /l 0x407 /d "NDEBUG"
 # ADD RSC /l 0x409 /i "$(WXWIN)\include" /d "NDEBUG"
 BSC32=bscmake.exe
@@ -73,7 +73,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /GX /Zi /Od /I "$(WXWIN)\lib\vc_lib\mswd" /I "$(WXWIN)\include" /I "$(WXWIN)\contrib\include" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "_MT" /D "_WINDOWS" /D "__WINDOWS__" /D "__WIN32__" /D WINVER=0x0400 /D "__WXMSW__" /D wxUSE_GUI=1 /D "__WXDEBUG__" /D WXDEBUG=1 /YX /FD /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /GX /Zi /Od /I "$(WXWIN)\lib\vc_lib\mswd" /I "$(WXWIN)\include" /I "$(WXWIN)\contrib\include" /D "_DEBUG" /D "__WXDEBUG__" /D WXDEBUG=1 /D "WIN32" /D "_CONSOLE" /D "_MBCS" /D "_MT" /D "_WINDOWS" /D "__WINDOWS__" /D "__WIN32__" /D WINVER=0x0400 /D "__WXMSW__" /D wxUSE_GUI=1 /D CUPS_DEFAULT_PATH=\"\" /YX /FD /GZ /c
 # ADD BASE RSC /l 0x407 /d "_DEBUG"
 # ADD RSC /l 0x409 /i "$(WXWIN)\include" /d "_DEBUG"
 BSC32=bscmake.exe
@@ -98,7 +98,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /GX /Zi /Od /I "$(WXWIN)\lib\vc_lib\mswud" /I "$(WXWIN)\include" /I "$(WXWIN)\contrib\include" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "_UNICODE" /D "_MT" /D "_WINDOWS" /D "__WINDOWS__" /D "__WIN32__" /D WINVER=0x0400 /D "__WXMSW__" /D wxUSE_GUI=1 /D "__WXDEBUG__" /D WXDEBUG=1 /YX /FD /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /GX /Zi /Od /I "$(WXWIN)\lib\vc_lib\mswud" /I "$(WXWIN)\include" /I "$(WXWIN)\contrib\include" /D "_DEBUG" /D "_UNICODE" /D "__WXDEBUG__" /D WXDEBUG=1 /D "WIN32" /D "_CONSOLE" /D "_MBCS" /D "_MT" /D "_WINDOWS" /D "__WINDOWS__" /D "__WIN32__" /D WINVER=0x0400 /D "__WXMSW__" /D wxUSE_GUI=1 /D CUPS_DEFAULT_PATH=\"\" /YX /FD /GZ /c
 # ADD BASE RSC /l 0x407 /d "_DEBUG"
 # ADD RSC /l 0x409 /i "$(WXWIN)\include" /d "_DEBUG"
 BSC32=bscmake.exe
@@ -123,7 +123,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MD /W4 /GX /O2 /I "$(WXWIN)\lib\vc_lib\mswu" /I "$(WXWIN)\include" /I "$(WXWIN)\contrib\include" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "NDEBUG" /D "_UNICODE" /D "_MT" /D "_WINDOWS" /D "__WINDOWS__" /D "__WIN32__" /D WINVER=0x0400 /D "__WXMSW__" /D wxUSE_GUI=1 /YX /FD /c
+# ADD CPP /nologo /MD /W4 /GX /O2 /I "$(WXWIN)\lib\vc_lib\mswu" /I "$(WXWIN)\include" /I "$(WXWIN)\contrib\include" /D "_DEBUG" /D "NDEBUG" /D "_UNICODE" /D "WIN32" /D "_CONSOLE" /D "_MBCS" /D "_MT" /D "_WINDOWS" /D "__WINDOWS__" /D "__WIN32__" /D WINVER=0x0400 /D "__WXMSW__" /D wxUSE_GUI=1 /D CUPS_DEFAULT_PATH=\"\" /YX /FD /c
 # ADD BASE RSC /l 0x407 /d "_DEBUG"
 # ADD RSC /l 0x409 /i "$(WXWIN)\include" /d "NDEBUG"
 BSC32=bscmake.exe
@@ -148,7 +148,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /GX /Zi /Od /I "$(WXWIN)\lib\vc_dll\mswd" /I "$(WXWIN)\include" /I "$(WXWIN)\contrib\include" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "_MT" /D "_WINDOWS" /D "__WINDOWS__" /D "__WIN32__" /D WINVER=0x0400 /D "__WXMSW__" /D wxUSE_GUI=1 /D "__WXDEBUG__" /D WXDEBUG=1 /D WXUSINGDLL=1 /FD /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /GX /Zi /Od /I "$(WXWIN)\lib\vc_dll\mswd" /I "$(WXWIN)\include" /I "$(WXWIN)\contrib\include" /D "_DEBUG" /D "__WXDEBUG__" /D WXDEBUG=1 /D WXUSINGDLL=1 /D "WIN32" /D "_CONSOLE" /D "_MBCS" /D "_MT" /D "_WINDOWS" /D "__WINDOWS__" /D "__WIN32__" /D WINVER=0x0400 /D "__WXMSW__" /D wxUSE_GUI=1 /D CUPS_DEFAULT_PATH=\"\" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x407 /d "_DEBUG"
 # ADD RSC /l 0x409 /i "$(WXWIN)\include" /d "_DEBUG"
@@ -174,7 +174,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MD /W4 /GX /O2 /I "$(WXWIN)\lib\vc_dll\msw" /I "$(WXWIN)\include" /I "$(WXWIN)\contrib\include" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "NDEBUG" /D "_MT" /D "_WINDOWS" /D "__WINDOWS__" /D "__WIN32__" /D WINVER=0x0400 /D "__WXMSW__" /D wxUSE_GUI=1 /D WXUSINGDLL=1 /YX /FD /c
+# ADD CPP /nologo /MD /W4 /GX /O2 /I "$(WXWIN)\lib\vc_dll\msw" /I "$(WXWIN)\include" /I "$(WXWIN)\contrib\include" /D "_DEBUG" /D "NDEBUG" /D WXUSINGDLL=1 /D "WIN32" /D "_CONSOLE" /D "_MBCS" /D "_MT" /D "_WINDOWS" /D "__WINDOWS__" /D "__WIN32__" /D WINVER=0x0400 /D "__WXMSW__" /D wxUSE_GUI=1 /D CUPS_DEFAULT_PATH=\"\" /YX /FD /c
 # ADD BASE RSC /l 0x407 /d "_DEBUG"
 # ADD RSC /l 0x409 /i "$(WXWIN)\include" /d "NDEBUG"
 BSC32=bscmake.exe
@@ -199,7 +199,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /GX /Zi /Od /I "$(WXWIN)\lib\vc_dll\mswud" /I "$(WXWIN)\include" /I "$(WXWIN)\contrib\include" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "_UNICODE" /D "_MT" /D "_WINDOWS" /D "__WINDOWS__" /D "__WIN32__" /D WINVER=0x0400 /D "__WXMSW__" /D wxUSE_GUI=1 /D "__WXDEBUG__" /D WXDEBUG=1 /D WXUSINGDLL=1 /YX /FD /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /GX /Zi /Od /I "$(WXWIN)\lib\vc_dll\mswud" /I "$(WXWIN)\include" /I "$(WXWIN)\contrib\include" /D "_DEBUG" /D "_UNICODE" /D "__WXDEBUG__" /D WXDEBUG=1 /D WXUSINGDLL=1 /D "WIN32" /D "_CONSOLE" /D "_MBCS" /D "_MT" /D "_WINDOWS" /D "__WINDOWS__" /D "__WIN32__" /D WINVER=0x0400 /D "__WXMSW__" /D wxUSE_GUI=1 /D CUPS_DEFAULT_PATH=\"\" /YX /FD /GZ /c
 # ADD BASE RSC /l 0x407 /d "_DEBUG"
 # ADD RSC /l 0x409 /i "$(WXWIN)\include" /d "_DEBUG"
 BSC32=bscmake.exe
@@ -224,7 +224,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MD /W4 /GX /O2 /I "$(WXWIN)\lib\vc_dll\mswu" /I "$(WXWIN)\include" /I "$(WXWIN)\contrib\include" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "NDEBUG" /D "_UNICODE" /D "_MT" /D "_WINDOWS" /D "__WINDOWS__" /D "__WIN32__" /D WINVER=0x0400 /D "__WXMSW__" /D wxUSE_GUI=1 /D WXUSINGDLL=1 /YX /FD /c
+# ADD CPP /nologo /MD /W4 /GX /O2 /I "$(WXWIN)\lib\vc_dll\mswu" /I "$(WXWIN)\include" /I "$(WXWIN)\contrib\include" /D "_DEBUG" /D "NDEBUG" /D "_UNICODE" /D WXUSINGDLL=1 /D "WIN32" /D "_CONSOLE" /D "_MBCS" /D "_MT" /D "_WINDOWS" /D "__WINDOWS__" /D "__WIN32__" /D WINVER=0x0400 /D "__WXMSW__" /D wxUSE_GUI=1 /D CUPS_DEFAULT_PATH=\"\" /YX /FD /c
 # ADD BASE RSC /l 0x407 /d "_DEBUG"
 # ADD RSC /l 0x409 /i "$(WXWIN)\include" /d "NDEBUG"
 BSC32=bscmake.exe
@@ -273,6 +273,26 @@ SOURCE=.\LoginDialog.cpp
 # Begin Source File
 
 SOURCE=.\md5.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\MyIPC.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\MySession.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\MyValidator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\MyWizard.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\MyXmlConfig.cpp
 # End Source File
 # Begin Source File
 
@@ -388,26 +408,6 @@ SOURCE=.\opennxApp.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MyIPC.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\MySession.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\MyValidator.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\MyWizard.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\MyXmlConfig.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\pwcrypt.cpp
 # End Source File
 # Begin Source File
@@ -433,6 +433,10 @@ SOURCE=.\SessionProperties.cpp
 # Begin Source File
 
 SOURCE=.\SmbShareProperties.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TextViewer.cpp
 # End Source File
 # Begin Source File
 
@@ -508,10 +512,6 @@ SOURCE=.\md5.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\opennxApp.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\MyIPC.h
 # End Source File
 # Begin Source File
@@ -533,6 +533,10 @@ SOURCE=.\MyWizard_symbols.h
 # Begin Source File
 
 SOURCE=.\MyXmlConfig.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\opennxApp.h
 # End Source File
 # Begin Source File
 
@@ -585,6 +589,14 @@ SOURCE=.\SmbShareProperties.h
 # Begin Source File
 
 SOURCE=.\SmbShareProperties_symbols.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TextViewer.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TextViewer_symbols.h
 # End Source File
 # Begin Source File
 
@@ -688,10 +700,6 @@ SOURCE=.\wx\msw\magnif1.cur
 # End Source File
 # Begin Source File
 
-SOURCE=.\res\opennx.xrc
-# End Source File
-# Begin Source File
-
 SOURCE=.\wx\msw\noentry.cur
 # End Source File
 # Begin Source File
@@ -701,6 +709,10 @@ SOURCE=".\res\nx-desktop.ico"
 # Begin Source File
 
 SOURCE=.\res\nx.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\opennx.xrc
 # End Source File
 # Begin Source File
 

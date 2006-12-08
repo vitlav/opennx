@@ -146,8 +146,8 @@ void MyWizard::CreateControls()
     m_pPageSecurity->Create(NULL);
     m_pPageFinish->Create(NULL);
 
-    for (wxWindowList::Node* node = GetChildren().GetFirst(); node; node = node->GetNext()) {
-        wxWizardPage* p = wxDynamicCast(node->GetData(), wxWizardPage);
+    for (wxWindowList::Node* n = GetChildren().GetFirst(); n; n = n->GetNext()) {
+        wxWizardPage* p = wxDynamicCast(n->GetData(), wxWizardPage);
         if (p) {
             int w, h;
             p->GetSize(&w, &h);
@@ -417,6 +417,7 @@ bool WizardPageSession::ConfigExists(wxString &sessionName)
 
 bool WizardPageSession::Create( wxWizard* parent )
 {
+    wxUnusedVar(parent);
     ////@begin WizardPageSession member initialisation
     m_iPort = 22;
     m_iConnectionSpeed = MyXmlConfig::SPEED_ADSL;
@@ -606,6 +607,7 @@ WizardPageDesktop::WizardPageDesktop( wxWizard* parent )
 
 bool WizardPageDesktop::Create( wxWizard* parent )
 {
+    wxUnusedVar(parent);
     ////@begin WizardPageDesktop member initialisation
     m_iSessionType = MyXmlConfig::STYPE_UNIX;
     m_iDesktopTypeDialog = MyXmlConfig::DTYPE_KDE;
@@ -833,6 +835,7 @@ WizardPageSecurity::WizardPageSecurity( wxWizard* parent )
 
 bool WizardPageSecurity::Create( wxWizard* parent )
 {
+    wxUnusedVar(parent);
     ////@begin WizardPageSecurity member initialisation
     m_bUseSmartCard = false;
     m_bEnableSSL = true;
@@ -948,6 +951,7 @@ WizardPageFinish::WizardPageFinish( wxWizard* parent )
 
 bool WizardPageFinish::Create( wxWizard* parent )
 {
+    wxUnusedVar(parent);
     ////@begin WizardPageFinish member initialisation
     m_bCreateShortcut = true;
     m_bShowAdvancedConfig = false;

@@ -217,6 +217,7 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
     wxString
 MyXmlConfig::sGetSessionParams(const wxString &protocolVersion)
 {
+    wxUnusedVar(protocolVersion);
     wxString ret = wxT("");
 
     ret += wxString::Format(wxT(" --session=\"%s\""), m_sName.c_str());
