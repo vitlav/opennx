@@ -1,12 +1,8 @@
-/////////////////////////////////////////////////////////////////////////////
 // $Id$
 //
-// Purpose:     Symbols file
 // Author:      Fritz Elfert
-// Created:     Wed 06 Dec 2006 15:00:39 CET
-// Copyright:   Copyright 2004 Millenux GmbH, 2006 InnoviData GmbH
+// Copyright:   Copyright (C) 2006 The OpenNX team
 // Licence:     LGPL
-/////////////////////////////////////////////////////////////////////////////
 
 #define ID_FRAME_ADMIN_SYMBOL_0 _("MX Session Administrator")
 #define ID_FRAME_ADMIN_SYMBOL_1 _("&File")

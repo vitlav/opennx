@@ -48,7 +48,7 @@ IMPLEMENT_DYNAMIC_CLASS( TextViewer, wxDialog )
 BEGIN_EVENT_TABLE( TextViewer, wxDialog )
 
 ////@begin TextViewer event table entries
-EVT_BUTTON( wxID_CLOSE, TextViewer::OnCloseClick )
+    EVT_BUTTON( wxID_CLOSE, TextViewer::OnCloseClick )
 
 ////@end TextViewer event table entries
 

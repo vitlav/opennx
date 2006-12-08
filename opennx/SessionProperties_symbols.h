@@ -1,7 +1,7 @@
 // $Id$
 //
 // Author:      Fritz Elfert
-// Copyright:   Copyright 2006 InnoviData GmbH
+// Copyright:   Copyright (C) 2006 The OpenNX team
 // Licence:     LGPL
 
 #define ID_DIALOG_PROPERTIES_SYMBOL_0 _("Session properties - OpenNX")

@@ -1,12 +1,8 @@
-/////////////////////////////////////////////////////////////////////////////
 // $Id$
 //
-// Purpose:     Symbols file
 // Author:      Fritz Elfert
-// Created:     Thu 07 Dec 2006 03:46:25 CET
-// Copyright:   Copyright 2004 Millenux GmbH, 2006 InnoviData GmbH
+// Copyright:   Copyright (C) 2006 The OpenNX team
 // Licence:     LGPL
-/////////////////////////////////////////////////////////////////////////////
 
 #define ID_DIALOG_IMAGE_RDP_SYMBOL_0 _("RDP Image Settings - OpenNX")
 #define ID_DIALOG_IMAGE_RDP_SYMBOL_1 _("Allowed colors")

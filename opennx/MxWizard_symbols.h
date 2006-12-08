@@ -1,12 +1,8 @@
-/////////////////////////////////////////////////////////////////////////////
 // $Id$
 //
-// Purpose:     Symbols file
 // Author:      Fritz Elfert
-// Created:     Wed 06 Dec 2006 15:11:16 CET
-// Copyright:   Copyright 2004 Millenux GmbH, 2006 InnoviData GmbH
+// Copyright:   Copyright (C) 2006 The OpenNX team
 // Licence:     LGPL
-/////////////////////////////////////////////////////////////////////////////
 
 #define ID_WIZARD_SYMBOL_0 _("MX Connection Wizard")
 #define ID_WIZARD_SYMBOL_1 _("Session")
