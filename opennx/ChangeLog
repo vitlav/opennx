@@ -1,17 +1,0 @@
-2006-11-29  gettextize  <bug-gnu-gettext@gnu.org>
-
-	* Makefile.am (EXTRA_DIST): Add [conf]/config.rpath, [conf]/mkinstalldirs.
-	* configure.ac (AC_CONFIG_FILES): Add po/Makefile.in, m4/Makefile.
-
-2004-12-09  gettextize  <bug-gnu-gettext@gnu.org>
-
-	* Makefile.am (EXTRA_DIST): Add conf/config.rpath conf/mkinstalldirs.
-	* configure.ac (AC_CONFIG_FILES): Add po/Makefile.in.
-
-2004-08-01  gettextize  <bug-gnu-gettext@gnu.org>
-
-	* Makefile.am (SUBDIRS): Add m4.
-	(ACLOCAL_AMFLAGS): New variable.
-	(EXTRA_DIST): New variable.
-	* configure.ac (AC_CONFIG_FILES): Add po/Makefile.in,
-
