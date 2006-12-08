@@ -1377,14 +1377,6 @@
             <string name="proxy-type">"wbBoxSizerProxy"</string>
             <string name="proxy-Orientation">"Vertical"</string>
             <string name="proxy-Member variable name">""</string>
-            <string name="proxy-AlignH">"Centre"</string>
-            <string name="proxy-AlignV">"Centre"</string>
-            <long name="proxy-Stretch factor">0</long>
-            <long name="proxy-Border">5</long>
-            <bool name="proxy-wxLEFT">1</bool>
-            <bool name="proxy-wxRIGHT">1</bool>
-            <bool name="proxy-wxTOP">1</bool>
-            <bool name="proxy-wxBOTTOM">1</bool>
             <bool name="proxy-wxSHAPED">0</bool>
             <bool name="proxy-wxADJUST_MINSIZE">0</bool>
             <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -1542,8 +1534,8 @@
                     <string name="proxy-Custom styles">""</string>
                     <long name="proxy-X">-1</long>
                     <long name="proxy-Y">-1</long>
-                    <long name="proxy-Width">146</long>
-                    <long name="proxy-Height">47</long>
+                    <long name="proxy-Width">195</long>
+                    <long name="proxy-Height">58</long>
                     <string name="proxy-AlignH">"Centre"</string>
                     <string name="proxy-AlignV">"Centre"</string>
                     <long name="proxy-Stretch factor">0</long>
@@ -1663,6 +1655,8 @@
                   <string name="proxy-Class">"wxPanel"</string>
                   <string name="proxy-Base class">"wxPanel"</string>
                   <string name="proxy-Member variable name">""</string>
+                  <string name="proxy-Tab label">"General"</string>
+                  <string name="proxy-Tab icon">""</string>
                   <bool name="proxy-External implementation">0</bool>
                   <bool name="proxy-Separate files">0</bool>
                   <string name="proxy-Implementation filename">""</string>
@@ -1710,8 +1704,6 @@
                   <string name="proxy-Custom arguments">""</string>
                   <string name="proxy-Custom ctor arguments">""</string>
                   <string name="proxy-Event sources">""</string>
-                  <string name="proxy-Tab label">"General"</string>
-                  <string name="proxy-Tab icon">""</string>
                   <document>
                     <string name="title">"wxFlexGridSizer"</string>
                     <string name="type">"dialog-control-document"</string>
@@ -2031,7 +2023,7 @@
                           <string name="proxy-Custom styles">""</string>
                           <long name="proxy-X">-1</long>
                           <long name="proxy-Y">-1</long>
-                          <long name="proxy-Width">21</long>
+                          <long name="proxy-Width">40</long>
                           <long name="proxy-Height">-1</long>
                           <string name="proxy-AlignH">"Expand"</string>
                           <string name="proxy-AlignV">"Centre"</string>
@@ -3144,7 +3136,7 @@
                           <string name="proxy-Custom styles">""</string>
                           <long name="proxy-X">-1</long>
                           <long name="proxy-Y">-1</long>
-                          <long name="proxy-Width">26</long>
+                          <long name="proxy-Width">35</long>
                           <long name="proxy-Height">-1</long>
                           <string name="proxy-AlignH">"Centre"</string>
                           <string name="proxy-AlignV">"Centre"</string>
@@ -3261,7 +3253,7 @@
                           <string name="proxy-Custom styles">""</string>
                           <long name="proxy-X">-1</long>
                           <long name="proxy-Y">-1</long>
-                          <long name="proxy-Width">26</long>
+                          <long name="proxy-Width">35</long>
                           <long name="proxy-Height">-1</long>
                           <string name="proxy-AlignH">"Centre"</string>
                           <string name="proxy-AlignV">"Centre"</string>
@@ -3501,6 +3493,8 @@
                   <string name="proxy-Class">"wxPanel"</string>
                   <string name="proxy-Base class">"wxPanel"</string>
                   <string name="proxy-Member variable name">""</string>
+                  <string name="proxy-Tab label">"Advanced"</string>
+                  <string name="proxy-Tab icon">""</string>
                   <bool name="proxy-External implementation">0</bool>
                   <bool name="proxy-Separate files">0</bool>
                   <string name="proxy-Implementation filename">""</string>
@@ -3548,8 +3542,6 @@
                   <string name="proxy-Custom arguments">""</string>
                   <string name="proxy-Custom ctor arguments">""</string>
                   <string name="proxy-Event sources">""</string>
-                  <string name="proxy-Tab label">"Advanced"</string>
-                  <string name="proxy-Tab icon">""</string>
                   <document>
                     <string name="title">"wxFlexGridSizer"</string>
                     <string name="type">"dialog-control-document"</string>
@@ -4113,7 +4105,7 @@
                           <string name="proxy-Custom styles">""</string>
                           <long name="proxy-X">-1</long>
                           <long name="proxy-Y">-1</long>
-                          <long name="proxy-Width">-1</long>
+                          <long name="proxy-Width">40</long>
                           <long name="proxy-Height">-1</long>
                           <string name="proxy-AlignH">"Centre"</string>
                           <string name="proxy-AlignV">"Centre"</string>
@@ -4719,6 +4711,8 @@
                   <string name="proxy-Class">"wxPanel"</string>
                   <string name="proxy-Base class">"wxPanel"</string>
                   <string name="proxy-Member variable name">""</string>
+                  <string name="proxy-Tab label">"Services"</string>
+                  <string name="proxy-Tab icon">""</string>
                   <bool name="proxy-External implementation">0</bool>
                   <bool name="proxy-Separate files">0</bool>
                   <string name="proxy-Implementation filename">""</string>
@@ -4766,8 +4760,6 @@
                   <string name="proxy-Custom arguments">""</string>
                   <string name="proxy-Custom ctor arguments">""</string>
                   <string name="proxy-Event sources">""</string>
-                  <string name="proxy-Tab label">"Services"</string>
-                  <string name="proxy-Tab icon">""</string>
                   <document>
                     <string name="title">"wxFlexGridSizer"</string>
                     <string name="type">"dialog-control-document"</string>
@@ -4856,8 +4848,8 @@
                         <string name="proxy-Custom styles">""</string>
                         <long name="proxy-X">-1</long>
                         <long name="proxy-Y">-1</long>
-                        <long name="proxy-Width">16</long>
-                        <long name="proxy-Height">16</long>
+                        <long name="proxy-Width">21</long>
+                        <long name="proxy-Height">19</long>
                         <string name="proxy-AlignH">"Centre"</string>
                         <string name="proxy-AlignV">"Centre"</string>
                         <long name="proxy-Stretch factor">0</long>
@@ -4987,8 +4979,8 @@
                         <string name="proxy-Custom styles">""</string>
                         <long name="proxy-X">-1</long>
                         <long name="proxy-Y">-1</long>
-                        <long name="proxy-Width">16</long>
-                        <long name="proxy-Height">16</long>
+                        <long name="proxy-Width">21</long>
+                        <long name="proxy-Height">19</long>
                         <string name="proxy-AlignH">"Centre"</string>
                         <string name="proxy-AlignV">"Centre"</string>
                         <long name="proxy-Stretch factor">0</long>
@@ -5160,7 +5152,7 @@
                         <string name="proxy-Custom styles">""</string>
                         <long name="proxy-X">-1</long>
                         <long name="proxy-Y">-1</long>
-                        <long name="proxy-Width">-1</long>
+                        <long name="proxy-Width">40</long>
                         <long name="proxy-Height">-1</long>
                         <string name="proxy-AlignH">"Centre"</string>
                         <string name="proxy-AlignV">"Centre"</string>
@@ -5491,8 +5483,8 @@
                         <string name="proxy-Custom styles">""</string>
                         <long name="proxy-X">-1</long>
                         <long name="proxy-Y">-1</long>
-                        <long name="proxy-Width">16</long>
-                        <long name="proxy-Height">16</long>
+                        <long name="proxy-Width">21</long>
+                        <long name="proxy-Height">19</long>
                         <string name="proxy-AlignH">"Centre"</string>
                         <string name="proxy-AlignV">"Centre"</string>
                         <long name="proxy-Stretch factor">0</long>
@@ -5578,6 +5570,8 @@
                   <string name="proxy-Class">"wxPanel"</string>
                   <string name="proxy-Base class">"wxPanel"</string>
                   <string name="proxy-Member variable name">""</string>
+                  <string name="proxy-Tab label">"Environment"</string>
+                  <string name="proxy-Tab icon">""</string>
                   <bool name="proxy-External implementation">0</bool>
                   <bool name="proxy-Separate files">0</bool>
                   <string name="proxy-Implementation filename">""</string>
@@ -5625,8 +5619,6 @@
                   <string name="proxy-Custom arguments">""</string>
                   <string name="proxy-Custom ctor arguments">""</string>
                   <string name="proxy-Event sources">""</string>
-                  <string name="proxy-Tab label">"Environment"</string>
-                  <string name="proxy-Tab icon">""</string>
                   <document>
                     <string name="title">"wxFlexGridSizer"</string>
                     <string name="type">"dialog-control-document"</string>

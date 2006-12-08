@@ -364,11 +364,12 @@ bool MySession::Create(const wxString cfgFileName, const wxString password)
                         {
                             wxString fname;
                             wxConfigBase::Get()->Read(wxT("Config/UserMxDir"), &fname);
-                            wxString o = wxString::Format(wxT("nx,cookie=%s,root=%s,product=%s,"),
-                                    sProxyCookie.c_str(), fname.c_str(), sSubscription.c_str());
-                            o += wxString::Format, sSessionID.c_str());
-                                    id=%s,session=session"),
-                                    sProxyCookie.c_str(), fname.c_str(), sSubscription.c_str(), sSessionID.c_str());
+                            wxString o;
+                            o << wxT("nx,cookie=") << sProxyCookie
+                              << wxT(",session=session")
+                              << wxT(",root=") << fname
+                              << wxT(",product=") << sSubscription
+                              << wxT(",id=") << sSessionID;
 #if 0
                             if (bSslTunneling)
                                 o += wxString::Format(wxT("listen=20000:%s"), sSessionDisplay.c_str());
