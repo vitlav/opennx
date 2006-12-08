@@ -64,13 +64,12 @@ else
 	AC_MSG_NOTICE([will link against shared wxWidgets libs])
 fi
 
-AM_PATH_WXCONFIG(2.5.3,wxWidgets=1,wxWidgets=0,[xrc,qa,html,adv,core,xml,net], $WXPARAMS)
+AM_PATH_WXCONFIG(2.6.3,wxWidgets=1,wxWidgets=0,[xrc,qa,html,adv,core,xml,net], $WXPARAMS)
 
 test ${wxWidgets} = 0 && AC_MSG_ERROR(Could not find wxWidgets library)
 
 LIBS="$LIBS $WX_LIBS"
 CPPFLAGS="$CPPFLAGS $WX_CPPFLAGS"
-#CXXFLAGS="$CXXFLAGS $WX_CXXFLAGS -fuse-cxa-atexit"
 CXXFLAGS="$CXXFLAGS $WX_CXXFLAGS"
 LDFLAGS="$LDFLAGS $WX_LDFLAGS"
 
@@ -82,6 +81,8 @@ AC_ARG_ENABLE([warn],
 		CPPFLAGS="$CPPFLAGS -Wctor-dtor-privacy -Wnon-virtual-dtor -Weffc++ -Wold-style-cast -Woverloaded-virtual -Wchar-subscripts -Wcomment -Wformat -Wimplicit -Wmissing-braces -Wparentheses -Wreturn-type -Wswitch -Wuninitialized"
 	]
 )
+
+AC_CHECK_LIB(cups,cupsServer)
 
 CUPS_DEFAULT_PATH=
 AC_PATH_PROG([cupsd],[cupsd],[],[$PATH:/usr/sbin:/usr/local/sbin])

@@ -58,6 +58,5 @@ MAINTAINERCLEANFILES = Makefile.in configure aclocal.m4 conf/config.guess \
 
 DISTCLEANFILES = res/*.prv.*
 
-EXTRA_DIST = conf conf/mkinstalldirs  conf/config.rpath conf/mkinstalldirs opennx.pjd opennx.dsw \
-	opennx.dsp opennx.rc res/opennx.rc res/opennx.xrc \
-	Translations.dsp PackedResources.dsp
+EXTRA_DIST = conf/* res/* opennx.pjd opennx.dsw *.dsp \
+	opennx.rc

@@ -42,6 +42,9 @@ SessionProperties_symbols.h
 SmbShareProperties.cpp
 SmbShareProperties.h
 SmbShareProperties_symbols.h
+TextViewer.cpp
+TextViewer.h
+TextViewer_symbols.h
 UnixImageSettingsDialog.cpp
 UnixImageSettingsDialog.h
 UnixImageSettingsDialog_symbols.h
