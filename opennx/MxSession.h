@@ -3,7 +3,7 @@
 
 #include <wx/regex.h>
 
-class MxSession
+class MySession
 {
 public:
     friend class SessionList;
@@ -21,10 +21,10 @@ public:
         Running,
     };
 
-    MxSession() { }
-    MxSession(wxString dir, wxString status, wxString stype, wxString host, int port, wxString md5);
-    MxSession(const MxSession &src);
-    virtual ~MxSession();
+    MySession() { }
+    MySession(wxString dir, wxString status, wxString stype, wxString host, int port, wxString md5);
+    MySession(const MySession &src);
+    virtual ~MySession();
 
     wxString GetCreationTime();
     wxString GetPIDStr() { return wxString::Format(_T("%d"), m_pid); }
@@ -34,7 +34,7 @@ public:
     bool GetPidFromFile();
     void CheckState();
 
-    MxSession &operator =(const MxSession &src);
+    MySession &operator =(const MySession &src);
 
 private:
 

@@ -32,7 +32,7 @@
 
 ////@begin forward declarations
 ////@end forward declarations
-class MxXmlConfig;
+class MyXmlConfig;
 
 /*!
  * Control identifiers
@@ -75,7 +75,7 @@ public:
     /// Creation
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_X11PROPERTYDIALOG_IDNAME, const wxString& caption = SYMBOL_X11PROPERTYDIALOG_TITLE, const wxPoint& pos = SYMBOL_X11PROPERTYDIALOG_POSITION, const wxSize& size = SYMBOL_X11PROPERTYDIALOG_SIZE, long style = SYMBOL_X11PROPERTYDIALOG_STYLE );
 
-    void SetConfig(MxXmlConfig *);
+    void SetConfig(MyXmlConfig *);
 
 private:
     /// Creates the controls and sizers
@@ -134,7 +134,7 @@ private:
     bool m_bDisableXagent;
 ////@end X11PropertyDialog member variables
 
-    MxXmlConfig *m_pCfg;
+    MyXmlConfig *m_pCfg;
 };
 
 #endif

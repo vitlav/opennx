@@ -31,7 +31,7 @@
  * Forward declarations
  */
 
-class MxXmlConfig;
+class MyXmlConfig;
 
 ////@begin forward declarations
 ////@end forward declarations
@@ -134,7 +134,7 @@ private:
     wxString m_sTmpPassword;
 ////@end LoginDialog member variables
 
-    MxXmlConfig *m_pCurrentCfg;
+    MyXmlConfig *m_pCurrentCfg;
     wxArrayString m_aConfigFiles;
     wxArrayString m_aSessionNames;
 };

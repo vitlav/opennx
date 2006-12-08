@@ -9,7 +9,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #if defined(__GNUG__) && !defined(__APPLE__)
-#pragma implementation "MxWizard.h"
+#pragma implementation "MyWizard.h"
 #endif
 
 // For compilers that support precompilation, includes "wx/wx.h".
@@ -30,8 +30,8 @@
 #include <shlobj.h>
 #endif
 
-#include "MxWizard.h"
-#include "MxXmlConfig.h"
+#include "MyWizard.h"
+#include "MyXmlConfig.h"
 #include "MyValidator.h"
 #include "X11PropertyDialog.h"
 #include "RdpPropertyDialog.h"
@@ -45,79 +45,79 @@
 #ifdef MYTRACETAG
 # undef MYTRACETAG
 #endif
-#define MYTRACETAG wxT("MxWizard")
+#define MYTRACETAG wxT("MyWizard")
 
 /*!
- * MxWizard type definition
+ * MyWizard type definition
  */
 
-IMPLEMENT_CLASS( MxWizard, wxWizard )
+IMPLEMENT_CLASS( MyWizard, wxWizard )
 
     /*!
-     * MxWizard event table definition
+     * MyWizard event table definition
      */
 
-BEGIN_EVENT_TABLE( MxWizard, wxWizard )
+BEGIN_EVENT_TABLE( MyWizard, wxWizard )
 
-    ////@begin MxWizard event table entries
-    ////@end MxWizard event table entries
+    ////@begin MyWizard event table entries
+    ////@end MyWizard event table entries
 
 END_EVENT_TABLE()
 
     /*!
-     * MxWizard constructors
+     * MyWizard constructors
      */
 
-    MxWizard::MxWizard( )
+    MyWizard::MyWizard( )
     : minW(290)
       , minH(200)
 {
-    m_pCfg = new MxXmlConfig();
+    m_pCfg = new MyXmlConfig();
 }
 
-    MxWizard::MxWizard( wxWindow* parent, wxWindowID id, const wxPoint& pos )
+    MyWizard::MyWizard( wxWindow* parent, wxWindowID id, const wxPoint& pos )
     : minW(290)
       , minH(200)
 {
-    m_pCfg = new MxXmlConfig();
+    m_pCfg = new MyXmlConfig();
     Create(parent, id, pos);
 }
 
-MxWizard::~MxWizard()
+MyWizard::~MyWizard()
 {
     if (m_pCfg)
         delete m_pCfg;
 }
 
 /*!
- * MxWizard creator
+ * MyWizard creator
  */
 
-bool MxWizard::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxPoint& WXUNUSED(pos) )
+bool MyWizard::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxPoint& WXUNUSED(pos) )
 {
-    ////@begin MxWizard member initialisation
+    ////@begin MyWizard member initialisation
     m_pPageWelcome = NULL;
     m_pPageSession = NULL;
     m_pPageDesktop = NULL;
     m_pPageSecurity = NULL;
     m_pPageFinish = NULL;
-    ////@end MxWizard member initialisation
+    ////@end MyWizard member initialisation
 
-    ////@begin MxWizard creation
+    ////@begin MyWizard creation
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/opennx-wizard.png")));
-    ////@end MxWizard creation
+    ////@end MyWizard creation
     return TRUE;
 }
 
 /*!
- * Control creation for MxWizard
+ * Control creation for MyWizard
  */
 
-void MxWizard::CreateControls()
+void MyWizard::CreateControls()
 {
-    ////@begin MxWizard content construction
+    ////@begin MyWizard content construction
     if (!wxXmlResource::Get()->LoadObject(this, GetParent(), _T("ID_WIZARD"), wxT("wxWizard")))
         wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
 
@@ -133,12 +133,12 @@ void MxWizard::CreateControls()
     m_pPageDesktop = XRCCTRL(*this, "ID_WIZARDPAGE_DESKTOP", WizardPageDesktop);
     m_pPageSecurity = XRCCTRL(*this, "ID_WIZARDPAGE_SECURITY", WizardPageSecurity);
     m_pPageFinish = XRCCTRL(*this, "ID_WIZARDPAGE_FINISH", WizardPageFinish);
-    ////@end MxWizard content construction
+    ////@end MyWizard content construction
 
     // Create custom windows not generated automatically here.
 
-    ////@begin MxWizard content initialisation
-    ////@end MxWizard content initialisation
+    ////@begin MyWizard content initialisation
+    ////@end MyWizard content initialisation
     nextButton = wxDynamicCast(FindWindowById(wxID_FORWARD, this), wxButton);
     m_pPageWelcome->Create(NULL);
     m_pPageSession->Create(NULL);
@@ -160,19 +160,19 @@ void MxWizard::CreateControls()
     }
 }
 
-void MxWizard::EnableNext(bool enable)
+void MyWizard::EnableNext(bool enable)
 {
     nextButton->Enable(enable);
 }
 
-void MxWizard::KeyTyped()
+void MyWizard::KeyTyped()
 {
     wxWizardPage *p = GetCurrentPage();
     if (p->IsKindOf(CLASSINFO(WizardPageSession)))
         wxDynamicCast(p, WizardPageSession)->KeyTyped();
 }
 
-wxSize MxWizard::GetPageSize() const
+wxSize MyWizard::GetPageSize() const
 {
     // Original Height of 290 is waaayyy to big
     return wxSize(minW, minH);
@@ -182,7 +182,7 @@ wxSize MxWizard::GetPageSize() const
  * Runs the wizard.
  */
 
-bool MxWizard::Run()
+bool MyWizard::Run()
 {
     wxWindowListNode* node = GetChildren().GetFirst();
     while (node)
@@ -204,7 +204,7 @@ bool MxWizard::Run()
  * Should we show tooltips?
  */
 
-bool MxWizard::ShowToolTips()
+bool MyWizard::ShowToolTips()
 {
     return TRUE;
 }
@@ -213,7 +213,7 @@ bool MxWizard::ShowToolTips()
  * Get bitmap resources
  */
 
-wxBitmap MxWizard::GetBitmapResource( const wxString& name )
+wxBitmap MyWizard::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
     return CreateBitmapFromFile(name);
@@ -223,13 +223,13 @@ wxBitmap MxWizard::GetBitmapResource( const wxString& name )
  * Get icon resources
  */
 
-wxIcon MxWizard::GetIconResource( const wxString& name)
+wxIcon MyWizard::GetIconResource( const wxString& name)
 {
     // Icon retrieval
     return CreateIconFromFile(name);
 }
 
-wxString MxWizard::sGetConfigName()
+wxString MyWizard::sGetConfigName()
 {
     return m_pCfg ? m_pCfg->sGetName() : _T("");
 }
@@ -420,7 +420,7 @@ bool WizardPageSession::Create( wxWizard* parent )
 {
     ////@begin WizardPageSession member initialisation
     m_iPort = 22;
-    m_iConnectionSpeed = MxXmlConfig::SPEED_ADSL;
+    m_iConnectionSpeed = MyXmlConfig::SPEED_ADSL;
     m_pText1 = NULL;
     m_pCtrlSessionName = NULL;
     m_pText2 = NULL;
@@ -442,9 +442,9 @@ bool WizardPageSession::Create( wxWizard* parent )
     CreateControls();
     ////@end WizardPageSession creation
     CreateControls();
-    wxDynamicCast(m_pCtrlSessionName->GetValidator(), MyValidator)->SetKeyTyped(wxDynamicCast(GetParent(), MxWizard));
-    wxDynamicCast(m_pCtrlHostName->GetValidator(), MyValidator)->SetKeyTyped(wxDynamicCast(GetParent(), MxWizard));
-    wxDynamicCast(m_pCtrlPort->GetValidator(), MyValidator)->SetKeyTyped(wxDynamicCast(GetParent(), MxWizard));
+    wxDynamicCast(m_pCtrlSessionName->GetValidator(), MyValidator)->SetKeyTyped(wxDynamicCast(GetParent(), MyWizard));
+    wxDynamicCast(m_pCtrlHostName->GetValidator(), MyValidator)->SetKeyTyped(wxDynamicCast(GetParent(), MyWizard));
+    wxDynamicCast(m_pCtrlPort->GetValidator(), MyValidator)->SetKeyTyped(wxDynamicCast(GetParent(), MyWizard));
     initHtml(m_pText1, _("Insert the name of the session. Your configuration settings will be saved with this name."));
     initHtml(m_pText2, _("Insert the name and port of the server you want to connect."));
     initHtml(m_pText3, _("Select the type of your internet connection."));
@@ -541,7 +541,7 @@ void WizardPageSession::CheckNextEnable()
         if (wxFileName::FileExists(cfgfn))
             enable = false;
     }
-    wxDynamicCast(GetParent(), MxWizard)->EnableNext(enable);
+    wxDynamicCast(GetParent(), MyWizard)->EnableNext(enable);
 }
 
 #define TIMERID_RDP 1
@@ -608,9 +608,9 @@ WizardPageDesktop::WizardPageDesktop( wxWizard* parent )
 bool WizardPageDesktop::Create( wxWizard* parent )
 {
     ////@begin WizardPageDesktop member initialisation
-    m_iSessionType = MxXmlConfig::STYPE_UNIX;
-    m_iDesktopTypeDialog = MxXmlConfig::DTYPE_KDE;
-    m_iDisplayType = MxXmlConfig::DPTYPE_AVAILABLE;
+    m_iSessionType = MyXmlConfig::STYPE_UNIX;
+    m_iDesktopTypeDialog = MyXmlConfig::DTYPE_KDE;
+    m_iDisplayType = MyXmlConfig::DPTYPE_AVAILABLE;
     m_iDisplayWidth = 800;
     m_iDisplayHeight = 600;
     m_pText1 = NULL;
@@ -672,31 +672,31 @@ void WizardPageDesktop::UpdateDialogConstraints(bool getValues)
 
     // 'General' tab
     switch (m_iSessionType) {
-        case MxXmlConfig::STYPE_UNIX:
+        case MyXmlConfig::STYPE_UNIX:
             m_pCtrlDesktopType->SetString(0, _("KDE"));
             m_pCtrlDesktopType->SetSelection(m_iDesktopTypeDialog);
             m_pCtrlDesktopType->Enable(true);
-            m_pCtrlDesktopSettings->Enable(m_iDesktopTypeDialog == MxXmlConfig::DTYPE_CUSTOM);
+            m_pCtrlDesktopSettings->Enable(m_iDesktopTypeDialog == MyXmlConfig::DTYPE_CUSTOM);
             break;
-        case MxXmlConfig::STYPE_WINDOWS:
+        case MyXmlConfig::STYPE_WINDOWS:
             m_pCtrlDesktopType->SetString(0, _("RDP"));
             m_pCtrlDesktopType->SetSelection(0);
-            m_iDesktopType = MxXmlConfig::DTYPE_RDP;
+            m_iDesktopType = MyXmlConfig::DTYPE_RDP;
             m_iDesktopTypeDialog = 0;
             m_pCtrlDesktopType->Enable(false);
             m_pCtrlDesktopSettings->Enable(true);
             break;
-        case MxXmlConfig::STYPE_VNC:
+        case MyXmlConfig::STYPE_VNC:
             m_pCtrlDesktopType->SetString(0, _("RFB"));
             m_pCtrlDesktopType->SetSelection(0);
-            m_iDesktopType = MxXmlConfig::DTYPE_RFB;
+            m_iDesktopType = MyXmlConfig::DTYPE_RFB;
             m_iDesktopTypeDialog = 0;
             m_pCtrlDesktopType->Enable(false);
             m_pCtrlDesktopSettings->Enable(true);
             break;
     }
     switch (m_iDisplayType) {
-        case MxXmlConfig::DPTYPE_CUSTOM:
+        case MyXmlConfig::DPTYPE_CUSTOM:
             m_pCtrlDisplayWidth->Enable(true);
             m_pCtrlDisplayHeight->Enable(true);
             break;
@@ -745,7 +745,7 @@ wxIcon WizardPageDesktop::GetIconResource( const wxString& name )
 void WizardPageDesktop::ShowRdpPropertyDialog()
 {
     RdpPropertyDialog d;
-    d.SetConfig(wxDynamicCast(GetParent(), MxWizard)->pGetConfig());
+    d.SetConfig(wxDynamicCast(GetParent(), MyWizard)->pGetConfig());
     d.Create(this);
     d.ShowModal();
     CheckNextEnable();
@@ -754,7 +754,7 @@ void WizardPageDesktop::ShowRdpPropertyDialog()
 void WizardPageDesktop::ShowVncPropertyDialog()
 {
     VncPropertyDialog d;
-    d.SetConfig(wxDynamicCast(GetParent(), MxWizard)->pGetConfig());
+    d.SetConfig(wxDynamicCast(GetParent(), MyWizard)->pGetConfig());
     d.Create(this);
     d.ShowModal();
     CheckNextEnable();
@@ -773,24 +773,24 @@ void WizardPageDesktop::OnVncDialogTimer(wxTimerEvent &)
 void WizardPageDesktop::CheckNextEnable()
 {
     bool enable = true;
-    MxXmlConfig *cfg = wxDynamicCast(GetParent(), MxWizard)->pGetConfig();
+    MyXmlConfig *cfg = wxDynamicCast(GetParent(), MyWizard)->pGetConfig();
     switch (m_iSessionType) {
-        case MxXmlConfig::STYPE_UNIX:
-            if (m_iDesktopTypeDialog == MxXmlConfig::DTYPE_CUSTOM) {
+        case MyXmlConfig::STYPE_UNIX:
+            if (m_iDesktopTypeDialog == MyXmlConfig::DTYPE_CUSTOM) {
                 if (cfg->sGetCommandLine().IsEmpty() && (!cfg->bGetRunConsole()) && (!cfg->bGetRunXclients()))
                     enable = false;
             }
             break;
-        case MxXmlConfig::STYPE_WINDOWS:
+        case MyXmlConfig::STYPE_WINDOWS:
             if (cfg->sGetRdpHostName().IsEmpty())
                 enable = false;
             break;
-        case MxXmlConfig::STYPE_VNC:
+        case MyXmlConfig::STYPE_VNC:
             if (cfg->sGetVncHostName().IsEmpty())
                 enable = false;
             break;
     }
-    wxDynamicCast(GetParent(), MxWizard)->EnableNext(enable);
+    wxDynamicCast(GetParent(), MyWizard)->EnableNext(enable);
 }
 
 /*!
@@ -1030,14 +1030,14 @@ void WizardPageDesktop::OnComboboxDprotoSelected( wxCommandEvent& event )
         m_pCtrlDesktopType->SetSelection(m_iDesktopTypeDialog);
     }
     UpdateDialogConstraints(true);
-    MxXmlConfig *cfg = wxDynamicCast(GetParent(), MxWizard)->pGetConfig();
+    MyXmlConfig *cfg = wxDynamicCast(GetParent(), MyWizard)->pGetConfig();
     CheckNextEnable();
     switch (m_iSessionType) {
-        case MxXmlConfig::STYPE_WINDOWS:
+        case MyXmlConfig::STYPE_WINDOWS:
             if (cfg->sGetRdpHostName().IsEmpty())
                 m_pRdpDialogTimer->Start(200, true);
             break;
-        case MxXmlConfig::STYPE_VNC:
+        case MyXmlConfig::STYPE_VNC:
             if (cfg->sGetVncHostName().IsEmpty())
                 m_pVncDialogTimer->Start(200, true);
             break;
@@ -1088,7 +1088,7 @@ void WizardPageSecurity::OnCheckboxScardClick( wxCommandEvent& event )
 
 void WizardPageWelcome::OnWizardpageWelcomePageChanged( wxWizardEvent& event )
 {
-    wxDynamicCast(GetParent(), MxWizard)->EnableNext(true);
+    wxDynamicCast(GetParent(), MyWizard)->EnableNext(true);
     event.Skip();
 }
 
@@ -1099,7 +1099,7 @@ void WizardPageWelcome::OnWizardpageWelcomePageChanged( wxWizardEvent& event )
 void WizardPageSession::OnWizardpageSessionPageChanged( wxWizardEvent& event )
 {
     if (event.GetDirection())
-        wxDynamicCast(GetParent(), MxWizard)->EnableNext(false);
+        wxDynamicCast(GetParent(), MyWizard)->EnableNext(false);
     event.Skip();
 }
 
@@ -1109,7 +1109,7 @@ void WizardPageSession::OnWizardpageSessionPageChanged( wxWizardEvent& event )
 
 void WizardPageDesktop::OnWizardpageDesktopPageChanged( wxWizardEvent& event )
 {
-    wxDynamicCast(GetParent(), MxWizard)->EnableNext(true);
+    wxDynamicCast(GetParent(), MyWizard)->EnableNext(true);
     event.Skip();
 }
 
@@ -1120,7 +1120,7 @@ void WizardPageDesktop::OnWizardpageDesktopPageChanged( wxWizardEvent& event )
 
 void WizardPageSecurity::OnWizardpageSecurityPageChanged( wxWizardEvent& event )
 {
-    wxDynamicCast(GetParent(), MxWizard)->EnableNext(true);
+    wxDynamicCast(GetParent(), MyWizard)->EnableNext(true);
     event.Skip();
 }
 
@@ -1131,8 +1131,8 @@ void WizardPageSecurity::OnWizardpageSecurityPageChanged( wxWizardEvent& event )
 
 void WizardPageFinish::OnWizardpageFinishPageChanged( wxWizardEvent& event )
 {
-    wxDynamicCast(GetParent(), MxWizard)->EnableNext(true);
-    MxXmlConfig *cfg = wxDynamicCast(GetParent(), MxWizard)->pGetConfig();
+    wxDynamicCast(GetParent(), MyWizard)->EnableNext(true);
+    MyXmlConfig *cfg = wxDynamicCast(GetParent(), MyWizard)->pGetConfig();
     wxString cfgName = cfg->sGetName();
     cfgName.Replace(_T(" "), _T("&nbsp;"));
     initHtml(m_pText1, wxString::Format(
@@ -1185,19 +1185,19 @@ void WizardPageSession::OnTextctrlSvrportUpdated( wxCommandEvent& event )
 void WizardPageDesktop::OnButtonDsettingsClick( wxCommandEvent& event )
 {
     switch (m_iSessionType) {
-        case MxXmlConfig::STYPE_UNIX:
+        case MyXmlConfig::STYPE_UNIX:
             {
                 X11PropertyDialog d;
-                d.SetConfig(wxDynamicCast(GetParent(), MxWizard)->pGetConfig());
+                d.SetConfig(wxDynamicCast(GetParent(), MyWizard)->pGetConfig());
                 d.Create(this);
                 d.ShowModal();
                 CheckNextEnable();
             }
             break;
-        case MxXmlConfig::STYPE_WINDOWS:
+        case MyXmlConfig::STYPE_WINDOWS:
             ShowRdpPropertyDialog();
             break;
-        case MxXmlConfig::STYPE_VNC:
+        case MyXmlConfig::STYPE_VNC:
             ShowVncPropertyDialog();
             break;
     }
@@ -1211,7 +1211,7 @@ void WizardPageDesktop::OnButtonDsettingsClick( wxCommandEvent& event )
 void WizardPageSession::OnWizardpageSessionPageChanging( wxWizardEvent& event )
 {
     if (event.GetDirection()) {
-        MxXmlConfig *cfg = wxDynamicCast(GetParent(), MxWizard)->pGetConfig();
+        MyXmlConfig *cfg = wxDynamicCast(GetParent(), MyWizard)->pGetConfig();
         TransferDataFromWindow();
         cfg->sSetName(m_sSessionName);
         cfg->sSetServerHost(m_sHostName);
@@ -1233,11 +1233,11 @@ void WizardPageSession::OnWizardpageSessionPageChanging( wxWizardEvent& event )
 void WizardPageDesktop::OnWizardpageDesktopPageChanging( wxWizardEvent& event )
 {
     if (event.GetDirection()) {
-        MxXmlConfig *cfg = wxDynamicCast(GetParent(), MxWizard)->pGetConfig();
+        MyXmlConfig *cfg = wxDynamicCast(GetParent(), MyWizard)->pGetConfig();
         TransferDataFromWindow();
-        cfg->eSetSessionType(wx_static_cast(MxXmlConfig::SessionType, m_iSessionType));
-        cfg->eSetDesktopType(wx_static_cast(MxXmlConfig::DesktopType, m_iDesktopType));
-        cfg->eSetDisplayType(wx_static_cast(MxXmlConfig::DisplayType, m_iDisplayType));
+        cfg->eSetSessionType(wx_static_cast(MyXmlConfig::SessionType, m_iSessionType));
+        cfg->eSetDesktopType(wx_static_cast(MyXmlConfig::DesktopType, m_iDesktopType));
+        cfg->eSetDisplayType(wx_static_cast(MyXmlConfig::DisplayType, m_iDisplayType));
         cfg->iSetDisplayWidth(m_iDisplayWidth);
         cfg->iSetDisplayHeight(m_iDisplayHeight);
     }
@@ -1252,7 +1252,7 @@ void WizardPageDesktop::OnWizardpageDesktopPageChanging( wxWizardEvent& event )
 void WizardPageSecurity::OnWizardpageSecurityPageChanging( wxWizardEvent& event )
 {
     if (event.GetDirection()) {
-        MxXmlConfig *cfg = wxDynamicCast(GetParent(), MxWizard)->pGetConfig();
+        MyXmlConfig *cfg = wxDynamicCast(GetParent(), MyWizard)->pGetConfig();
         TransferDataFromWindow();
         cfg->bSetEnableSSL(m_bEnableSSL);
         cfg->bSetUseSmartCard(m_bUseSmartCard);
@@ -1268,8 +1268,8 @@ void WizardPageSecurity::OnWizardpageSecurityPageChanging( wxWizardEvent& event 
 void WizardPageFinish::OnWizardpageFinishPageChanging( wxWizardEvent& event )
 {
     if (event.GetDirection()) {
-        MxXmlConfig *cfg = wxDynamicCast(GetParent(), MxWizard)->pGetConfig();
-        wxLogTrace(MYTRACETAG, _T("MxWizard: creating new config %s"), cfg->sGetFileName().c_str());
+        MyXmlConfig *cfg = wxDynamicCast(GetParent(), MyWizard)->pGetConfig();
+        wxLogTrace(MYTRACETAG, _T("MyWizard: creating new config %s"), cfg->sGetFileName().c_str());
         cfg->SaveToFile();
         TransferDataFromWindow();
         if (m_bShowAdvancedConfig) {
@@ -1284,7 +1284,7 @@ void WizardPageFinish::OnWizardpageFinishPageChanging( wxWizardEvent& event )
                     // actually we were not cancelled but we want to behave
                     // as if we were, because the just created session has
                     // been deleted.
-                    wxDynamicCast(GetParent(), MxWizard)->SetCancelled();
+                    wxDynamicCast(GetParent(), MyWizard)->SetCancelled();
                     m_bCreateShortcut = false;
                     break;
             }

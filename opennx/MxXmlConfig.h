@@ -1,4 +1,4 @@
-// MxXmlConfig.h: interface for the MxXmlConfig class.
+// MyXmlConfig.h: interface for the MyXmlConfig class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -6,7 +6,7 @@
 #define _MXXMLCONFIG_H_
 
 #if defined(__GNUG__) && !defined(__APPLE__)
-#pragma interface "MxXmlConfig.cpp"
+#pragma interface "MyXmlConfig.cpp"
 #endif
 
 #include <wx/dynarray.h>
@@ -35,7 +35,7 @@ public:
 
 WX_DECLARE_OBJARRAY(ShareGroup, ArrayOfShareGroups);
 
-class MxXmlConfig
+class MyXmlConfig
 {
 public:
     typedef enum {
@@ -91,12 +91,12 @@ public:
         CACHEDISK_128MB,
     } CacheDisk;
 
-    MxXmlConfig();
-    MxXmlConfig(const wxString &);
-    virtual ~MxXmlConfig();
+    MyXmlConfig();
+    MyXmlConfig(const wxString &);
+    virtual ~MyXmlConfig();
     
-    MxXmlConfig &operator =(const MxXmlConfig &);
-    bool operator ==(const MxXmlConfig &);
+    MyXmlConfig &operator =(const MyXmlConfig &);
+    bool operator ==(const MyXmlConfig &);
 
     void saveState();
     bool checkChanged();
@@ -139,12 +139,12 @@ public:
     bool bGetVncRememberPassword() { return m_bVncRememberPassword; }
     bool bGetVncUseMxAuth() { return m_bVncUseMxAuth; }
     
-    MxXmlConfig::ConnectionSpeed eGetConnectionSpeed() { return m_eConnectionSpeed; }
-    MxXmlConfig::DesktopType eGetDesktopType() { return m_eDesktopType; }
-    MxXmlConfig::DisplayType eGetDisplayType() { return m_eDisplayType; }
-    MxXmlConfig::SessionType eGetSessionType() { return m_eSessionType; }
-    MxXmlConfig::CacheMemory eGetCacheMemory() { return m_eCacheMemory; }
-    MxXmlConfig::CacheDisk eGetCacheDisk() { return m_eCacheDisk; }
+    MyXmlConfig::ConnectionSpeed eGetConnectionSpeed() { return m_eConnectionSpeed; }
+    MyXmlConfig::DesktopType eGetDesktopType() { return m_eDesktopType; }
+    MyXmlConfig::DisplayType eGetDisplayType() { return m_eDisplayType; }
+    MyXmlConfig::SessionType eGetSessionType() { return m_eSessionType; }
+    MyXmlConfig::CacheMemory eGetCacheMemory() { return m_eCacheMemory; }
+    MyXmlConfig::CacheDisk eGetCacheDisk() { return m_eCacheDisk; }
 
     int iGetCupsPort() { return m_iCupsPort; }
     int iGetDisplayHeight() { return m_iDisplayHeight; }
@@ -210,12 +210,12 @@ public:
     void bSetVncRememberPassword(bool b) { m_bVncRememberPassword = b; }
     void bSetVncUseMxAuth(bool b) { m_bVncUseMxAuth = b; }
     
-    void eSetCacheDisk(MxXmlConfig::CacheDisk e) { m_eCacheDisk = e; }
-    void eSetCacheMemory(MxXmlConfig::CacheMemory e) { m_eCacheMemory = e; }
-    void eSetConnectionSpeed(MxXmlConfig::ConnectionSpeed e) { m_eConnectionSpeed = e; }
-    void eSetDesktopType(MxXmlConfig::DesktopType e) { m_eDesktopType = e; }
-    void eSetDisplayType(MxXmlConfig::DisplayType e) { m_eDisplayType = e; }
-    void eSetSessionType(MxXmlConfig::SessionType e) { m_eSessionType = e; }
+    void eSetCacheDisk(MyXmlConfig::CacheDisk e) { m_eCacheDisk = e; }
+    void eSetCacheMemory(MyXmlConfig::CacheMemory e) { m_eCacheMemory = e; }
+    void eSetConnectionSpeed(MyXmlConfig::ConnectionSpeed e) { m_eConnectionSpeed = e; }
+    void eSetDesktopType(MyXmlConfig::DesktopType e) { m_eDesktopType = e; }
+    void eSetDisplayType(MyXmlConfig::DisplayType e) { m_eDisplayType = e; }
+    void eSetSessionType(MyXmlConfig::SessionType e) { m_eSessionType = e; }
 
     void iSetCupsPort(int i) { m_iCupsPort = i; }
     void iSetDisplayHeight(int i) { m_iDisplayHeight = i; }
@@ -339,7 +339,7 @@ private:
     ArrayOfShareGroups m_aShareGroups;
     wxArrayString m_aUsedShareGroups;
 
-    MxXmlConfig *saved;
+    MyXmlConfig *saved;
     wxString *m_pMd5Password;
     wxString *m_pClrPassword;
 };

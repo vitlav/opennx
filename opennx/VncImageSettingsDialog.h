@@ -33,7 +33,7 @@
 
 ////@begin forward declarations
 ////@end forward declarations
-class MxXmlConfig;
+class MyXmlConfig;
 
 /*!
  * Control identifiers
@@ -72,7 +72,7 @@ public:
 
     /// Creation
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_VNCIMAGESETTINGSDIALOG_IDNAME, const wxString& caption = SYMBOL_VNCIMAGESETTINGSDIALOG_TITLE, const wxPoint& pos = SYMBOL_VNCIMAGESETTINGSDIALOG_POSITION, const wxSize& size = SYMBOL_VNCIMAGESETTINGSDIALOG_SIZE, long style = SYMBOL_VNCIMAGESETTINGSDIALOG_STYLE );
-    void SetConfig(MxXmlConfig *);
+    void SetConfig(MyXmlConfig *);
 
 private:
     /// Creates the controls and sizers
@@ -119,7 +119,7 @@ private:
     bool m_bUseTightJpeg;
 ////@end VncImageSettingsDialog member variables
 
-    MxXmlConfig *m_pCfg;
+    MyXmlConfig *m_pCfg;
 };
 
 #endif

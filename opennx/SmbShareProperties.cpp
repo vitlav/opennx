@@ -28,7 +28,7 @@
 ////@end includes
 
 #include "MyValidator.h"
-#include "MxXmlConfig.h"
+#include "MyXmlConfig.h"
 #include "WinShare.h"
 #include "SmbShareProperties.h"
 #include "Icon.h"
@@ -78,7 +78,7 @@ SmbShareProperties::SmbShareProperties( wxWindow* parent, wxWindowID id, const w
     Create(parent, id, caption, pos, size, style);
 }
 
-void SmbShareProperties::SetConfig(MxXmlConfig *cfg)
+void SmbShareProperties::SetConfig(MyXmlConfig *cfg)
 {
     m_pCfg = cfg;
 }

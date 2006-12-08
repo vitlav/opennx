@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-// Name:        MxWizard.h
+// Name:        MyWizard.h
 // Purpose:     
 // Author:      Fritz Elfert
 // Modified by: 
@@ -13,7 +13,7 @@
 #define _MXWIZARD_H_
 
 #if defined(__GNUG__) && !defined(__APPLE__)
-#pragma interface "MxWizard.cpp"
+#pragma interface "MyWizard.cpp"
 #endif
 
 /*!
@@ -21,7 +21,7 @@
  */
 
 ////@begin includes
-#include "MxWizard_symbols.h"
+#include "MyWizard_symbols.h"
 #include "wx/xrc/xmlres.h"
 #include "wx/wizard.h"
 #include "wx/html/htmlwin.h"
@@ -44,7 +44,7 @@ class wxSpinCtrl;
 class WizardPageSecurity;
 class WizardPageFinish;
 ////@end forward declarations
-class MxXmlConfig;
+class MyXmlConfig;
 
 /*!
  * Control identifiers
@@ -69,20 +69,20 @@ class MxXmlConfig;
 #endif
 
 /*!
- * MxWizard class declaration
+ * MyWizard class declaration
  */
 
-class MxWizard: public wxWizard, public KeyTypeCallback
+class MyWizard: public wxWizard, public KeyTypeCallback
 {    
-    DECLARE_CLASS( MxWizard )
+    DECLARE_CLASS( MyWizard )
     DECLARE_EVENT_TABLE()
 
 public:
     /// Constructors
-    MxWizard( );
-    MxWizard( wxWindow* parent, wxWindowID id = SYMBOL_MXWIZARD_IDNAME, const wxPoint& pos = wxDefaultPosition );
+    MyWizard( );
+    MyWizard( wxWindow* parent, wxWindowID id = SYMBOL_MXWIZARD_IDNAME, const wxPoint& pos = wxDefaultPosition );
 
-    ~MxWizard();
+    ~MyWizard();
 
     /// Creation
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_MXWIZARD_IDNAME, const wxPoint& pos = wxDefaultPosition );
@@ -98,13 +98,13 @@ public:
 
     wxString sGetConfigName();
 
-    MxXmlConfig *pGetConfig() { return m_pCfg; }
+    MyXmlConfig *pGetConfig() { return m_pCfg; }
 
-////@begin MxWizard event handler declarations
+////@begin MyWizard event handler declarations
 
-////@end MxWizard event handler declarations
+////@end MyWizard event handler declarations
 
-////@begin MxWizard member function declarations
+////@begin MyWizard member function declarations
 
     /// Runs the wizard.
     bool Run();
@@ -114,22 +114,22 @@ public:
 
     /// Retrieves icon resources
     wxIcon GetIconResource( const wxString& name );
-////@end MxWizard member function declarations
+////@end MyWizard member function declarations
 
 private:
     /// Should we show tooltips?
     static bool ShowToolTips();
 
-////@begin MxWizard member variables
+////@begin MyWizard member variables
     WizardPageWelcome* m_pPageWelcome;
     WizardPageSession* m_pPageSession;
     WizardPageDesktop* m_pPageDesktop;
     WizardPageSecurity* m_pPageSecurity;
     WizardPageFinish* m_pPageFinish;
-////@end MxWizard member variables
+////@end MyWizard member variables
 
     wxButton *nextButton;
-    MxXmlConfig *m_pCfg;
+    MyXmlConfig *m_pCfg;
     bool m_bCancelForced;
     int minW, minH;
 };

@@ -33,7 +33,7 @@
 
 ////@begin forward declarations
 ////@end forward declarations
-class MxXmlConfig;
+class MyXmlConfig;
 
 /*!
  * Control identifiers
@@ -75,7 +75,7 @@ public:
 
     /// Creation
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_UNIXIMAGESETTINGSDIALOG_IDNAME, const wxString& caption = SYMBOL_UNIXIMAGESETTINGSDIALOG_TITLE, const wxPoint& pos = SYMBOL_UNIXIMAGESETTINGSDIALOG_POSITION, const wxSize& size = SYMBOL_UNIXIMAGESETTINGSDIALOG_SIZE, long style = SYMBOL_UNIXIMAGESETTINGSDIALOG_STYLE );
-    void SetConfig(MxXmlConfig *);
+    void SetConfig(MyXmlConfig *);
 
 private:
     /// Creates the controls and sizers
@@ -116,7 +116,7 @@ private:
     bool m_bDisableShpix;
 ////@end UnixImageSettingsDialog member variables
 
-    MxXmlConfig *m_pCfg;
+    MyXmlConfig *m_pCfg;
 };
 
 #endif

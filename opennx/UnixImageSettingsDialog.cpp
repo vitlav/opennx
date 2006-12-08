@@ -28,7 +28,7 @@
 ////@end includes
 
 #include "UnixImageSettingsDialog.h"
-#include "MxXmlConfig.h"
+#include "MyXmlConfig.h"
 #include "Icon.h"
 
 ////@begin XPM images
@@ -68,7 +68,7 @@ UnixImageSettingsDialog::UnixImageSettingsDialog( wxWindow* parent, wxWindowID i
     Create(parent, id, caption, pos, size, style);
 }
 
-void UnixImageSettingsDialog::SetConfig(MxXmlConfig *cfg)
+void UnixImageSettingsDialog::SetConfig(MyXmlConfig *cfg)
 {
     m_pCfg = cfg;
 }

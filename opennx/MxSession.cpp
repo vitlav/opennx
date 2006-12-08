@@ -23,8 +23,8 @@
 #endif
 
 #include "ConnectDialog.h"
-#include "MxSession.h"
-#include "MxXmlConfig.h"
+#include "MySession.h"
+#include "MyXmlConfig.h"
 #include "MyIPC.h"
 
 #include <wx/filename.h>
@@ -40,9 +40,9 @@
 #ifdef MYTRACETAG
 # undef MYTRACETAG
 #endif
-#define MYTRACETAG wxT("MxSession")
+#define MYTRACETAG wxT("MySession")
 
-MxSession::MxSession(wxString dir, wxString status, wxString stype, wxString host, int port, wxString md5)
+MySession::MySession(wxString dir, wxString status, wxString stype, wxString host, int port, wxString md5)
     : m_host(host)
     , m_port(port)
     , m_pid(0)
@@ -68,7 +68,7 @@ MxSession::MxSession(wxString dir, wxString status, wxString stype, wxString hos
     GetPidFromFile();
 }
 
-MxSession::MxSession(const MxSession &src)
+MySession::MySession(const MySession &src)
 {
     m_host = src.m_host;
     m_port = src.m_port;
@@ -81,7 +81,7 @@ MxSession::MxSession(const MxSession &src)
     m_rePID.Compile(wxT("([[:digit:]]+)"));
 }
 
-MxSession & MxSession::operator =(const MxSession &src)
+MySession & MySession::operator =(const MySession &src)
 {
     m_host = src.m_host;
     m_port = src.m_port;
@@ -95,12 +95,12 @@ MxSession & MxSession::operator =(const MxSession &src)
     return *this;
 }
 
-MxSession::~MxSession()
+MySession::~MySession()
 {
-    ::wxLogTrace(MYTRACETAG, wxT("~MxSession: md5='%s'"), m_md5.c_str());
+    ::wxLogTrace(MYTRACETAG, wxT("~MySession: md5='%s'"), m_md5.c_str());
 }
 
-wxString MxSession::GetCreationTime()
+wxString MySession::GetCreationTime()
 {
     wxDateTime ctime;
     wxFileName fn(m_dir, wxT("session"));
@@ -108,7 +108,7 @@ wxString MxSession::GetCreationTime()
     return ctime.Format();
 }
 
-bool MxSession::GetPidFromFile()
+bool MySession::GetPidFromFile()
 {
     wxFileInputStream input(m_dir + wxFileName::GetPathSeparator() + wxT("session"));
     wxTextInputStream text(input);
@@ -131,7 +131,7 @@ bool MxSession::GetPidFromFile()
     return (m_pid > 0);
 }
 
-void MxSession::CheckState()
+void MySession::CheckState()
 {
     if ((m_status == Terminated) || (m_status == Failed))
         return;
@@ -176,7 +176,7 @@ typedef enum {
     STATE_START_SESSION,
 } SessionState;
 
-bool MxSession::Create(const wxString cfgFileName, const wxString password)
+bool MySession::Create(const wxString cfgFileName, const wxString password)
 {
     wxString sSessionID;
     wxString sSessionType;
@@ -189,7 +189,7 @@ bool MxSession::Create(const wxString cfgFileName, const wxString password)
     bool bSslTunneling = false;
     wxString cmd = wxT("-nx -x -2 -o 'RhostsAuthentication no' -o 'PasswordAuthentication no' -o 'RSAAuthentication no' -o 'RhostsRSAAuthentication no' -o 'PubkeyAuthentication yes' ");
 
-    MxXmlConfig cfg(cfgFileName);
+    MyXmlConfig cfg(cfgFileName);
     if (cfg.IsValid()) {
         wxString appDir;
         wxConfigBase::Get()->Read(wxT("Config/SystemMxDir"), &appDir);

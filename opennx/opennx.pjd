@@ -14590,10 +14590,10 @@ this share."</string>
           <long name="use-xrc">0</long>
           <string name="proxy-Id name">"ID_WIZARD"</string>
           <long name="proxy-Id value">10126</long>
-          <string name="proxy-Class">"MxWizard"</string>
+          <string name="proxy-Class">"MyWizard"</string>
           <string name="proxy-Base class">"wxWizard"</string>
-          <string name="proxy-Implementation filename">"MxWizard.cpp"</string>
-          <string name="proxy-Header filename">"MxWizard.h"</string>
+          <string name="proxy-Implementation filename">"MyWizard.cpp"</string>
+          <string name="proxy-Header filename">"MyWizard.h"</string>
           <string name="proxy-XRC filename">""</string>
           <string name="proxy-Title">"MX Connection Wizard"</string>
           <string name="proxy-Bitmap">"res/wizard.png"</string>
@@ -14788,7 +14788,7 @@ this share."</string>
             <string name="proxy-type">"wbWizardPageProxy"</string>
             <string name="variable-0">"m_sHostName|wxString||"</string>
             <string name="variable-1">"m_iPort|int||22"</string>
-            <string name="variable-2">"m_iConnectionSpeed|int||MxXmlConfig::SPEED_ADSL"</string>
+            <string name="variable-2">"m_iConnectionSpeed|int||MyXmlConfig::SPEED_ADSL"</string>
             <string name="variable-3">"m_sSessionName|wxString||"</string>
             <string name="event-handler-0">"wxEVT_WIZARD_PAGE_CHANGED|OnWizardpageSessionPageChanged"</string>
             <string name="event-handler-1">"wxEVT_WIZARD_PAGE_CHANGING|OnWizardpageSessionPageChanging"</string>
@@ -15917,9 +15917,9 @@ this share."</string>
             <long name="title-mode">0</long>
             <long name="locked">0</long>
             <string name="proxy-type">"wbWizardPageProxy"</string>
-            <string name="variable-0">"m_iSessionType|int||MxXmlConfig::STYPE_UNIX"</string>
-            <string name="variable-1">"m_iDesktopTypeDialog|int||MxXmlConfig::DTYPE_KDE"</string>
-            <string name="variable-2">"m_iDisplayType|int||MxXmlConfig::DPTYPE_AVAILABLE"</string>
+            <string name="variable-0">"m_iSessionType|int||MyXmlConfig::STYPE_UNIX"</string>
+            <string name="variable-1">"m_iDesktopTypeDialog|int||MyXmlConfig::DTYPE_KDE"</string>
+            <string name="variable-2">"m_iDisplayType|int||MyXmlConfig::DPTYPE_AVAILABLE"</string>
             <string name="variable-3">"m_iDisplayWidth|int||800"</string>
             <string name="variable-4">"m_iDisplayHeight|int||600"</string>
             <string name="event-handler-0">"wxEVT_WIZARD_PAGE_CHANGED|OnWizardpageDesktopPageChanged"</string>

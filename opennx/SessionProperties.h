@@ -40,7 +40,7 @@ class wxSpinCtrl;
 class wxListCtrl;
 ////@end forward declarations
 class wxFont;
-class MxXmlConfig;
+class MyXmlConfig;
 
 #include "MyValidator.h"
 
@@ -85,7 +85,7 @@ public:
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_SESSIONPROPERTIES_IDNAME, const wxString& caption = SYMBOL_SESSIONPROPERTIES_TITLE, const wxPoint& pos = SYMBOL_SESSIONPROPERTIES_POSITION, const wxSize& size = SYMBOL_SESSIONPROPERTIES_SIZE, long style = SYMBOL_SESSIONPROPERTIES_STYLE );
 
     void UpdateDialogConstraints(bool);
-    void SetConfig(MxXmlConfig *config);
+    void SetConfig(MyXmlConfig *config);
 
 private:
     /// Creates the controls and sizers
@@ -365,7 +365,7 @@ private:
     bool m_bKeyTyped;
     int m_iUnixDesktopType;
 
-    MxXmlConfig *m_pCfg;
+    MyXmlConfig *m_pCfg;
 };
 
 #endif

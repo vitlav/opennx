@@ -25,7 +25,7 @@
 #endif
 
 #include "SessionList.h"
-#include "MxSession.h"
+#include "MySession.h"
 #include "LogDialog.h"
 
 #include <wx/dir.h>
@@ -58,7 +58,7 @@ class SessionTraverser : public wxDirTraverser
         wxArrayString& m_dirs;
 };
 
-WX_DECLARE_STRING_HASH_MAP(MxSession, SessionHash);
+WX_DECLARE_STRING_HASH_MAP(MySession, SessionHash);
 
     SessionList::SessionList(wxString dir, wxListCtrl* ctrl)
     : wxThreadHelper()
@@ -164,7 +164,7 @@ void SessionList::ScanDir()
                         m_re->GetMatch(tmp,2).c_str(), m_re->GetMatch(tmp,3).c_str(),
                         m_re->GetMatch(tmp,4).c_str(), port, md5.c_str());
                 // Create new hash entry
-                MxSession s(m_dirName + wxFileName::GetPathSeparator() + tmp,
+                MySession s(m_dirName + wxFileName::GetPathSeparator() + tmp,
                         m_re->GetMatch(tmp,2), m_re->GetMatch(tmp,3), m_re->GetMatch(tmp,4), port, md5);
                 (*m_sessions)[md5] = s;
                 if (m_listctrl != NULL) {
@@ -184,13 +184,13 @@ void SessionList::ScanDir()
                     m_listctrl->SetItem(idx, 4, s.GetPIDStr());
                     // Status
                     switch (s.m_status) {
-                        case MxSession::Terminated:
+                        case MySession::Terminated:
                             m_listctrl->SetItem(idx, 5, _("terminated"));
                             break;
-                        case MxSession::Failed:
+                        case MySession::Failed:
                             m_listctrl->SetItem(idx, 5, _("failed"));
                             break;
-                        case MxSession::Running:
+                        case MySession::Running:
                             m_listctrl->SetItem(idx, 5, _("running"));
                             break;
                         default:
@@ -198,7 +198,7 @@ void SessionList::ScanDir()
                             break;
                     }
                     // Type
-                    m_listctrl->SetItem(idx, 6, (s.m_type == MxSession::Server) ? _("Server") : _("Client"));
+                    m_listctrl->SetItem(idx, 6, (s.m_type == MySession::Server) ? _("Server") : _("Client"));
 
                     // Data
                     //                    m_listctrl->SetItemData(idx, (long)(*m_sessions)[md5].m_md5.c_str());

@@ -30,7 +30,7 @@
 /*!
  * Forward declarations
  */
-class MxXmlConfig;
+class MyXmlConfig;
 
 ////@begin forward declarations
 ////@end forward declarations
@@ -73,7 +73,7 @@ public:
     /// Creation
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_VNCPROPERTYDIALOG_IDNAME, const wxString& caption = SYMBOL_VNCPROPERTYDIALOG_TITLE, const wxPoint& pos = SYMBOL_VNCPROPERTYDIALOG_POSITION, const wxSize& size = SYMBOL_VNCPROPERTYDIALOG_SIZE, long style = SYMBOL_VNCPROPERTYDIALOG_STYLE );
 
-    void SetConfig(MxXmlConfig *);
+    void SetConfig(MyXmlConfig *);
 
 private:
     /// Creates the controls and sizers
@@ -109,7 +109,7 @@ private:
     bool m_bRememberPassword;
 ////@end VncPropertyDialog member variables
 
-    MxXmlConfig *m_pCfg;
+    MyXmlConfig *m_pCfg;
 
 };
 

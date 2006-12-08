@@ -33,7 +33,7 @@
 
 ////@begin forward declarations
 ////@end forward declarations
-class MxXmlConfig;
+class MyXmlConfig;
 
 /*!
  * Control identifiers
@@ -72,7 +72,7 @@ public:
 
     /// Creation
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_RDPIMAGESETTINGSDIALOG_IDNAME, const wxString& caption = SYMBOL_RDPIMAGESETTINGSDIALOG_TITLE, const wxPoint& pos = SYMBOL_RDPIMAGESETTINGSDIALOG_POSITION, const wxSize& size = SYMBOL_RDPIMAGESETTINGSDIALOG_SIZE, long style = SYMBOL_RDPIMAGESETTINGSDIALOG_STYLE );
-    void SetConfig(MxXmlConfig *);
+    void SetConfig(MyXmlConfig *);
 
 private:
     /// Creates the controls and sizers
@@ -124,7 +124,7 @@ private:
     int m_iRdpColors;
 ////@end RdpImageSettingsDialog member variables
 
-    MxXmlConfig *m_pCfg;
+    MyXmlConfig *m_pCfg;
 };
 
 #endif

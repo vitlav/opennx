@@ -31,7 +31,7 @@
  * Forward declarations
  */
 
-class MxXmlConfig;
+class MyXmlConfig;
 
 ////@begin forward declarations
 ////@end forward declarations
@@ -74,7 +74,7 @@ public:
     /// Creation
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_RDPPROPERTYDIALOG_IDNAME, const wxString& caption = SYMBOL_RDPPROPERTYDIALOG_TITLE, const wxPoint& pos = SYMBOL_RDPPROPERTYDIALOG_POSITION, const wxSize& size = SYMBOL_RDPPROPERTYDIALOG_SIZE, long style = SYMBOL_RDPPROPERTYDIALOG_STYLE );
 
-    void SetConfig(MxXmlConfig *);
+    void SetConfig(MyXmlConfig *);
     void UpdateDialogConstraints();
 
 private:
@@ -138,7 +138,7 @@ private:
     wxString m_sRdpDomain;
 ////@end RdpPropertyDialog member variables
 
-    MxXmlConfig *m_pCfg;
+    MyXmlConfig *m_pCfg;
 };
 
 #endif

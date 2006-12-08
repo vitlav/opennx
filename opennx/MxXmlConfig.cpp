@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #if defined(__GNUG__) && !defined(__APPLE__)
-#pragma implementation "MxXmlConfig.h"
+#pragma implementation "MyXmlConfig.h"
 #endif
 
 // For compilers that support precompilation, includes "wx/wx.h".
@@ -26,7 +26,7 @@
 
 class wxConfigBase;
 
-#include "MxXmlConfig.h"
+#include "MyXmlConfig.h"
 #include "WinShare.h"
 #include "opennxApp.h"
 #include "pwcrypt.h"
@@ -34,7 +34,7 @@ class wxConfigBase;
 #ifdef MYTRACETAG
 # undef MYTRACETAG
 #endif
-#define MYTRACETAG wxT("MxXmlConfig")
+#define MYTRACETAG wxT("MyXmlConfig")
 
 #define STR_TRUE wxT("true")
 #define STR_FALSE wxT("false");
@@ -64,7 +64,7 @@ bool ShareGroup::operator !=(const ShareGroup &other)
     return (!(*this == other));
 }
 
-    MxXmlConfig::MxXmlConfig()
+    MyXmlConfig::MyXmlConfig()
     : m_bValid(false)
     , saved(NULL)
     , m_bRememberPassword(false)
@@ -133,8 +133,8 @@ bool ShareGroup::operator !=(const ShareGroup &other)
     m_iKbdLayoutLanguage = mapLocaleToKeyboard();
 }
 
-    MxXmlConfig &
-MxXmlConfig::operator =(const MxXmlConfig &other)
+    MyXmlConfig &
+MyXmlConfig::operator =(const MyXmlConfig &other)
 {
     m_bValid = other.m_bValid;
     saved = NULL;
@@ -215,7 +215,7 @@ MxXmlConfig::operator =(const MxXmlConfig &other)
 
 // Retrieve parameter for startsession command
     wxString
-MxXmlConfig::sGetSessionParams(const wxString &protocolVersion)
+MyXmlConfig::sGetSessionParams(const wxString &protocolVersion)
 {
     wxString ret = wxT("");
 
@@ -359,7 +359,7 @@ MxXmlConfig::sGetSessionParams(const wxString &protocolVersion)
 // Compare two arrays of ShareGroup where sequence of elements is irrelevant
 // return true, if arrays are different.
     bool
-MxXmlConfig::cmpShareGroups(ArrayOfShareGroups a1, ArrayOfShareGroups a2)
+MyXmlConfig::cmpShareGroups(ArrayOfShareGroups a1, ArrayOfShareGroups a2)
 {
     size_t cnt = a1.GetCount();
     if (cnt != a2.GetCount())
@@ -384,7 +384,7 @@ MxXmlConfig::cmpShareGroups(ArrayOfShareGroups a1, ArrayOfShareGroups a2)
 // Compare two wxArrayString where sequence of elements is irrelevant
 // return true, if arrays are different.
     bool
-MxXmlConfig::cmpUsedShareGroups(wxArrayString a1, wxArrayString a2)
+MyXmlConfig::cmpUsedShareGroups(wxArrayString a1, wxArrayString a2)
 {
     size_t cnt = a1.GetCount();
     if (cnt != a2.GetCount())
@@ -400,7 +400,7 @@ MxXmlConfig::cmpUsedShareGroups(wxArrayString a1, wxArrayString a2)
 }
 
     bool
-MxXmlConfig::operator ==(const MxXmlConfig &other)
+MyXmlConfig::operator ==(const MyXmlConfig &other)
 {
     if (m_bValid != other.m_bValid) return false;
     if (m_bRememberPassword != other.m_bRememberPassword) return false;
@@ -468,7 +468,7 @@ MxXmlConfig::operator ==(const MxXmlConfig &other)
     return true;
 }
 
-    MxXmlConfig::MxXmlConfig(const wxString &filename)
+    MyXmlConfig::MyXmlConfig(const wxString &filename)
     : m_bValid(false)
     , saved(NULL)
     , m_bRememberPassword(false)
@@ -884,7 +884,7 @@ MxXmlConfig::operator ==(const MxXmlConfig &other)
     }
 }
 
-MxXmlConfig::~MxXmlConfig()
+MyXmlConfig::~MyXmlConfig()
 {
     if (saved)
         delete saved;
@@ -895,7 +895,7 @@ MxXmlConfig::~MxXmlConfig()
 }
 
     void 
-MxXmlConfig::bAddOption(wxXmlNode *group, const wxString &name, const bool val)
+MyXmlConfig::bAddOption(wxXmlNode *group, const wxString &name, const bool val)
 {
     wxXmlNode *n = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("option"));
     n->AddProperty(new wxXmlProperty(wxT("key"), name, NULL));
@@ -904,7 +904,7 @@ MxXmlConfig::bAddOption(wxXmlNode *group, const wxString &name, const bool val)
 }
 
     void
-MxXmlConfig::iAddOptionBool(wxXmlNode *group, const wxString &name, const bool val)
+MyXmlConfig::iAddOptionBool(wxXmlNode *group, const wxString &name, const bool val)
 {
     wxXmlNode *n = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("option"));
     n->AddProperty(new wxXmlProperty(wxT("key"), name, NULL));
@@ -913,7 +913,7 @@ MxXmlConfig::iAddOptionBool(wxXmlNode *group, const wxString &name, const bool v
 }
 
     void
-MxXmlConfig::iAddOption(wxXmlNode *group, const wxString &name, const long val)
+MyXmlConfig::iAddOption(wxXmlNode *group, const wxString &name, const long val)
 {
     wxXmlNode *n = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("option"));
     n->AddProperty(new wxXmlProperty(wxT("key"), name, NULL));
@@ -922,7 +922,7 @@ MxXmlConfig::iAddOption(wxXmlNode *group, const wxString &name, const long val)
 }
 
     void
-MxXmlConfig::sAddOption(wxXmlNode *group, const wxString &name, const wxString &val)
+MyXmlConfig::sAddOption(wxXmlNode *group, const wxString &name, const wxString &val)
 {
     wxXmlNode *n = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("option"));
     n->AddProperty(new wxXmlProperty(wxT("key"), name, NULL));
@@ -931,7 +931,7 @@ MxXmlConfig::sAddOption(wxXmlNode *group, const wxString &name, const wxString &
 }
 
     wxXmlNode *
-MxXmlConfig::AddGroup(wxXmlNode *parent, const wxString &name)
+MyXmlConfig::AddGroup(wxXmlNode *parent, const wxString &name)
 {
     wxXmlNode *n = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("group"));
     n->AddProperty(new wxXmlProperty(wxT("name"), name, NULL));
@@ -940,7 +940,7 @@ MxXmlConfig::AddGroup(wxXmlNode *parent, const wxString &name)
 }
 
     bool
-MxXmlConfig::SaveToFile()
+MyXmlConfig::SaveToFile()
 {
     wxXmlDocument cfg;
     wxXmlNode *r;
@@ -1248,22 +1248,22 @@ MxXmlConfig::SaveToFile()
     return true;
 }
 
-void MxXmlConfig::saveState()
+void MyXmlConfig::saveState()
 {
     if (saved)
         delete saved;
-    saved = new MxXmlConfig();
+    saved = new MyXmlConfig();
     *saved = *this;
 }
 
-bool MxXmlConfig::checkChanged()
+bool MyXmlConfig::checkChanged()
 {
     if (!saved)
         return true;
     return (!(*this == *saved));
 }
 
-bool MxXmlConfig::getBool(wxXmlNode *opt, const wxString &key, bool defval)
+bool MyXmlConfig::getBool(wxXmlNode *opt, const wxString &key, bool defval)
 {
     bool val = defval;
 
@@ -1277,7 +1277,7 @@ bool MxXmlConfig::getBool(wxXmlNode *opt, const wxString &key, bool defval)
     return val;
 }
 
-long MxXmlConfig::getLong(wxXmlNode *opt, const wxString &key, long defval)
+long MyXmlConfig::getLong(wxXmlNode *opt, const wxString &key, long defval)
 {
     long val = defval;
 
@@ -1291,7 +1291,7 @@ long MxXmlConfig::getLong(wxXmlNode *opt, const wxString &key, long defval)
     return val;
 }
 
-wxString MxXmlConfig::getString(wxXmlNode *opt, const wxString &key, const wxString &defval)
+wxString MyXmlConfig::getString(wxXmlNode *opt, const wxString &key, const wxString &defval)
 {
     wxString tmp = defval;
 
@@ -1302,7 +1302,7 @@ wxString MxXmlConfig::getString(wxXmlNode *opt, const wxString &key, const wxStr
     return tmp;
 }
 
-wxString *MxXmlConfig::getStringNew(wxXmlNode *opt, const wxString &key, wxString *defval)
+wxString *MyXmlConfig::getStringNew(wxXmlNode *opt, const wxString &key, wxString *defval)
 {
     wxString *val = defval;
 
@@ -1322,7 +1322,7 @@ wxString *MxXmlConfig::getStringNew(wxXmlNode *opt, const wxString &key, wxStrin
     return val;
 }
 
-wxString MxXmlConfig::getPassword(wxXmlNode *opt, const wxString &key, const wxString &defval)
+wxString MyXmlConfig::getPassword(wxXmlNode *opt, const wxString &key, const wxString &defval)
 {
     wxString val = defval;
     wxString *enc = getStringNew(opt, key, NULL);
@@ -1347,7 +1347,7 @@ wxString MxXmlConfig::getPassword(wxXmlNode *opt, const wxString &key, const wxS
     return val;
 }
 
-int MxXmlConfig::mapLocaleToKeyboard()
+int MyXmlConfig::mapLocaleToKeyboard()
 {
     int ret = 0;
 
@@ -1558,7 +1558,7 @@ int MxXmlConfig::mapLocaleToKeyboard()
 
 // Map keyboard language code from NXclient to OpenNX
     int
-MxXmlConfig::mapMxLanguage(int origNXlang)
+MyXmlConfig::mapMxLanguage(int origNXlang)
 {
     switch (origNXlang) {
         case 0:
@@ -1586,7 +1586,7 @@ MxXmlConfig::mapMxLanguage(int origNXlang)
 
 // Map keyboard language iso code
     wxString 
-MxXmlConfig::isoKbd(int lang)
+MyXmlConfig::isoKbd(int lang)
 {
     const wxChar *iso_codes[] =
     {
@@ -1605,7 +1605,7 @@ MxXmlConfig::isoKbd(int lang)
 
 // Map keyboard language code from OpenNX to NXclient
     int 
-MxXmlConfig::mapNxLanguage(int origMXlang)
+MyXmlConfig::mapNxLanguage(int origMXlang)
 {
     switch (origMXlang) {
         case 25:

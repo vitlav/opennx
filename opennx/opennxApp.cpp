@@ -33,8 +33,8 @@
 #include "SessionAdmin.h"
 #include "SessionProperties.h"
 #include "LoginDialog.h"
-#include "MxWizard.h"
-#include "MxXmlConfig.h"
+#include "MyWizard.h"
+#include "MyXmlConfig.h"
 
 #include "memres.h"
 
@@ -277,14 +277,14 @@ bool opennxApp::OnInit()
             m_eMode = MODE_WIZARD;
     } else {
         if (!m_sSessionName.IsEmpty()) {
-            MxXmlConfig cfg(m_sSessionName);
+            MyXmlConfig cfg(m_sSessionName);
             if (cfg.IsValid())
                 m_sSessionName = cfg.sGetName();
         }
     }
 
     if (m_eMode == MODE_WIZARD) {
-        MxWizard wz(NULL);
+        MyWizard wz(NULL);
         if (!wz.Run()) {
             if (m_szMemRes) {
                 free_mem_res(m_szMemRes);

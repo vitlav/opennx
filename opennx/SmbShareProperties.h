@@ -34,7 +34,7 @@
 
 ////@begin forward declarations
 ////@end forward declarations
-class MxXmlConfig;
+class MyXmlConfig;
 
 /*!
  * Control identifiers
@@ -73,7 +73,7 @@ public:
     /// Constructors
     SmbShareProperties( );
     SmbShareProperties( wxWindow* parent, wxWindowID id = SYMBOL_SMBSHAREPROPERTIES_IDNAME, const wxString& caption = SYMBOL_SMBSHAREPROPERTIES_TITLE, const wxPoint& pos = SYMBOL_SMBSHAREPROPERTIES_POSITION, const wxSize& size = SYMBOL_SMBSHAREPROPERTIES_SIZE, long style = SYMBOL_SMBSHAREPROPERTIES_STYLE );
-    void SetConfig(MxXmlConfig *);
+    void SetConfig(MyXmlConfig *);
     void SetCurrentShare(int);
 
     /// Creation
@@ -126,7 +126,7 @@ private:
 
     int m_iCurrentShare;
     ArrayOfShares m_aShares;
-    MxXmlConfig *m_pCfg;
+    MyXmlConfig *m_pCfg;
 };
 
 #endif

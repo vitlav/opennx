@@ -28,7 +28,7 @@
 ////@end includes
 
 #include "RdpImageSettingsDialog.h"
-#include "MxXmlConfig.h"
+#include "MyXmlConfig.h"
 #include "Icon.h"
 
 ////@begin XPM images
@@ -76,7 +76,7 @@ RdpImageSettingsDialog::RdpImageSettingsDialog( wxWindow* parent, wxWindowID id,
     Create(parent, id, caption, pos, size, style);
 }
 
-void RdpImageSettingsDialog::SetConfig(MxXmlConfig *cfg)
+void RdpImageSettingsDialog::SetConfig(MyXmlConfig *cfg)
 {
     m_pCfg = cfg;
 }

@@ -30,9 +30,9 @@
 ////@end includes
 
 #include "LoginDialog.h"
-#include "MxXmlConfig.h"
+#include "MyXmlConfig.h"
 #include "SessionProperties.h"
-#include "MxSession.h"
+#include "MySession.h"
 #include "Icon.h"
 
 ////@begin XPM images
@@ -105,13 +105,13 @@ void LoginDialog::ReadConfigDirectory()
         delete m_pCurrentCfg;
     m_pCurrentCfg = NULL;
     for (i = 0; i < m_aConfigFiles.GetCount(); i++) {
-        MxXmlConfig cfg(m_aConfigFiles[i]);
+        MyXmlConfig cfg(m_aConfigFiles[i]);
         if (cfg.IsValid()) {
             if (m_sSessionName.IsEmpty())
                 m_sSessionName = cfg.sGetName();
             m_aSessionNames.Add(cfg.sGetName());
             if (cfg.sGetName() == m_sSessionName) {
-                m_pCurrentCfg = new MxXmlConfig(m_aConfigFiles[i]);
+                m_pCurrentCfg = new MyXmlConfig(m_aConfigFiles[i]);
                 m_sUsername = cfg.sGetUsername();
                 m_sPassword = cfg.sGetPassword();
                 m_bUseSmartCard = cfg.bGetUseSmartCard();
@@ -273,7 +273,7 @@ void LoginDialog::OnButtonConfigureClick( wxCommandEvent& event )
     switch (d.ShowModal()) {
         case wxID_CANCEL:
             delete m_pCurrentCfg;
-            m_pCurrentCfg = new MxXmlConfig(fn);
+            m_pCurrentCfg = new MyXmlConfig(fn);
             break;
         case wxID_CLEAR:
             ::wxLogTrace(MYTRACETAG, wxT("deleting '%s'"), fn.c_str());
@@ -309,10 +309,10 @@ void LoginDialog::OnComboboxSessionSelected( wxCommandEvent& event )
     if (m_pCurrentCfg)
         delete m_pCurrentCfg;
     for (size_t i = 0; i < m_aConfigFiles.GetCount(); i++) {
-        MxXmlConfig cfg(m_aConfigFiles[i]);
+        MyXmlConfig cfg(m_aConfigFiles[i]);
         if (cfg.IsValid()) {
             if (cfg.sGetName() == sessionName) {
-                m_pCurrentCfg = new MxXmlConfig(m_aConfigFiles[i]);
+                m_pCurrentCfg = new MyXmlConfig(m_aConfigFiles[i]);
                 m_pCtrlUsername->SetValue(cfg.sGetUsername());
                 m_pCtrlPassword->SetValue(cfg.sGetPassword());
                 m_pCtrlUseSmartCard->SetValue(cfg.bGetUseSmartCard());
@@ -342,7 +342,7 @@ void LoginDialog::OnOkClick( wxCommandEvent& event )
                         m_pCurrentCfg->sGetFileName().c_str()), _("Error saving - OpenNX"),
                     wxICON_ERROR | wxOK);
         else {
-            MxSession s;
+            MySession s;
             s.Create(m_pCurrentCfg->sGetFileName(), m_sPassword);
         }
     }

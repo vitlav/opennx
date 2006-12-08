@@ -40,7 +40,7 @@
 #include "VncPropertyDialog.h"
 #include "AboutDialog.h"
 #include "SmbShareProperties.h"
-#include "MxXmlConfig.h"
+#include "MyXmlConfig.h"
 #include "MyValidator.h"
 #include "Icon.h"
 
@@ -184,7 +184,7 @@ SessionProperties::SessionProperties( wxWindow* parent, wxWindowID id, const wxS
     Create(parent, id, caption, pos, size, style);
 }
 
-void SessionProperties::SetConfig(MxXmlConfig *cfg)
+void SessionProperties::SetConfig(MyXmlConfig *cfg)
 {
     m_pCfg = cfg;
 }
@@ -201,21 +201,21 @@ void SessionProperties::CheckChanged()
         m_pCfg->bSetUseSmartCard(m_bUseSmartCard);
         m_pCfg->bSetUseCustomImageEncoding(m_bUseCustomImageEncoding);
         m_pCfg->iSetServerPort(m_iPort);
-        m_pCfg->eSetSessionType((MxXmlConfig::SessionType)m_iSessionType);
+        m_pCfg->eSetSessionType((MyXmlConfig::SessionType)m_iSessionType);
         switch (m_iSessionType) {
-            case MxXmlConfig::STYPE_UNIX:
+            case MyXmlConfig::STYPE_UNIX:
                 m_iDesktopType = m_iDesktopTypeDialog;
                 break;
-            case MxXmlConfig::STYPE_WINDOWS:
-                m_iDesktopType = MxXmlConfig::DTYPE_RDP;
+            case MyXmlConfig::STYPE_WINDOWS:
+                m_iDesktopType = MyXmlConfig::DTYPE_RDP;
                 break;
-            case MxXmlConfig::STYPE_VNC:
-                m_iDesktopType = MxXmlConfig::DTYPE_RFB;
+            case MyXmlConfig::STYPE_VNC:
+                m_iDesktopType = MyXmlConfig::DTYPE_RFB;
                 break;
         }
-        m_pCfg->eSetDesktopType((MxXmlConfig::DesktopType)m_iDesktopType);
-        m_pCfg->eSetConnectionSpeed((MxXmlConfig::ConnectionSpeed)m_iConnectionSpeed);
-        m_pCfg->eSetDisplayType((MxXmlConfig::DisplayType)m_iDisplayType);
+        m_pCfg->eSetDesktopType((MyXmlConfig::DesktopType)m_iDesktopType);
+        m_pCfg->eSetConnectionSpeed((MyXmlConfig::ConnectionSpeed)m_iConnectionSpeed);
+        m_pCfg->eSetDisplayType((MyXmlConfig::DisplayType)m_iDisplayType);
         m_pCfg->iSetDisplayWidth(m_iDisplayWidth);
         m_pCfg->iSetDisplayHeight(m_iDisplayHeight);
         m_pCfg->sSetServerHost(m_sHostName);
@@ -224,8 +224,8 @@ void SessionProperties::CheckChanged()
         m_pCfg->bSetDisableTcpNoDelay(m_bDisableTcpNoDelay);
         m_pCfg->bSetDisableZlibCompression(m_bDisableZlibCompression);
         m_pCfg->bSetEnableSSL(m_bEnableSSL);
-        m_pCfg->eSetCacheMemory((MxXmlConfig::CacheMemory)m_iCacheMem);
-        m_pCfg->eSetCacheDisk((MxXmlConfig::CacheDisk)m_iCacheDisk);
+        m_pCfg->eSetCacheMemory((MyXmlConfig::CacheMemory)m_iCacheMem);
+        m_pCfg->eSetCacheDisk((MyXmlConfig::CacheDisk)m_iCacheDisk);
         m_pCfg->bSetKbdLayoutOther(m_bKbdLayoutOther);
         m_pCfg->iSetKbdLayoutLanguage(m_iKbdLayoutLanguage);
 
@@ -448,31 +448,31 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
 
     // 'General' tab
     switch (m_iSessionType) {
-        case MxXmlConfig::STYPE_UNIX:
+        case MyXmlConfig::STYPE_UNIX:
             m_pCtrlDesktopType->SetString(0, _("KDE"));
             m_pCtrlDesktopType->SetSelection(m_iDesktopTypeDialog);
             m_pCtrlDesktopType->Enable(true);
-            m_pCtrlDesktopSettings->Enable(m_iDesktopTypeDialog == MxXmlConfig::DTYPE_CUSTOM);
+            m_pCtrlDesktopSettings->Enable(m_iDesktopTypeDialog == MyXmlConfig::DTYPE_CUSTOM);
             break;
-        case MxXmlConfig::STYPE_WINDOWS:
+        case MyXmlConfig::STYPE_WINDOWS:
             m_pCtrlDesktopType->SetString(0, _("RDP"));
             m_pCtrlDesktopType->SetSelection(0);
-            m_iDesktopType = MxXmlConfig::DTYPE_RDP;
+            m_iDesktopType = MyXmlConfig::DTYPE_RDP;
             m_iDesktopTypeDialog = 0;
             m_pCtrlDesktopType->Enable(false);
             m_pCtrlDesktopSettings->Enable(true);
             break;
-        case MxXmlConfig::STYPE_VNC:
+        case MyXmlConfig::STYPE_VNC:
             m_pCtrlDesktopType->SetString(0, _("RFB"));
             m_pCtrlDesktopType->SetSelection(0);
-            m_iDesktopType = MxXmlConfig::DTYPE_RFB;
+            m_iDesktopType = MyXmlConfig::DTYPE_RFB;
             m_iDesktopTypeDialog = 0;
             m_pCtrlDesktopType->Enable(false);
             m_pCtrlDesktopSettings->Enable(true);
             break;
     }
     switch (m_iDisplayType) {
-        case MxXmlConfig::DPTYPE_CUSTOM:
+        case MyXmlConfig::DPTYPE_CUSTOM:
             m_pCtrlDisplayWidth->Enable(true);
             m_pCtrlDisplayHeight->Enable(true);
             break;
@@ -675,7 +675,7 @@ int SessionProperties::FindSelectedShare()
 void SessionProperties::OnButtonDsettingsClick( wxCommandEvent& event )
 {
     switch (m_iSessionType) {
-        case MxXmlConfig::STYPE_UNIX:
+        case MyXmlConfig::STYPE_UNIX:
             {
                 X11PropertyDialog d;
                 d.SetConfig(m_pCfg);
@@ -684,7 +684,7 @@ void SessionProperties::OnButtonDsettingsClick( wxCommandEvent& event )
                 CheckChanged();
             }
             break;
-        case MxXmlConfig::STYPE_WINDOWS:
+        case MyXmlConfig::STYPE_WINDOWS:
             {
                 RdpPropertyDialog d;
                 d.SetConfig(m_pCfg);
@@ -693,7 +693,7 @@ void SessionProperties::OnButtonDsettingsClick( wxCommandEvent& event )
                 CheckChanged();
             }
             break;
-        case MxXmlConfig::STYPE_VNC:
+        case MyXmlConfig::STYPE_VNC:
             {
                 VncPropertyDialog d;
                 d.SetConfig(m_pCfg);
@@ -735,7 +735,7 @@ void SessionProperties::OnRadiobuttonImgCustomSelected( wxCommandEvent& event )
 void SessionProperties::OnButtonImgCustomClick( wxCommandEvent& event )
 {
     switch (m_iSessionType) {
-        case MxXmlConfig::STYPE_UNIX:
+        case MyXmlConfig::STYPE_UNIX:
             {
                 UnixImageSettingsDialog d;
                 d.SetConfig(m_pCfg);
@@ -744,7 +744,7 @@ void SessionProperties::OnButtonImgCustomClick( wxCommandEvent& event )
                 CheckChanged();
             }
             break;
-        case MxXmlConfig::STYPE_WINDOWS:
+        case MyXmlConfig::STYPE_WINDOWS:
             {
                 RdpImageSettingsDialog d;
                 d.SetConfig(m_pCfg);
@@ -753,7 +753,7 @@ void SessionProperties::OnButtonImgCustomClick( wxCommandEvent& event )
                 CheckChanged();
             }
             break;
-        case MxXmlConfig::STYPE_VNC:
+        case MyXmlConfig::STYPE_VNC:
             {
                 VncImageSettingsDialog d;
                 d.SetConfig(m_pCfg);

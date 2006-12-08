@@ -29,7 +29,7 @@
 
 #include "RdpPropertyDialog.h"
 #include "Icon.h"
-#include "MxXmlConfig.h"
+#include "MyXmlConfig.h"
 #include "MyValidator.h"
 
 ////@begin XPM images
@@ -79,7 +79,7 @@ RdpPropertyDialog::RdpPropertyDialog( wxWindow* parent, wxWindowID id, const wxS
     Create(parent, id, caption, pos, size, style);
 }
 
-void RdpPropertyDialog::SetConfig(MxXmlConfig *cfg)
+void RdpPropertyDialog::SetConfig(MyXmlConfig *cfg)
 {
     m_pCfg = cfg;
 }

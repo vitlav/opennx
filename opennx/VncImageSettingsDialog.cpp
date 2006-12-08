@@ -28,7 +28,7 @@
 ////@end includes
 
 #include "VncImageSettingsDialog.h"
-#include "MxXmlConfig.h"
+#include "MyXmlConfig.h"
 #include "Icon.h"
 
 ////@begin XPM images
@@ -74,7 +74,7 @@ VncImageSettingsDialog::VncImageSettingsDialog( wxWindow* parent, wxWindowID id,
     Create(parent, id, caption, pos, size, style);
 }
 
-void VncImageSettingsDialog::SetConfig(MxXmlConfig *cfg)
+void VncImageSettingsDialog::SetConfig(MyXmlConfig *cfg)
 {
     m_pCfg = cfg;
 }

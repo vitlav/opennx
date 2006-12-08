@@ -28,7 +28,7 @@
 ////@end includes
 
 #include "X11PropertyDialog.h"
-#include "MxXmlConfig.h"
+#include "MyXmlConfig.h"
 #include "Icon.h"
 
 ////@begin XPM images
@@ -78,7 +78,7 @@ X11PropertyDialog::X11PropertyDialog( wxWindow* parent, wxWindowID id, const wxS
     Create(parent, id, caption, pos, size, style);
 }
 
-void X11PropertyDialog::SetConfig(MxXmlConfig *cfg)
+void X11PropertyDialog::SetConfig(MyXmlConfig *cfg)
 {
     m_pCfg = cfg;
 }

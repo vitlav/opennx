@@ -29,7 +29,7 @@
 
 #include "VncPropertyDialog.h"
 #include "Icon.h"
-#include "MxXmlConfig.h"
+#include "MyXmlConfig.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -68,7 +68,7 @@ VncPropertyDialog::VncPropertyDialog( wxWindow* parent, wxWindowID id, const wxS
     Create(parent, id, caption, pos, size, style);
 }
 
-void VncPropertyDialog::SetConfig(MxXmlConfig *cfg)
+void VncPropertyDialog::SetConfig(MyXmlConfig *cfg)
 {
     m_pCfg = cfg;
 }
