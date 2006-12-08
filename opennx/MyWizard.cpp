@@ -1298,10 +1298,10 @@ void WizardPageFinish::OnWizardpageFinishPageChanging( wxWizardEvent& event )
 #ifdef __WXMSW__
             TCHAR dtPath[MAX_PATH];
             if (SHGetSpecialFolderPath(NULL, dtPath, CSIDL_DESKTOPDIRECTORY, FALSE)) {
-                wxString linkPath = wxString::Format(_T("%s\\%s.lnk"), dtPath, cfg->sGetName().mb_str());
-                wxString targetPath = wxString::Format(_T("%s\\opennx.exe"), appDir.mb_str());
+                wxString linkPath = wxString::Format(_T("%s\\%s.lnk"), dtPath, cfg->sGetName().c_str());
+                wxString targetPath = wxString::Format(_T("%s\\opennx.exe"), appDir.c_str());
                 wxString desc = _("Launch MX Session");
-                wxString args = wxString::Format(_T("--session=\"%s\""), cfg->sGetFileName().mb_str());
+                wxString args = wxString::Format(_T("--session=\"%s\""), cfg->sGetFileName().c_str());
                 HRESULT hres;
                 IShellLink* psl;
 
