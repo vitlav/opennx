@@ -388,19 +388,19 @@ SOURCE=.\opennxApp.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MxIPC.cpp
+SOURCE=.\MyIPC.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MxSession.cpp
+SOURCE=.\MySession.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MxValidator.cpp
+SOURCE=.\MyValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MxWizard.cpp
+SOURCE=.\MyWizard.cpp
 # End Source File
 # Begin Source File
 
@@ -512,23 +512,23 @@ SOURCE=.\opennxApp.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\MxIPC.h
+SOURCE=.\MyIPC.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\MxSession.h
+SOURCE=.\MySession.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\MxValidator.h
+SOURCE=.\MyValidator.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\MxWizard.h
+SOURCE=.\MyWizard.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\MxWizard_symbols.h
+SOURCE=.\MyWizard_symbols.h
 # End Source File
 # Begin Source File
 
