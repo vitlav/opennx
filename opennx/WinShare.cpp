@@ -39,7 +39,36 @@
 #include <wx/dynlib.h>
 #include <wx/arrimpl.cpp>
 
-#ifdef __WXMSW__
+#ifdef __UNIX__
+
+#include <cups/cups.h>
+#include <libsmbclient.h>
+
+typedef int (*SMBC_init)(smbc_get_auth_data_fn fn, int debug);
+typedef int (*SMBC_opendir)(const char *url);
+typedef struct smbc_dirent* (*SMBC_readdir)(unsigned int dh);
+typedef int (*SMBC_closedir)(int dh);
+
+// dummy typedefs for windows funcptrs
+typedef void (*NT_NetShareEnum)(void);
+typedef void (*NT_NetApiBufferFree)(void);
+typedef void (*W9X_NetShareEnum)(void);
+
+typedef int (*FP_cupsGetDests)(cups_dest_t ** dests);
+typedef const char * (*FP_cupsServer)();
+
+// authentication-callback, used by libsmbclient
+// we always return empty username and password which means "do anonymous logon"
+static void
+smbc_auth_fn(const char *, const char *, char *, int,
+        char *username, int unmaxlen, char *password, int pwmaxlen)
+{
+    *username = '\0'; *password = '\0';
+}
+
+#else // __UNIX__
+// Windows
+
 #include <lm.h>
 
 struct share_info_1 {
@@ -64,32 +93,8 @@ typedef void (*SMBC_closedir)(void);
 typedef void cups_dest_t;
 typedef int (*FP_cupsGetDests)(cups_dest_t ** dests);
 typedef const char * (*FP_cupsServer)();
-#else
-// Unix
-#include <cups/cups.h>
-#include <libsmbclient.h>
 
-typedef int (*SMBC_init)(smbc_get_auth_data_fn fn, int debug);
-typedef int (*SMBC_opendir)(const char *url);
-typedef struct smbc_dirent* (*SMBC_readdir)(unsigned int dh);
-typedef int (*SMBC_closedir)(int dh);
-
-// dummy typedefs for windows funcptrs
-typedef void (*NT_NetShareEnum)(void);
-typedef void (*NT_NetApiBufferFree)(void);
-typedef void (*W9X_NetShareEnum)(void);
-
-typedef int (*FP_cupsGetDests)(cups_dest_t ** dests);
-typedef const char * (*FP_cupsServer)();
-
-// authentication-callback, used by libsmbclient
-// we always return empty username and password which means "do anonymous logon"
-void smbc_auth_fn(const char *, const char *, char *, int,
-        char *username, int unmaxlen, char *password, int pwmaxlen)
-{
-    *username = '\0'; *password = '\0';
-}
-#endif
+#endif // __UNIX__
 
 WX_DEFINE_OBJARRAY(ArrayOfShares);
 
@@ -175,7 +180,44 @@ DllData::~DllData()
 ArrayOfShares DllData::GetShares()
 {
     ArrayOfShares sa;
-#ifdef __WXMSW__
+
+#ifdef __UNIX__
+    if (isSMBC) {
+        // Unix, use libsmbclient
+        if (C_init(smbc_auth_fn, 0) == 0) {
+            int d = C_opendir("smb://127.0.0.1/");
+            if (d >= 0) {
+                struct smbc_dirent *e;
+                while (e = C_readdir(d)) {
+                    SharedResource r;
+                    switch (e->smbc_type) {
+                        case SMBC_FILE_SHARE:
+                        case SMBC_PRINTER_SHARE:
+                            r.name = wxConvLocal.cMB2WX(e->name);
+                            r.description = wxConvLocal.cMB2WX(e->comment);
+                            r.sharetype = (e->smbc_type == SMBC_FILE_SHARE) ?
+                                SharedResource::SHARE_SMB_DISK : SharedResource::SHARE_SMB_PRINTER;
+                            sa.Add(r);
+                            break;
+                    }
+                }
+                C_closedir(d);
+            }
+        }
+    } else {
+        // Unix, use libcups
+        cups_dest_t *dests = NULL;
+        int ndests = cupsGetDests(&dests);
+        for (int i = 0; i < ndests; i++) {
+            SharedResource r;
+            r.name = wxConvLocal.cMB2WX(dests[i].name);
+            r.description = wxConvLocal.cMB2WX(dests[i].instance);
+            r.sharetype = SharedResource::SHARE_CUPS_PRINTER;
+        }
+    }
+#else // __UNIX__
+
+    // Windows specific stuff
     if (isNT) {
         // NT, Win2K, XP
         PSHARE_INFO_1 BufPtr, p;
@@ -244,41 +286,8 @@ ArrayOfShares DllData::GetShares()
             }
         }
     }
-#else
-    if (isSMBC) {
-        // Unix, use libsmbclient
-        if (C_init(smbc_auth_fn, 0) == 0) {
-            int d = C_opendir("smb://127.0.0.1/");
-            if (d >= 0) {
-                struct smbc_dirent *e;
-                while (e = C_readdir(d)) {
-                    SharedResource r;
-                    switch (e->smbc_type) {
-                        case SMBC_FILE_SHARE:
-                        case SMBC_PRINTER_SHARE:
-                            r.name = wxConvLocal.cMB2WX(e->name);
-                            r.description = wxConvLocal.cMB2WX(e->comment);
-                            r.sharetype = (e->smbc_type == SMBC_FILE_SHARE) ?
-                                SharedResource::SHARE_SMB_DISK : SharedResource::SHARE_SMB_PRINTER;
-                            sa.Add(r);
-                            break;
-                    }
-                }
-                C_closedir(d);
-            }
-        }
-    } else {
-        // Unix, use libcups
-        cups_dest_t *dests = NULL;
-        int ndests = cupsGetDests(&dests);
-        for (int i = 0; i < ndests; i++) {
-            SharedResource r;
-            r.name = wxConvLocal.cMB2WX(dests[i].name);
-            r.description = wxConvLocal.cMB2WX(dests[i].instance);
-            r.sharetype = SharedResource::SHARE_CUPS_PRINTER;
-        }
-    }
-#endif
+#endif // __UNIX__
+
     return sa;
 }
 
@@ -336,10 +345,10 @@ ArrayOfShares WinShare::GetShares()
 
 bool WinShare::IsAvailable()
 {
-#ifdef __WXWIN__
-    return true;
-#else
+#ifdef __UNIX__
     return dllPrivate && dllPrivate->IsAvailable();
+#else
+    return true;
 #endif
 }
 
