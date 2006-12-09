@@ -55,6 +55,7 @@
 #include "MyXmlConfig.h"
 #include "MyValidator.h"
 #include "Icon.h"
+#include "KeyDialog.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -1302,10 +1303,15 @@ void SessionProperties::OnButtonBrowseCupspathClick( wxCommandEvent& event )
 
 void SessionProperties::OnButtonKeymanageClick( wxCommandEvent& event )
 {
-    ////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_KEYMANAGE in SessionProperties.
-    // Before editing this code, remove the block markers.
+    KeyDialog d;
+::wxLogDebug(wxT("key='%s'"), m_pCfg->sGetSshKey().c_str()); 
+    d.SetSshKey(m_pCfg->sGetSshKey());
+    d.Create(this);
+    if (d.ShowModal() != wxCANCEL) {
+        m_pCfg->sSetSshKey(d.GetSshKey());
+        CheckChanged();
+    }
     event.Skip();
-    ////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_KEYMANAGE in SessionProperties. 
 }
 
 
