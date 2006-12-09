@@ -103,7 +103,6 @@ opennxApp::LoadFileFromResource(const wxString &loc, bool bUseLocale /* = true *
 
 opennxApp::opennxApp()
     : m_pCfg(NULL)
-    , m_szMemRes(NULL)
 {
 
 #ifdef __WXDEBUG__
@@ -319,7 +318,7 @@ bool opennxApp::OnInit()
 }
 
 /*!
- * Cleanup for GastroCardApp
+ * Cleanup for opennxApp
  */
 int opennxApp::OnExit()
 {
