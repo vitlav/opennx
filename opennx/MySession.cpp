@@ -199,18 +199,27 @@ bool MySession::Create(const wxString cfgFileName, const wxString password)
     wxString sSubscription;
     wxString sAgentCookie;
     bool bSslTunneling = false;
-    wxString cmd = wxT("-nx -x -2 -o 'RhostsAuthentication no' -o 'PasswordAuthentication no' -o 'RSAAuthentication no' -o 'RhostsRSAAuthentication no' -o 'PubkeyAuthentication yes' ");
+    wxString cmd;
 
     MyXmlConfig cfg(cfgFileName);
     if (cfg.IsValid()) {
         wxString appDir;
-        wxConfigBase::Get()->Read(wxT("Config/SystemMxDir"), &appDir);
+        wxString userDir;
+        wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &appDir);
+        wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &userDir);
         wxFileName fn(appDir);
+
+        cmd << wxT("-nx -x -2")
+            << wxT(" -o 'RhostsAuthentication no'")
+            << wxT(" -o 'PasswordAuthentication no'")
+            << wxT(" -o 'RSAAuthentication no'")
+            << wxT(" -o 'RhostsRSAAuthentication no'")
+            << wxT(" -o 'PubkeyAuthentication yes'");
 
         // FE. nxssh is a fork of a stone-old openssh and therefore complains
         // about newer options in .ssh/config e.g.: ForwardDynamic.
         // Therefore we disable the use of a cfg at all.
-        cmd += wxT("-F /dev/null ");
+        cmd << wxT(" -F /dev/null ");
 
         int proxyPort = -1;
         cmd += wxString::Format(wxT("-p %d "), cfg.iGetServerPort());
@@ -362,12 +371,10 @@ bool MySession::Create(const wxString cfgFileName, const wxString password)
                         break;
                     case MyIPC::ActionStartProxy:
                         {
-                            wxString fname;
-                            wxConfigBase::Get()->Read(wxT("Config/UserMxDir"), &fname);
                             wxString o;
                             o << wxT("nx,cookie=") << sProxyCookie
                               << wxT(",session=session")
-                              << wxT(",root=") << fname
+                              << wxT(",root=") << userDir
                               << wxT(",product=") << sSubscription
                               << wxT(",id=") << sSessionID;
 #if 0
@@ -377,7 +384,7 @@ bool MySession::Create(const wxString cfgFileName, const wxString password)
                                 o += wxString::Format(wxT("connect=%s:%s"),
                                         cfg.sGetServerHost().c_str(), sSessionDisplay.c_str());
 #endif
-                            fname += wxFileName::GetPathSeparator();
+                            wxString fname = userDir + wxFileName::GetPathSeparator();
                             fname += wxString::Format(wxT("S-%s"), sSessionID.c_str());
                             {
                                 wxFileName::Mkdir(fname, 0777, wxPATH_MKDIR_FULL);
@@ -388,7 +395,7 @@ bool MySession::Create(const wxString cfgFileName, const wxString password)
                                     f.Write(o);
                                     f.Close();
                                     wxString pcmd;
-                                    wxConfigBase::Get()->Read(wxT("Config/SystemMxDir"), &pcmd);
+                                    wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &pcmd);
                                     pcmd += wxFileName::GetPathSeparator();
                                     pcmd += wxT("bin");
                                     pcmd += wxFileName::GetPathSeparator();

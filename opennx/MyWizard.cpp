@@ -317,7 +317,7 @@ bool WizardPageWelcome::Create( wxWizard* WXUNUSED(parent) )
     ////@end WizardPageWelcome creation
     CreateControls();
     initHtml(m_pWelcomeText,
-            _("Welcome to the MX Client Connection Wizard which will guide you through the steps needed to setup your login. Please select the 'Next' button to start."));
+            _("Welcome to the OpenNX Client Connection Wizard which will guide you through the steps needed to setup your login. Please select the 'Next' button to start."));
     return TRUE;
 }
 
@@ -416,7 +416,7 @@ END_EVENT_TABLE()
 bool WizardPageSession::ConfigExists(wxString &sessionName)
 {
     wxString cfgfn;
-    wxConfigBase::Get()->Read(_T("Config/UserMxDir"), &cfgfn);
+    wxConfigBase::Get()->Read(_T("Config/UserNxDir"), &cfgfn);
     cfgfn = cfgfn + wxFileName::GetPathSeparator() + _T("config");
     cfgfn = cfgfn + wxFileName::GetPathSeparator() + sessionName + _T(".nxs");
     return wxFileName::FileExists(cfgfn);
@@ -477,11 +477,11 @@ void WizardPageSession::CreateControls()
     m_pText3 = XRCCTRL(*this, "ID_HTMLWINDOW_TEXT3", wxHtmlWindow);
     // Set validators
     if (FindWindow(XRCID("ID_TEXTCTRL_SESSION_NAME")))
-        FindWindow(XRCID("ID_TEXTCTRL_SESSION_NAME"))->SetValidator( MyValidator(MyValidator::MXVAL_FILENAME, & m_sSessionName) );
+        FindWindow(XRCID("ID_TEXTCTRL_SESSION_NAME"))->SetValidator( MyValidator(MyValidator::MYVAL_FILENAME, & m_sSessionName) );
     if (FindWindow(XRCID("ID_TEXTCTRL_SVRNAME")))
-        FindWindow(XRCID("ID_TEXTCTRL_SVRNAME"))->SetValidator( MyValidator(MyValidator::MXVAL_HOST, & m_sHostName) );
+        FindWindow(XRCID("ID_TEXTCTRL_SVRNAME"))->SetValidator( MyValidator(MyValidator::MYVAL_HOST, & m_sHostName) );
     if (FindWindow(XRCID("ID_TEXTCTRL_SVRPORT")))
-        FindWindow(XRCID("ID_TEXTCTRL_SVRPORT"))->SetValidator( MyValidator(MyValidator::MXVAL_NUMERIC, & m_iPort) );
+        FindWindow(XRCID("ID_TEXTCTRL_SVRPORT"))->SetValidator( MyValidator(MyValidator::MYVAL_NUMERIC, & m_iPort) );
     if (FindWindow(XRCID("ID_SLIDER")))
         FindWindow(XRCID("ID_SLIDER"))->SetValidator( wxGenericValidator(& m_iConnectionSpeed) );
     ////@end WizardPageSession content construction
@@ -546,7 +546,7 @@ void WizardPageSession::CheckNextEnable()
 
     if (enable) {
         wxString cfgfn;
-        wxConfigBase::Get()->Read(_T("Config/UserMxDir"), &cfgfn);
+        wxConfigBase::Get()->Read(_T("Config/UserNxDir"), &cfgfn);
         cfgfn = cfgfn + wxFileName::GetPathSeparator() + _T("config");
         cfgfn = cfgfn + wxFileName::GetPathSeparator() + m_pCtrlSessionName->GetValue() + _T(".nxs");
         if (wxFileName::FileExists(cfgfn))
@@ -638,7 +638,7 @@ bool WizardPageDesktop::Create( wxWizard* parent )
     CreateControls();
     ////@end WizardPageDesktop creation
     CreateControls();
-    initHtml(m_pText1, _("Using MX Client, you can run RDP, VNC and X desktops, depending on what your service provider has made available."));
+    initHtml(m_pText1, _("Using OpenNX Client, you can run RDP, VNC and X desktops, depending on what your service provider has made available."));
     UpdateDialogConstraints(false);
     m_pCtrlDisplayWidth->SetFont(wxSystemSettings::GetFont(wxSYS_ANSI_VAR_FONT));
     m_pCtrlDisplayHeight->SetFont(wxSystemSettings::GetFont(wxSYS_ANSI_VAR_FONT));
@@ -860,7 +860,7 @@ bool WizardPageSecurity::Create( wxWizard* parent )
     CreateControls();
     ////@end WizardPageSecurity creation
     CreateControls();
-    initHtml(m_pText1, _("MX Client supports authentication using a variety of USB SmartCard tokens. Enable this option if you intend to use such a token."));
+    initHtml(m_pText1, _("OpenNX Client supports authentication using a variety of USB SmartCard tokens. Enable this option if you intend to use such a token."));
     initHtml(m_pText2, _("Authorization credentials are always encrypted while establishing a connection. For increased security, you can enable the following option."));
     return TRUE;
 }
@@ -1231,7 +1231,7 @@ void WizardPageSession::OnWizardpageSessionPageChanging( wxWizardEvent& event )
         cfg->sSetServerHost(m_sHostName);
         cfg->iSetServerPort(m_iPort);
         wxString cfgfn;
-        wxConfigBase::Get()->Read(_T("Config/UserMxDir"), &cfgfn);
+        wxConfigBase::Get()->Read(_T("Config/UserNxDir"), &cfgfn);
         cfgfn = cfgfn + wxFileName::GetPathSeparator() + _T("config");
         cfgfn = cfgfn + wxFileName::GetPathSeparator() + m_pCtrlSessionName->GetValue() + _T(".nxs");
         cfg->sSetFileName(cfgfn);
@@ -1305,13 +1305,13 @@ void WizardPageFinish::OnWizardpageFinishPageChanging( wxWizardEvent& event )
         }
         if (m_bCreateShortcut) {
             wxString appDir;
-            wxConfigBase::Get()->Read(_T("Config/SystemMxDir"), &appDir);
+            wxConfigBase::Get()->Read(_T("Config/SystemNxDir"), &appDir);
 #ifdef __WXMSW__
             TCHAR dtPath[MAX_PATH];
             if (SHGetSpecialFolderPath(NULL, dtPath, CSIDL_DESKTOPDIRECTORY, FALSE)) {
                 wxString linkPath = wxString::Format(_T("%s\\%s.lnk"), dtPath, cfg->sGetName().c_str());
                 wxString targetPath = wxString::Format(_T("%s\\opennx.exe"), appDir.c_str());
-                wxString desc = _("Launch MX Session");
+                wxString desc = _("Launch NX Session");
                 wxString args = wxString::Format(_T("--session=\"%s\""), cfg->sGetFileName().c_str());
                 HRESULT hres;
                 IShellLink* psl;
@@ -1342,11 +1342,11 @@ void WizardPageFinish::OnWizardpageFinishPageChanging( wxWizardEvent& event )
             dtEntry += _T("StartupNotify=true\n");
             dtEntry += _T("Terminal=false\n");
             dtEntry += _T("TerminalOptions=\n");
-            dtEntry += _T("Comment=Launch MX Session\n");
-            dtEntry += _T("Comment[de]=Starte MX Sitzung\n");
+            dtEntry += _T("Comment=Launch NX Session\n");
+            dtEntry += _T("Comment[de]=Starte NX Sitzung\n");
             dtEntry += _T("Name=") + cfg->sGetName() + _T("\n");
-            dtEntry += _T("GenericName=MX Client\n");
-            dtEntry += _T("GenericName[de]=MX Client\n");
+            dtEntry += _T("GenericName=OpenNX Client\n");
+            dtEntry += _T("GenericName[de]=OpenNX Client\n");
             dtEntry += _T("Exec=") + appDir + _T("/opennx --session=\"")
                 + cfg->sGetFileName() + _T("\"\n");
             dtEntry += _T("Icon=") + appDir + _T("/nx-desktop.png\n");

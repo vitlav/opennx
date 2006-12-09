@@ -1,5 +1,5 @@
-#ifndef _MXSESSION_H_
-#define _MXSESSION_H_
+#ifndef _MYSESSION_H_
+#define _MYSESSION_H_
 
 #include <wx/regex.h>
 

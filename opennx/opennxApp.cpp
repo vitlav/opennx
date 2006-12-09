@@ -155,14 +155,14 @@ opennxApp::opennxApp()
 #endif
 
     wxString tmp;
-    if (!wxConfigBase::Get()->Read(wxT("Config/UserMxDir"), &tmp)) {
+    if (!wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &tmp)) {
         tmp = ::wxGetHomeDir() + wxFileName::GetPathSeparator() + wxT(".nx");
         if (!wxFileName(tmp).DirExists())
             wxFileName(tmp).Mkdir();
-        wxConfigBase::Get()->Write(wxT("Config/UserMxDir"), tmp);
+        wxConfigBase::Get()->Write(wxT("Config/UserNxDir"), tmp);
         wxFileName::Mkdir(tmp +  wxFileName::GetPathSeparator() + wxT("config"), 0750, wxPATH_MKDIR_FULL);
     }
-    if (!wxConfigBase::Get()->Read(wxT("Config/SystemMxDir"), &tmp)) {
+    if (!wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp)) {
         tmp = wxT("/usr/NX");
 #ifdef __WXMSW__
         int ret = GetModuleFileName(NULL, tmp.GetWriteBuf(1024), 1024);
@@ -184,10 +184,10 @@ opennxApp::opennxApp()
         else
             tmp = wxFileName(wxConvLocal.cMB2WX(ldst)).GetPath();
 #endif
-        wxConfigBase::Get()->Write(wxT("Config/SystemMxDir"), tmp);
+        wxConfigBase::Get()->Write(wxT("Config/SystemNxDir"), tmp);
     }
     wxConfigBase::Get()->Flush();
-    wxConfigBase::Get()->Read(wxT("Config/SystemMxDir"), &tmp);
+    wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp);
     // Change to our system dir so we can read our resources
     wxSetWorkingDirectory(tmp);
 #ifdef __UNIX__

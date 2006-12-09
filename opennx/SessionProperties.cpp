@@ -252,8 +252,8 @@ void SessionProperties::CheckChanged()
         m_pCfg->sSetCupsPath(m_sCupsPath);
 
         bool changed = m_pCfg->checkChanged();
-        changed |= (m_sSavedUserMxDir != m_sUserMxDir);
-        changed |= (m_sSavedSystemMxDir != m_sSystemMxDir);
+        changed |= (m_sSavedUserNxDir != m_sUserNxDir);
+        changed |= (m_sSavedSystemNxDir != m_sSystemNxDir);
         m_pCtrlApplyButton->Enable(changed);
     }
 }
@@ -294,8 +294,8 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlShareAdd = NULL;
     m_pCtrlShareModify = NULL;
     m_pCtrlShareDelete = NULL;
-    m_pCtrlUserMxDir = NULL;
-    m_pCtrlSystemMxDir = NULL;
+    m_pCtrlUserNxDir = NULL;
+    m_pCtrlSystemNxDir = NULL;
     m_pCtrlCupsPath = NULL;
     m_pCtrlFontDefault = NULL;
     m_pCtrlFontFixed = NULL;
@@ -341,8 +341,8 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
         m_bRemoveOldSessionFiles = m_pCfg->bGetRemoveOldSessionFiles();
         m_sCupsPath = m_pCfg->sGetCupsPath();
     }
-    wxConfigBase::Get()->Read(_T("Config/UserMxDir"), &m_sUserMxDir);
-    wxConfigBase::Get()->Read(_T("Config/SystemMxDir"), &m_sSystemMxDir);
+    wxConfigBase::Get()->Read(_T("Config/UserNxDir"), &m_sUserNxDir);
+    wxConfigBase::Get()->Read(_T("Config/SystemNxDir"), &m_sSystemNxDir);
 
 ////@begin SessionProperties creation
     SetExtraStyle(GetExtraStyle()|wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS);
@@ -410,8 +410,8 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
 
     m_pCtrlApplyButton->Enable(false);
     m_pCfg->saveState();
-    m_sSavedUserMxDir = m_sUserMxDir;
-    m_sSavedSystemMxDir = m_sSystemMxDir;
+    m_sSavedUserNxDir = m_sUserNxDir;
+    m_sSavedSystemNxDir = m_sSystemNxDir;
 
     // Hook into OnChar events of wxTextCtrl's and wxSpinCtrl's
     InstallOnCharHandlers();
@@ -552,15 +552,15 @@ void SessionProperties::CreateControls()
     m_pCtrlShareAdd = XRCCTRL(*this, "ID_BUTTON_SMB_ADD", wxButton);
     m_pCtrlShareModify = XRCCTRL(*this, "ID_BUTTON_SMB_MODIFY", wxButton);
     m_pCtrlShareDelete = XRCCTRL(*this, "ID_BUTTON_SMB_DELETE", wxButton);
-    m_pCtrlUserMxDir = XRCCTRL(*this, "ID_TEXTCTRL_USERDIR", wxTextCtrl);
-    m_pCtrlSystemMxDir = XRCCTRL(*this, "ID_TEXTCTRL_SYSDIR", wxTextCtrl);
+    m_pCtrlUserNxDir = XRCCTRL(*this, "ID_TEXTCTRL_USERDIR", wxTextCtrl);
+    m_pCtrlSystemNxDir = XRCCTRL(*this, "ID_TEXTCTRL_SYSDIR", wxTextCtrl);
     m_pCtrlCupsPath = XRCCTRL(*this, "ID_TEXTCTRL_CUPSPATH", wxTextCtrl);
     m_pCtrlFontDefault = XRCCTRL(*this, "ID_BUTTON_FONT_DEFAULT", wxButton);
     m_pCtrlFontFixed = XRCCTRL(*this, "ID_BUTTON_FONT_FIXED", wxButton);
     m_pCtrlApplyButton = XRCCTRL(*this, "wxID_APPLY", wxButton);
     // Set validators
     if (FindWindow(XRCID("ID_TEXTCTRL_HOST")))
-        FindWindow(XRCID("ID_TEXTCTRL_HOST"))->SetValidator( MyValidator(MyValidator::MXVAL_HOST, & m_sHostName) );
+        FindWindow(XRCID("ID_TEXTCTRL_HOST"))->SetValidator( MyValidator(MyValidator::MYVAL_HOST, & m_sHostName) );
     if (FindWindow(XRCID("ID_SPINCTRL_PORT")))
         FindWindow(XRCID("ID_SPINCTRL_PORT"))->SetValidator( MyValidator(& m_iPort) );
     if (FindWindow(XRCID("ID_CHECKBOX_PWSAVE")))
@@ -590,7 +590,7 @@ void SessionProperties::CreateControls()
     if (FindWindow(XRCID("ID_CHECKBOX_HTTPPROXY")))
         FindWindow(XRCID("ID_CHECKBOX_HTTPPROXY"))->SetValidator( wxGenericValidator(& m_bUseProxy) );
     if (FindWindow(XRCID("ID_TEXTCTRL_PROXYHOST")))
-        FindWindow(XRCID("ID_TEXTCTRL_PROXYHOST"))->SetValidator( MyValidator(MyValidator::MXVAL_HOST, & m_sProxyHost) );
+        FindWindow(XRCID("ID_TEXTCTRL_PROXYHOST"))->SetValidator( MyValidator(MyValidator::MYVAL_HOST, & m_sProxyHost) );
     if (FindWindow(XRCID("ID_SPINCTRL_PROXYPORT")))
         FindWindow(XRCID("ID_SPINCTRL_PROXYPORT"))->SetValidator( MyValidator(& m_iProxyPort) );
     if (FindWindow(XRCID("ID_COMBOBOX_CACHEMEM")))
@@ -610,11 +610,11 @@ void SessionProperties::CreateControls()
     if (FindWindow(XRCID("ID_CHECKBOX_MMEDIA")))
         FindWindow(XRCID("ID_CHECKBOX_MMEDIA"))->SetValidator( wxGenericValidator(& m_bEnableMultimedia) );
     if (FindWindow(XRCID("ID_TEXTCTRL_USERDIR")))
-        FindWindow(XRCID("ID_TEXTCTRL_USERDIR"))->SetValidator( MyValidator(& m_sUserMxDir) );
+        FindWindow(XRCID("ID_TEXTCTRL_USERDIR"))->SetValidator( MyValidator(& m_sUserNxDir) );
     if (FindWindow(XRCID("ID_CHECKBOX_REMOVEOLDSF")))
         FindWindow(XRCID("ID_CHECKBOX_REMOVEOLDSF"))->SetValidator( wxGenericValidator(& m_bRemoveOldSessionFiles) );
     if (FindWindow(XRCID("ID_TEXTCTRL_SYSDIR")))
-        FindWindow(XRCID("ID_TEXTCTRL_SYSDIR"))->SetValidator( MyValidator(& m_sSystemMxDir) );
+        FindWindow(XRCID("ID_TEXTCTRL_SYSDIR"))->SetValidator( MyValidator(& m_sSystemNxDir) );
     if (FindWindow(XRCID("ID_TEXTCTRL_CUPSPATH")))
         FindWindow(XRCID("ID_TEXTCTRL_CUPSPATH"))->SetValidator( MyValidator(& m_sCupsPath) );
 ////@end SessionProperties content construction
@@ -923,10 +923,10 @@ void SessionProperties::OnButtonSmbDeleteClick( wxCommandEvent& event )
 
 void SessionProperties::OnButtonBrowseUserdirClick( wxCommandEvent& event )
 {
-    const wxString& dir = wxDirSelector(_("Select User MX directory"),
-        m_sUserMxDir, 0, wxDefaultPosition, this);
+    const wxString& dir = wxDirSelector(_("Select User NX directory"),
+        m_sUserNxDir, 0, wxDefaultPosition, this);
     if (!dir.IsEmpty()) {
-        m_pCtrlUserMxDir->SetValue(dir);
+        m_pCtrlUserNxDir->SetValue(dir);
         CheckChanged();
     }
     event.Skip();
@@ -940,10 +940,10 @@ void SessionProperties::OnButtonBrowseUserdirClick( wxCommandEvent& event )
 
 void SessionProperties::OnButtonBrowseSysdirClick( wxCommandEvent& event )
 {
-    const wxString& dir = wxDirSelector(_("Select System MX directory"),
-        m_sSystemMxDir, 0, wxDefaultPosition, this);
+    const wxString& dir = wxDirSelector(_("Select System NX directory"),
+        m_sSystemNxDir, 0, wxDefaultPosition, this);
     if (!dir.IsEmpty()) {
-        m_pCtrlSystemMxDir->SetValue(dir);
+        m_pCtrlSystemNxDir->SetValue(dir);
         CheckChanged();
     }
     event.Skip();
@@ -1020,8 +1020,8 @@ void SessionProperties::OnDeleteClick( wxCommandEvent& event )
 void SessionProperties::OnApplyClick( wxCommandEvent& event )
 {
     m_pCfg->saveState();
-    m_sSavedUserMxDir = m_sUserMxDir;
-    m_sSavedSystemMxDir = m_sSystemMxDir;
+    m_sSavedUserNxDir = m_sUserNxDir;
+    m_sSavedSystemNxDir = m_sSystemNxDir;
     m_pCtrlApplyButton->Enable(false);
     event.Skip();
 }
@@ -1218,7 +1218,7 @@ void SessionProperties::OnTextctrlHostUpdated( wxCommandEvent& event )
 
 void SessionProperties::OnTextctrlUserdirUpdated( wxCommandEvent& event )
 {
-    if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlUserMxDir))
+    if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlUserNxDir))
         CheckChanged();
     event.Skip();
 }
@@ -1229,7 +1229,7 @@ void SessionProperties::OnTextctrlUserdirUpdated( wxCommandEvent& event )
 
 void SessionProperties::OnTextctrlSysdirUpdated( wxCommandEvent& event )
 {
-    if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlSystemMxDir))
+    if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlSystemNxDir))
         CheckChanged();
     event.Skip();
 }

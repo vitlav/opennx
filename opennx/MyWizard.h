@@ -9,8 +9,8 @@
 // Licence:     LGPL
 /////////////////////////////////////////////////////////////////////////////
 
-#ifndef _MXWIZARD_H_
-#define _MXWIZARD_H_
+#ifndef _MYWIZARD_H_
+#define _MYWIZARD_H_
 
 #if defined(__GNUG__) && !defined(__APPLE__)
 #pragma interface "MyWizard.cpp"
@@ -57,7 +57,7 @@ class MyXmlConfig;
 #define ID_WIZARDPAGE_DESKTOP 10133
 #define ID_WIZARDPAGE_SECURITY 10020
 #define ID_WIZARDPAGE_FINISH 10142
-#define SYMBOL_MXWIZARD_IDNAME ID_WIZARD
+#define SYMBOL_MYWIZARD_IDNAME ID_WIZARD
 ////@end control identifiers
 
 /*!
@@ -80,12 +80,12 @@ class MyWizard: public wxWizard, public KeyTypeCallback
 public:
     /// Constructors
     MyWizard( );
-    MyWizard( wxWindow* parent, wxWindowID id = SYMBOL_MXWIZARD_IDNAME, const wxPoint& pos = wxDefaultPosition );
+    MyWizard( wxWindow* parent, wxWindowID id = SYMBOL_MYWIZARD_IDNAME, const wxPoint& pos = wxDefaultPosition );
 
     ~MyWizard();
 
     /// Creation
-    bool Create( wxWindow* parent, wxWindowID id = SYMBOL_MXWIZARD_IDNAME, const wxPoint& pos = wxDefaultPosition );
+    bool Create( wxWindow* parent, wxWindowID id = SYMBOL_MYWIZARD_IDNAME, const wxPoint& pos = wxDefaultPosition );
 
     /// Creates the controls and sizers
     void CreateControls();
@@ -450,4 +450,4 @@ private:
 };
 
 #endif
-    // _MXWIZARD_H_
+    // _MYWIZARD_H_

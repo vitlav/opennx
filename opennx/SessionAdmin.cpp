@@ -135,7 +135,7 @@ bool SessionAdmin::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxSt
     m_SessionListCtrl = NULL;
 ////@end SessionAdmin member initialisation
 
-    wxConfigBase::Get()->Read(_T("Config/UserMxDir"), &m_MxDirectory);
+    wxConfigBase::Get()->Read(_T("Config/UserNxDir"), &m_NxDirectory);
 
 ////@begin SessionAdmin creation
     SetParent(parent);
@@ -144,7 +144,7 @@ bool SessionAdmin::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxSt
     Centre();
 ////@end SessionAdmin creation
 
-    m_sessions = new SessionList(m_MxDirectory, m_SessionListCtrl);
+    m_sessions = new SessionList(m_NxDirectory, m_SessionListCtrl);
     return TRUE;
 }
 
@@ -237,10 +237,10 @@ void SessionAdmin::OnToolSessionNewClick( wxCommandEvent& event )
 
 void SessionAdmin::OnMenuFileChdirClick( wxCommandEvent& event )
 {
-    const wxString& dir = wxDirSelector(_("Choose new MX session directory."),
-        m_MxDirectory, wxDD_DEFAULT_STYLE, wxDefaultPosition, this);
+    const wxString& dir = wxDirSelector(_("Choose new NX session directory."),
+        m_NxDirectory, wxDD_DEFAULT_STYLE, wxDefaultPosition, this);
     if (!dir.IsEmpty()) {
-        m_MxDirectory = dir;
+        m_NxDirectory = dir;
         m_sessions->SetDir(dir);
     }
     event.Skip();

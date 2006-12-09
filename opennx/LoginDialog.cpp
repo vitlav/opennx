@@ -106,7 +106,7 @@ LoginDialog::~LoginDialog()
 void LoginDialog::ReadConfigDirectory()
 {
     wxString cfgdir;
-    wxConfigBase::Get()->Read(wxT("Config/UserMxDir"), &cfgdir);
+    wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &cfgdir);
     cfgdir = cfgdir + wxFileName::GetPathSeparator() + wxT("config");
     m_aConfigFiles.Empty();
     m_aSessionNames.Empty();
@@ -304,8 +304,8 @@ void LoginDialog::OnButtonConfigureClick( wxCommandEvent& event )
                 wxMessageBox(wxString::Format(_("Could not save session to\n%s"),
                             m_pCurrentCfg->sGetFileName().c_str()), _("Error saving - OpenNX"),
                         wxICON_ERROR | wxOK);
-            wxConfigBase::Get()->Write(wxT("Config/UserMxDir"), d.GetsUserMxDir());
-            wxConfigBase::Get()->Write(wxT("Config/SystemMxDir"), d.GetsSystemMxDir());
+            wxConfigBase::Get()->Write(wxT("Config/UserNxDir"), d.GetsUserNxDir());
+            wxConfigBase::Get()->Write(wxT("Config/SystemNxDir"), d.GetsSystemNxDir());
             break;
     }
     event.Skip();

@@ -124,7 +124,7 @@ MyValidator::MyValidator(const MyValidator &v)
 
 MyValidator::MyValidator(bool *val)
     : wxValidator()
-    , m_type(MXVAL_ANY)
+    , m_type(MYVAL_ANY)
 {
     Init();
     m_pBool = val;
@@ -132,7 +132,7 @@ MyValidator::MyValidator(bool *val)
 
 MyValidator::MyValidator(int *val)
     : wxValidator()
-    , m_type(MXVAL_ANY)
+    , m_type(MYVAL_ANY)
 {
     Init();
     m_pInt = val;
@@ -140,7 +140,7 @@ MyValidator::MyValidator(int *val)
 
 MyValidator::MyValidator(wxString *val)
     : wxValidator()
-    , m_type(MXVAL_ANY)
+    , m_type(MYVAL_ANY)
 {
     Init();
     m_pString = val;
@@ -148,7 +148,7 @@ MyValidator::MyValidator(wxString *val)
 
 MyValidator::MyValidator(wxArrayInt *val)
     : wxValidator()
-    , m_type(MXVAL_ANY)
+    , m_type(MYVAL_ANY)
 {
     Init();
     m_pArrayInt = val;
@@ -638,13 +638,13 @@ void MyValidator::OnChar(wxKeyEvent& event)
         if (!(keyCode < WXK_SPACE || keyCode == WXK_DELETE || keyCode > WXK_START)) {
             bool chOk = true;
             switch (m_type) {
-                case MXVAL_NUMERIC:
+                case MYVAL_NUMERIC:
                     chOk = (wxIsdigit(keyCode) != 0);
                     break;
-                case MXVAL_HOST:
+                case MYVAL_HOST:
                     chOk = (wxIsalnum(keyCode) || (keyCode == _T('.')) || (keyCode == _T('-')));
                     break;
-                case MXVAL_FILENAME:
+                case MYVAL_FILENAME:
                     chOk = (wxFileName::GetForbiddenChars().Find(keyCode) == -1);
                     break;
             }

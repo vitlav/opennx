@@ -81,142 +81,166 @@ bool ShareGroup::operator !=(const ShareGroup &other)
     return (!(*this == other));
 }
 
-    MyXmlConfig::MyXmlConfig()
-    : m_bValid(false)
-    , saved(NULL)
-    , m_bRememberPassword(false)
-    , m_bUseCustomImageEncoding(false)
-    , m_bUseSmartCard(false)
-    , m_bDisableTcpNoDelay(false)
-    , m_bDisableZlibCompression(false)
-    , m_bEnableSSL(true)
-    , m_bKbdLayoutOther(false)
-    , m_bEnableSmbSharing(false)
-    , m_bEnableMultimedia(false)
-    , m_bRemoveOldSessionFiles(true)
-    , m_bUseCups(false)
-    , m_bRunConsole(false)
-    , m_bRunXclients(false)
-    , m_bVirtualDesktop(false)
+MyXmlConfig::MyXmlConfig()
+    : saved(NULL)
+    , m_bDisableBackingstore(false)
+    , m_bDisableComposite(false)
+    , m_bDisableImageCompression(false)
+    , m_bDisableJpeg(false)
+    , m_bDisableRender(false)
+    , m_bDisableStreaming(false)
     , m_bDisableTaint(false)
+    , m_bDisableTcpNoDelay(false)
+    , m_bDisableXagent(false)
+    , m_bDisableZlibCompression(false)
+    , m_bEnableMultimedia(false)
+    , m_bEnableSmbSharing(false)
+    , m_bEnableSSL(true)
+    , m_bGuestMode(false)
+    , m_bImageEncodingJpeg(true)
+    , m_bImageEncodingPlainX(false)
+    , m_bImageEncodingPNG(false)
+    , m_bKbdLayoutOther(false)
     , m_bRdpRememberPassword(false)
     , m_bRdpRunApplication(false)
-    , m_bVncRememberPassword(false)
-    , m_bVncUseMxAuth(false)
-    , m_bImageEncodingPNG(false)
-    , m_bImageEncodingPlainX(false)
-    , m_bImageEncodingJpeg(true)
+    , m_bRememberPassword(false)
+    , m_bRemoveOldSessionFiles(true)
+    , m_bRunConsole(false)
+    , m_bRunXclients(false)
+    , m_bUseCups(false)
+    , m_bUseCustomImageEncoding(false)
     , m_bUseJpegQuality(false)
-    , m_bDisableRender(false)
+    , m_bUseProxy(false)
+    , m_bUseSmartCard(false)
     , m_bUseTightJpeg(false)
-    , m_bDisableBackingstore(false)
-    , m_bDisableXagent(false)
-    , m_bDisableJpeg(false)
-    , m_bDisableImageCompression(false)
-    , m_bDisableComposite(false)
-    , m_bDisableStreaming(false)
+    , m_bValid(false)
+    , m_bVirtualDesktop(false)
+    , m_bVncRememberPassword(false)
+    , m_bVncUseNxAuth(false)
+
+    , m_iCupsPort(631)
     , m_iDisplayHeight(480)
     , m_iDisplayWidth(640)
-    , m_iServerPort(22)
-    , m_iCupsPort(631)
-    , m_iRdpAuthType(1)
-    , m_iVncDisplayNumber(0)
-    , m_iRdpImageCompression(1)
-    , m_iVncImageEncoding(0)
-    , m_iUsedShareGroups(0)
     , m_iJpegQuality(6)
+    , m_iKbdLayoutLanguage(mapLocaleToKeyboard())
+    , m_iProxyPort(3128)
+    , m_iRdpAuthType(1)
+    , m_iRdpImageCompression(1)
+    , m_iServerPort(22)
+    , m_iUsedShareGroups(0)
+    , m_iVncDisplayNumber(0)
+    , m_iVncImageEncoding(0)
+
+    , m_eCacheDisk(CACHEDISK_32MB)
+    , m_eCacheMemory(CACHEMEM_8MB)
     , m_eConnectionSpeed(SPEED_ADSL)
     , m_eDesktopType(DTYPE_KDE)
     , m_eDisplayType(DPTYPE_AVAILABLE)
     , m_eSessionType(STYPE_UNIX)
-    , m_eCacheMemory(CACHEMEM_8MB)
-    , m_eCacheDisk(CACHEDISK_32MB)
-    , m_sName(wxT(""))
-    , m_sUsername(wxT(""))
-    , m_sPassword(wxT(""))
-    , m_sServerHost(wxT(""))
+
     , m_sCommandLine(wxT(""))
-    , m_sRdpHostName(wxT(""))
-    , m_sRdpUsername(wxT(""))
-    , m_sRdpPassword(wxT(""))
-    , m_sRdpApplication(wxT(""))
-    , m_sVncHostName(wxT(""))
-    , m_sVncPassword(wxT(""))
     , m_sCupsPath(wxT(CUPS_DEFAULT_PATH))
     , m_sFileName(wxT(""))
+    , m_sGuestUser(wxT(""))
+    , m_sGuestPassword(wxT(""))
+    , m_sName(wxT(""))
+    , m_sPassword(wxT(""))
+    , m_sProxyHost(wxT(""))
+    , m_sRdpApplication(wxT(""))
+    , m_sRdpHostName(wxT(""))
+    , m_sRdpPassword(wxT(""))
+    , m_sRdpUsername(wxT(""))
+    , m_sServerHost(wxT(""))
+    , m_sSshKey(wxT(""))
+    , m_sUsername(wxT(""))
+    , m_sVncHostName(wxT(""))
+    , m_sVncPassword(wxT(""))
+
     , m_pMd5Password(NULL)
     , m_pClrPassword(NULL)
 {
-    m_iKbdLayoutLanguage = mapLocaleToKeyboard();
 }
 
     MyXmlConfig &
 MyXmlConfig::operator =(const MyXmlConfig &other)
 {
-    m_bValid = other.m_bValid;
     saved = NULL;
-    m_bRememberPassword = other.m_bRememberPassword;
-    m_bUseCustomImageEncoding = other.m_bUseCustomImageEncoding;
-    m_bUseSmartCard = other.m_bUseSmartCard;
-    m_bDisableTcpNoDelay = other.m_bDisableTcpNoDelay;
-    m_bDisableZlibCompression = other.m_bDisableZlibCompression;
-    m_bEnableSSL = other.m_bEnableSSL;
-    m_bKbdLayoutOther = other.m_bKbdLayoutOther;
-    m_bEnableSmbSharing = other.m_bEnableSmbSharing;
-    m_bEnableMultimedia = other.m_bEnableMultimedia;
-    m_bRemoveOldSessionFiles = other.m_bRemoveOldSessionFiles;
-    m_bUseCups = other.m_bUseCups;
-    m_bRunConsole = other.m_bRunConsole;
-    m_bRunXclients = other.m_bRunXclients;
-    m_bVirtualDesktop = other.m_bVirtualDesktop;
+
+    m_bDisableBackingstore = other.m_bDisableBackingstore;
+    m_bDisableComposite = other.m_bDisableComposite;
+    m_bDisableImageCompression = other.m_bDisableImageCompression;
+    m_bDisableJpeg = other.m_bDisableJpeg;
+    m_bDisableRender = other.m_bDisableRender;
+    m_bDisableStreaming = other.m_bDisableStreaming;
     m_bDisableTaint = other.m_bDisableTaint;
+    m_bDisableTcpNoDelay = other.m_bDisableTcpNoDelay;
+    m_bDisableXagent = other.m_bDisableXagent;
+    m_bDisableZlibCompression = other.m_bDisableZlibCompression;
+    m_bEnableMultimedia = other.m_bEnableMultimedia;
+    m_bEnableSmbSharing = other.m_bEnableSmbSharing;
+    m_bEnableSSL = other.m_bEnableSSL;
+    m_bGuestMode = other.m_bGuestMode;
+    m_bImageEncodingJpeg = other.m_bImageEncodingJpeg;
+    m_bImageEncodingPlainX = other.m_bImageEncodingPlainX;
+    m_bImageEncodingPNG = other.m_bImageEncodingPNG;
+    m_bKbdLayoutOther = other.m_bKbdLayoutOther;
     m_bRdpRememberPassword = other.m_bRdpRememberPassword;
     m_bRdpRunApplication = other.m_bRdpRunApplication;
-    m_bVncRememberPassword = other.m_bVncRememberPassword;
-    m_bVncUseMxAuth = other.m_bVncUseMxAuth;
-    m_bImageEncodingPNG = other.m_bImageEncodingPNG;
-    m_bImageEncodingPlainX = other.m_bImageEncodingPlainX;
-    m_bImageEncodingJpeg = other.m_bImageEncodingJpeg;
+    m_bRememberPassword = other.m_bRememberPassword;
+    m_bRemoveOldSessionFiles = other.m_bRemoveOldSessionFiles;
+    m_bRunConsole = other.m_bRunConsole;
+    m_bRunXclients = other.m_bRunXclients;
+    m_bUseCups = other.m_bUseCups;
+    m_bUseCustomImageEncoding = other.m_bUseCustomImageEncoding;
     m_bUseJpegQuality = other.m_bUseJpegQuality;
-    m_bDisableRender = other.m_bDisableRender;
+    m_bUseProxy = other.m_bUseProxy;
+    m_bUseSmartCard = other.m_bUseSmartCard;
     m_bUseTightJpeg = other.m_bUseTightJpeg;
+    m_bValid = other.m_bValid;
+    m_bVirtualDesktop = other.m_bVirtualDesktop;
+    m_bVncRememberPassword = other.m_bVncRememberPassword;
+    m_bVncUseNxAuth = other.m_bVncUseNxAuth;
+
+    m_iCupsPort = other.m_iCupsPort;
     m_iDisplayHeight = other.m_iDisplayHeight;
     m_iDisplayWidth = other.m_iDisplayWidth;
-    m_iServerPort = other.m_iServerPort;
-    m_iCupsPort = other.m_iCupsPort;
-    m_iRdpAuthType = other.m_iRdpAuthType;
-    m_iVncDisplayNumber = other.m_iVncDisplayNumber;
-    m_iRdpImageCompression = other.m_iRdpImageCompression;
-    m_iVncImageEncoding = other.m_iVncImageEncoding;
-    m_iUsedShareGroups = other.m_iUsedShareGroups;
-    m_iKbdLayoutLanguage = other.m_iKbdLayoutLanguage;
     m_iJpegQuality = other.m_iJpegQuality;
+    m_iKbdLayoutLanguage = other.m_iKbdLayoutLanguage;
+    m_iProxyPort = other.m_iProxyPort;
+    m_iRdpAuthType = other.m_iRdpAuthType;
+    m_iRdpImageCompression = other.m_iRdpImageCompression;
+    m_iServerPort = other.m_iServerPort;
+    m_iUsedShareGroups = other.m_iUsedShareGroups;
+    m_iVncDisplayNumber = other.m_iVncDisplayNumber;
+    m_iVncImageEncoding = other.m_iVncImageEncoding;
+
+    m_eCacheDisk = other.m_eCacheDisk;
+    m_eCacheMemory = other.m_eCacheMemory;
     m_eConnectionSpeed = other.m_eConnectionSpeed;
     m_eDesktopType = other.m_eDesktopType;
     m_eDisplayType = other.m_eDisplayType;
     m_eSessionType = other.m_eSessionType;
-    m_eCacheMemory = other.m_eCacheMemory;
-    m_eCacheDisk = other.m_eCacheDisk;
-    m_sName = other.m_sName;
-    m_sUsername = other.m_sUsername;
-    m_sPassword = other.m_sPassword;
-    m_bDisableBackingstore = other.m_bDisableBackingstore;
-    m_bDisableXagent = other.m_bDisableXagent;
-    m_bDisableJpeg = other.m_bDisableJpeg;
-    m_bDisableImageCompression = other.m_bDisableImageCompression;
-    m_bDisableComposite = other.m_bDisableComposite;
-    m_bDisableStreaming = other.m_bDisableStreaming;
-    m_sServerHost = other.m_sServerHost;
+
     m_sCommandLine = other.m_sCommandLine;
-    m_sRdpHostName = other.m_sRdpHostName;
-    m_sRdpUsername = other.m_sRdpUsername;
-    m_sRdpPassword = other.m_sRdpPassword;
+    m_sCupsPath = other.m_sCupsPath;
+    m_sGuestPassword = other.m_sGuestPassword;
+    m_sGuestUser = other.m_sGuestUser;
+    m_sName = other.m_sName;
+    m_sPassword = other.m_sPassword;
+    m_sProxyHost = other.m_sProxyHost;
     m_sRdpApplication = other.m_sRdpApplication;
+    m_sRdpHostName = other.m_sRdpHostName;
+    m_sRdpPassword = other.m_sRdpPassword;
+    m_sRdpUsername = other.m_sRdpUsername;
+    m_sServerHost = other.m_sServerHost;
+    m_sSshKey = other.m_sSshKey;
+    m_sUsername = other.m_sUsername;
     m_sVncHostName = other.m_sVncHostName;
     m_sVncPassword = other.m_sVncPassword;
-    m_sCupsPath = other.m_sCupsPath;
+
     m_aShareGroups = other.m_aShareGroups;
     m_aUsedShareGroups = other.m_aUsedShareGroups;
+
     if (other.m_pMd5Password) {
         if (m_pMd5Password)
             delete m_pMd5Password;
@@ -420,142 +444,164 @@ MyXmlConfig::cmpUsedShareGroups(wxArrayString a1, wxArrayString a2)
     bool
 MyXmlConfig::operator ==(const MyXmlConfig &other)
 {
-    if (m_bValid != other.m_bValid) return false;
-    if (m_bRememberPassword != other.m_bRememberPassword) return false;
-    if (m_bUseCustomImageEncoding != other.m_bUseCustomImageEncoding) return false;
-    if (m_bUseSmartCard != other.m_bUseSmartCard) return false;
-    if (m_bDisableTcpNoDelay != other.m_bDisableTcpNoDelay) return false;
-    if (m_bDisableZlibCompression != other.m_bDisableZlibCompression) return false;
-    if (m_bEnableSSL != other.m_bEnableSSL) return false;
-    if (m_bKbdLayoutOther != other.m_bKbdLayoutOther) return false;
-    if (m_bEnableSmbSharing != other.m_bEnableSmbSharing) return false;
-    if (m_bEnableMultimedia != other.m_bEnableMultimedia) return false;
-    if (m_bRemoveOldSessionFiles != other.m_bRemoveOldSessionFiles) return false;
-    if (m_bUseCups != other.m_bUseCups) return false;
-    if (m_bRunConsole != other.m_bRunConsole) return false;
-    if (m_bRunXclients != other.m_bRunXclients) return false;
-    if (m_bVirtualDesktop != other.m_bVirtualDesktop) return false;
+    if (m_bDisableBackingstore != other.m_bDisableBackingstore) return false;
+    if (m_bDisableComposite != other.m_bDisableComposite) return false;
+    if (m_bDisableImageCompression != other.m_bDisableImageCompression) return false;
+    if (m_bDisableJpeg != other.m_bDisableJpeg) return false;
+    if (m_bDisableRender != other.m_bDisableRender) return false;
+    if (m_bDisableStreaming != other.m_bDisableStreaming) return false;
     if (m_bDisableTaint != other.m_bDisableTaint) return false;
+    if (m_bDisableTcpNoDelay != other.m_bDisableTcpNoDelay) return false;
+    if (m_bDisableXagent != other.m_bDisableXagent) return false;
+    if (m_bDisableZlibCompression != other.m_bDisableZlibCompression) return false;
+    if (m_bEnableMultimedia != other.m_bEnableMultimedia) return false;
+    if (m_bEnableSmbSharing != other.m_bEnableSmbSharing) return false;
+    if (m_bEnableSSL != other.m_bEnableSSL) return false;
+    if (m_bGuestMode != other.m_bGuestMode) return false;
+    if (m_bImageEncodingJpeg != other.m_bImageEncodingJpeg) return false;
+    if (m_bImageEncodingPlainX != other.m_bImageEncodingPlainX) return false;
+    if (m_bImageEncodingPNG != other.m_bImageEncodingPNG) return false;
+    if (m_bKbdLayoutOther != other.m_bKbdLayoutOther) return false;
     if (m_bRdpRememberPassword != other.m_bRdpRememberPassword) return false;
     if (m_bRdpRunApplication != other.m_bRdpRunApplication) return false;
-    if (m_bVncRememberPassword != other.m_bVncRememberPassword) return false;
-    if (m_bVncUseMxAuth != other.m_bVncUseMxAuth) return false;
-    if (m_bImageEncodingPNG != other.m_bImageEncodingPNG) return false;
-    if (m_bImageEncodingPlainX != other.m_bImageEncodingPlainX) return false;
-    if (m_bImageEncodingJpeg != other.m_bImageEncodingJpeg) return false;
+    if (m_bRememberPassword != other.m_bRememberPassword) return false;
+    if (m_bRemoveOldSessionFiles != other.m_bRemoveOldSessionFiles) return false;
+    if (m_bRunConsole != other.m_bRunConsole) return false;
+    if (m_bRunXclients != other.m_bRunXclients) return false;
+    if (m_bUseCups != other.m_bUseCups) return false;
+    if (m_bUseCustomImageEncoding != other.m_bUseCustomImageEncoding) return false;
     if (m_bUseJpegQuality != other.m_bUseJpegQuality) return false;
-    if (m_bDisableRender != other.m_bDisableRender) return false;
+    if (m_bUseProxy != other.m_bUseProxy) return false;
+    if (m_bUseSmartCard != other.m_bUseSmartCard) return false;
     if (m_bUseTightJpeg != other.m_bUseTightJpeg) return false;
-    if (m_bDisableBackingstore != other.m_bDisableBackingstore) return false;
-    if (m_bDisableXagent != other.m_bDisableXagent) return false;
-    if (m_bDisableJpeg != other.m_bDisableJpeg) return false;
-    if (m_bDisableImageCompression != other.m_bDisableImageCompression) return false;
-    if (m_bDisableComposite != other.m_bDisableComposite) return false;
-    if (m_bDisableStreaming != other.m_bDisableStreaming) return false;
+    if (m_bValid != other.m_bValid) return false;
+    if (m_bVirtualDesktop != other.m_bVirtualDesktop) return false;
+    if (m_bVncRememberPassword != other.m_bVncRememberPassword) return false;
+    if (m_bVncUseNxAuth != other.m_bVncUseNxAuth) return false;
+
+    if (m_iCupsPort != other.m_iCupsPort) return false;
     if (m_iDisplayHeight != other.m_iDisplayHeight) return false;
     if (m_iDisplayWidth != other.m_iDisplayWidth) return false;
-    if (m_iServerPort != other.m_iServerPort) return false;
-    if (m_iCupsPort != other.m_iCupsPort) return false;
-    if (m_iRdpAuthType != other.m_iRdpAuthType) return false;
-    if (m_iVncDisplayNumber != other.m_iVncDisplayNumber) return false;
-    if (m_iRdpImageCompression != other.m_iRdpImageCompression) return false;
-    if (m_iVncImageEncoding != other.m_iVncImageEncoding) return false;
-    if (m_iUsedShareGroups != other.m_iUsedShareGroups) return false;
-    if (m_iKbdLayoutLanguage != other.m_iKbdLayoutLanguage) return false;
     if (m_iJpegQuality != other.m_iJpegQuality) return false;
+    if (m_iKbdLayoutLanguage != other.m_iKbdLayoutLanguage) return false;
+    if (m_iProxyPort != other.m_iProxyPort) return false;
+    if (m_iRdpAuthType != other.m_iRdpAuthType) return false;
+    if (m_iRdpImageCompression != other.m_iRdpImageCompression) return false;
+    if (m_iServerPort != other.m_iServerPort) return false;
+    if (m_iUsedShareGroups != other.m_iUsedShareGroups) return false;
+    if (m_iVncDisplayNumber != other.m_iVncDisplayNumber) return false;
+    if (m_iVncImageEncoding != other.m_iVncImageEncoding) return false;
+
+    if (m_eCacheDisk != other.m_eCacheDisk) return false;
+    if (m_eCacheMemory != other.m_eCacheMemory) return false;
     if (m_eConnectionSpeed != other.m_eConnectionSpeed) return false;
     if (m_eDesktopType != other.m_eDesktopType) return false;
     if (m_eDisplayType != other.m_eDisplayType) return false;
     if (m_eSessionType != other.m_eSessionType) return false;
-    if (m_eCacheMemory != other.m_eCacheMemory) return false;
-    if (m_eCacheDisk != other.m_eCacheDisk) return false;
-    if (m_sName != other.m_sName) return false;
-    if (m_sUsername != other.m_sUsername) return false;
-    if (m_sPassword != other.m_sPassword) return false;
-    if (m_sServerHost != other.m_sServerHost) return false;
+
     if (m_sCommandLine != other.m_sCommandLine) return false;
-    if (m_sRdpHostName != other.m_sRdpHostName) return false;
-    if (m_sRdpUsername != other.m_sRdpUsername) return false;
-    if (m_sRdpPassword != other.m_sRdpPassword) return false;
+    if (m_sCupsPath != other.m_sCupsPath) return false;
+    // if (m_sFileName != other.m_sFileName) return false;
+    if (m_sName != other.m_sName) return false;
+    if (m_sPassword != other.m_sPassword) return false;
+    if (m_sProxyHost != other.m_sProxyHost) return false;
     if (m_sRdpApplication != other.m_sRdpApplication) return false;
+    if (m_sRdpHostName != other.m_sRdpHostName) return false;
+    if (m_sRdpPassword != other.m_sRdpPassword) return false;
+    if (m_sRdpUsername != other.m_sRdpUsername) return false;
+    if (m_sServerHost != other.m_sServerHost) return false;
+    if (m_sSshKey != other.m_sSshKey) return false;
+    if (m_sUsername != other.m_sUsername) return false;
     if (m_sVncHostName != other.m_sVncHostName) return false;
     if (m_sVncPassword != other.m_sVncPassword) return false;
-    if (m_sCupsPath != other.m_sCupsPath) return false;
+
     if (cmpUsedShareGroups(m_aUsedShareGroups, other.m_aUsedShareGroups)) return false;
     if (cmpShareGroups(m_aShareGroups, other.m_aShareGroups)) return false;
     return true;
 }
 
-    MyXmlConfig::MyXmlConfig(const wxString &filename)
-    : m_bValid(false)
-    , saved(NULL)
-    , m_bRememberPassword(false)
-    , m_bUseCustomImageEncoding(false)
-    , m_bUseSmartCard(false)
-    , m_bDisableTcpNoDelay(false)
-    , m_bDisableZlibCompression(false)
-    , m_bEnableSSL(true)
-    , m_bKbdLayoutOther(false)
-    , m_bEnableSmbSharing(false)
-    , m_bEnableMultimedia(false)
-    , m_bRemoveOldSessionFiles(true)
-    , m_bUseCups(false)
-    , m_bRunConsole(false)
-    , m_bRunXclients(false)
-    , m_bVirtualDesktop(false)
+MyXmlConfig::MyXmlConfig(const wxString &filename)
+    : saved(NULL)
+
+    , m_bDisableBackingstore(false)
+    , m_bDisableComposite(false)
+    , m_bDisableImageCompression(false)
+    , m_bDisableJpeg(false)
+    , m_bDisableRender(false)
+    , m_bDisableStreaming(false)
     , m_bDisableTaint(false)
+    , m_bDisableTcpNoDelay(false)
+    , m_bDisableXagent(false)
+    , m_bDisableZlibCompression(false)
+    , m_bEnableMultimedia(false)
+    , m_bEnableSmbSharing(false)
+    , m_bEnableSSL(true)
+    , m_bGuestMode(false)
+    , m_bImageEncodingJpeg(true)
+    , m_bImageEncodingPlainX(false)
+    , m_bImageEncodingPNG(false)
+    , m_bKbdLayoutOther(false)
     , m_bRdpRememberPassword(false)
     , m_bRdpRunApplication(false)
-    , m_bVncRememberPassword(false)
-    , m_bVncUseMxAuth(false)
-    , m_bImageEncodingPNG(false)
-    , m_bImageEncodingPlainX(false)
-    , m_bImageEncodingJpeg(true)
+    , m_bRememberPassword(false)
+    , m_bRemoveOldSessionFiles(true)
+    , m_bRunConsole(false)
+    , m_bRunXclients(false)
+    , m_bUseCups(false)
+    , m_bUseCustomImageEncoding(false)
     , m_bUseJpegQuality(false)
-    , m_bDisableRender(false)
+    , m_bUseProxy(false)
+    , m_bUseSmartCard(false)
     , m_bUseTightJpeg(false)
-    , m_bDisableBackingstore(false)
-    , m_bDisableXagent(false)
-    , m_bDisableJpeg(false)
-    , m_bDisableImageCompression(false)
-    , m_bDisableComposite(false)
-    , m_bDisableStreaming(false)
+    , m_bValid(false)
+    , m_bVirtualDesktop(false)
+    , m_bVncRememberPassword(false)
+    , m_bVncUseNxAuth(false)
+
+    , m_iCupsPort(631)
     , m_iDisplayHeight(480)
     , m_iDisplayWidth(640)
-    , m_iServerPort(22)
-    , m_iCupsPort(631)
-    , m_iRdpAuthType(1)
-    , m_iVncDisplayNumber(0)
-    , m_iRdpImageCompression(1)
-    , m_iVncImageEncoding(0)
-    , m_iUsedShareGroups(0)
     , m_iJpegQuality(6)
+    , m_iKbdLayoutLanguage(mapLocaleToKeyboard())
+    , m_iProxyPort(22)
+    , m_iRdpAuthType(1)
+    , m_iRdpImageCompression(1)
+    , m_iServerPort(22)
+    , m_iUsedShareGroups(0)
+    , m_iVncDisplayNumber(0)
+    , m_iVncImageEncoding(0)
+
     , m_eConnectionSpeed(SPEED_ADSL)
     , m_eDesktopType(DTYPE_KDE)
     , m_eDisplayType(DPTYPE_AVAILABLE)
     , m_eSessionType(STYPE_UNIX)
     , m_eCacheMemory(CACHEMEM_8MB)
     , m_eCacheDisk(CACHEDISK_32MB)
-    , m_sName(wxT(""))
-    , m_sUsername(wxT(""))
-    , m_sPassword(wxT(""))
-    , m_sServerHost(wxT(""))
+
     , m_sCommandLine(wxT(""))
-    , m_sRdpHostName(wxT(""))
-    , m_sRdpUsername(wxT(""))
-    , m_sRdpPassword(wxT(""))
-    , m_sRdpApplication(wxT(""))
-    , m_sVncHostName(wxT(""))
-    , m_sVncPassword(wxT(""))
     , m_sCupsPath(wxT(CUPS_DEFAULT_PATH))
     , m_sFileName(wxT(""))
+    , m_sGuestPassword(wxT(""))
+    , m_sGuestUser(wxT(""))
+    , m_sName(wxT(""))
+    , m_sPassword(wxT(""))
+    , m_sProxyHost(wxT(""))
+    , m_sRdpApplication(wxT(""))
+    , m_sRdpHostName(wxT(""))
+    , m_sRdpPassword(wxT(""))
+    , m_sRdpUsername(wxT(""))
+    , m_sServerHost(wxT(""))
+    , m_sSshKey(wxT(""))
+    , m_sUsername(wxT(""))
+    , m_sVncHostName(wxT(""))
+    , m_sVncPassword(wxT(""))
+
     , m_pMd5Password(NULL)
     , m_pClrPassword(NULL)
 {
     wxString tmp;
     int itmp;
 
-    m_iKbdLayoutLanguage = mapLocaleToKeyboard();
 
     {
         wxLogNull dummy; 
@@ -578,98 +624,16 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
         while (cfgnode) {
             if (cfgnode->GetName() == wxT("group")) {
 
-                // Tab "General"
-                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("General")) {
-                    wxXmlNode *opt = cfgnode->GetChildren();
-                    while (opt) {
-                        tmp = getString(opt, wxT("Session"));
-                        if (tmp.CmpNoCase(wxT("unix")) == 0) {
-                            m_eSessionType = STYPE_UNIX;
-                            m_bValid = true;
-                        }
-                        if (tmp.CmpNoCase(wxT("windows")) == 0) {
-                            m_eSessionType = STYPE_WINDOWS;
-                            m_bValid = true;
-                        }
-                        if (tmp.CmpNoCase(wxT("vnc")) == 0) {
-                            m_eSessionType = STYPE_VNC;
-                            m_bValid = true;
-                        }
-
-                        tmp = getString(opt, wxT("Link speed"));
-                        if (tmp == wxT("modem"))
-                            m_eConnectionSpeed = SPEED_MODEM;
-                        if (tmp == wxT("isdn"))
-                            m_eConnectionSpeed = SPEED_ISDN;
-                        if (tmp == wxT("adsl"))
-                            m_eConnectionSpeed = SPEED_ADSL;
-                        if (tmp == wxT("wan"))
-                            m_eConnectionSpeed = SPEED_WAN;
-                        if (tmp == wxT("lan"))
-                            m_eConnectionSpeed = SPEED_LAN;
-
-                        tmp = getString(opt, wxT("Desktop"));
-                        if (tmp.CmpNoCase(wxT("RDP")) == 0)
-                            m_eDesktopType = DTYPE_RDP;
-                        if (tmp.CmpNoCase(wxT("RFB")) == 0)
-                            m_eDesktopType = DTYPE_RFB;
-                        if (tmp.CmpNoCase(wxT("KDE")) == 0)
-                            m_eDesktopType = DTYPE_KDE;
-                        if (tmp.CmpNoCase(wxT("Gnome")) == 0)
-                            m_eDesktopType = DTYPE_GNOME;
-                        if (tmp.CmpNoCase(wxT("CDE")) == 0)
-                            m_eDesktopType = DTYPE_CDE;
-                        if (tmp.CmpNoCase(wxT("XFCE")) == 0)
-                            m_eDesktopType = DTYPE_XFCE;
-                        if (tmp.CmpNoCase(wxT("Console")) == 0)
-                            m_eDesktopType = DTYPE_CUSTOM;
-
-                        tmp = getString(opt, wxT("Resolution"));
-                        if (!tmp.IsEmpty())
-                            m_eDisplayType = DPTYPE_CUSTOM;
-                        if (tmp == wxT("640x480"))
-                            m_eDisplayType = DPTYPE_640x480;
-                        if (tmp == wxT("800x600"))
-                            m_eDisplayType = DPTYPE_800x600;
-                        if (tmp == wxT("1024x768"))
-                            m_eDisplayType = DPTYPE_1024x768;
-                        if (tmp == wxT("available"))
-                            m_eDisplayType = DPTYPE_AVAILABLE;
-                        if (tmp == wxT("fullscreen"))
-                            m_eDisplayType = DPTYPE_FULLSCREEN;
-
-                        // this is 0/1 in NX but getBool can handle that
-                        m_bUseCustomImageEncoding = getBool(opt, wxT("Use default image encoding"), m_bUseCustomImageEncoding);
-                        // X11 props
-                        m_sCommandLine = getString(opt, wxT("Command line"), m_sCommandLine);
-                        m_bRunConsole = getBool(opt, wxT("Only console"), m_bRunConsole);
-                        m_bRunXclients = getBool(opt, wxT("Run default script"), m_bRunXclients);
-                        m_bVirtualDesktop = getBool(opt, wxT("Virtual desktop"), m_bVirtualDesktop);
-                        m_bDisableTaint = !getBool(opt, wxT("Use taint"), !m_bDisableTaint);
-                        m_bDisableRender = !getBool(opt, wxT("Use render"), !m_bDisableRender);
-                        m_bUseSmartCard = getBool(opt, wxT("Use smartcard"), m_bUseSmartCard);
-
-                        m_bRememberPassword = getBool(opt, wxT("Remember password"), m_bRememberPassword);
-                        m_iDisplayHeight = getLong(opt, wxT("Resolution height"), m_iDisplayHeight);
-                        m_iDisplayWidth = getLong(opt, wxT("Resolution width"), m_iDisplayWidth);
-                        m_sServerHost = getString(opt, wxT("Server host"), m_sServerHost);
-                        m_iServerPort = getLong(opt, wxT("Server port"), m_iServerPort);
-                        opt = opt->GetNext();
-                    }
-                    cfgnode = cfgnode->GetNext();
-                    continue;
-                }
-
+                // Tab "Advanced"
                 if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Advanced")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
-                        m_bKbdLayoutOther = !getBool(opt, wxT("Current keyboard"), !m_bKbdLayoutOther);
-                        m_bDisableTcpNoDelay = getBool(opt, wxT("Disable TCP no-delay"), m_bDisableTcpNoDelay);
-                        m_bDisableZlibCompression = getBool(opt, wxT("Disable ZLIB stream compression"),
-                                m_bDisableZlibCompression);
-                        m_bEnableSSL = getBool(opt, wxT("Enable SSL encryption"), m_bEnableSSL);
+
                         itmp = getLong(opt, wxT("Cache size"), -1);
                         switch (itmp) {
+                            case 0:
+                                m_eCacheMemory = CACHEMEM_0MB;
+                                break;
                             case 1:
                                 m_eCacheMemory = CACHEMEM_1MB;
                                 break;
@@ -689,56 +653,59 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
                                 m_eCacheMemory = CACHEMEM_32MB;
                                 break;
                         }
+                        itmp = getLong(opt, wxT("Cache size on disk"), -1);
+                        switch (itmp) {
+                            case 0:
+                                m_eCacheDisk = CACHEDISK_0MB;
+                                break;
+                            case 4:
+                                m_eCacheDisk = CACHEDISK_4MB;
+                                break;
+                            case 8:
+                                m_eCacheDisk = CACHEDISK_8MB;
+                                break;
+                            case 16:
+                                m_eCacheDisk = CACHEDISK_16MB;
+                                break;
+                            case 32:
+                                m_eCacheDisk = CACHEDISK_32MB;
+                                break;
+                            case 64:
+                                m_eCacheDisk = CACHEDISK_64MB;
+                                break;
+                            case 128:
+                                m_eCacheDisk = CACHEDISK_128MB;
+                                break;
+                        }
+#if 0
                         if (wxGetEnv(wxT("THINCLIENT"), NULL))
                             m_eCacheDisk = CACHEDISK_0MB;
-                        else {
-                            itmp = getLong(opt, wxT("Cache size on disk"), -1);
-                            switch (itmp) {
-                                case 0:
-                                    m_eCacheDisk = CACHEDISK_0MB;
-                                    break;
-                                case 4:
-                                    m_eCacheDisk = CACHEDISK_4MB;
-                                    break;
-                                case 8:
-                                    m_eCacheDisk = CACHEDISK_8MB;
-                                    break;
-                                case 16:
-                                    m_eCacheDisk = CACHEDISK_16MB;
-                                    break;
-                                case 32:
-                                    m_eCacheDisk = CACHEDISK_32MB;
-                                    break;
-                                case 64:
-                                    m_eCacheDisk = CACHEDISK_64MB;
-                                    break;
-                                case 128:
-                                    m_eCacheDisk = CACHEDISK_128MB;
-                                    break;
-                            }
-                        }
-                        itmp = getLong(opt, wxT("Other keyboard"), -1);
+#endif
+                        m_bKbdLayoutOther = !getBool(opt, wxT("Current keyboard"),
+                                !m_bKbdLayoutOther);
+                        itmp = getLong(opt, wxT("Custom keyboard layout"), -1);
                         if (itmp != -1)
-                            m_iKbdLayoutLanguage = mapMxLanguage(itmp);
+                            m_iKbdLayoutLanguage = mapNxLanguage(itmp);
+                        m_bDisableTcpNoDelay = getBool(opt, wxT("Disable TCP no-delay"),
+                                m_bDisableTcpNoDelay);
+                        m_bDisableZlibCompression = getBool(opt,
+                                wxT("Disable ZLIB stream compression"),
+                                m_bDisableZlibCompression);
+                        m_bUseProxy = !getBool(opt, wxT("Enable HTTP proxy"), !m_bUseProxy);
+                        m_bEnableSSL = getBool(opt, wxT("Enable SSL encryption"), m_bEnableSSL);
+// Enable response time optimizations false
+                        m_sProxyHost = getString(opt, wxT("HTTP Proxy host"), m_sProxyHost);
+                        m_iProxyPort = getLong(opt, wxT("HTTP Proxy port"), m_iProxyPort);
+// Restore cache true
+// StreamCompression ""
+
                         opt = opt->GetNext();
                     }
                     cfgnode = cfgnode->GetNext();
                     continue;
                 }
 
-                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Login")) {
-                    wxXmlNode *opt = cfgnode->GetChildren();
-                    while (opt) {
-                        m_sUsername = getString(opt, wxT("User"), m_sUsername);
-                        m_pMd5Password = getStringNew(opt, wxT("Auth"), m_pMd5Password);
-                        m_pClrPassword = getStringNew(opt, wxT("Password"), m_pClrPassword);
-                        // TODO: decode
-                        opt = opt->GetNext();
-                    }
-                    cfgnode = cfgnode->GetNext();
-                    continue;
-                }
-
+                // Tab "Environment"
                 if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Environment")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
@@ -749,14 +716,120 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
                     continue;
                 }
 
+                // Tab "General"
+                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("General")) {
+                    wxXmlNode *opt = cfgnode->GetChildren();
+                    while (opt) {
+
+// Automatic reconnect true
+                        m_sCommandLine = getString(opt, wxT("Command line"), m_sCommandLine);
+// Custom Unix Desktop "application"
+                        tmp = getString(opt, wxT("Desktop"));
+                        if (tmp.CmpNoCase(wxT("RDP")) == 0)
+                            m_eDesktopType = DTYPE_RDP;
+                        if (tmp.CmpNoCase(wxT("RFB")) == 0)
+                            m_eDesktopType = DTYPE_RFB;
+                        if (tmp.CmpNoCase(wxT("KDE")) == 0)
+                            m_eDesktopType = DTYPE_KDE;
+                        if (tmp.CmpNoCase(wxT("Gnome")) == 0)
+                            m_eDesktopType = DTYPE_GNOME;
+                        if (tmp.CmpNoCase(wxT("CDE")) == 0)
+                            m_eDesktopType = DTYPE_CDE;
+                        if (tmp.CmpNoCase(wxT("XFCE")) == 0)
+                            m_eDesktopType = DTYPE_XFCE;
+                        if (tmp.CmpNoCase(wxT("Console")) == 0)
+                            m_eDesktopType = DTYPE_CUSTOM;
+// Disable SHM false
+// Disable emulated shared pixmaps
+                        tmp = getString(opt, wxT("Link speed"));
+                        if (tmp == wxT("modem"))
+                            m_eConnectionSpeed = SPEED_MODEM;
+                        if (tmp == wxT("isdn"))
+                            m_eConnectionSpeed = SPEED_ISDN;
+                        if (tmp == wxT("adsl"))
+                            m_eConnectionSpeed = SPEED_ADSL;
+                        if (tmp == wxT("wan"))
+                            m_eConnectionSpeed = SPEED_WAN;
+                        if (tmp == wxT("lan"))
+                            m_eConnectionSpeed = SPEED_LAN;
+
+                        m_bRememberPassword = getBool(opt, wxT("Remember password"),
+                                m_bRememberPassword);
+
+                        tmp = getString(opt, wxT("Resolution"));
+                        if (!tmp.IsEmpty())
+                            m_eDisplayType = DPTYPE_CUSTOM;
+                        if (tmp == wxT("640x480"))
+                            m_eDisplayType = DPTYPE_640x480;
+                        if (tmp == wxT("800x600"))
+                            m_eDisplayType = DPTYPE_800x600;
+                        if (tmp == wxT("1024x768"))
+                            m_eDisplayType = DPTYPE_1024x768;
+                        if (tmp == wxT("available"))
+                            m_eDisplayType = DPTYPE_AVAILABLE;
+                        if (tmp == wxT("fullscreen"))
+                            m_eDisplayType = DPTYPE_FULLSCREEN;
+
+                        m_iDisplayHeight = getLong(opt, wxT("Resolution height"),
+                                m_iDisplayHeight);
+                        m_iDisplayWidth = getLong(opt, wxT("Resolution width"),
+                                m_iDisplayWidth);
+                        m_sServerHost = getString(opt, wxT("Server host"), m_sServerHost);
+                        m_iServerPort = getLong(opt, wxT("Server port"), m_iServerPort);
+
+                        tmp = getString(opt, wxT("Session"));
+                        if (tmp.CmpNoCase(wxT("unix")) == 0) {
+                            m_eSessionType = STYPE_UNIX;
+                            m_bValid = true;
+                        }
+                        if (tmp.CmpNoCase(wxT("windows")) == 0) {
+                            m_eSessionType = STYPE_WINDOWS;
+                            m_bValid = true;
+                        }
+                        if (tmp.CmpNoCase(wxT("vnc")) == 0) {
+                            m_eSessionType = STYPE_VNC;
+                            m_bValid = true;
+                        }
+                        // this is 0/1 in NX but getBool can handle that
+                        m_bUseCustomImageEncoding = getBool(opt,
+                                wxT("Use default image encoding"), m_bUseCustomImageEncoding);
+                        m_bDisableRender = !getBool(opt, wxT("Use render"), !m_bDisableRender);
+                        m_bUseSmartCard = getBool(opt, wxT("Use smartcard"), m_bUseSmartCard);
+                        m_bDisableTaint = !getBool(opt, wxT("Use taint"), !m_bDisableTaint);
+                        m_bVirtualDesktop = getBool(opt, wxT("Virtual desktop"),
+                                m_bVirtualDesktop);
+                        m_bDisableXagent = !getBool(opt, wxT("XAgent encoding"),
+                                !m_bDisableXagent);
+// displaySaveOnExit  = true
+// xdm broadcast port = 177
+// xdm mode = "server_decide"
+// xdm query host = "localhost"
+// xdm query port = 177
+                        m_bRunConsole = getBool(opt, wxT("Only console"), m_bRunConsole);
+                        m_bRunXclients = getBool(opt, wxT("Run default script"), m_bRunXclients);
+
+                        opt = opt->GetNext();
+                    }
+                    cfgnode = cfgnode->GetNext();
+                    continue;
+                }
+
+                // Sub-Dialog Custom image compresion
                 if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Images")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
-                        m_iRdpImageCompression = getLong(opt, wxT("Windows images compression"), m_iRdpImageCompression);
-                        m_iVncImageEncoding = getLong(opt, wxT("Image Encoding Type"), m_iVncImageEncoding);
-                        m_bUseTightJpeg = getBool(opt, wxT("Image JPEG Encoding"), m_bUseTightJpeg);
-                        m_iJpegQuality = getLong(opt, wxT("JPEG Quality"), m_iJpegQuality);
-                        m_bImageEncodingPNG = getBool(opt, wxT("Use PNG Compression"), m_bImageEncodingPNG);
+                        m_bDisableJpeg = getLongBool(opt, wxT("Disable JPEG Compression"),
+                                m_bDisableJpeg);
+                        m_bDisableImageCompression = getBool(opt,
+                                wxT("Disable all image optimisations"),
+                                m_bDisableImageCompression);
+                        m_bDisableBackingstore = getBool(opt, wxT("Disable backingstore"),
+                                m_bDisableBackingstore);
+                        m_bDisableComposite = getBool(opt, wxT("Disable coposite"),
+                                m_bDisableComposite);
+                        m_bDisableStreaming = getBool(opt, wxT("Disable image streaming"),
+                                m_bDisableStreaming);
+
                         itmp = getLong(opt, wxT("Image Compression Type"), -1);
                         switch (itmp) {
                             case 0:
@@ -773,6 +846,18 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
                                 m_bImageEncodingJpeg = false;
                                 m_bUseJpegQuality = false;
                         }
+                        m_bUseTightJpeg = getBool(opt, wxT("Image JPEG Encoding"),
+                                m_bUseTightJpeg);
+                        m_iJpegQuality = getLong(opt, wxT("JPEG Quality"), m_iJpegQuality);
+// RDP optimization for low-bandwidth link = false
+// Reduce colors to = ""
+                        m_bImageEncodingPNG = getBool(opt, wxT("Use PNG Compression"),
+                                m_bImageEncodingPNG);
+                        m_iVncImageEncoding = getLong(opt, wxT("VNC images compression"),
+                                m_iVncImageEncoding);
+                        m_iRdpImageCompression = getLong(opt, wxT("Windows Image compression"),
+                                m_iRdpImageCompression);
+
                         opt = opt->GetNext();
                         if (!opt)
                             m_bImageEncodingPlainX = !m_bImageEncodingPNG;
@@ -781,52 +866,44 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
                     continue;
                 }
 
-                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Services")) {
+                // Main login params
+                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Login")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
-                        m_bEnableMultimedia = getBool(opt, wxT("Audio"), m_bEnableMultimedia);
-                        m_bEnableSmbSharing = getBool(opt, wxT("Shares"), m_bEnableSmbSharing);
-                        m_bUseCups = getBool(opt, wxT("IPPPrinting"), m_bUseCups);
-                        m_iCupsPort = getLong(opt, wxT("IPPPort"), m_iCupsPort);
+                        m_pMd5Password = getStringNew(opt, wxT("Auth"), m_pMd5Password);
+                        m_bGuestMode = getBool(opt, wxT("Guest Mode"), m_bGuestMode);
+                        m_sGuestPassword = getString(opt, wxT("Guest password"),
+                                m_sGuestPassword);
+                        m_sGuestUser = getString(opt, wxT("Guest username"), m_sGuestUser);
+// Login method = "nx"
+                        m_sSshKey = getString(opt, wxT("Public Key"), m_sSshKey);
+                        m_sUsername = getString(opt, wxT("User"), m_sUsername);
+
+                        m_pClrPassword = getStringNew(opt, wxT("Password"), m_pClrPassword);
                         opt = opt->GetNext();
                     }
                     cfgnode = cfgnode->GetNext();
                     continue;
                 }
-                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("share chosen")) {
+                // TODO: decode password
+
+                // Tab "Services"
+                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Services")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
-                        if (opt->GetPropVal(wxT("key"), wxT("")) == wxT("Share number"))
-                            m_iUsedShareGroups = getLong(opt, wxT("Share number"), m_iUsedShareGroups);
-                        else
-                            m_aUsedShareGroups.Add(opt->GetPropVal(wxT("value"), wxT("")));
+                        m_bEnableMultimedia = getBool(opt, wxT("Audio"), m_bEnableMultimedia);
+                        m_iCupsPort = getLong(opt, wxT("IPPPort"), m_iCupsPort);
+                        m_bUseCups = getBool(opt, wxT("IPPPrinting"), m_bUseCups);
+                        m_bEnableSmbSharing = getBool(opt, wxT("Shares"), m_bEnableSmbSharing);
                         opt = opt->GetNext();
                     }
                     cfgnode = cfgnode->GetNext();
                     continue;
                 }
 
-                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Windows Session")) {
-                    wxXmlNode *opt = cfgnode->GetChildren();
-                    while (opt) {
-                        m_bRdpRememberPassword = getBool(opt, wxT("Remember"), m_bRdpRememberPassword);
-                        m_bRdpRunApplication = getBool(opt, wxT("Run application"), m_bRdpRunApplication);
-                        m_iRdpAuthType = getLong(opt, wxT("Authentication"), m_iRdpAuthType);
-                        m_sRdpHostName = getString(opt, wxT("Server"), m_sRdpHostName);
-                        m_sRdpUsername = getString(opt, wxT("User"), m_sRdpUsername);
-                        m_sRdpPassword = getPassword(opt, wxT("Password"), m_sRdpPassword);
-                        m_sRdpApplication = getString(opt, wxT("Application"), m_sRdpApplication);
-                        opt = opt->GetNext();
-                    }
-                    cfgnode = cfgnode->GetNext();
-                    continue;
-                }
                 if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("VNC Session")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
-                        m_bVncRememberPassword = getBool(opt, wxT("Remember"), m_bVncRememberPassword);
-                        m_sVncHostName = getString(opt, wxT("Server"), m_sVncHostName);
-                        m_sVncPassword = getPassword(opt, wxT("Password"), m_sVncPassword);
                         tmp = getString(opt, wxT("Display"));
                         if (tmp.Left(1) == wxT(":")) {
                             tmp = tmp.Mid(1);
@@ -836,11 +913,55 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
                                 m_iVncDisplayNumber = l;
                             }
                         }
+                        m_sVncPassword = getPassword(opt, wxT("Password"), m_sVncPassword);
+                        m_bVncRememberPassword = getBool(opt, wxT("Remember"),
+                                m_bVncRememberPassword);
+                        m_sVncHostName = getString(opt, wxT("Server"), m_sVncHostName);
                         opt = opt->GetNext();
                     }
                     cfgnode = cfgnode->GetNext();
                     continue;
                 }
+
+                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Windows Session")) {
+                    wxXmlNode *opt = cfgnode->GetChildren();
+                    while (opt) {
+                        m_sRdpApplication = getString(opt, wxT("Application"),
+                                m_sRdpApplication);
+                        m_iRdpAuthType = getLong(opt, wxT("Authentication"), m_iRdpAuthType);
+// Color Depth = 8
+// Domain = ""
+// Image Cache = true
+                        m_sRdpPassword = getPassword(opt, wxT("Password"), m_sRdpPassword);
+                        m_bRdpRememberPassword = getBool(opt, wxT("Remember"),
+                                m_bRdpRememberPassword);
+                        m_bRdpRunApplication = getBool(opt, wxT("Run application"),
+                                m_bRdpRunApplication);
+                        m_sRdpHostName = getString(opt, wxT("Server"), m_sRdpHostName);
+                        m_sRdpUsername = getString(opt, wxT("User"), m_sRdpUsername);
+                        opt = opt->GetNext();
+                    }
+                    cfgnode = cfgnode->GetNext();
+                    continue;
+                }
+
+                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("share chosen")) {
+                    wxXmlNode *opt = cfgnode->GetChildren();
+                    while (opt) {
+                        wxString key = opt->GetPropVal(wxT("key"), wxT(""));
+                        if (key == wxT("Share number")) {
+                            m_iUsedShareGroups = getLong(opt, wxT("Share number"),
+                                    m_iUsedShareGroups);
+                        } else if (key == wxT("default printer")) {
+                            /// ?
+                        } else
+                            m_aUsedShareGroups.Add(opt->GetPropVal(wxT("value"), wxT("")));
+                        opt = opt->GetNext();
+                    }
+                    cfgnode = cfgnode->GetNext();
+                    continue;
+                }
+
                 // When we reach here, we gon an "unknown" group name. This is usually
                 // a mounted share description.
                 {
@@ -850,31 +971,36 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
                     s.m_iType = SharedResource::SHARE_UNKNOWN;
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
-                        if (opt->GetPropVal(wxT("key"), wxT("")) == wxT("Alias")) {
+                        wxString key = opt->GetPropVal(wxT("key"), wxT(""));
+// Public = false
+// Default = true
+                        if (key == wxT("Alias")) {
                             shareOptions++;
                             s.m_sMountPoint = getString(opt, wxT("Alias"), wxT(""));
                         }
-                        if (opt->GetPropVal(wxT("key"), wxT("")) == wxT("Sharename")) {
+                        if (key == wxT("Sharename")) {
                             shareOptions++;
                             s.m_sName = getString(opt, wxT("Sharename"), wxT(""));
                         }
-                        if (opt->GetPropVal(wxT("key"), wxT("")) == wxT("Username")) {
+                        if (key == wxT("Username")) {
                             shareOptions++;
                             s.m_sUsername = getString(opt, wxT("Username"), wxT(""));
                         }
-                        if (opt->GetPropVal(wxT("key"), wxT("")) == wxT("Password")) {
+                        if (key == wxT("Password")) {
                             shareOptions++;
                             s.m_sPassword = getPassword(opt, wxT("Password"), wxT(""));
                         }
-                        if (opt->GetPropVal(wxT("key"), wxT("")) == wxT("Type")) {
+                        if (key == wxT("Type")) {
                             shareOptions++;
                             wxString tmp = getString(opt, wxT("Type"), wxT(""));
-                            if (tmp == wxT("Disk"))
+                            if (tmp == wxT("cupsprinter"))
+                                s.m_iType = SharedResource::SHARE_CUPS_PRINTER;
+                            if (tmp == wxT("disk"))
                                 s.m_iType = SharedResource::SHARE_SMB_DISK;
-                            if (tmp == wxT("Printer"))
+                            if (tmp == wxT("drinter"))
                                 s.m_iType = SharedResource::SHARE_SMB_PRINTER;
                         }
-                        if (opt->GetPropVal(wxT("key"), wxT("")) == wxT("Mounted now")) {
+                        if (key == wxT("Mounted now")) {
                             shareOptions++;
                             s.m_bMountNow = getBool(opt, wxT("Mounted now"), false);
                         }
@@ -1309,6 +1435,20 @@ long MyXmlConfig::getLong(wxXmlNode *opt, const wxString &key, long defval)
     return val;
 }
 
+bool MyXmlConfig::getLongBool(wxXmlNode *opt, const wxString &key, bool defval)
+{
+    long val = defval ? 1 : 0;
+
+    if (opt->GetName() == wxT("option")) {
+        if (opt->GetPropVal(wxT("key"), wxT("")) == key) {
+            wxString tmp = opt->GetPropVal(wxT("value"), wxT(""));
+            if (tmp.IsNumber())
+                tmp.ToLong(&val, 0);
+        }
+    }
+    return (val != 0);
+}
+
 wxString MyXmlConfig::getString(wxXmlNode *opt, const wxString &key, const wxString &defval)
 {
     wxString tmp = defval;
@@ -1576,7 +1716,7 @@ int MyXmlConfig::mapLocaleToKeyboard()
 
 // Map keyboard language code from NXclient to OpenNX
     int
-MyXmlConfig::mapMxLanguage(int origNXlang)
+MyXmlConfig::mapMyLanguage(int origNXlang)
 {
     switch (origNXlang) {
         case 0:
@@ -1618,14 +1758,14 @@ MyXmlConfig::isoKbd(int lang)
     wxString ret;
     if ((lang >= 0) && (lang <= 41))
         ret = iso_codes[lang];
-    return ret;
+            return ret;
 }
 
 // Map keyboard language code from OpenNX to NXclient
     int 
-MyXmlConfig::mapNxLanguage(int origMXlang)
+MyXmlConfig::mapNxLanguage(int origNXlang)
 {
-    switch (origMXlang) {
+    switch (origNXlang) {
         case 25:
             return 0;
             break;
@@ -1636,14 +1776,14 @@ MyXmlConfig::mapNxLanguage(int origMXlang)
             return 41;
             break;
         default:
-            if (origMXlang < 12)
-                return origMXlang + 2;
-            if ((origMXlang >= 13) && (origMXlang <= 18))
-                return origMXlang + 1;
-            if ((origMXlang >= 20) && (origMXlang <= 24))
-                return origMXlang;
-            if ((origMXlang > 25) && (origMXlang <= 40))
-                return origMXlang - 1;
+            if (origNXlang < 12)
+                return origNXlang + 2;
+            if ((origNXlang >= 13) && (origNXlang <= 18))
+                return origNXlang + 1;
+            if ((origNXlang >= 20) && (origNXlang <= 24))
+                return origNXlang;
+            if ((origNXlang > 25) && (origNXlang <= 40))
+                return origNXlang - 1;
             break;
     }
     return 0;

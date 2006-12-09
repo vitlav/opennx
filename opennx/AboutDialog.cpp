@@ -162,25 +162,6 @@ bool AboutDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
     }
     Centre();
 ////@end AboutDialog creation
-    return TRUE;
-}
-
-/*!
- * Control creation for AboutDialog
- */
-
-void AboutDialog::CreateControls()
-{    
-////@begin AboutDialog content construction
-    if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_ABOUT")))
-        wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
-    m_pHtmlWindow = XRCCTRL(*this, "ID_HTMLWINDOW_ABOUT", extHtmlWindow);
-////@end AboutDialog content construction
-
-    // Create custom windows not generated automatically here.
-
-////@begin AboutDialog content initialisation
-////@end AboutDialog content initialisation
 
     int fs[7];
     wxFont fv = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
@@ -205,15 +186,37 @@ void AboutDialog::CreateControls()
 
     m_pHtmlWindow->SetPage(content);
     m_pHtmlWindow->SetBackgroundColour(GetBackgroundColour());
+    if (!content.IsEmpty()) {
+        int width, height;
+        m_pHtmlWindow->GetSize(&width, &height);
+        m_pHtmlWindow->GetInternalRepresentation()->Layout(width);
+        height = m_pHtmlWindow->GetInternalRepresentation()->GetHeight();
+        width = m_pHtmlWindow->GetInternalRepresentation()->GetWidth();
+        m_pHtmlWindow->SetSize(width, height);
+        m_pHtmlWindow->SetSizeHints(width, height);
+        Fit();
+    }
 
-    int width, height;
-    m_pHtmlWindow->GetSize(&width, &height);
-    m_pHtmlWindow->GetInternalRepresentation()->Layout(width);
-    height = m_pHtmlWindow->GetInternalRepresentation()->GetHeight();
-    width = m_pHtmlWindow->GetInternalRepresentation()->GetWidth();
-    m_pHtmlWindow->SetSize(width, height);
-    m_pHtmlWindow->SetSizeHints(width, height);
-    Fit();
+    return TRUE;
+}
+
+/*!
+ * Control creation for AboutDialog
+ */
+
+void AboutDialog::CreateControls()
+{    
+    ////@begin AboutDialog content construction
+    if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_ABOUT")))
+        wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
+    m_pHtmlWindow = XRCCTRL(*this, "ID_HTMLWINDOW_ABOUT", extHtmlWindow);
+    ////@end AboutDialog content construction
+
+    // Create custom windows not generated automatically here.
+
+    ////@begin AboutDialog content initialisation
+    ////@end AboutDialog content initialisation
+
 }
 
 /*!

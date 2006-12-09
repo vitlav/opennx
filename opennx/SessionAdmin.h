@@ -44,7 +44,7 @@ class wxListCtrl;
 ////@begin control identifiers
 #define ID_FRAME_ADMIN 10103
 #define SYMBOL_SESSIONADMIN_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxMINIMIZE_BOX|wxMAXIMIZE_BOX|wxCLOSE_BOX
-#define SYMBOL_SESSIONADMIN_TITLE _("MX Session Administrator")
+#define SYMBOL_SESSIONADMIN_TITLE _("Session Administrator - OpenNX")
 #define SYMBOL_SESSIONADMIN_IDNAME ID_FRAME_ADMIN
 #define SYMBOL_SESSIONADMIN_SIZE wxSize(350, 100)
 #define SYMBOL_SESSIONADMIN_POSITION wxDefaultPosition
@@ -149,8 +149,8 @@ public:
 
 ////@begin SessionAdmin member function declarations
 
-    wxString GetMxDirectory() const { return m_MxDirectory ; }
-    void SetMxDirectory(wxString value) { m_MxDirectory = value ; }
+    wxString GetNxDirectory() const { return m_NxDirectory ; }
+    void SetNxDirectory(wxString value) { m_NxDirectory = value ; }
 
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
@@ -166,7 +166,7 @@ private:
 
 ////@begin SessionAdmin member variables
     wxListCtrl* m_SessionListCtrl;
-    wxString m_MxDirectory;
+    wxString m_NxDirectory;
 ////@end SessionAdmin member variables
 
     SessionList *m_sessions;

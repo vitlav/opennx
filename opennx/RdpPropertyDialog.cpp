@@ -60,7 +60,7 @@ BEGIN_EVENT_TABLE( RdpPropertyDialog, wxDialog )
 ////@begin RdpPropertyDialog event table entries
     EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_RDP_WINLOGON"), RdpPropertyDialog::OnRadiobuttonRdpWinlogonSelected )
 
-    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_RDP_MXAUTH"), RdpPropertyDialog::OnRadiobuttonRdpMxauthSelected )
+    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_RDP_NXAUTH"), RdpPropertyDialog::OnRadiobuttonRdpNxauthSelected )
 
     EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_RDP_AUTOLOGIN"), RdpPropertyDialog::OnRadiobuttonRdpAutologinSelected )
 
@@ -122,12 +122,12 @@ bool RdpPropertyDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
             case 0:
                 m_bShowWinLogon = false;
                 m_bAutoLogin = true;
-                m_bUseMxAuth = false;
+                m_bUseNxAuth = false;
                 break;
             case 1:
                 m_bShowWinLogon = true;
                 m_bAutoLogin = false;
-                m_bUseMxAuth = false;
+                m_bUseNxAuth = false;
                 break;
         }
 
@@ -169,8 +169,8 @@ void RdpPropertyDialog::CreateControls()
         FindWindow(XRCID("ID_TEXTCTRL_RDP_DOMAIN"))->SetValidator( wxTextValidator(wxFILTER_NONE, & m_sRdpDomain) );
     if (FindWindow(XRCID("ID_RADIOBUTTON_RDP_WINLOGON")))
         FindWindow(XRCID("ID_RADIOBUTTON_RDP_WINLOGON"))->SetValidator( wxGenericValidator(& m_bShowWinLogon) );
-    if (FindWindow(XRCID("ID_RADIOBUTTON_RDP_MXAUTH")))
-        FindWindow(XRCID("ID_RADIOBUTTON_RDP_MXAUTH"))->SetValidator( wxGenericValidator(& m_bUseMxAuth) );
+    if (FindWindow(XRCID("ID_RADIOBUTTON_RDP_NXAUTH")))
+        FindWindow(XRCID("ID_RADIOBUTTON_RDP_NXAUTH"))->SetValidator( wxGenericValidator(& m_bUseNxAuth) );
     if (FindWindow(XRCID("ID_RADIOBUTTON_RDP_AUTOLOGIN")))
         FindWindow(XRCID("ID_RADIOBUTTON_RDP_AUTOLOGIN"))->SetValidator( wxGenericValidator(& m_bAutoLogin) );
     if (FindWindow(XRCID("ID_TEXTCTRL_RDP_USERNAME")))
@@ -238,10 +238,10 @@ void RdpPropertyDialog::OnRadiobuttonRdpAutologinSelected( wxCommandEvent& event
 }
 
 /*!
- * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_MXAUTH
+ * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_NXAUTH
  */
 
-void RdpPropertyDialog::OnRadiobuttonRdpMxauthSelected( wxCommandEvent& event )
+void RdpPropertyDialog::OnRadiobuttonRdpNxauthSelected( wxCommandEvent& event )
 {
     m_bAutoLogin = false;
     UpdateDialogConstraints();
@@ -307,7 +307,7 @@ void RdpPropertyDialog::OnOkClick( wxCommandEvent& event )
         if (m_bShowWinLogon)
             atype = 1;
         if (m_bAutoLogin)
-            atype = m_bUseMxAuth ? 2 : 0;
+            atype = m_bUseNxAuth ? 2 : 0;
         m_pCfg->iSetRdpAuthType(atype);
     }
     event.Skip();

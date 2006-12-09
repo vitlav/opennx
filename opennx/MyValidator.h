@@ -1,7 +1,7 @@
 // $Id$
 
-#ifndef _MXVALIDATOR_H_
-#define _MXVALIDATOR_H_
+#ifndef _MYVALIDATOR_H_
+#define _MYVALIDATOR_H_
 
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
 #pragma interface "MyValidator.h"
@@ -22,10 +22,10 @@ class MyValidator : public wxValidator
 public:
 
     typedef enum {
-        MXVAL_ANY,
-        MXVAL_NUMERIC,
-        MXVAL_HOST,
-        MXVAL_FILENAME,
+        MYVAL_ANY,
+        MYVAL_NUMERIC,
+        MYVAL_HOST,
+        MYVAL_FILENAME,
     } MyValidatorType;
 
 
@@ -78,4 +78,4 @@ private:
 };
 
 #endif
-// _MXVALIDATOR_H_
+// _MYVALIDATOR_H_

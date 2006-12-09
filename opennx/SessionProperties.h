@@ -271,11 +271,11 @@ public:
 
 ////@begin SessionProperties member function declarations
 
-    wxString GetsUserMxDir() const { return m_sUserMxDir ; }
-    void SetsUserMxDir(wxString value) { m_sUserMxDir = value ; }
+    wxString GetsUserNxDir() const { return m_sUserNxDir ; }
+    void SetsUserNxDir(wxString value) { m_sUserNxDir = value ; }
 
-    wxString GetsSystemMxDir() const { return m_sSystemMxDir ; }
-    void SetsSystemMxDir(wxString value) { m_sSystemMxDir = value ; }
+    wxString GetsSystemNxDir() const { return m_sSystemNxDir ; }
+    void SetsSystemNxDir(wxString value) { m_sSystemNxDir = value ; }
 
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
@@ -314,8 +314,8 @@ private:
     wxButton* m_pCtrlShareAdd;
     wxButton* m_pCtrlShareModify;
     wxButton* m_pCtrlShareDelete;
-    wxTextCtrl* m_pCtrlUserMxDir;
-    wxTextCtrl* m_pCtrlSystemMxDir;
+    wxTextCtrl* m_pCtrlUserNxDir;
+    wxTextCtrl* m_pCtrlSystemNxDir;
     wxTextCtrl* m_pCtrlCupsPath;
     wxButton* m_pCtrlFontDefault;
     wxButton* m_pCtrlFontFixed;
@@ -340,8 +340,8 @@ private:
     wxString m_sKbdLayoutLanguage;
     bool m_bEnableSmbSharing;
     bool m_bEnableMultimedia;
-    wxString m_sUserMxDir;
-    wxString m_sSystemMxDir;
+    wxString m_sUserNxDir;
+    wxString m_sSystemNxDir;
     bool m_bRemoveOldSessionFiles;
     wxString m_sCupsPath;
     int m_iCupsPort;
@@ -360,8 +360,8 @@ private:
 
     wxFont m_cFontDefault;
     wxFont m_cFontFixed;
-    wxString m_sSavedUserMxDir;
-    wxString m_sSavedSystemMxDir;
+    wxString m_sSavedUserNxDir;
+    wxString m_sSavedSystemNxDir;
     bool m_bKeyTyped;
     int m_iUnixDesktopType;
 

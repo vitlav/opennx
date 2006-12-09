@@ -86,8 +86,8 @@ private:
     /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_WINLOGON
     void OnRadiobuttonRdpWinlogonSelected( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_MXAUTH
-    void OnRadiobuttonRdpMxauthSelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_NXAUTH
+    void OnRadiobuttonRdpNxauthSelected( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_AUTOLOGIN
     void OnRadiobuttonRdpAutologinSelected( wxCommandEvent& event );
@@ -132,7 +132,7 @@ private:
     bool m_bAutoLogin;
     bool m_bRememberPassword;
     bool m_bShowWinLogon;
-    bool m_bUseMxAuth;
+    bool m_bUseNxAuth;
     bool m_bRunDesktop;
     bool m_bRunApplication;
     wxString m_sRdpDomain;

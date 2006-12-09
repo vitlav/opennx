@@ -2,8 +2,8 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#ifndef _MXXMLCONFIG_H_
-#define _MXXMLCONFIG_H_
+#ifndef _MYXMLCONFIG_H_
+#define _MYXMLCONFIG_H_
 
 #if defined(__GNUG__) && !defined(__APPLE__)
 #pragma interface "MyXmlConfig.cpp"
@@ -119,6 +119,7 @@ public:
     bool bGetEnableMultimedia() { return m_bEnableMultimedia; }
     bool bGetEnableSmbSharing() { return m_bEnableSmbSharing; }
     bool bGetEnableSSL() { return m_bEnableSSL; }
+    bool bGetGuestMode() { return m_bGuestMode; }
     bool bGetKbdLayoutOther() { return m_bKbdLayoutOther; }
     bool bGetRdpRememberPassword() { return m_bRdpRememberPassword; }
     bool bGetRdpRunApplication() { return m_bRdpRunApplication; }
@@ -137,7 +138,7 @@ public:
     bool bGetUseTightJpeg() { return m_bUseTightJpeg; }
     bool bGetVirtualDesktop() { return m_bVirtualDesktop; }
     bool bGetVncRememberPassword() { return m_bVncRememberPassword; }
-    bool bGetVncUseMxAuth() { return m_bVncUseMxAuth; }
+    bool bGetVncUseNxAuth() { return m_bVncUseNxAuth; }
     
     MyXmlConfig::ConnectionSpeed eGetConnectionSpeed() { return m_eConnectionSpeed; }
     MyXmlConfig::DesktopType eGetDesktopType() { return m_eDesktopType; }
@@ -162,6 +163,8 @@ public:
     wxString sGetCommandLine() { return m_sCommandLine; }
     wxString sGetCupsPath() { return m_sCupsPath; }
     wxString sGetFileName() { return m_sFileName; }
+    wxString sGetGuestUser() { return m_sGuestUser; }
+    wxString sGetGuestPassword() { return m_sGuestPassword; }
     wxString sGetName() { return m_sName; }
     wxString sGetPassword() { return m_sPassword; }
     wxString sGetProxyHost() { return m_sProxyHost; }
@@ -170,6 +173,7 @@ public:
     wxString sGetRdpPassword() { return m_sRdpPassword; }
     wxString sGetRdpUsername() { return m_sRdpUsername; }
     wxString sGetServerHost() { return m_sServerHost; }
+    wxString sGetSshKey() { return m_sSshKey; }
     wxString sGetUsername() { return m_sUsername; }
     wxString sGetVncHostName() { return m_sVncHostName; }
     wxString sGetVncPassword() { return m_sVncPassword; }
@@ -190,6 +194,7 @@ public:
     void bSetEnableMultimedia(bool b) { m_bEnableMultimedia = b; }
     void bSetEnableSmbSharing(bool b) { m_bEnableSmbSharing = b; }
     void bSetEnableSSL(bool b) { m_bEnableSSL = b; }
+    void bSetGuestMode(bool b) { m_bGuestMode = b; }
     void bSetKbdLayoutOther(bool b) { m_bKbdLayoutOther = b; }
     void bSetRdpRememberPassword(bool b) { m_bRdpRememberPassword = b; }
     void bSetRdpRunApplication(bool b) { m_bRdpRunApplication = b; }
@@ -208,7 +213,7 @@ public:
     void bSetUseTightJpeg(bool b) { m_bUseTightJpeg = b; }
     void bSetVirtualDesktop(bool b) { m_bVirtualDesktop = b; }
     void bSetVncRememberPassword(bool b) { m_bVncRememberPassword = b; }
-    void bSetVncUseMxAuth(bool b) { m_bVncUseMxAuth = b; }
+    void bSetVncUseNxAuth(bool b) { m_bVncUseNxAuth = b; }
     
     void eSetCacheDisk(MyXmlConfig::CacheDisk e) { m_eCacheDisk = e; }
     void eSetCacheMemory(MyXmlConfig::CacheMemory e) { m_eCacheMemory = e; }
@@ -233,6 +238,8 @@ public:
     void sSetCommandLine(const wxString &s) { m_sCommandLine = s; }
     void sSetCupsPath(const wxString &s) { m_sCupsPath = s; }
     void sSetFileName(const wxString &s) { m_sFileName = s; }
+    void sSetGuestUser(const wxString &s) { m_sGuestUser = s; }
+    void sSetGuestPassword(const wxString &s) { m_sGuestPassword = s; }
     void sSetName(const wxString &s) { m_sName = s; }
     void sSetPassword(const wxString &s) { m_sPassword = s; }
     void sSetProxyHost(const wxString &s) { m_sProxyHost = s; }
@@ -241,6 +248,7 @@ public:
     void sSetRdpPassword(const wxString &s) { m_sRdpPassword = s; }
     void sSetRdpUsername(const wxString &s) { m_sRdpUsername = s; }
     void sSetServerHost(const wxString &s) { m_sServerHost = s; }
+    void sSetSshKey(const wxString &s) { m_sSshKey = s; }
     void sSetUsername(const wxString &s) { m_sUsername = s; }
     void sSetVncHostName(const wxString &s) { m_sVncHostName = s; }
     void sSetVncPassword(const wxString &s) { m_sVncPassword = s; }
@@ -252,10 +260,11 @@ private:
 
     bool getBool(wxXmlNode *, const wxString &, bool defval = false);
     long getLong(wxXmlNode *, const wxString &, long defval = 0);
+    bool getLongBool(wxXmlNode *, const wxString &, bool defval = false);
     wxString getString(wxXmlNode *, const wxString &, const wxString &defval = _T(""));
     wxString getPassword(wxXmlNode *, const wxString &, const wxString &defval = _T(""));
     wxString *getStringNew(wxXmlNode *, const wxString &, wxString *defval = NULL);
-    int mapMxLanguage(const int);
+    int mapMyLanguage(const int);
     int mapNxLanguage(const int);
     int mapLocaleToKeyboard();
     wxString isoKbd(const int);
@@ -277,9 +286,13 @@ private:
     bool m_bDisableTcpNoDelay;
     bool m_bDisableXagent;
     bool m_bDisableZlibCompression;
-    bool m_bEnableSmbSharing;
     bool m_bEnableMultimedia;
+    bool m_bEnableSmbSharing;
     bool m_bEnableSSL;
+    bool m_bGuestMode;
+    bool m_bImageEncodingJpeg;
+    bool m_bImageEncodingPlainX;
+    bool m_bImageEncodingPNG;
     bool m_bKbdLayoutOther;
     bool m_bRdpRememberPassword;
     bool m_bRdpRunApplication;
@@ -289,21 +302,18 @@ private:
     bool m_bRunXclients;
     bool m_bUseCups;
     bool m_bUseCustomImageEncoding;
-    bool m_bImageEncodingJpeg;
     bool m_bUseJpegQuality;
-    bool m_bImageEncodingPlainX;
-    bool m_bImageEncodingPNG;
     bool m_bUseProxy;
     bool m_bUseSmartCard;
     bool m_bUseTightJpeg;
     bool m_bValid;
     bool m_bVirtualDesktop;
     bool m_bVncRememberPassword;
-    bool m_bVncUseMxAuth;
+    bool m_bVncUseNxAuth;
 
     int m_iCupsPort;
-    int m_iDisplayWidth;
     int m_iDisplayHeight;
+    int m_iDisplayWidth;
     int m_iJpegQuality;
     int m_iKbdLayoutLanguage;
     int m_iProxyPort;
@@ -317,14 +327,17 @@ private:
     wxString m_sCommandLine;
     wxString m_sCupsPath;
     wxString m_sFileName;
+    wxString m_sGuestPassword;
+    wxString m_sGuestUser;
     wxString m_sName;
     wxString m_sPassword;
     wxString m_sProxyHost;
-    wxString m_sRdpHostName;
-    wxString m_sRdpUsername;
-    wxString m_sRdpPassword;
     wxString m_sRdpApplication;
+    wxString m_sRdpHostName;
+    wxString m_sRdpPassword;
+    wxString m_sRdpUsername;
     wxString m_sServerHost;
+    wxString m_sSshKey;
     wxString m_sUsername;
     wxString m_sVncHostName;
     wxString m_sVncPassword;
@@ -345,4 +358,4 @@ private:
 };
 
 #endif
-// _MXXMLCONFIG_H_
+// _MYXMLCONFIG_H_

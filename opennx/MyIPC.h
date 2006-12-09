@@ -9,8 +9,8 @@
 // Licence:     LGPL
 /////////////////////////////////////////////////////////////////////////////
 
-#ifndef _MXIPC_H_
-#define _MXIPC_H_
+#ifndef _MYIPC_H_
+#define _MYIPC_H_
 
 #if defined(__GNUG__) && !defined(__APPLE__)
 #pragma interface "MyIPC.cpp"
@@ -70,4 +70,4 @@ private:
 };
 
 #endif
-// _MXIPC_
+// _MYIPC_
