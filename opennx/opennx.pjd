@@ -122,7 +122,7 @@
     <bool name="generate_app_class">0</bool>
     <string name="external_symbol_filenames">""</string>
     <string name="configuration">"&lt;None&gt;"</string>
-    <string name="source_encoding">"iso-8859-1"</string>
+    <string name="source_encoding">"utf-8"</string>
     <string name="project_encoding">"utf-8"</string>
     <string name="resource_archive">""</string>
     <long name="text_file_type">0</long>
@@ -18532,7 +18532,6 @@ this share."</string>
           <string name="id-prefix">""</string>
           <long name="use-xrc">0</long>
           <string name="variable-0">"m_sSshKey|wxString|SshKey|wxT(&quot;&quot;)|2"</string>
-          <string name="variable-1">"m_bCharTyped|bool||false|2"</string>
           <string name="proxy-Id name">"ID_KEYDIALOG"</string>
           <long name="proxy-Id value">10122</long>
           <string name="proxy-Class">"KeyDialog"</string>
@@ -18614,7 +18613,6 @@ this share."</string>
               <string name="created">"8/12/2006"</string>
               <string name="proxy-type">"wbTextCtrlProxy"</string>
               <string name="event-handler-0">"wxEVT_COMMAND_TEXT_UPDATED|OnTextctrlSshkeyUpdated"</string>
-              <string name="event-handler-1">"wxEVT_CHAR|OnChar"</string>
               <string name="proxy-Id name">"ID_TEXTCTRL_SSHKEY"</string>
               <long name="proxy-Id value">10124</long>
               <string name="proxy-Class">"wxTextCtrl"</string>

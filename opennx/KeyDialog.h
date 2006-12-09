@@ -97,9 +97,6 @@ private:
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SSHKEY
     void OnTextctrlSshkeyUpdated( wxCommandEvent& event );
 
-    /// wxEVT_CHAR event handler for ID_TEXTCTRL_SSHKEY
-    void OnChar( wxKeyEvent& event );
-
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_IMPORT
     void OnButtonImportClick( wxCommandEvent& event );
 
@@ -134,7 +131,6 @@ private:
     wxButton* m_pCtrlSave;
 private:
     wxString m_sSshKey;
-    bool m_bCharTyped;
 ////@end KeyDialog member variables
 };
 

@@ -111,7 +111,6 @@ void KeyDialog::Init()
 {
 ////@begin KeyDialog member initialisation
     m_sSshKey = wxT("");
-    m_bCharTyped = false;
     m_pCtrlSshKey = NULL;
     m_pCtrlSave = NULL;
 ////@end KeyDialog member initialisation
@@ -122,7 +121,6 @@ void KeyDialog::Init()
 
 void KeyDialog::CreateControls()
 {   
-#if 0 
 ////@begin KeyDialog content construction
     if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_KEYDIALOG")))
         wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
@@ -131,21 +129,7 @@ void KeyDialog::CreateControls()
     // Set validators
     if (FindWindow(XRCID("ID_TEXTCTRL_SSHKEY")))
         FindWindow(XRCID("ID_TEXTCTRL_SSHKEY"))->SetValidator( wxGenericValidator(& m_sSshKey) );
-    // Connect events and objects
-    m_pCtrlSshKey->Connect(ID_TEXTCTRL_SSHKEY, wxEVT_CHAR, wxKeyEventHandler(KeyDialog::OnChar), NULL, this);
 ////@end KeyDialog content construction
-#else
-    if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_KEYDIALOG")))
-        wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
-    m_pCtrlSshKey = XRCCTRL(*this, "ID_TEXTCTRL_SSHKEY", wxTextCtrl);
-    m_pCtrlSave = XRCCTRL(*this, "wxID_SAVE", wxButton);
-    // Set validators
-    if (FindWindow(XRCID("ID_TEXTCTRL_SSHKEY")))
-        FindWindow(XRCID("ID_TEXTCTRL_SSHKEY"))->SetValidator( wxGenericValidator(& m_sSshKey) );
-    // Connect events and objects
-    m_pCtrlSshKey->Connect(XRCID("ID_TEXTCTRL_SSHKEY"), wxEVT_CHAR, wxKeyEventHandler(KeyDialog::OnChar), NULL, this);
-#endif
-
     // Create custom windows not generated automatically here.
 ////@begin KeyDialog content initialisation
 ////@end KeyDialog content initialisation
@@ -237,20 +221,9 @@ void KeyDialog::OnSAVEClick( wxCommandEvent& event )
 
 void KeyDialog::OnTextctrlSshkeyUpdated( wxCommandEvent& event )
 {
-    //if (m_bCharTyped)
-        CheckChanged();
-    m_bCharTyped = false;
+    CheckChanged();
     event.Skip();
 }
 
-/*!
- * wxEVT_CHAR event handler for ID_TEXTCTRL_SSHKEY
- */
-
-void KeyDialog::OnChar( wxKeyEvent& event )
-{
-    m_bCharTyped = true;
-    event.Skip();
-}
 
 
