@@ -34,6 +34,8 @@
 #include "wx/wx.h"
 #endif
 
+#include <wx/config.h>
+
 ////@begin includes
 ////@end includes
 
@@ -55,6 +57,8 @@ IMPLEMENT_DYNAMIC_CLASS( KeyDialog, wxDialog )
 BEGIN_EVENT_TABLE( KeyDialog, wxDialog )
 
 ////@begin KeyDialog event table entries
+    EVT_TEXT( XRCID("ID_TEXTCTRL_SSHKEY"), KeyDialog::OnTextctrlSshkeyUpdated )
+
     EVT_BUTTON( XRCID("ID_BUTTON_IMPORT"), KeyDialog::OnButtonImportClick )
 
     EVT_BUTTON( wxID_DEFAULT, KeyDialog::OnDEFAULTClick )
@@ -107,6 +111,9 @@ void KeyDialog::Init()
 {
 ////@begin KeyDialog member initialisation
     m_sSshKey = wxT("");
+    m_bCharTyped = false;
+    m_pCtrlSshKey = NULL;
+    m_pCtrlSave = NULL;
 ////@end KeyDialog member initialisation
 }
 /*!
@@ -114,14 +121,30 @@ void KeyDialog::Init()
  */
 
 void KeyDialog::CreateControls()
-{    
+{   
+#if 0 
 ////@begin KeyDialog content construction
     if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_KEYDIALOG")))
         wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
+    m_pCtrlSshKey = XRCCTRL(*this, "ID_TEXTCTRL_SSHKEY", wxTextCtrl);
+    m_pCtrlSave = XRCCTRL(*this, "wxID_SAVE", wxButton);
     // Set validators
     if (FindWindow(XRCID("ID_TEXTCTRL_SSHKEY")))
         FindWindow(XRCID("ID_TEXTCTRL_SSHKEY"))->SetValidator( wxGenericValidator(& m_sSshKey) );
+    // Connect events and objects
+    m_pCtrlSshKey->Connect(ID_TEXTCTRL_SSHKEY, wxEVT_CHAR, wxKeyEventHandler(KeyDialog::OnChar), NULL, this);
 ////@end KeyDialog content construction
+#else
+    if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_KEYDIALOG")))
+        wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
+    m_pCtrlSshKey = XRCCTRL(*this, "ID_TEXTCTRL_SSHKEY", wxTextCtrl);
+    m_pCtrlSave = XRCCTRL(*this, "wxID_SAVE", wxButton);
+    // Set validators
+    if (FindWindow(XRCID("ID_TEXTCTRL_SSHKEY")))
+        FindWindow(XRCID("ID_TEXTCTRL_SSHKEY"))->SetValidator( wxGenericValidator(& m_sSshKey) );
+    // Connect events and objects
+    m_pCtrlSshKey->Connect(XRCID("ID_TEXTCTRL_SSHKEY"), wxEVT_CHAR, wxKeyEventHandler(KeyDialog::OnChar), NULL, this);
+#endif
 
     // Create custom windows not generated automatically here.
 ////@begin KeyDialog content initialisation
@@ -162,6 +185,12 @@ wxIcon KeyDialog::GetIconResource( const wxString& name )
     return wxNullIcon;
 ////@end KeyDialog icon retrieval
 }
+
+void KeyDialog::CheckChanged()
+{
+    m_pCtrlSave->Enable(m_pCtrlSshKey->GetValue() != m_sSshKey);
+}
+
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_IMPORT
  */
@@ -180,10 +209,14 @@ void KeyDialog::OnButtonImportClick( wxCommandEvent& event )
 
 void KeyDialog::OnDEFAULTClick( wxCommandEvent& event )
 {
-////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_DEFAULT in KeyDialog.
-    // Before editing this code, remove the block markers.
+    wxString fn;
+    wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &fn);
+    fn << wxFileName::GetPathSeparator() << wxT("share")
+       << wxFileName::GetPathSeparator() << wxT("keys")
+       << wxFileName::GetPathSeparator() << wxT("server.id_dsa.key");
+    m_pCtrlSshKey->LoadFile(fn);
+    CheckChanged();
     event.Skip();
-////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_DEFAULT in KeyDialog. 
 }
 
 /*!
@@ -192,10 +225,32 @@ void KeyDialog::OnDEFAULTClick( wxCommandEvent& event )
 
 void KeyDialog::OnSAVEClick( wxCommandEvent& event )
 {
-////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_SAVE in KeyDialog.
-    // Before editing this code, remove the block markers.
+    TransferDataFromWindow();
+    CheckChanged();
     event.Skip();
-////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_SAVE in KeyDialog. 
+}
+
+
+/*!
+ * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SSHKEY
+ */
+
+void KeyDialog::OnTextctrlSshkeyUpdated( wxCommandEvent& event )
+{
+    //if (m_bCharTyped)
+        CheckChanged();
+    m_bCharTyped = false;
+    event.Skip();
+}
+
+/*!
+ * wxEVT_CHAR event handler for ID_TEXTCTRL_SSHKEY
+ */
+
+void KeyDialog::OnChar( wxKeyEvent& event )
+{
+    m_bCharTyped = true;
+    event.Skip();
 }
 
 

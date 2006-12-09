@@ -2950,7 +2950,7 @@ this share.</label>
                 <border>5</border>
                 <option>1</option>
                 <object class="wxTextCtrl" name="ID_TEXTCTRL_SSHKEY">
-                    <size>250,150d</size>
+                    <size>260,150d</size>
                     <font>
                         <size>10</size>
                         <face>Monospace</face>

@@ -1304,7 +1304,6 @@ void SessionProperties::OnButtonBrowseCupspathClick( wxCommandEvent& event )
 void SessionProperties::OnButtonKeymanageClick( wxCommandEvent& event )
 {
     KeyDialog d;
-::wxLogDebug(wxT("key='%s'"), m_pCfg->sGetSshKey().c_str()); 
     d.SetSshKey(m_pCfg->sGetSshKey());
     d.Create(this);
     if (d.ShowModal() != wxCANCEL) {

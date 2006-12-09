@@ -40,6 +40,7 @@
 #include <wx/file.h>
 #include <wx/mstream.h>
 #include <wx/wfstream.h>
+#include <wx/regex.h>
 
 class wxConfigBase;
 
@@ -602,7 +603,6 @@ MyXmlConfig::MyXmlConfig(const wxString &filename)
     wxString tmp;
     int itmp;
 
-
     {
         wxLogNull dummy; 
         wxFile *f = new wxFile(filename);
@@ -876,7 +876,19 @@ MyXmlConfig::MyXmlConfig(const wxString &filename)
                                 m_sGuestPassword);
                         m_sGuestUser = getString(opt, wxT("Guest username"), m_sGuestUser);
 // Login method = "nx"
+                        tmp = m_sSshKey;
                         m_sSshKey = getString(opt, wxT("Public Key"), m_sSshKey);
+                        if (tmp != m_sSshKey) {
+                            if (!m_sSshKey.IsEmpty()) {
+                                wxRegEx r(wxT("^(-----BEGIN .SA PRIVATE KEY-----)\\s+(.*)(-----END .SA PRIVATE KEY-----)\\s+$"), wxRE_ADVANCED);
+                                if (r.Matches(m_sSshKey)) {
+                                    tmp = r.GetMatch(m_sSshKey, 2);
+                                    tmp.Replace(wxT(" "), wxT("\n"));
+                                    m_sSshKey = r.GetMatch(m_sSshKey, 1) + wxT("\n")
+                                        + tmp + r.GetMatch(m_sSshKey, 3) + wxT("\n");
+                                }
+                            }
+                        }
                         m_sUsername = getString(opt, wxT("User"), m_sUsername);
 
                         m_pClrPassword = getStringNew(opt, wxT("Password"), m_pClrPassword);
