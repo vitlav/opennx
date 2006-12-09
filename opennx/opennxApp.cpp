@@ -262,14 +262,12 @@ bool opennxApp::OnInit()
     wxBitmap::InitStandardHandlers();
     wxXmlResource::Get()->InitAllHandlers();
 
-    m_szMemRes = get_mem_res();
-    wxMemoryFSHandler::AddFile(wxT("memrsc"), m_szMemRes, cnt_mem_res);
+    const unsigned char *resptr = get_mem_res();
+    wxMemoryFSHandler::AddFile(wxT("memrsc"), resptr, cnt_mem_res);
+    free_mem_res(resptr);
     m_sResourcePrefix = wxT("memory:memrsc#zip:");
     if (!wxXmlResource::Get()->Load(m_sResourcePrefix + wxT("res/opennx.xrc"))) {
-        if (m_szMemRes) {
-            free_mem_res(m_szMemRes);
-            m_szMemRes = NULL;
-        }
+        wxMemoryFSHandler::RemoveFile(wxT("memrsc"));
         return false;
     }
 
@@ -298,10 +296,7 @@ bool opennxApp::OnInit()
     if (m_eMode == MODE_WIZARD) {
         MyWizard wz(NULL);
         if (!wz.Run()) {
-            if (m_szMemRes) {
-                free_mem_res(m_szMemRes);
-                m_szMemRes = NULL;
-            }
+            wxMemoryFSHandler::RemoveFile(wxT("memrsc"));
             return false;
         }
         m_sSessionName = wz.sGetConfigName();
@@ -319,6 +314,7 @@ bool opennxApp::OnInit()
     // success: wxApp::OnRun() will be called which will enter the main message
     // loop and the application will run. We returne FALSE here, so that the
     // application exits if the dialog is destroyed.
+    wxMemoryFSHandler::RemoveFile(wxT("memrsc"));
     return false;
 }
 
@@ -327,8 +323,6 @@ bool opennxApp::OnInit()
  */
 int opennxApp::OnExit()
 {
-    if (m_szMemRes)
-        free_mem_res(m_szMemRes);
-    m_szMemRes = NULL;
+    wxMemoryFSHandler::RemoveFile(wxT("memrsc"));
     return wxApp::OnExit();
 }
