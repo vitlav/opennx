@@ -105,6 +105,7 @@ opennxApp::opennxApp()
     : m_pCfg(NULL)
 {
 
+    SetAppName(wxT("OpenNX"));
 #ifdef __WXDEBUG__
 # ifdef __WXMSW__
     m_pCfg = new wxConfig(wxT("OpenNX-Debug"), wxT("Millenux"));

@@ -94,6 +94,7 @@ bool KeyDialog::Create( wxWindow* parent, wxWindowID id, const wxString& caption
     SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
+    SetIcon(GetIconResource(wxT("res/nx.png")));
     if (GetSizer())
     {
         GetSizer()->SetSizeHints(this);

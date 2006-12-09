@@ -298,6 +298,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlUserNxDir = NULL;
     m_pCtrlSystemNxDir = NULL;
     m_pCtrlCupsPath = NULL;
+    m_pCtrlCupsBrowse = NULL;
     m_pCtrlFontDefault = NULL;
     m_pCtrlFontFixed = NULL;
     m_pCtrlApplyButton = NULL;
@@ -335,7 +336,11 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
         // variables on 'Services' tab
         m_bEnableSmbSharing = m_pCfg->bGetEnableSmbSharing();
         m_bEnableMultimedia = m_pCfg->bGetEnableMultimedia();
+#ifdef __UNIX__
         m_bUseCups = m_pCfg->bGetUseCups();
+#else
+        m_bUseCups = false;
+#endif
         m_iCupsPort = m_pCfg->iGetCupsPort();
 
         // variabless on 'Environment' tab
@@ -417,6 +422,13 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     // Hook into OnChar events of wxTextCtrl's and wxSpinCtrl's
     InstallOnCharHandlers();
 
+#ifndef __UNIX__
+    // disable CUPS-related stuff on non-Unix platforms
+    m_pCtrlCupsEnable->Enable(false);
+    m_pCtrlCupsPort->Enable(false);
+    m_pCtrlCupsPath->Enable(false);
+    m_pCtrlCupsBrowse->Enable(false);
+#endif
     return TRUE;
 }
 
@@ -556,6 +568,7 @@ void SessionProperties::CreateControls()
     m_pCtrlUserNxDir = XRCCTRL(*this, "ID_TEXTCTRL_USERDIR", wxTextCtrl);
     m_pCtrlSystemNxDir = XRCCTRL(*this, "ID_TEXTCTRL_SYSDIR", wxTextCtrl);
     m_pCtrlCupsPath = XRCCTRL(*this, "ID_TEXTCTRL_CUPSPATH", wxTextCtrl);
+    m_pCtrlCupsBrowse = XRCCTRL(*this, "ID_BUTTON_BROWSE_CUPSPATH", wxButton);
     m_pCtrlFontDefault = XRCCTRL(*this, "ID_BUTTON_FONT_DEFAULT", wxButton);
     m_pCtrlFontFixed = XRCCTRL(*this, "ID_BUTTON_FONT_FIXED", wxButton);
     m_pCtrlApplyButton = XRCCTRL(*this, "wxID_APPLY", wxButton);
@@ -1279,7 +1292,6 @@ void SessionProperties::OnCheckboxCupsenableClick( wxCommandEvent& event )
     event.Skip();
 }
 
-
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BROWSE_CUPSD
  */
@@ -1295,7 +1307,6 @@ void SessionProperties::OnButtonBrowseCupspathClick( wxCommandEvent& event )
     }
     event.Skip();
 }
-
 
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_KEYMANAGE

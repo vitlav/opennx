@@ -317,6 +317,7 @@ private:
     wxTextCtrl* m_pCtrlUserNxDir;
     wxTextCtrl* m_pCtrlSystemNxDir;
     wxTextCtrl* m_pCtrlCupsPath;
+    wxButton* m_pCtrlCupsBrowse;
     wxButton* m_pCtrlFontDefault;
     wxButton* m_pCtrlFontFixed;
     wxButton* m_pCtrlApplyButton;
