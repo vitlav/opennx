@@ -264,6 +264,10 @@ SOURCE=.\Icon.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\KeyDialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\LogDialog.cpp
 # End Source File
 # Begin Source File
@@ -489,6 +493,14 @@ SOURCE=.\debugleak.h
 # Begin Source File
 
 SOURCE=.\Icon.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\KeyDialog.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\KeyDialog_symbols.h
 # End Source File
 # Begin Source File
 
