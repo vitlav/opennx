@@ -199,7 +199,7 @@ TextViewer::LoadFile(const wxString &sFileName)
         if (f) {
             size_t sz = f->GetStream()->GetSize();
             if (!isRtf) {
-                char *buf = new char[sz+1];
+                char *buf = new char[sz + 1];
                 f->GetStream()->Read(buf, sz);
                 buf[sz] = '\0';
                 m_pTextCtrl->SetValue(wxConvLocal.cMB2WX(buf));
