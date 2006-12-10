@@ -177,14 +177,16 @@ wxIcon TextViewer::GetIconResource( const wxString& name )
 TextViewer::LoadFile(const wxString &sFileName)
 {
     bool ret = false;
+    m_sFileName = sFileName;
     wxFileName fn(sFileName);
+    bool isRtf = (fn.GetExt().CmpNoCase(wxT("rtf")) == 0);
 
 #ifdef __UNIX__
     // On unix, wxTextCtrl doesn't support RTF, so we use .txt there
-    if (fn.GetExt().CmpNoCase(wxT("rtf")) == 0)
+    if (isRtf)
         fn.SetExt(wxT("txt"));
-#endif
     m_sFileName = fn.GetFullPath();
+#endif
     {
         wxLogNull l;
         ret = m_pTextCtrl->LoadFile(m_sFileName);
@@ -196,10 +198,18 @@ TextViewer::LoadFile(const wxString &sFileName)
         wxFSFile *f = fs.OpenFile(m_sFileName);
         if (f) {
             size_t sz = f->GetStream()->GetSize();
-            char *buf = new char[sz+1];
-            f->GetStream()->Read(buf, sz);
-            buf[sz] = '\0';
-            m_pTextCtrl->SetValue(wxConvLocal.cMB2WX(buf));
+            if (!isRtf) {
+                char *buf = new char[sz+1];
+                f->GetStream()->Read(buf, sz);
+                buf[sz] = '\0';
+                m_pTextCtrl->SetValue(wxConvLocal.cMB2WX(buf));
+                delete buf;
+            } else {
+                wxString s;
+                f->GetStream()->Read(s.GetWriteBuf(sz), sz);
+                s.UngetWriteBuf();
+                m_pTextCtrl->SetValue(s);
+            }
             m_pTextCtrl->DiscardEdits();
             ret = true;
             delete f;
@@ -207,6 +217,3 @@ TextViewer::LoadFile(const wxString &sFileName)
     }
     return ret;
 }
-
-
-

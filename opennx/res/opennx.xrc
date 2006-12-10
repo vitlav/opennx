@@ -2913,7 +2913,7 @@ this share.</label>
                 <option>1</option>
                 <object class="wxTextCtrl" name="ID_TEXTCTRL">
                     <size>600,300</size>
-                    <style>wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxTE_NOHIDESEL|wxHSCROLL</style>
+                    <style>wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxTE_NOHIDESEL|wxTE_LEFT</style>
                 </object>
             </object>
             <object class="sizeritem">
