@@ -671,7 +671,7 @@ void SessionProperties::CreateControls()
         width = m_pHtmlWindow->GetInternalRepresentation()->GetWidth();
         m_pHtmlWindow->SetSize(width, height);
         m_pHtmlWindow->SetSizeHints(width, height);
-        Fit();
+        m_pHtmlWindow->GetParent()->Fit();
     }
 
 }

@@ -260,6 +260,10 @@ SOURCE=.\ConnectDialog.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\ExtHtmlWindow.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\Icon.cpp
 # End Source File
 # Begin Source File
@@ -489,6 +493,10 @@ SOURCE=.\ConnectDialog_symbols.h
 # Begin Source File
 
 SOURCE=.\debugleak.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ExtHtmlWindow.h
 # End Source File
 # Begin Source File
 
