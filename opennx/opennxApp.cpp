@@ -238,7 +238,6 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
     if (parser.Found(wxT("wizard")))
         m_eMode = MODE_WIZARD;
     (void)parser.Found(wxT("session"), &m_sSessionName);
-
     return true;
 }
 

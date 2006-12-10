@@ -179,23 +179,27 @@ TextViewer::LoadFile(const wxString &sFileName)
     bool ret = false;
     wxFileName fn(sFileName);
 
+#ifdef __UNIX__
+    // On unix, wxTextCtrl doesn't support RTF, so we use .txt there
+    if (fn.GetExt().CmpNoCase(wxT("rtf")) == 0)
+        fn.SetExt(wxT("txt"));
+#endif
     m_sFileName = fn.GetFullPath();
     {
         wxLogNull l;
-        ret = m_pTextCtrl->LoadFile(sFileName);
+        ret = m_pTextCtrl->LoadFile(m_sFileName);
     }
     if (ret) {
         SetTitle(fn.GetName());
     } else {
         wxFileSystem fs;
-        wxFSFile *f = fs.OpenFile(sFileName);
+        wxFSFile *f = fs.OpenFile(m_sFileName);
         if (f) {
-            wxInputStream *is = f->GetStream();
-            size_t sz = is->GetSize();
-            wxString s;
-            is->Read(s.GetWriteBuf(sz), sz);
-            s.UngetWriteBuf();
-            m_pTextCtrl->SetValue(s);
+            size_t sz = f->GetStream()->GetSize();
+            char *buf = new char[sz+1];
+            f->GetStream()->Read(buf, sz);
+            buf[sz] = '\0';
+            m_pTextCtrl->SetValue(wxConvLocal.cMB2WX(buf));
             m_pTextCtrl->DiscardEdits();
             ret = true;
             delete f;

@@ -85,29 +85,34 @@ void extHtmlWindow::OnLinkClicked(const wxHtmlLinkInfo& link)
         target = target.AfterFirst(wxT(':'));
         if (!target.IsEmpty())
             tw->SetTitle(target);
-        tw->Show(true);
+        tw->ShowModal();
         return;
     }
 #ifdef __WXMSW__
     ShellExecute((HWND)GetHandle(), wxT("open"), href.c_str(), NULL, NULL, SW_SHOWNORMAL);
-    return;
 #endif
 #ifdef __UNIX__
-    wxString browser;
-    if (wxGetEnv(wxT("BROWSER"), &browser)) {
-        if (wxExecute(browser + wxT(" \"") + href + wxT("\"")))
-            return;
+    if (fork() == 0) {
+        for (int fd = 3; fd <= 255; fd++)
+            ::close(fd);
+
+        wxString browser;
+        if (wxGetEnv(wxT("BROWSER"), &browser)) {
+            if (::wxExecute(browser + wxT(" \"") + href + wxT("\""), wxEXEC_SYNC) == 0)
+                exit(0);
+        }
+        if (::wxExecute(wxT("htmlview \"") + href + wxT("\""), wxEXEC_SYNC) == 0)
+                exit(0);
+        if (::wxExecute(wxT("kfmclient openURL \"") + href + wxT("\""), wxEXEC_SYNC) == 0)
+                exit(0);
+        if (::wxExecute(wxT("gnome-open \"") + href + wxT("\""), wxEXEC_SYNC) == 0)
+                exit(0);
+        if (::wxExecute(wxT("firefox -url \"") + href + wxT("\""), wxEXEC_SYNC) == 0)
+                exit(0);
+        if (::wxExecute(wxT("mozilla \"") + href + wxT("\""), wxEXEC_SYNC) == 0)
+                exit(0);
+        exit(0);
     }
-    if (wxExecute(wxT("htmlview \"") + href + wxT("\"")))
-        return;
-    if (wxExecute(wxT("kfmklient openURL \"") + href + wxT("\"")))
-        return;
-    if (wxExecute(wxT("gnome-open \"") + href + wxT("\"")))
-        return;
-    if (wxExecute(wxT("firefox -url \"") + href + wxT("\"")))
-        return;
-    if (wxExecute(wxT("mozilla \"") + href + wxT("\"")))
-        return;
 #endif
 }
 

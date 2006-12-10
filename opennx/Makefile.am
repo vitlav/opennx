@@ -44,7 +44,7 @@ distclean-local:
 	rm -f po/*~ *.bak *~ \#.* .#*
 
 tmpres.zip: res/opennx.xrc
-	zip -q9r $@ res -i *.png -i *.xrc -i *.ico
+	zip -q9r $@ res -i *.png -i *.xrc -i *.html -i *.txt -i *.rtf
 
 memres.h: tmpres.zip bin2hdr
 	./bin2hdr tmpres.zip memres.h mem_res

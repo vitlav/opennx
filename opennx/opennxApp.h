@@ -51,7 +51,6 @@ private:
     wxString m_sResourcePrefix;
     wxString m_sVersion;
     enum mode m_eMode;
-    const unsigned char *m_szMemRes;
 };
 
 DECLARE_APP(opennxApp)
