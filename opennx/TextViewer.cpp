@@ -1,4 +1,4 @@
-// $Id: opennxApp.cpp 360 2006-12-08 00:58:21Z felfert $
+// $Id$
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert
@@ -186,6 +186,7 @@ TextViewer::LoadFile(const wxString &sFileName)
     if (isRtf)
         fn.SetExt(wxT("txt"));
     m_sFileName = fn.GetFullPath();
+    isRtf = false;
 #endif
     {
         wxLogNull l;
