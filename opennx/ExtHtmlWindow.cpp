@@ -1,4 +1,4 @@
-// $Id: AboutDialog.cpp 387 2006-12-10 01:41:24Z felfert $
+// $Id$
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert
