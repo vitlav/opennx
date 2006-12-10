@@ -56,6 +56,8 @@
 #include "MyValidator.h"
 #include "Icon.h"
 #include "KeyDialog.h"
+#include "ExtHtmlWindow.h"
+#include "opennxApp.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -165,8 +167,6 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
     EVT_BUTTON( XRCID("ID_BUTTON_FONT_DEFAULT"), SessionProperties::OnButtonFontDefaultClick )
 
     EVT_BUTTON( XRCID("ID_BUTTON_FONT_FIXED"), SessionProperties::OnButtonFontFixedClick )
-
-    EVT_BUTTON( XRCID("ID_BUTTON_ABOUT"), SessionProperties::OnButtonAboutClick )
 
     EVT_BUTTON( wxID_DELETE, SessionProperties::OnDeleteClick )
 
@@ -301,6 +301,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlCupsBrowse = NULL;
     m_pCtrlFontDefault = NULL;
     m_pCtrlFontFixed = NULL;
+    m_pHtmlWindow = NULL;
     m_pCtrlApplyButton = NULL;
 ////@end SessionProperties member initialisation
 
@@ -571,6 +572,7 @@ void SessionProperties::CreateControls()
     m_pCtrlCupsBrowse = XRCCTRL(*this, "ID_BUTTON_BROWSE_CUPSPATH", wxButton);
     m_pCtrlFontDefault = XRCCTRL(*this, "ID_BUTTON_FONT_DEFAULT", wxButton);
     m_pCtrlFontFixed = XRCCTRL(*this, "ID_BUTTON_FONT_FIXED", wxButton);
+    m_pHtmlWindow = XRCCTRL(*this, "ID_HTMLWINDOW_ABOUT", extHtmlWindow);
     m_pCtrlApplyButton = XRCCTRL(*this, "wxID_APPLY", wxButton);
     // Set validators
     if (FindWindow(XRCID("ID_TEXTCTRL_HOST")))
@@ -637,6 +639,41 @@ void SessionProperties::CreateControls()
 
 ////@begin SessionProperties content initialisation
 ////@end SessionProperties content initialisation
+
+    int fs[7];
+    wxFont fv = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
+    wxFont ff = wxSystemSettings::GetFont(wxSYS_ANSI_FIXED_FONT);
+    for (int i = 0; i < 7; i++)
+        fs[i] = fv.GetPointSize();
+    m_pHtmlWindow->SetFonts(fv.GetFaceName(), ff.GetFaceName(), fs);
+    m_pHtmlWindow->SetBorders(0);
+
+    wxString version = _("Version") + wxString::Format(wxT(" <B>%s</B>"),
+        ::wxGetApp().GetVersion().c_str());
+#ifdef __WXDEBUG__
+    version += wxT(" (DEBUG)");
+#else
+    version += wxT(" (RELEASE)");
+#endif
+
+    wxString content = ::wxGetApp().LoadFileFromResource(wxT("res/about.html"));
+    content.Replace(wxT("<VERSION>"), version);
+    content.Replace(wxT("<WXVERSION>"), wxVERSION_STRING);
+    content.Replace(wxT("\"res:"), wxT("\"") + ::wxGetApp().GetResourcePrefix());
+
+    m_pHtmlWindow->SetPage(content);
+    m_pHtmlWindow->SetBackgroundColour(GetBackgroundColour());
+    if (!content.IsEmpty()) {
+        int width, height;
+        m_pHtmlWindow->GetSize(&width, &height);
+        m_pHtmlWindow->GetInternalRepresentation()->Layout(width);
+        height = m_pHtmlWindow->GetInternalRepresentation()->GetHeight();
+        width = m_pHtmlWindow->GetInternalRepresentation()->GetWidth();
+        m_pHtmlWindow->SetSize(width, height);
+        m_pHtmlWindow->SetSizeHints(width, height);
+        Fit();
+    }
+
 }
 
 /*!
@@ -1041,16 +1078,6 @@ void SessionProperties::OnApplyClick( wxCommandEvent& event )
 }
 
 
-/*!
- * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_ABOUT
- */
-
-void SessionProperties::OnButtonAboutClick( wxCommandEvent& event )
-{
-    AboutDialog d(this);
-    d.ShowModal();
-    event.Skip();
-}
 
 
 /*!
@@ -1457,3 +1484,5 @@ void SessionProperties::OnTextctrlCupspathUpdated( wxCommandEvent& event )
         CheckChanged();
     event.Skip();
 }
+
+

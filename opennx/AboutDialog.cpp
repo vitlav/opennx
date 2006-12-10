@@ -37,7 +37,7 @@
 ////@begin includes
 ////@end includes
 #include "AboutDialog.h"
-#include "TextViewer.h"
+#include "ExtHtmlWindow.h"
 #include "Icon.h"
 #include "opennxApp.h"
 
@@ -48,73 +48,6 @@
 # undef MYTRACETAG
 #endif
 #define MYTRACETAG wxT("AboutDialog")
-
-/**
- * Custom HTML window.
- * This derivate of wxHtmlWindow interpretes links in a special
- * way:<br>
- * <ul>
- * <li>If "TV" is specified as target, a builting TextViewer is used.
- * <li>Other links are opened in an external browser.
- * </ul>
- */
-class extHtmlWindow : public wxHtmlWindow
-{
-    DECLARE_DYNAMIC_CLASS( extHtmlWindow )
-
-public:
-    extHtmlWindow() : wxHtmlWindow() { }
-
-    /**
-     * Performs the actual action.
-     * If target is TV, open url in internal TextViewer,
-     * otherwise in external browser.
-     */
-    virtual void OnLinkClicked(const wxHtmlLinkInfo&);
-};
-
-IMPLEMENT_DYNAMIC_CLASS( extHtmlWindow, wxHtmlWindow )
-
-void extHtmlWindow::OnLinkClicked(const wxHtmlLinkInfo& link)
-{
-    wxString href = link.GetHref();
-    wxString target = link.GetTarget();
-    if (target.StartsWith(wxT("TV:"))) {
-        TextViewer *tw = new TextViewer(this);
-        tw->LoadFile(href);
-        target = target.AfterFirst(wxT(':'));
-        if (!target.IsEmpty())
-            tw->SetTitle(target);
-        tw->ShowModal();
-        return;
-    }
-#ifdef __WXMSW__
-    ShellExecute((HWND)GetHandle(), wxT("open"), href.c_str(), NULL, NULL, SW_SHOWNORMAL);
-#endif
-#ifdef __UNIX__
-    if (fork() == 0) {
-        for (int fd = 3; fd <= 255; fd++)
-            ::close(fd);
-
-        wxString browser;
-        if (wxGetEnv(wxT("BROWSER"), &browser)) {
-            if (::wxExecute(browser + wxT(" \"") + href + wxT("\""), wxEXEC_SYNC) == 0)
-                exit(0);
-        }
-        if (::wxExecute(wxT("htmlview \"") + href + wxT("\""), wxEXEC_SYNC) == 0)
-                exit(0);
-        if (::wxExecute(wxT("kfmclient openURL \"") + href + wxT("\""), wxEXEC_SYNC) == 0)
-                exit(0);
-        if (::wxExecute(wxT("gnome-open \"") + href + wxT("\""), wxEXEC_SYNC) == 0)
-                exit(0);
-        if (::wxExecute(wxT("firefox -url \"") + href + wxT("\""), wxEXEC_SYNC) == 0)
-                exit(0);
-        if (::wxExecute(wxT("mozilla \"") + href + wxT("\""), wxEXEC_SYNC) == 0)
-                exit(0);
-        exit(0);
-    }
-#endif
-}
 
 /*!
  * AboutDialog type definition

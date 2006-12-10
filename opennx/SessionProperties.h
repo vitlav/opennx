@@ -27,6 +27,7 @@
 #include "wx/spinctrl.h"
 #include "wx/valgen.h"
 #include "wx/listctrl.h"
+#include "wx/html/htmlwin.h"
 ////@end includes
 
 
@@ -38,6 +39,7 @@
 class wxNotebook;
 class wxSpinCtrl;
 class wxListCtrl;
+class extHtmlWindow;
 ////@end forward declarations
 class wxFont;
 class MyXmlConfig;
@@ -258,9 +260,6 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_FONT_FIXED
     void OnButtonFontFixedClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_ABOUT
-    void OnButtonAboutClick( wxCommandEvent& event );
-
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_DELETE
     void OnDeleteClick( wxCommandEvent& event );
 
@@ -320,6 +319,7 @@ private:
     wxButton* m_pCtrlCupsBrowse;
     wxButton* m_pCtrlFontDefault;
     wxButton* m_pCtrlFontFixed;
+    extHtmlWindow* m_pHtmlWindow;
     wxButton* m_pCtrlApplyButton;
 private:
     int m_iPort;

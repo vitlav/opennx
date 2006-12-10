@@ -7,7 +7,7 @@ bin2hdr_SOURCES = bin2hdr.cpp
 
 bin_PROGRAMS = opennx
 
-opennx_SOURCES = AboutDialog.cpp ConnectDialog.cpp Icon.cpp LogDialog.cpp \
+opennx_SOURCES = AboutDialog.cpp ConnectDialog.cpp ExtHtmlWindow.cpp Icon.cpp LogDialog.cpp \
 	KeyDialog.cpp LoginDialog.cpp opennxApp.cpp MyIPC.cpp MySession.cpp \
 	MyValidator.cpp MyWizard.cpp MyXmlConfig.cpp pwcrypt.cpp \
 	RdpImageSettingsDialog.cpp RdpPropertyDialog.cpp SessionAdmin.cpp \
@@ -17,7 +17,7 @@ opennx_SOURCES = AboutDialog.cpp ConnectDialog.cpp Icon.cpp LogDialog.cpp \
 	md5.c
 
 noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h ConnectDialog.h \
-	ConnectDialog_symbols.h debugleak.h Icon.h KeyDialog.h KeyDialog_symbols.h \
+	ConnectDialog_symbols.h debugleak.h ExtHtmlWindow.h Icon.h KeyDialog.h KeyDialog_symbols.h \
 	LogDialog.h LogDialog_symbols.h LoginDialog.h LoginDialog_symbols.h opennxApp.h \
 	MyIPC.h MyValidator.h MyWizard.h MyWizard_symbols.h MyXmlConfig.h \
 	pwcrypt.h RdpImageSettingsDialog.h RdpImageSettingsDialog_symbols.h \
