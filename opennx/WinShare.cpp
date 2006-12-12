@@ -136,36 +136,36 @@ DllData::DllData(ClientType ct)
     switch (ct) {
         case SmbClientUnix:
             {
-                wxDynamicLibrary dll(_T("libsmbclient"));
-                C_init = (SMBC_init)dll.GetSymbol(_T("smbc_init"));
-                C_opendir = (SMBC_opendir)dll.GetSymbol(_T("smbc_opendir"));
-                C_readdir = (SMBC_readdir)dll.GetSymbol(_T("smbc_readdir"));
-                C_closedir = (SMBC_closedir)dll.GetSymbol(_T("smbc_closedir"));
+                wxDynamicLibrary dll(wxT("libsmbclient"));
+                C_init = (SMBC_init)dll.GetSymbol(wxT("smbc_init"));
+                C_opendir = (SMBC_opendir)dll.GetSymbol(wxT("smbc_opendir"));
+                C_readdir = (SMBC_readdir)dll.GetSymbol(wxT("smbc_readdir"));
+                C_closedir = (SMBC_closedir)dll.GetSymbol(wxT("smbc_closedir"));
                 handle = dll.Detach();
                 isSMBC = true;
             }
             break;
         case SmbClientWinNT:
             {
-                wxDynamicLibrary dll(_T("netapi32"));
-                NT_enum = (NT_NetShareEnum)dll.GetSymbol(_T("NetShareEnum"));
-                NT_free = (NT_NetApiBufferFree)dll.GetSymbol(_T("NetApiBufferFree"));
+                wxDynamicLibrary dll(wxT("netapi32"));
+                NT_enum = (NT_NetShareEnum)dll.GetSymbol(wxT("NetShareEnum"));
+                NT_free = (NT_NetApiBufferFree)dll.GetSymbol(wxT("NetApiBufferFree"));
                 handle = dll.Detach();
                 isNT = true;
             }
             break;
         case SmbClientWin95:
             {
-                wxDynamicLibrary dll(_T("svrapi32"));
-                W9X_enum = (W9X_NetShareEnum)dll.GetSymbol(_T("NetShareEnum"));
+                wxDynamicLibrary dll(wxT("svrapi32"));
+                W9X_enum = (W9X_NetShareEnum)dll.GetSymbol(wxT("NetShareEnum"));
                 handle = dll.Detach();
             }
             break;
         case CupsClientUnix:
             {
-                wxDynamicLibrary dll(_T("libcups"));
-                cupsGetDests = (FP_cupsGetDests)dll.GetSymbol(_T("cupsGetDests"));
-                cupsServer = (FP_cupsServer)dll.GetSymbol(_T("cupsServer"));
+                wxDynamicLibrary dll(wxT("libcups"));
+                cupsGetDests = (FP_cupsGetDests)dll.GetSymbol(wxT("cupsGetDests"));
+                cupsServer = (FP_cupsServer)dll.GetSymbol(wxT("cupsServer"));
                 handle = dll.Detach();
             }
             break;
@@ -236,7 +236,7 @@ ArrayOfShares DllData::GetShares()
                             r.description = wxConvLocal.cWC2WX((const wchar_t*)p->shi1_remark);
                             r.sharetype = (p->shi1_type == STYPE_DISKTREE) ?
                                 SharedResource::SHARE_SMB_DISK : SharedResource::SHARE_SMB_PRINTER;
-                            if (r.name != _T("print$"))
+                            if (r.name != wxT("print$"))
                                 sa.Add(r);
                             break;
                     }
@@ -273,7 +273,7 @@ ArrayOfShares DllData::GetShares()
                                         r.description = wxConvUTF8.cMB2WX(p->shi1_remark);
                                         r.sharetype = (p->shi1_type == STYPE_DISKTREE) ?
                                             SharedResource::SHARE_SMB_DISK : SharedResource::SHARE_SMB_PRINTER;
-                                        if (r.name != _T("print$"))
+                                        if (r.name != wxT("print$"))
                                             sa.Add(r);
                                         break;
                                 }

@@ -22,9 +22,9 @@
 #include <wx/datetime.h>
 #include "pwcrypt.h"
 
-static const wxString dummyString = _T("{{{{");
+static const wxString dummyString = wxT("{{{{");
 static const wxString validChars =
-    _T("!#$%&()*+-.0123456789:;<>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]_abcdefghijklmnopqrstuvwxyz{|}");
+    wxT("!#$%&()*+-.0123456789:;<>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]_abcdefghijklmnopqrstuvwxyz{|}");
 
 static wxChar
 getRandomValidCharFromList()
@@ -36,12 +36,12 @@ wxString
 encodeString(const wxString &s)
 {
     size_t i;
-    wxString ret = _T("");
+    wxString ret = wxT("");
 
     if (s.Length()) {
-        ret = _T(":");
+        ret = wxT(":");
         for (i = 0; i < s.Length(); i++)
-            ret += wxString::Format(_T("%d:"), s[i] + i + 1);
+            ret += wxString::Format(wxT("%d:"), s[i] + i + 1);
     }
     return ret;
 }
@@ -50,13 +50,13 @@ wxString
 decodeString(const wxString &s)
 {
     wxString val = s;
-    wxString ret = _T("");
+    wxString ret = wxT("");
 
-    if (val.Left(1) == _T(":") && val.Right(1) == _T(":") && val.Length() > 1) {
+    if (val.Left(1) == wxT(":") && val.Right(1) == wxT(":") && val.Length() > 1) {
         int idx = 1;
         val.Remove(0, 1);
         while (val.Length()) {
-            int p = val.Find(_T(":"));
+            int p = val.Find(wxT(":"));
             if (p != -1) {
                 long l;
                 val.Left(p).ToLong(&l);
@@ -73,7 +73,7 @@ wxString
 cryptString(const wxString &s)
 {
     size_t i;
-    wxString sRet = _T("");
+    wxString sRet = wxT("");
     
     if (s.IsEmpty())
         return s;
@@ -111,7 +111,7 @@ wxString
 decryptString(const wxString &s)
 {
     size_t i;
-    wxString sRet = _T("");
+    wxString sRet = wxT("");
     
     if (s.IsEmpty() || s.Length() < 5)
         return s;
@@ -139,7 +139,7 @@ decryptString(const wxString &s)
         sRet.Remove(0, dummyString.Length());
     
     wxString str = sRet;
-    sRet = _T("");
+    sRet = wxT("");
     // Reverse string
     for (i = (str.Length() - 1); (int)i >= 0; i--)
         sRet += str[i];

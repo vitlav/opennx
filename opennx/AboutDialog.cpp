@@ -145,7 +145,7 @@ bool AboutDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
 void AboutDialog::CreateControls()
 {    
     ////@begin AboutDialog content construction
-    if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_ABOUT")))
+    if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), wxT("ID_DIALOG_ABOUT")))
         wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
     m_pHtmlWindow = XRCCTRL(*this, "ID_HTMLWINDOW_ABOUT", extHtmlWindow);
     ////@end AboutDialog content construction
