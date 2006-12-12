@@ -103,6 +103,7 @@ public:
     bool SaveToFile();
 
     wxString sGetSessionParams(const wxString &);
+    wxString sGetProxyParams(const wxString &);
 
     bool IsValid() { return m_bValid; }
 
@@ -167,6 +168,7 @@ public:
     wxString sGetGuestPassword() { return m_sGuestPassword; }
     wxString sGetName() { return m_sName; }
     wxString sGetPassword() { return m_sPassword; }
+    wxString sGetDecryptedPassword();
     wxString sGetProxyHost() { return m_sProxyHost; }
     wxString sGetRdpApplication() { return m_sRdpApplication; }
     wxString sGetRdpHostName() { return m_sRdpHostName; }

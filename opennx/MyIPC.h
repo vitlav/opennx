@@ -16,22 +16,30 @@
 #pragma interface "MyIPC.cpp"
 #endif
 
+#include <wx/event.h>
+
+DECLARE_EVENT_TYPE(wxEVT_NXSSH, -1);
+
 class AsyncProcess;
 class wxRegEx;
 
-class MyIPC
+class MyIPC : public wxEvtHandler
 {
+    DECLARE_CLASS(MyIPC);
+    DECLARE_EVENT_TABLE();
+
 public:
     typedef enum {
         ActionNone,
         ActionStatus,
-        ActionNotice,
+        ActionLog,
         ActionWarning,
         ActionError,
         ActionPromptYesNo,
         ActionSendUsername,
         ActionSendPassword,
         ActionNextCommand,
+        ActionWelcome,
         ActionPassphraseDialog,
         ActionSetSessionID,
         ActionSetProxyCookie,
@@ -45,28 +53,36 @@ public:
         ActionExit,
         ActionChildDied,
         ActionStartProxy,
-    } ChatActions;
+        ActionSessionRunning,
+    } tSessionEvents;
 
     MyIPC();
     virtual ~MyIPC();
-    bool SshProcess(wxString, wxString);
+    bool SshProcess(const wxString&, const wxString&, wxEvtHandler *);
     bool IsRunning();
     bool Kill();
-    const ChatActions SshChat(wxString &);
-    void Print(wxString s);
+    void Print(const wxString &s);
     int GetResult();
 
 private:
+    int parseCode(const wxString &);
+    virtual void OnOutReceived(wxCommandEvent &);
+    virtual void OnErrReceived(wxCommandEvent &);
+    virtual void OnTerminate(wxCommandEvent &);
+
 #ifdef __WXMSW__
     unsigned int m_MsgSession;
     unsigned int m_MsgKill;
 #endif
     AsyncProcess *m_pProcess;
+    wxEvtHandler *m_pEvtHandler;
     wxRegEx *m_re;
     bool m_bIsSsh;
     int m_iSshPid;
-    int m_iLineCount;
-    wxString m_sMessage;
+    int m_iOutCollect;
+    int m_iErrCollect;
+    wxString m_sOutMessage;
+    wxString m_sErrMessage;
 };
 
 #endif

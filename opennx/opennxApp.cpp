@@ -195,7 +195,8 @@ opennxApp::opennxApp()
     if (::wxGetEnv(wxT("LD_LIBRARY_PATH"), &lpath))
         lpath += wxT(":");
     lpath = tmp + wxT("/lib");
-    wxSetEnv(wxT("LD_LIBRARY_PATH"), lpath);
+    if (!::wxSetEnv(wxT("LD_LIBRARY_PATH"), lpath))
+        ::wxLogSysError(wxT("Can not set LD_LIBRARY_PATH"));
 #endif
     wxString traceTags;
     if (::wxGetEnv(wxT("WXTRACE"), &traceTags)) {

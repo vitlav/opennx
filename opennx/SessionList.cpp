@@ -79,7 +79,7 @@ WX_DECLARE_STRING_HASH_MAP(MySession, SessionHash);
 {
     m_sessions = new SessionHash();
     m_re = new wxRegEx();
-    if (m_re->Compile(_T("(([TF])-)?([SC])-(.*)-([[:digit:]]+)-([[:xdigit:]]{32})$"), wxRE_ADVANCED))
+    if (m_re->Compile(wxT("(([TF])-)?([SC])-(.*)-([[:digit:]]+)-([[:xdigit:]]{32})$"), wxRE_ADVANCED))
         m_reValid = true;
     if (m_reValid && (!m_dirName.IsEmpty())) {
         Create();
@@ -124,12 +124,12 @@ void SessionList::ScanDir()
         if (m_dirName.IsEmpty())
             return;
         if (!wxDir::Exists(m_dirName)) {
-            m_dirName = _T("");
+            m_dirName = wxT("");
             return;
         }
         m_dir = new wxDir(m_dirName);
     }
-    ::wxLogTrace(MYTRACETAG, _T("SessionList: scanning %s"), m_dirName.c_str());
+    ::wxLogTrace(MYTRACETAG, wxT("SessionList: scanning %s"), m_dirName.c_str());
 
     // get the names of all session directories
     wxArrayString sdirs;
@@ -157,7 +157,7 @@ void SessionList::ScanDir()
     bool changed = false;
     SessionHash::iterator it;
     for (it = m_sessions->begin(); it != m_sessions->end(); ++it)
-        it->second.m_touched = false;
+        it->second.bSetTouched(false);
 
     for (i = 0; i < cnt; i++) {
         wxString tmp = sdirs[i];
@@ -170,7 +170,7 @@ void SessionList::ScanDir()
                 long port;
 
                 m_re->GetMatch(tmp,5).ToLong(&port);
-                ::wxLogTrace(MYTRACETAG, _T("State='%s', Type='%s', Host='%s', Port=%d, MD5='%s'"),
+                ::wxLogTrace(MYTRACETAG, wxT("State='%s', Type='%s', Host='%s', Port=%d, MD5='%s'"),
                         m_re->GetMatch(tmp,2).c_str(), m_re->GetMatch(tmp,3).c_str(),
                         m_re->GetMatch(tmp,4).c_str(), port, md5.c_str());
                 // Create new hash entry
@@ -183,17 +183,17 @@ void SessionList::ScanDir()
                     wxMutexGuiEnter();
 
                     // Hostname
-                    idx = m_listctrl->InsertItem(0, s.m_host, 0);
+                    idx = m_listctrl->InsertItem(0, s.sGetHost(), 0);
                     // Port
-                    m_listctrl->SetItem(idx, 1, s.GetPortStr());
+                    m_listctrl->SetItem(idx, 1, s.sGetPort());
                     // Session ID
-                    m_listctrl->SetItem(idx, 2, s.m_md5);
+                    m_listctrl->SetItem(idx, 2, s.sGetMd5());
                     // Creation Time
-                    m_listctrl->SetItem(idx, 3, s.GetCreationTime());
+                    m_listctrl->SetItem(idx, 3, s.sGetCreationTime());
                     // PID
-                    m_listctrl->SetItem(idx, 4, s.GetPIDStr());
+                    m_listctrl->SetItem(idx, 4, s.sGetPID());
                     // Status
-                    switch (s.m_status) {
+                    switch (s.eGetSessionStatus()) {
                         case MySession::Terminated:
                             m_listctrl->SetItem(idx, 5, _("terminated"));
                             break;
@@ -208,18 +208,19 @@ void SessionList::ScanDir()
                             break;
                     }
                     // Type
-                    m_listctrl->SetItem(idx, 6, (s.m_type == MySession::Server) ? _("Server") : _("Client"));
+                    m_listctrl->SetItem(idx, 6,
+                            (s.eGetSessionType() == MySession::Server) ? _("Server") : _("Client"));
 
                     // Data
                     //                    m_listctrl->SetItemData(idx, (long)(*m_sessions)[md5].m_md5.c_str());
-                    m_listctrl->SetItemData(idx, (long)s.m_md5.c_str());
+                    m_listctrl->SetItemData(idx, (long)s.sGetMd5().c_str());
                     wxMutexGuiLeave();
 
                     changed = true;
                 }
             } else {
                 // Existing session found, mark it
-                it->second.m_touched = true;
+                it->second.bSetTouched(true);
             }
         }
     }
@@ -228,15 +229,15 @@ void SessionList::ScanDir()
     while (!finished) {
         finished = true;
         for (it = m_sessions->begin(); it != m_sessions->end(); ++it) {
-            if (!it->second.m_touched) {
-                ::wxLogTrace(MYTRACETAG, _T("Session '%s' disappeared"), it->second.m_md5.c_str());
+            if (!it->second.bGetTouched()) {
+                ::wxLogTrace(MYTRACETAG, wxT("Session '%s' disappeared"), it->second.sGetMd5().c_str());
                 finished = false;
                 if (m_listctrl != NULL) {
                     long item;
 
                     wxMutexGuiEnter();
 
-                    item = m_listctrl->FindItem(-1, it->second.m_md5);
+                    item = m_listctrl->FindItem(-1, it->second.sGetMd5().c_str());
                     if (item != -1) {
                         m_listctrl->DeleteItem(item);
                         changed = true;
@@ -260,7 +261,7 @@ void SessionList::ScanDir()
         wxMutexGuiLeave();
     }
 
-    ::wxLogTrace(MYTRACETAG, _T("SessionList: Now %d sessions"), m_sessions->size());
+    ::wxLogTrace(MYTRACETAG, wxT("SessionList: Now %d sessions"), m_sessions->size());
 }
 
 void SessionList::ShowSesssionLog(int idx)
@@ -271,7 +272,7 @@ void SessionList::ShowSesssionLog(int idx)
 
     } else {
         LogDialog d(NULL);
-        d.ReadLogFile(it->second.m_dir + _T("/session"));
+        d.ReadLogFile(it->second.sGetDir() + wxFileName::GetPathSeparator() + wxT("session"));
         d.ShowModal();
     }
 }

@@ -255,6 +255,16 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
     return *this;
 }
 
+// Retrieve parameter for proxy otion file
+    wxString
+MyXmlConfig::sGetProxyParams(const wxString &protocolVersion)
+{
+    wxUnusedVar(protocolVersion);
+    wxString ret = wxT("");
+    ret << wxT(",shmem=1,shpix=1,font=1");
+    return ret;
+}
+
 // Retrieve parameter for startsession command
     wxString
 MyXmlConfig::sGetSessionParams(const wxString &protocolVersion)
@@ -381,7 +391,9 @@ MyXmlConfig::sGetSessionParams(const wxString &protocolVersion)
     ret += wxString::Format(wxT(" --screeninfo=\"%dx%dx%d%s\""), w, h, ::wxDisplayDepth(), m_bDisableRender ? wxT("") : wxT("+render"));
     if (m_bKbdLayoutOther)
         ret += wxString::Format(wxT(" --keyboard=\"pc105/%s\""), isoKbd(m_iKbdLayoutLanguage).c_str());
-    ret += wxString::Format(wxT(" --backingstore=\"%d\""), m_bDisableBackingstore ? 1 : 0);
+    else
+        ret += wxT(" --keyboard=\"pc105/de\"");
+    ret += wxString::Format(wxT(" --backingstore=\"%d\""), m_bDisableBackingstore ? 0 : 1);
     ret += wxString::Format(wxT(" --encryption=\"%d\""), m_bEnableSSL ? 1 : 0);
 #ifdef __UNIX__
     ret += wxT(" --client=\"linux\"");
@@ -391,6 +403,7 @@ MyXmlConfig::sGetSessionParams(const wxString &protocolVersion)
     // FIXME: Add real settings
     ret += wxT(" --media=\"0\"");
     ret += wxT(" --composite=\"1\"");
+//    ret += wxT(" --cups=\"0\"");
     ret += wxT(" --strict=\"0\"");
     ret += wxT(" --nodelay=\"1\"");
     ret += wxT(" --shmem=\"1\"");
@@ -1050,6 +1063,16 @@ MyXmlConfig::~MyXmlConfig()
         delete m_pClrPassword;
 }
 
+    wxString
+MyXmlConfig::sGetDecryptedPassword()
+{
+    wxString ret;
+    if ((m_sPassword == DUMMY_MD5_PASSWORD) && m_pMd5Password)
+        ret = decryptString(*m_pMd5Password);
+    else
+        ret = m_sPassword;
+    return ret;
+}
     void 
 MyXmlConfig::bAddOption(wxXmlNode *group, const wxString &name, const bool val)
 {
@@ -1239,7 +1262,6 @@ MyXmlConfig::SaveToFile()
     iAddOption(g, wxT("Windows Image Compression"), m_iRdpImageCompression);
 
     g = AddGroup(r, wxT("Login"));
-    sAddOption(g, wxT("User"), m_sUsername);
     if (m_bRememberPassword) {
         if ((m_sPassword != DUMMY_MD5_PASSWORD) &&
                 (m_sPassword != DUMMY_CLR_PASSWORD)   ) {
@@ -1256,6 +1278,12 @@ MyXmlConfig::SaveToFile()
         sAddOption(g, wxT("Auth"), optval);
         sAddOption(g, wxT("Password"), optval);
     }
+    bAddOption(g, wxT("Guest Mode"), m_bGuestMode);
+    sAddOption(g, wxT("Guest password"), m_sGuestPassword);
+    sAddOption(g, wxT("Guest username"), m_sGuestUser);
+    sAddOption(g, wxT("Login Method"), wxT("nx"));
+    sAddOption(g, wxT("Public Key"), m_sSshKey);
+    sAddOption(g, wxT("User"), m_sUsername);
 
     g = AddGroup(r, wxT("Environment"));
     sAddOption(g, wxT("CUPSD path"), m_sCupsPath);

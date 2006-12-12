@@ -128,15 +128,8 @@ void LogDialog::ReadLogFile(wxString name)
     if (!name.IsEmpty())
         m_sFileName = name;
 
-    if (!m_sFileName.IsEmpty()) {
-        wxTextFile f(m_sFileName);
-        if (f.Open()) {
-            wxString line;
-            for(line = f.GetLastLine(); f.GetCurrentLine() > 0; line = f.GetPrevLine())
-                m_TextCtrl->AppendText(line + _T("\n"));
-        }
-        f.Close();
-    }
+    if (!m_sFileName.IsEmpty())
+        m_TextCtrl->LoadFile(m_sFileName);
 }
 
 /*!

@@ -124,6 +124,7 @@ void LoginDialog::ReadConfigDirectory()
             m_aSessionNames.Add(cfg.sGetName());
             if (cfg.sGetName() == m_sSessionName) {
                 m_pCurrentCfg = new MyXmlConfig(m_aConfigFiles[i]);
+                m_bGuestLogin = cfg.bGetGuestMode();
                 m_sUsername = cfg.sGetUsername();
                 m_sPassword = cfg.sGetPassword();
                 m_bUseSmartCard = cfg.bGetUseSmartCard();

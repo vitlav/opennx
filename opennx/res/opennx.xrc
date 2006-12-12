@@ -176,7 +176,7 @@
                                     <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
                                     <border>5</border>
                                     <object class="wxStaticBitmap" name="wxID_STATIC">
-                                        <size>195,58d</size>
+                                        <size>146,47d</size>
                                         <bitmap>memory:memrsc#zip:res/opennx.png</bitmap>
                                     </object>
                                 </object>
@@ -816,7 +816,7 @@
                                                     <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                        <size>21,19d</size>
+                                                        <size>16,16d</size>
                                                         <bitmap>memory:memrsc#zip:res/sharing.png</bitmap>
                                                     </object>
                                                 </object>
@@ -839,7 +839,7 @@
                                                     <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                        <size>21,19d</size>
+                                                        <size>16,16d</size>
                                                         <bitmap>memory:memrsc#zip:res/sharing.png</bitmap>
                                                     </object>
                                                 </object>
@@ -921,7 +921,6 @@
                                                     <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                        <size>21,19d</size>
                                                         <bitmap>memory:memrsc#zip:res/multimedia.png</bitmap>
                                                     </object>
                                                 </object>
@@ -2250,7 +2249,6 @@ this share.</label>
     </object>
     <object class="wxFrame" name="ID_FRAME_ADMIN" subclass="SessionAdmin">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxMINIMIZE_BOX|wxMAXIMIZE_BOX|wxCLOSE_BOX</style>
-        <size>350,100</size>
         <title>Session Administrator - OpenNX</title>
         <icon>memory:memrsc#zip:res/opennx-admin.png</icon>
         <object class="wxMenuBar" name="ID_MENUBAR">
@@ -2356,9 +2354,17 @@ this share.</label>
                 <tooltip>Kill application</tooltip>
             </object>
         </object>
-        <object class="wxListCtrl" name="ID_LISTCTRL">
-            <size>100,100</size>
-            <style>wxLC_REPORT|wxLC_SINGLE_SEL|wxSUNKEN_BORDER</style>
+        <object class="wxBoxSizer">
+            <orient>wxVERTICAL</orient>
+            <object class="sizeritem">
+                <flag>wxGROW|wxALL</flag>
+                <border>5</border>
+                <option>1</option>
+                <object class="wxListCtrl" name="ID_LISTCTRL">
+                    <size>500,100</size>
+                    <style>wxLC_REPORT|wxLC_SINGLE_SEL|wxSUNKEN_BORDER</style>
+                </object>
+            </object>
         </object>
     </object>
     <object class="wxWizard" name="ID_WIZARD" subclass="MyWizard">
