@@ -137,6 +137,7 @@ IoThread::Entry()
             m_pProcess->Poll();
         wxThread::Sleep(100);
     }
+    return 0;
 }
 
     void
