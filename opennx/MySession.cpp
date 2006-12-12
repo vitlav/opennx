@@ -262,9 +262,9 @@ MySession::OnSshEvent(wxCommandEvent &event)
         case MyIPC::ActionSendPassword:
             m_pDlg->SetStatusText(_("Authenticating"));
             if (m_pCfg->bGetRememberPassword()) {
-                m_pNxSsh->Print(m_pCfg->sGetDecryptedPassword());
+                m_pNxSsh->Print(m_pCfg->sGetDecryptedPassword(), false);
             } else {
-                m_pNxSsh->Print(m_sClearPassword);
+                m_pNxSsh->Print(m_sClearPassword, false);
             }
             break;
         case MyIPC::ActionWelcome:
@@ -354,6 +354,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
             m_pNxSsh->Print(msg);
             break;
         case MyIPC::ActionStartProxy:
+            m_pDlg->SetStatusText(_("Starting session"));
             {
                 wxString popts;
                 popts << wxT("nx,cookie=") << m_sProxyCookie
@@ -382,11 +383,14 @@ MySession::OnSshEvent(wxCommandEvent &event)
                 m_sOptFilename << wxFileName::GetPathSeparator()
                     << wxT("S-") << m_sSessionID;
                 {
-                    wxFileName::Mkdir(m_sOptFilename, 0700, wxPATH_MKDIR_FULL);
-                    // TODO: error handling
+                    if (!wxFileName::Mkdir(m_sOptFilename, 0700, wxPATH_MKDIR_FULL)) {
+                        ::wxLogSysError(_("Could not create session directory\n%s\n"),
+                                m_sOptFilename.c_str());
+                        m_bGotError = true;
+                    }
                     m_sOptFilename << wxFileName::GetPathSeparator() << wxT("options");
                     wxFile f;
-                    if (f.Open(m_sOptFilename, wxFile::write_excl, wxS_IRUSR|wxS_IWUSR)) {
+                    if (f.Open(m_sOptFilename, wxFile::write, wxS_IRUSR|wxS_IWUSR)) {
                         f.Write(popts + wxT("\n"));
                         f.Close();
 
@@ -398,6 +402,10 @@ MySession::OnSshEvent(wxCommandEvent &event)
                             << m_sOptFilename << wxT(":") << m_sSessionDisplay;
                         m_pNxSsh->Print(wxT("bye"));
                         ::wxExecute(pcmd);
+                    } else {
+                        ::wxLogSysError(_("Could not write session options\n%s\n"),
+                                m_sOptFilename.c_str());
+                        m_bGotError = true;
                     }
                 }
             }
@@ -449,7 +457,7 @@ bool MySession::Create(const wxString cfgFileName, const wxString password)
                 f.Write(cfg.sGetSshKey());
                 f.Close();
             } else {
-                wxLogSysError(_("Could not write %s"), fn.GetFullPath().c_str());
+                ::wxLogSysError(_("Could not write %s"), fn.GetFullPath().c_str());
                 return false;
             }
         }
@@ -468,18 +476,7 @@ bool MySession::Create(const wxString cfgFileName, const wxString password)
         ::wxSetEnv(wxT("XAUTHORITY"), wxFileName::GetHomeDir() + wxFileName::GetPathSeparator() + wxT(".Xauthority"));
         // FIXME: use the dir containing .X11-unix, since nxproxy assumes that
         ::wxSetEnv(wxT("NX_TEMP"), wxT("/tmp"));
-
-#if 0
-        int proxyPort = -1;
-        if (cfg.bGetUseSmartCard())
-            cmd += wxT("-I 0 ");
-        else
-            cmd += wxString::Format(wxT("-i %s/share/keys/server.id_dsa.key "), fn.GetShortPath().c_str());
-        if (cfg.bGetEnableSSL()) {
-            proxyPort = getFirstFreePort();
-            cmd += wxString::Format(wxT("-D %d "), proxyPort);
-        }
-#endif
+        ::wxSetEnv(wxT("TEMP"), wxT("/tmp"));
 
         m_sXauthCookie = getXauthCookie();
         fn.Assign(sysDir, wxT("bin"));
@@ -491,6 +488,7 @@ bool MySession::Create(const wxString cfgFileName, const wxString password)
         dlg.Show(true);
         MyIPC nxssh;
         m_pNxSsh = &nxssh;
+
         if (nxssh.SshProcess(nxsshcmd, fn.GetShortPath(), this)) {
             m_bGotError = false;
             m_eConnectState = STATE_HELLO;
@@ -507,6 +505,7 @@ bool MySession::Create(const wxString cfgFileName, const wxString password)
             ::wxLogError(_("Could not start nxssh."));
             return false;
         }
+        return true;
     }
-    return true;
+    return false;
 }

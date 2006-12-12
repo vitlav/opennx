@@ -61,7 +61,7 @@ public:
     bool SshProcess(const wxString&, const wxString&, wxEvtHandler *);
     bool IsRunning();
     bool Kill();
-    void Print(const wxString &s);
+    void Print(const wxString &s, bool doLog = true);
     int GetResult();
 
 private:

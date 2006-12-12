@@ -99,7 +99,7 @@ class AsyncProcess : public wxProcess
 
         bool Start();
         bool Kill();
-        bool Print(const wxString &);
+        bool Print(const wxString &, bool doLog);
         bool IsRunning() { return !m_bTerminated; }
         int GetStatus() { return m_iStatus; }
 
@@ -206,11 +206,14 @@ AsyncProcess::Poll()
 }
 
     bool
-AsyncProcess::Print(const wxString &s)
+AsyncProcess::Print(const wxString &s, bool doLog)
 {
     wxOutputStream *os = GetOutputStream();
     if (os) {
-        ::wxLogTrace(MYTRACETAG, wxT("Sending: '%s'"), s.c_str());
+        if (doLog)
+            ::wxLogTrace(MYTRACETAG, wxT("Sending: '%s'"), s.c_str());
+        else
+            ::wxLogTrace(MYTRACETAG, wxT("Sending (hidden): '************'"));
         wxTextOutputStream tos(*os);
         tos << s << wxT("\n");;
         return true;
@@ -228,11 +231,13 @@ AsyncProcess::OnTerminate(int pid, int status)
     wxLogTrace(MYTRACETAG, wxT("Process %u terminated with exit code %d."), pid, status);
     m_iStatus = status;
     m_bTerminated = true;
+#if 0
     if (m_pEvtHandler) {
         wxCommandEvent event(wxEVT_PROCESS_EXIT, wxID_ANY);
         event.SetInt(m_iStatus);
         m_pEvtHandler->AddPendingEvent(event);
     }
+#endif
 }
 
     bool
@@ -276,7 +281,7 @@ IMPLEMENT_CLASS(MyIPC, wxEvtHandler);
 BEGIN_EVENT_TABLE(MyIPC, wxEvtHandler)
     EVT_COMMAND(wxID_ANY, wxEVT_PROCESS_STDOUT, MyIPC::OnOutReceived )
     EVT_COMMAND(wxID_ANY, wxEVT_PROCESS_STDERR, MyIPC::OnErrReceived )
-    EVT_COMMAND(wxID_ANY, wxEVT_PROCESS_EXIT,   MyIPC::OnTerminate )
+//    EVT_COMMAND(wxID_ANY, wxEVT_PROCESS_EXIT,   MyIPC::OnTerminate )
 END_EVENT_TABLE();
 
 MyIPC::MyIPC()
@@ -298,6 +303,7 @@ MyIPC::MyIPC()
 
 MyIPC::~MyIPC()
 {
+    m_pEvtHandler = NULL;
     if (m_pProcess) {
         if (m_pProcess->IsRunning())
             m_pProcess->Detach();
@@ -328,10 +334,10 @@ MyIPC::Kill()
 }
 
     void
-MyIPC::Print(const wxString &s)
+MyIPC::Print(const wxString &s, bool doLog /* = true */ )
 {
     if (m_pProcess)
-        m_pProcess->Print(s);
+        m_pProcess->Print(s, doLog);
 }
 
     bool
@@ -375,6 +381,7 @@ MyIPC::parseCode(const wxString &buf)
     void
 MyIPC::OnTerminate(wxCommandEvent &event)
 {
+    event.Skip();
 }
 
     void
@@ -490,6 +497,7 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
                 break;
             case 208:
                     // Using auth method: ...
+                break;
             case 209:
                 // Remote host authentication has changed
                 upevent.SetString(msg.Mid(8));
@@ -672,7 +680,7 @@ MyIPC::OnErrReceived(wxCommandEvent &event)
         wxCommandEvent upevent(wxEVT_NXSSH, wxID_ANY);
         upevent.SetInt(ActionLog);
         upevent.SetString(event.GetString());
-        m_pEvtHandler->ProcessEvent(upevent);
+        m_pEvtHandler->AddPendingEvent(upevent);
         switch (code) {
             case -1:
                 // No code found
@@ -704,6 +712,11 @@ MyIPC::OnErrReceived(wxCommandEvent &event)
                     m_pEvtHandler->ProcessEvent(upevent);
                     break;
                 }
+                break;
+            case 287:
+                // Successfully redirected ports
+                upevent.SetInt(ActionSessionRunning);
+                m_pEvtHandler->ProcessEvent(upevent);
                 break;
             case 999:
                 upevent.SetInt(ActionExit);
