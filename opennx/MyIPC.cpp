@@ -448,14 +448,20 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
                 // Result: service started
             case 123:
                 // Result: service stopped
+                break;
             case 127:
                 // Result: session list
             case 146:
                 // Result: user list
+                upevent.SetInt(ActionSessionListStart);
+                m_pEvtHandler->ProcessEvent(upevent);
+                break;
             case 147:
                 // Result: server capacity reached
             case 148:
                 // Result: server capacity not reached
+                upevent.SetInt(ActionSessionListEnd);
+                m_pEvtHandler->ProcessEvent(upevent);
                 break;
             case 134:
                 // Accepted protocol: <version>

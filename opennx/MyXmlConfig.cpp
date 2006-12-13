@@ -255,17 +255,62 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
     return *this;
 }
 
-// Retrieve parameter for proxy otion file
+// Retrieve parameters for proxy otion file
     wxString
 MyXmlConfig::sGetProxyParams(const wxString &protocolVersion)
 {
     wxUnusedVar(protocolVersion);
     wxString ret = wxT("");
+    // FIXME: use real settings
     ret << wxT(",shmem=1,shpix=1,font=1");
     return ret;
 }
 
-// Retrieve parameter for startsession command
+// Retrieve parameters for listsession command
+    wxString
+MyXmlConfig::sGetListParams(const wxString &protocolVersion)
+{
+    wxUnusedVar(protocolVersion);
+    wxString ret = wxT(" --user=\"");
+
+    ret << m_sUsername << wxT("\" --status=\"suspended,running\"")
+        << wxT(" --type=\"");
+    switch (m_eSessionType) {
+        case STYPE_UNIX:
+            ret << wxT("unix-");
+            switch (m_eDesktopType) {
+                case DTYPE_KDE:
+                    ret << wxT("kde\"");
+                    break;
+                case DTYPE_GNOME:
+                    ret << wxT("gnome\"");
+                    break;
+                case DTYPE_CDE:
+                    ret << wxT("cde\"");
+                    break;
+                case DTYPE_XFCE:
+                    ret << wxT("xfce\"");
+                    break;
+                case DTYPE_CUSTOM:
+                    ret << wxT("custom\"");
+                    break;
+            }
+            break;
+        case STYPE_WINDOWS:
+            ret << wxT("rdp");
+            break;
+        case STYPE_VNC:
+            ret << wxT("vnc");
+            break;
+    }
+    int w, h;
+    ::wxDisplaySize(&w, &h);
+    ret << wxT(" --geometry=\"") << w << wxT("x") << h << wxT("x")
+       << ::wxDisplayDepth() << (m_bDisableRender ? wxT("") : wxT("+render")) << wxT("\"");
+    return ret;
+}
+
+// Retrieve parameters for startsession command
     wxString
 MyXmlConfig::sGetSessionParams(const wxString &protocolVersion)
 {
