@@ -3021,4 +3021,71 @@ this share.</label>
             </object>
         </object>
     </object>
+    <object class="wxDialog" name="ID_RESUMEDIALOG" subclass="ResumeDialog">
+        <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
+        <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
+        <size>400,300d</size>
+        <title>ResumeDialog</title>
+        <centered>1</centered>
+        <object class="wxBoxSizer">
+            <orient>wxVERTICAL</orient>
+            <object class="sizeritem">
+                <flag>wxALIGN_LEFT|wxALL</flag>
+                <border>5</border>
+                <object class="wxStaticText" name="wxID_STATIC">
+                    <label>There are multiple sessions available, please select one or click New to create a session.</label>
+                </object>
+            </object>
+            <object class="sizeritem">
+                <flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+                <border>5</border>
+                <object class="wxListCtrl" name="ID_LISTCTRL_SESSIONS">
+                    <size>500,100d</size>
+                    <style>wxLC_REPORT|wxLC_SINGLE_SEL|wxSUNKEN_BORDER</style>
+                </object>
+            </object>
+            <object class="sizeritem">
+                <flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+                <border>5</border>
+                <object class="wxStaticLine" name="wxID_STATIC">
+                    <style>wxLI_HORIZONTAL</style>
+                </object>
+            </object>
+            <object class="sizeritem">
+                <flag>wxALIGN_RIGHT|wxALL</flag>
+                <border>5</border>
+                <object class="wxBoxSizer">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxButton" name="ID_BUTTON_TAKEOVER">
+                            <label>&amp;Takeover</label>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxButton" name="ID_BUTTON_RESUME">
+                            <label>&amp;Resume</label>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxButton" name="wxID_NEW">
+                            <label>&amp;New</label>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxButton" name="wxID_ABORT">
+                            <label>&amp;Abort</label>
+                        </object>
+                    </object>
+                </object>
+            </object>
+        </object>
+    </object>
 </resource>

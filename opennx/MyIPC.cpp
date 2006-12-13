@@ -135,7 +135,7 @@ IoThread::Entry()
     while (!TestDestroy()) {
         if (m_pProcess)
             m_pProcess->Poll();
-        wxThread::Sleep(100);
+        wxThread::Sleep(10);
     }
     return 0;
 }
@@ -395,7 +395,7 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
         wxCommandEvent upevent(wxEVT_NXSSH, wxID_ANY);
         upevent.SetInt(ActionLog);
         upevent.SetString(msg);
-        m_pEvtHandler->AddPendingEvent(upevent);
+        m_pEvtHandler->ProcessEvent(upevent);
         switch (code) {
             case -1:
                 // No code found
@@ -451,10 +451,11 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
                 break;
             case 127:
                 // Result: session list
-            case 146:
-                // Result: user list
                 upevent.SetInt(ActionSessionListStart);
                 m_pEvtHandler->ProcessEvent(upevent);
+                break;
+            case 146:
+                // Result: user list
                 break;
             case 147:
                 // Result: server capacity reached
@@ -687,7 +688,7 @@ MyIPC::OnErrReceived(wxCommandEvent &event)
         wxCommandEvent upevent(wxEVT_NXSSH, wxID_ANY);
         upevent.SetInt(ActionLog);
         upevent.SetString(event.GetString());
-        m_pEvtHandler->AddPendingEvent(upevent);
+        m_pEvtHandler->ProcessEvent(upevent);
         switch (code) {
             case -1:
                 // No code found

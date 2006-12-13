@@ -10,7 +10,7 @@ bin_PROGRAMS = opennx
 opennx_SOURCES = AboutDialog.cpp ConnectDialog.cpp ExtHtmlWindow.cpp Icon.cpp LogDialog.cpp \
 	KeyDialog.cpp LoginDialog.cpp opennxApp.cpp MyIPC.cpp MySession.cpp \
 	MyValidator.cpp MyWizard.cpp MyXmlConfig.cpp pwcrypt.cpp \
-	RdpImageSettingsDialog.cpp RdpPropertyDialog.cpp SessionAdmin.cpp \
+	RdpImageSettingsDialog.cpp RdpPropertyDialog.cpp ResumeDialog.cpp SessionAdmin.cpp \
 	SessionList.cpp SessionProperties.cpp SmbShareProperties.cpp \
 	TextViewer.cpp UnixImageSettingsDialog.cpp VncImageSettingsDialog.cpp \
 	VncPropertyDialog.cpp wxprec.cpp WinShare.cpp X11PropertyDialog.cpp \
@@ -21,8 +21,8 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h ConnectDialog.h \
 	LogDialog.h LogDialog_symbols.h LoginDialog.h LoginDialog_symbols.h opennxApp.h \
 	MyIPC.h MyValidator.h MyWizard.h MyWizard_symbols.h MyXmlConfig.h \
 	pwcrypt.h RdpImageSettingsDialog.h RdpImageSettingsDialog_symbols.h \
-	RdpPropertyDialog.h RdpPropertyDialog_symbols.h resource.h \
-	SessionAdmin.h SessionAdmin_symbols.h SessionList.h \
+	RdpPropertyDialog.h RdpPropertyDialog_symbols.h resource.h ResumeDialog.h \
+	ResumeDialog_symbols.h SessionAdmin.h SessionAdmin_symbols.h SessionList.h \
 	SessionProperties.h SessionProperties_symbols.h \
 	SmbShareProperties.h SmbShareProperties_symbols.h \
 	TextViewer.h TextViewer_symbols.h \

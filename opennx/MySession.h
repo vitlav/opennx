@@ -96,6 +96,7 @@ private:
     bool m_bSessionRunning;
     bool m_bCollectSessions;
     int m_iProgress;
+    wxLog *m_pRunLog;
     MyIPC *m_pNxSsh;
     MyXmlConfig *m_pCfg;
     ConnectDialog *m_pDlg;

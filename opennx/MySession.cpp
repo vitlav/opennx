@@ -38,6 +38,7 @@
 #include "MySession.h"
 #include "MyXmlConfig.h"
 #include "MyIPC.h"
+#include "ResumeDialog.h"
 
 #include <wx/filename.h>
 #include <wx/regex.h>
@@ -48,6 +49,8 @@
 //#include <wx/dynlib.h>
 #include <wx/utils.h>
 #include <wx/tokenzr.h>
+#include <wx/regex.h>
+#include <fstream>
 
 #ifdef MYTRACETAG
 # undef MYTRACETAG
@@ -74,6 +77,7 @@ MySession::MySession(wxString dir, wxString status, wxString stype, wxString hos
     , m_pNxSsh(NULL)
     , m_pCfg(NULL)
     , m_pDlg(NULL)
+    , m_pRunLog(NULL)
 {
     if (stype == wxT("C"))
         m_eSessionType = Server;
@@ -92,6 +96,10 @@ MySession::MySession(wxString dir, wxString status, wxString stype, wxString hos
 }
 
 MySession::MySession(const MySession &src)
+    : m_pNxSsh(NULL)
+    , m_pCfg(NULL)
+    , m_pDlg(NULL)
+    , m_pRunLog(NULL)
 {
     m_sHost = src.m_sHost;
     m_iPort = src.m_iPort;
@@ -121,6 +129,8 @@ MySession & MySession::operator =(const MySession &src)
 MySession::~MySession()
 {
     ::wxLogTrace(MYTRACETAG, wxT("~MySession: md5='%s'"), m_sMd5.c_str());
+    if (m_pRunLog)
+        delete m_pRunLog;
 }
 
     wxString
@@ -241,7 +251,11 @@ MySession::OnSshEvent(wxCommandEvent &event)
             m_pDlg->SetProgress(m_iProgress++);
             if (m_bCollectSessions)
                 m_aParseBuffer.Add(msg);
-            // TODO implement logging to runlog
+            {
+                wxLog *old = wxLog::SetActiveTarget(m_pRunLog);
+                ::wxLogMessage(msg);
+                wxLog::SetActiveTarget(old);
+            }
             break;
         case MyIPC::ActionWarning:
             ::wxLogWarning(msg);
@@ -293,7 +307,6 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     break;
                 case STATE_LIST_SESSIONS:
                     scmd = wxT("listsession") + m_pCfg->sGetListParams(NX_PROTOCOL_VERSION);
-                    m_aParseBuffer.Empty();
                     m_pNxSsh->Print(scmd);
                     m_eConnectState = STATE_PARSE_SESSIONS;
                     break;
@@ -369,11 +382,14 @@ MySession::OnSshEvent(wxCommandEvent &event)
             break;
         case MyIPC::ActionSessionListStart:
             // Server starts sending session list
+            ::wxLogTrace(MYTRACETAG, wxT("receiving session list"));
+            m_aParseBuffer.Empty();
             m_bCollectSessions = true;
             break;
         case MyIPC::ActionSessionListEnd:
             // Server has sent list of running & suspended sessions
             m_bCollectSessions = false;
+            ::wxLogTrace(MYTRACETAG, wxT("received end of session list"));
             parseSessions();
             m_eConnectState = STATE_START_SESSION;
             break;
@@ -383,6 +399,32 @@ MySession::OnSshEvent(wxCommandEvent &event)
     void
 MySession::parseSessions()
 {
+    size_t n = m_aParseBuffer.GetCount();
+    wxRegEx re(
+            wxT("^(\\d+)\\s+([a-z-]+)\\s+([0-9A-F]{32})\\s+([A-Z-]{8})\\s+(\\d+)\\s+(\\d+x\\d+)\\s+(\\w+)\\s+(\\w+)\\s*"),
+            wxRE_ADVANCED);
+    wxASSERT(re.IsValid());
+    ResumeDialog d(NULL);
+    bool bFound = false;
+    for (size_t i = 0; i < n; i++) {
+        wxString line = m_aParseBuffer[i];
+        if (re.Matches(line) && (re.GetMatchCount() == 9)) {
+            wxString sPort(re.GetMatch(line, 1));
+            wxString sType(re.GetMatch(line, 2));
+            wxString sId(re.GetMatch(line, 3));
+            wxString sOpts(re.GetMatch(line, 4));
+            wxString sColors(re.GetMatch(line, 5));
+            wxString sSize(re.GetMatch(line, 6));
+            wxString sState(re.GetMatch(line, 7));
+            wxString sName(re.GetMatch(line, 8));
+            d.AddSession(sName, sState, sType, sSize, sColors, sPort, sOpts, sId);
+            bFound = true;
+        }
+    }
+    if (bFound) {
+        d.SetPreferredSession(m_pCfg->sGetName());
+        d.ShowModal();
+    }
 }
 
     void
@@ -470,6 +512,10 @@ bool MySession::Create(const wxString cfgFileName, const wxString password)
         tmpDir << wxFileName::GetPathSeparator() << wxT("temp")
             << wxFileName::GetPathSeparator() << ::wxGetProcessId();
         wxFileName::Mkdir(tmpDir, 0700, wxPATH_MKDIR_FULL);
+        wxString rlogfn = tmpDir + wxFileName::GetPathSeparator() + wxT("runlog");
+        std::ofstream *runlog = new std::ofstream();
+        runlog->open(rlogfn.fn_str());
+        m_pRunLog = new wxLogStream(runlog);
 
         if (cfg.sGetSshKey().IsEmpty()) {
             fn.Assign(sysDir, wxT("server.id_dsa.key"));
