@@ -114,6 +114,10 @@ MySession::MySession(const MySession &src)
 
 MySession & MySession::operator =(const MySession &src)
 {
+    m_pRunLog = NULL;
+    m_pCfg = NULL;
+    m_pDlg = NULL;
+    m_pNxSsh = NULL;
     m_sHost = src.m_sHost;
     m_iPort = src.m_iPort;
     m_lPid = src.m_lPid;
@@ -131,6 +135,7 @@ MySession::~MySession()
     ::wxLogTrace(MYTRACETAG, wxT("~MySession: md5='%s'"), m_sMd5.c_str());
     if (m_pRunLog)
         delete m_pRunLog;
+    m_pRunLog = NULL;
 }
 
     wxString

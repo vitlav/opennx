@@ -159,7 +159,7 @@ ResumeDialog::AddSession(const wxString& name, const wxString& state, const wxSt
     m_pCtrlSessions->SetItemData(idx, lPort);
     for (int i = 0; i < m_pCtrlSessions->GetColumnCount(); i++)
         m_pCtrlSessions->SetColumnWidth(i, wxLIST_AUTOSIZE);
-    if ((m_lActiveSession < 0) && (name == m_sPreferredSession)) {
+    if ((m_lActiveSession < 0) || (name == m_sPreferredSession)) {
         wxListItem info;
         info.m_itemId = idx;
         info.m_mask = wxLIST_MASK_STATE;

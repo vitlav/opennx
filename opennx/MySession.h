@@ -47,7 +47,7 @@ public:
         Running,
     } tSessionStatus;
 
-    MySession() { }
+    MySession() : m_pRunLog(NULL) { }
     MySession(wxString dir, wxString status, wxString stype, wxString host, int port, wxString md5);
     MySession(const MySession &src);
     virtual ~MySession();
