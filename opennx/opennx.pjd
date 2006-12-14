@@ -14949,7 +14949,7 @@ this share."</string>
                 <string name="proxy-Foreground colour">""</string>
                 <string name="proxy-Font">""</string>
                 <bool name="proxy-Hidden">0</bool>
-                <bool name="proxy-Enabled">1</bool>
+                <bool name="proxy-Enabled">0</bool>
                 <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                 <string name="proxy-Data variable">""</string>
                 <string name="proxy-Data validator">""</string>
@@ -14987,7 +14987,6 @@ this share."</string>
                 <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                 <string name="proxy-Custom arguments">""</string>
                 <string name="proxy-Custom ctor arguments">""</string>
-                <bool name="proxy-wxCLIP_CHILDREN ">0</bool>
               </document>
             </document>
           </document>
@@ -15136,7 +15135,6 @@ this share."</string>
                 <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                 <string name="proxy-Custom arguments">""</string>
                 <string name="proxy-Custom ctor arguments">""</string>
-                <bool name="proxy-wxCLIP_CHILDREN ">0</bool>
               </document>
               <document>
                 <string name="title">"wxBoxSizer H"</string>
@@ -18352,7 +18350,7 @@ this share."</string>
               <long name="proxy-Id value">5101</long>
               <string name="proxy-Class">"wxButton"</string>
               <string name="proxy-Member variable name">""</string>
-              <string name="proxy-Label">"&amp;Abort"</string>
+              <string name="proxy-Label">"&amp;Cancel"</string>
               <bool name="proxy-Default">0</bool>
               <string name="proxy-Help text">""</string>
               <string name="proxy-Tooltip text">""</string>
@@ -18416,7 +18414,7 @@ this share."</string>
           <string name="proxy-Implementation filename">"TextViewer.cpp"</string>
           <string name="proxy-Header filename">"TextViewer.h"</string>
           <string name="proxy-XRC filename">""</string>
-          <string name="proxy-Title">"Text Viewer"</string>
+          <string name="proxy-Title">"Text Viewer - OpenNX"</string>
           <bool name="proxy-Centre">1</bool>
           <string name="proxy-Icon">"res/nx.png"</string>
           <bool name="proxy-Dialog units">0</bool>
@@ -19158,6 +19156,11 @@ this share."</string>
           <bool name="use-id-prefix">0</bool>
           <string name="id-prefix">""</string>
           <long name="use-xrc">0</long>
+          <string name="variable-0">"m_lActiveSession|long||-1|2"</string>
+          <string name="variable-1">"m_eMode|Mode|Mode|New|2"</string>
+          <string name="variable-2">"m_sSelectedId|wxString|SelectedId||2"</string>
+          <string name="variable-3">"m_sSelectedName|wxString|SelectedName||2"</string>
+          <string name="variable-4">"m_sSelectedType|wxString|SelectedType||2"</string>
           <string name="proxy-Id name">"ID_RESUMEDIALOG"</string>
           <long name="proxy-Id value">10050</long>
           <string name="proxy-Class">"ResumeDialog"</string>
@@ -19166,7 +19169,7 @@ this share."</string>
           <string name="proxy-Implementation filename">"ResumeDialog.cpp"</string>
           <string name="proxy-Header filename">"ResumeDialog.h"</string>
           <string name="proxy-XRC filename">""</string>
-          <string name="proxy-Title">"ResumeDialog"</string>
+          <string name="proxy-Title">"Select session - OpenNX"</string>
           <bool name="proxy-Centre">1</bool>
           <string name="proxy-Icon">""</string>
           <bool name="proxy-Dialog units">1</bool>
@@ -19298,7 +19301,6 @@ this share."</string>
               <string name="created">"13/12/2006"</string>
               <string name="proxy-type">"wbListCtrlProxy"</string>
               <string name="event-handler-0">"wxEVT_COMMAND_LIST_ITEM_SELECTED|OnListctrlSessionsSelected"</string>
-              <string name="event-handler-1">"wxEVT_COMMAND_LIST_ITEM_DESELECTED|OnListctrlSessionsDeselected"</string>
               <string name="proxy-Id name">"ID_LISTCTRL_SESSIONS"</string>
               <long name="proxy-Id value">10147</long>
               <string name="proxy-Class">"wxListCtrl"</string>
@@ -19342,8 +19344,8 @@ this share."</string>
               <string name="proxy-Custom styles">""</string>
               <long name="proxy-X">-1</long>
               <long name="proxy-Y">-1</long>
-              <long name="proxy-Width">500</long>
-              <long name="proxy-Height">100</long>
+              <long name="proxy-Width">350</long>
+              <long name="proxy-Height">60</long>
               <string name="proxy-AlignH">"Centre"</string>
               <string name="proxy-AlignV">"Centre"</string>
               <long name="proxy-Stretch factor">0</long>
@@ -19447,16 +19449,16 @@ this share."</string>
                 <string name="proxy-Id name">"ID_BUTTON_TAKEOVER"</string>
                 <long name="proxy-Id value">10000</long>
                 <string name="proxy-Class">"wxButton"</string>
-                <string name="proxy-Member variable name">""</string>
+                <string name="proxy-Member variable name">"m_pCtrlTakeover"</string>
                 <string name="proxy-Label">"&amp;Takeover"</string>
-                <bool name="proxy-Default">0</bool>
+                <bool name="proxy-Default">1</bool>
                 <string name="proxy-Help text">""</string>
                 <string name="proxy-Tooltip text">""</string>
                 <string name="proxy-Background colour">""</string>
                 <string name="proxy-Foreground colour">""</string>
                 <string name="proxy-Font">""</string>
                 <bool name="proxy-Hidden">0</bool>
-                <bool name="proxy-Enabled">1</bool>
+                <bool name="proxy-Enabled">0</bool>
                 <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                 <bool name="proxy-wxBU_LEFT">0</bool>
                 <bool name="proxy-wxBU_RIGHT">0</bool>
@@ -19501,16 +19503,16 @@ this share."</string>
                 <string name="proxy-Id name">"ID_BUTTON_RESUME"</string>
                 <long name="proxy-Id value">10148</long>
                 <string name="proxy-Class">"wxButton"</string>
-                <string name="proxy-Member variable name">""</string>
+                <string name="proxy-Member variable name">"m_pCtrlResume"</string>
                 <string name="proxy-Label">"&amp;Resume"</string>
-                <bool name="proxy-Default">0</bool>
+                <bool name="proxy-Default">1</bool>
                 <string name="proxy-Help text">""</string>
                 <string name="proxy-Tooltip text">""</string>
                 <string name="proxy-Background colour">""</string>
                 <string name="proxy-Foreground colour">""</string>
                 <string name="proxy-Font">""</string>
                 <bool name="proxy-Hidden">0</bool>
-                <bool name="proxy-Enabled">1</bool>
+                <bool name="proxy-Enabled">0</bool>
                 <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                 <bool name="proxy-wxBU_LEFT">0</bool>
                 <bool name="proxy-wxBU_RIGHT">0</bool>
@@ -19541,7 +19543,7 @@ this share."</string>
                 <string name="proxy-Custom ctor arguments">""</string>
               </document>
               <document>
-                <string name="title">"wxButton: wxID_NEW"</string>
+                <string name="title">"wxButton: wxID_OK"</string>
                 <string name="type">"dialog-control-document"</string>
                 <string name="filename">""</string>
                 <string name="icon-name">"dialogcontrol"</string>
@@ -19551,9 +19553,8 @@ this share."</string>
                 <long name="locked">0</long>
                 <string name="created">"13/12/2006"</string>
                 <string name="proxy-type">"wbButtonProxy"</string>
-                <string name="event-handler-0">"wxEVT_COMMAND_BUTTON_CLICKED|OnNEWClick"</string>
-                <string name="proxy-Id name">"wxID_NEW"</string>
-                <long name="proxy-Id value">5002</long>
+                <string name="proxy-Id name">"wxID_OK"</string>
+                <long name="proxy-Id value">5100</long>
                 <string name="proxy-Class">"wxButton"</string>
                 <string name="proxy-Member variable name">""</string>
                 <string name="proxy-Label">"&amp;New"</string>
@@ -19595,7 +19596,7 @@ this share."</string>
                 <string name="proxy-Custom ctor arguments">""</string>
               </document>
               <document>
-                <string name="title">"wxButton: wxID_ABORT"</string>
+                <string name="title">"wxButton: wxID_CANCEL"</string>
                 <string name="type">"dialog-control-document"</string>
                 <string name="filename">""</string>
                 <string name="icon-name">"dialogcontrol"</string>
@@ -19605,12 +19606,11 @@ this share."</string>
                 <long name="locked">0</long>
                 <string name="created">"13/12/2006"</string>
                 <string name="proxy-type">"wbButtonProxy"</string>
-                <string name="event-handler-0">"wxEVT_COMMAND_BUTTON_CLICKED|OnABORTClick"</string>
-                <string name="proxy-Id name">"wxID_ABORT"</string>
-                <long name="proxy-Id value">5115</long>
+                <string name="proxy-Id name">"wxID_CANCEL"</string>
+                <long name="proxy-Id value">5101</long>
                 <string name="proxy-Class">"wxButton"</string>
                 <string name="proxy-Member variable name">""</string>
-                <string name="proxy-Label">"&amp;Abort"</string>
+                <string name="proxy-Label">"&amp;Cancel"</string>
                 <bool name="proxy-Default">0</bool>
                 <string name="proxy-Help text">""</string>
                 <string name="proxy-Tooltip text">""</string>

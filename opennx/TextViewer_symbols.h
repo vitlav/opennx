@@ -19,5 +19,5 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
-#define ID_TEXTVIEWER_SYMBOL_0 _("Text Viewer")
+#define ID_TEXTVIEWER_SYMBOL_0 _("Text Viewer - OpenNX")
 #define ID_TEXTVIEWER_SYMBOL_1 _("&Close")

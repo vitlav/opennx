@@ -52,7 +52,7 @@ class wxListCtrl;
 ////@begin control identifiers
 #define ID_RESUMEDIALOG 10050
 #define SYMBOL_RESUMEDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
-#define SYMBOL_RESUMEDIALOG_TITLE _("ResumeDialog")
+#define SYMBOL_RESUMEDIALOG_TITLE _("Select session - OpenNX")
 #define SYMBOL_RESUMEDIALOG_IDNAME ID_RESUMEDIALOG
 #define SYMBOL_RESUMEDIALOG_SIZE wxSize(400, 300)
 #define SYMBOL_RESUMEDIALOG_POSITION wxDefaultPosition
@@ -76,6 +76,12 @@ class ResumeDialog: public wxDialog
     DECLARE_EVENT_TABLE()
 
 public:
+    typedef enum {
+        New,
+        Resume,
+        Takeover,
+    } Mode;
+    
     /// Constructors
     ResumeDialog( );
     ResumeDialog( wxWindow* parent, wxWindowID id = SYMBOL_RESUMEDIALOG_IDNAME, const wxString& caption = SYMBOL_RESUMEDIALOG_TITLE, const wxPoint& pos = SYMBOL_RESUMEDIALOG_POSITION, const wxSize& size = SYMBOL_RESUMEDIALOG_SIZE, long style = SYMBOL_RESUMEDIALOG_STYLE );
@@ -100,24 +106,28 @@ private:
     /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRL_SESSIONS
     void OnListctrlSessionsSelected( wxListEvent& event );
 
-    /// wxEVT_COMMAND_LIST_ITEM_DESELECTED event handler for ID_LISTCTRL_SESSIONS
-    void OnListctrlSessionsDeselected( wxListEvent& event );
-
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_TAKEOVER
     void OnButtonTakeoverClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_RESUME
     void OnButtonResumeClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_NEW
-    void OnNEWClick( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_ABORT
-    void OnABORTClick( wxCommandEvent& event );
-
 ////@end ResumeDialog event handler declarations
 
+public:
 ////@begin ResumeDialog member function declarations
+
+    Mode GetMode() const { return m_eMode ; }
+    void SetMode(Mode value) { m_eMode = value ; }
+
+    wxString GetSelectedId() const { return m_sSelectedId ; }
+    void SetSelectedId(wxString value) { m_sSelectedId = value ; }
+
+    wxString GetSelectedName() const { return m_sSelectedName ; }
+    void SetSelectedName(wxString value) { m_sSelectedName = value ; }
+
+    wxString GetSelectedType() const { return m_sSelectedType ; }
+    void SetSelectedType(wxString value) { m_sSelectedType = value ; }
 
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
@@ -126,11 +136,20 @@ private:
     wxIcon GetIconResource( const wxString& name );
 ////@end ResumeDialog member function declarations
 
+private:
     /// Should we show tooltips?
     static bool ShowToolTips();
 
 ////@begin ResumeDialog member variables
     wxListCtrl* m_pCtrlSessions;
+    wxButton* m_pCtrlTakeover;
+    wxButton* m_pCtrlResume;
+private:
+    long m_lActiveSession;
+    Mode m_eMode;
+    wxString m_sSelectedId;
+    wxString m_sSelectedName;
+    wxString m_sSelectedType;
 ////@end ResumeDialog member variables
 
     wxString m_sPreferredSession;

@@ -119,7 +119,7 @@ public:
     bool checkChanged();
     bool SaveToFile();
 
-    wxString sGetSessionParams(const wxString &);
+    wxString sGetSessionParams(const wxString &, bool);
     wxString sGetListParams(const wxString &);
     wxString sGetProxyParams(const wxString &);
 

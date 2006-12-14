@@ -203,6 +203,7 @@ MySession::getFirstFreePort()
         wxSocketServer ss(a);
         if (ss.Ok())
             return port;
+        port++;
     }
     return 0;
 }
@@ -310,12 +311,30 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     m_pNxSsh->Print(scmd);
                     m_eConnectState = STATE_PARSE_SESSIONS;
                     break;
+                case STATE_PARSE_SESSIONS:
+                    m_pNxSsh->Print(wxT(""));
+                    break;
                 case STATE_START_SESSION:
                     scmd = wxT("startsession ");
-                    scmd << m_pCfg->sGetSessionParams(NX_PROTOCOL_VERSION);
+                    scmd << m_pCfg->sGetSessionParams(NX_PROTOCOL_VERSION, true);
 #ifdef __UNIX__
                     if (!m_sXauthCookie.IsEmpty())
-                        scmd << wxT(" --cookie=\"%s\"") << m_sXauthCookie;
+                        scmd << wxT(" --cookie=\"") << m_sXauthCookie << wxT("\"");
+#endif
+                    m_pNxSsh->Print(scmd);
+                    m_eConnectState = STATE_FINISH;
+                    break;
+                case STATE_RESUME_SESSION:
+                    scmd = wxT("restoresession ");
+                    scmd << m_pCfg->sGetSessionParams(NX_PROTOCOL_VERSION, false)
+                        << wxT(" --session=\"") << m_sResumeName
+                        << wxT("\" --type=\"") << m_sResumeType
+                        << wxT("\" --id=\"") << m_sResumeId << wxT("\"");
+#if 0
+#ifdef __UNIX__
+                    if (!m_sXauthCookie.IsEmpty())
+                        scmd << wxT(" --cookie=\"") << m_sXauthCookie << wxT("\"");
+#endif
 #endif
                     m_pNxSsh->Print(scmd);
                     m_eConnectState = STATE_FINISH;
@@ -367,15 +386,20 @@ MySession::OnSshEvent(wxCommandEvent &event)
             m_sSubscription = msg;
             break;
         case MyIPC::ActionExit:
-            m_pDlg->SetStatusText(_("Starting session"));
-            msg = wxT("NX> 299 Switch connection to: ");
-            msg << m_sProxyIP << wxT(":") << m_sProxyPort
-                << wxT(" cookie: ") << m_sProxyCookie;
-            m_pNxSsh->Print(msg);
+            if (m_eConnectState == STATE_FINISH) {
+                m_pDlg->SetStatusText(_("Starting session"));
+                msg = wxT("NX> 299 Switch connection to: ");
+                msg << m_sProxyIP << wxT(":") << m_sProxyPort
+                    << wxT(" cookie: ") << m_sProxyCookie;
+                m_pNxSsh->Print(msg);
+            } else
+                m_bSessionRunning = true;
             break;
         case MyIPC::ActionStartProxy:
-            m_pDlg->SetStatusText(_("Starting session"));
-            startProxy();
+            if (m_eConnectState == STATE_FINISH) {
+                m_pDlg->SetStatusText(_("Starting session"));
+                startProxy();
+            }
             break;
         case MyIPC::ActionSessionRunning:
             m_bSessionRunning = true;
@@ -391,7 +415,6 @@ MySession::OnSshEvent(wxCommandEvent &event)
             m_bCollectSessions = false;
             ::wxLogTrace(MYTRACETAG, wxT("received end of session list"));
             parseSessions();
-            m_eConnectState = STATE_START_SESSION;
             break;
     }
 }
@@ -406,6 +429,7 @@ MySession::parseSessions()
     wxASSERT(re.IsValid());
     ResumeDialog d(NULL);
     bool bFound = false;
+    d.SetPreferredSession(m_pCfg->sGetName());
     for (size_t i = 0; i < n; i++) {
         wxString line = m_aParseBuffer[i];
         if (re.Matches(line) && (re.GetMatchCount() == 9)) {
@@ -422,8 +446,32 @@ MySession::parseSessions()
         }
     }
     if (bFound) {
-        d.SetPreferredSession(m_pCfg->sGetName());
-        d.ShowModal();
+        switch (d.ShowModal()) {
+            case wxID_OK:
+                switch (d.GetMode()) {
+                    case ResumeDialog::Resume:
+                        wxLogDebug(wxT("RESUME"));
+                        m_sResumeName = d.GetSelectedName();
+                        m_sResumeType = d.GetSelectedType();
+                        m_sResumeId = d.GetSelectedId();
+                        m_eConnectState = STATE_RESUME_SESSION;
+                        break;
+                    case ResumeDialog::Takeover:
+                        wxLogDebug(wxT("TAKEOVER"));
+                        m_sResumeName = d.GetSelectedName();
+                        m_sResumeType = d.GetSelectedType();
+                        m_sResumeId = d.GetSelectedId();
+                        m_eConnectState = STATE_RESUME_SESSION;
+                        break;
+                    case ResumeDialog::New:
+                        m_eConnectState = STATE_START_SESSION;
+                        break;
+                }
+                break;
+            case wxID_CANCEL:
+                m_pNxSsh->Print(wxT("bye"));
+                break;
+        }
     }
 }
 

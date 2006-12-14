@@ -53,28 +53,18 @@ DEFINE_EVENT_TYPE(wxEVT_PROCESS_STDOUT);
 DEFINE_EVENT_TYPE(wxEVT_PROCESS_STDERR);
 DEFINE_EVENT_TYPE(wxEVT_PROCESS_EXIT);
 
-class IoThread : public wxThread
-{
-    public:
-        IoThread(AsyncProcess *process);
-        virtual ExitCode Entry();
-
-    private:
-        AsyncProcess *m_pProcess;
-};
-
-class AsyncProcess : public wxProcess
+class AsyncProcess : public wxProcess, wxThreadHelper
 {
     public:
         AsyncProcess()
             : wxProcess(),
-            m_pIoThread(NULL),
+            wxThreadHelper(),
             m_pEvtHandler(NULL)
         { Redirect(); }
 
         AsyncProcess(const wxString& cmd, const wxString &wdir, wxEvtHandler *h = NULL)
             : wxProcess(),
-            m_pIoThread(NULL),
+            wxThreadHelper(),
             m_sCmd(cmd),
             m_sDir(wdir),
             m_pEvtHandler(h)
@@ -82,20 +72,16 @@ class AsyncProcess : public wxProcess
 
         AsyncProcess(const wxString& cmd, wxEvtHandler *h = NULL)
             : wxProcess(),
-            m_pIoThread(NULL),
+            wxThreadHelper(),
             m_sCmd(cmd),
             m_sDir(::wxGetCwd()),
             m_pEvtHandler(h)
         { Redirect(); }
 
-        ~AsyncProcess() {
-            if (m_pIoThread) {
-                m_pIoThread->Delete();
-                m_pIoThread = NULL;
-            }
-        }
+        ~AsyncProcess();
 
         virtual void OnTerminate(int pid, int status);
+        virtual wxThread::ExitCode Entry();
 
         bool Start();
         bool Kill();
@@ -110,7 +96,6 @@ class AsyncProcess : public wxProcess
         long m_iPid;
         int m_iStatus;
         bool m_bTerminated;
-        IoThread *m_pIoThread;
         wxEvtHandler *m_pEvtHandler;
 
         wxString m_sOutBuf;
@@ -121,20 +106,80 @@ class AsyncProcess : public wxProcess
         wxStopWatch m_cErrWatch;
 };
 
-IoThread::IoThread(AsyncProcess *process)
-    : wxThread()
+AsyncProcess::~AsyncProcess()
 {
-    m_pProcess = process;
-    if (Create() == wxTHREAD_NO_ERROR)
-        Run();
+    if (m_thread && m_thread->IsRunning()) {
+        m_thread->Delete();
+        while (m_thread->IsRunning())
+            wxThread::Sleep(100);
+        m_thread = NULL;
+    }
 }
 
     wxThread::ExitCode
-IoThread::Entry()
+AsyncProcess::Entry()
 {
-    while (!TestDestroy()) {
-        if (m_pProcess)
-            m_pProcess->Poll();
+    while (!m_thread->TestDestroy()) {
+        while (IsInputAvailable()) {
+            char c = GetInputStream()->GetC();
+            if (m_pEvtHandler) {
+                m_cOutWatch.Start();
+                switch (c) {
+                    case '\r':
+                        break;
+                    case '\n':
+                        {
+                            wxCommandEvent event(wxEVT_PROCESS_STDOUT, wxID_ANY);
+                            event.SetString(m_sOutBuf);
+                            m_pEvtHandler->AddPendingEvent(event);
+                            m_sOutBuf.Empty();
+                        }
+                        break;
+                    default:
+                        m_sOutBuf += c;
+                        break;
+                }
+            }
+        }
+        if (m_pEvtHandler) {
+            // If no LF received within a second, send buffer anyway
+            if ((m_cOutWatch.Time() > 1000) && (!m_sOutBuf.IsEmpty())) {
+                wxCommandEvent event(wxEVT_PROCESS_STDOUT, wxID_ANY);
+                event.SetString(m_sOutBuf);
+                m_pEvtHandler->AddPendingEvent(event);
+                m_sOutBuf.Empty();
+            }
+        }
+        while (IsErrorAvailable()) {
+            char c = GetErrorStream()->GetC();
+            if (m_pEvtHandler) {
+                m_cErrWatch.Start();
+                switch (c) {
+                    case '\r':
+                        break;
+                    case '\n':
+                        {
+                            wxCommandEvent event(wxEVT_PROCESS_STDERR, wxID_ANY);
+                            event.SetString(m_sErrBuf);
+                            m_pEvtHandler->AddPendingEvent(event);
+                            m_sErrBuf.Empty();
+                        }
+                        break;
+                    default:
+                        m_sErrBuf += c;
+                        break;
+                }
+            }
+        }
+        if (m_pEvtHandler) {
+            // If no LF received within a second, send buffer anyway
+            if ((m_cErrWatch.Time() > 1000) && (!m_sErrBuf.IsEmpty())) {
+                wxCommandEvent event(wxEVT_PROCESS_STDERR, wxID_ANY);
+                event.SetString(m_sErrBuf);
+                m_pEvtHandler->AddPendingEvent(event);
+                m_sErrBuf.Empty();
+            }
+        }
         wxThread::Sleep(10);
     }
     return 0;
@@ -144,66 +189,6 @@ IoThread::Entry()
 AsyncProcess::Poll()
 {
 
-    while (IsInputAvailable()) {
-        char c = GetInputStream()->GetC();
-        if (m_pEvtHandler) {
-            m_cOutWatch.Start();
-            switch (c) {
-                case '\r':
-                    break;
-                case '\n':
-                    {
-                        wxCommandEvent event(wxEVT_PROCESS_STDOUT, wxID_ANY);
-                        event.SetString(m_sOutBuf);
-                        m_pEvtHandler->AddPendingEvent(event);
-                        m_sOutBuf.Empty();
-                    }
-                    break;
-                default:
-                    m_sOutBuf += c;
-                    break;
-            }
-        }
-    }
-    if (m_pEvtHandler) {
-        // If no LF received within a second, send buffer anyway
-        if ((m_cOutWatch.Time() > 1000) && (!m_sOutBuf.IsEmpty())) {
-            wxCommandEvent event(wxEVT_PROCESS_STDOUT, wxID_ANY);
-            event.SetString(m_sOutBuf);
-            m_pEvtHandler->AddPendingEvent(event);
-            m_sOutBuf.Empty();
-        }
-    }
-    while (IsErrorAvailable()) {
-        char c = GetErrorStream()->GetC();
-        if (m_pEvtHandler) {
-            m_cErrWatch.Start();
-            switch (c) {
-                case '\r':
-                    break;
-                case '\n':
-                    {
-                        wxCommandEvent event(wxEVT_PROCESS_STDERR, wxID_ANY);
-                        event.SetString(m_sErrBuf);
-                        m_pEvtHandler->AddPendingEvent(event);
-                        m_sErrBuf.Empty();
-                    }
-                    break;
-                default:
-                    m_sErrBuf += c;
-                    break;
-            }
-        }
-    }
-    if (m_pEvtHandler) {
-        // If no LF received within a second, send buffer anyway
-        if ((m_cErrWatch.Time() > 1000) && (!m_sErrBuf.IsEmpty())) {
-            wxCommandEvent event(wxEVT_PROCESS_STDERR, wxID_ANY);
-            event.SetString(m_sErrBuf);
-            m_pEvtHandler->AddPendingEvent(event);
-            m_sErrBuf.Empty();
-        }
-    }
 }
 
     bool
@@ -225,10 +210,13 @@ AsyncProcess::Print(const wxString &s, bool doLog)
     void
 AsyncProcess::OnTerminate(int pid, int status)
 {
-    if (m_pIoThread) {
-        m_pIoThread->Delete();
-        m_pIoThread = NULL;
+    if (m_thread && m_thread->IsRunning()) {
+        m_thread->Delete();
+        while (m_thread->IsRunning())
+            wxThread::Sleep(100);
+        m_thread = NULL;
     }
+
     wxLogTrace(MYTRACETAG, wxT("Process %u terminated with exit code %d."), pid, status);
     m_iStatus = status;
     m_bTerminated = true;
@@ -255,8 +243,10 @@ AsyncProcess::Start()
         ret = (m_iPid != 0);
         wxFileName::SetCwd(cwd);
         m_bTerminated = !ret;
-        if (ret)
-            m_pIoThread = new IoThread(this);
+        if (ret) {
+            Create();
+            m_thread->Run();
+        }
     }
     return ret;
 }
@@ -265,6 +255,12 @@ AsyncProcess::Start()
 AsyncProcess::Kill()
 {
     bool ret = false;
+    if (m_thread && m_thread->IsRunning()) {
+        m_thread->Delete();
+        while (m_thread->IsRunning())
+            wxThread::Sleep(100);
+        m_thread = NULL;
+    }
     if (m_iPid) {
         switch (wxProcess::Kill(m_iPid, wxSIGKILL)) {
             case wxKILL_OK:

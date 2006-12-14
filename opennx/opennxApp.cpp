@@ -220,6 +220,7 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
     // Init standard options (--help, --verbose);
     wxApp::OnInitCmdLine(parser);
 
+
     parser.AddSwitch(wxT(""), wxT("admin"),
             _("Start the session administration tool."));
     parser.AddOption(wxT(""), wxT("session"),

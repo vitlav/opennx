@@ -40,7 +40,6 @@
 #include "ResumeDialog.h"
 
 ////@begin XPM images
-
 ////@end XPM images
 
 /*!
@@ -57,15 +56,10 @@ BEGIN_EVENT_TABLE( ResumeDialog, wxDialog )
 
 ////@begin ResumeDialog event table entries
     EVT_LIST_ITEM_SELECTED( XRCID("ID_LISTCTRL_SESSIONS"), ResumeDialog::OnListctrlSessionsSelected )
-    EVT_LIST_ITEM_DESELECTED( XRCID("ID_LISTCTRL_SESSIONS"), ResumeDialog::OnListctrlSessionsDeselected )
 
     EVT_BUTTON( XRCID("ID_BUTTON_TAKEOVER"), ResumeDialog::OnButtonTakeoverClick )
 
     EVT_BUTTON( XRCID("ID_BUTTON_RESUME"), ResumeDialog::OnButtonResumeClick )
-
-    EVT_BUTTON( wxID_NEW, ResumeDialog::OnNEWClick )
-
-    EVT_BUTTON( wxID_ABORT, ResumeDialog::OnABORTClick )
 
 ////@end ResumeDialog event table entries
 
@@ -112,7 +106,11 @@ bool ResumeDialog::Create( wxWindow* parent, wxWindowID id, const wxString& capt
 void ResumeDialog::Init()
 {
 ////@begin ResumeDialog member initialisation
+    m_lActiveSession = -1;
+    m_eMode = New;
     m_pCtrlSessions = NULL;
+    m_pCtrlTakeover = NULL;
+    m_pCtrlResume = NULL;
 ////@end ResumeDialog member initialisation
 }
 /*!
@@ -125,6 +123,8 @@ void ResumeDialog::CreateControls()
     if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_RESUMEDIALOG")))
         wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
     m_pCtrlSessions = XRCCTRL(*this, "ID_LISTCTRL_SESSIONS", wxListCtrl);
+    m_pCtrlTakeover = XRCCTRL(*this, "ID_BUTTON_TAKEOVER", wxButton);
+    m_pCtrlResume = XRCCTRL(*this, "ID_BUTTON_RESUME", wxButton);
 ////@end ResumeDialog content construction
 
     // Create custom windows not generated automatically here.
@@ -139,7 +139,7 @@ void ResumeDialog::CreateControls()
     m_pCtrlSessions->InsertColumn(5, _("Options"));
     m_pCtrlSessions->InsertColumn(6, _("Session ID"));
     for (int i = 0; i < m_pCtrlSessions->GetColumnCount(); i++) 
-        m_pCtrlSessions->SetColumnWidth(i, wxLIST_AUTOSIZE_USEHEADER);
+        m_pCtrlSessions->SetColumnWidth(i, wxLIST_AUTOSIZE);
 }
 
 void
@@ -157,6 +157,16 @@ ResumeDialog::AddSession(const wxString& name, const wxString& state, const wxSt
     long lPort;
     port.ToLong(&lPort);
     m_pCtrlSessions->SetItemData(idx, lPort);
+    for (int i = 0; i < m_pCtrlSessions->GetColumnCount(); i++)
+        m_pCtrlSessions->SetColumnWidth(i, wxLIST_AUTOSIZE);
+    if ((m_lActiveSession < 0) && (name == m_sPreferredSession)) {
+        wxListItem info;
+        info.m_itemId = idx;
+        info.m_mask = wxLIST_MASK_STATE;
+        info.m_state = wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED;
+        info.m_stateMask = wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED;
+        m_pCtrlSessions->SetItem(info);
+    }
 }
 
 /*!
@@ -165,23 +175,30 @@ ResumeDialog::AddSession(const wxString& name, const wxString& state, const wxSt
 
 void ResumeDialog::OnListctrlSessionsSelected( wxListEvent& event )
 {
-////@begin wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRL_SESSIONS in ResumeDialog.
-    // Before editing this code, remove the block markers.
+    m_lActiveSession = event.GetIndex();
+    wxListItem info;
+    info.m_itemId = m_lActiveSession;
+    info.m_col = 1;
+    m_pCtrlSessions->GetItem(info);
+    if (info.m_text == wxT("Suspended")) {
+        m_pCtrlResume->Enable(true);
+        m_pCtrlTakeover->Enable(false);
+    } else {
+        m_pCtrlResume->Enable(false);
+        m_pCtrlTakeover->Enable(true);
+    }
+    info.m_col = 0;
+    m_pCtrlSessions->GetItem(info);
+    m_sSelectedName = info.m_text;
+    info.m_col = 2;
+    m_pCtrlSessions->GetItem(info);
+    m_sSelectedType = info.m_text;
+    info.m_col = 6;
+    m_pCtrlSessions->GetItem(info);
+    m_sSelectedId = info.m_text;
     event.Skip();
-////@end wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRL_SESSIONS in ResumeDialog. 
 }
 
-/*!
- * wxEVT_COMMAND_LIST_ITEM_DESELECTED event handler for ID_LISTCTRL_SESSIONS
- */
-
-void ResumeDialog::OnListctrlSessionsDeselected( wxListEvent& event )
-{
-////@begin wxEVT_COMMAND_LIST_ITEM_DESELECTED event handler for ID_LISTCTRL_SESSIONS in ResumeDialog.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_LIST_ITEM_DESELECTED event handler for ID_LISTCTRL_SESSIONS in ResumeDialog. 
-}
 
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_TAKEOVER
@@ -189,10 +206,9 @@ void ResumeDialog::OnListctrlSessionsDeselected( wxListEvent& event )
 
 void ResumeDialog::OnButtonTakeoverClick( wxCommandEvent& event )
 {
-////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_TAKEOVER in ResumeDialog.
-    // Before editing this code, remove the block markers.
+    m_eMode = Takeover;
+    EndModal(wxID_OK);
     event.Skip();
-////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_TAKEOVER in ResumeDialog. 
 }
 
 /*!
@@ -201,35 +217,12 @@ void ResumeDialog::OnButtonTakeoverClick( wxCommandEvent& event )
 
 void ResumeDialog::OnButtonResumeClick( wxCommandEvent& event )
 {
-////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_RESUME in ResumeDialog.
-    // Before editing this code, remove the block markers.
+    m_eMode = Resume;
+    EndModal(wxID_OK);
     event.Skip();
-////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_RESUME in ResumeDialog. 
 }
 
-/*!
- * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_NEW
- */
 
-void ResumeDialog::OnNEWClick( wxCommandEvent& event )
-{
-////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_NEW in ResumeDialog.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_NEW in ResumeDialog. 
-}
-
-/*!
- * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_ABORT
- */
-
-void ResumeDialog::OnABORTClick( wxCommandEvent& event )
-{
-////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_ABORT in ResumeDialog.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_ABORT in ResumeDialog. 
-}
 
 /*!
  * Should we show tooltips?

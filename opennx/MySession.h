@@ -80,6 +80,7 @@ private:
         STATE_LIST_SESSIONS,
         STATE_PARSE_SESSIONS,
         STATE_START_SESSION,
+        STATE_RESUME_SESSION,
         STATE_FINISH,
     } tConnectState;
 
@@ -95,6 +96,7 @@ private:
     bool m_bSslTunneling;
     bool m_bSessionRunning;
     bool m_bCollectSessions;
+    bool m_Abort;
     int m_iProgress;
     wxLog *m_pRunLog;
     MyIPC *m_pNxSsh;
@@ -113,6 +115,9 @@ private:
     wxString m_sOptFilename;
     wxString m_sUserDir;
     wxString m_sXauthCookie;
+    wxString m_sResumeName;
+    wxString m_sResumeType;
+    wxString m_sResumeId;
 
     // locals for admin tool
     bool m_bTouched;

@@ -43,7 +43,7 @@ ACLOCAL_AMFLAGS = -I m4
 distclean-local:
 	rm -f po/*~ *.bak *~ \#.* .#*
 
-tmpres.zip: res/opennx.xrc
+tmpres.zip: res/*.xrc res/*.png res/*.html res/*.txt res/*.rtf
 	zip -q9r $@ res -i *.png -i *.xrc -i *.html -i *.txt -i *.rtf
 
 memres.h: tmpres.zip bin2hdr

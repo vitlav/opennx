@@ -19,9 +19,9 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
-#define ID_RESUMEDIALOG_SYMBOL_0 _("ResumeDialog")
+#define ID_RESUMEDIALOG_SYMBOL_0 _("Select session - OpenNX")
 #define ID_RESUMEDIALOG_SYMBOL_1 _("There are multiple sessions available, please select one or click New to create a session.")
 #define ID_RESUMEDIALOG_SYMBOL_2 _("&Takeover")
 #define ID_RESUMEDIALOG_SYMBOL_3 _("&Resume")
 #define ID_RESUMEDIALOG_SYMBOL_4 _("&New")
-#define ID_RESUMEDIALOG_SYMBOL_5 _("&Abort")
+#define ID_RESUMEDIALOG_SYMBOL_5 _("&Cancel")

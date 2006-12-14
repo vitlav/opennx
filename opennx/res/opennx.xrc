@@ -2386,6 +2386,7 @@ this share.</label>
                     <object class="wxHtmlWindow" name="ID_HTMLWINDOW_WELCOME">
                         <size>200,10</size>
                         <style>wxHW_SCROLLBAR_NEVER</style>
+                        <enabled>0</enabled>
                     </object>
                 </object>
             </object>
@@ -2907,7 +2908,7 @@ this share.</label>
                 <flag>wxALIGN_RIGHT|wxALL</flag>
                 <border>5</border>
                 <object class="wxButton" name="wxID_CANCEL">
-                    <label>&amp;Abort</label>
+                    <label>&amp;Cancel</label>
                 </object>
             </object>
         </object>
@@ -2915,7 +2916,7 @@ this share.</label>
     <object class="wxDialog" name="ID_TEXTVIEWER" subclass="TextViewer">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxDIALOG_NO_PARENT|wxCLOSE_BOX|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxDIALOG_MODAL</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
-        <title>Text Viewer</title>
+        <title>Text Viewer - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
         <object class="wxBoxSizer">
@@ -3025,7 +3026,7 @@ this share.</label>
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
         <size>400,300d</size>
-        <title>ResumeDialog</title>
+        <title>Select session - OpenNX</title>
         <centered>1</centered>
         <object class="wxBoxSizer">
             <orient>wxVERTICAL</orient>
@@ -3040,7 +3041,7 @@ this share.</label>
                 <flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
                 <border>5</border>
                 <object class="wxListCtrl" name="ID_LISTCTRL_SESSIONS">
-                    <size>500,100d</size>
+                    <size>350,60d</size>
                     <style>wxLC_REPORT|wxLC_SINGLE_SEL|wxSUNKEN_BORDER</style>
                 </object>
             </object>
@@ -3060,28 +3061,32 @@ this share.</label>
                         <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                         <border>5</border>
                         <object class="wxButton" name="ID_BUTTON_TAKEOVER">
+                            <enabled>0</enabled>
                             <label>&amp;Takeover</label>
+                            <default>1</default>
                         </object>
                     </object>
                     <object class="sizeritem">
                         <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                         <border>5</border>
                         <object class="wxButton" name="ID_BUTTON_RESUME">
+                            <enabled>0</enabled>
                             <label>&amp;Resume</label>
+                            <default>1</default>
                         </object>
                     </object>
                     <object class="sizeritem">
                         <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                         <border>5</border>
-                        <object class="wxButton" name="wxID_NEW">
+                        <object class="wxButton" name="wxID_OK">
                             <label>&amp;New</label>
                         </object>
                     </object>
                     <object class="sizeritem">
                         <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                         <border>5</border>
-                        <object class="wxButton" name="wxID_ABORT">
-                            <label>&amp;Abort</label>
+                        <object class="wxButton" name="wxID_CANCEL">
+                            <label>&amp;Cancel</label>
                         </object>
                     </object>
                 </object>

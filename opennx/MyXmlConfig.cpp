@@ -312,40 +312,42 @@ MyXmlConfig::sGetListParams(const wxString &protocolVersion)
 
 // Retrieve parameters for startsession command
     wxString
-MyXmlConfig::sGetSessionParams(const wxString &protocolVersion)
+MyXmlConfig::sGetSessionParams(const wxString &protocolVersion, bool bNew)
 {
     wxUnusedVar(protocolVersion);
     wxString ret = wxT("");
 
-    ret += wxString::Format(wxT(" --session=\"%s\""), m_sName.c_str());
-    ret += wxT(" --type=\"");
-    switch (m_eSessionType) {
-        case STYPE_UNIX:
-            ret += wxT("unix-");
-            switch (m_eDesktopType) {
-                case DTYPE_KDE:
-                    ret += wxT("kde\" ");
-                    break;
-                case DTYPE_GNOME:
-                    ret += wxT("gnome\" ");
-                    break;
-                case DTYPE_CDE:
-                    ret += wxT("cde\" ");
-                    break;
-                case DTYPE_XFCE:
-                    ret += wxT("xfce\" ");
-                    break;
-                case DTYPE_CUSTOM:
-                    ret += wxT("custom\" ");
-                    break;
-            }
-            break;
-        case STYPE_WINDOWS:
-            ret += wxT("rdp");
-            break;
-        case STYPE_VNC:
-            ret += wxT("vnc");
-            break;
+    if (bNew) {
+        ret += wxString::Format(wxT(" --session=\"%s\""), m_sName.c_str());
+        ret += wxT(" --type=\"");
+        switch (m_eSessionType) {
+            case STYPE_UNIX:
+                ret += wxT("unix-");
+                switch (m_eDesktopType) {
+                    case DTYPE_KDE:
+                        ret += wxT("kde\" ");
+                        break;
+                    case DTYPE_GNOME:
+                        ret += wxT("gnome\" ");
+                        break;
+                    case DTYPE_CDE:
+                        ret += wxT("cde\" ");
+                        break;
+                    case DTYPE_XFCE:
+                        ret += wxT("xfce\" ");
+                        break;
+                    case DTYPE_CUSTOM:
+                        ret += wxT("custom\" ");
+                        break;
+                }
+                break;
+            case STYPE_WINDOWS:
+                ret += wxT("rdp");
+                break;
+            case STYPE_VNC:
+                ret += wxT("vnc");
+                break;
+        }
     }
     ret += wxT(" --cache=\"");
     switch (m_eCacheMemory) {
