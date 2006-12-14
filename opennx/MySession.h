@@ -89,6 +89,7 @@ private:
     int getFirstFreePort();
     void startProxy();
     void parseSessions();
+    long intver(const wxString&);
     virtual void OnSshEvent(wxCommandEvent &);
 
     tConnectState m_eConnectState;
@@ -114,6 +115,7 @@ private:
     wxString m_sAgentCookie;
     wxString m_sOptFilename;
     wxString m_sUserDir;
+    wxString m_sSysDir;
     wxString m_sXauthCookie;
     wxString m_sResumeName;
     wxString m_sResumeType;

@@ -46,7 +46,6 @@
 #include <wx/txtstrm.h>
 #include <wx/socket.h>
 #include <wx/config.h>
-//#include <wx/dynlib.h>
 #include <wx/utils.h>
 #include <wx/tokenzr.h>
 #include <wx/regex.h>
@@ -293,7 +292,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
             m_eConnectState = STATE_LIST_SESSIONS;
             break;
         case MyIPC::ActionNextCommand:
-            m_iProgress += 5;
+            m_iProgress += 4;
             m_pDlg->SetProgress(m_iProgress);
             switch (m_eConnectState) {
                 case STATE_HELLO:
@@ -322,9 +321,11 @@ MySession::OnSshEvent(wxCommandEvent &event)
                 case STATE_START_SESSION:
                     scmd = wxT("startsession ");
                     scmd << m_pCfg->sGetSessionParams(NX_PROTOCOL_VERSION, true);
+#if 0
 #ifdef __UNIX__
                     if (!m_sXauthCookie.IsEmpty())
                         scmd << wxT(" --cookie=\"") << m_sXauthCookie << wxT("\"");
+#endif
 #endif
                     m_pNxSsh->Print(scmd);
                     m_eConnectState = STATE_FINISH;
@@ -394,8 +395,13 @@ MySession::OnSshEvent(wxCommandEvent &event)
             if (m_eConnectState == STATE_FINISH) {
                 m_pDlg->SetStatusText(_("Starting session"));
                 msg = wxT("NX> 299 Switch connection to: ");
-                msg << m_sProxyIP << wxT(":") << m_sProxyPort
-                    << wxT(" cookie: ") << m_sProxyCookie;
+                if (intver(NX_PROTOCOL_VERSION) > 0x00020000) {
+                    msg << wxT("NX mode: encrypted options: nx,options=")
+                        << m_sOptFilename << wxT(":") << m_sSessionDisplay;
+                } else {
+                    msg << m_sProxyIP << wxT(":") << m_sProxyPort
+                        << wxT(" cookie: ") << m_sProxyCookie;
+                }
                 m_pNxSsh->Print(msg);
             } else
                 m_bSessionRunning = true;
@@ -422,6 +428,20 @@ MySession::OnSshEvent(wxCommandEvent &event)
             parseSessions();
             break;
     }
+}
+
+long
+MySession::intver(const wxString &ver)
+{
+    long ret = 0;
+    wxStringTokenizer t(ver, wxT("."));
+    while (t.HasMoreTokens()) {
+        long n;
+        t.GetNextToken().ToLong(&n);
+        ret = (ret << 8) + n;
+    }
+    ::wxLogTrace(MYTRACETAG, wxT("protocol version: %08x"), ret);
+    return ret;
 }
 
     void
@@ -477,7 +497,8 @@ MySession::parseSessions()
                 m_pNxSsh->Print(wxT("bye"));
                 break;
         }
-    }
+    } else
+        m_eConnectState = STATE_START_SESSION;
 }
 
     void
@@ -496,15 +517,16 @@ MySession::startProxy()
         << wxT(",client=win")
 #endif
         << wxT(",id=") << m_sSessionID;
-    if (m_bSslTunneling) {
-        m_sProxyIP = wxT("127.0.0.1");
-        m_sProxyPort = wxString::Format(wxT("%d"), getFirstFreePort());
-        popts << wxT(",listen=") << m_sProxyPort
-            << wxT(":") << m_sSessionDisplay;
-    } else {
-        popts << wxT(",connect=") << m_sProxyIP
-            << wxT(":") << m_sSessionDisplay;
+    if (intver(NX_PROTOCOL_VERSION) <= 0x00020000) {
+        if (m_bSslTunneling) {
+            m_sProxyIP = wxT("127.0.0.1");
+            m_sProxyPort = wxString::Format(wxT("%d"), getFirstFreePort());
+            popts << wxT(",listen=") << m_sProxyPort;
+        } else {
+            popts << wxT(",connect=") << m_sProxyIP;
+        }
     }
+    popts << wxT(":") << m_sSessionDisplay;
     m_sOptFilename = m_sUserDir;
     m_sOptFilename << wxFileName::GetPathSeparator()
         << wxT("S-") << m_sSessionID;
@@ -526,7 +548,8 @@ MySession::startProxy()
                 << wxFileName::GetPathSeparator() << wxT("nxproxy -S nx,options=")
                 << m_sOptFilename << wxT(":") << m_sSessionDisplay;
             m_pNxSsh->Print(wxT("bye"));
-            ::wxExecute(pcmd);
+            if (intver(NX_PROTOCOL_VERSION) <= 0x00020000)
+                ::wxExecute(pcmd);
         } else {
             ::wxLogSysError(_("Could not write session options\n%s\n"),
                     m_sOptFilename.c_str());
@@ -543,12 +566,9 @@ bool MySession::Create(const wxString cfgFileName, const wxString password)
     MyXmlConfig cfg(cfgFileName);
     m_pCfg = &cfg;
     if (cfg.IsValid()) {
-        wxString sysDir;
-        wxString userDir;
-        wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &sysDir);
-        wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &userDir);
-        m_sUserDir = userDir;
-        wxFileName fn(sysDir, wxT(""));
+        wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &m_sSysDir);
+        wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &m_sUserDir);
+        wxFileName fn(m_sSysDir, wxT(""));
 
         fn.AppendDir(wxT("bin"));
         fn.SetName(wxT("nxssh"));
@@ -561,7 +581,7 @@ bool MySession::Create(const wxString cfgFileName, const wxString password)
             << wxT(" -o 'RhostsRSAAuthentication no'")
             << wxT(" -o 'PubkeyAuthentication yes'");
 
-        wxString tmpDir = userDir;
+        wxString tmpDir = m_sUserDir;
         tmpDir << wxFileName::GetPathSeparator() << wxT("temp")
             << wxFileName::GetPathSeparator() << ::wxGetProcessId();
         wxFileName::Mkdir(tmpDir, 0700, wxPATH_MKDIR_FULL);
@@ -571,7 +591,7 @@ bool MySession::Create(const wxString cfgFileName, const wxString password)
         m_pRunLog = new wxLogStream(runlog);
 
         if (cfg.sGetSshKey().IsEmpty()) {
-            fn.Assign(sysDir, wxT("server.id_dsa.key"));
+            fn.Assign(m_sSysDir, wxT("server.id_dsa.key"));
             fn.AppendDir(wxT("share"));
             fn.AppendDir(wxT("keys"));
         } else {
@@ -592,8 +612,8 @@ bool MySession::Create(const wxString cfgFileName, const wxString password)
         nxsshcmd << wxT(" -E") << wxT(" nx@") << cfg.sGetServerHost();
 
         ::wxSetEnv(wxT("NX_HOME"), wxFileName::GetHomeDir());
-        ::wxSetEnv(wxT("NX_ROOT"), userDir);
-        ::wxSetEnv(wxT("NX_SYSTEM"), sysDir);
+        ::wxSetEnv(wxT("NX_ROOT"), m_sUserDir);
+        ::wxSetEnv(wxT("NX_SYSTEM"), m_sSysDir);
         ::wxSetEnv(wxT("NX_CLIENT"), wxT("/usr/NX/bin/nxclient"));
         //        wxT("/home/felfert/Projects/NX/mxclient/opennx"));
         ::wxSetEnv(wxT("NX_VERSION"), NX_PROTOCOL_VERSION);
@@ -603,7 +623,7 @@ bool MySession::Create(const wxString cfgFileName, const wxString password)
         ::wxSetEnv(wxT("TEMP"), wxT("/tmp"));
 
         m_sXauthCookie = getXauthCookie();
-        fn.Assign(sysDir, wxT("bin"));
+        fn.Assign(m_sSysDir, wxT("bin"));
         m_iProgress = 0;
         ConnectDialog dlg(NULL);
         m_pDlg = &dlg;
