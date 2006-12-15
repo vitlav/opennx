@@ -106,18 +106,10 @@ opennxApp::opennxApp()
 {
 
     SetAppName(wxT("OpenNX"));
-#ifdef __WXDEBUG__
-# ifdef __WXMSW__
-    m_pCfg = new wxConfig(wxT("OpenNX-Debug"), wxT("Millenux"));
-# else
-    m_pCfg = new wxConfig(wxT("OpenNX-Debug"), wxT("Millenux"), wxT(".opennx-debug"));
-# endif
-#else
-# ifdef __WXMSW__
+#ifdef __WXMSW__
     m_pCfg = new wxConfig(wxT("OpenNX"), wxT("Millenux"));
-# else
+#else
     m_pCfg = new wxConfig(wxT("OpenNX"), wxT("Millenux"), wxT(".opennx"));
-# endif
 #endif
     wxConfigBase::Set(m_pCfg);
 
@@ -162,17 +154,22 @@ opennxApp::opennxApp()
         wxConfigBase::Get()->Write(wxT("Config/UserNxDir"), tmp);
         wxFileName::Mkdir(tmp +  wxFileName::GetPathSeparator() + wxT("config"), 0750, wxPATH_MKDIR_FULL);
     }
+
+    wxFileName fn;
     if (!wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp)) {
-        tmp = wxT("/usr/NX");
+#define NotImplemented
 #ifdef __WXMSW__
         int ret = GetModuleFileName(NULL, tmp.GetWriteBuf(1024), 1024);
         tmp.UngetWriteBuf(ret);
-        tmp = wxFileName(tmp).GetPath(wxPATH_GET_VOLUME);
+        fn.Assign(tmp);
+# undef NotImplemented
 #endif
 #ifdef __OPENBSD__
-        tmp = wxT("/usr/local/NX");
+        // FIXME: How to get one's own exe path?
+        fn.Assign(wxT("/usr/local/NX/bin/opennx"));
+# undef NotImplemented
 #endif
-#ifdef __LINUX__
+#ifdef __linux__
         // Get executable path from /proc/self/exe
         char ldst[PATH_MAX+1];
         int ret = readlink("/proc/self/exe", ldst, PATH_MAX);
@@ -180,16 +177,22 @@ opennxApp::opennxApp()
             ret = 0;
         ldst[ret] = '\0';
         if (ret == 0)
-            tmp = wxT("/usr/NX");
+            fn.Assign(wxT("/usr/NX/bin/opennx"));
         else
-            tmp = wxFileName(wxConvLocal.cMB2WX(ldst)).GetPath();
+            fn.Assign(wxConvLocal.cMB2WX(ldst));
+# undef NotImplemented
 #endif
-        wxConfigBase::Get()->Write(wxT("Config/SystemNxDir"), tmp);
+#ifdef NotImplemented
+# error Missing Implementation for this OS
+#endif
+        m_sSelfPath = fn.GetFullPath();
+        fn.RemoveLastDir();
+        wxConfigBase::Get()->Write(wxT("Config/SystemNxDir"),
+                fn.GetPath(wxPATH_GET_VOLUME));
     }
     wxConfigBase::Get()->Flush();
     wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp);
-    // Change to our system dir so we can read our resources
-    wxSetWorkingDirectory(tmp);
+
 #ifdef __UNIX__
     wxString lpath;
     if (::wxGetEnv(wxT("LD_LIBRARY_PATH"), &lpath))
@@ -198,6 +201,7 @@ opennxApp::opennxApp()
     if (!::wxSetEnv(wxT("LD_LIBRARY_PATH"), lpath))
         ::wxLogSysError(wxT("Can not set LD_LIBRARY_PATH"));
 #endif
+
     wxString traceTags;
     if (::wxGetEnv(wxT("WXTRACE"), &traceTags)) {
         wxStringTokenizer t(traceTags, wxT(",:"));

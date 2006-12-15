@@ -39,6 +39,7 @@
 #include "MyXmlConfig.h"
 #include "MyIPC.h"
 #include "ResumeDialog.h"
+#include "opennxApp.h"
 #include "osdep.h"
 
 #include <wx/filename.h>
@@ -234,6 +235,31 @@ MySession::getXauthCookie()
                         if (++ecount == 3)
                             return tok;
                     }
+                }
+            }
+        }
+    }
+#endif
+    return wxString();
+}
+
+    wxString
+MySession::getXauthPath()
+{
+#ifdef __UNIX__
+    wxString cmd = wxT("xauth info");
+    wxArrayString clines;
+    if (::wxExecute(cmd, clines) == 0) {
+        size_t count = clines.GetCount();
+        for (size_t i = 0; i < count; i++) {
+            wxString line = clines[i];
+            if (line.StartsWith(wxT("Authority file:"))) {
+                wxStringTokenizer t(line, wxT(":"));
+                int ecount = 0;
+                while (t.HasMoreTokens()) {
+                    wxString tok = t.GetNextToken();
+                    if (++ecount == 2)
+                        return tok.Strip(wxString::both);
                 }
             }
         }
@@ -615,10 +641,10 @@ bool MySession::Create(const wxString cfgFileName, const wxString password)
         ::wxSetEnv(wxT("NX_HOME"), wxFileName::GetHomeDir());
         ::wxSetEnv(wxT("NX_ROOT"), m_sUserDir);
         ::wxSetEnv(wxT("NX_SYSTEM"), m_sSysDir);
-        ::wxSetEnv(wxT("NX_CLIENT"), wxT("/usr/NX/bin/nxclient"));
-        //        wxT("/home/felfert/Projects/NX/mxclient/opennx"));
+        ::wxSetEnv(wxT("NX_CLIENT"), ::wxGetApp().GetSelfPath());
+        //        wxT("/usr/NX/bin/nxclient"));
         ::wxSetEnv(wxT("NX_VERSION"), NX_PROTOCOL_VERSION);
-        ::wxSetEnv(wxT("XAUTHORITY"), wxFileName::GetHomeDir() + wxFileName::GetPathSeparator() + wxT(".Xauthority"));
+        ::wxSetEnv(wxT("XAUTHORITY"), getXauthPath());
         // opennx needs TEMP or NX_TEMP to be set to the same dir
         // where .X11-unix resides (typically /tmp)
         wxString stmp = wxConvLocal.cMB2WX(x11_socket_path);
@@ -626,7 +652,6 @@ bool MySession::Create(const wxString cfgFileName, const wxString password)
             fn.Assign(stmp);
             fn.RemoveLastDir();
             fn.SetName(wxT(""));
-            ::wxLogDebug(wxT("tmp='%s'"), fn.GetShortPath().c_str());
             ::wxSetEnv(wxT("NX_TEMP"), fn.GetShortPath());
         } else
             ::wxSetEnv(wxT("NX_TEMP"), wxT("/tmp"));

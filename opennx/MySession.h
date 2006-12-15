@@ -86,6 +86,7 @@ private:
 
     wxArrayString m_aParseBuffer;
     wxString getXauthCookie();
+    wxString getXauthPath();
     int getFirstFreePort();
     void startProxy();
     void parseSessions();

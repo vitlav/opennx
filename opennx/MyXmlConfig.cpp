@@ -957,7 +957,6 @@ MyXmlConfig::MyXmlConfig(const wxString &filename)
                     cfgnode = cfgnode->GetNext();
                     continue;
                 }
-                // TODO: decode password
 
                 // Tab "Services"
                 if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Services")) {

@@ -41,6 +41,7 @@ public:
     wxLocale *GetLocale() { return &m_cLocale; }
     const wxString &GetResourcePrefix() { return m_sResourcePrefix; }
     const wxString &GetVersion() { return m_sVersion; }
+    const wxString &GetSelfPath() { return m_sSelfPath; }
     wxString LoadFileFromResource(const wxString &loc, bool bUseLocale = true);
 
     // override base class virtuals
@@ -60,6 +61,7 @@ private:
     wxString m_sSessionName;
     wxString m_sResourcePrefix;
     wxString m_sVersion;
+    wxString m_sSelfPath;
     enum mode m_eMode;
 };
 
