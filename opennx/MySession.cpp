@@ -39,6 +39,7 @@
 #include "MyXmlConfig.h"
 #include "MyIPC.h"
 #include "ResumeDialog.h"
+#include "osdep.h"
 
 #include <wx/filename.h>
 #include <wx/regex.h>
@@ -618,9 +619,17 @@ bool MySession::Create(const wxString cfgFileName, const wxString password)
         //        wxT("/home/felfert/Projects/NX/mxclient/opennx"));
         ::wxSetEnv(wxT("NX_VERSION"), NX_PROTOCOL_VERSION);
         ::wxSetEnv(wxT("XAUTHORITY"), wxFileName::GetHomeDir() + wxFileName::GetPathSeparator() + wxT(".Xauthority"));
-        // FIXME: use the dir containing .X11-unix, since nxproxy assumes that
-        ::wxSetEnv(wxT("NX_TEMP"), wxT("/tmp"));
-        ::wxSetEnv(wxT("TEMP"), wxT("/tmp"));
+        // opennx needs TEMP or NX_TEMP to be set to the same dir
+        // where .X11-unix resides (typically /tmp)
+        wxString stmp = wxConvLocal.cMB2WX(x11_socket_path);
+        if (!stmp.IsEmpty()) {
+            fn.Assign(stmp);
+            fn.RemoveLastDir();
+            fn.SetName(wxT(""));
+            ::wxLogDebug(wxT("tmp='%s'"), fn.GetShortPath().c_str());
+            ::wxSetEnv(wxT("NX_TEMP"), fn.GetShortPath());
+        } else
+            ::wxSetEnv(wxT("NX_TEMP"), wxT("/tmp"));
 
         m_sXauthCookie = getXauthCookie();
         fn.Assign(m_sSysDir, wxT("bin"));
