@@ -205,6 +205,10 @@ void UnixImageSettingsDialog::OnOKClick( wxCommandEvent& event )
         m_pCfg->bSetUseJpegQuality(m_bUseJpegQuality);
         m_pCfg->bSetDisableRender(m_bDisableRender);
         m_pCfg->iSetJpegQuality(m_iJpegQuality);
+        m_pCfg->bSetDisableBackingstore(m_bDisableBackingstore);
+        m_pCfg->bSetDisableComposite(m_bDisableComposite);
+        m_pCfg->bSetDisableShmem(m_bDisableShmem);
+        m_pCfg->bSetDisableShpix(m_bDisableShpix);
     }
     event.Skip();
 }

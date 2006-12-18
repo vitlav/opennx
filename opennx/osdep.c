@@ -31,9 +31,11 @@ typedef int (*PFconnect)(int s, const struct sockaddr *name, socklen_t namelen);
 static PFconnect real_connect = NULL;
 static void *libc = NULL;
 static int do_save = 1;
-static char _spath[PATH_MAX];
+static char _spath[PATH_MAX+1];
+static char _kbd[PATH_MAX+1];
 
 char *x11_socket_path = _spath;
+char *x11_keyboard_type = _kbd;
 
 int connect(int s, const struct sockaddr *name, socklen_t namelen)
 {
@@ -51,6 +53,7 @@ static void __attribute__ ((constructor))
 getx11socket()
 {
     memset(&_spath, 0, sizeof(_spath));
+    memset(&_kbd, 0, sizeof(_kbd));
 #define NotImplemented
 #ifdef __linux__
     libc = dlopen("libc.so.6", RTLD_NOW);
@@ -73,8 +76,38 @@ getx11socket()
         exit(1);
     }
     Display *dpy = XOpenDisplay(NULL);
-    if (dpy)
+    if (dpy) {
+        Atom a = XInternAtom(dpy, "_XKB_RULES_NAMES", True);
+        if (a != None) {
+            Atom type;
+            int fmt;
+            unsigned long n;
+            unsigned long ba;
+            char *prop;
+            int res = XGetWindowProperty(dpy,
+                    RootWindowOfScreen(DefaultScreenOfDisplay(dpy)),
+                    a, 0, PATH_MAX, False, AnyPropertyType,
+                    &type, &fmt, &n, &ba, (unsigned char *)&prop);
+            if ((res == Success) && (fmt == 8) && prop) {
+                unsigned long i = 0;
+                int idx = 0;
+                while (i < n) {
+                    switch (idx++) {
+                        case 1:
+                            strncat(_kbd, prop, PATH_MAX);
+                            strncat(_kbd, "/", PATH_MAX);
+                            break;
+                        case 2:
+                            strncat(_kbd, prop, PATH_MAX);
+                            break;
+                    }
+                    i += strlen(prop) + 1;
+                    prop += strlen(prop) + 1;
+                }
+            }
+        }
         XCloseDisplay(dpy);
+    }
 }
 
 static void __attribute__ ((destructor))

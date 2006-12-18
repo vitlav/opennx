@@ -48,6 +48,7 @@ class wxConfigBase;
 #include "WinShare.h"
 #include "opennxApp.h"
 #include "pwcrypt.h"
+#include "osdep.h"
 
 #ifdef MYTRACETAG
 # undef MYTRACETAG
@@ -89,6 +90,8 @@ MyXmlConfig::MyXmlConfig()
     , m_bDisableImageCompression(false)
     , m_bDisableJpeg(false)
     , m_bDisableRender(false)
+    , m_bDisableShmem(false)
+    , m_bDisableShpix(false)
     , m_bDisableStreaming(false)
     , m_bDisableTaint(false)
     , m_bDisableTcpNoDelay(false)
@@ -172,6 +175,8 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
     m_bDisableImageCompression = other.m_bDisableImageCompression;
     m_bDisableJpeg = other.m_bDisableJpeg;
     m_bDisableRender = other.m_bDisableRender;
+    m_bDisableShmem = other.m_bDisableShmem;
+    m_bDisableShpix = other.m_bDisableShpix;
     m_bDisableStreaming = other.m_bDisableStreaming;
     m_bDisableTaint = other.m_bDisableTaint;
     m_bDisableTcpNoDelay = other.m_bDisableTcpNoDelay;
@@ -261,8 +266,11 @@ MyXmlConfig::sGetProxyParams(const wxString &protocolVersion)
 {
     wxUnusedVar(protocolVersion);
     wxString ret = wxT("");
+    ret << wxT(",shmem=") << (m_bDisableShmem ? 0 : 1)
+        << wxT(",shpix=") << (m_bDisableShpix ? 0 : 1)
+        ;
     // FIXME: use real settings
-    ret << wxT(",shmem=1,shpix=1,font=1");
+    ret << wxT(",font=1");
     return ret;
 }
 
@@ -435,27 +443,38 @@ MyXmlConfig::sGetSessionParams(const wxString &protocolVersion, bool bNew)
     }
     int w, h;
     ::wxDisplaySize(&w, &h);
-    ret += wxString::Format(wxT(" --screeninfo=\"%dx%dx%d%s\""), w, h, ::wxDisplayDepth(), m_bDisableRender ? wxT("") : wxT("+render"));
+    ret << wxT(" --screeninfo=\"") << w << wxT("x") << h << wxT("x")
+        << ::wxDisplayDepth() << (m_bDisableRender ? wxT("") : wxT("+render")) << wxT("\"");
+
+    wxString kbdLocal = wxConvLocal.cMB2WX(x11_keyboard_type);
+    ret << wxT(" --keyboard=\"");
     if (m_bKbdLayoutOther)
-        ret += wxString::Format(wxT(" --keyboard=\"pc105/%s\""), isoKbd(m_iKbdLayoutLanguage).c_str());
+        ret << kbdLocal.BeforeFirst(wxT('/')) << wxT("/") << isoKbd(m_iKbdLayoutLanguage);
     else
-        ret += wxT(" --keyboard=\"pc105/de\"");
-    ret += wxString::Format(wxT(" --backingstore=\"%d\""), m_bDisableBackingstore ? 0 : 1);
-    ret += wxString::Format(wxT(" --encryption=\"%d\""), m_bEnableSSL ? 1 : 0);
+        ret << kbdLocal;
+    ret << wxT("\"")
+        << wxT(" --backingstore=\"")
+        << (m_bDisableBackingstore ? 0 : 1)
+        << wxT("\"")
+        << wxT(" --encryption=\"")
+        << (m_bEnableSSL ? 1 : 0)
+        << wxT("\"")
+        << wxT(" --composite=\"") << (m_bDisableComposite ? 0 : 1) << wxT("\"")
+        << wxT(" --shmem=\"") << (m_bDisableShmem ? 0 : 1) << wxT("\"")
+        << wxT(" --shpix=\"") << (m_bDisableShpix ? 0 : 1) << wxT("\"")
+        << wxT(" --streaming=\"") << (m_bDisableStreaming ? 0 : 1) << wxT("\"")
+        << wxT(" --cups=\"") << (m_bUseCups ? 1 : 0) << wxT("\"")
+        << wxT(" --nodelay=\"") << (m_bDisableTcpNoDelay ? 0 : 1) << wxT("\"")
 #ifdef __UNIX__
-    ret += wxT(" --client=\"linux\"");
+        << wxT(" --client=\"linux\"")
 #else
-    ret += wxT(" --client=\"windows\"");
+        << wxT(" --client=\"windows\"")
 #endif
-    // FIXME: Add real settings
-    ret += wxT(" --media=\"0\"");
-    ret += wxT(" --composite=\"1\"");
-//    ret += wxT(" --cups=\"0\"");
-    ret += wxT(" --strict=\"0\"");
-    ret += wxT(" --nodelay=\"1\"");
-    ret += wxT(" --shmem=\"1\"");
-    ret += wxT(" --shpix=\"1\"");
-    ret += wxT(" --streaming=\"1\"");
+        ;
+        // FIXME: Add real settings
+        //
+        ret += wxT(" --media=\"0\"");
+        ret += wxT(" --strict=\"0\"");
     return ret;
 }
 
@@ -510,6 +529,8 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
     if (m_bDisableImageCompression != other.m_bDisableImageCompression) return false;
     if (m_bDisableJpeg != other.m_bDisableJpeg) return false;
     if (m_bDisableRender != other.m_bDisableRender) return false;
+    if (m_bDisableShmem != other.m_bDisableShmem) return false;
+    if (m_bDisableShpix != other.m_bDisableShpix) return false;
     if (m_bDisableStreaming != other.m_bDisableStreaming) return false;
     if (m_bDisableTaint != other.m_bDisableTaint) return false;
     if (m_bDisableTcpNoDelay != other.m_bDisableTcpNoDelay) return false;
@@ -589,6 +610,8 @@ MyXmlConfig::MyXmlConfig(const wxString &filename)
     , m_bDisableImageCompression(false)
     , m_bDisableJpeg(false)
     , m_bDisableRender(false)
+    , m_bDisableShmem(false)
+    , m_bDisableShpix(false)
     , m_bDisableStreaming(false)
     , m_bDisableTaint(false)
     , m_bDisableTcpNoDelay(false)
@@ -799,8 +822,8 @@ MyXmlConfig::MyXmlConfig(const wxString &filename)
                             m_eDesktopType = DTYPE_XFCE;
                         if (tmp.CmpNoCase(wxT("Console")) == 0)
                             m_eDesktopType = DTYPE_CUSTOM;
-// Disable SHM false
-// Disable emulated shared pixmaps
+                        m_bDisableShmem = getBool(opt, wxT("Disable SHM"), m_bDisableShmem);
+                        m_bDisableShpix = getBool(opt, wxT("Disable emulate shared pixmaps"), m_bDisableShpix);
                         tmp = getString(opt, wxT("Link speed"));
                         if (tmp == wxT("modem"))
                             m_eConnectionSpeed = SPEED_MODEM;
@@ -1033,7 +1056,7 @@ MyXmlConfig::MyXmlConfig(const wxString &filename)
                     continue;
                 }
 
-                // When we reach here, we gon an "unknown" group name. This is usually
+                // When we reach here, we got an "unknown" group name. This is usually
                 // a mounted share description.
                 {
                     int shareOptions = 0;
@@ -1211,8 +1234,8 @@ MyXmlConfig::SaveToFile()
             break;
     }
     sAddOption(g, wxT("Desktop"), optval);
-    bAddOption(g, wxT("Disable SHM"), false); // Not in original GUI but in config ?!
-    bAddOption(g, wxT("Disable emulate shared pixmaps"), false); // Not in original GUI but in config ?!
+    bAddOption(g, wxT("Disable SHM"), m_bDisableShmem); // Not in original GUI but in config ?!
+    bAddOption(g, wxT("Disable emulate shared pixmaps"), m_bDisableShpix); // Not in original GUI but in config ?!
     switch (m_eConnectionSpeed) {
         case SPEED_MODEM:
             optval = wxT("modem");

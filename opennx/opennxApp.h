@@ -25,6 +25,7 @@
 #include <wx/intl.h>
 
 class wxConfigBase;
+class MyXmlConfig;
 
 // Define a new application type, each program should derive a class from wxApp
 class opennxApp : public wxApp
@@ -43,6 +44,8 @@ public:
     const wxString &GetVersion() { return m_sVersion; }
     const wxString &GetSelfPath() { return m_sSelfPath; }
     wxString LoadFileFromResource(const wxString &loc, bool bUseLocale = true);
+    bool CreateDesktopEntry(MyXmlConfig *);
+    bool RemoveDesktopEntry(MyXmlConfig *);
 
     // override base class virtuals
     // ----------------------------

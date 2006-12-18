@@ -37,9 +37,6 @@
 ////@begin includes
 ////@end includes
 #include <wx/config.h>
-#ifdef __WXMSW__
-#include <shlobj.h>
-#endif
 
 #include "MyWizard.h"
 #include "MyXmlConfig.h"
@@ -48,6 +45,7 @@
 #include "RdpPropertyDialog.h"
 #include "VncPropertyDialog.h"
 #include "SessionProperties.h"
+#include "opennxApp.h"
 #include "Icon.h"
 
 ////@begin XPM images
@@ -1303,72 +1301,8 @@ void WizardPageFinish::OnWizardpageFinishPageChanging( wxWizardEvent& event )
                     break;
             }
         }
-        if (m_bCreateShortcut) {
-            wxString appDir;
-            wxConfigBase::Get()->Read(_T("Config/SystemNxDir"), &appDir);
-#ifdef __WXMSW__
-            TCHAR dtPath[MAX_PATH];
-            if (SHGetSpecialFolderPath(NULL, dtPath, CSIDL_DESKTOPDIRECTORY, FALSE)) {
-                wxString linkPath = wxString::Format(_T("%s\\%s.lnk"), dtPath, cfg->sGetName().c_str());
-                wxString targetPath = wxString::Format(_T("%s\\opennx.exe"), appDir.c_str());
-                wxString desc = _("Launch NX Session");
-                wxString args = wxString::Format(_T("--session=\"%s\""), cfg->sGetFileName().c_str());
-                HRESULT hres;
-                IShellLink* psl;
-
-                hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER,
-                        IID_IShellLink, (LPVOID *) &psl);
-                if (SUCCEEDED(hres)) {
-                    IPersistFile* ppf;
-                    psl->SetPath(targetPath.c_str());
-                    psl->SetWorkingDirectory(appDir.c_str());
-                    psl->SetDescription(desc.c_str());
-                    psl->SetArguments(args.c_str());
-                    psl->SetIconLocation(targetPath, 1);
-                    hres = psl->QueryInterface(IID_IPersistFile, (LPVOID*)&ppf);
-                    if (SUCCEEDED(hres)) {
-                        hres = ppf->Save(wxConvLocal.cWX2WC(linkPath), TRUE);
-                        ppf->Release();
-                    }
-                    psl->Release();
-                }
-            }
-#endif
-#ifdef __UNIX__
-            wxString dtEntry = _T("[Desktop Entry]\n");
-            dtEntry += _T("Encoding=UTF-8\n");
-            dtEntry += _T("Type=Application\n");
-            dtEntry += _T("MimeType=\n");
-            dtEntry += _T("StartupNotify=true\n");
-            dtEntry += _T("Terminal=false\n");
-            dtEntry += _T("TerminalOptions=\n");
-            dtEntry += _T("Comment=Launch NX Session\n");
-            dtEntry += _T("Comment[de]=Starte NX Sitzung\n");
-            dtEntry += _T("Name=") + cfg->sGetName() + _T("\n");
-            dtEntry += _T("GenericName=OpenNX Client\n");
-            dtEntry += _T("GenericName[de]=OpenNX Client\n");
-            dtEntry += _T("Exec=") + appDir + _T("/opennx --session=\"")
-                + cfg->sGetFileName() + _T("\"\n");
-            dtEntry += _T("Icon=") + appDir + _T("/nx-desktop.png\n");
-
-            const char* dtPaths[] = { "Desktop", "KDesktop", ".gnome-desktop", NULL };
-            const char **p = dtPaths;
-
-            while (*p) {
-                wxString dtPath = wxString::Format(_T("%s/%s"), ::wxGetHomeDir().c_str(), *p);
-                if (::wxDirExists(dtPath)) {
-                    wxFile f;
-                    wxString fn = dtPath + _T("/") + cfg->sGetName() + _T(".desktop");
-                    ::wxLogTrace(MYTRACETAG, _T("Creating '%s'"), fn.c_str());
-                    if (f.Create(fn, true, wxS_IRUSR|wxS_IWUSR|wxS_IRGRP|wxS_IROTH)) {
-                        f.Write(dtEntry);
-                        f.Close();
-                    }
-                }
-                p++;
-            }
-#endif
-        }
+        if (m_bCreateShortcut)
+            ::wxGetApp().CreateDesktopEntry(cfg);
     }
     event.Skip();
 }

@@ -130,6 +130,8 @@ public:
     bool bGetDisableImageCompression() { return m_bDisableImageCompression; }
     bool bGetDisableJpeg() { return m_bDisableJpeg; }
     bool bGetDisableRender() { return m_bDisableRender; }
+    bool bGetDisableShmem() { return m_bDisableShmem; }
+    bool bGetDisableShpix() { return m_bDisableShpix; }
     bool bGetDisableStreaming() { return m_bDisableStreaming; }
     bool bGetDisableTaint() { return m_bDisableTaint; }
     bool bGetDisableTcpNoDelay() { return m_bDisableTcpNoDelay; }
@@ -206,6 +208,8 @@ public:
     void bSetDisableImageCompression(const bool b) { m_bDisableImageCompression = b; }
     void bSetDisableJpeg(const bool b) { m_bDisableJpeg = b; }
     void bSetDisableRender(bool b) { m_bDisableRender = b; }
+    void bSetDisableShmem(const bool b) { m_bDisableShmem = b; }
+    void bSetDisableShpix(const bool b) { m_bDisableShpix = b; }
     void bSetDisableStreaming(const bool b) { m_bDisableStreaming = b; }
     void bSetDisableTaint(bool b) { m_bDisableTaint = b; }
     void bSetDisableTcpNoDelay(bool b) { m_bDisableTcpNoDelay = b; }
@@ -301,6 +305,8 @@ private:
     bool m_bDisableImageCompression;
     bool m_bDisableJpeg;
     bool m_bDisableRender;
+    bool m_bDisableShmem;
+    bool m_bDisableShpix;
     bool m_bDisableStreaming;
     bool m_bDisableTaint;
     bool m_bDisableTcpNoDelay;

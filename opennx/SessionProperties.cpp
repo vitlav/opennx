@@ -33,9 +33,6 @@
 #ifndef WX_PRECOMP
 #include "wx/wx.h"
 #endif
-#ifdef __WXMSW__
-#include <shlobj.h>
-#endif
 
 ////@begin includes
 ////@end includes
@@ -1043,22 +1040,7 @@ void SessionProperties::OnDeleteClick( wxCommandEvent& event )
     if (wxMessageBox(wxString::Format(_("Really delete Session '%s' ?"),
                     m_pCfg->sGetName().c_str()), _("Delete Session"),
                 wxICON_QUESTION|wxYES_NO|wxNO_DEFAULT) == wxYES) {
-#ifdef __WXMSW__
-        TCHAR dtPath[MAX_PATH];
-        if (SHGetSpecialFolderPath(NULL, dtPath, CSIDL_DESKTOPDIRECTORY, FALSE))
-            wxRemoveFile(wxString::Format(_T("%s\\%s.lnk"), dtPath, m_pCfg->sGetName().mb_str()));
-#endif
-#ifdef __UNIX__
-        const char* dtPaths[] = { "Desktop", "KDesktop", ".gnome-desktop", NULL };
-        const char **p = dtPaths;
-
-        while (*p) {
-            wxRemoveFile(wxString::Format(_T("%s/%s/%s.desktop"),
-                        ::wxGetHomeDir().c_str(), *p, m_pCfg->sGetName().c_str()));
-            p++;
-        }
-#endif
-        ::wxLogDebug(wxT("TODO: really delete .nxs file"));
+        ::wxGetApp().RemoveDesktopEntry(m_pCfg);
         EndModal(wxID_CLEAR);
     }
     event.Skip();
