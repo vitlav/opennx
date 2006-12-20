@@ -52,10 +52,10 @@ class SharedResource : public wxObject
 
 WX_DECLARE_OBJARRAY(SharedResource, ArrayOfShares);
 
-class CupsShare {
+class CupsClient {
     public:
-        CupsShare();
-        ~CupsShare();
+        CupsClient();
+        ~CupsClient();
 
         ArrayOfShares GetShares();
         bool IsAvailable();
@@ -65,10 +65,10 @@ class CupsShare {
         ArrayOfShares m_shares;
 };
 
-class WinShare {
+class SmbClient {
     public:
-        WinShare();
-        ~WinShare();
+        SmbClient();
+        ~SmbClient();
 
         ArrayOfShares GetShares();
         bool IsAvailable();

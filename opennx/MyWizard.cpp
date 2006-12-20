@@ -51,10 +51,7 @@
 ////@begin XPM images
 ////@end XPM images
 
-#ifdef MYTRACETAG
-# undef MYTRACETAG
-#endif
-#define MYTRACETAG wxT("MyWizard")
+static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
 
 /*!
  * MyWizard type definition
@@ -849,6 +846,7 @@ bool WizardPageSecurity::Create( wxWizard* parent )
     m_bUseSmartCard = false;
     m_bEnableSSL = true;
     m_pText1 = NULL;
+    m_pCtrlUseSmartCard = NULL;
     m_pText2 = NULL;
     m_pCtrlEnableSSL = NULL;
     ////@end WizardPageSecurity member initialisation
@@ -871,6 +869,7 @@ void WizardPageSecurity::CreateControls()
 {
     ////@begin WizardPageSecurity content construction
     m_pText1 = XRCCTRL(*this, "ID_HTMLWINDOW_TEXT1", wxHtmlWindow);
+    m_pCtrlUseSmartCard = XRCCTRL(*this, "ID_CHECKBOX_SCARD", wxCheckBox);
     m_pText2 = XRCCTRL(*this, "ID_HTMLWINDOW_TEXT2", wxHtmlWindow);
     m_pCtrlEnableSSL = XRCCTRL(*this, "ID_CHECKBOX_SSLENABLE", wxCheckBox);
     // Set validators
@@ -884,6 +883,9 @@ void WizardPageSecurity::CreateControls()
 
     ////@begin WizardPageSecurity content initialisation
     ////@end WizardPageSecurity content initialisation
+#ifndef ENABLE_SMARTCARD
+    m_pCtrlUseSmartCard->Enable(false);
+#endif
 }
 
 /*!
@@ -1267,7 +1269,9 @@ void WizardPageSecurity::OnWizardpageSecurityPageChanging( wxWizardEvent& event 
         MyXmlConfig *cfg = wxDynamicCast(GetParent(), MyWizard)->pGetConfig();
         TransferDataFromWindow();
         cfg->bSetEnableSSL(m_bEnableSSL);
+#ifdef ENABLE_SMARTCARD
         cfg->bSetUseSmartCard(m_bUseSmartCard);
+#endif
     }
     event.Skip();
 }

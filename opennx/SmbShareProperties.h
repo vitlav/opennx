@@ -43,6 +43,7 @@
  */
 
 ////@begin forward declarations
+class wxBitmapComboBox;
 ////@end forward declarations
 class MyXmlConfig;
 
@@ -53,7 +54,7 @@ class MyXmlConfig;
 ////@begin control identifiers
 #define ID_DIALOG_SHARE_ADD 10098
 #define SYMBOL_SMBSHAREPROPERTIES_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
-#define SYMBOL_SMBSHAREPROPERTIES_TITLE _("New SMB Share - OpenNX")
+#define SYMBOL_SMBSHAREPROPERTIES_TITLE _("New shared resource - OpenNX")
 #define SYMBOL_SMBSHAREPROPERTIES_IDNAME ID_DIALOG_SHARE_ADD
 #define SYMBOL_SMBSHAREPROPERTIES_SIZE wxSize(114, 75)
 #define SYMBOL_SMBSHAREPROPERTIES_POSITION wxDefaultPosition
@@ -85,6 +86,7 @@ public:
     SmbShareProperties( wxWindow* parent, wxWindowID id = SYMBOL_SMBSHAREPROPERTIES_IDNAME, const wxString& caption = SYMBOL_SMBSHAREPROPERTIES_TITLE, const wxPoint& pos = SYMBOL_SMBSHAREPROPERTIES_POSITION, const wxSize& size = SYMBOL_SMBSHAREPROPERTIES_SIZE, long style = SYMBOL_SMBSHAREPROPERTIES_STYLE );
     void SetConfig(MyXmlConfig *);
     void SetCurrentShare(int);
+    void SetUse(bool, bool);
 
     /// Creation
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_SMBSHAREPROPERTIES_IDNAME, const wxString& caption = SYMBOL_SMBSHAREPROPERTIES_TITLE, const wxPoint& pos = SYMBOL_SMBSHAREPROPERTIES_POSITION, const wxSize& size = SYMBOL_SMBSHAREPROPERTIES_SIZE, long style = SYMBOL_SMBSHAREPROPERTIES_STYLE );
@@ -125,7 +127,7 @@ private:
     static bool ShowToolTips();
 
 ////@begin SmbShareProperties member variables
-    wxComboBox* m_pCtrlLocalShares;
+    wxBitmapComboBox* m_pCtrlLocalShares;
     wxTextCtrl* m_pCtrlMountPoint;
     wxTextCtrl* m_pCtrlUsername;
     wxTextCtrl* m_pCtrlPassword;
@@ -137,6 +139,8 @@ private:
     int m_iCurrentShare;
     ArrayOfShares m_aShares;
     MyXmlConfig *m_pCfg;
+    bool m_bUseSmb;
+    bool m_bUseCups;
 };
 
 #endif

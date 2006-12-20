@@ -50,10 +50,7 @@ class wxConfigBase;
 #include "pwcrypt.h"
 #include "osdep.h"
 
-#ifdef MYTRACETAG
-# undef MYTRACETAG
-#endif
-#define MYTRACETAG wxT("MyXmlConfig")
+static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
 
 #define STR_TRUE wxT("true")
 #define STR_FALSE wxT("false");

@@ -208,7 +208,9 @@ void SessionProperties::CheckChanged()
 
         // variables on 'General' Tab
         m_pCfg->bSetRememberPassword(m_bRememberPassword);
+#ifdef ENABLE_SMARTCARD
         m_pCfg->bSetUseSmartCard(m_bUseSmartCard);
+#endif
         m_pCfg->bSetUseCustomImageEncoding(m_bUseCustomImageEncoding);
         m_pCfg->iSetServerPort(m_iPort);
         m_pCfg->eSetSessionType((MyXmlConfig::SessionType)m_iSessionType);
@@ -270,6 +272,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pNoteBook = NULL;
     m_pCtrlHostname = NULL;
     m_pCtrlPort = NULL;
+    m_pCtrlUseSmartCard = NULL;
     m_pCtrlSessionType = NULL;
     m_pCtrlDesktopType = NULL;
     m_pCtrlDesktopSettings = NULL;
@@ -306,7 +309,11 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     if (m_pCfg) {
         // variables on 'General' Tab
         m_bRememberPassword = m_pCfg->bGetRememberPassword();
+#ifdef ENABLE_SMARTCARD
         m_bUseSmartCard = m_pCfg->bGetUseSmartCard();
+#else
+        m_bUseSmartCard = false;
+#endif
         m_bUseCustomImageEncoding = m_pCfg->bGetUseCustomImageEncoding();
         m_iPort = m_pCfg->iGetServerPort();
         m_iSessionType = m_pCfg->eGetSessionType();
@@ -359,14 +366,14 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     }
     Centre();
 ////@end SessionProperties creation
-
     SetFontLabel(m_pCtrlFontDefault, m_cFontDefault);
     SetFontLabel(m_pCtrlFontFixed, m_cFontFixed);
 #define SHI_SIZE 16
     wxImageList *il = new wxImageList(SHI_SIZE, SHI_SIZE);
     il->Add(CreateBitmapFromFile(_T("res/shbroken.png"), SHI_SIZE, SHI_SIZE));
-    il->Add(CreateBitmapFromFile(_T("res/shfolder.png"), SHI_SIZE, SHI_SIZE));
-    il->Add(CreateBitmapFromFile(_T("res/shprinter.png"), SHI_SIZE, SHI_SIZE));
+    il->Add(CreateBitmapFromFile(_T("res/smbfolder.png"), SHI_SIZE, SHI_SIZE));
+    il->Add(CreateBitmapFromFile(_T("res/smbprinter.png"), SHI_SIZE, SHI_SIZE));
+    il->Add(CreateBitmapFromFile(_T("res/cupsprinter.png"), SHI_SIZE, SHI_SIZE));
 #undef SHI_SIZE
     m_pCtrlSmbShares->AssignImageList(il, wxIMAGE_LIST_SMALL);
     m_pCtrlSmbShares->InsertColumn(0, _("Share"));
@@ -374,7 +381,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlSmbShares->InsertColumn(2, _("Comment"));
     if (m_pCfg && (m_pCfg->iGetUsedShareGroups() > 0)) {
         size_t i;
-        WinShare s;
+        SmbClient s;
         ArrayOfShareGroups sg = m_pCfg->aGetShareGroups();
         ArrayOfShares sa = s.GetShares();
         wxArrayString usg = m_pCfg->aGetUsedShareGroups();
@@ -386,7 +393,17 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
                 for (si = 0; si < sa.GetCount(); si++) {
                     if (sa[si].name == sg[i].m_sName) {
                         comment = sa[si].description;
-                        iconidx = (sa[si].sharetype == SharedResource::SHARE_SMB_DISK) ? 1 : 2;
+                        switch (sa[si].sharetype) {
+                            case SharedResource::SHARE_SMB_DISK:
+                                iconidx = 1;
+                                break;
+                            case SharedResource::SHARE_SMB_PRINTER:
+                                iconidx = 2;
+                                break;
+                            case SharedResource::SHARE_CUPS_PRINTER:
+                                iconidx = 3;
+                                break;
+                        }
                         break;
                     }
                 }
@@ -427,6 +444,9 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlCupsPath->Enable(false);
     m_pCtrlCupsBrowse->Enable(false);
 #endif
+    //SetMinSize(wxSize(400, -1));
+    //SetMaxSize(wxSize(400, -1));
+    //SetSize(400, 600);
     return TRUE;
 }
 
@@ -476,6 +496,8 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
             m_pCtrlDesktopType->SetSelection(m_iDesktopTypeDialog);
             m_pCtrlDesktopType->Enable(true);
             m_pCtrlDesktopSettings->Enable(m_iDesktopTypeDialog == MyXmlConfig::DTYPE_CUSTOM);
+            m_pCtrlCupsEnable->Enable(true);
+            m_pCtrlSmbEnable->Enable(true);
             break;
         case MyXmlConfig::STYPE_WINDOWS:
             m_pCtrlDesktopType->SetString(0, _("RDP"));
@@ -484,6 +506,10 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
             m_iDesktopTypeDialog = 0;
             m_pCtrlDesktopType->Enable(false);
             m_pCtrlDesktopSettings->Enable(true);
+            m_pCtrlCupsEnable->Enable(false);
+            m_pCtrlSmbEnable->Enable(false);
+            m_bUseCups = false;
+            m_bEnableSmbSharing = false;
             break;
         case MyXmlConfig::STYPE_VNC:
             m_pCtrlDesktopType->SetString(0, _("RFB"));
@@ -492,6 +518,10 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
             m_iDesktopTypeDialog = 0;
             m_pCtrlDesktopType->Enable(false);
             m_pCtrlDesktopSettings->Enable(true);
+            m_pCtrlCupsEnable->Enable(false);
+            m_pCtrlSmbEnable->Enable(false);
+            m_bUseCups = false;
+            m_bEnableSmbSharing = false;
             break;
     }
     switch (m_iDisplayType) {
@@ -541,6 +571,7 @@ void SessionProperties::CreateControls()
     m_pNoteBook = XRCCTRL(*this, "ID_NOTEBOOK", wxNotebook);
     m_pCtrlHostname = XRCCTRL(*this, "ID_TEXTCTRL_HOST", wxTextCtrl);
     m_pCtrlPort = XRCCTRL(*this, "ID_SPINCTRL_PORT", wxSpinCtrl);
+    m_pCtrlUseSmartCard = XRCCTRL(*this, "ID_CHECKBOX_SMARTCARD", wxCheckBox);
     m_pCtrlSessionType = XRCCTRL(*this, "ID_COMBOBOX_DPROTO", wxComboBox);
     m_pCtrlDesktopType = XRCCTRL(*this, "ID_COMBOBOX_DTYPE", wxComboBox);
     m_pCtrlDesktopSettings = XRCCTRL(*this, "ID_BUTTON_DSETTINGS", wxButton);
@@ -637,9 +668,14 @@ void SessionProperties::CreateControls()
 ////@begin SessionProperties content initialisation
 ////@end SessionProperties content initialisation
 
+#ifndef ENABLE_SMARTCARD
+    m_pCtrlUseSmartCard->Enable(false);
+#endif
+
     int fs[7];
     wxFont fv = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
     wxFont ff = wxSystemSettings::GetFont(wxSYS_ANSI_FIXED_FONT);
+
     for (int i = 0; i < 7; i++)
         fs[i] = fv.GetPointSize();
     m_pHtmlWindow->SetFonts(fv.GetFaceName(), ff.GetFaceName(), fs);
@@ -670,7 +706,6 @@ void SessionProperties::CreateControls()
         m_pHtmlWindow->SetSizeHints(width, height);
         m_pHtmlWindow->GetParent()->Fit();
     }
-
 }
 
 /*!
@@ -866,14 +901,14 @@ void SessionProperties::OnRadiobuttonKbdotherSelected( wxCommandEvent& event )
 
 void SessionProperties::OnCheckboxSmbClick( wxCommandEvent& event )
 {
-    WinShare s;
+    SmbClient s;
     if (s.IsAvailable()) {
         UpdateDialogConstraints(true);
         CheckChanged();
     } else {
         ::wxLogWarning(_("No local samba server is running."));
         wxDynamicCast(event.GetEventObject(), wxCheckBox)->SetValue(false);
-        //wxDynamicCast(event.GetEventObject(), wxCheckBox)->Enable(false);
+        wxDynamicCast(event.GetEventObject(), wxCheckBox)->Enable(false);
     }
     event.Skip();
 }
@@ -884,32 +919,39 @@ void SessionProperties::OnCheckboxSmbClick( wxCommandEvent& event )
 
 void SessionProperties::OnButtonSmbAddClick( wxCommandEvent& event )
 {
-    SmbShareProperties d;
-    d.SetConfig(m_pCfg);
-    d.Create(this);
-    if (d.ShowModal() == wxID_OK) {
-        WinShare s;
-        size_t sgidx = m_pCfg->aGetShareGroups().GetCount() - 1;
-        ArrayOfShares sa = s.GetShares();
-        ShareGroup sg = m_pCfg->aGetShareGroups().Item(sgidx);
-        int iconidx = (sg.m_iType == SharedResource::SHARE_SMB_DISK) ? 1 : 2;
-        size_t si;
-        wxString comment = _("Currently not available");
-        for (si = 0; si < sa.GetCount(); si++) {
-            if (sa[si].name == sg.m_sName) {
-                comment = sa[si].description;
-                break;
+    SmbClient sc;
+    CupsClient cc;
+
+    if ((sc.GetShares().GetCount() + cc.GetShares().GetCount()) > 0) {
+        SmbShareProperties d;
+        d.SetConfig(m_pCfg);
+        d.SetUse(m_bEnableSmbSharing, m_bUseCups);
+        d.Create(this);
+        if (d.ShowModal() == wxID_OK) {
+            size_t sgidx = m_pCfg->aGetShareGroups().GetCount() - 1;
+            ArrayOfShares sa = sc.GetShares();
+            ShareGroup sg = m_pCfg->aGetShareGroups().Item(sgidx);
+            int iconidx = (sg.m_iType == SharedResource::SHARE_SMB_DISK) ? 1 : 2;
+            size_t si;
+            wxString comment = _("Currently not available");
+            for (si = 0; si < sa.GetCount(); si++) {
+                if (sa[si].name == sg.m_sName) {
+                    comment = sa[si].description;
+                    break;
+                }
             }
+            int lidx = m_pCtrlSmbShares->InsertItem(0, sg.m_sName, iconidx);
+            m_pCtrlSmbShares->SetItem(lidx, 1, sg.m_sMountPoint);
+            m_pCtrlSmbShares->SetItem(lidx, 2, comment);
+            m_pCtrlSmbShares->SetItemData(lidx, m_pCfg->aGetShareGroups().GetCount() - 1);
+            m_pCtrlSmbShares->SetColumnWidth(0, wxLIST_AUTOSIZE);
+            m_pCtrlSmbShares->SetColumnWidth(1, wxLIST_AUTOSIZE);
+            m_pCtrlSmbShares->SetColumnWidth(2, wxLIST_AUTOSIZE);
         }
-        int lidx = m_pCtrlSmbShares->InsertItem(0, sg.m_sName, iconidx);
-        m_pCtrlSmbShares->SetItem(lidx, 1, sg.m_sMountPoint);
-        m_pCtrlSmbShares->SetItem(lidx, 2, comment);
-        m_pCtrlSmbShares->SetItemData(lidx, m_pCfg->aGetShareGroups().GetCount() - 1);
-        m_pCtrlSmbShares->SetColumnWidth(0, wxLIST_AUTOSIZE);
-        m_pCtrlSmbShares->SetColumnWidth(1, wxLIST_AUTOSIZE);
-        m_pCtrlSmbShares->SetColumnWidth(2, wxLIST_AUTOSIZE);
+        CheckChanged();
+    } else {
+        ::wxLogWarning(_("No shares found"));
     }
-    CheckChanged();
     event.Skip();
 }
 
@@ -923,6 +965,7 @@ void SessionProperties::OnButtonSmbModifyClick( wxCommandEvent& event )
     if (idx != -1) {
         SmbShareProperties d;
         d.SetConfig(m_pCfg);
+        d.SetUse(m_bEnableSmbSharing, m_bUseCups);
         d.SetCurrentShare(m_pCtrlSmbShares->GetItemData(idx));
         d.Create(this);
         if (d.ShowModal() == wxID_OK) {
@@ -1288,14 +1331,14 @@ void SessionProperties::OnListctrlSmbSharesItemActivated( wxListEvent& event )
 
 void SessionProperties::OnCheckboxCupsenableClick( wxCommandEvent& event )
 {
-    CupsShare s;
-    if (s.IsAvailable()) {
+    CupsClient cl;
+    if (cl.IsAvailable()) {
         UpdateDialogConstraints(true);
         CheckChanged();
     } else {
         ::wxLogWarning(_("No cups server available."));
         wxDynamicCast(event.GetEventObject(), wxCheckBox)->SetValue(false);
-        //wxDynamicCast(event.GetEventObject(), wxCheckBox)->Enable(false);
+        wxDynamicCast(event.GetEventObject(), wxCheckBox)->Enable(false);
         m_bUseCups = false;
     }
     event.Skip();

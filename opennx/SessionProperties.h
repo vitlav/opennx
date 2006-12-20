@@ -301,6 +301,7 @@ private:
     wxNotebook* m_pNoteBook;
     wxTextCtrl* m_pCtrlHostname;
     wxSpinCtrl* m_pCtrlPort;
+    wxCheckBox* m_pCtrlUseSmartCard;
     wxComboBox* m_pCtrlSessionType;
     wxComboBox* m_pCtrlDesktopType;
     wxButton* m_pCtrlDesktopSettings;

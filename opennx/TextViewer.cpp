@@ -115,7 +115,7 @@ bool TextViewer::Create( wxWindow* parent, wxWindowID id, const wxString& captio
  */
 
 void TextViewer::CreateControls()
-{    
+{   
     ////@begin TextViewer content construction
     if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_TEXTVIEWER")))
         wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));

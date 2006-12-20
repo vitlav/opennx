@@ -41,10 +41,7 @@
 
 #include "MyIPC.h"
 
-#ifdef MYTRACETAG
-# undef MYTRACETAG
-#endif
-#define MYTRACETAG wxT("MyIPC")
+static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
 
 DECLARE_EVENT_TYPE(wxEVT_PROCESS_STDOUT, -2);
 DECLARE_EVENT_TYPE(wxEVT_PROCESS_STDERR, -3);

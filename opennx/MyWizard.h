@@ -400,6 +400,7 @@ private:
 
 ////@begin WizardPageSecurity member variables
     wxHtmlWindow* m_pText1;
+    wxCheckBox* m_pCtrlUseSmartCard;
     wxHtmlWindow* m_pText2;
     wxCheckBox* m_pCtrlEnableSSL;
     bool m_bUseSmartCard;

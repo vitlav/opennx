@@ -64,7 +64,7 @@ else
 	AC_MSG_NOTICE([will link against shared wxWidgets libs])
 fi
 
-AM_PATH_WXCONFIG(2.6.3,wxWidgets=1,wxWidgets=0,[xrc,qa,html,adv,core,xml,net], $WXPARAMS)
+AM_PATH_WXCONFIG(2.8.0,wxWidgets=1,wxWidgets=0,[xrc,qa,html,adv,core,xml,net], $WXPARAMS)
 
 test ${wxWidgets} = 0 && AC_MSG_ERROR(Could not find wxWidgets library)
 
@@ -81,6 +81,20 @@ AC_ARG_ENABLE([warn],
 		CPPFLAGS="$CPPFLAGS -Wctor-dtor-privacy -Wnon-virtual-dtor -Weffc++ -Wold-style-cast -Woverloaded-virtual -Wchar-subscripts -Wcomment -Wformat -Wimplicit -Wmissing-braces -Wparentheses -Wreturn-type -Wswitch -Wuninitialized"
 	]
 )
+
+ac_cv_enable_smartcard=NO
+AC_ARG_ENABLE([smartcard],
+	AS_HELP_STRING([--enable-smartcard],
+		[Enable debug build (Default: NO)]),
+	[ test "$enableval" = "yes" && ac_cv_enable_smartcard=YES ]
+)
+if test "$ac_cv_enable_smartcard" = "YES" ; then
+	AC_MSG_NOTICE([SmartCard feature enabled])
+    AC_DEFINE(ENABLE_SMARTCARD,1,[Define, if SmartCard support should be enabled])
+    CPPFLAGS="$CPPFLAGS -D"
+else
+	AC_MSG_NOTICE([SmartCard feature disabled])
+fi
 
 AC_CHECK_LIB(cups,cupsServer)
 

@@ -610,7 +610,7 @@ bool MyValidator::TransferFromWindow(void)
              count = pControl->GetCount();
       for ( i = 0; i < count; i++ )
       {
-        if (pControl->Selected(i))
+        if (pControl->IsSelected(i))
           m_pArrayInt->Add(i);
       }
 

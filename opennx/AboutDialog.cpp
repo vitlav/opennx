@@ -44,10 +44,7 @@
 ////@begin XPM images
 ////@end XPM images
 
-#ifdef MYTRACETAG
-# undef MYTRACETAG
-#endif
-#define MYTRACETAG wxT("AboutDialog")
+static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
 
 /*!
  * AboutDialog type definition

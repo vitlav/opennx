@@ -53,10 +53,7 @@
 
 #include "memres.h"
 
-#ifdef MYTRACETAG
-# undef MYTRACETAG
-#endif
-#define MYTRACETAG wxT("opennxApp")
+static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
 
 // Create a new application object: this macro will allow wxWindows to create
 // the application object during program execution (it's better than using a
@@ -349,8 +346,10 @@ bool opennxApp::OnInit()
     m_cLocale.Init();
     m_cLocale.AddCatalog(wxT("opennx"));
 
-    // Don't remap bitmaps to system colors
+    // Win: Don't remap bitmaps to system colors
     wxSystemOptions::SetOption(wxT("msw.remap"), 0);
+    // WinXP: Don't draw themed gradients on notebook pages
+    wxSystemOptions::SetOption(wxT("msw.notebook.themed-background"), 0);
 
     // Call to base class needed for initializing command line processing
     if (!wxApp::OnInit())

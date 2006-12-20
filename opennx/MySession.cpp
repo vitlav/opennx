@@ -53,10 +53,7 @@
 #include <wx/regex.h>
 #include <fstream>
 
-#ifdef MYTRACETAG
-# undef MYTRACETAG
-#endif
-#define MYTRACETAG wxT("MySession")
+static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
 
 #define NX_PROTOCOL_VERSION wxT("2.1.0")
 

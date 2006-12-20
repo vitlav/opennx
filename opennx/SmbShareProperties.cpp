@@ -37,6 +37,8 @@
 ////@begin includes
 ////@end includes
 
+#include <wx/bmpcbox.h>
+
 #include "MyValidator.h"
 #include "MyXmlConfig.h"
 #include "WinShare.h"
@@ -45,6 +47,8 @@
 
 ////@begin XPM images
 ////@end XPM images
+
+static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
 
 /*!
  * SmbShareProperties type definition
@@ -79,11 +83,15 @@ END_EVENT_TABLE()
 
 SmbShareProperties::SmbShareProperties( )
     : m_iCurrentShare(-1)
+    , m_bUseSmb(false)
+    , m_bUseCups(false)
 {
 }
 
 SmbShareProperties::SmbShareProperties( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
     : m_iCurrentShare(-1)
+    , m_bUseSmb(false)
+    , m_bUseCups(false)
 {
     Create(parent, id, caption, pos, size, style);
 }
@@ -96,6 +104,12 @@ void SmbShareProperties::SetConfig(MyXmlConfig *cfg)
 void SmbShareProperties::SetCurrentShare(int cs)
 {
     m_iCurrentShare = cs;
+}
+
+void SmbShareProperties::SetUse(bool useSmb, bool useCups)
+{
+    m_bUseSmb = useSmb;
+    m_bUseCups = useCups;
 }
 
 /*!
@@ -115,7 +129,7 @@ bool SmbShareProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), cons
     SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
-    SetIcon(GetIconResource(wxT("res/nx.png")));
+    //SetIcon(GetIconResource(wxT("res/nx.png")));
     if (GetSizer())
     {
         GetSizer()->SetSizeHints(this);
@@ -123,6 +137,13 @@ bool SmbShareProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), cons
     Centre();
 ////@end SmbShareProperties creation
     return TRUE;
+}
+
+static int
+cmpShare(SharedResource *a, SharedResource *b)
+{
+    int ret = a->sharetype - b->sharetype;
+    return (ret != 0) ? ret : a->name.Cmp(b->name);
 }
 
 /*!
@@ -134,7 +155,7 @@ void SmbShareProperties::CreateControls()
 ////@begin SmbShareProperties content construction
     if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_SHARE_ADD")))
         wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
-    m_pCtrlLocalShares = XRCCTRL(*this, "ID_COMBOBOX_SHARE_LOCALNAME", wxComboBox);
+    m_pCtrlLocalShares = XRCCTRL(*this, "ID_COMBOBOX_SHARE_LOCALNAME", wxBitmapComboBox);
     m_pCtrlMountPoint = XRCCTRL(*this, "ID_TEXTCTRL_SHARE_MOUNTPOINT", wxTextCtrl);
     m_pCtrlUsername = XRCCTRL(*this, "ID_TEXTCTRL_SHARE_USERNAME", wxTextCtrl);
     m_pCtrlPassword = XRCCTRL(*this, "ID_TEXTCTRL_SHARE_PASSWORD", wxTextCtrl);
@@ -154,23 +175,54 @@ void SmbShareProperties::CreateControls()
 
     if (m_iCurrentShare != -1) {
         ShareGroup sg = m_pCfg->aGetShareGroups().Item(m_iCurrentShare);
-        m_pCtrlLocalShares->Append(sg.m_sName, &sg);
+        wxBitmap bm = wxNullBitmap;
+        m_pCtrlLocalShares->Append(sg.m_sName, bm, &sg);
         m_pCtrlLocalShares->SetSelection(0);
         m_pCtrlLocalShares->Enable(false);
         m_sMountPoint = sg.m_sMountPoint;
         m_sUsername = sg.m_sUsername;
         m_sPassword = sg.m_sPassword;
-        SetTitle(_("Modify SMB Share - OpenNX"));
+        SetTitle(_("Modify shared resource - OpenNX"));
     } else {
-        WinShare s;
-        
-        m_aShares = s.GetShares();
-        for (size_t i = 0; i < m_aShares.GetCount(); i++)
-            m_pCtrlLocalShares->Append(m_aShares[i].name, &(m_aShares[i]));
+        if (m_bUseSmb) {
+            SmbClient sc;
+            m_aShares = sc.GetShares();
+        }
+        if (m_bUseCups) {
+            CupsClient cc;
+            ArrayOfShares acs = cc.GetShares();
+            WX_APPEND_ARRAY(m_aShares, acs);
+        }
+
+        for (size_t i = 0; i < m_aShares.GetCount(); i++) {
+            wxBitmap bm;
+            switch (m_aShares[i].sharetype) {
+                case SharedResource::SHARE_SMB_DISK:
+                    bm = GetBitmapResource(wxT("res/smbfolder.png"));
+                    break;
+                case SharedResource::SHARE_SMB_PRINTER:
+                    bm = GetBitmapResource(wxT("res/smbprinter.png"));
+                    break;
+                case SharedResource::SHARE_CUPS_PRINTER:
+                    bm = GetBitmapResource(wxT("res/cupsprinter.png"));
+                    break;
+                default:
+                    bm = wxNullBitmap;
+                    break;
+            }
+            m_pCtrlLocalShares->Append(m_aShares[i].name, bm, &(m_aShares[i]));
+        }
+
         if (m_aShares.GetCount() > 0) {
             m_pCtrlLocalShares->SetSelection(0);
             m_sMountPoint = _T("$(SHARES)/");
             m_sMountPoint += wxDynamicCast(m_pCtrlLocalShares->GetClientData(0), SharedResource)->name;
+        } else {
+            ::wxLogMessage(_("No shares found"));
+            m_pCtrlLocalShares->Enable(false);
+            m_pCtrlMountPoint->Enable(false);
+            m_pCtrlUsername->Enable(false);
+            m_pCtrlPassword->Enable(false);
         }
     }
 }
@@ -286,10 +338,7 @@ bool SmbShareProperties::ShowToolTips()
 wxBitmap SmbShareProperties::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
-////@begin SmbShareProperties bitmap retrieval
-    wxUnusedVar(name);
-    return wxNullBitmap;
-////@end SmbShareProperties bitmap retrieval
+    return CreateBitmapFromFile(name);
 }
 
 /*!

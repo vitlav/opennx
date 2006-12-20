@@ -312,6 +312,7 @@
                                                             <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                             <border>5</border>
                                                             <object class="wxComboBox" name="ID_COMBOBOX_DPROTO">
+                                                                <size>50,-1d</size>
                                                                 <style>wxCB_READONLY</style>
                                                                 <content>
                                                                     <item>Unix</item>
@@ -324,6 +325,7 @@
                                                             <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                             <border>5</border>
                                                             <object class="wxComboBox" name="ID_COMBOBOX_DTYPE">
+                                                                <size>50,-1d</size>
                                                                 <style>wxCB_READONLY</style>
                                                                 <content>
                                                                     <item>KDE</item>
@@ -432,6 +434,7 @@
                                                             <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                             <border>5</border>
                                                             <object class="wxComboBox" name="ID_COMBOBOX_DISPTYPE">
+                                                                <size>50,-1d</size>
                                                                 <style>wxCB_READONLY</style>
                                                                 <content>
                                                                     <item>640x480</item>
@@ -651,6 +654,7 @@
                                                             <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                             <border>5</border>
                                                             <object class="wxComboBox" name="ID_COMBOBOX_CACHEMEM">
+                                                                <size>50,-1d</size>
                                                                 <style>wxCB_DROPDOWN</style>
                                                                 <content>
                                                                     <item>0 Mb</item>
@@ -676,6 +680,7 @@
                                                             <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                             <border>5</border>
                                                             <object class="wxComboBox" name="ID_COMBOBOX_CACHEDISK">
+                                                                <size>50,-1d</size>
                                                                 <style>wxCB_DROPDOWN</style>
                                                                 <content>
                                                                     <item>0 Mb</item>
@@ -742,6 +747,7 @@
                                                             <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                             <border>5</border>
                                                             <object class="wxComboBox" name="ID_COMBOBOX_KBDLAYOUT">
+                                                                <size>50,-1d</size>
                                                                 <style>wxCB_READONLY</style>
                                                                 <content>
                                                                     <item>Afrikaans</item>
@@ -817,7 +823,7 @@
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
                                                         <size>16,16d</size>
-                                                        <bitmap>memory:memrsc#zip:res/sharing.png</bitmap>
+                                                        <bitmap>memory:memrsc#zip:res/smbsharing.png</bitmap>
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
@@ -840,7 +846,7 @@
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
                                                         <size>16,16d</size>
-                                                        <bitmap>memory:memrsc#zip:res/sharing.png</bitmap>
+                                                        <bitmap>memory:memrsc#zip:res/cupssharing.png</bitmap>
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
@@ -876,9 +882,8 @@
                                         <object class="sizeritem">
                                             <flag>wxGROW|wxGROW|wxALL</flag>
                                             <border>5</border>
-                                            <option>1</option>
                                             <object class="wxListCtrl" name="ID_LISTCTRL_SMB_SHARES">
-                                                <style>wxLC_REPORT|wxLC_SINGLE_SEL</style>
+                                                <style>wxLC_REPORT|wxLC_SINGLE_SEL|wxSUNKEN_BORDER</style>
                                             </object>
                                         </object>
                                         <object class="sizeritem">
@@ -921,6 +926,7 @@
                                                     <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
+                                                        <size>16,16d</size>
                                                         <bitmap>memory:memrsc#zip:res/multimedia.png</bitmap>
                                                     </object>
                                                 </object>
@@ -2072,7 +2078,7 @@ remote VNC server</label>
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
         <size>114,75d</size>
-        <title>New SMB Share - OpenNX</title>
+        <title>New shared resource - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
         <object class="wxBoxSizer">
@@ -2111,7 +2117,7 @@ local computer.</label>
                                 <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                 <border>5</border>
                                 <option>1</option>
-                                <object class="wxComboBox" name="ID_COMBOBOX_SHARE_LOCALNAME">
+                                <object class="wxBitmapComboBox" name="ID_COMBOBOX_SHARE_LOCALNAME" >
                                     <style>wxCB_READONLY|wxCB_SORT</style>
                                 </object>
                             </object>
@@ -2571,6 +2577,7 @@ this share.</label>
                             <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                             <border>5</border>
                             <object class="wxComboBox" name="ID_COMBOBOX_DPROTO">
+                                <size>100,-1</size>
                                 <style>wxCB_READONLY</style>
                                 <content>
                                     <item>Unix</item>
@@ -2583,6 +2590,7 @@ this share.</label>
                             <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                             <border>5</border>
                             <object class="wxComboBox" name="ID_COMBOBOX_DTYPE">
+                                <size>100,-1</size>
                                 <style>wxCB_READONLY</style>
                                 <content>
                                     <item>KDE</item>
@@ -2626,6 +2634,7 @@ this share.</label>
                             <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                             <border>5</border>
                             <object class="wxComboBox" name="ID_COMBOBOX_DISPTYPE">
+                                <size>100,-1</size>
                                 <style>wxCB_READONLY</style>
                                 <content>
                                     <item>640x480</item>
@@ -2927,7 +2936,7 @@ this share.</label>
                 <option>1</option>
                 <object class="wxTextCtrl" name="ID_TEXTCTRL">
                     <size>600,300</size>
-                    <style>wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxTE_NOHIDESEL|wxTE_LEFT</style>
+                    <style>wxTE_MULTILINE|wxTE_READONLY</style>
                 </object>
             </object>
             <object class="sizeritem">

@@ -42,10 +42,7 @@
 #include <wx/filename.h>
 #include <wx/listctrl.h>
 
-#ifdef MYTRACETAG
-# undef MYTRACETAG
-#endif
-#define MYTRACETAG wxT("SessionList")
+static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
 
 class SessionTraverser : public wxDirTraverser
 {

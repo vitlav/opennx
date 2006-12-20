@@ -50,10 +50,7 @@
 ////@begin XPM images
 ////@end XPM images
 
-#ifdef MYTRACETAG
-# undef MYTRACETAG
-#endif
-#define MYTRACETAG wxT("LoginDialog")
+static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
 
 /*!
  * LoginDialog type definition
@@ -127,7 +124,11 @@ void LoginDialog::ReadConfigDirectory()
                 m_bGuestLogin = cfg.bGetGuestMode();
                 m_sUsername = cfg.sGetUsername();
                 m_sPassword = cfg.sGetPassword();
+#ifdef ENABLE_SMARTCARD
                 m_bUseSmartCard = cfg.bGetUseSmartCard();
+#else
+                m_bUseSmartCard = false;
+#endif
             }
         }
     }
@@ -206,7 +207,9 @@ void LoginDialog::CreateControls()
 
     ////@begin LoginDialog content initialisation
     ////@end LoginDialog content initialisation
-
+#ifndef ENABLE_SMARTCARD
+    m_pCtrlUseSmartCard->Enable(false);
+#endif
     m_pCtrlSessionName->Append(m_aSessionNames);
 }
 
@@ -299,8 +302,10 @@ void LoginDialog::OnButtonConfigureClick( wxCommandEvent& event )
                 m_pCtrlSessionName->SetValue(m_sSessionName);
             break;
         case wxID_OK:
+#ifdef ENABLE_SMARTCARD
             m_bUseSmartCard = m_pCurrentCfg->bGetUseSmartCard();
             m_pCtrlUseSmartCard->SetValue(m_bUseSmartCard);
+#endif
             if (!m_pCurrentCfg->SaveToFile())
                 wxMessageBox(wxString::Format(_("Could not save session to\n%s"),
                             m_pCurrentCfg->sGetFileName().c_str()), _("Error saving - OpenNX"),
@@ -328,7 +333,9 @@ void LoginDialog::OnComboboxSessionSelected( wxCommandEvent& event )
                 m_pCurrentCfg = new MyXmlConfig(m_aConfigFiles[i]);
                 m_pCtrlUsername->SetValue(cfg.sGetUsername());
                 m_pCtrlPassword->SetValue(cfg.sGetPassword());
+#ifdef ENABLE_SMARTCARD
                 m_pCtrlUseSmartCard->SetValue(cfg.bGetUseSmartCard());
+#endif
             }
         }
     }

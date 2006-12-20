@@ -37,7 +37,11 @@
 #include "WinShare.h"
 #include <wx/utils.h>
 #include <wx/dynlib.h>
+#include <wx/filename.h>
+#include <wx/log.h>
 #include <wx/arrimpl.cpp>
+
+static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
 
 #ifdef __UNIX__
 
@@ -206,6 +210,7 @@ ArrayOfShares DllData::GetShares()
         }
     } else {
         // Unix, use libcups
+        ::wxLogTrace(MYTRACETAG, wxT("Retrieving CUPS destinations"));
         cups_dest_t *dests = NULL;
         int ndests = cupsGetDests(&dests);
         for (int i = 0; i < ndests; i++) {
@@ -213,6 +218,7 @@ ArrayOfShares DllData::GetShares()
             r.name = wxConvLocal.cMB2WX(dests[i].name);
             r.description = wxConvLocal.cMB2WX(dests[i].instance);
             r.sharetype = SharedResource::SHARE_CUPS_PRINTER;
+            sa.Add(r);
         }
     }
 #else // __UNIX__
@@ -294,16 +300,19 @@ ArrayOfShares DllData::GetShares()
 bool DllData::IsAvailable()
 {
     bool ret = false;
+    ::wxLogTrace(MYTRACETAG, wxT("DllData(SMB) IsAvailable called"));
 #ifdef __UNIX__
     if (isSMBC) {
         // Probe Samba
         if (C_init(smbc_auth_fn, 0) == 0) {
+            ::wxLogTrace(MYTRACETAG, wxT("C_init success"));
             int d = C_opendir("smb://127.0.0.1/");
             if (d >= 0) {
                 ret = true;
                 C_closedir(d);
             }
-        }
+        } else
+            ::wxLogTrace(MYTRACETAG, wxT("C_init returned error"));
     } else {
         // Probe Cups
         return (cupsServer() != NULL);
@@ -312,38 +321,43 @@ bool DllData::IsAvailable()
     return ret;
 }
 
-    WinShare::WinShare()
+    SmbClient::SmbClient()
 : dllPrivate(NULL)
 {
     int vMajor, vMinor;
 
-    switch (::wxGetOsVersion(&vMajor, &vMinor)) {
-        case wxWINDOWS_NT:
-            dllPrivate = new DllData(DllData::SmbClientWinNT);
-            break;
-        case wxWIN95:
-            dllPrivate = new DllData(DllData::SmbClientWin95);
-            break;
-        case wxGTK:
-            dllPrivate = new DllData(DllData::SmbClientUnix);
-            break;
+    int osType = ::wxGetOsVersion(&vMajor, &vMinor);
+    if (osType & (wxOS_UNIX | wxOS_MAC_OSX_DARWIN))
+        dllPrivate = new DllData(DllData::SmbClientUnix);
+    else if (osType & wxOS_WINDOWS) {
+        switch (osType) {
+            case wxOS_WINDOWS_NT:
+                dllPrivate = new DllData(DllData::SmbClientWinNT);
+                break;
+            case wxOS_WINDOWS_9X:
+                dllPrivate = new DllData(DllData::SmbClientWin95);
+                break;
+        }
     }
 }
 
-WinShare::~WinShare()
+SmbClient::~SmbClient()
 {
     if (dllPrivate)
         delete dllPrivate;
 }
 
-ArrayOfShares WinShare::GetShares()
+    ArrayOfShares
+SmbClient::GetShares()
 {
     if (dllPrivate)
         m_shares = dllPrivate->GetShares();
+    ::wxLogTrace(MYTRACETAG, wxT("# of SMB shares: %d"), m_shares.GetCount());
     return m_shares;
 }
 
-bool WinShare::IsAvailable()
+    bool
+SmbClient::IsAvailable()
 {
 #ifdef __UNIX__
     return dllPrivate && dllPrivate->IsAvailable();
@@ -352,7 +366,7 @@ bool WinShare::IsAvailable()
 #endif
 }
 
-    CupsShare::CupsShare()
+    CupsClient::CupsClient()
 : dllPrivate(NULL)
 {
 #ifdef __UNIX__
@@ -360,22 +374,25 @@ bool WinShare::IsAvailable()
 #endif
 }
 
-CupsShare::~CupsShare()
+CupsClient::~CupsClient()
 {
     if (dllPrivate)
         delete dllPrivate;
 }
 
-ArrayOfShares CupsShare::GetShares()
+    ArrayOfShares
+CupsClient::GetShares()
 {
 #ifdef __UNIX__
     if (dllPrivate)
         m_shares = dllPrivate->GetShares();
 #endif
+    ::wxLogTrace(MYTRACETAG, wxT("# of CUPS shares: %d"), m_shares.GetCount());
     return m_shares;
 }
 
-bool CupsShare::IsAvailable()
+    bool
+CupsClient::IsAvailable()
 {
     return dllPrivate && dllPrivate->IsAvailable();
 }
