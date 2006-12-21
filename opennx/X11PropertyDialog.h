@@ -34,6 +34,7 @@
 #include "X11PropertyDialog_symbols.h"
 #include "wx/xrc/xmlres.h"
 #include "wx/valgen.h"
+#include "wx/statline.h"
 ////@end includes
 
 /*!

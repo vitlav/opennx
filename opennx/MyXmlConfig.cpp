@@ -467,10 +467,9 @@ MyXmlConfig::sGetSessionParams(const wxString &protocolVersion, bool bNew)
 #else
         << wxT(" --client=\"windows\"")
 #endif
+        << wxT(" --media=\"") << (m_bEnableMultimedia ? 1 : 0) << wxT("\"")
         ;
         // FIXME: Add real settings
-        //
-        ret += wxT(" --media=\"0\"");
         ret += wxT(" --strict=\"0\"");
     return ret;
 }

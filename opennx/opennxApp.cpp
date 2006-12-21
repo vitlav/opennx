@@ -260,21 +260,73 @@ opennxApp::opennxApp()
 # undef NotImplemented
 #endif
 #ifdef __OPENBSD__
-        // FIXME: How to get one's own exe path?
-        fn.Assign(wxT("/usr/local/NX/bin/opennx"));
+        // FIXME: How to get one's own exe path on OpenBSD?
+        // for now, we resemble sh's actions
+        tmp = argv[0];
+        if (!::wxIsAbsolutePath(tmp)) {
+            if (av0.StartsWith(wxt("."))) {
+                // a relative path
+                fn.Assign(tmp);
+                fn.MakeAbsolute();
+                tmp = fn.GetFullPath();
+            } else {
+                bool found = false;
+                tmp = ::wxGetEnv(wxT("PATH"));
+                if (tmp.IsEmpty) {
+                    wxLogError(_("Could not get PATH environment"));
+                    return;
+                }
+                wxStringTokenizer st(tmp, wxT(":"));
+                while (st.HasMoreTokens()) {
+                    tmp = st.GetNextToken();
+                    fn.Assign(tmp, argv[0]);
+                    if (fn.IsFileExecutable()) {
+                        tmp = fn.getFullPath();
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    tmp = argv[0];
+                    wxLogError(_("Could not find %s in PATH"), tmp.c_str());
+                    return;
+                }
+            }
+        }
+        int ret;
+        char ldst[PATH_MAX+1];
+        while (true) {
+            struct stat st;
+            if (lstat(tmp.c_str(), &st) != 0) {
+                wxLogSysError(_("Could not stat %s"), tmp.c_str());
+                return;
+            }
+            if (S_IFLNK(st.st_mode)) {
+                ret = readlink(tmp.c_str(), ldst, PATH_MAX);
+                if (ret == -1) {
+                    wxLogSysError(_("Could not read link %s"), tmp.c_str());
+                    return;
+                }
+                ldst[ret] = '\0';
+                tmp = wxConvLocal.cMB2WX(ldst);
+            } else {
+                fn.Assign(tmp);
+                fn.MakeAbsolute();
+                break;
+            }
+        }
 # undef NotImplemented
 #endif
-#ifdef __linux__
+#ifdef __LINUX__
         // Get executable path from /proc/self/exe
         char ldst[PATH_MAX+1];
         int ret = readlink("/proc/self/exe", ldst, PATH_MAX);
-        if (ret == -1)
-            ret = 0;
+        if (ret == -1) {
+            wxLogSysError(_("Could not read link /proc/self/exe"));
+            return;
+        }
         ldst[ret] = '\0';
-        if (ret == 0)
-            fn.Assign(wxT("/usr/NX/bin/opennx"));
-        else
-            fn.Assign(wxConvLocal.cMB2WX(ldst));
+        fn.Assign(wxConvLocal.cMB2WX(ldst));
 # undef NotImplemented
 #endif
 #ifdef NotImplemented

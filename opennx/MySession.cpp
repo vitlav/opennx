@@ -639,7 +639,6 @@ bool MySession::Create(const wxString cfgFileName, const wxString password)
         ::wxSetEnv(wxT("NX_ROOT"), m_sUserDir);
         ::wxSetEnv(wxT("NX_SYSTEM"), m_sSysDir);
         ::wxSetEnv(wxT("NX_CLIENT"), ::wxGetApp().GetSelfPath());
-        //        wxT("/usr/NX/bin/nxclient"));
         ::wxSetEnv(wxT("NX_VERSION"), NX_PROTOCOL_VERSION);
         ::wxSetEnv(wxT("XAUTHORITY"), getXauthPath());
         // opennx needs TEMP or NX_TEMP to be set to the same dir

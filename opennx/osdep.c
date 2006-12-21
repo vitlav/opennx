@@ -28,6 +28,11 @@
 #include <sys/un.h>
 #include <dlfcn.h>
 
+/*
+ * Defines canonicalized platform names (e.g. __LINUX__)
+ */
+#include <wx/platform.h>
+
 typedef int (*PFconnect)(int s, const struct sockaddr *name, socklen_t namelen);
 static PFconnect real_connect = NULL;
 static void *libc = NULL;
@@ -56,11 +61,11 @@ getx11socket()
     memset(&_spath, 0, sizeof(_spath));
     memset(&_kbd, 0, sizeof(_kbd));
 #define NotImplemented
-#ifdef __linux__
+#ifdef __LINUX__
     libc = dlopen("libc.so.6", RTLD_NOW);
 # undef NotImplemented
 #endif
-#ifdef __OpenBSD__
+#ifdef __OPENBSD__
     libc = dlopen("libc.so", RTLD_NOW);
 # undef NotImplemented
 #endif
@@ -120,7 +125,7 @@ free_libc()
 
 void close_foreign(long parentID)
 {
-#if defined(__linux__) || defined(__OpenBSD__)
+#if defined(__LINUX__) || defined(__OPENBSD__)
     Display *dpy = XOpenDisplay(NULL);
     if (dpy) {
         XClientMessageEvent ev;
@@ -131,7 +136,6 @@ void close_foreign(long parentID)
         ev.data.l[0] = XInternAtom(dpy, "WM_DELETE_WINDOW", True);
         ev.data.l[1] = CurrentTime;
         XSendEvent(dpy, parentID, False, 0, (XEvent *)&ev);
-        // XDestroyWindow(dpy, parentID);
         XCloseDisplay(dpy);
     }
 #else
@@ -141,7 +145,7 @@ void close_foreign(long parentID)
 
 void reparent_pulldown(long parentID)
 {
-#if defined(__linux__) || defined(__OpenBSD__)
+#if defined(__LINUX__) || defined(__OPENBSD__)
     Display *dpy = XOpenDisplay(NULL);
     if (dpy) {
         Atom a = XInternAtom(dpy, "_NET_WM_PID", True);
@@ -164,7 +168,7 @@ void reparent_pulldown(long parentID)
                             unsigned long pid;
                             unsigned long *prop;
                             int res = XGetWindowProperty(dpy, w, a, 0, 32, False,
-                                    XA_CARDINAL, &type, &fmt, &n, &ba, (unsigned char *)&prop);
+                                    XA_CARDINAL, &type, &fmt, &n, &ba, (unsigned char **)&prop);
                             if ((res == Success) && (fmt = 32) && (n == 1) && prop) {
                                 if (*prop == getpid()) {
                                     int pw, cw, dummy;

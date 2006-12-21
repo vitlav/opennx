@@ -18,7 +18,7 @@ opennx_SOURCES = AboutDialog.cpp ConnectDialog.cpp ExtHtmlWindow.cpp \
 	VncPropertyDialog.cpp wxprec.cpp WinShare.cpp X11PropertyDialog.cpp
 
 noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h ConnectDialog.h \
-	ConnectDialog_symbols.h debugleak.h ExtHtmlWindow.h
+	ConnectDialog_symbols.h debugleak.h ExtHtmlWindow.h \
 	ForeignFrame.h ForeignFrame_symbols.h Icon.h \
 	KeyDialog.h KeyDialog_symbols.h LogDialog.h LogDialog_symbols.h \
 	LoginDialog.h LoginDialog_symbols.h md5.h memres.h MyIPC.h \
@@ -41,7 +41,7 @@ PROGRAM = opennx
 opennx_LDADD = -lstdc++
 
 bootstrap:
-	AUTOMAKE_VERSION=1.8 AUTOCONF_VERSION=2.59 autoreconf -is
+	AUTOMAKE_VERSION=1.8 AUTOCONF_VERSION=2.59 autoreconf -isf
 
 ACLOCAL_AMFLAGS = -I m4
 
@@ -63,5 +63,15 @@ MAINTAINERCLEANFILES = Makefile.in configure aclocal.m4 conf/config.guess \
 
 DISTCLEANFILES = res/*.prv.*
 
+data_DATA = share/keyboards
+
+keydir = $(datadir)/keys
+
+key_DATA = share/keys/*
+
+cupsdir = $(datadir)/cups
+
+cups_DATA = share/cups/*
+
 EXTRA_DIST = INSTALL COPYING conf/* res/* opennx.pjd opennx.dsw *.dsp \
-	opennx.rc
+	opennx.rc share

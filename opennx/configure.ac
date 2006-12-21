@@ -10,6 +10,7 @@ AM_INIT_AUTOMAKE
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CC
+AM_GNU_GETTEXT_VERSION(0.14.5)
 AM_GNU_GETTEXT([external])
 
 # Checks for libraries.

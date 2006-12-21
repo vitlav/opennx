@@ -120,16 +120,18 @@ bool SmbShareProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), cons
 {
 ////@begin SmbShareProperties member initialisation
     m_pCtrlLocalShares = NULL;
+    m_pCtrlCupsOptions = NULL;
+    m_pCtrlSmbOptions = NULL;
     m_pCtrlMountPoint = NULL;
     m_pCtrlUsername = NULL;
     m_pCtrlPassword = NULL;
 ////@end SmbShareProperties member initialisation
 
 ////@begin SmbShareProperties creation
-    SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
+    SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
-    //SetIcon(GetIconResource(wxT("res/nx.png")));
+    SetIcon(GetIconResource(wxT("res/nx.png")));
     if (GetSizer())
     {
         GetSizer()->SetSizeHints(this);
@@ -156,6 +158,8 @@ void SmbShareProperties::CreateControls()
     if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_SHARE_ADD")))
         wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
     m_pCtrlLocalShares = XRCCTRL(*this, "ID_COMBOBOX_SHARE_LOCALNAME", wxBitmapComboBox);
+    m_pCtrlCupsOptions = XRCCTRL(*this, "ID_PANEL_CUPSOTIONS", wxPanel);
+    m_pCtrlSmbOptions = XRCCTRL(*this, "ID_PANEL_SMBOPTIONS", wxPanel);
     m_pCtrlMountPoint = XRCCTRL(*this, "ID_TEXTCTRL_SHARE_MOUNTPOINT", wxTextCtrl);
     m_pCtrlUsername = XRCCTRL(*this, "ID_TEXTCTRL_SHARE_USERNAME", wxTextCtrl);
     m_pCtrlPassword = XRCCTRL(*this, "ID_TEXTCTRL_SHARE_PASSWORD", wxTextCtrl);
@@ -173,6 +177,15 @@ void SmbShareProperties::CreateControls()
 ////@begin SmbShareProperties content initialisation
 ////@end SmbShareProperties content initialisation
 
+    Layout();
+    m_pCtrlCupsOptions->SetMinSize(m_pCtrlSmbOptions->GetBestSize());
+    m_pCtrlSmbOptions->Show(false);
+    m_pCtrlCupsOptions->Show(true);
+    Layout();
+    m_pCtrlCupsOptions->Show(false);
+    m_pCtrlSmbOptions->Show(true);
+    Layout();
+    
     if (m_iCurrentShare != -1) {
         ShareGroup sg = m_pCfg->aGetShareGroups().Item(m_iCurrentShare);
         wxBitmap bm = wxNullBitmap;
@@ -215,8 +228,16 @@ void SmbShareProperties::CreateControls()
 
         if (m_aShares.GetCount() > 0) {
             m_pCtrlLocalShares->SetSelection(0);
-            m_sMountPoint = _T("$(SHARES)/");
-            m_sMountPoint += wxDynamicCast(m_pCtrlLocalShares->GetClientData(0), SharedResource)->name;
+            switch (m_aShares[0].sharetype) {
+                case SharedResource::SHARE_SMB_DISK:
+                case SharedResource::SHARE_SMB_PRINTER:
+                    m_sMountPoint = _T("$(SHARES)/") + m_aShares[0].name;
+                    break;
+                case SharedResource::SHARE_CUPS_PRINTER:
+                    m_pCtrlSmbOptions->Show(false);
+                    m_pCtrlCupsOptions->Show(true);
+                    break;
+            }
         } else {
             ::wxLogMessage(_("No shares found"));
             m_pCtrlLocalShares->Enable(false);
@@ -233,9 +254,21 @@ void SmbShareProperties::CreateControls()
 
 void SmbShareProperties::OnComboboxShareLocalnameSelected( wxCommandEvent& event )
 {
-    m_sMountPoint = _T("$(SHARES)/");
-    m_sMountPoint += wxDynamicCast(m_pCtrlLocalShares->GetClientData(event.GetInt()), SharedResource)->name;
-    m_pCtrlMountPoint->SetValue(m_sMountPoint);
+    SharedResource *res = wxDynamicCast(m_pCtrlLocalShares->GetClientData(event.GetInt()), SharedResource);
+    switch (res->sharetype) {
+        case SharedResource::SHARE_SMB_DISK:
+        case SharedResource::SHARE_SMB_PRINTER:
+            m_pCtrlCupsOptions->Show(false);
+            m_pCtrlSmbOptions->Show(true);
+            m_sMountPoint = wxT("$(SHARES)/") + res->name;
+            m_pCtrlMountPoint->SetValue(m_sMountPoint);
+            break;
+        case SharedResource::SHARE_CUPS_PRINTER:
+            m_pCtrlSmbOptions->Show(false);
+            m_pCtrlCupsOptions->GetSizer()->Layout();
+            m_pCtrlCupsOptions->Show(true);
+            break;
+    }
     event.Skip();
 }
 

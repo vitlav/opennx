@@ -128,6 +128,8 @@ private:
 
 ////@begin SmbShareProperties member variables
     wxBitmapComboBox* m_pCtrlLocalShares;
+    wxPanel* m_pCtrlCupsOptions;
+    wxPanel* m_pCtrlSmbOptions;
     wxTextCtrl* m_pCtrlMountPoint;
     wxTextCtrl* m_pCtrlUsername;
     wxTextCtrl* m_pCtrlPassword;
