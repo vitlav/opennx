@@ -511,6 +511,10 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
 // 'Main program' equivalent: the program execution "starts" here
 bool opennxApp::OnInit()
 {
+    wxString tmp;
+    wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp);
+    m_cLocale.AddCatalogLookupPathPrefix(tmp + wxFileName::GetPathSeparator()
+            + wxT("share") + wxFileName::GetPathSeparator() + wxT("locale"));
     m_cLocale.AddCatalogLookupPathPrefix(wxT("locale"));
     m_cLocale.Init();
     m_cLocale.AddCatalog(wxT("opennx"));

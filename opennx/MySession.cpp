@@ -55,7 +55,7 @@
 
 static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
 
-#define NX_PROTOCOL_VERSION wxT("2.1.0")
+#define NX_PROTO wxT(NX_PROTOCOL_VERSION)
 
 IMPLEMENT_CLASS(MySession, wxEvtHandler);
 
@@ -320,7 +320,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
             m_pDlg->SetProgress(m_iProgress);
             switch (m_eConnectState) {
                 case STATE_HELLO:
-                    m_pNxSsh->Print(wxT("hello NXCLIENT - Version ") NX_PROTOCOL_VERSION);
+                    m_pNxSsh->Print(wxT("hello NXCLIENT - Version ") NX_PROTO);
                     m_eConnectState = STATE_SHELLMODE;
                     break;
                 case STATE_SHELLMODE:
@@ -335,7 +335,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     m_pNxSsh->Print(wxT("login"));
                     break;
                 case STATE_LIST_SESSIONS:
-                    scmd = wxT("listsession") + m_pCfg->sGetListParams(NX_PROTOCOL_VERSION);
+                    scmd = wxT("listsession") + m_pCfg->sGetListParams(NX_PROTO);
                     m_pNxSsh->Print(scmd);
                     m_eConnectState = STATE_PARSE_SESSIONS;
                     break;
@@ -344,7 +344,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     break;
                 case STATE_START_SESSION:
                     scmd = wxT("startsession ");
-                    scmd << m_pCfg->sGetSessionParams(NX_PROTOCOL_VERSION, true);
+                    scmd << m_pCfg->sGetSessionParams(NX_PROTO, true);
 #if 0
 #ifdef __UNIX__
                     if (!m_sXauthCookie.IsEmpty())
@@ -356,7 +356,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     break;
                 case STATE_RESUME_SESSION:
                     scmd = wxT("restoresession ");
-                    scmd << m_pCfg->sGetSessionParams(NX_PROTOCOL_VERSION, false)
+                    scmd << m_pCfg->sGetSessionParams(NX_PROTO, false)
                         << wxT(" --session=\"") << m_sResumeName
                         << wxT("\" --type=\"") << m_sResumeType
                         << wxT("\" --id=\"") << m_sResumeId << wxT("\"");
@@ -419,7 +419,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
             if (m_eConnectState == STATE_FINISH) {
                 m_pDlg->SetStatusText(_("Starting session"));
                 msg = wxT("NX> 299 Switch connection to: ");
-                if (intver(NX_PROTOCOL_VERSION) > 0x00020000) {
+                if (intver(NX_PROTO) > 0x00020000) {
                     msg << wxT("NX mode: encrypted options: nx,options=")
                         << m_sOptFilename << wxT(":") << m_sSessionDisplay;
                 } else {
@@ -531,7 +531,7 @@ MySession::startProxy()
     wxString popts;
     popts << wxT("nx,cookie=") << m_sProxyCookie
         << wxT(",root=") << m_sUserDir
-        << m_pCfg->sGetProxyParams(NX_PROTOCOL_VERSION)
+        << m_pCfg->sGetProxyParams(NX_PROTO)
         << wxT(",product=") << m_sSubscription
         << wxT(",encryption=") << (m_bSslTunneling ? 1 : 0)
         << wxT(",session=session")
@@ -541,7 +541,7 @@ MySession::startProxy()
         << wxT(",client=win")
 #endif
         << wxT(",id=") << m_sSessionID;
-    if (intver(NX_PROTOCOL_VERSION) <= 0x00020000) {
+    if (intver(NX_PROTO) <= 0x00020000) {
         if (m_bSslTunneling) {
             m_sProxyIP = wxT("127.0.0.1");
             m_sProxyPort = wxString::Format(wxT("%d"), getFirstFreePort());
@@ -572,7 +572,7 @@ MySession::startProxy()
                 << wxFileName::GetPathSeparator() << wxT("nxproxy -S nx,options=")
                 << m_sOptFilename << wxT(":") << m_sSessionDisplay;
             m_pNxSsh->Print(wxT("bye"));
-            if (intver(NX_PROTOCOL_VERSION) <= 0x00020000)
+            if (intver(NX_PROTO) <= 0x00020000)
                 ::wxExecute(pcmd);
         } else {
             ::wxLogSysError(_("Could not write session options\n%s\n"),
@@ -639,7 +639,7 @@ bool MySession::Create(const wxString cfgFileName, const wxString password)
         ::wxSetEnv(wxT("NX_ROOT"), m_sUserDir);
         ::wxSetEnv(wxT("NX_SYSTEM"), m_sSysDir);
         ::wxSetEnv(wxT("NX_CLIENT"), ::wxGetApp().GetSelfPath());
-        ::wxSetEnv(wxT("NX_VERSION"), NX_PROTOCOL_VERSION);
+        ::wxSetEnv(wxT("NX_VERSION"), NX_PROTO);
         ::wxSetEnv(wxT("XAUTHORITY"), getXauthPath());
         // opennx needs TEMP or NX_TEMP to be set to the same dir
         // where .X11-unix resides (typically /tmp)

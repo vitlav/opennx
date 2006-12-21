@@ -104,5 +104,12 @@ AC_PATH_PROG([cupsd],[cupsd],[],[$PATH:/usr/sbin:/usr/local/sbin])
 test -n "$cupsd" && CUPS_DEFAULT_PATH=$cupsd
 AC_DEFINE_UNQUOTED(CUPS_DEFAULT_PATH,"$CUPS_DEFAULT_PATH")
 
+ac_cv_nxproto="2.1.0"
+AC_ARG_WITH([nxproto],
+            AS_HELP_STRING([--with-nxproto],
+                           [Specify NX protocol version (Default: 2.1.0)]),
+            [ac_cv_nxproto=${withval}])
+AC_DEFINE_UNQUOTED(NX_PROTOCOL_VERSION,"${ac_cv_nxproto}")
+
 AC_CONFIG_FILES([Makefile po/Makefile.in m4/Makefile])
 AC_OUTPUT

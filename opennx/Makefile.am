@@ -66,12 +66,13 @@ DISTCLEANFILES = res/*.prv.*
 data_DATA = share/keyboards
 
 keydir = $(datadir)/keys
-
 key_DATA = share/keys/*
 
 cupsdir = $(datadir)/cups
-
 cups_DATA = share/cups/*
+
+icondir = $(datadir)/icons
+icon_DATA = res/nx-desktop.png res/opennx-admin.png res/opennx-wizard.png
 
 EXTRA_DIST = INSTALL COPYING conf/* res/* opennx.pjd opennx.dsw *.dsp \
 	opennx.rc share

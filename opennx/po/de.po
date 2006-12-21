@@ -1,18 +1,20 @@
+# translation of de.po to
+# Fritz Elfert <fritz.elfert@innovidata.com>, 2006.
 msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: fritz.elfert@innovidata.com\n"
-"POT-Creation-Date: 2006-12-14 03:45+0100\n"
-"PO-Revision-Date: 2004-08-09 19:50+0200\n"
-"Last-Translator: Fritz Elfert <felfert@fe.think>\n"
-"Language-Team: Deutsch <de@li.org>\n"
+"POT-Creation-Date: 2006-12-21 23:07+0100\n"
+"PO-Revision-Date: 2006-12-22 00:35+0100\n"
+"Last-Translator: Fritz Elfert <fritz.elfert@innovidata.com>\n"
+"Language-Team:  <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.3.1\n"
+"X-Generator: KBabel 1.11.4\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
-#: AboutDialog.cpp:112 SessionProperties.cpp:651
+#: AboutDialog.cpp:109 SessionProperties.cpp:720
 msgid "Version"
 msgstr "Version"
 
@@ -21,8 +23,8 @@ msgid "About OpenNX"
 msgstr "Über OpenNX"
 
 #: AboutDialog_symbols.h:23 RdpImageSettingsDialog_symbols.h:35
-#: RdpPropertyDialog_symbols.h:35 SessionProperties_symbols.h:140
-#: SmbShareProperties_symbols.h:30 UnixImageSettingsDialog_symbols.h:34
+#: RdpPropertyDialog_symbols.h:35 SessionProperties_symbols.h:98
+#: SmbShareProperties_symbols.h:36 UnixImageSettingsDialog_symbols.h:34
 #: VncImageSettingsDialog_symbols.h:27 VncPropertyDialog_symbols.h:31
 #: X11PropertyDialog_symbols.h:32
 msgid "&OK"
@@ -36,7 +38,7 @@ msgstr "Sitzungsprotokoll - OpenNX"
 msgid "Close"
 msgstr "Schließen"
 
-#: LoginDialog.cpp:305 LoginDialog.cpp:354
+#: LoginDialog.cpp:310 LoginDialog.cpp:361
 #, c-format
 msgid ""
 "Could not save session to\n"
@@ -46,7 +48,7 @@ msgstr ""
 "%s\n"
 "speichern."
 
-#: LoginDialog.cpp:306 LoginDialog.cpp:355
+#: LoginDialog.cpp:311 LoginDialog.cpp:362
 msgid "Error saving - OpenNX"
 msgstr "Fehler beim Speichern - OpenNX"
 
@@ -59,7 +61,7 @@ msgid "Login"
 msgstr "Login"
 
 #: LoginDialog_symbols.h:24 RdpPropertyDialog_symbols.h:30
-#: SmbShareProperties_symbols.h:29 VncPropertyDialog_symbols.h:29
+#: SmbShareProperties_symbols.h:35 VncPropertyDialog_symbols.h:29
 msgid "Password"
 msgstr "Passwort"
 
@@ -74,7 +76,7 @@ msgstr "Verwende SmartCard"
 
 #: LoginDialog_symbols.h:27
 msgid "Login as guest user"
-msgstr ""
+msgstr "Als Gast anmelden"
 
 #: LoginDialog_symbols.h:28
 msgid "Configure..."
@@ -84,44 +86,97 @@ msgstr "Einstellungen..."
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: opennxApp.cpp:225
+#: opennxApp.cpp:121
+msgid "Launch NX Session"
+msgstr "Starte NX Sitzung"
+
+#: opennxApp.cpp:276
+msgid "Could not get PATH environment"
+msgstr "Konnte PATH nicht in der Umgebung ermitteln"
+
+#: opennxApp.cpp:291
+#, c-format
+msgid "Could not find %s in PATH"
+msgstr "Konnte %s nicht im PATH finden"
+
+#: opennxApp.cpp:301
+#, c-format
+msgid "Could not stat %s"
+msgstr "Konnte Attribute von %s nicht ermitteln"
+
+#: opennxApp.cpp:307
+#, c-format
+msgid "Could not read link %s"
+msgstr "Konnte Verknüpfung %s nicht lesen"
+
+#: opennxApp.cpp:325
+msgid "Could not read link /proc/self/exe"
+msgstr "Konnte den symlink /proc/self/exe nicht lesen"
+
+#: opennxApp.cpp:376
 msgid "Start the session administration tool."
 msgstr "Starte das Sitzungs-Administrations-Werkzeug."
 
-#: opennxApp.cpp:227
+#: opennxApp.cpp:378
+msgid "Secify window title for dialog mode."
+msgstr "Spezifiziere Fenstertitel für Dialog-Modus."
+
+#: opennxApp.cpp:380
+msgid "Secify dialog style for dialog mode."
+msgstr "Spezifiziere Dialog-Stil für Dialog-Modus."
+
+#: opennxApp.cpp:382
+msgid "Run in dialog mode."
+msgstr "Aktiviere Dialog-Modus."
+
+#: opennxApp.cpp:384
+msgid "Dialog mode proxy."
+msgstr "Proxy des Dialog-Modus."
+
+#: opennxApp.cpp:386
+msgid "Specify message for dialog mode."
+msgstr "Spezifiziere Mitteilungstext für Dialog-Modus."
+
+#: opennxApp.cpp:388
+msgid "Specify parent PID for dialog mode."
+msgstr "Spezifiziere Eltern-PID für Dialog-Modus."
+
+#: opennxApp.cpp:390
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr "Starte eine Sitzung mit den Einstellungen aus FILENAME."
 
-#: opennxApp.cpp:229
+#: opennxApp.cpp:392
+msgid "Specify window-ID for dialog mode."
+msgstr "Spezifiziere Window-ID für Dialog-Modus."
+
+#: opennxApp.cpp:394
 msgid "Guide the user through the steps to configure a session."
 msgstr "Führe den Benutzer durch die Schritte zu Konfiguration einer Sitzung."
 
-#: MyIPC.cpp:493
-#, fuzzy
+#: MyIPC.cpp:490
 msgid "Authentication failed"
-msgstr "Authentisierung"
+msgstr "Authentisierung fehlgeshlagen"
 
-#: MyWizard.cpp:320
-#, fuzzy
+#: MyWizard.cpp:315
 msgid ""
 "Welcome to the OpenNX Client Connection Wizard which will guide you through "
 "the steps needed to setup your login. Please select the 'Next' button to "
 "start."
 msgstr ""
-"Willkommen beim MX Client Verbindungs-Assistenten. In den folgenden "
+"Willkommen beim OpenNX Client Verbindungs-Assistenten. In den folgenden "
 "Schritten werden Sie die Einstellungen Ihrer Sitzung konfigurieren. Bitte "
 "wählen Sie die Schaltfläche 'Next' um zu beginnen."
 
-#: MyWizard.cpp:442
+#: MyWizard.cpp:437
 msgid "New Session"
 msgstr "Neue Sitzung"
 
-#: MyWizard.cpp:445
+#: MyWizard.cpp:440
 #, c-format
 msgid "New Session %d"
 msgstr "Neue Sitzung %d"
 
-#: MyWizard.cpp:459
+#: MyWizard.cpp:454
 msgid ""
 "Insert the name of the session. Your configuration settings will be saved "
 "with this name."
@@ -129,48 +184,46 @@ msgstr ""
 "Geben Sie den Namen der Sitzung ein. Die Einstellungen werden unter diesem "
 "Namen gespeichert."
 
-#: MyWizard.cpp:460
+#: MyWizard.cpp:455
 msgid "Insert the name and port of the server you want to connect."
 msgstr "Geben Sie den Namen und Port des Servers ein."
 
-#: MyWizard.cpp:461
+#: MyWizard.cpp:456
 msgid "Select the type of your internet connection."
 msgstr "Wählen Sie den Typ (Geschwindigkeit) Ihrer Internet-Anbindung."
 
-#: MyWizard.cpp:641
-#, fuzzy
+#: MyWizard.cpp:636
 msgid ""
 "Using OpenNX Client, you can run RDP, VNC and X desktops, depending on what "
 "your service provider has made available."
 msgstr ""
-"Mit dem MX Client können Sie auf RDP, VNC und X Arbeitsflächen zugreifen. "
+"Mit dem OpenNX Client können Sie auf RDP, VNC und X Arbeitsflächen zugreifen. "
 "Dies ist von der Verfügbarkeit dieser Dienste bei Ihrem Service-Provider "
 "abhängig."
 
-#: MyWizard.cpp:688 MyWizard_symbols.h:34 SessionProperties.cpp:478
+#: MyWizard.cpp:683 MyWizard_symbols.h:34 SessionProperties.cpp:533
 #: SessionProperties_symbols.h:34
 msgid "KDE"
 msgstr "KDE"
 
-#: MyWizard.cpp:694 SessionProperties.cpp:484
+#: MyWizard.cpp:689 SessionProperties.cpp:541
 msgid "RDP"
 msgstr "RDP"
 
-#: MyWizard.cpp:702 SessionProperties.cpp:492
+#: MyWizard.cpp:697 SessionProperties.cpp:553
 msgid "RFB"
 msgstr "RFB"
 
-#: MyWizard.cpp:863
-#, fuzzy
+#: MyWizard.cpp:859
 msgid ""
 "OpenNX Client supports authentication using a variety of USB SmartCard "
 "tokens. Enable this option if you intend to use such a token."
 msgstr ""
-"Der MX Client unterstützt Authentisierung mit Hilfe verschiedener USB "
-"SmartCard Tokens. Aktivieren Sie dies, wenn sie solch ein Token verwenden "
+"Der OpenNX Client unterstützt Authentisierung mit Hilfe verschiedener USB "
+"SmartCard Tokens. Aktivieren Sie dies, wenn sie ein solches Token verwenden "
 "wollen."
 
-#: MyWizard.cpp:864
+#: MyWizard.cpp:860
 msgid ""
 "Authorization credentials are always encrypted while establishing a "
 "connection. For increased security, you can enable the following option."
@@ -188,15 +241,9 @@ msgstr ""
 "Sie können Ihre Sitzung weitergehend konfigurieren, indem Sie die "
 "erweiterten Einstellungen anzeigen lassen."
 
-#: MyWizard.cpp:1314
-#, fuzzy
-msgid "Launch NX Session"
-msgstr "Starte MX Sitzung"
-
 #: MyWizard_symbols.h:22
-#, fuzzy
 msgid "Connection Wizard - OpenNX"
-msgstr "MX Verbindungs Assistent"
+msgstr "Verbindungs Assistent - OpenNX"
 
 #: MyWizard_symbols.h:24 SessionProperties_symbols.h:25
 #: VncPropertyDialog_symbols.h:25
@@ -309,28 +356,27 @@ msgstr "RDP Bild Einstellungen - OpenNX"
 
 #: RdpImageSettingsDialog_symbols.h:23
 msgid "Allowed colors"
-msgstr ""
+msgstr "Erlaubte Farben"
 
 #: RdpImageSettingsDialog_symbols.h:24
 msgid "256"
-msgstr ""
+msgstr "256"
 
 #: RdpImageSettingsDialog_symbols.h:25
 msgid "32K"
-msgstr ""
+msgstr "32K"
 
 #: RdpImageSettingsDialog_symbols.h:26
 msgid "64K"
-msgstr ""
+msgstr "64K"
 
 #: RdpImageSettingsDialog_symbols.h:27
-#, fuzzy
 msgid "16M"
-msgstr "16 MB"
+msgstr "16M"
 
 #: RdpImageSettingsDialog_symbols.h:28 UnixImageSettingsDialog_symbols.h:23
 msgid "Encoding"
-msgstr ""
+msgstr "Kodierung"
 
 #: RdpImageSettingsDialog_symbols.h:29
 msgid "Use RDP image encoding"
@@ -341,9 +387,8 @@ msgid "Use compressed RDP bitmaps"
 msgstr "Verwende komprimierte RDP Bitmaps"
 
 #: RdpImageSettingsDialog_symbols.h:31
-#, fuzzy
 msgid "Use RGB image encoding"
-msgstr "Verwende RDP Bildkodierung"
+msgstr "Verwende RGB Bildkodierung"
 
 #: RdpImageSettingsDialog_symbols.h:32 UnixImageSettingsDialog_symbols.h:25
 #: VncImageSettingsDialog_symbols.h:26
@@ -356,28 +401,27 @@ msgstr "Cache"
 
 #: RdpImageSettingsDialog_symbols.h:34
 msgid "Enable RDP image cache"
-msgstr ""
+msgstr "Aktiviere RDP Bild-Cache"
 
 #: RdpImageSettingsDialog_symbols.h:36 RdpPropertyDialog_symbols.h:36
-#: SessionProperties_symbols.h:141 SmbShareProperties_symbols.h:31
+#: SessionProperties_symbols.h:99 SmbShareProperties_symbols.h:37
 #: UnixImageSettingsDialog_symbols.h:35 VncImageSettingsDialog_symbols.h:28
 #: VncPropertyDialog_symbols.h:32 X11PropertyDialog_symbols.h:33
 msgid "&Cancel"
 msgstr "&Abbruch"
 
-#: RdpPropertyDialog.h:56 RdpPropertyDialog_symbols.h:22
+#: RdpPropertyDialog.h:57 RdpPropertyDialog_symbols.h:22
 msgid "RDP Session Settings - OpenNX"
 msgstr "RDP Sitzungs-Einstellungen - OpenNX"
 
-#: RdpPropertyDialog_symbols.h:23 SessionAdmin.cpp:173 SessionList.cpp:212
+#: RdpPropertyDialog_symbols.h:23 SessionAdmin.cpp:173 SessionList.cpp:209
 #: SessionProperties_symbols.h:24 VncPropertyDialog_symbols.h:23
 msgid "Server"
 msgstr "Server"
 
 #: RdpPropertyDialog_symbols.h:24
-#, fuzzy
 msgid "Domain"
-msgstr "Rumänisch"
+msgstr "Domäne"
 
 #: RdpPropertyDialog_symbols.h:25 VncPropertyDialog_symbols.h:27
 msgid "Authentication"
@@ -388,15 +432,14 @@ msgid "Show the Windows logon"
 msgstr "Zeige Windows Anmeldung"
 
 #: RdpPropertyDialog_symbols.h:27
-#, fuzzy
 msgid "Use NX credentials"
-msgstr "Verwende MX Benutzerkennung"
+msgstr "Verwende NX Benutzerkennung"
 
 #: RdpPropertyDialog_symbols.h:28
 msgid "Use the following credentials"
 msgstr "Verwende folgende Kennung"
 
-#: RdpPropertyDialog_symbols.h:29 SmbShareProperties_symbols.h:28
+#: RdpPropertyDialog_symbols.h:29 SmbShareProperties_symbols.h:34
 msgid "Username"
 msgstr "Username"
 
@@ -438,32 +481,28 @@ msgid "Type"
 msgstr "Typ"
 
 #: SessionAdmin.cpp:244
-#, fuzzy
 msgid "Choose new NX session directory."
-msgstr "Wähle neues MX Sitzungs-Verzeichnis"
+msgstr "Wähle neues OpenNX Sitzungs-Verzeichnis"
 
-#: SessionAdmin.cpp:379 SessionList.cpp:198
+#: SessionAdmin.cpp:379 SessionList.cpp:195
 msgid "terminated"
 msgstr "beendet"
 
 #: SessionAdmin.h:57 SessionAdmin_symbols.h:22
-#, fuzzy
 msgid "Session Administrator - OpenNX"
-msgstr "MX Sitzungs-Administrator"
+msgstr "Sitzungs-Administrator - OpenNX"
 
 #: SessionAdmin_symbols.h:23
 msgid "&File"
 msgstr "&Datei"
 
 #: SessionAdmin_symbols.h:24
-#, fuzzy
 msgid "New NX Session..."
-msgstr "Neue MX Sitzung..."
+msgstr "Neue NX Sitzung..."
 
 #: SessionAdmin_symbols.h:25
-#, fuzzy
 msgid "Change NX directory..."
-msgstr "Ändere MX Verzeichnis"
+msgstr "Ändere NX Verzeichnis..."
 
 #: SessionAdmin_symbols.h:26
 msgid "Exit"
@@ -515,77 +554,91 @@ msgid "About OpenNX client..."
 msgstr "Über OpenNX..."
 
 #: SessionAdmin_symbols.h:38
-#, fuzzy
 msgid "New NX session"
-msgstr "Neue MX Sitzung"
+msgstr "Neue NX Sitzung"
 
-#: SessionList.cpp:201
+#: SessionList.cpp:198
 msgid "failed"
 msgstr "gescheitert"
 
-#: SessionList.cpp:204
+#: SessionList.cpp:201
 msgid "running"
 msgstr "laufend"
 
-#: SessionList.cpp:207
+#: SessionList.cpp:204
 msgid "unknown"
 msgstr "unbekannt"
 
-#: SessionList.cpp:212
+#: SessionList.cpp:209
 msgid "Client"
 msgstr "Client"
 
-#: SessionProperties.cpp:375 SmbShareProperties_symbols.h:24
+#: SessionProperties.cpp:416 SmbShareProperties_symbols.h:24
 msgid "Share"
 msgstr "Freigabe"
 
-#: SessionProperties.cpp:376 SmbShareProperties_symbols.h:26
+#: SessionProperties.cpp:417 SmbShareProperties_symbols.h:32
 msgid "Mount on"
 msgstr "Eingehängt unter"
 
-#: SessionProperties.cpp:377
+#: SessionProperties.cpp:418
 msgid "Comment"
 msgstr "Kommentar"
 
-#: SessionProperties.cpp:388 SessionProperties.cpp:900
+#: SessionProperties.cpp:429 SessionProperties.cpp:1022
 msgid "Currently not available"
 msgstr "Nicht verfügbar"
 
-#: SessionProperties.cpp:711 SessionProperties_symbols.h:135
+#: SessionProperties.cpp:781 SessionProperties_symbols.h:93
 msgid "Font"
 msgstr "Font"
 
-#: SessionProperties.cpp:877
+#: SessionProperties.cpp:812
+msgid "Error while reading keyboard table"
+msgstr "Fehler beim Lesen der Tastatur-Tabelle"
+
+#: SessionProperties.cpp:841
+#, c-format
+msgid "Invalid line='%s'"
+msgstr "Ungültige Zeile='%s'"
+
+#: SessionProperties.cpp:842
+#, c-format
+msgid "Invalid entry in %s"
+msgstr "Ungültiger Eintrag in %s"
+
+#: SessionProperties.cpp:995
 msgid "No local samba server is running."
-msgstr ""
+msgstr "Es läuft kein lokaler Samba-Server."
 
-#: SessionProperties.cpp:977
-#, fuzzy
+#: SessionProperties.cpp:1039 SmbShareProperties.cpp:242
+msgid "No shares found"
+msgstr "Keine Freigaben gefunden"
+
+#: SessionProperties.cpp:1103
 msgid "Select User NX directory"
-msgstr "Wähle Benutzer MX Verzeichnis"
+msgstr "Wähle persönliches NX Verzeichnis"
 
-#: SessionProperties.cpp:994
-#, fuzzy
+#: SessionProperties.cpp:1120
 msgid "Select System NX directory"
-msgstr "Wähle System MX Verzeichnis"
+msgstr "Wähle System NX Verzeichnis"
 
-#: SessionProperties.cpp:1043
+#: SessionProperties.cpp:1169
 #, c-format
 msgid "Really delete Session '%s' ?"
 msgstr "Die Sitzung '%s' wirklich löschen ?"
 
-#: SessionProperties.cpp:1044
+#: SessionProperties.cpp:1170
 msgid "Delete Session"
 msgstr "Lösche Sitzung"
 
-#: SessionProperties.cpp:1314
+#: SessionProperties.cpp:1427
 msgid "No cups server available."
-msgstr ""
+msgstr "Kein CUPS-Server verfügbar."
 
-#: SessionProperties.cpp:1329
-#, fuzzy
+#: SessionProperties.cpp:1442
 msgid "Select System CUPS daemon"
-msgstr "Wähle System MX Verzeichnis"
+msgstr "Wähle System CUPS-Dämon"
 
 #: SessionProperties.h:66 SessionProperties_symbols.h:22
 msgid "Session properties - OpenNX"
@@ -596,9 +649,8 @@ msgid "General"
 msgstr "Allgemein"
 
 #: SessionProperties_symbols.h:28
-#, fuzzy
 msgid "Key..."
-msgstr "..."
+msgstr "Schlüssel..."
 
 #: SessionProperties_symbols.h:30
 msgid "Desktop"
@@ -617,9 +669,8 @@ msgid "Use custom settings"
 msgstr "Verwende benutzerdefinierte Einstellungen"
 
 #: SessionProperties_symbols.h:55
-#, fuzzy
 msgid "Modify..."
-msgstr "Ändern"
+msgstr "Ändern..."
 
 #: SessionProperties_symbols.h:56
 msgid "Advanced"
@@ -639,7 +690,7 @@ msgstr "Deaktiviere ZLIB Kompression"
 
 #: SessionProperties_symbols.h:61
 msgid "Connect through HTTP proxy"
-msgstr ""
+msgstr "Verbinde über HTTP Proxy"
 
 #: SessionProperties_symbols.h:63
 msgid "In memory"
@@ -702,307 +753,158 @@ msgid "Use other layout"
 msgstr "Verwende anderes Layout"
 
 #: SessionProperties_symbols.h:78
-msgid "Afrikaans"
-msgstr "Afrikaans"
-
-#: SessionProperties_symbols.h:79
-msgid "Albanian"
-msgstr "Albanisch"
-
-#: SessionProperties_symbols.h:80
-msgid "Arabic"
-msgstr "Arabisch"
-
-#: SessionProperties_symbols.h:81
-msgid "Basque"
-msgstr "Baskisch"
-
-#: SessionProperties_symbols.h:82
-msgid "Belarusian"
-msgstr "Belarussisch"
-
-#: SessionProperties_symbols.h:83
-msgid "Bulgarian"
-msgstr "Bulgarisch"
-
-#: SessionProperties_symbols.h:84
-msgid "Catalan"
-msgstr "Katalanisch"
-
-#: SessionProperties_symbols.h:85
-msgid "Chinese"
-msgstr "Chinesisch"
-
-#: SessionProperties_symbols.h:86
-msgid "Croatian"
-msgstr "Kroatisch"
-
-#: SessionProperties_symbols.h:87
-msgid "Czech"
-msgstr "Tschechisch"
-
-#: SessionProperties_symbols.h:88
-msgid "Danish"
-msgstr "Dänisch"
-
-#: SessionProperties_symbols.h:89
-msgid "Dutch"
-msgstr "Niederländisch"
-
-#: SessionProperties_symbols.h:90
-msgid "English (GB)"
-msgstr "Englisch (GB)"
-
-#: SessionProperties_symbols.h:91
-msgid "English (US)"
-msgstr "Englisch (US)"
-
-#: SessionProperties_symbols.h:92
-msgid "Estonian"
-msgstr "Estnisch"
-
-#: SessionProperties_symbols.h:93
-msgid "Faeorese"
-msgstr ""
-
-#: SessionProperties_symbols.h:94
-msgid "Farsi"
-msgstr "Persisch"
-
-#: SessionProperties_symbols.h:95
-msgid "Finnish"
-msgstr "Finnisch"
-
-#: SessionProperties_symbols.h:96
-msgid "French"
-msgstr "Französisch"
-
-#: SessionProperties_symbols.h:97
-msgid "German"
-msgstr "Deutsch"
-
-#: SessionProperties_symbols.h:98
-msgid "Greek"
-msgstr "Griechisch"
-
-#: SessionProperties_symbols.h:99
-msgid "Hebrew"
-msgstr "Hebräisch"
-
-#: SessionProperties_symbols.h:100
-msgid "Hungarian"
-msgstr "Ungarisch"
-
-#: SessionProperties_symbols.h:101
-msgid "Icelandic"
-msgstr "Isländisch"
-
-#: SessionProperties_symbols.h:102
-msgid "Indonesian"
-msgstr "Indonesisch"
-
-#: SessionProperties_symbols.h:103
-msgid "Italian"
-msgstr "Italienisch"
-
-#: SessionProperties_symbols.h:104
-msgid "Japanese"
-msgstr "Japanisch"
-
-#: SessionProperties_symbols.h:105
-msgid "Korean"
-msgstr "Koreanisch"
-
-#: SessionProperties_symbols.h:106
-msgid "Latvian"
-msgstr "Lettisch"
-
-#: SessionProperties_symbols.h:107
-msgid "Lithuanian"
-msgstr "Litauisch"
-
-#: SessionProperties_symbols.h:108
-msgid "Norwegian"
-msgstr "Norwegisch"
-
-#: SessionProperties_symbols.h:109
-msgid "Polish"
-msgstr "Polnisch"
-
-#: SessionProperties_symbols.h:110
-msgid "Portugese"
-msgstr "Portugiesisch"
-
-#: SessionProperties_symbols.h:111
-msgid "Romanian"
-msgstr "Rumänisch"
-
-#: SessionProperties_symbols.h:112
-msgid "Russian"
-msgstr "Russisch"
-
-#: SessionProperties_symbols.h:113
-msgid "Slovak"
-msgstr "Slowakisch"
-
-#: SessionProperties_symbols.h:114
-msgid "Slovenian"
-msgstr "Slowenisch"
-
-#: SessionProperties_symbols.h:115
-msgid "Spanish"
-msgstr "Spanisch"
-
-#: SessionProperties_symbols.h:116
-msgid "Swedish"
-msgstr "Schwedisch"
-
-#: SessionProperties_symbols.h:117
-msgid "Thai"
-msgstr "Thailändisch"
-
-#: SessionProperties_symbols.h:118
-msgid "Turkish"
-msgstr "Türkisch"
-
-#: SessionProperties_symbols.h:119
-msgid "Vietnamese"
-msgstr "Vietnamesisch"
-
-#: SessionProperties_symbols.h:120
 msgid "Services"
 msgstr "Dienste"
 
-#: SessionProperties_symbols.h:121
+#: SessionProperties_symbols.h:79
 #, fuzzy
 msgid "Enable SMB printer and file sharing"
 msgstr "Aktiviere Druck- und Dateifreigabe"
 
-#: SessionProperties_symbols.h:122
-#, fuzzy
+#: SessionProperties_symbols.h:80
 msgid "Enable CUPS printing"
-msgstr "Aktiviere JPEG Kodierung"
+msgstr "Aktiviere CUPS Druckfreigabe"
 
-#: SessionProperties_symbols.h:123
+#: SessionProperties_symbols.h:81
 msgid "Add"
 msgstr "Hinzufügen"
 
-#: SessionProperties_symbols.h:124
+#: SessionProperties_symbols.h:82
 msgid "Modify"
 msgstr "Ändern"
 
-#: SessionProperties_symbols.h:125
+#: SessionProperties_symbols.h:83
 msgid "Delete"
 msgstr "Löschen"
 
-#: SessionProperties_symbols.h:126
+#: SessionProperties_symbols.h:84
 msgid "Enable multimedia support"
 msgstr "Aktiviere Multimedia Unterstützung"
 
-#: SessionProperties_symbols.h:127
+#: SessionProperties_symbols.h:85
 msgid "Environment"
 msgstr "Umgebung"
 
-#: SessionProperties_symbols.h:128
-#, fuzzy
+#: SessionProperties_symbols.h:86
 msgid "User NX directory"
-msgstr "Benutzer MX Verzeichnis"
+msgstr "Persönliches NX Verzeichnis"
 
-#: SessionProperties_symbols.h:129
+#: SessionProperties_symbols.h:87
 msgid "..."
 msgstr "..."
 
-#: SessionProperties_symbols.h:130
+#: SessionProperties_symbols.h:88
 msgid "Remove old session files"
 msgstr "Entferne alte Sitzungs-Dateien"
 
-#: SessionProperties_symbols.h:131
-#, fuzzy
+#: SessionProperties_symbols.h:89
 msgid "System NX directory"
-msgstr "System MX Verzeichnis"
+msgstr "System NX Verzeichnis"
 
-#: SessionProperties_symbols.h:132
+#: SessionProperties_symbols.h:90
 msgid "System CUPS daemon"
-msgstr ""
+msgstr "System CUPS-Dämon"
 
-#: SessionProperties_symbols.h:133
-#, fuzzy
+#: SessionProperties_symbols.h:91
 msgid "Select NX fonts"
-msgstr "Wähle MX Fonts"
+msgstr "Wähle NX Fonts"
 
-#: SessionProperties_symbols.h:134
+#: SessionProperties_symbols.h:92
 msgid "Default"
 msgstr "Vorgabe"
 
-#: SessionProperties_symbols.h:136
+#: SessionProperties_symbols.h:94
 msgid "Fixed"
 msgstr "Feste Breite"
 
-#: SessionProperties_symbols.h:137
+#: SessionProperties_symbols.h:95
 msgid "About"
 msgstr "�er"
 
-#: SessionProperties_symbols.h:138
+#: SessionProperties_symbols.h:96
 msgid "&Delete"
 msgstr "&Löschen"
 
-#: SessionProperties_symbols.h:139
+#: SessionProperties_symbols.h:97
 msgid "&Apply"
 msgstr "&Anwenden"
 
-#: SmbShareProperties.cpp:163
-msgid "Modify SMB Share - OpenNX"
-msgstr "Bearbeite SMB Freigabe - OpenNX"
+#: SmbShareProperties.cpp:198
+msgid "Modify shared resource - OpenNX"
+msgstr "Bearbeite Freigabe - OpenNX"
 
-#: SmbShareProperties.cpp:230
+#: SmbShareProperties.cpp:315
 msgid "Mountpoint is already used. Please chose another mountpoint"
 msgstr ""
 "Der Einhängepunkt ist in Verwendung. Bitte wählen Sie einen anderen "
 "Einhängepunkt."
 
-#: SmbShareProperties.cpp:231
+#: SmbShareProperties.cpp:316
 msgid "Invalid mountpoint"
 msgstr "Ungültiger Einhängepunkt"
 
-#: SmbShareProperties.h:56 SmbShareProperties_symbols.h:22
-msgid "New SMB Share - OpenNX"
-msgstr "Neue SMB Freigabe - OpenNX"
+#: SmbShareProperties.h:57 SmbShareProperties_symbols.h:22
+msgid "New shared resource - OpenNX"
+msgstr "Neue Freigabe - OpenNX"
 
 #: SmbShareProperties_symbols.h:23
-#, fuzzy
 msgid ""
 "Please select the name of the shared resource on the\n"
 "local computer."
-msgstr "Bitte wählen Sie den Namen der Freigabe auf dem lokalen Rechner."
+msgstr ""
+"Bitte wählen Sie den Namen der Freigabe auf dem\n"
+"lokalen Rechner."
 
 #: SmbShareProperties_symbols.h:25
-#, fuzzy
+msgid "CUPS options"
+msgstr "CUPS Optionen"
+
+#: SmbShareProperties_symbols.h:26
+msgid "Please choose a printer driver:"
+msgstr "Bitte wählen Sie einen Druckertreiber:"
+
+#: SmbShareProperties_symbols.h:27
+msgid "Access control:"
+msgstr "Zugriffskontrolle:"
+
+#: SmbShareProperties_symbols.h:28
+msgid "Private printer"
+msgstr "Perönlicher Drucker"
+
+#: SmbShareProperties_symbols.h:29
+msgid "Public printer"
+msgstr "Öffentlicher Drucker"
+
+#: SmbShareProperties_symbols.h:30
+msgid "SMB options"
+msgstr "SMB Optionen"
+
+#: SmbShareProperties_symbols.h:31
 msgid ""
 "Please specify the resource name on the remote\n"
 "machine with which this share will be made available."
 msgstr ""
-"Bitte geben Sie den Namen des Einhängepunktes an\\nunter dem die Freigabe "
+"Bitte geben Sie den Namen des Einhängepunktes an\nunter dem die Freigabe "
 "auf dem entfernten Rechner verfügbar sein soll."
 
-#: SmbShareProperties_symbols.h:27
-#, fuzzy
+#: SmbShareProperties_symbols.h:33
 msgid ""
 "The remote system will need to provide security\n"
 "credentials to your local client. Please specify\n"
 "username and password with which you configured\n"
 "this share."
 msgstr ""
-"Das entfernte System wird sich an Ihrem lokalen\\nRechner anmelden müssen. "
-"Bitte geben Sie\\nBenutzername und Passwort für diese Freigabe an."
+"Das entfernte System wird sich an Ihrem lokalen\n"
+"Rechner anmelden müssen. Bitte geben Sie\n"
+"Benutzername und Passwort für diese Freigabe an."
 
 #: TextViewer.h:53 TextViewer_symbols.h:22
 msgid "Text Viewer - OpenNX"
-msgstr ""
+msgstr "Textbetrachter - OpenNX"
 
 #: TextViewer_symbols.h:23
-#, fuzzy
 msgid "&Close"
-msgstr "Schließen"
+msgstr "&Schließen"
 
 #: UnixImageSettingsDialog.h:55 UnixImageSettingsDialog_symbols.h:22
 msgid "Unix Image Settings - OpenNX"
@@ -1022,31 +924,27 @@ msgstr "Benutzerdefinierte Qualität�"
 
 #: UnixImageSettingsDialog_symbols.h:28
 msgid "Performance"
-msgstr ""
+msgstr "Leistung"
 
 #: UnixImageSettingsDialog_symbols.h:29
 msgid "Disable render extension"
 msgstr "Deaktiviere \"render\" Erweiterung"
 
 #: UnixImageSettingsDialog_symbols.h:30
-#, fuzzy
 msgid "Disable backing-store"
-msgstr "Hintergrundspeicher"
+msgstr "Deaktiviere backing-store"
 
 #: UnixImageSettingsDialog_symbols.h:31
-#, fuzzy
 msgid "Disable composite extension"
-msgstr "Deaktiviere \"render\" Erweiterung"
+msgstr "Deaktiviere \"composite\" Erweiterung"
 
 #: UnixImageSettingsDialog_symbols.h:32
-#, fuzzy
 msgid "Disable shared memory extension"
-msgstr "Deaktiviere \"render\" Erweiterung"
+msgstr "Deaktiviere \"shared-memory\" Erweiterung"
 
 #: UnixImageSettingsDialog_symbols.h:33
-#, fuzzy
 msgid "Disable shared pixmap emulation"
-msgstr "Deaktiviere \"render\" Erweiterung"
+msgstr "Deaktiviere \"shared-pixmap\" Emulation"
 
 #: VncImageSettingsDialog.h:55 VncImageSettingsDialog_symbols.h:22
 msgid "VNC Image Settings - OpenNX"
@@ -1064,33 +962,31 @@ msgstr "Verwende RFB Tight Kodierung"
 msgid "Enable JPEG encoding"
 msgstr "Aktiviere JPEG Kodierung"
 
-#: VncPropertyDialog.h:55 VncPropertyDialog_symbols.h:22
+#: VncPropertyDialog.h:56 VncPropertyDialog_symbols.h:22
 msgid "VNC Session Settings - OpenNX"
 msgstr "VNC Sitzungs-Einstellungen - OpenNX"
 
 #: VncPropertyDialog_symbols.h:24
-#, fuzzy
 msgid ""
 "Please specify the name and the display number of the\n"
 "remote VNC computer connected to the NX server"
 msgstr ""
-"Bitte geben Sie den Namen und die Bildschirm-Nr. des\\nentfernten VNC-"
-"Rechners an"
+"Bitte geben Sie den Namen und die Bildschirm-Nr. des\n"
+"entfernten VNC-Rechners an"
 
 #: VncPropertyDialog_symbols.h:26
 msgid ":"
 msgstr ":"
 
 #: VncPropertyDialog_symbols.h:28
-#, fuzzy
 msgid ""
 "Please specify a password. NX will use it to login to the\n"
 "remote VNC server"
 msgstr ""
-"Bitte geben Sie ein Passwort an. MX wird es verwenden, um\\nsich beim "
-"entfernten VNC-Server zu anzumelden"
+"Bitte geben Sie ein Passwort an. OpenNX wird es verwenden, um\n"
+"sich beim entfernten VNC-Server zu anzumelden"
 
-#: X11PropertyDialog.h:54 X11PropertyDialog_symbols.h:22
+#: X11PropertyDialog.h:55 X11PropertyDialog_symbols.h:22
 msgid "X11 Session Settings - OpenNX"
 msgstr "X11 Sitzungs-Einstellungen - OpenNX"
 
@@ -1119,29 +1015,10 @@ msgid "Floating window"
 msgstr "Einzelnes Applikationsfenster"
 
 #: X11PropertyDialog_symbols.h:30
-#, fuzzy
 msgid "Disable X agent encoding"
-msgstr "Verwende RDP Bildkodierung"
+msgstr "Deaktiviere X-Agent-Kodierung"
 
 #: X11PropertyDialog_symbols.h:31
 msgid "Disable taint of X replies"
 msgstr "Deaktiviere X-Packetmodifikation"
 
-#~ msgid "Windows Terminal Server"
-#~ msgstr "Windows Terminal Server"
-
-#~ msgid ""
-#~ "Please specify the name of the Windows computer\\nconnected to the MX "
-#~ "server"
-#~ msgstr ""
-#~ "Bitte geben Sie den Namen des Windows-Rechners\\nan, der mit dem MX "
-#~ "Server verbunden ist."
-
-#~ msgid "Font server"
-#~ msgstr "Fontserver"
-
-#~ msgid "Use font server"
-#~ msgstr "Verwende Fontserver"
-
-#~ msgid "Copyright  (C) 2004 Millenux GmbH"
-#~ msgstr "Copyright  (C) 2004 Millenux GmbH"
