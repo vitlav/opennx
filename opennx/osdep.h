@@ -21,6 +21,11 @@
 
 #ifndef _OSDEP_H_
 #define _OSDEP_H_
+
+extern "C" {
 extern const char *x11_socket_path;
 extern const char *x11_keyboard_type;
+extern void reparent_pulldown(long);
+extern void close_foreign(long);
+};
 #endif

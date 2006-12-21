@@ -20,6 +20,7 @@
  */
 
 #include <X11/Xlib.h>
+#include <X11/Xatom.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -87,7 +88,7 @@ getx11socket()
             int res = XGetWindowProperty(dpy,
                     RootWindowOfScreen(DefaultScreenOfDisplay(dpy)),
                     a, 0, PATH_MAX, False, AnyPropertyType,
-                    &type, &fmt, &n, &ba, (unsigned char *)&prop);
+                    &type, &fmt, &n, &ba, (unsigned char **)&prop);
             if ((res == Success) && (fmt == 8) && prop) {
                 unsigned long i = 0;
                 int idx = 0;
@@ -115,4 +116,76 @@ free_libc()
 {
     if (libc)
         dlclose(libc);
+}
+
+void close_foreign(long parentID)
+{
+#if defined(__linux__) || defined(__OpenBSD__)
+    Display *dpy = XOpenDisplay(NULL);
+    if (dpy) {
+        XClientMessageEvent ev;
+        ev.type = ClientMessage;
+        ev.window = parentID;
+        ev.message_type = XInternAtom(dpy, "WM_PROTOCOLS", True);
+        ev.format = 32;
+        ev.data.l[0] = XInternAtom(dpy, "WM_DELETE_WINDOW", True);
+        ev.data.l[1] = CurrentTime;
+        XSendEvent(dpy, parentID, False, 0, (XEvent *)&ev);
+        // XDestroyWindow(dpy, parentID);
+        XCloseDisplay(dpy);
+    }
+#else
+#error Implement reparent_pulldown
+#endif
+}
+
+void reparent_pulldown(long parentID)
+{
+#if defined(__linux__) || defined(__OpenBSD__)
+    Display *dpy = XOpenDisplay(NULL);
+    if (dpy) {
+        Atom a = XInternAtom(dpy, "_NET_WM_PID", True);
+        if (a != None) {
+            int s;
+            for (s = 0; s < ScreenCount(dpy); s++) {
+                Window root = RootWindow(dpy, s);
+                Window dummy;
+                Window *childs = NULL;
+                int nchilds = 0;
+                if (XQueryTree(dpy, root, &dummy, &dummy, &childs, &nchilds)) {
+                    int c;
+                    for (c = 0; c < nchilds; c++) {
+                        Window w = childs[c];
+                        if (w != None) {
+                            Atom type;
+                            int fmt;
+                            unsigned long n;
+                            unsigned long ba;
+                            unsigned long pid;
+                            unsigned long *prop;
+                            int res = XGetWindowProperty(dpy, w, a, 0, 32, False,
+                                    XA_CARDINAL, &type, &fmt, &n, &ba, (unsigned char *)&prop);
+                            if ((res == Success) && (fmt = 32) && (n == 1) && prop) {
+                                if (*prop == getpid()) {
+                                    int pw, cw, dummy;
+                                    Window wdummy;
+
+                                    XGetGeometry(dpy, w, &wdummy, &dummy, &dummy,
+                                            &cw, &dummy, &dummy, &dummy);
+                                    XGetGeometry(dpy, parentID, &wdummy, &dummy, &dummy,
+                                            &pw, &dummy, &dummy, &dummy);
+                                    XReparentWindow(dpy, w, parentID, pw / 2 - cw / 2, 0);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        XCloseDisplay(dpy);
+    }
+#else
+#error Implement reparent_pulldown
+#endif
 }

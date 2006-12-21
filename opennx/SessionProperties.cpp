@@ -39,6 +39,9 @@
 #include <wx/config.h>
 #include <wx/fontdlg.h>
 #include <wx/imaglist.h>
+#include <wx/tokenzr.h>
+#include <wx/wfstream.h>
+#include <wx/txtstrm.h>
 
 #include "SessionProperties.h"
 #include "UnixImageSettingsDialog.h"
@@ -55,9 +58,20 @@
 #include "KeyDialog.h"
 #include "ExtHtmlWindow.h"
 #include "opennxApp.h"
+#include "osdep.h"
 
 ////@begin XPM images
 ////@end XPM images
+
+class KbdLayout {
+    public:
+        wxString sLayoutName;
+        wxString sIsoCode;
+        unsigned long winCode; // win32 language code;
+};
+
+#include <wx/arrimpl.cpp>
+WX_DEFINE_OBJARRAY(KbdLayoutTable);
 
 /*!
  * SessionProperties type definition
@@ -183,6 +197,7 @@ SessionProperties::SessionProperties( )
 {
     m_cFontDefault = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
     m_cFontFixed = wxSystemSettings::GetFont(wxSYS_ANSI_FIXED_FONT);
+    readKbdLayouts();
 }
 
 SessionProperties::SessionProperties( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
@@ -191,15 +206,18 @@ SessionProperties::SessionProperties( wxWindow* parent, wxWindowID id, const wxS
 {
     m_cFontDefault = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
     m_cFontFixed = wxSystemSettings::GetFont(wxSYS_ANSI_FIXED_FONT);
+    readKbdLayouts();
     Create(parent, id, caption, pos, size, style);
 }
 
-void SessionProperties::SetConfig(MyXmlConfig *cfg)
+    void
+SessionProperties::SetConfig(MyXmlConfig *cfg)
 {
     m_pCfg = cfg;
 }
 
-void SessionProperties::CheckChanged()
+    void
+SessionProperties::CheckChanged()
 {
     wxASSERT_MSG(m_pCfg, _T("SessionProperties::CheckChanged: No configuration"));
     if (m_pCfg) {
@@ -239,7 +257,7 @@ void SessionProperties::CheckChanged()
         m_pCfg->eSetCacheMemory((MyXmlConfig::CacheMemory)m_iCacheMem);
         m_pCfg->eSetCacheDisk((MyXmlConfig::CacheDisk)m_iCacheDisk);
         m_pCfg->bSetKbdLayoutOther(m_bKbdLayoutOther);
-        m_pCfg->iSetKbdLayoutLanguage(m_iKbdLayoutLanguage);
+        m_pCfg->sSetKbdLayoutLanguage(m_sKbdLayoutLanguage);
 
         // variables on 'Services' tab
         m_pCfg->bSetEnableSmbSharing(m_bEnableSmbSharing);
@@ -258,7 +276,8 @@ void SessionProperties::CheckChanged()
     }
 }
 
-void SessionProperties::KeyTyped() {
+void
+SessionProperties::KeyTyped() {
     m_bKeyTyped = true;
 }
 
@@ -334,7 +353,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
         m_bKbdLayoutOther = m_pCfg->bGetKbdLayoutOther();
         m_iCacheMem = m_pCfg->eGetCacheMemory();
         m_iCacheDisk = m_pCfg->eGetCacheDisk();
-        m_iKbdLayoutLanguage = m_pCfg->iGetKbdLayoutLanguage();
+        m_sKbdLayoutLanguage = m_pCfg->sGetKbdLayoutLanguage();
         m_iProxyPort = m_pCfg->iGetProxyPort();
         m_sProxyHost = m_pCfg->sGetProxyHost();
         
@@ -366,14 +385,32 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     }
     Centre();
 ////@end SessionProperties creation
-    SetFontLabel(m_pCtrlFontDefault, m_cFontDefault);
-    SetFontLabel(m_pCtrlFontFixed, m_cFontFixed);
-#define SHI_SIZE 16
+    setFontLabel(m_pCtrlFontDefault, m_cFontDefault);
+    setFontLabel(m_pCtrlFontFixed, m_cFontFixed);
+
+    // Populate keyboard layout combobox
+    size_t idx1 = -1;
+    size_t idx2 = -1;
+    wxString mykbdlang = wxString(wxConvLocal.cMB2WX(x11_keyboard_type)).AfterFirst(wxT('/'));
+    for (size_t i = 0; i < m_aKbdLayoutTable.GetCount(); i++) {
+        KbdLayout &l = m_aKbdLayoutTable.Item(i);
+        m_pCtrlKeyboardLayout->Append(l.sLayoutName, (void *)i);
+        if (l.sIsoCode == m_sKbdLayoutLanguage)
+            idx1 = i;
+        if (l.sIsoCode == mykbdlang)
+            idx2 = i;
+    }
+    if (idx1 != -1)
+        m_pCtrlKeyboardLayout->SetValue(m_aKbdLayoutTable.Item(idx1).sLayoutName);
+    else if (idx2 != -1)
+        m_pCtrlKeyboardLayout->SetValue(m_aKbdLayoutTable.Item(idx2).sLayoutName);
+
+#define SHI_SIZE 16,16
     wxImageList *il = new wxImageList(SHI_SIZE, SHI_SIZE);
-    il->Add(CreateBitmapFromFile(_T("res/shbroken.png"), SHI_SIZE, SHI_SIZE));
-    il->Add(CreateBitmapFromFile(_T("res/smbfolder.png"), SHI_SIZE, SHI_SIZE));
-    il->Add(CreateBitmapFromFile(_T("res/smbprinter.png"), SHI_SIZE, SHI_SIZE));
-    il->Add(CreateBitmapFromFile(_T("res/cupsprinter.png"), SHI_SIZE, SHI_SIZE));
+    il->Add(CreateBitmapFromFile(_T("res/shbroken.png"), SHI_SIZE));
+    il->Add(CreateBitmapFromFile(_T("res/smbfolder.png"), SHI_SIZE));
+    il->Add(CreateBitmapFromFile(_T("res/smbprinter.png"), SHI_SIZE));
+    il->Add(CreateBitmapFromFile(_T("res/cupsprinter.png"), SHI_SIZE));
 #undef SHI_SIZE
     m_pCtrlSmbShares->AssignImageList(il, wxIMAGE_LIST_SMALL);
     m_pCtrlSmbShares->InsertColumn(0, _("Share"));
@@ -454,7 +491,8 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
  * Installs event handler for OnChar event in all wxTextCtrl and wxSpinCtrl
  * childs.
  */
-void SessionProperties::InstallOnCharHandlers(wxWindow *w /* = NULL*/)
+    void
+SessionProperties::InstallOnCharHandlers(wxWindow *w /* = NULL*/)
 {
     if (!w)
         w = this;
@@ -643,8 +681,6 @@ void SessionProperties::CreateControls()
         FindWindow(XRCID("ID_COMBOBOX_CACHEDISK"))->SetValidator( wxGenericValidator(& m_iCacheDisk) );
     if (FindWindow(XRCID("ID_RADIOBUTTON_KBDOTHER")))
         FindWindow(XRCID("ID_RADIOBUTTON_KBDOTHER"))->SetValidator( wxGenericValidator(& m_bKbdLayoutOther) );
-    if (FindWindow(XRCID("ID_COMBOBOX_KBDLAYOUT")))
-        FindWindow(XRCID("ID_COMBOBOX_KBDLAYOUT"))->SetValidator( wxGenericValidator(& m_iKbdLayoutLanguage) );
     if (FindWindow(XRCID("ID_CHECKBOX_SMB")))
         FindWindow(XRCID("ID_CHECKBOX_SMB"))->SetValidator( wxGenericValidator(& m_bEnableSmbSharing) );
     if (FindWindow(XRCID("ID_CHECKBOX_CUPSENABLE")))
@@ -712,7 +748,8 @@ void SessionProperties::CreateControls()
  * Should we show tooltips?
  */
 
-bool SessionProperties::ShowToolTips()
+    bool
+SessionProperties::ShowToolTips()
 {
     return TRUE;
 }
@@ -737,7 +774,8 @@ wxIcon SessionProperties::GetIconResource( const wxString& name )
     return CreateIconFromFile(name);
 }
 
-void SessionProperties::SetFontLabel(wxButton *b, const wxFont &f)
+    void
+SessionProperties::setFontLabel(wxButton *b, const wxFont &f)
 {
     wxString lbl = f.GetFaceName();
     lbl = wxString::Format(wxT("%s %dpt"), lbl.IsEmpty() ? _("Font") : lbl.c_str(), f.GetPointSize());
@@ -751,7 +789,8 @@ void SessionProperties::SetFontLabel(wxButton *b, const wxFont &f)
     }
 }
 
-int SessionProperties::FindSelectedShare()
+    int
+SessionProperties::findSelectedShare()
 {
     for (int i = 0; i < m_pCtrlSmbShares->GetItemCount(); i++) {
         int state = m_pCtrlSmbShares->GetItemState(i, wxLIST_STATE_SELECTED);
@@ -759,6 +798,53 @@ int SessionProperties::FindSelectedShare()
             return i;
     }
     return -1;
+}
+
+    bool
+SessionProperties::readKbdLayouts()
+{
+    wxString kbdCfg;
+    wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &kbdCfg);
+    kbdCfg << wxFileName::GetPathSeparator() << wxT("share")
+        << wxFileName::GetPathSeparator() << wxT("keyboards");
+    wxFileInputStream fis(kbdCfg);
+    if (!fis.IsOk()) {
+        ::wxLogError(_("Error while reading keyboard table"));
+        return false;
+    }
+    wxTextInputStream tis(fis);
+    m_aKbdLayoutTable.Empty();
+    while (!fis.Eof()) {
+        wxString line = tis.ReadLine();
+        wxStringTokenizer t(line, wxT(","));
+        int i = 0;
+        long n;
+        KbdLayout kl;
+
+        while (t.HasMoreTokens()) {
+            switch (i++) {
+                case 0:
+                    // ISO country code
+                    kl.sIsoCode = t.GetNextToken();
+                    break;
+                case 1:
+                    // win32 language code
+                    if (t.GetNextToken().ToLong(&n))
+                        kl.winCode = n;
+                    break;
+                case 2:
+                    // Human readable name
+                    kl.sLayoutName = t.GetNextToken();
+                    m_aKbdLayoutTable.Add(kl);
+                    break;
+                default:
+                    wxLogError(_("Invalid line='%s'"), line.c_str());
+                    wxLogError(_("Invalid entry in %s"), kbdCfg.c_str());
+                    break;
+            }
+        }
+    }
+    return true;
 }
 
 // ====================== Event handlers ===============================
@@ -961,7 +1047,7 @@ void SessionProperties::OnButtonSmbAddClick( wxCommandEvent& event )
 
 void SessionProperties::OnButtonSmbModifyClick( wxCommandEvent& event )
 {
-    int idx = FindSelectedShare();
+    int idx = findSelectedShare();
     if (idx != -1) {
         SmbShareProperties d;
         d.SetConfig(m_pCfg);
@@ -984,7 +1070,7 @@ void SessionProperties::OnButtonSmbModifyClick( wxCommandEvent& event )
 
 void SessionProperties::OnButtonSmbDeleteClick( wxCommandEvent& event )
 {
-    int idx = FindSelectedShare();
+    int idx = findSelectedShare();
     if (idx != -1) {
         int shidx = m_pCtrlSmbShares->GetItemData(idx);
         wxArrayString as = m_pCfg->aGetUsedShareGroups();
@@ -1051,7 +1137,7 @@ void SessionProperties::OnButtonFontDefaultClick( wxCommandEvent& event )
     // Insert custom code here
     wxFont tmp = wxGetFontFromUser(this, m_cFontDefault);
     if (tmp.Ok()) {
-        SetFontLabel(m_pCtrlFontDefault, tmp);
+        setFontLabel(m_pCtrlFontDefault, tmp);
         m_cFontDefault = tmp;
         CheckChanged();
     }
@@ -1067,7 +1153,7 @@ void SessionProperties::OnButtonFontFixedClick( wxCommandEvent& event )
     // Insert custom code here
     wxFont tmp = wxGetFontFromUser(this, m_cFontFixed);
     if (tmp.Ok()) {
-        SetFontLabel(m_pCtrlFontFixed, tmp);
+        setFontLabel(m_pCtrlFontFixed, tmp);
         m_cFontFixed = tmp;
         CheckChanged();
     }
@@ -1252,6 +1338,8 @@ void SessionProperties::OnComboboxCachediskSelected( wxCommandEvent& event )
 
 void SessionProperties::OnComboboxKbdlayoutSelected( wxCommandEvent& event )
 {
+    size_t idx = (size_t)m_pCtrlKeyboardLayout->GetClientData(event.GetInt());
+    m_sKbdLayoutLanguage = m_aKbdLayoutTable.Item(idx).sIsoCode;
     CheckChanged();
     event.Skip();
 }
@@ -1509,5 +1597,3 @@ void SessionProperties::OnTextctrlCupspathUpdated( wxCommandEvent& event )
         CheckChanged();
     event.Skip();
 }
-
-

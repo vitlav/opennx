@@ -123,7 +123,6 @@ MyXmlConfig::MyXmlConfig()
     , m_iDisplayHeight(480)
     , m_iDisplayWidth(640)
     , m_iJpegQuality(6)
-    , m_iKbdLayoutLanguage(mapLocaleToKeyboard())
     , m_iProxyPort(3128)
     , m_iRdpAuthType(1)
     , m_iRdpImageCompression(1)
@@ -144,6 +143,7 @@ MyXmlConfig::MyXmlConfig()
     , m_sFileName(wxT(""))
     , m_sGuestUser(wxT(""))
     , m_sGuestPassword(wxT(""))
+    , m_sKbdLayoutLanguage(wxString(wxConvLocal.cMB2WX(x11_keyboard_type)).AfterFirst(wxT('/')))
     , m_sName(wxT(""))
     , m_sPassword(wxT(""))
     , m_sProxyHost(wxT(""))
@@ -208,7 +208,7 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
     m_iDisplayHeight = other.m_iDisplayHeight;
     m_iDisplayWidth = other.m_iDisplayWidth;
     m_iJpegQuality = other.m_iJpegQuality;
-    m_iKbdLayoutLanguage = other.m_iKbdLayoutLanguage;
+    m_sKbdLayoutLanguage = other.m_sKbdLayoutLanguage;
     m_iProxyPort = other.m_iProxyPort;
     m_iRdpAuthType = other.m_iRdpAuthType;
     m_iRdpImageCompression = other.m_iRdpImageCompression;
@@ -446,7 +446,7 @@ MyXmlConfig::sGetSessionParams(const wxString &protocolVersion, bool bNew)
     wxString kbdLocal = wxConvLocal.cMB2WX(x11_keyboard_type);
     ret << wxT(" --keyboard=\"");
     if (m_bKbdLayoutOther)
-        ret << kbdLocal.BeforeFirst(wxT('/')) << wxT("/") << isoKbd(m_iKbdLayoutLanguage);
+        ret << kbdLocal.BeforeFirst(wxT('/')) << wxT("/") << m_sKbdLayoutLanguage;
     else
         ret << kbdLocal;
     ret << wxT("\"")
@@ -562,7 +562,7 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
     if (m_iDisplayHeight != other.m_iDisplayHeight) return false;
     if (m_iDisplayWidth != other.m_iDisplayWidth) return false;
     if (m_iJpegQuality != other.m_iJpegQuality) return false;
-    if (m_iKbdLayoutLanguage != other.m_iKbdLayoutLanguage) return false;
+    if (m_sKbdLayoutLanguage != other.m_sKbdLayoutLanguage) return false;
     if (m_iProxyPort != other.m_iProxyPort) return false;
     if (m_iRdpAuthType != other.m_iRdpAuthType) return false;
     if (m_iRdpImageCompression != other.m_iRdpImageCompression) return false;
@@ -643,7 +643,7 @@ MyXmlConfig::MyXmlConfig(const wxString &filename)
     , m_iDisplayHeight(480)
     , m_iDisplayWidth(640)
     , m_iJpegQuality(6)
-    , m_iKbdLayoutLanguage(mapLocaleToKeyboard())
+    , m_sKbdLayoutLanguage(wxString(wxConvLocal.cMB2WX(x11_keyboard_type)).AfterFirst(wxT('/')))
     , m_iProxyPort(3128)
     , m_iRdpAuthType(1)
     , m_iRdpImageCompression(1)
@@ -763,9 +763,8 @@ MyXmlConfig::MyXmlConfig(const wxString &filename)
 #endif
                         m_bKbdLayoutOther = !getBool(opt, wxT("Current keyboard"),
                                 !m_bKbdLayoutOther);
-                        itmp = getLong(opt, wxT("Custom keyboard layout"), -1);
-                        if (itmp != -1)
-                            m_iKbdLayoutLanguage = mapNxLanguage(itmp);
+                        m_sKbdLayoutLanguage = getString(opt,
+                                wxT("Custom keyboard layout"), m_sKbdLayoutLanguage);
                         m_bDisableTcpNoDelay = getBool(opt, wxT("Disable TCP no-delay"),
                                 m_bDisableTcpNoDelay);
                         m_bDisableZlibCompression = getBool(opt,
@@ -1371,6 +1370,7 @@ MyXmlConfig::SaveToFile()
 
     g = AddGroup(r, wxT("Advanced"));
     bAddOption(g, wxT("Current keyboard"), !m_bKbdLayoutOther);
+    sAddOption(g, wxT("Custom keyboard layout"), m_sKbdLayoutLanguage);
     bAddOption(g, wxT("Disable TCP no-delay"), m_bDisableTcpNoDelay);
     bAddOption(g, wxT("Disable ZLIB stream compression"), m_bDisableZlibCompression);
     bAddOption(g, wxT("Enable SSL encryption"), m_bEnableSSL);
@@ -1419,7 +1419,6 @@ MyXmlConfig::SaveToFile()
             break;
     }
     sAddOption(g, wxT("Cache size on disk"), optval);
-    iAddOption(g, wxT("Other keyboard"), mapNxLanguage(m_iKbdLayoutLanguage));
 
     g = AddGroup(r, wxT("Windows Session"));
     bAddOption(g, wxT("Remember"), m_bRdpRememberPassword);
@@ -1609,288 +1608,4 @@ wxString MyXmlConfig::getPassword(wxXmlNode *opt, const wxString &key, const wxS
     if (enc)
         delete enc;
     return val;
-}
-
-int MyXmlConfig::mapLocaleToKeyboard()
-{
-    int ret = 0;
-
-    switch (wxGetApp().GetLocale()->GetLanguage()) {
-        case wxLANGUAGE_AFRIKAANS:
-            ret = 0;
-            break;
-        case wxLANGUAGE_ALBANIAN:
-            ret = 1;
-            break;
-        case wxLANGUAGE_ARABIC:
-        case wxLANGUAGE_ARABIC_ALGERIA:
-        case wxLANGUAGE_ARABIC_BAHRAIN:
-        case wxLANGUAGE_ARABIC_EGYPT:
-        case wxLANGUAGE_ARABIC_IRAQ:
-        case wxLANGUAGE_ARABIC_JORDAN:
-        case wxLANGUAGE_ARABIC_KUWAIT:
-        case wxLANGUAGE_ARABIC_LEBANON:
-        case wxLANGUAGE_ARABIC_LIBYA:
-        case wxLANGUAGE_ARABIC_MOROCCO:
-        case wxLANGUAGE_ARABIC_OMAN:
-        case wxLANGUAGE_ARABIC_QATAR:
-        case wxLANGUAGE_ARABIC_SAUDI_ARABIA:
-        case wxLANGUAGE_ARABIC_SUDAN:
-        case wxLANGUAGE_ARABIC_SYRIA:
-        case wxLANGUAGE_ARABIC_TUNISIA:
-        case wxLANGUAGE_ARABIC_UAE:
-        case wxLANGUAGE_ARABIC_YEMEN:
-            ret = 2;
-            break;
-        case wxLANGUAGE_BASQUE:
-            ret = 3;
-            break;
-        case wxLANGUAGE_BELARUSIAN:
-            ret = 4;
-            break;
-        case wxLANGUAGE_BULGARIAN:
-            ret = 5;
-            break;
-        case wxLANGUAGE_CATALAN:
-            ret = 6;
-            break;
-        case wxLANGUAGE_CHINESE:
-        case wxLANGUAGE_CHINESE_SIMPLIFIED:
-        case wxLANGUAGE_CHINESE_TRADITIONAL:
-        case wxLANGUAGE_CHINESE_HONGKONG:
-        case wxLANGUAGE_CHINESE_MACAU:
-        case wxLANGUAGE_CHINESE_SINGAPORE:
-        case wxLANGUAGE_CHINESE_TAIWAN:
-            ret = 7;
-            break;
-        case wxLANGUAGE_CROATIAN:
-            ret = 8;
-            break;
-        case wxLANGUAGE_CZECH:
-            ret = 9;
-            break;
-        case wxLANGUAGE_DANISH:
-            ret = 10;
-            break;
-        case wxLANGUAGE_DUTCH:
-        case wxLANGUAGE_DUTCH_BELGIAN:
-            ret = 11;
-            break;
-        case wxLANGUAGE_ENGLISH_UK:
-        case wxLANGUAGE_ENGLISH_AUSTRALIA:
-        case wxLANGUAGE_ENGLISH_BELIZE:
-        case wxLANGUAGE_ENGLISH_BOTSWANA:
-        case wxLANGUAGE_ENGLISH_DENMARK:
-        case wxLANGUAGE_ENGLISH_EIRE:
-        case wxLANGUAGE_ENGLISH_NEW_ZEALAND:
-        case wxLANGUAGE_ENGLISH_PHILIPPINES:
-        case wxLANGUAGE_ENGLISH_SOUTH_AFRICA:
-        case wxLANGUAGE_ENGLISH_ZIMBABWE:
-            ret = 12;
-            break;
-        default:
-        case wxLANGUAGE_ENGLISH:
-        case wxLANGUAGE_ENGLISH_TRINIDAD:
-        case wxLANGUAGE_ENGLISH_US:
-        case wxLANGUAGE_ENGLISH_CANADA:
-        case wxLANGUAGE_ENGLISH_CARIBBEAN:
-        case wxLANGUAGE_ENGLISH_JAMAICA:
-            ret = 13;
-            break;
-        case wxLANGUAGE_ESTONIAN:
-            ret = 14;
-            break;
-        case wxLANGUAGE_FAEROESE:
-            ret = 15;
-            break;
-        case wxLANGUAGE_FARSI:
-            ret = 16;
-            break;
-        case wxLANGUAGE_FINNISH:
-            ret = 17;
-            break;
-        case wxLANGUAGE_FRENCH:
-        case wxLANGUAGE_FRENCH_BELGIAN:
-        case wxLANGUAGE_FRENCH_CANADIAN:
-        case wxLANGUAGE_FRENCH_LUXEMBOURG:
-        case wxLANGUAGE_FRENCH_MONACO:
-        case wxLANGUAGE_FRENCH_SWISS:
-            ret = 18;
-            break;
-        case wxLANGUAGE_GERMAN:
-        case wxLANGUAGE_GERMAN_AUSTRIAN:
-        case wxLANGUAGE_GERMAN_BELGIUM:
-        case wxLANGUAGE_GERMAN_LIECHTENSTEIN:
-        case wxLANGUAGE_GERMAN_LUXEMBOURG:
-        case wxLANGUAGE_GERMAN_SWISS:
-            ret = 19;
-            break;
-        case wxLANGUAGE_GREEK:
-            ret = 20;
-            break;
-        case wxLANGUAGE_HEBREW:
-            ret = 21;
-            break;
-        case wxLANGUAGE_HUNGARIAN:
-            ret = 22;
-            break;
-        case wxLANGUAGE_ICELANDIC:
-            ret = 23;
-            break;
-        case wxLANGUAGE_INDONESIAN:
-            ret = 24;
-            break;
-        case wxLANGUAGE_ITALIAN:
-        case wxLANGUAGE_ITALIAN_SWISS:
-            ret = 25;
-            break;
-        case wxLANGUAGE_JAPANESE:
-            ret = 26;
-            break;
-        case wxLANGUAGE_KOREAN:
-            ret = 27;
-            break;
-        case wxLANGUAGE_LATVIAN:
-            ret = 28;
-            break;
-        case wxLANGUAGE_LITHUANIAN:
-            ret = 29;
-            break;
-        case wxLANGUAGE_NORWEGIAN_BOKMAL:
-        case wxLANGUAGE_NORWEGIAN_NYNORSK:
-            ret = 30;
-            break;
-        case wxLANGUAGE_POLISH:
-            ret = 31;
-            break;
-        case wxLANGUAGE_PORTUGUESE:
-        case wxLANGUAGE_PORTUGUESE_BRAZILIAN:
-            ret = 32;
-            break;
-        case wxLANGUAGE_ROMANIAN:
-            ret = 33;
-            break;
-        case wxLANGUAGE_RUSSIAN:
-        case wxLANGUAGE_RUSSIAN_UKRAINE:
-            ret = 34;
-            break;
-        case wxLANGUAGE_SLOVAK:
-            ret = 35;
-            break;
-        case wxLANGUAGE_SLOVENIAN:
-            ret = 36;
-        case wxLANGUAGE_SPANISH:
-        case wxLANGUAGE_SPANISH_ARGENTINA:
-        case wxLANGUAGE_SPANISH_BOLIVIA:
-        case wxLANGUAGE_SPANISH_CHILE:
-        case wxLANGUAGE_SPANISH_COLOMBIA:
-        case wxLANGUAGE_SPANISH_COSTA_RICA:
-        case wxLANGUAGE_SPANISH_DOMINICAN_REPUBLIC:
-        case wxLANGUAGE_SPANISH_ECUADOR:
-        case wxLANGUAGE_SPANISH_EL_SALVADOR:
-        case wxLANGUAGE_SPANISH_GUATEMALA:
-        case wxLANGUAGE_SPANISH_HONDURAS:
-        case wxLANGUAGE_SPANISH_MEXICAN:
-        case wxLANGUAGE_SPANISH_MODERN:
-        case wxLANGUAGE_SPANISH_NICARAGUA:
-        case wxLANGUAGE_SPANISH_PANAMA:
-        case wxLANGUAGE_SPANISH_PARAGUAY:
-        case wxLANGUAGE_SPANISH_PERU:
-        case wxLANGUAGE_SPANISH_PUERTO_RICO:
-        case wxLANGUAGE_SPANISH_URUGUAY:
-        case wxLANGUAGE_SPANISH_US:
-        case wxLANGUAGE_SPANISH_VENEZUELA:
-            ret = 37;
-            break;
-        case wxLANGUAGE_SWEDISH:
-        case wxLANGUAGE_SWEDISH_FINLAND:
-            ret = 38;
-            break;
-        case wxLANGUAGE_THAI:
-            ret = 39;
-            break;
-        case wxLANGUAGE_TURKISH:
-            ret = 40;
-            break;
-        case wxLANGUAGE_VIETNAMESE:
-            ret = 41;
-            break;
-
-    }
-    return ret;
-}
-
-// Map keyboard language code from NXclient to OpenNX
-    int
-MyXmlConfig::mapMyLanguage(int origNXlang)
-{
-    switch (origNXlang) {
-        case 0:
-            return 25;
-            break;
-        case 1:
-            return 19;
-            break;
-        case 41:
-            return 12;
-            break;
-        default:
-            if ((origNXlang >= 2) && (origNXlang <= 13))
-                return origNXlang - 2;
-            if ((origNXlang >= 14) && (origNXlang <= 19))
-                return origNXlang - 1;
-            if ((origNXlang >= 20) && (origNXlang <= 24))
-                return origNXlang;
-            if ((origNXlang >= 25) && (origNXlang <= 40))
-                return origNXlang + 1;
-            break;
-    }
-    return 0;
-}
-
-// Map keyboard language iso code
-    wxString 
-MyXmlConfig::isoKbd(int lang)
-{
-    const wxChar *iso_codes[] =
-    {
-        wxT("af"), wxT("sq"), wxT("ar"), wxT("eu"), wxT(""), wxT("bg"), wxT("ca"), wxT("zh"),
-        wxT("hr"), wxT("cs"), wxT("da"), wxT("nl"), wxT("en"), wxT("en_US"), wxT("et"), wxT("fo"),
-        wxT("fa"), wxT("fi"), wxT("fr"), wxT("de"), wxT("el"), wxT("he"), wxT("hu"), wxT("is"),
-        wxT("id"), wxT("it"), wxT("ja"), wxT("ko"), wxT("lv"), wxT("lt"), wxT("no"), wxT("pl"),
-        wxT("pt"), wxT("ro"), wxT("ru"), wxT("sk"), wxT("sl"), wxT("es"), wxT("sv"), wxT("th"),
-        wxT("tr"), wxT("vi")
-    };
-    wxString ret;
-    if ((lang >= 0) && (lang <= 41))
-        ret = iso_codes[lang];
-            return ret;
-}
-
-// Map keyboard language code from OpenNX to NXclient
-    int 
-MyXmlConfig::mapNxLanguage(int origNXlang)
-{
-    switch (origNXlang) {
-        case 25:
-            return 0;
-            break;
-        case 19:
-            return 1;
-            break;
-        case 12:
-            return 41;
-            break;
-        default:
-            if (origNXlang < 12)
-                return origNXlang + 2;
-            if ((origNXlang >= 13) && (origNXlang <= 18))
-                return origNXlang + 1;
-            if ((origNXlang >= 20) && (origNXlang <= 24))
-                return origNXlang;
-            if ((origNXlang > 25) && (origNXlang <= 40))
-                return origNXlang - 1;
-            break;
-    }
-    return 0;
 }

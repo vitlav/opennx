@@ -172,7 +172,6 @@ public:
     int iGetDisplayHeight() { return m_iDisplayHeight; }
     int iGetDisplayWidth() { return m_iDisplayWidth; }
     int iGetJpegQuality() { return m_iJpegQuality; }
-    int iGetKbdLayoutLanguage() { return m_iKbdLayoutLanguage; }
     int iGetProxyPort() { return m_iProxyPort; }
     int iGetRdpAuthType() { return m_iRdpAuthType; }
     int iGetRdpImageCompression() { return m_iRdpImageCompression; }
@@ -186,6 +185,7 @@ public:
     wxString sGetFileName() { return m_sFileName; }
     wxString sGetGuestUser() { return m_sGuestUser; }
     wxString sGetGuestPassword() { return m_sGuestPassword; }
+    wxString sGetKbdLayoutLanguage() { return m_sKbdLayoutLanguage; }
     wxString sGetName() { return m_sName; }
     wxString sGetPassword() { return m_sPassword; }
     wxString sGetDecryptedPassword();
@@ -250,7 +250,6 @@ public:
     void iSetDisplayHeight(int i) { m_iDisplayHeight = i; }
     void iSetDisplayWidth(int i) { m_iDisplayWidth = i; }
     void iSetJpegQuality(int i) { m_iJpegQuality = i; }
-    void iSetKbdLayoutLanguage(int i) { m_iKbdLayoutLanguage = i; }
     void iSetProxyPort(int i) { m_iProxyPort = i; }
     void iSetRdpAuthType(int i) { m_iRdpAuthType = i; }
     void iSetRdpImageCompression(int i) { m_iRdpImageCompression = i; }
@@ -264,6 +263,7 @@ public:
     void sSetFileName(const wxString &s) { m_sFileName = s; }
     void sSetGuestUser(const wxString &s) { m_sGuestUser = s; }
     void sSetGuestPassword(const wxString &s) { m_sGuestPassword = s; }
+    void sSetKbdLayoutLanguage(const wxString &s) { m_sKbdLayoutLanguage = s; }
     void sSetName(const wxString &s) { m_sName = s; }
     void sSetPassword(const wxString &s) { m_sPassword = s; }
     void sSetProxyHost(const wxString &s) { m_sProxyHost = s; }
@@ -288,10 +288,6 @@ private:
     wxString getString(wxXmlNode *, const wxString &, const wxString &defval = _T(""));
     wxString getPassword(wxXmlNode *, const wxString &, const wxString &defval = _T(""));
     wxString *getStringNew(wxXmlNode *, const wxString &, wxString *defval = NULL);
-    int mapMyLanguage(const int);
-    int mapNxLanguage(const int);
-    int mapLocaleToKeyboard();
-    wxString isoKbd(const int);
     bool cmpShareGroups(const ArrayOfShareGroups, const ArrayOfShareGroups);
     bool cmpUsedShareGroups(const wxArrayString, const wxArrayString);
     void bAddOption(wxXmlNode *, const wxString &, const bool);
@@ -341,7 +337,6 @@ private:
     int m_iDisplayHeight;
     int m_iDisplayWidth;
     int m_iJpegQuality;
-    int m_iKbdLayoutLanguage;
     int m_iProxyPort;
     int m_iRdpAuthType;
     int m_iRdpImageCompression;
@@ -355,6 +350,7 @@ private:
     wxString m_sFileName;
     wxString m_sGuestPassword;
     wxString m_sGuestUser;
+    wxString m_sKbdLayoutLanguage;
     wxString m_sName;
     wxString m_sPassword;
     wxString m_sProxyHost;

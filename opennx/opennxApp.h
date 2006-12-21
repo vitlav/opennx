@@ -35,6 +35,9 @@ public:
         MODE_CLIENT,
         MODE_ADMIN,
         MODE_WIZARD,
+        MODE_DIALOG_PANIC,
+        MODE_DIALOG_QUIT,
+        MODE_FOREIGN_TOOLBAR,
     };
 
     opennxApp();
@@ -65,6 +68,11 @@ private:
     wxString m_sResourcePrefix;
     wxString m_sVersion;
     wxString m_sSelfPath;
+    wxString m_sDialogCaption;
+    wxString m_sDialogMessage;
+    long m_nOtherPID;
+    long m_nWindowID;
+    int m_iDialogClass;
     enum mode m_eMode;
 };
 

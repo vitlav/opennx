@@ -747,52 +747,7 @@
                                                             <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                             <border>5</border>
                                                             <object class="wxComboBox" name="ID_COMBOBOX_KBDLAYOUT">
-                                                                <size>50,-1d</size>
-                                                                <style>wxCB_READONLY</style>
-                                                                <content>
-                                                                    <item>Afrikaans</item>
-                                                                    <item>Albanian</item>
-                                                                    <item>Arabic</item>
-                                                                    <item>Basque</item>
-                                                                    <item>Belarusian</item>
-                                                                    <item>Bulgarian</item>
-                                                                    <item>Catalan</item>
-                                                                    <item>Chinese</item>
-                                                                    <item>Croatian</item>
-                                                                    <item>Czech</item>
-                                                                    <item>Danish</item>
-                                                                    <item>Dutch</item>
-                                                                    <item>English (GB)</item>
-                                                                    <item>English (US)</item>
-                                                                    <item>Estonian</item>
-                                                                    <item>Faeorese</item>
-                                                                    <item>Farsi</item>
-                                                                    <item>Finnish</item>
-                                                                    <item>French</item>
-                                                                    <item>German</item>
-                                                                    <item>Greek</item>
-                                                                    <item>Hebrew</item>
-                                                                    <item>Hungarian</item>
-                                                                    <item>Icelandic</item>
-                                                                    <item>Indonesian</item>
-                                                                    <item>Italian</item>
-                                                                    <item>Japanese</item>
-                                                                    <item>Korean</item>
-                                                                    <item>Latvian</item>
-                                                                    <item>Lithuanian</item>
-                                                                    <item>Norwegian</item>
-                                                                    <item>Polish</item>
-                                                                    <item>Portugese</item>
-                                                                    <item>Romanian</item>
-                                                                    <item>Russian</item>
-                                                                    <item>Slovak</item>
-                                                                    <item>Slovenian</item>
-                                                                    <item>Spanish</item>
-                                                                    <item>Swedish</item>
-                                                                    <item>Thai</item>
-                                                                    <item>Turkish</item>
-                                                                    <item>Vietnamese</item>
-                                                                </content>
+                                                                <style>wxCB_READONLY|wxCB_SORT</style>
                                                             </object>
                                                         </object>
                                                     </object>
@@ -3099,6 +3054,119 @@ this share.</label>
                         </object>
                     </object>
                 </object>
+            </object>
+        </object>
+    </object>
+    <object class="wxDialog" name="ID_PANICDIALOG" subclass="PanicDialog">
+        <style>wxCAPTION|wxSYSTEM_MENU|wxSTAY_ON_TOP|wxCLOSE_BOX|wxDIALOG_MODAL</style>
+        <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
+        <size>400,300d</size>
+        <icon>memory:memrsc#zip:res/nx.png</icon>
+        <object class="wxBoxSizer">
+            <orient>wxVERTICAL</orient>
+            <object class="sizeritem">
+                <flag>wxGROW|wxALL</flag>
+                <border>5</border>
+                <object class="wxBoxSizer">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_TOP|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxStaticBitmap" name="wxID_STATIC_BITMAP">
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxGROW|wxALL</flag>
+                        <border>5</border>
+                        <option>1</option>
+                        <object class="wxStaticText" name="wxID_STATIC">
+                            <label></label>
+                        </object>
+                    </object>
+                </object>
+            </object>
+            <object class="sizeritem">
+                <flag>wxALIGN_RIGHT|wxALL</flag>
+                <border>5</border>
+                <object class="wxBoxSizer">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxButton" name="wxID_OK">
+                            <label>&amp;Terminate</label>
+                            <default>1</default>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxButton" name="wxID_CANCEL">
+                            <label>&amp;Cancel</label>
+                        </object>
+                    </object>
+                </object>
+            </object>
+        </object>
+    </object>
+    <object class="wxDialog" name="ID_QUITDIALOG" subclass="QuitDialog">
+        <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxSTAY_ON_TOP|wxCLOSE_BOX</style>
+        <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
+        <size>400,300d</size>
+        <icon>memory:memrsc#zip:res/nx.png</icon>
+        <object class="wxBoxSizer">
+            <orient>wxVERTICAL</orient>
+            <object class="sizeritem">
+                <flag>wxGROW|wxALL</flag>
+                <border>5</border>
+                <object class="wxBoxSizer">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_TOP|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxStaticBitmap" name="ID_STATICBITMAP">
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxGROW|wxALL</flag>
+                        <border>5</border>
+                        <option>1</option>
+                        <object class="wxStaticText" name="wxID_STATIC">
+                            <label></label>
+                        </object>
+                    </object>
+                </object>
+            </object>
+            <object class="sizeritem">
+                <flag>wxALIGN_RIGHT|wxALL</flag>
+                <border>5</border>
+                <object class="wxBoxSizer">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxButton" name="wxID_OK">
+                            <label>&amp;Quit</label>
+                            <default>1</default>
+                        </object>
+                    </object>
+                </object>
+            </object>
+        </object>
+    </object>
+    <object class="wxFrame" name="ID_FOREIGNFRAME" subclass="ForeignFrame">
+        <style>wxFRAME_NO_TASKBAR|wxSTAY_ON_TOP|wxNO_BORDER</style>
+        <title>OPENNX-PULLDOWN</title>
+        <object class="wxToolBar" name="ID_TOOLBAR_FOREIGN">
+            <style>wxTB_FLAT|wxTB_HORIZONTAL</style>
+            <object class="tool" name="ID_FOREIGN_SUSPEND">
+                <bitmap>memory:memrsc#zip:res/tb_suspend.png</bitmap>
+            </object>
+            <object class="tool" name="ID_FOREIGN_TERMINATE">
+                <bitmap>memory:memrsc#zip:res/tb_terminate.png</bitmap>
+            </object>
+            <object class="tool" name="ID_FOREIGN_CLOSE">
+                <bitmap>memory:memrsc#zip:res/tb_close.png</bitmap>
             </object>
         </object>
     </object>

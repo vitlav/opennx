@@ -77,6 +77,9 @@ class MyXmlConfig;
 #define wxCLOSE_BOX 0x1000
 #endif
 
+class KbdLayout;
+WX_DECLARE_OBJARRAY(KbdLayout, KbdLayoutTable);
+
 /*!
  * SessionProperties class declaration
  */
@@ -359,7 +362,6 @@ private:
     int m_iCupsPort;
     bool m_bUseDefaultImageEncoding;
     bool m_bUseCustomImageEncoding;
-    int m_iKbdLayoutLanguage;
     int m_iDesktopTypeDialog;
     int m_iProxyPort;
     wxString m_sProxyHost;
@@ -367,8 +369,9 @@ private:
     bool m_bUseCups;
 ////@end SessionProperties member variables
 
-    void SetFontLabel(wxButton *, const wxFont &);
-    int FindSelectedShare();
+    bool readKbdLayouts();
+    void setFontLabel(wxButton *, const wxFont &);
+    int findSelectedShare();
 
     wxFont m_cFontDefault;
     wxFont m_cFontFixed;
@@ -378,6 +381,7 @@ private:
     int m_iUnixDesktopType;
 
     MyXmlConfig *m_pCfg;
+    KbdLayoutTable m_aKbdLayoutTable;
 };
 
 #endif

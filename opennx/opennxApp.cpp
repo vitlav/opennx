@@ -50,6 +50,9 @@
 #include "LoginDialog.h"
 #include "MyWizard.h"
 #include "MyXmlConfig.h"
+#include "PanicDialog.h"
+#include "QuitDialog.h"
+#include "ForeignFrame.h"
 
 #include "memres.h"
 
@@ -319,18 +322,132 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
 
     parser.AddSwitch(wxT(""), wxT("admin"),
             _("Start the session administration tool."));
+    parser.AddOption(wxT(""), wxT("caption"),
+            _("Secify window title for dialog mode."));
+    parser.AddOption(wxT(""), wxT("style"),
+            _("Secify dialog style for dialog mode."));
+    parser.AddOption(wxT(""), wxT("dialog"),
+            _("Run in dialog mode."));
+    parser.AddSwitch(wxT(""), wxT("local"),
+            _("Dialog mode proxy."));
+    parser.AddOption(wxT(""), wxT("message"),
+            _("Specify message for dialog mode."));
+    parser.AddOption(wxT(""), wxT("parent"),
+            _("Specify parent PID for dialog mode."), wxCMD_LINE_VAL_NUMBER);
     parser.AddOption(wxT(""), wxT("session"),
             _("Run a session importing configuration settings from FILENAME."));
+    parser.AddOption(wxT(""), wxT("window"),
+            _("Specify window-ID for dialog mode."), wxCMD_LINE_VAL_NUMBER);
     parser.AddSwitch(wxT(""), wxT("wizard"),
             _("Guide the user through the steps to configure a session."));
 }
+
+static const wxChar *_dlgTypes[] = {
+        wxT("yesno"), wxT("ok"), wxT("error"), wxT("panic"),
+        wxT("quit"), wxT("pulldown"), wxT("yesnosuspend")
+};
+static wxArrayString aDlgTypes(sizeof(_dlgTypes)/sizeof(wxChar *), _dlgTypes);
+static const wxChar *_dlgClasses[] = {
+        wxT("info"), wxT("warning"), wxT("error")
+};
+static wxArrayString aDlgClasses(sizeof(_dlgClasses)/sizeof(wxChar *), _dlgClasses);
 
 bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
 {
     if (!wxApp::OnCmdLineParsed(parser))
         return false;
+    wxString sDlgType;
 
     m_eMode = MODE_CLIENT;
+    if (parser.Found(wxT("dialog"), &sDlgType)) {
+        wxString tmp;
+        wxString sMessage;
+        wxString sCaption;
+        int style = wxICON_WARNING;
+#ifdef __UNIX__
+        long pPID = (long)getppid();
+#else
+#error TODO: implement win32 getppid();
+#endif
+        long oPID;
+        (void)parser.Found(wxT("caption"), &sCaption);
+        (void)parser.Found(wxT("message"), &sMessage);
+        (void)parser.Found(wxT("style"), &tmp);
+        sMessage.Replace(wxT("\\r\\n"), wxT("\n"));
+        sMessage.Replace(wxT("\\r"), wxT("\n"));
+        sMessage.Replace(wxT("\\n"), wxT("\n"));
+        sMessage.Replace(wxT("\\t"), wxT("\t"));
+        if (!parser.Found(wxT("parent"), &oPID))
+            oPID = pPID;
+        switch (aDlgClasses.Index(tmp)) {
+            case 0:
+                style = wxICON_INFORMATION;
+                break;
+            case 2:
+                style = wxICON_ERROR;
+                break;
+            default:
+                style = wxICON_WARNING;
+                break;
+        }
+        switch (aDlgTypes.Index(sDlgType)) {
+            case 0:
+                // yesno
+                style |= wxYES_NO;
+                if (::wxMessageBox(sMessage, sCaption, style) == wxYES)
+                    ::wxKill(pPID, wxSIGTERM);
+                return false;
+            case 1:
+                // ok
+                style |= wxOK;
+                ::wxMessageBox(sMessage, sCaption, style);
+                return false;
+            case 2:
+                // error
+                style |= wxOK;
+                ::wxMessageBox(sMessage, sCaption, style);
+                ::wxKill(pPID, wxSIGTERM);
+                return false;
+            case 3:
+                // panic (Buttons: Terminate and Cancel, Terminate sends SIGTERM)
+                // Since we use a custom dialog which uses resources, we must defer
+                // execution until after XRC initialization.
+                m_sDialogCaption = sCaption;
+                m_sDialogMessage = sMessage;
+                m_iDialogClass = style;
+                m_nOtherPID = pPID;
+                m_eMode = MODE_DIALOG_PANIC;
+                return true;
+            case 4:
+                // quit (Button: Quit, no signals)
+                // Deferred execution, like panic
+                m_sDialogCaption = sCaption;
+                m_sDialogMessage = sMessage;
+                m_iDialogClass = style;
+                m_eMode = MODE_DIALOG_QUIT;
+                return true;
+            case 5:
+                // pulldown (a toolbar, docked to top-center of wID),
+                // timing out after ~ 6sec. The toolbar has 3 buttons:
+                // suspend, terminate and close.
+                // suspend sends SIGHUP to real ppid, terminate sends SIGTERM to pPID
+                // and close sends WM_CLOSE event to wID
+                if (!parser.Found(wxT("window"), &m_nWindowID)) {
+                    OnCmdLineError(parser);
+                    return false;
+                }
+                m_eMode = MODE_FOREIGN_TOOLBAR;
+                return true;
+            case 6:
+                // yesnosuspend (Buttons: Suspend, Terminate and Cancel,
+                // Terminate sends SIGTERM to pPID, Suspend sends SIGHUP to real ppid)
+                break;
+            default:
+                OnCmdLineError(parser);
+                return false;
+        }
+        return false;
+    }
     if (parser.Found(wxT("admin")))
         m_eMode = MODE_ADMIN;
     if (parser.Found(wxT("wizard")))
@@ -368,6 +485,35 @@ bool opennxApp::OnInit()
     if (!wxXmlResource::Get()->Load(m_sResourcePrefix + wxT("res/opennx.xrc"))) {
         wxMemoryFSHandler::RemoveFile(wxT("memrsc"));
         return false;
+    }
+
+    if (m_eMode == MODE_DIALOG_PANIC) {
+        PanicDialog d;
+        d.SetMessage(m_sDialogMessage);
+        d.SetDialogClass(m_iDialogClass);
+        d.Create(NULL, wxID_ANY, m_sDialogCaption);
+        if (d.ShowModal() == wxID_OK)
+            ::wxKill(m_nOtherPID, wxSIGTERM);
+        return false;
+    }
+
+    if (m_eMode == MODE_DIALOG_QUIT) {
+        QuitDialog d;
+        d.SetMessage(m_sDialogMessage);
+        d.SetDialogClass(m_iDialogClass);
+        d.Create(NULL, wxID_ANY, m_sDialogCaption);
+        d.ShowModal();
+        return false;
+    }
+
+    if (m_eMode == MODE_FOREIGN_TOOLBAR) {
+        ForeignFrame *ff = new ForeignFrame(NULL);
+        m_pCfg = NULL;
+        ff->SetOtherPID(m_nOtherPID);
+        ff->SetForeignWindowID(m_nWindowID);
+        ff->Show();
+        SetTopWindow(ff);
+        return true;
     }
 
     if (m_eMode == MODE_ADMIN) {
