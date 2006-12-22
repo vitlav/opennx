@@ -197,9 +197,9 @@ msgid ""
 "Using OpenNX Client, you can run RDP, VNC and X desktops, depending on what "
 "your service provider has made available."
 msgstr ""
-"Mit dem OpenNX Client können Sie auf RDP, VNC und X Arbeitsflächen zugreifen. "
-"Dies ist von der Verfügbarkeit dieser Dienste bei Ihrem Service-Provider "
-"abhängig."
+"Mit dem OpenNX Client können Sie auf RDP, VNC und X Arbeitsflächen "
+"zugreifen. Dies ist von der Verfügbarkeit dieser Dienste bei Ihrem Service-"
+"Provider abhängig."
 
 #: MyWizard.cpp:683 MyWizard_symbols.h:34 SessionProperties.cpp:533
 #: SessionProperties_symbols.h:34
@@ -884,8 +884,8 @@ msgid ""
 "Please specify the resource name on the remote\n"
 "machine with which this share will be made available."
 msgstr ""
-"Bitte geben Sie den Namen des Einhängepunktes an\nunter dem die Freigabe "
-"auf dem entfernten Rechner verfügbar sein soll."
+"Bitte geben Sie den Namen des Einhängepunktes an\n"
+"unter dem die Freigabe auf dem entfernten Rechner verfügbar sein soll."
 
 #: SmbShareProperties_symbols.h:33
 msgid ""
@@ -1021,4 +1021,3 @@ msgstr "Deaktiviere X-Agent-Kodierung"
 #: X11PropertyDialog_symbols.h:31
 msgid "Disable taint of X replies"
 msgstr "Deaktiviere X-Packetmodifikation"
-

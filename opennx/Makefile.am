@@ -75,4 +75,4 @@ icondir = $(datadir)/icons
 icon_DATA = res/nx-desktop.png res/opennx-admin.png res/opennx-wizard.png
 
 EXTRA_DIST = INSTALL COPYING conf/* res/* opennx.pjd opennx.dsw *.dsp \
-	opennx.rc share
+	opennx.rc share/keyboards share/keys/* share/cups/*
