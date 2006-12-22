@@ -43,6 +43,29 @@ static char _kbd[PATH_MAX+1];
 char *x11_socket_path = _spath;
 char *x11_keyboard_type = _kbd;
 
+/**
+ * A horrific hack for retrieving the path of the X11 local server socket.
+ *
+ * This path is needed for setting the NX_TEMP environment variable before
+ * starting nxssh. As NoMachine's code in libXcomp silently asumes, that
+ * the socket is always in TEMP if NX_TEMP is not set. On my machine, TEMP is
+ * set to /dev/shm for speed reasons, but the X11 socket still resides in
+ * /tmp/.X11-unix/. With that setting, the original client fails immediately
+ * upon connect.
+ * Normally, there's no way to retrieve the socket path via some X11 function.
+ * So here is ho it works:
+ *
+ *  1. We implement our own connect() function
+ *  2. In getx11socket [called automatically during app-startup because of the
+ *     __attribute__((constructor))], we load libc dynamically and set the
+ *     function-pointer "real_connect" to the original function. Since our
+ *     binary already contains a symbol connect(), the symbol connect() from
+ *     libc is not used in normal relocation. Inside our connect, we simply
+ *     call the original (now named "real_connect").
+ *  3. Just call XOpenDisplay(). The Xlib function will do it's normal work and
+ *     connect to the X server. In our connect() function, we save the path
+ *     argument from this call in a global var.
+ */ 
 int connect(int s, const struct sockaddr *name, socklen_t namelen)
 {
     if (do_save) {
@@ -123,6 +146,9 @@ free_libc()
         dlclose(libc);
 }
 
+/*
+ * Close a foreign X11 window (just like a window-manager would do.
+ */
 void close_foreign(long parentID)
 {
 #if defined(__LINUX__) || defined(__OPENBSD__)
@@ -143,6 +169,13 @@ void close_foreign(long parentID)
 #endif
 }
 
+/*
+ * Reparent our custom toolbar to the top center of a given foreign
+ * X11 window. Since there is no way to retrieve our toolbar's X11-WindowID,
+ * we use the _NET_WM_PID property (which automatically get's set by gdk), to find
+ * our window. (At the time of the call it obviously should be the only one).
+ * After that, proceed with a standard X11 reparenting ...
+ */
 void reparent_pulldown(long parentID)
 {
 #if defined(__LINUX__) || defined(__OPENBSD__)
@@ -193,3 +226,4 @@ void reparent_pulldown(long parentID)
 #error Implement reparent_pulldown
 #endif
 }
+
