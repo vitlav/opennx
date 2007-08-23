@@ -1,0 +1,2 @@
+#
+?package(menu): needs=x11 section="Internet" title="OpenNX client" icon="/usr/NX/share/icons/nx.png"

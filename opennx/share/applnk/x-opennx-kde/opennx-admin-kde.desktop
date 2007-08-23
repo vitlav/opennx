@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Comment=Launch session administrator
+Exec=/usr/NX/bin/opennx --admin
+Icon=/usr/NX/share/icons/opennx-admin.png
+Name=OpenNX Session Administrator
+Type=Application
+Categories=X-opennx;
+OnlyShowIn=KDE;
