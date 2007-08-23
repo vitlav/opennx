@@ -37,6 +37,12 @@
 ////@begin includes
 ////@end includes
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include <wx/config.h>
+
 #include "RdpPropertyDialog.h"
 #include "Icon.h"
 #include "MyXmlConfig.h"
@@ -101,6 +107,9 @@ void RdpPropertyDialog::SetConfig(MyXmlConfig *cfg)
 bool RdpPropertyDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxString& WXUNUSED(caption), const wxPoint& WXUNUSED(pos), const wxSize& WXUNUSED(size), long WXUNUSED(style) )
 {
 ////@begin RdpPropertyDialog member initialisation
+    m_bAutoLogin = false;
+    m_bShowWinLogon = false;
+    m_bUseNxAuth = false;
     m_pCtrlAutologin = NULL;
     m_pCtrlUsername = NULL;
     m_pCtrlPassword = NULL;
@@ -117,21 +126,24 @@ bool RdpPropertyDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
         m_sUsername = m_pCfg->sGetRdpUsername();
         m_sPassword = m_pCfg->sGetRdpPassword();
         m_sRunCommand = m_pCfg->sGetRdpApplication();
+        m_sRdpDomain = m_pCfg->sGetRdpDomain();
         int atype = m_pCfg->iGetRdpAuthType();
         switch (atype) {
             case 0:
-                m_bShowWinLogon = false;
                 m_bAutoLogin = true;
-                m_bUseNxAuth = false;
                 break;
             case 1:
                 m_bShowWinLogon = true;
-                m_bAutoLogin = false;
-                m_bUseNxAuth = false;
+                break;
+            case 2:
+                m_bUseNxAuth = true;
                 break;
         }
 
     }
+    wxConfigBase::Get()->Read(wxT("Config/StorePasswords"), &m_bStorePasswords, true);
+    if (!m_bStorePasswords)
+        m_bRememberPassword = false;
 
 ////@begin RdpPropertyDialog creation
     SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
@@ -187,7 +199,8 @@ void RdpPropertyDialog::CreateControls()
         FindWindow(XRCID("ID_TEXTCTRL_RDP_APPLICATION"))->SetValidator( wxGenericValidator(& m_sRunCommand) );
 ////@end RdpPropertyDialog content construction
 
-    // Create custom windows not generated automatically here.
+    if (!m_bStorePasswords)
+        m_pCtrlRememberPassword->Enable(false);
 
 ////@begin RdpPropertyDialog content initialisation
 ////@end RdpPropertyDialog content initialisation
@@ -285,7 +298,7 @@ void RdpPropertyDialog::UpdateDialogConstraints()
 {
     m_pCtrlUsername->Enable(m_bAutoLogin);
     m_pCtrlPassword->Enable(m_bAutoLogin);
-    m_pCtrlRememberPassword->Enable(m_bAutoLogin);
+    m_pCtrlRememberPassword->Enable(m_bStorePasswords && m_bAutoLogin);
     m_pCtrlApplicationString->Enable(m_bRunApplication);
 }
 /*!
@@ -303,11 +316,12 @@ void RdpPropertyDialog::OnOkClick( wxCommandEvent& event )
         m_pCfg->sSetRdpUsername(m_sUsername);
         m_pCfg->sSetRdpPassword(m_sPassword);
         m_pCfg->sSetRdpApplication(m_sRunCommand);
-        int atype = 0;
+        m_pCfg->sSetRdpDomain(m_sRdpDomain);
+        int atype = 2;
         if (m_bShowWinLogon)
             atype = 1;
         if (m_bAutoLogin)
-            atype = m_bUseNxAuth ? 2 : 0;
+            atype = 0;
         m_pCfg->iSetRdpAuthType(atype);
     }
     event.Skip();

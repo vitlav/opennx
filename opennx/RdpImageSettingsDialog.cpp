@@ -37,6 +37,9 @@
 ////@begin includes
 ////@end includes
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "RdpImageSettingsDialog.h"
 #include "MyXmlConfig.h"
 #include "Icon.h"
@@ -108,24 +111,36 @@ bool RdpImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), 
     if (m_pCfg) {
         switch (m_pCfg->iGetRdpImageCompression()) {
             case 0:
-                m_bRdpPlainX = true;
-                m_bRdpEncoding = false;
-                break;
-            case 1:
-                m_bRdpPlainX = false;
-                m_bRdpEncoding = true;
-                m_bRdpCompressed = true;
-                break;
-            case 2:
-                m_bRdpPlainX = false;
                 m_bRdpEncoding = true;
                 m_bRdpCompressed = false;
+                m_bRdpRgb = true;
+                m_bRdpPlainX = false;
+                break;
+            case 1:
+                m_bRdpEncoding = true;
+                m_bRdpCompressed = true;
+                m_bRdpRgb = false;
+                m_bRdpPlainX = false;
+                break;
+            case 2:
+                m_bRdpEncoding = true;
+                m_bRdpCompressed = false;
+                m_bRdpRgb = false;
+                m_bRdpPlainX = false;
+                break;
+            case 3:
+                m_bRdpEncoding = false;
+                m_bRdpCompressed = false;
+                m_bRdpRgb = false;
+                m_bRdpPlainX = true;
                 break;
         }
+        m_bRdpCache = m_pCfg->bGetRdpCache();
+        m_iRdpColors = m_pCfg->iGetRdpColors();
     }
 
 ////@begin RdpImageSettingsDialog creation
-    SetExtraStyle(GetExtraStyle()|wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS);
+    SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));
@@ -164,7 +179,7 @@ void RdpImageSettingsDialog::CreateControls()
     if (FindWindow(XRCID("ID_RADIOBUTTON_RDP_IMGPLAINX")))
         FindWindow(XRCID("ID_RADIOBUTTON_RDP_IMGPLAINX"))->SetValidator( wxGenericValidator(& m_bRdpPlainX) );
     if (FindWindow(XRCID("ID_CHECKBOX_RDP_IMGCACHE")))
-        FindWindow(XRCID("ID_CHECKBOX_RDP_IMGCACHE"))->SetValidator( wxGenericValidator(& m_bRdbCache) );
+        FindWindow(XRCID("ID_CHECKBOX_RDP_IMGCACHE"))->SetValidator( wxGenericValidator(& m_bRdpCache) );
 ////@end RdpImageSettingsDialog content construction
 
     // Create custom windows not generated automatically here.
@@ -260,7 +275,12 @@ void RdpImageSettingsDialog::OnOkClick( wxCommandEvent& event )
     wxASSERT_MSG(m_pCfg, _T("RdpImageSettingsDialog::OnOkClick: No configuration"));
     if (m_pCfg) {
         TransferDataFromWindow();
-        m_pCfg->iSetRdpImageCompression(m_bRdpPlainX ? 0 : (m_bRdpCompressed ? 1 : 2));
+        if (m_bRdpEncoding)
+            m_pCfg->iSetRdpImageCompression(m_bRdpCompressed ? 1 : 2);
+        else
+            m_pCfg->iSetRdpImageCompression(m_bRdpPlainX ? 3 : 0);
+        m_pCfg->iSetRdpColors(m_iRdpColors);
+        m_pCfg->bSetRdpCache(m_bRdpCache);
     }
     event.Skip();
 }
@@ -275,7 +295,6 @@ void RdpImageSettingsDialog::OnSliderRdpColorsScrollThumbRelease( wxScrollEvent&
     wxSlider *sl = wxDynamicCast(event.GetEventObject(), wxSlider);
     // Stick slider to nearest integer position
     int p = event.GetPosition();
-    ::wxLogDebug(wxT("p: %d, sl: %d"), p, sl->GetValue());
     sl->SetValue((p > 0) ?  p - 1 : p + 1);
     sl->SetValue(p);
     event.Skip();

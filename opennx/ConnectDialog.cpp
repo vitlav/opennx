@@ -37,6 +37,9 @@
 ////@begin includes
 ////@end includes
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "ConnectDialog.h"
 #include "Icon.h"
 
@@ -162,6 +165,7 @@ void ConnectDialog::OnCancelClick( wxCommandEvent& WXUNUSED(event) )
 void ConnectDialog::SetStatusText(wxString txt)
 {
     m_pCtrlStatus->SetLabel(txt);
+    Update();
 }
 
 void ConnectDialog::SetProgress(int i)
@@ -171,5 +175,6 @@ void ConnectDialog::SetProgress(int i)
     if (i > 100)
         i = 100;
     m_pCtrlProgress->SetValue(i);
+    Update();
 }
 

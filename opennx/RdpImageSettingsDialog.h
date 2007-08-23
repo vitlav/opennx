@@ -130,7 +130,7 @@ private:
     bool m_bRdpEncoding;
     bool m_bRdpCompressed;
     bool m_bRdpRgb;
-    bool m_bRdbCache;
+    bool m_bRdpCache;
     int m_iRdpColors;
 ////@end RdpImageSettingsDialog member variables
 

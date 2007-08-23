@@ -37,6 +37,9 @@
 ////@begin includes
 ////@end includes
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "ForeignFrame.h"
 #include "osdep.h"
 
@@ -99,6 +102,11 @@ bool ForeignFrame::Create( wxWindow* parent, wxWindowID id, const wxString& capt
     SetParent(parent);
     CreateControls();
 ////@end ForeignFrame creation
+	wxUnusedVar(style);
+	wxUnusedVar(size);
+	wxUnusedVar(pos);
+	wxUnusedVar(caption);
+	wxUnusedVar(id);
     return true;
 }
 
@@ -184,13 +192,7 @@ void ForeignFrame::OnForeignSuspendClick( wxCommandEvent& event )
 {
     Close();
     event.Skip();
-    long ppid;
-#ifdef __UNIX__
-    ppid = getppid();
-#else
-# error Implement on win32
-#endif
-    ::wxKill(ppid, wxSIGHUP);
+    ::wxKill(getppid(), wxSIGHUP);
 }
 
 /*!

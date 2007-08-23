@@ -27,6 +27,9 @@
 #ifndef WX_PRECOMP
 #include "wx/wx.h"
 #endif
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #ifdef __WXMSW__
 #include <shlobj.h>
 #endif
@@ -42,6 +45,7 @@
 #include "wx/fs_mem.h"
 #include <wx/sysopt.h>
 #include <wx/tokenzr.h>
+#include <wx/wfstream.h>
 
 #include "resource.h"
 #include "opennxApp.h"
@@ -53,6 +57,8 @@
 #include "PanicDialog.h"
 #include "QuitDialog.h"
 #include "ForeignFrame.h"
+#include "Icon.h"
+#include "osdep.h"
 
 #include "memres.h"
 
@@ -63,7 +69,76 @@ static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
 // static object for many reasons) and also declares the accessor function
 // wxGetApp() which will return the reference of the right type (i.e. opennxApp and
 // not wxApp)
+
 IMPLEMENT_APP(opennxApp);
+
+opennxApp::opennxApp()
+    : wxApp(),
+    m_pCfg(NULL)
+{
+    SetAppName(wxT("OpenNX"));
+#ifdef __WXMSW__
+    m_pCfg = new wxConfig(wxT("OpenNX"), wxT("InnoviData"));
+#else
+    m_pCfg = new wxConfig(wxT("OpenNX"), wxT("InnoviData"), wxT(".opennx"), wxT("opennx.conf"));
+#endif
+    wxConfigBase::Set(m_pCfg);
+
+#ifdef __WXMSW__
+    DWORD dummy;
+    DWORD viSize;
+    LPVOID vi;
+    TCHAR mySelf[MAX_PATH];
+    VS_FIXEDFILEINFO *vsFFI;
+    UINT vsFFIlen;
+    m_sVersion = wxT("?.?");
+
+    if (GetModuleFileName(NULL, mySelf, sizeof(mySelf))) {
+        viSize = GetFileVersionInfoSize(mySelf, &dummy);
+        if (viSize) {
+            vi = (LPVOID)malloc(viSize);
+            if (vi) {
+                if (GetFileVersionInfo(mySelf, dummy, viSize, vi)) {
+                    if (VerQueryValue(vi, wxT("\\"), (LPVOID *)&vsFFI, &vsFFIlen)) {
+                        m_sVersion = wxString::Format(wxT("%d.%d"), HIWORD(vsFFI->dwFileVersionMS),
+                                LOWORD(vsFFI->dwFileVersionMS));
+                        if (vsFFI->dwFileVersionLS)
+                            m_sVersion += wxString::Format(wxT(".%d"), HIWORD(vsFFI->dwFileVersionLS));
+                        if (LOWORD(vsFFI->dwFileVersionLS))
+                            m_sVersion += wxString::Format(wxT(".%d"), LOWORD(vsFFI->dwFileVersionLS));
+                    }
+
+                }
+                free(vi);
+            }
+        }
+    }
+#else
+    m_sVersion = wxT(PACKAGE_VERSION);
+    {
+        wxLogNull dummy;
+        // Try to get KDE language settings and set locale accordingly
+        wxFileInputStream fis(::wxGetHomeDir() +
+                wxFileName::GetPathSeparator() + wxT(".kde") + 
+                wxFileName::GetPathSeparator() + wxT("share") + 
+                wxFileName::GetPathSeparator() + wxT("config") + 
+                wxFileName::GetPathSeparator() + wxT("kdeglobals"));
+        if (fis.IsOk()) {
+            wxFileConfig cfg(fis);
+            wxString country = cfg.Read(wxT("Locale/Country"), wxT(""));
+            wxString lang = cfg.Read(wxT("Locale/Language"), wxT(""));
+            if ((!lang.IsEmpty()) && (!country.IsEmpty()))
+                ::wxSetEnv(wxT("LANG"), lang + wxT("_") + country.Upper() + wxT(".UTF-8"));
+        }
+    }
+#endif
+}
+
+opennxApp::~opennxApp()
+{
+    if (m_pCfg)
+        delete m_pCfg;
+}
 
     wxString
 opennxApp::LoadFileFromResource(const wxString &loc, bool bUseLocale /* = true */)
@@ -111,13 +186,15 @@ static const wxChar *desktopDirs[] = {
     bool
 opennxApp::CreateDesktopEntry(MyXmlConfig *cfg)
 {
+	bool ret = false;
+
     wxString appDir;
     wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &appDir);
 #ifdef __WXMSW__
     TCHAR dtPath[MAX_PATH];
     if (SHGetSpecialFolderPath(NULL, dtPath, CSIDL_DESKTOPDIRECTORY, FALSE)) {
         wxString linkPath = wxString::Format(wxT("%s\\%s.lnk"), dtPath, cfg->sGetName().c_str());
-        wxString targetPath = wxString::Format(wxT("%s\\bin\\opennx.exe"), appDir.c_str());
+        wxString targetPath = GetSelfPath();
         wxString desc = _("Launch NX Session");
         wxString args = wxString::Format(wxT("--session=\"%s\""), cfg->sGetFileName().c_str());
         HRESULT hres;
@@ -136,12 +213,105 @@ opennxApp::CreateDesktopEntry(MyXmlConfig *cfg)
             if (SUCCEEDED(hres)) {
                 hres = ppf->Save(wxConvLocal.cWX2WC(linkPath), TRUE);
                 ppf->Release();
+				ret = true;
             }
             psl->Release();
         }
     }
 #endif
 #ifdef __UNIX__
+# ifdef __WXMAC__
+    wxString path = wxGetHomeDir() + wxFileName::GetPathSeparator() + wxT("Desktop") +
+        wxFileName::GetPathSeparator() + wxT(".") + cfg->sGetName() +
+        wxFileName::GetPathSeparator() + wxT("Contents");
+    wxFileName::Mkdir(path, 0755, wxPATH_MKDIR_FULL);
+    wxFileName::Mkdir(path + wxFileName::GetPathSeparator() + wxT("Resources"), 0755, wxPATH_MKDIR_FULL);
+    wxFileName::Mkdir(path + wxFileName::GetPathSeparator() + wxT("MacOS"), 0755, wxPATH_MKDIR_FULL);
+    wxString plist = wxT("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+    plist += wxT("<!DOCTYPE plist SYSTEM \"file://localhost/System/Library/DTDs/PropertyList.dtd\">\n");
+    plist += wxT("<plist version=\"0.9\">\n");
+    plist += wxT("<dict>\n");
+    plist += wxT(" <key>CFBundleInfoDictionaryVersion</key>\n");
+    plist += wxT(" <string>6.0</string>\n");
+    plist += wxT(" <key>CFBundleIdentifier</key>\n");
+    plist += wxString::Format(wxT(" <string>org.opennx.%s.%s</string>\n"),
+            wxGetUserId().c_str(), cfg->sGetName().c_str());
+    plist += wxT(" <key>CFBundleDevelopmentRegion</key>\n");
+    plist += wxT(" <string>English</string>\n");
+    plist += wxT(" <key>CFBundleExecutable</key>\n");
+    plist += wxT(" <string>startnxsession</string>\n");
+    plist += wxT(" <key>CFBundleIconFile</key>\n");
+    plist += wxT(" <string>nxdesktop</string>\n");
+    plist += wxT(" <key>CFBundleName</key>\n");
+    plist += wxT(" <string>") + cfg->sGetName() + wxT("</string>\n");
+    plist += wxT(" <key>CFBundlePackageType</key>\n");
+    plist += wxT(" <string>APPL</string>\n");
+    plist += wxT(" <key>CFBundleSignature</key>\n");
+    plist += wxT(" <string>\?\?\?\?</string>\n");
+    plist += wxT(" <key>CFBundleVersion</key>\n");
+    plist += wxT(" <string>1.0</string>\n");
+    plist += wxT(" <key>CFBundleShortVersionString</key>\n");
+    plist += wxT(" <string>1.0</string>\n");
+    plist += wxT(" <key>CFBundleGetInfoString</key>\n");
+    plist += wxT(" <string>Starts an OpenNX session</string>\n");
+    plist += wxT(" <key>LSRequiresCarbon</key>\n");
+    plist += wxT(" <true/>\n");
+    plist += wxT(" <key>CSResourcesFileMapped</key>\n");
+    plist += wxT(" <true/>\n");
+    plist += wxT("</dict>\n");
+    plist += wxT("</plist>\n");
+    if (::wxDirExists(path)) {
+
+        wxFile f;
+        wxFileSystem fs;
+        wxString fn = path + wxFileName::GetPathSeparator() + wxT("Resources") +
+            wxFileName::GetPathSeparator() + wxT("nxdesktop.icns");
+        wxFSFile *ff = fs.OpenFile(::wxGetApp().GetResourcePrefix() + wxT("res/nx-desktop.icns"));
+
+        // Write icon file
+        ::wxLogTrace(MYTRACETAG, wxT("Creating '%s'"), fn.c_str());
+        if (ff  && f.Create(fn, true, wxS_IRUSR|wxS_IWUSR|wxS_IRGRP|wxS_IROTH)) {
+            wxInputStream *is = ff->GetStream();
+            size_t len = is->GetSize();
+            unsigned char *buf = new unsigned char[len];
+            is->Read(buf, len);
+            f.Write(buf, len);
+            f.Close();
+            delete buf;
+        }
+
+        // Write shell script
+        fn = path + wxFileName::GetPathSeparator() + wxT("MacOS") +
+            wxFileName::GetPathSeparator() + wxT("startnxsession");
+        ::wxLogTrace(MYTRACETAG, wxT("Creating '%s'"), fn.c_str());
+        if (f.Create(fn, true, wxS_IRUSR|wxS_IWUSR|wxS_IXUSR|wxS_IRGRP|wxS_IXGRP|wxS_IROTH)) {
+            wxString cmd = wxT("#!/bin/sh\nexec \"") + GetSelfPath() + wxT("\" --session=\"") + cfg->sGetFileName() + wxT("\"\n");
+            f.Write(cmd);
+            f.Close();
+        }
+
+        fn = path + wxFileName::GetPathSeparator() + wxT("Info.plist");
+        ::wxLogTrace(MYTRACETAG, wxT("Creating '%s'"), fn.c_str());
+        if (f.Create(fn, true, wxS_IRUSR|wxS_IWUSR|wxS_IRGRP|wxS_IROTH)) {
+            f.Write(plist);
+            f.Close();
+        }
+
+        fn = path + wxFileName::GetPathSeparator() + wxT("PkgInfo");
+        ::wxLogTrace(MYTRACETAG, wxT("Creating '%s'"), fn.c_str());
+        if (f.Create(fn, true, wxS_IRUSR|wxS_IWUSR|wxS_IRGRP|wxS_IROTH)) {
+            wxString pkginfo = wxT("APPL????");
+            f.Write(pkginfo);
+            f.Close();
+        }
+
+        wxFileName dir(path);
+        fn = wxGetHomeDir() + wxFileName::GetPathSeparator() + wxT("Desktop") +
+            wxFileName::GetPathSeparator() + cfg->sGetName() + wxT(".app");
+        ::wxRenameFile(dir.GetPath(wxPATH_GET_VOLUME), fn, false);
+
+    }
+# else
     wxString dtEntry = wxT("[Desktop Entry]\n");
     dtEntry += wxT("Encoding=UTF-8\n");
     dtEntry += wxT("Type=Application\n");
@@ -154,7 +324,7 @@ opennxApp::CreateDesktopEntry(MyXmlConfig *cfg)
     dtEntry += wxT("Name=") + cfg->sGetName() + wxT("\n");
     dtEntry += wxT("GenericName=OpenNX Client\n");
     dtEntry += wxT("GenericName[de]=OpenNX Client\n");
-    dtEntry += wxT("Exec=") + appDir + wxT("/bin/opennx --session=\"")
+    dtEntry += wxT("Exec=\"") + GetSelfPath() + wxT("\" --session=\"")
         + cfg->sGetFileName() + wxT("\"\n");
     dtEntry += wxT("Icon=") + appDir + wxT("/share/icons/nx-desktop.png\n");
 
@@ -168,11 +338,14 @@ opennxApp::CreateDesktopEntry(MyXmlConfig *cfg)
             if (f.Create(fn, true, wxS_IRUSR|wxS_IWUSR|wxS_IRGRP|wxS_IROTH)) {
                 f.Write(dtEntry);
                 f.Close();
+				ret = true;
             }
         }
         p++;
     }
-#endif
+# endif // !__WXMAC__
+#endif // __UNIX__
+	return ret;
 }
 
     bool
@@ -180,8 +353,11 @@ opennxApp::RemoveDesktopEntry(MyXmlConfig *cfg)
 {
 #ifdef __WXMSW__
     TCHAR dtPath[MAX_PATH];
-    if (SHGetSpecialFolderPath(NULL, dtPath, CSIDL_DESKTOPDIRECTORY, FALSE))
-        wxRemoveFile(wxString::Format(_T("%s\\%s.lnk"), dtPath, cfg->sGetName().mb_str()));
+    if (SHGetSpecialFolderPath(NULL, dtPath, CSIDL_DESKTOPDIRECTORY, FALSE)) {
+		wxString lpath = wxString::Format(_T("%s\\%s.lnk"), dtPath, cfg->sGetName().mb_str());
+		::wxLogTrace(MYTRACETAG, wxT("Removing '%s'"), lpath.c_str());
+        ::wxRemoveFile(lpath);
+	}
 #endif
 #ifdef __UNIX__
     const wxChar **p = desktopDirs;
@@ -194,145 +370,107 @@ opennxApp::RemoveDesktopEntry(MyXmlConfig *cfg)
 #endif
     ::wxLogTrace(MYTRACETAG, wxT("Removing '%s'"), cfg->sGetFileName().c_str());
     ::wxRemoveFile(cfg->sGetFileName());
+	return true;
 }
 
-opennxApp::opennxApp()
-    : m_pCfg(NULL)
+    bool
+opennxApp::preInit()
 {
-
-    SetAppName(wxT("OpenNX"));
-#ifdef __WXMSW__
-    m_pCfg = new wxConfig(wxT("OpenNX"), wxT("Millenux"));
-#else
-    m_pCfg = new wxConfig(wxT("OpenNX"), wxT("Millenux"), wxT(".opennx"));
-#endif
-    wxConfigBase::Set(m_pCfg);
-
-#ifdef __WXMSW__
-    DWORD dummy;
-    DWORD viSize;
-    LPVOID vi;
-    TCHAR mySelf[MAX_PATH];
-    VS_FIXEDFILEINFO *vsFFI;
-    UINT vsFFIlen;
-    m_sVersion = wxT("?.?");
-
-    if (GetModuleFileName(NULL, mySelf, sizeof(mySelf))) {
-        viSize = GetFileVersionInfoSize(mySelf, &dummy);
-        if (viSize) {
-            vi = (LPVOID)malloc(viSize);
-            if (vi) {
-                if (GetFileVersionInfo(mySelf, dummy, viSize, vi)) {
-                    if (VerQueryValue(vi, wxT("\\"), (LPVOID *)&vsFFI, &vsFFIlen)) {
-                        m_sVersion = wxString::Format(wxT("%d.%d"), HIWORD(vsFFI->dwFileVersionMS),
-                                LOWORD(vsFFI->dwFileVersionMS));
-                        if (vsFFI->dwFileVersionLS)
-                            m_sVersion += wxString::Format(wxT(".%d"), HIWORD(vsFFI->dwFileVersionLS));
-                        if (LOWORD(vsFFI->dwFileVersionLS))
-                            m_sVersion += wxString::Format(wxT(".%d"), LOWORD(vsFFI->dwFileVersionLS));
-                    }
-
-                }
-                free(vi);
-            }
-        }
-    }
-#else
-    m_sVersion = wxT(PACKAGE_VERSION);
-#endif
-
     wxString tmp;
-    if (!wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &tmp)) {
+    if (!wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &tmp))
         tmp = ::wxGetHomeDir() + wxFileName::GetPathSeparator() + wxT(".nx");
-        if (!wxFileName(tmp).DirExists())
-            wxFileName(tmp).Mkdir();
-        wxConfigBase::Get()->Write(wxT("Config/UserNxDir"), tmp);
-        wxFileName::Mkdir(tmp +  wxFileName::GetPathSeparator() + wxT("config"), 0750, wxPATH_MKDIR_FULL);
-    }
+    wxFileName::Mkdir(tmp, 0750, wxPATH_MKDIR_FULL);
+    wxConfigBase::Get()->Write(wxT("Config/UserNxDir"), tmp);
+    wxFileName::Mkdir(tmp +  wxFileName::GetPathSeparator() + wxT("config"), 0750,
+            wxPATH_MKDIR_FULL);
 
     wxFileName fn;
-    if (!wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp)) {
 #define NotImplemented
 #ifdef __WXMSW__
-        int ret = GetModuleFileName(NULL, tmp.GetWriteBuf(1024), 1024);
-        tmp.UngetWriteBuf(ret);
-        fn.Assign(tmp);
-# undef NotImplemented
+    int ret = GetModuleFileName(NULL, tmp.GetWriteBuf(1024), 1024);
+    tmp.UngetWriteBuf(ret);
+    fn.Assign(tmp);
+#undef NotImplemented
 #endif
-#ifdef __OPENBSD__
-        // FIXME: How to get one's own exe path on OpenBSD?
-        // for now, we resemble sh's actions
-        tmp = argv[0];
-        if (!::wxIsAbsolutePath(tmp)) {
-            if (av0.StartsWith(wxt("."))) {
-                // a relative path
-                fn.Assign(tmp);
-                fn.MakeAbsolute();
-                tmp = fn.GetFullPath();
-            } else {
-                bool found = false;
-                tmp = ::wxGetEnv(wxT("PATH"));
-                if (tmp.IsEmpty) {
-                    wxLogError(_("Could not get PATH environment"));
-                    return;
+#if defined(__OPENBSD__) || defined(__WXMAC__)
+    // FIXME: How to get one's own exe path on OpenBSD?
+    // for now, we resemble sh's actions
+    tmp = this->argv[0];
+    if (!::wxIsAbsolutePath(tmp)) {
+        if (tmp.StartsWith(wxT("."))) {
+            // a relative path
+            fn.Assign(tmp);
+            fn.MakeAbsolute();
+            tmp = fn.GetFullPath();
+        } else {
+            bool found = false;
+            ::wxGetEnv(wxT("PATH"), &tmp);
+            if (tmp.IsEmpty()) {
+                wxLogError(_("Could not get PATH environment"));
+                return false;
+            }
+            wxStringTokenizer st(tmp, wxT(":"));
+            while (st.HasMoreTokens()) {
+                tmp = st.GetNextToken();
+                fn.Assign(tmp, argv[0]);
+                if (fn.IsFileExecutable()) {
+                    tmp = fn.GetFullPath();
+                    found = true;
+                    break;
                 }
-                wxStringTokenizer st(tmp, wxT(":"));
-                while (st.HasMoreTokens()) {
-                    tmp = st.GetNextToken();
-                    fn.Assign(tmp, argv[0]);
-                    if (fn.IsFileExecutable()) {
-                        tmp = fn.getFullPath();
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    tmp = argv[0];
-                    wxLogError(_("Could not find %s in PATH"), tmp.c_str());
-                    return;
-                }
+            }
+            if (!found) {
+                tmp = argv[0];
+                wxLogError(_("Could not find %s in PATH"), tmp.c_str());
+                return false;
             }
         }
-        int ret;
-        char ldst[PATH_MAX+1];
-        while (true) {
-            struct stat st;
-            if (lstat(tmp.c_str(), &st) != 0) {
-                wxLogSysError(_("Could not stat %s"), tmp.c_str());
-                return;
+    }
+    int ret;
+    char ldst[PATH_MAX+1];
+    while (true) {
+        struct stat st;
+        if (lstat(tmp.fn_str(), &st) != 0) {
+            wxLogSysError(_("Could not stat %s"), tmp.c_str());
+            return false;
+        }
+        if (S_ISLNK(st.st_mode)) {
+            ret = readlink(tmp.fn_str(), ldst, PATH_MAX);
+            if (ret == -1) {
+                wxLogSysError(_("Could not read link %s"), tmp.c_str());
+                return false;
             }
-            if (S_IFLNK(st.st_mode)) {
-                ret = readlink(tmp.c_str(), ldst, PATH_MAX);
-                if (ret == -1) {
-                    wxLogSysError(_("Could not read link %s"), tmp.c_str());
-                    return;
-                }
-                ldst[ret] = '\0';
+            ldst[ret] = '\0';
+            if (ldst[0] == '/')
                 tmp = wxConvLocal.cMB2WX(ldst);
-            } else {
+            else {
                 fn.Assign(tmp);
-                fn.MakeAbsolute();
-                break;
+                tmp = fn.GetPathWithSep() + wxConvLocal.cMB2WX(ldst);
             }
+        } else {
+            fn.Assign(tmp);
+            fn.MakeAbsolute();
+            break;
         }
+    }
 # undef NotImplemented
 #endif
 #ifdef __LINUX__
-        // Get executable path from /proc/self/exe
-        char ldst[PATH_MAX+1];
-        int ret = readlink("/proc/self/exe", ldst, PATH_MAX);
-        if (ret == -1) {
-            wxLogSysError(_("Could not read link /proc/self/exe"));
-            return;
-        }
-        ldst[ret] = '\0';
-        fn.Assign(wxConvLocal.cMB2WX(ldst));
+    // Get executable path from /proc/self/exe
+    char ldst[PATH_MAX+1];
+    memset(ldst, 0, sizeof(ldst));
+    if (readlink("/proc/self/exe", ldst, PATH_MAX) == -1) {
+        wxLogSysError(_("Could not read link /proc/self/exe"));
+        return false;
+    }
+    fn.Assign(wxConvLocal.cMB2WX(ldst));
 # undef NotImplemented
 #endif
 #ifdef NotImplemented
 # error Missing Implementation for this OS
 #endif
-        m_sSelfPath = fn.GetFullPath();
+    m_sSelfPath = fn.GetFullPath();
+    if (!wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp)) {
         fn.RemoveLastDir();
         wxConfigBase::Get()->Write(wxT("Config/SystemNxDir"),
                 fn.GetPath(wxPATH_GET_VOLUME));
@@ -341,12 +479,14 @@ opennxApp::opennxApp()
     wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp);
 
 #ifdef __UNIX__
-    wxString lpath;
-    if (::wxGetEnv(wxT("LD_LIBRARY_PATH"), &lpath))
-        lpath += wxT(":");
-    lpath = tmp + wxT("/lib");
-    if (!::wxSetEnv(wxT("LD_LIBRARY_PATH"), lpath))
+    wxString ldpath;
+    if (::wxGetEnv(wxT("LD_LIBRARY_PATH"), &ldpath))
+        ldpath += wxT(":");
+    ldpath = tmp + wxT("/lib");
+    if (!::wxSetEnv(wxT("LD_LIBRARY_PATH"), ldpath)) {
         ::wxLogSysError(wxT("Can not set LD_LIBRARY_PATH"));
+	return false;
+    }
 #endif
 
     wxString traceTags;
@@ -358,19 +498,13 @@ opennxApp::opennxApp()
             wxLog::AddTraceMask(tag);
         }
     }
-}
-
-opennxApp::~opennxApp()
-{
-    if (m_pCfg)
-        delete m_pCfg;
+    return true;
 }
 
 void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
 {
     // Init standard options (--help, --verbose);
     wxApp::OnInitCmdLine(parser);
-
 
     parser.AddSwitch(wxT(""), wxT("admin"),
             _("Start the session administration tool."));
@@ -413,69 +547,49 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
     m_eMode = MODE_CLIENT;
     if (parser.Found(wxT("dialog"), &sDlgType)) {
         wxString tmp;
-        wxString sMessage;
-        wxString sCaption;
-        int style = wxICON_WARNING;
-#ifdef __UNIX__
-        long pPID = (long)getppid();
-#else
-#error TODO: implement win32 getppid();
-#endif
-        long oPID;
-        (void)parser.Found(wxT("caption"), &sCaption);
-        (void)parser.Found(wxT("message"), &sMessage);
+        m_iDialogStyle = wxICON_WARNING;
+        (void)parser.Found(wxT("caption"), &m_sDialogCaption);
+        (void)parser.Found(wxT("message"), &m_sDialogMessage);
         (void)parser.Found(wxT("style"), &tmp);
-        sMessage.Replace(wxT("\\r\\n"), wxT("\n"));
-        sMessage.Replace(wxT("\\r"), wxT("\n"));
-        sMessage.Replace(wxT("\\n"), wxT("\n"));
-        sMessage.Replace(wxT("\\t"), wxT("\t"));
-        if (!parser.Found(wxT("parent"), &oPID))
-            oPID = pPID;
+        m_sDialogMessage.Replace(wxT("\\r\\n"), wxT("\n"));
+        m_sDialogMessage.Replace(wxT("\\r"), wxT("\n"));
+        m_sDialogMessage.Replace(wxT("\\n"), wxT("\n"));
+        m_sDialogMessage.Replace(wxT("\\t"), wxT("\t"));
+        if (!parser.Found(wxT("parent"), &m_nOtherPID))
+            m_nOtherPID = (long)getppid();
         switch (aDlgClasses.Index(tmp)) {
             case 0:
-                style = wxICON_INFORMATION;
+                m_iDialogStyle = wxICON_INFORMATION;
                 break;
             case 2:
-                style = wxICON_ERROR;
+                m_iDialogStyle = wxICON_ERROR;
                 break;
             default:
-                style = wxICON_WARNING;
+                m_iDialogStyle = wxICON_WARNING;
                 break;
         }
         switch (aDlgTypes.Index(sDlgType)) {
             case 0:
                 // yesno
-                style |= wxYES_NO;
-                if (::wxMessageBox(sMessage, sCaption, style) == wxYES)
-                    ::wxKill(pPID, wxSIGTERM);
-                return false;
+                m_iDialogStyle |= wxYES_NO;
+                m_eMode = MODE_DIALOG_YESNO;
+                return true;
             case 1:
                 // ok
-                style |= wxOK;
-                ::wxMessageBox(sMessage, sCaption, style);
-                return false;
+                m_iDialogStyle |= wxOK;
+                m_eMode = MODE_DIALOG_OK;
+                return true;
             case 2:
                 // error
-                style |= wxOK;
-                ::wxMessageBox(sMessage, sCaption, style);
-                ::wxKill(pPID, wxSIGTERM);
-                return false;
+                m_iDialogStyle |= wxOK;
+                m_eMode = MODE_DIALOG_ERROR;
+                return true;
             case 3:
                 // panic (Buttons: Terminate and Cancel, Terminate sends SIGTERM)
-                // Since we use a custom dialog which uses resources, we must defer
-                // execution until after XRC initialization.
-                m_sDialogCaption = sCaption;
-                m_sDialogMessage = sMessage;
-                m_iDialogClass = style;
-                m_nOtherPID = pPID;
                 m_eMode = MODE_DIALOG_PANIC;
                 return true;
             case 4:
                 // quit (Button: Quit, no signals)
-                // Deferred execution, like panic
-                m_sDialogCaption = sCaption;
-                m_sDialogMessage = sMessage;
-                m_iDialogClass = style;
                 m_eMode = MODE_DIALOG_QUIT;
                 return true;
             case 5:
@@ -511,6 +625,9 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
 // 'Main program' equivalent: the program execution "starts" here
 bool opennxApp::OnInit()
 {
+    if (!preInit())
+        return false;
+
     wxString tmp;
     wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp);
     m_cLocale.AddCatalogLookupPathPrefix(tmp + wxFileName::GetPathSeparator()
@@ -543,44 +660,85 @@ bool opennxApp::OnInit()
         return false;
     }
 
-    if (m_eMode == MODE_DIALOG_PANIC) {
-        PanicDialog d;
-        d.SetMessage(m_sDialogMessage);
-        d.SetDialogClass(m_iDialogClass);
-        d.Create(NULL, wxID_ANY, m_sDialogCaption);
-        if (d.ShowModal() == wxID_OK)
-            ::wxKill(m_nOtherPID, wxSIGTERM);
-        return false;
-    }
-
-    if (m_eMode == MODE_DIALOG_QUIT) {
-        QuitDialog d;
-        d.SetMessage(m_sDialogMessage);
-        d.SetDialogClass(m_iDialogClass);
-        d.Create(NULL, wxID_ANY, m_sDialogCaption);
-        d.ShowModal();
-        return false;
-    }
-
-    if (m_eMode == MODE_FOREIGN_TOOLBAR) {
-        ForeignFrame *ff = new ForeignFrame(NULL);
-        m_pCfg = NULL;
-        ff->SetOtherPID(m_nOtherPID);
-        ff->SetForeignWindowID(m_nWindowID);
-        ff->Show();
-        SetTopWindow(ff);
-        return true;
-    }
-
-    if (m_eMode == MODE_ADMIN) {
-        SessionAdmin *sa = new SessionAdmin(NULL);
-        // If we return true, the global config will
-        // be deleted by the framework, so we set it to NULL here
-        // to prevent double free.
-        m_pCfg = NULL;
-        sa->Show();
-        SetTopWindow(sa);
-        return true;
+    switch (m_eMode) {
+        case MODE_CLIENT:
+        case MODE_WIZARD:
+            break;
+        case MODE_DIALOG_YESNO:
+            {
+                wxMessageDialog d(NULL, m_sDialogMessage, m_sDialogCaption, m_iDialogStyle);
+                d.SetIcon(CreateIconFromFile(wxT("res/nx.png")));
+                if (d.ShowModal() == wxYES)
+                    ::wxKill(m_nOtherPID, wxSIGTERM);
+                wxMemoryFSHandler::RemoveFile(wxT("memrsc"));
+                return false;
+            }
+            break;
+        case MODE_DIALOG_OK:
+            {
+                wxMessageDialog d(NULL, m_sDialogMessage, m_sDialogCaption, m_iDialogStyle);
+                d.SetIcon(CreateIconFromFile(wxT("res/nx.png")));
+                d.ShowModal();
+                wxMemoryFSHandler::RemoveFile(wxT("memrsc"));
+                return false;
+            }
+            break;
+        case MODE_DIALOG_ERROR:
+            {
+                wxMessageDialog d(NULL, m_sDialogMessage, m_sDialogCaption, m_iDialogStyle);
+                d.SetIcon(CreateIconFromFile(wxT("res/nx.png")));
+                d.ShowModal();
+                ::wxKill(m_nOtherPID, wxSIGTERM);
+                wxMemoryFSHandler::RemoveFile(wxT("memrsc"));
+                return false;
+            }
+            break;
+        case MODE_DIALOG_PANIC:
+            {
+                PanicDialog d;
+                d.SetMessage(m_sDialogMessage);
+                d.SetDialogClass(m_iDialogStyle);
+                d.Create(NULL, wxID_ANY, m_sDialogCaption);
+                if (d.ShowModal() == wxID_OK)
+                    ::wxKill(m_nOtherPID, wxSIGTERM);
+                wxMemoryFSHandler::RemoveFile(wxT("memrsc"));
+                return false;
+            }
+            break;
+        case MODE_DIALOG_QUIT:
+            {
+                QuitDialog d;
+                d.SetMessage(m_sDialogMessage);
+                d.SetDialogClass(m_iDialogStyle);
+                d.Create(NULL, wxID_ANY, m_sDialogCaption);
+                d.ShowModal();
+                wxMemoryFSHandler::RemoveFile(wxT("memrsc"));
+                return false;
+            }
+            break;
+        case MODE_FOREIGN_TOOLBAR:
+            {
+                ForeignFrame *ff = new ForeignFrame(NULL);
+                m_pCfg = NULL;
+                ff->SetOtherPID(m_nOtherPID);
+                ff->SetForeignWindowID(m_nWindowID);
+                ff->Show();
+                SetTopWindow(ff);
+                return true;
+            }
+            break;
+        case MODE_ADMIN:
+            {
+                SessionAdmin *sa = new SessionAdmin(NULL);
+                // If we return true, the global config will
+                // be deleted by the framework, so we set it to NULL here
+                // to prevent double free.
+                m_pCfg = NULL;
+                sa->Show();
+                SetTopWindow(sa);
+                return true;
+            }
+            break;
     }
 
     if ((m_eMode == MODE_CLIENT) && m_sSessionName.IsEmpty()) {

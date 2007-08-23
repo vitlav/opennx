@@ -19,30 +19,104 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#include <X11/Xlib.h>
-#include <X11/Xatom.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/un.h>
-#include <dlfcn.h>
-
 /*
  * Defines canonicalized platform names (e.g. __LINUX__)
  */
 #include <wx/platform.h>
 
+#ifdef __WXMSW__
+/* dummies for now */
+char *x11_socket_path = "";
+char *x11_keyboard_type = "";
+
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <tlhelp32.h>
+#include <stdlib.h>
+
+static char _spath[_MAX_PATH+1];
+static char _kbd[_MAX_PATH+1];
+
+
+long getppid()
+{
+    OSVERSIONINFO osver;
+    HINSTANCE hKernel32;
+    HANDLE hSnapShot;
+    PROCESSENTRY32 procentry;
+    long mypid;
+    long ppid = 0;
+
+	/* ToolHelp Function Pointers.*/
+    HANDLE (WINAPI *lpfCreateToolhelp32Snapshot)(DWORD,DWORD);
+    BOOL (WINAPI *lpfProcess32First)(HANDLE,LPPROCESSENTRY32);
+    BOOL (WINAPI *lpfProcess32Next)(HANDLE,LPPROCESSENTRY32);
+	
+    osver.dwOSVersionInfoSize = sizeof(osver);
+    if (!GetVersionEx(&osver))
+        return 0;
+	if (osver.dwPlatformId != VER_PLATFORM_WIN32_NT)
+        return 0;
+    if ((hKernel32 = LoadLibraryA("kernel32.dll")) == NULL)
+        return 0;
+	lpfCreateToolhelp32Snapshot= (HANDLE(WINAPI *)(DWORD,DWORD))
+        GetProcAddress(hKernel32, "CreateToolhelp32Snapshot");
+	lpfProcess32First= (BOOL(WINAPI *)(HANDLE,LPPROCESSENTRY32))
+        GetProcAddress(hKernel32, "Process32First");
+    lpfProcess32Next= (BOOL(WINAPI *)(HANDLE,LPPROCESSENTRY32))
+        GetProcAddress(hKernel32, "Process32Next");
+    if (lpfProcess32Next == NULL || lpfProcess32First == NULL || lpfCreateToolhelp32Snapshot == NULL) {
+        FreeLibrary(hKernel32);
+        return 0;
+    }
+    hSnapShot = lpfCreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    if (hSnapShot == INVALID_HANDLE_VALUE) {
+        FreeLibrary(hKernel32);
+        return 0;
+    }
+    memset((LPVOID)&procentry,0,sizeof(PROCESSENTRY32));
+    procentry.dwSize = sizeof(PROCESSENTRY32);
+    mypid = GetCurrentProcessId();
+    if (lpfProcess32First(hSnapShot, &procentry)) {
+        do {
+            if (mypid == (long)procentry.th32ProcessID) {
+                ppid =  procentry.th32ParentProcessID;
+                break;
+            }
+            procentry.dwSize = sizeof(PROCESSENTRY32);
+        } while (lpfProcess32Next(hSnapShot, &procentry));
+    }	
+	FreeLibrary(hKernel32);
+    return ppid;
+}
+
+#else /* ! __WXMSW__ */
+
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
+#include <X11/Xmu/WinUtil.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/unistd.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <dlfcn.h>
+#include <limits.h>
+#include <string.h>
+
 typedef int (*PFconnect)(int s, const struct sockaddr *name, socklen_t namelen);
 static PFconnect real_connect = NULL;
 static void *libc = NULL;
 static int do_save = 1;
+
 static char _spath[PATH_MAX+1];
 static char _kbd[PATH_MAX+1];
 
 char *x11_socket_path = _spath;
 char *x11_keyboard_type = _kbd;
 
+#ifndef __WXMAC__
 /**
  * A horrific hack for retrieving the path of the X11 local server socket.
  *
@@ -90,6 +164,10 @@ getx11socket()
 #endif
 #ifdef __OPENBSD__
     libc = dlopen("libc.so", RTLD_NOW);
+# undef NotImplemented
+#endif
+#ifdef __WXMAC__
+    libc = dlopen("libc.dylib", RTLD_NOW);
 # undef NotImplemented
 #endif
 #ifdef NotImplemented
@@ -145,6 +223,9 @@ free_libc()
     if (libc)
         dlclose(libc);
 }
+# endif /* !__WXMAC__ */
+
+#endif
 
 /*
  * Close a foreign X11 window (just like a window-manager would do.
@@ -165,7 +246,8 @@ void close_foreign(long parentID)
         XCloseDisplay(dpy);
     }
 #else
-#error Implement reparent_pulldown
+	(void)parentID;
+#pragma message(__FILE__ " : warning: Implement close_foreign")
 #endif
 }
 
@@ -188,7 +270,7 @@ void reparent_pulldown(long parentID)
                 Window root = RootWindow(dpy, s);
                 Window dummy;
                 Window *childs = NULL;
-                int nchilds = 0;
+                unsigned int nchilds = 0;
                 if (XQueryTree(dpy, root, &dummy, &dummy, &childs, &nchilds)) {
                     int c;
                     for (c = 0; c < nchilds; c++) {
@@ -198,19 +280,19 @@ void reparent_pulldown(long parentID)
                             int fmt;
                             unsigned long n;
                             unsigned long ba;
-                            unsigned long pid;
                             unsigned long *prop;
                             int res = XGetWindowProperty(dpy, w, a, 0, 32, False,
                                     XA_CARDINAL, &type, &fmt, &n, &ba, (unsigned char **)&prop);
                             if ((res == Success) && (fmt = 32) && (n == 1) && prop) {
                                 if (*prop == getpid()) {
-                                    int pw, cw, dummy;
+                                    int dummy;
+                                    unsigned int pw, cw, udummy;
                                     Window wdummy;
 
                                     XGetGeometry(dpy, w, &wdummy, &dummy, &dummy,
-                                            &cw, &dummy, &dummy, &dummy);
+                                            &cw, &udummy, &udummy, &udummy);
                                     XGetGeometry(dpy, parentID, &wdummy, &dummy, &dummy,
-                                            &pw, &dummy, &dummy, &dummy);
+                                            &pw, &udummy, &udummy, &udummy);
                                     XReparentWindow(dpy, w, parentID, pw / 2 - cw / 2, 0);
                                     break;
                                 }
@@ -223,7 +305,54 @@ void reparent_pulldown(long parentID)
         XCloseDisplay(dpy);
     }
 #else
-#error Implement reparent_pulldown
+	(void)parentID;
+#pragma message(__FILE__ " : warning: Implement reparent_pulldown")
+#endif
+}
+
+void close_sid(const char *sid)
+{
+#if defined(__LINUX__) || defined(__OPENBSD__)
+    Display *dpy = XOpenDisplay(NULL);
+    int closed = 0;
+    if (dpy) {
+        int s;
+        for (s = 0; s < ScreenCount(dpy); s++) {
+            Window root = RootWindow(dpy, s);
+            Window dummy;
+            Window *childs = NULL;
+            unsigned int nchilds = 0;
+            if (XQueryTree(dpy, root, &dummy, &dummy, &childs, &nchilds)) {
+                int c;
+                for (c = 0; c < nchilds; c++) {
+                    Window w = XmuClientWindow(dpy, childs[c]);
+                    if (w != None) {
+                        char **cargv = NULL;
+                        int cargc = 0;
+                        if (XGetCommand(dpy, w, &cargv, &cargc)) { 
+                            if ((cargc > 3) &&
+                                    (strcmp(cargv[0], "/usr/NX/bin/nxagent") == 0) &&
+                                    (strcmp(cargv[1], "-D") == 0) &&
+                                    (strcmp(cargv[2], "-options") == 0) &&
+                                    (strstr(cargv[3], sid) != NULL)) {
+                                close_foreign(w);
+                                closed = 1;
+                                XFreeStringList(cargv);
+                                break;
+                            }
+                        }
+                        XFreeStringList(cargv);
+                    }
+                }
+            }
+            if (closed)
+                break;
+        }
+        XCloseDisplay(dpy);
+    }
+#else
+	(void)sid;
+#pragma message(__FILE__ " : warning: Implement reparent_pulldown")
 #endif
 }
 

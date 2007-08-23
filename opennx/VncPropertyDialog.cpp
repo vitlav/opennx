@@ -37,9 +37,15 @@
 ////@begin includes
 ////@end includes
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+#include <wx/config.h>
+
 #include "VncPropertyDialog.h"
 #include "Icon.h"
 #include "MyXmlConfig.h"
+#include "MyValidator.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -101,6 +107,9 @@ bool VncPropertyDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
         m_sHostname = m_pCfg->sGetVncHostName();
         m_sPassword = m_pCfg->sGetVncPassword();
     }
+    wxConfigBase::Get()->Read(wxT("Config/StorePasswords"), &m_bStorePasswords, true);
+    if (!m_bStorePasswords)
+        m_bRememberPassword = false;
 
 ////@begin VncPropertyDialog creation
     SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
@@ -131,14 +140,15 @@ void VncPropertyDialog::CreateControls()
     if (FindWindow(XRCID("ID_TEXTCTRL_VNC_HOST")))
         FindWindow(XRCID("ID_TEXTCTRL_VNC_HOST"))->SetValidator( wxTextValidator(wxFILTER_NONE, & m_sHostname) );
     if (FindWindow(XRCID("ID_TEXTCTRL_VNC_DPY")))
-        FindWindow(XRCID("ID_TEXTCTRL_VNC_DPY"))->SetValidator( wxGenericValidator(& m_iDisplayNumber) );
+        FindWindow(XRCID("ID_TEXTCTRL_VNC_DPY"))->SetValidator( MyValidator(MyValidator::MYVAL_NUMERIC, & m_iDisplayNumber) );
     if (FindWindow(XRCID("ID_TEXTCTRL_VNC_PASSWD")))
         FindWindow(XRCID("ID_TEXTCTRL_VNC_PASSWD"))->SetValidator( wxGenericValidator(& m_sPassword) );
     if (FindWindow(XRCID("ID_CHECKBOX_VNC_REMEMBER_PWD")))
         FindWindow(XRCID("ID_CHECKBOX_VNC_REMEMBER_PWD"))->SetValidator( wxGenericValidator(& m_bRememberPassword) );
 ////@end VncPropertyDialog content construction
 
-    // Create custom windows not generated automatically here.
+    if (!m_bStorePasswords)
+        m_pCtrlRememberPassword->Enable(false);
 
 ////@begin VncPropertyDialog content initialisation
 ////@end VncPropertyDialog content initialisation

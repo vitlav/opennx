@@ -33,6 +33,9 @@
 #include <wx/image.h>
 #include <wx/filesys.h>
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "opennxApp.h"
 
 static char * broken_xpm[] = {

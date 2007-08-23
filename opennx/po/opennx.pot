@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: fritz.elfert@innovidata.com\n"
-"POT-Creation-Date: 2006-12-21 23:07+0100\n"
+"POT-Creation-Date: 2007-04-17 12:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: AboutDialog.cpp:109 SessionProperties.cpp:720
+#: AboutDialog.cpp:112 SessionProperties.cpp:797
 msgid "Version"
 msgstr ""
 
@@ -26,7 +26,7 @@ msgstr ""
 
 #: AboutDialog_symbols.h:23 RdpImageSettingsDialog_symbols.h:35
 #: RdpPropertyDialog_symbols.h:35 SessionProperties_symbols.h:98
-#: SmbShareProperties_symbols.h:36 UnixImageSettingsDialog_symbols.h:34
+#: SmbShareProperties_symbols.h:50 UnixImageSettingsDialog_symbols.h:34
 #: VncImageSettingsDialog_symbols.h:27 VncPropertyDialog_symbols.h:31
 #: X11PropertyDialog_symbols.h:32
 msgid "&OK"
@@ -40,14 +40,14 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: LoginDialog.cpp:310 LoginDialog.cpp:361
+#: LoginDialog.cpp:323 LoginDialog.cpp:396
 #, c-format
 msgid ""
 "Could not save session to\n"
 "%s"
 msgstr ""
 
-#: LoginDialog.cpp:311 LoginDialog.cpp:362
+#: LoginDialog.cpp:324 LoginDialog.cpp:397
 msgid "Error saving - OpenNX"
 msgstr ""
 
@@ -60,7 +60,7 @@ msgid "Login"
 msgstr ""
 
 #: LoginDialog_symbols.h:24 RdpPropertyDialog_symbols.h:30
-#: SmbShareProperties_symbols.h:35 VncPropertyDialog_symbols.h:29
+#: SmbShareProperties_symbols.h:44 VncPropertyDialog_symbols.h:29
 msgid "Password"
 msgstr ""
 
@@ -85,139 +85,139 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: opennxApp.cpp:121
+#: opennxApp.cpp:198
 msgid "Launch NX Session"
 msgstr ""
 
-#: opennxApp.cpp:276
+#: opennxApp.cpp:409
 msgid "Could not get PATH environment"
 msgstr ""
 
-#: opennxApp.cpp:291
+#: opennxApp.cpp:424
 #, c-format
 msgid "Could not find %s in PATH"
 msgstr ""
 
-#: opennxApp.cpp:301
+#: opennxApp.cpp:434
 #, c-format
 msgid "Could not stat %s"
 msgstr ""
 
-#: opennxApp.cpp:307
+#: opennxApp.cpp:440
 #, c-format
 msgid "Could not read link %s"
 msgstr ""
 
-#: opennxApp.cpp:325
+#: opennxApp.cpp:463
 msgid "Could not read link /proc/self/exe"
 msgstr ""
 
-#: opennxApp.cpp:376
+#: opennxApp.cpp:510
 msgid "Start the session administration tool."
 msgstr ""
 
-#: opennxApp.cpp:378
+#: opennxApp.cpp:512
 msgid "Secify window title for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:380
+#: opennxApp.cpp:514
 msgid "Secify dialog style for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:382
+#: opennxApp.cpp:516
 msgid "Run in dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:384
+#: opennxApp.cpp:518
 msgid "Dialog mode proxy."
 msgstr ""
 
-#: opennxApp.cpp:386
+#: opennxApp.cpp:520
 msgid "Specify message for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:388
+#: opennxApp.cpp:522
 msgid "Specify parent PID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:390
+#: opennxApp.cpp:524
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr ""
 
-#: opennxApp.cpp:392
+#: opennxApp.cpp:526
 msgid "Specify window-ID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:394
+#: opennxApp.cpp:528
 msgid "Guide the user through the steps to configure a session."
 msgstr ""
 
-#: MyIPC.cpp:490
+#: MyIPC.cpp:334
 msgid "Authentication failed"
 msgstr ""
 
-#: MyWizard.cpp:315
+#: MyWizard.cpp:318
 msgid ""
 "Welcome to the OpenNX Client Connection Wizard which will guide you through "
 "the steps needed to setup your login. Please select the 'Next' button to "
 "start."
 msgstr ""
 
-#: MyWizard.cpp:437
+#: MyWizard.cpp:440
 msgid "New Session"
 msgstr ""
 
-#: MyWizard.cpp:440
+#: MyWizard.cpp:443
 #, c-format
 msgid "New Session %d"
 msgstr ""
 
-#: MyWizard.cpp:454
+#: MyWizard.cpp:457
 msgid ""
 "Insert the name of the session. Your configuration settings will be saved "
 "with this name."
 msgstr ""
 
-#: MyWizard.cpp:455
+#: MyWizard.cpp:458
 msgid "Insert the name and port of the server you want to connect."
 msgstr ""
 
-#: MyWizard.cpp:456
+#: MyWizard.cpp:459
 msgid "Select the type of your internet connection."
 msgstr ""
 
-#: MyWizard.cpp:636
+#: MyWizard.cpp:639
 msgid ""
 "Using OpenNX Client, you can run RDP, VNC and X desktops, depending on what "
 "your service provider has made available."
 msgstr ""
 
-#: MyWizard.cpp:683 MyWizard_symbols.h:34 SessionProperties.cpp:533
+#: MyWizard.cpp:686 MyWizard_symbols.h:34 SessionProperties.cpp:604
 #: SessionProperties_symbols.h:34
 msgid "KDE"
 msgstr ""
 
-#: MyWizard.cpp:689 SessionProperties.cpp:541
+#: MyWizard.cpp:692 SessionProperties.cpp:612
 msgid "RDP"
 msgstr ""
 
-#: MyWizard.cpp:697 SessionProperties.cpp:553
+#: MyWizard.cpp:700 SessionProperties.cpp:624
 msgid "RFB"
 msgstr ""
 
-#: MyWizard.cpp:859
+#: MyWizard.cpp:862
 msgid ""
 "OpenNX Client supports authentication using a variety of USB SmartCard "
 "tokens. Enable this option if you intend to use such a token."
 msgstr ""
 
-#: MyWizard.cpp:860
+#: MyWizard.cpp:863
 msgid ""
 "Authorization credentials are always encrypted while establishing a "
 "connection. For increased security, you can enable the following option."
 msgstr ""
 
-#: MyWizard.cpp:1153
+#: MyWizard.cpp:1156
 #, c-format
 msgid ""
 "Congratulations. The connection to '%s' will be saved as '%s'. You may "
@@ -387,7 +387,7 @@ msgid "Enable RDP image cache"
 msgstr ""
 
 #: RdpImageSettingsDialog_symbols.h:36 RdpPropertyDialog_symbols.h:36
-#: SessionProperties_symbols.h:99 SmbShareProperties_symbols.h:37
+#: SessionProperties_symbols.h:99 SmbShareProperties_symbols.h:51
 #: UnixImageSettingsDialog_symbols.h:35 VncImageSettingsDialog_symbols.h:28
 #: VncPropertyDialog_symbols.h:32 X11PropertyDialog_symbols.h:33
 msgid "&Cancel"
@@ -397,7 +397,7 @@ msgstr ""
 msgid "RDP Session Settings - OpenNX"
 msgstr ""
 
-#: RdpPropertyDialog_symbols.h:23 SessionAdmin.cpp:173 SessionList.cpp:209
+#: RdpPropertyDialog_symbols.h:23 SessionAdmin.cpp:173 SessionList.cpp:265
 #: SessionProperties_symbols.h:24 VncPropertyDialog_symbols.h:23
 msgid "Server"
 msgstr ""
@@ -422,7 +422,7 @@ msgstr ""
 msgid "Use the following credentials"
 msgstr ""
 
-#: RdpPropertyDialog_symbols.h:29 SmbShareProperties_symbols.h:34
+#: RdpPropertyDialog_symbols.h:29 SmbShareProperties_symbols.h:43
 msgid "Username"
 msgstr ""
 
@@ -465,10 +465,6 @@ msgstr ""
 
 #: SessionAdmin.cpp:244
 msgid "Choose new NX session directory."
-msgstr ""
-
-#: SessionAdmin.cpp:379 SessionList.cpp:195
-msgid "terminated"
 msgstr ""
 
 #: SessionAdmin.h:57 SessionAdmin_symbols.h:22
@@ -539,86 +535,106 @@ msgstr ""
 msgid "New NX session"
 msgstr ""
 
-#: SessionList.cpp:198
+#: SessionList.cpp:250 SessionList.cpp:295
+msgid "terminated"
+msgstr ""
+
+#: SessionList.cpp:253 SessionList.cpp:298
 msgid "failed"
 msgstr ""
 
-#: SessionList.cpp:201
+#: SessionList.cpp:256 SessionList.cpp:301
 msgid "running"
 msgstr ""
 
-#: SessionList.cpp:204
+#: SessionList.cpp:259 SessionList.cpp:304
 msgid "unknown"
 msgstr ""
 
-#: SessionList.cpp:209
+#: SessionList.cpp:265
 msgid "Client"
 msgstr ""
 
-#: SessionProperties.cpp:416 SmbShareProperties_symbols.h:24
+#: SessionList.cpp:390
+msgid "Full session statistics - OpenNX"
+msgstr ""
+
+#: SessionList.cpp:391
+msgid "Partial session statistics - OpenNX"
+msgstr ""
+
+#: SessionProperties.cpp:467 SmbShareProperties_symbols.h:24
 msgid "Share"
 msgstr ""
 
-#: SessionProperties.cpp:417 SmbShareProperties_symbols.h:32
+#: SessionProperties.cpp:468 SmbShareProperties_symbols.h:49
 msgid "Mount on"
 msgstr ""
 
-#: SessionProperties.cpp:418
+#: SessionProperties.cpp:469
 msgid "Comment"
 msgstr ""
 
-#: SessionProperties.cpp:429 SessionProperties.cpp:1022
+#: SessionProperties.cpp:481 SessionProperties.cpp:1123
 msgid "Currently not available"
 msgstr ""
 
-#: SessionProperties.cpp:781 SessionProperties_symbols.h:93
+#: SessionProperties.cpp:858 SessionProperties_symbols.h:93
 msgid "Font"
 msgstr ""
 
-#: SessionProperties.cpp:812
+#: SessionProperties.cpp:889
 msgid "Error while reading keyboard table"
 msgstr ""
 
-#: SessionProperties.cpp:841
+#: SessionProperties.cpp:918
 #, c-format
 msgid "Invalid line='%s'"
 msgstr ""
 
-#: SessionProperties.cpp:842
+#: SessionProperties.cpp:919
 #, c-format
 msgid "Invalid entry in %s"
 msgstr ""
 
-#: SessionProperties.cpp:995
+#: SessionProperties.cpp:1047
+msgid "Do you really want to delete all cache directories?"
+msgstr ""
+
+#: SessionProperties.cpp:1048
+msgid "Clean cache - OpenNX"
+msgstr ""
+
+#: SessionProperties.cpp:1096
 msgid "No local samba server is running."
 msgstr ""
 
-#: SessionProperties.cpp:1039 SmbShareProperties.cpp:242
+#: SessionProperties.cpp:1158 SmbShareProperties.cpp:319
 msgid "No shares found"
 msgstr ""
 
-#: SessionProperties.cpp:1103
+#: SessionProperties.cpp:1234
 msgid "Select User NX directory"
 msgstr ""
 
-#: SessionProperties.cpp:1120
+#: SessionProperties.cpp:1251
 msgid "Select System NX directory"
 msgstr ""
 
-#: SessionProperties.cpp:1169
+#: SessionProperties.cpp:1300
 #, c-format
 msgid "Really delete Session '%s' ?"
 msgstr ""
 
-#: SessionProperties.cpp:1170
+#: SessionProperties.cpp:1301
 msgid "Delete Session"
 msgstr ""
 
-#: SessionProperties.cpp:1427
+#: SessionProperties.cpp:1558
 msgid "No cups server available."
 msgstr ""
 
-#: SessionProperties.cpp:1442
+#: SessionProperties.cpp:1573
 msgid "Select System CUPS daemon"
 msgstr ""
 
@@ -810,19 +826,31 @@ msgstr ""
 msgid "&Apply"
 msgstr ""
 
-#: SmbShareProperties.cpp:198
+#: SmbShareProperties.cpp:225
 msgid "Modify shared resource - OpenNX"
 msgstr ""
 
-#: SmbShareProperties.cpp:315
+#: SmbShareProperties.cpp:403
+#, c-format
+msgid ""
+"Do you want to make\n"
+"%s\n"
+"the default printer?"
+msgstr ""
+
+#: SmbShareProperties.cpp:404
+msgid "Default printer"
+msgstr ""
+
+#: SmbShareProperties.cpp:433
 msgid "Mountpoint is already used. Please chose another mountpoint"
 msgstr ""
 
-#: SmbShareProperties.cpp:316
+#: SmbShareProperties.cpp:434
 msgid "Invalid mountpoint"
 msgstr ""
 
-#: SmbShareProperties.h:57 SmbShareProperties_symbols.h:22
+#: SmbShareProperties.h:59 SmbShareProperties_symbols.h:22
 msgid "New shared resource - OpenNX"
 msgstr ""
 
@@ -833,7 +861,7 @@ msgid ""
 msgstr ""
 
 #: SmbShareProperties_symbols.h:25
-msgid "CUPS options"
+msgid "SMB printer options"
 msgstr ""
 
 #: SmbShareProperties_symbols.h:26
@@ -841,33 +869,89 @@ msgid "Please choose a printer driver:"
 msgstr ""
 
 #: SmbShareProperties_symbols.h:27
-msgid "Access control:"
+msgid "deskjet"
 msgstr ""
 
 #: SmbShareProperties_symbols.h:28
-msgid "Private printer"
+msgid "deskjet2"
 msgstr ""
 
 #: SmbShareProperties_symbols.h:29
-msgid "Public printer"
+msgid "dymo"
 msgstr ""
 
 #: SmbShareProperties_symbols.h:30
-msgid "SMB options"
+msgid "epson24"
 msgstr ""
 
 #: SmbShareProperties_symbols.h:31
-msgid ""
-"Please specify the resource name on the remote\n"
-"machine with which this share will be made available."
+msgid "epson9"
+msgstr ""
+
+#: SmbShareProperties_symbols.h:32
+msgid "laserjet"
 msgstr ""
 
 #: SmbShareProperties_symbols.h:33
+msgid "okidata24"
+msgstr ""
+
+#: SmbShareProperties_symbols.h:34
+msgid "okidata9"
+msgstr ""
+
+#: SmbShareProperties_symbols.h:35
+msgid "stcolor"
+msgstr ""
+
+#: SmbShareProperties_symbols.h:36
+msgid "stcolor2"
+msgstr ""
+
+#: SmbShareProperties_symbols.h:37
+msgid "stphoto"
+msgstr ""
+
+#: SmbShareProperties_symbols.h:38
+msgid "stphoto2"
+msgstr ""
+
+#: SmbShareProperties_symbols.h:39
+msgid "Access control:"
+msgstr ""
+
+#: SmbShareProperties_symbols.h:40
+msgid "Private printer"
+msgstr ""
+
+#: SmbShareProperties_symbols.h:41
+msgid "Public printer"
+msgstr ""
+
+#: SmbShareProperties_symbols.h:42
 msgid ""
 "The remote system will need to provide security\n"
 "credentials to your local client. Please specify\n"
 "username and password with which you configured\n"
 "this share."
+msgstr ""
+
+#: SmbShareProperties_symbols.h:45
+msgid "CUPS options"
+msgstr ""
+
+#: SmbShareProperties_symbols.h:46
+msgid "cups driver"
+msgstr ""
+
+#: SmbShareProperties_symbols.h:47
+msgid "SMB options"
+msgstr ""
+
+#: SmbShareProperties_symbols.h:48
+msgid ""
+"Please specify the resource name on the remote\n"
+"machine with which this share will be made available."
 msgstr ""
 
 #: TextViewer.h:53 TextViewer_symbols.h:22

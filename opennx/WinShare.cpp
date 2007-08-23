@@ -137,40 +137,53 @@ DllData::DllData(ClientType ct)
 {
     isNT = false;
     isSMBC = false;
+    handle = NULL;
     switch (ct) {
         case SmbClientUnix:
             {
+                wxLogNull lognull;
                 wxDynamicLibrary dll(wxT("libsmbclient"));
-                C_init = (SMBC_init)dll.GetSymbol(wxT("smbc_init"));
-                C_opendir = (SMBC_opendir)dll.GetSymbol(wxT("smbc_opendir"));
-                C_readdir = (SMBC_readdir)dll.GetSymbol(wxT("smbc_readdir"));
-                C_closedir = (SMBC_closedir)dll.GetSymbol(wxT("smbc_closedir"));
-                handle = dll.Detach();
+                if (dll.IsLoaded()) {
+                    C_init = (SMBC_init)dll.GetSymbol(wxT("smbc_init"));
+                    C_opendir = (SMBC_opendir)dll.GetSymbol(wxT("smbc_opendir"));
+                    C_readdir = (SMBC_readdir)dll.GetSymbol(wxT("smbc_readdir"));
+                    C_closedir = (SMBC_closedir)dll.GetSymbol(wxT("smbc_closedir"));
+                    handle = dll.Detach();
+                }
                 isSMBC = true;
             }
             break;
         case SmbClientWinNT:
             {
+                wxLogNull lognull;
                 wxDynamicLibrary dll(wxT("netapi32"));
-                NT_enum = (NT_NetShareEnum)dll.GetSymbol(wxT("NetShareEnum"));
-                NT_free = (NT_NetApiBufferFree)dll.GetSymbol(wxT("NetApiBufferFree"));
-                handle = dll.Detach();
-                isNT = true;
+                if (dll.IsLoaded()) {
+                    NT_enum = (NT_NetShareEnum)dll.GetSymbol(wxT("NetShareEnum"));
+                    NT_free = (NT_NetApiBufferFree)dll.GetSymbol(wxT("NetApiBufferFree"));
+                    handle = dll.Detach();
+                    isNT = true;
+                }
             }
             break;
         case SmbClientWin95:
             {
+                wxLogNull lognull;
                 wxDynamicLibrary dll(wxT("svrapi32"));
-                W9X_enum = (W9X_NetShareEnum)dll.GetSymbol(wxT("NetShareEnum"));
-                handle = dll.Detach();
+                if (dll.IsLoaded()) {
+                    W9X_enum = (W9X_NetShareEnum)dll.GetSymbol(wxT("NetShareEnum"));
+                    handle = dll.Detach();
+                }
             }
             break;
         case CupsClientUnix:
             {
+                wxLogNull lognull;
                 wxDynamicLibrary dll(wxT("libcups"));
-                cupsGetDests = (FP_cupsGetDests)dll.GetSymbol(wxT("cupsGetDests"));
-                cupsServer = (FP_cupsServer)dll.GetSymbol(wxT("cupsServer"));
-                handle = dll.Detach();
+                if (dll.IsLoaded()) {
+                    cupsGetDests = (FP_cupsGetDests)dll.GetSymbol(wxT("cupsGetDests"));
+                    cupsServer = (FP_cupsServer)dll.GetSymbol(wxT("cupsServer"));
+                    handle = dll.Detach();
+                }
             }
             break;
     }
@@ -178,12 +191,16 @@ DllData::DllData(ClientType ct)
 
 DllData::~DllData()
 {
-    wxDynamicLibrary::Unload(handle);
+    if (handle)
+        wxDynamicLibrary::Unload(handle);
 }
 
 ArrayOfShares DllData::GetShares()
 {
     ArrayOfShares sa;
+
+    if (!handle)
+        return sa;
 
 #ifdef __UNIX__
     if (isSMBC) {
@@ -192,7 +209,7 @@ ArrayOfShares DllData::GetShares()
             int d = C_opendir("smb://127.0.0.1/");
             if (d >= 0) {
                 struct smbc_dirent *e;
-                while (e = C_readdir(d)) {
+                while ((e = C_readdir(d))) {
                     SharedResource r;
                     switch (e->smbc_type) {
                         case SMBC_FILE_SHARE:
@@ -302,20 +319,22 @@ bool DllData::IsAvailable()
     bool ret = false;
     ::wxLogTrace(MYTRACETAG, wxT("DllData(SMB) IsAvailable called"));
 #ifdef __UNIX__
-    if (isSMBC) {
-        // Probe Samba
-        if (C_init(smbc_auth_fn, 0) == 0) {
-            ::wxLogTrace(MYTRACETAG, wxT("C_init success"));
-            int d = C_opendir("smb://127.0.0.1/");
-            if (d >= 0) {
-                ret = true;
-                C_closedir(d);
-            }
-        } else
-            ::wxLogTrace(MYTRACETAG, wxT("C_init returned error"));
-    } else {
-        // Probe Cups
-        return (cupsServer() != NULL);
+    if (handle) {
+        if (isSMBC) {
+            // Probe Samba
+            if (C_init(smbc_auth_fn, 0) == 0) {
+                ::wxLogTrace(MYTRACETAG, wxT("C_init success"));
+                int d = C_opendir("smb://127.0.0.1/");
+                if (d >= 0) {
+                    ret = true;
+                    C_closedir(d);
+                }
+            } else
+                ::wxLogTrace(MYTRACETAG, wxT("C_init returned error"));
+        } else {
+            // Probe Cups
+            return (cupsServer() != NULL);
+        }
     }
 #endif
     return ret;

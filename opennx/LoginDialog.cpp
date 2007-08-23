@@ -34,6 +34,9 @@
 #include "wx/wx.h"
 #endif
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include <wx/config.h>
 #include <wx/dir.h>
 #include <wx/xml/xml.h>
@@ -122,8 +125,15 @@ void LoginDialog::ReadConfigDirectory()
             if (cfg.sGetName() == m_sSessionName) {
                 m_pCurrentCfg = new MyXmlConfig(m_aConfigFiles[i]);
                 m_bGuestLogin = cfg.bGetGuestMode();
-                m_sUsername = cfg.sGetUsername();
-                m_sPassword = cfg.sGetPassword();
+                if (m_bGuestLogin) {
+                    m_sTmpUsername = cfg.sGetUsername();
+                    m_sTmpPassword = cfg.sGetPassword();
+                    m_sUsername = wxT("");
+                    m_sPassword = wxT("");
+                } else {
+                    m_sUsername = cfg.sGetUsername();
+                    m_sPassword = cfg.sGetPassword();
+                }
 #ifdef ENABLE_SMARTCARD
                 m_bUseSmartCard = cfg.bGetUseSmartCard();
 #else
@@ -160,7 +170,7 @@ bool LoginDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
     ////@end LoginDialog member initialisation
 
     ////@begin LoginDialog creation
-    SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
+    SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));
@@ -211,6 +221,10 @@ void LoginDialog::CreateControls()
     m_pCtrlUseSmartCard->Enable(false);
 #endif
     m_pCtrlSessionName->Append(m_aSessionNames);
+    if (m_bGuestLogin) {
+        m_pCtrlUsername->Enable(false);
+        m_pCtrlPassword->Enable(false);
+    }
 }
 
 /*!
@@ -231,17 +245,16 @@ void LoginDialog::OnCheckboxGuestloginClick( wxCommandEvent& event )
 {
     if (m_pCtrlGuestLogin->IsChecked()) {
         m_sTmpUsername = m_pCtrlUsername->GetValue();
-        m_pCtrlUsername->SetValue(wxT(""));
-        m_pCtrlUsername->Enable(false);
         m_sTmpPassword = m_pCtrlPassword->GetValue();
+        m_pCtrlUsername->SetValue(wxT(""));
         m_pCtrlPassword->SetValue(wxT(""));
         m_pCtrlUsername->Enable(false);
+        m_pCtrlPassword->Enable(false);
     } else {
         m_pCtrlUsername->SetValue(m_sTmpUsername);
-        m_pCtrlUsername->Enable(true);
-        m_sTmpPassword = m_pCtrlPassword->GetValue();
         m_pCtrlPassword->SetValue(m_sTmpPassword);
         m_pCtrlUsername->Enable(true);
+        m_pCtrlPassword->Enable(true);
     }
     event.Skip();
 }
@@ -331,8 +344,21 @@ void LoginDialog::OnComboboxSessionSelected( wxCommandEvent& event )
         if (cfg.IsValid()) {
             if (cfg.sGetName() == sessionName) {
                 m_pCurrentCfg = new MyXmlConfig(m_aConfigFiles[i]);
-                m_pCtrlUsername->SetValue(cfg.sGetUsername());
-                m_pCtrlPassword->SetValue(cfg.sGetPassword());
+                m_bGuestLogin = cfg.bGetGuestMode();
+                m_pCtrlGuestLogin->SetValue(m_bGuestLogin);
+                if (m_bGuestLogin) {
+                    m_sTmpUsername = cfg.sGetUsername();
+                    m_pCtrlUsername->SetValue(wxT(""));
+                    m_sTmpPassword = cfg.sGetPassword();
+                    m_pCtrlPassword->SetValue(wxT(""));
+                    m_pCtrlPassword->Enable(false);
+                    m_pCtrlUsername->Enable(false);
+                } else {
+                    m_pCtrlPassword->SetValue(cfg.sGetPassword());
+                    m_pCtrlUsername->SetValue(cfg.sGetUsername());
+                    m_pCtrlPassword->Enable(true);
+                    m_pCtrlUsername->Enable(true);
+                }
 #ifdef ENABLE_SMARTCARD
                 m_pCtrlUseSmartCard->SetValue(cfg.bGetUseSmartCard());
 #endif
@@ -350,12 +376,21 @@ void LoginDialog::OnOkClick( wxCommandEvent& event )
 {
     if (m_pCurrentCfg) {
         TransferDataFromWindow();
-        m_pCurrentCfg->sSetUsername(m_sUsername);
-        if (m_pCurrentCfg->bGetRememberPassword())
-            m_pCurrentCfg->sSetPassword(m_sPassword);
+        m_pCurrentCfg->bSetGuestMode(m_bGuestLogin);
+        if (!m_bGuestLogin) {
+            m_pCurrentCfg->sSetUsername(m_sUsername);
+            if (m_pCurrentCfg->bGetRememberPassword())
+                m_pCurrentCfg->sSetPassword(m_sPassword);
+        }
         m_pCurrentCfg->bSetUseSmartCard(m_bUseSmartCard);
         if (m_bUseSmartCard)
             m_pCurrentCfg->bSetEnableSSL(true);
+
+        // Workaround for a bug in original nxclient:
+        // At least in guest mode, original stores RDP password,
+        // even if remember is false.
+        if (m_bGuestLogin)
+            m_pCurrentCfg->bSetRdpRememberPassword(true);
 
         if (!m_pCurrentCfg->SaveToFile())
             wxMessageBox(wxString::Format(_("Could not save session to\n%s"),
@@ -363,7 +398,8 @@ void LoginDialog::OnOkClick( wxCommandEvent& event )
                     wxICON_ERROR | wxOK);
         else {
             MySession s;
-            s.Create(m_pCurrentCfg->sGetFileName(), m_sPassword);
+            if (!s.Create(m_pCurrentCfg->sGetFileName(), m_sPassword, this))
+                return;
         }
     }
     event.Skip();

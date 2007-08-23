@@ -29,6 +29,7 @@
 #include <wx/event.h>
 
 DECLARE_EVENT_TYPE(wxEVT_NXSSH, -1);
+DECLARE_EVENT_TYPE(wxEVT_NXSERVICE, -2);
 
 class AsyncProcess;
 class wxRegEx;
@@ -40,12 +41,21 @@ class MyIPC : public wxEvtHandler
 
 public:
     typedef enum {
+        ServiceTerminated,
+        ServiceEsdRunning,
+        ServiceEsdStarted,
+        ServiceEsdPort,
+    } tServiceEvents;
+
+    typedef enum {
         ActionNone,
         ActionStatus,
         ActionLog,
         ActionWarning,
         ActionError,
         ActionPromptYesNo,
+        ActionKeyChangedYesNo,
+        ActionOffendingKey,
         ActionSendUsername,
         ActionSendPassword,
         ActionNextCommand,
@@ -60,23 +70,32 @@ public:
         ActionSetAgentCookie,
         ActionSetSslTunneling,
         ActionSetSubscription,
+        ActionSetSmbPort,
         ActionExit,
-        ActionChildDied,
         ActionStartProxy,
         ActionSessionRunning,
         ActionSessionListStart,
         ActionSessionListEnd,
+        ActionSessionPushLength,
+        ActionSessionPushStart,
     } tSessionEvents;
 
     MyIPC();
     virtual ~MyIPC();
     bool SshProcess(const wxString&, const wxString&, wxEvtHandler *);
+    bool ServiceProcess(const wxString&, wxEvtHandler *);
     bool IsRunning();
     bool Kill();
     void Print(const wxString &s, bool doLog = true);
     int GetResult();
 
 private:
+    typedef enum {
+        TypeNone,
+        TypeSsh,
+        TypeService,
+    } ProcessType;
+
     int parseCode(const wxString &);
     virtual void OnOutReceived(wxCommandEvent &);
     virtual void OnErrReceived(wxCommandEvent &);
@@ -89,12 +108,13 @@ private:
     AsyncProcess *m_pProcess;
     wxEvtHandler *m_pEvtHandler;
     wxRegEx *m_re;
-    bool m_bIsSsh;
+    ProcessType m_eType;
     int m_iSshPid;
     int m_iOutCollect;
     int m_iErrCollect;
     wxString m_sOutMessage;
     wxString m_sErrMessage;
+    wxString m_s595msg;
 };
 
 #endif

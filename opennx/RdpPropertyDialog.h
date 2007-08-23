@@ -150,6 +150,7 @@ private:
 ////@end RdpPropertyDialog member variables
 
     MyXmlConfig *m_pCfg;
+    bool m_bStorePasswords;
 };
 
 #endif

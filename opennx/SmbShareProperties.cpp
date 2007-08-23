@@ -65,6 +65,10 @@ BEGIN_EVENT_TABLE( SmbShareProperties, wxDialog )
 ////@begin SmbShareProperties event table entries
     EVT_COMBOBOX( XRCID("ID_COMBOBOX_SHARE_LOCALNAME"), SmbShareProperties::OnComboboxShareLocalnameSelected )
 
+    EVT_TEXT( XRCID("ID_TEXTCTRL_SMBPRINT_USERNAME"), SmbShareProperties::OnTextctrlSmbprintUsernameUpdated )
+
+    EVT_TEXT( XRCID("ID_TEXTCTRL_SMBPRINT_PASSWORD"), SmbShareProperties::OnTextctrlSmbprintPasswordUpdated )
+
     EVT_TEXT( XRCID("ID_TEXTCTRL_SHARE_MOUNTPOINT"), SmbShareProperties::OnTextctrlShareMountpointUpdated )
 
     EVT_TEXT( XRCID("ID_TEXTCTRL_SHARE_USERNAME"), SmbShareProperties::OnTextctrlShareUsernameUpdated )
@@ -119,9 +123,22 @@ void SmbShareProperties::SetUse(bool useSmb, bool useCups)
 bool SmbShareProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxString& WXUNUSED(caption), const wxPoint& WXUNUSED(pos), const wxSize& WXUNUSED(size), long WXUNUSED(style) )
 {
 ////@begin SmbShareProperties member initialisation
+    m_sSmbDiskUsername = ::wxGetUserId();
+    m_bCupsPublic = false;
+    m_sCupsDriver = wxT("cups driver");
+    m_sSmbPrintUsername = ::wxGetUserId();
+    m_bSmbPublic = false;
     m_pCtrlLocalShares = NULL;
+    m_pCtrlSmbPrintOptions = NULL;
+    m_pCtrlSmbDriver = NULL;
+    m_pCtrlSmbPrivate = NULL;
+    m_pCtrlSmbPublic = NULL;
+    m_pCtrlSmbPrintUsername = NULL;
+    m_pCtrlSmbPrintPassword = NULL;
     m_pCtrlCupsOptions = NULL;
-    m_pCtrlSmbOptions = NULL;
+    m_pCtrlCupsPrivate = NULL;
+    m_pCtrlCupsPublic = NULL;
+    m_pCtrlSmbDiskOptions = NULL;
     m_pCtrlMountPoint = NULL;
     m_pCtrlUsername = NULL;
     m_pCtrlPassword = NULL;
@@ -141,13 +158,6 @@ bool SmbShareProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), cons
     return TRUE;
 }
 
-static int
-cmpShare(SharedResource *a, SharedResource *b)
-{
-    int ret = a->sharetype - b->sharetype;
-    return (ret != 0) ? ret : a->name.Cmp(b->name);
-}
-
 /*!
  * Control creation for SmbShareProperties
  */
@@ -158,18 +168,38 @@ void SmbShareProperties::CreateControls()
     if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_SHARE_ADD")))
         wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
     m_pCtrlLocalShares = XRCCTRL(*this, "ID_COMBOBOX_SHARE_LOCALNAME", wxBitmapComboBox);
+    m_pCtrlSmbPrintOptions = XRCCTRL(*this, "ID_PANEL_SMB_PRINTER", wxPanel);
+    m_pCtrlSmbDriver = XRCCTRL(*this, "ID_COMBOBOX_SMBDRIVER", wxComboBox);
+    m_pCtrlSmbPrivate = XRCCTRL(*this, "ID_RADIOBUTTON_SMB_PRIVATE", wxRadioButton);
+    m_pCtrlSmbPublic = XRCCTRL(*this, "ID_RADIOBUTTON_SMB_PUBLIC", wxRadioButton);
+    m_pCtrlSmbPrintUsername = XRCCTRL(*this, "ID_TEXTCTRL_SMBPRINT_USERNAME", wxTextCtrl);
+    m_pCtrlSmbPrintPassword = XRCCTRL(*this, "ID_TEXTCTRL_SMBPRINT_PASSWORD", wxTextCtrl);
     m_pCtrlCupsOptions = XRCCTRL(*this, "ID_PANEL_CUPSOTIONS", wxPanel);
-    m_pCtrlSmbOptions = XRCCTRL(*this, "ID_PANEL_SMBOPTIONS", wxPanel);
+    m_pCtrlCupsPrivate = XRCCTRL(*this, "ID_RADIOBUTTON_CUPS_PRIVATE", wxRadioButton);
+    m_pCtrlCupsPublic = XRCCTRL(*this, "ID_RADIOBUTTON_CUPS_PUBLIC", wxRadioButton);
+    m_pCtrlSmbDiskOptions = XRCCTRL(*this, "ID_PANEL_SMBOPTIONS", wxPanel);
     m_pCtrlMountPoint = XRCCTRL(*this, "ID_TEXTCTRL_SHARE_MOUNTPOINT", wxTextCtrl);
     m_pCtrlUsername = XRCCTRL(*this, "ID_TEXTCTRL_SHARE_USERNAME", wxTextCtrl);
     m_pCtrlPassword = XRCCTRL(*this, "ID_TEXTCTRL_SHARE_PASSWORD", wxTextCtrl);
     // Set validators
+    if (FindWindow(XRCID("ID_COMBOBOX_SMBDRIVER")))
+        FindWindow(XRCID("ID_COMBOBOX_SMBDRIVER"))->SetValidator( wxGenericValidator(& m_sSmbDriver) );
+    if (FindWindow(XRCID("ID_RADIOBUTTON_SMB_PUBLIC")))
+        FindWindow(XRCID("ID_RADIOBUTTON_SMB_PUBLIC"))->SetValidator( wxGenericValidator(& m_bSmbPublic) );
+    if (FindWindow(XRCID("ID_TEXTCTRL_SMBPRINT_USERNAME")))
+        FindWindow(XRCID("ID_TEXTCTRL_SMBPRINT_USERNAME"))->SetValidator( MyValidator(& m_sSmbPrintUsername) );
+    if (FindWindow(XRCID("ID_TEXTCTRL_SMBPRINT_PASSWORD")))
+        FindWindow(XRCID("ID_TEXTCTRL_SMBPRINT_PASSWORD"))->SetValidator( MyValidator(& m_sSmbPrintPassword) );
+    if (FindWindow(XRCID("ID_COMBOBOX_CUPSDRIVER")))
+        FindWindow(XRCID("ID_COMBOBOX_CUPSDRIVER"))->SetValidator( wxGenericValidator(& m_sCupsDriver) );
+    if (FindWindow(XRCID("ID_RADIOBUTTON_CUPS_PUBLIC")))
+        FindWindow(XRCID("ID_RADIOBUTTON_CUPS_PUBLIC"))->SetValidator( wxGenericValidator(& m_bCupsPublic) );
     if (FindWindow(XRCID("ID_TEXTCTRL_SHARE_MOUNTPOINT")))
         FindWindow(XRCID("ID_TEXTCTRL_SHARE_MOUNTPOINT"))->SetValidator( MyValidator(& m_sMountPoint) );
     if (FindWindow(XRCID("ID_TEXTCTRL_SHARE_USERNAME")))
-        FindWindow(XRCID("ID_TEXTCTRL_SHARE_USERNAME"))->SetValidator( MyValidator(& m_sUsername) );
+        FindWindow(XRCID("ID_TEXTCTRL_SHARE_USERNAME"))->SetValidator( MyValidator(& m_sSmbDiskUsername) );
     if (FindWindow(XRCID("ID_TEXTCTRL_SHARE_PASSWORD")))
-        FindWindow(XRCID("ID_TEXTCTRL_SHARE_PASSWORD"))->SetValidator( MyValidator(& m_sPassword) );
+        FindWindow(XRCID("ID_TEXTCTRL_SHARE_PASSWORD"))->SetValidator( MyValidator(& m_sSmbDiskPassword) );
 ////@end SmbShareProperties content construction
 
     // Create custom windows not generated automatically here.
@@ -178,24 +208,60 @@ void SmbShareProperties::CreateControls()
 ////@end SmbShareProperties content initialisation
 
     Layout();
-    m_pCtrlCupsOptions->SetMinSize(m_pCtrlSmbOptions->GetBestSize());
-    m_pCtrlSmbOptions->Show(false);
+    m_pCtrlCupsOptions->SetMinSize(m_pCtrlSmbDiskOptions->GetBestSize());
+    m_pCtrlSmbDiskOptions->Show(false);
     m_pCtrlCupsOptions->Show(true);
     Layout();
     m_pCtrlCupsOptions->Show(false);
-    m_pCtrlSmbOptions->Show(true);
+    m_pCtrlSmbDiskOptions->Show(true);
     Layout();
     
     if (m_iCurrentShare != -1) {
         ShareGroup sg = m_pCfg->aGetShareGroups().Item(m_iCurrentShare);
         wxBitmap bm = wxNullBitmap;
-        m_pCtrlLocalShares->Append(sg.m_sName, bm, &sg);
+        m_pCtrlLocalShares->Append(sg.m_sShareName, bm, &sg);
         m_pCtrlLocalShares->SetSelection(0);
         m_pCtrlLocalShares->Enable(false);
-        m_sMountPoint = sg.m_sMountPoint;
-        m_sUsername = sg.m_sUsername;
-        m_sPassword = sg.m_sPassword;
         SetTitle(_("Modify shared resource - OpenNX"));
+        switch (sg.m_eType) {
+            case SharedResource::SHARE_UNKNOWN:
+                break;
+            case SharedResource::SHARE_SMB_DISK:
+                m_pCtrlCupsOptions->Show(false);
+                m_pCtrlSmbPrintOptions->Show(false);
+                m_pCtrlSmbDiskOptions->Show(true);
+                m_sMountPoint = sg.m_sAlias;
+                m_sSmbDiskUsername = sg.m_sUsername;
+                if (m_sSmbDiskUsername.IsEmpty())
+                    m_sSmbDiskUsername = ::wxGetUserId();
+                m_sSmbDiskPassword = sg.m_sPassword;
+                break;
+            case SharedResource::SHARE_SMB_PRINTER:
+                m_pCtrlCupsOptions->Show(false);
+                m_pCtrlSmbDiskOptions->Show(false);
+                m_pCtrlSmbPrintOptions->Show(true);
+                m_sSmbDriver = sg.m_sDriver;
+                m_sSmbPrintUsername = sg.m_sUsername;
+                if (m_sSmbPrintUsername.IsEmpty())
+                    m_sSmbPrintUsername = ::wxGetUserId();
+                m_sSmbPrintPassword = sg.m_sPassword;
+                if (sg.m_bPublic)
+                    m_pCtrlSmbPublic->SetValue(true);
+                else
+                    m_pCtrlSmbPrivate->SetValue(true);
+                break;
+            case SharedResource::SHARE_CUPS_PRINTER:
+                m_pCtrlSmbPrintOptions->Show(false);
+                m_pCtrlSmbDiskOptions->Show(false);
+                m_pCtrlCupsOptions->GetSizer()->Layout();
+                m_pCtrlCupsOptions->Show(true);
+                if (sg.m_bPublic)
+                    m_pCtrlCupsPublic->SetValue(true);
+                else
+                    m_pCtrlCupsPrivate->SetValue(true);
+                break;
+        }
+        m_pCtrlMountPoint->SetValue(m_sMountPoint);
     } else {
         if (m_bUseSmb) {
             SmbClient sc;
@@ -203,8 +269,7 @@ void SmbShareProperties::CreateControls()
         }
         if (m_bUseCups) {
             CupsClient cc;
-            ArrayOfShares acs = cc.GetShares();
-            WX_APPEND_ARRAY(m_aShares, acs);
+            WX_APPEND_ARRAY(m_aShares, cc.GetShares());
         }
 
         for (size_t i = 0; i < m_aShares.GetCount(); i++) {
@@ -223,18 +288,30 @@ void SmbShareProperties::CreateControls()
                     bm = wxNullBitmap;
                     break;
             }
-            m_pCtrlLocalShares->Append(m_aShares[i].name, bm, &(m_aShares[i]));
+            m_pCtrlLocalShares->Append(m_aShares[i].name, bm, (void *)i);
         }
 
         if (m_aShares.GetCount() > 0) {
             m_pCtrlLocalShares->SetSelection(0);
-            switch (m_aShares[0].sharetype) {
+            int sidx = (int)m_pCtrlLocalShares->GetClientData(0);
+            switch (m_aShares[sidx].sharetype) {
+                case SharedResource::SHARE_UNKNOWN:
+                    break;
                 case SharedResource::SHARE_SMB_DISK:
+                    m_pCtrlSmbPrintOptions->Show(false);
+                    m_pCtrlCupsOptions->Show(false);
+                    m_pCtrlSmbDiskOptions->Show(true);
+                    m_sMountPoint = wxT("") + m_aShares[sidx].name;
+                    break;
                 case SharedResource::SHARE_SMB_PRINTER:
-                    m_sMountPoint = _T("$(SHARES)/") + m_aShares[0].name;
+                    m_pCtrlSmbDiskOptions->Show(false);
+                    m_pCtrlCupsOptions->Show(false);
+                    m_pCtrlSmbPrintOptions->Show(true);
+                    m_sSmbDriver = wxT("laserjet");
                     break;
                 case SharedResource::SHARE_CUPS_PRINTER:
-                    m_pCtrlSmbOptions->Show(false);
+                    m_pCtrlSmbDiskOptions->Show(false);
+                    m_pCtrlSmbPrintOptions->Show(false);
                     m_pCtrlCupsOptions->Show(true);
                     break;
             }
@@ -254,17 +331,33 @@ void SmbShareProperties::CreateControls()
 
 void SmbShareProperties::OnComboboxShareLocalnameSelected( wxCommandEvent& event )
 {
-    SharedResource *res = wxDynamicCast(m_pCtrlLocalShares->GetClientData(event.GetInt()), SharedResource);
+    int sidx = (int)m_pCtrlLocalShares->GetClientData(event.GetInt());
+    ::wxLogTrace(MYTRACETAG, wxT("selected: %d %d"), event.GetInt(), sidx);
+    SharedResource *res = &m_aShares[sidx];
+    wxASSERT(res);
     switch (res->sharetype) {
+        case SharedResource::SHARE_UNKNOWN:
+            break;
         case SharedResource::SHARE_SMB_DISK:
-        case SharedResource::SHARE_SMB_PRINTER:
             m_pCtrlCupsOptions->Show(false);
-            m_pCtrlSmbOptions->Show(true);
+            m_pCtrlSmbPrintOptions->Show(false);
+            m_pCtrlSmbDiskOptions->Show(true);
             m_sMountPoint = wxT("$(SHARES)/") + res->name;
             m_pCtrlMountPoint->SetValue(m_sMountPoint);
             break;
+        case SharedResource::SHARE_SMB_PRINTER:
+            m_sSmbDriver = wxT("laserjet");
+            m_pCtrlSmbDriver->SetValue(m_sSmbDriver);
+            m_pCtrlCupsOptions->Show(false);
+            m_pCtrlSmbDiskOptions->Show(false);
+            m_pCtrlCupsOptions->Show(false);
+            m_pCtrlCupsOptions->GetSizer()->Layout();
+            m_pCtrlSmbPrintOptions->Show(true);
+            break;
         case SharedResource::SHARE_CUPS_PRINTER:
-            m_pCtrlSmbOptions->Show(false);
+            m_sCupsDriver = wxT("cups driver");
+            m_pCtrlSmbPrintOptions->Show(false);
+            m_pCtrlSmbDiskOptions->Show(false);
             m_pCtrlCupsOptions->GetSizer()->Layout();
             m_pCtrlCupsOptions->Show(true);
             break;
@@ -302,6 +395,20 @@ void SmbShareProperties::OnTextctrlSharePasswordUpdated( wxCommandEvent& event )
     event.Skip();
 }
 
+void SmbShareProperties::askForDefault(ArrayOfShareGroups &sg, ShareGroup &g)
+{
+    if (g.m_bDefault)
+        return;
+    wxString msg =
+        wxString::Format(_("Do you want to make\n%s\nthe default printer?"), g.m_sShareName.c_str());
+    wxMessageDialog d(this, msg, _("Default printer"), wxYES_NO|wxICON_QUESTION);
+    if (d.ShowModal() == wxID_YES) {
+        for (size_t i = 0; i < sg.GetCount(); i++)
+            sg[i].m_bDefault = false;
+        g.m_bDefault = true;
+    }
+}
+
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
  */
@@ -309,42 +416,88 @@ void SmbShareProperties::OnTextctrlSharePasswordUpdated( wxCommandEvent& event )
 void SmbShareProperties::OnOkClick( wxCommandEvent& event )
 {
     ArrayOfShareGroups sg = m_pCfg->aGetShareGroups();
+    int nPrinters = 0;
     TransferDataFromWindow();
     for (size_t i = 0; i < sg.GetCount(); i++) {
-        if ((sg[i].m_sMountPoint == m_sMountPoint) && ((int)i != m_iCurrentShare)) {
-            wxMessageBox(_("Mountpoint is already used. Please chose another mountpoint"),
-                _("Invalid mountpoint"), wxICON_ERROR|wxOK);
-            if (m_iCurrentShare != -1)
-                m_pCtrlMountPoint->SetValue(sg[m_iCurrentShare].m_sMountPoint);
-            return;
+        switch (sg[i].m_eType) {
+            case SharedResource::SHARE_UNKNOWN:
+                break;
+            case SharedResource::SHARE_CUPS_PRINTER:
+                nPrinters++;
+                break;
+            case SharedResource::SHARE_SMB_PRINTER:
+                nPrinters++;
+                break;
+            case SharedResource::SHARE_SMB_DISK:
+                if ((sg[i].m_sAlias == m_sMountPoint) && ((int)i != m_iCurrentShare)) {
+                    wxMessageBox(_("Mountpoint is already used. Please chose another mountpoint"),
+                            _("Invalid mountpoint"), wxICON_ERROR|wxOK);
+                    if (m_iCurrentShare != -1)
+                        m_pCtrlMountPoint->SetValue(sg[m_iCurrentShare].m_sAlias);
+                    return;
+                }
+                break;
         }
     }
-    wxString groupName = m_sMountPoint + _T("_Shared");
     if (m_iCurrentShare != -1) {
-        if (groupName != sg[m_iCurrentShare].m_sGroupName) {
-            wxArrayString as = m_pCfg->aGetUsedShareGroups();
-            int aidx = as.Index(sg[m_iCurrentShare].m_sGroupName);
-            as.RemoveAt(aidx);
-            as.Insert(groupName, aidx);
-            m_pCfg->aSetUsedShareGroups(as);
+        switch (sg[m_iCurrentShare].m_eType) {
+            case SharedResource::SHARE_UNKNOWN:
+                break;
+            case SharedResource::SHARE_SMB_DISK:
+                sg[m_iCurrentShare].m_sAlias = m_sMountPoint;
+                sg[m_iCurrentShare].m_sUsername = m_sSmbDiskUsername;
+                sg[m_iCurrentShare].m_sPassword = m_sSmbDiskPassword;
+                break;
+            case SharedResource::SHARE_SMB_PRINTER:
+                sg[m_iCurrentShare].m_sDriver = m_sSmbDriver;
+                sg[m_iCurrentShare].m_bPublic = m_bSmbPublic;
+                sg[m_iCurrentShare].m_sUsername = m_sSmbPrintUsername;
+                sg[m_iCurrentShare].m_sPassword = m_sSmbPrintPassword;
+                if (nPrinters > 0)
+                    askForDefault(sg, sg[m_iCurrentShare]);
+                break;
+            case SharedResource::SHARE_CUPS_PRINTER:
+                sg[m_iCurrentShare].m_sUsername = ::wxGetUserId();
+                sg[m_iCurrentShare].m_sDriver = m_sCupsDriver;
+                sg[m_iCurrentShare].m_bPublic = m_bCupsPublic;
+                if (nPrinters > 0)
+                    askForDefault(sg, sg[m_iCurrentShare]);
+                break;
         }
-        sg[m_iCurrentShare].m_sGroupName = groupName;
-        sg[m_iCurrentShare].m_sMountPoint = m_sMountPoint;
-        sg[m_iCurrentShare].m_sUsername = m_sUsername;
-        sg[m_iCurrentShare].m_sPassword = m_sPassword;
         m_pCfg->aSetShareGroups(sg);
     } else {
         ShareGroup g;
-        int shidx = m_pCtrlLocalShares->GetSelection();
+        int sidx = (int)m_pCtrlLocalShares->GetClientData(m_pCtrlLocalShares->GetSelection());
+        SharedResource *res = &m_aShares[sidx];
 
-        g.m_bMountNow = true;
-        g.m_iType = wxDynamicCast(m_pCtrlLocalShares->GetClientData(shidx), SharedResource)->sharetype;
-        g.m_sGroupName = groupName;
-        g.m_sMountPoint = m_sMountPoint;
-        g.m_sName = m_pCtrlLocalShares->GetValue();
-        g.m_sUsername = m_sUsername;
-        g.m_sPassword = m_sPassword;
-
+        g.m_eType = res->sharetype;
+        g.m_sShareName = res->name;
+        g.m_sGroupName = wxString::Format(wxT("Share%d"), sg.GetCount());
+        g.m_bDefault = false;
+        switch (res->sharetype) {
+            case SharedResource::SHARE_UNKNOWN:
+                break;
+            case SharedResource::SHARE_SMB_DISK:
+                g.m_sAlias = m_sMountPoint;
+                g.m_sUsername = m_sSmbDiskUsername;
+                g.m_sPassword = m_sSmbDiskPassword;
+                break;
+            case SharedResource::SHARE_SMB_PRINTER:
+                g.m_sDriver = m_sSmbDriver;
+                g.m_bPublic = m_bSmbPublic;
+                g.m_sUsername = m_sSmbPrintUsername;
+                g.m_sPassword = m_sSmbPrintPassword;
+                if (nPrinters > 0)
+                    askForDefault(sg, g);
+                break;
+            case SharedResource::SHARE_CUPS_PRINTER:
+                g.m_sUsername = ::wxGetUserId();
+                g.m_sDriver = wxT("cups driver");
+                g.m_bPublic = m_bCupsPublic;
+                if (nPrinters > 0)
+                    askForDefault(sg, g);
+                break;
+        }
         sg.Add(g);
         m_pCfg->aSetShareGroups(sg);
         wxArrayString as = m_pCfg->aGetUsedShareGroups();
@@ -383,3 +536,28 @@ wxIcon SmbShareProperties::GetIconResource( const wxString& name )
     // Icon retrieval
     return CreateIconFromFile(name);
 }
+/*!
+ * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SMBPRINT_USERNAME
+ */
+
+void SmbShareProperties::OnTextctrlSmbprintUsernameUpdated( wxCommandEvent& event )
+{
+////@begin wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SMBPRINT_USERNAME in SmbShareProperties.
+    // Before editing this code, remove the block markers.
+    event.Skip();
+////@end wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SMBPRINT_USERNAME in SmbShareProperties. 
+}
+
+/*!
+ * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SMBPRINT_PASSWORD
+ */
+
+void SmbShareProperties::OnTextctrlSmbprintPasswordUpdated( wxCommandEvent& event )
+{
+////@begin wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SMBPRINT_PASSWORD in SmbShareProperties.
+    // Before editing this code, remove the block markers.
+    event.Skip();
+////@end wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SMBPRINT_PASSWORD in SmbShareProperties. 
+}
+
+

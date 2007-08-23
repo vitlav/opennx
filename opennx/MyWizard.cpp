@@ -34,6 +34,9 @@
 #include "wx/wx.h"
 #endif
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 ////@begin includes
 ////@end includes
 #include <wx/config.h>
@@ -661,9 +664,9 @@ void WizardPageDesktop::CreateControls()
     if (FindWindow(XRCID("ID_COMBOBOX_DISPTYPE")))
         FindWindow(XRCID("ID_COMBOBOX_DISPTYPE"))->SetValidator( wxGenericValidator(& m_iDisplayType) );
     if (FindWindow(XRCID("ID_SPINCTRL_WIDTH")))
-        FindWindow(XRCID("ID_SPINCTRL_WIDTH"))->SetValidator( wxGenericValidator(& m_iDisplayWidth) );
+        FindWindow(XRCID("ID_SPINCTRL_WIDTH"))->SetValidator( MyValidator(MyValidator::MYVAL_NUMERIC, & m_iDisplayWidth) );
     if (FindWindow(XRCID("ID_SPINCTRL_HEIGHT")))
-        FindWindow(XRCID("ID_SPINCTRL_HEIGHT"))->SetValidator( wxGenericValidator(& m_iDisplayHeight) );
+        FindWindow(XRCID("ID_SPINCTRL_HEIGHT"))->SetValidator( MyValidator(MyValidator::MYVAL_NUMERIC, & m_iDisplayHeight) );
     ////@end WizardPageDesktop content construction
 
     // Create custom windows not generated automatically here.

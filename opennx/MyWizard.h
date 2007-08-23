@@ -103,7 +103,7 @@ public:
     virtual wxSize GetPageSize() const;
 
     void EnableNext(bool enable = true);
-    void KeyTyped();
+    virtual void KeyTyped();
     void SetCancelled() { m_bCancelForced = true; }
 
     wxString sGetConfigName();

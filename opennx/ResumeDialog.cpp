@@ -96,6 +96,11 @@ bool ResumeDialog::Create( wxWindow* parent, wxWindowID id, const wxString& capt
     }
     Centre();
 ////@end ResumeDialog creation
+    wxUnusedVar(style);
+    wxUnusedVar(size);
+    wxUnusedVar(pos);
+    wxUnusedVar(caption);
+    wxUnusedVar(id);
     return true;
 }
 

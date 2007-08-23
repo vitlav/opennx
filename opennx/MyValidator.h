@@ -31,6 +31,7 @@
 class KeyTypeCallback
 {
 public:
+    virtual ~KeyTypeCallback() {};
     virtual void KeyTyped() = 0;
 };
 
@@ -76,7 +77,7 @@ public:
     
     void SetKeyTyped(KeyTypeCallback *);
 
-    ~MyValidator();
+    virtual ~MyValidator();
 
     void OnChar(wxKeyEvent& event);
 

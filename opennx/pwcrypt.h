@@ -28,6 +28,8 @@ extern wxString encodeString(const wxString &);
 extern wxString decodeString(const wxString &);
 extern wxString cryptString(const wxString &);
 extern wxString decryptString(const wxString &);
+extern wxString md5sum(const wxString &);
+extern wxString Md5OfFile(const wxString &);
 
 #endif
 // _PWCRYPT_H_

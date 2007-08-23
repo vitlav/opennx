@@ -2,15 +2,17 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(opennx, 0.3, fritz.elfert@innovidata.com)
+AC_INIT(opennx, 0.12, fritz.elfert@innovidata.com)
 AC_CONFIG_AUX_DIR([conf])
 AC_CONFIG_SRCDIR([opennxApp.cpp])
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE(no-dependencies)
+AM_CONFIG_HEADER(config.h)
 
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CC
-AM_GNU_GETTEXT_VERSION(0.14.5)
+AC_PROG_LN_S
+dnl AM_GNU_GETTEXT_VERSION(0.14.5)
 AM_GNU_GETTEXT([external])
 
 # Checks for libraries.
@@ -65,21 +67,34 @@ else
 	AC_MSG_NOTICE([will link against shared wxWidgets libs])
 fi
 
-AM_PATH_WXCONFIG(2.8.0,wxWidgets=1,wxWidgets=0,[xrc,qa,html,adv,core,xml,net], $WXPARAMS)
+AM_PATH_WXCONFIG(2.8.0,wxWidgets=1,wxWidgets=0,[xrc,xml,qa,html,core,adv,net], $WXPARAMS)
 
 test ${wxWidgets} = 0 && AC_MSG_ERROR(Could not find wxWidgets library)
 
-LIBS="$LIBS $WX_LIBS"
-CPPFLAGS="$CPPFLAGS $WX_CPPFLAGS"
-CXXFLAGS="$CXXFLAGS $WX_CXXFLAGS"
-LDFLAGS="$LDFLAGS $WX_LDFLAGS"
+APP_LDADD="-lstdc++ -lX11 -lXmu"
+case $build_os in
+	darwin8*)
+		APP_LDADD=
+		# Automatically build universal binary, if wxWidgets is a universal binary
+		if test -n "`echo -- $WX_LIBS|grep -- '-arch ppc'`" ; then
+			WX_CFLAGS="$WX_CFLAGS -arch ppc"
+			WX_CXXFLAGS="$WX_CFLAGS -arch ppc"
+		fi
+		if test -n "`echo -- $WX_LIBS|grep -- '-arch i386'`" ; then
+			WX_CFLAGS="$WX_CFLAGS -arch i386"
+			WX_CXXFLAGS="$WX_CFLAGS -arch i386"
+		fi
+		;;
+esac
+AC_SUBST(APP_LDADD)
 
 AC_ARG_ENABLE([warn],
 	AS_HELP_STRING([--enable-warn],
 		[Enable some g++ warnings (Default: NO)]),
 	[
 		AC_MSG_NOTICE([will enable additional g++ warnings])
-		CPPFLAGS="$CPPFLAGS -Wctor-dtor-privacy -Wnon-virtual-dtor -Weffc++ -Wold-style-cast -Woverloaded-virtual -Wchar-subscripts -Wcomment -Wformat -Wimplicit -Wmissing-braces -Wparentheses -Wreturn-type -Wswitch -Wuninitialized"
+		CPPFLAGS="$CPPFLAGS -Wall -Wchar-subscripts -Wcomment -Wformat -Wimplicit -Wmissing-braces -Wparentheses -Wreturn-type -Wswitch -Wuninitialized"
+		CXXFLAGS="$CXXFLAGS -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual"
 	]
 )
 
@@ -97,19 +112,32 @@ else
 	AC_MSG_NOTICE([SmartCard feature disabled])
 fi
 
-AC_CHECK_LIB(cups,cupsServer)
+dnl AC_CHECK_LIB(cups,cupsServer)
 
 CUPS_DEFAULT_PATH=
 AC_PATH_PROG([cupsd],[cupsd],[],[$PATH:/usr/sbin:/usr/local/sbin])
 test -n "$cupsd" && CUPS_DEFAULT_PATH=$cupsd
-AC_DEFINE_UNQUOTED(CUPS_DEFAULT_PATH,"$CUPS_DEFAULT_PATH")
+AC_DEFINE_UNQUOTED(CUPS_DEFAULT_PATH,"$CUPS_DEFAULT_PATH",
+                   [Set to the path of your CUPS daemon])
 
 ac_cv_nxproto="2.1.0"
 AC_ARG_WITH([nxproto],
             AS_HELP_STRING([--with-nxproto],
                            [Specify NX protocol version (Default: 2.1.0)]),
             [ac_cv_nxproto=${withval}])
-AC_DEFINE_UNQUOTED(NX_PROTOCOL_VERSION,"${ac_cv_nxproto}")
+AC_DEFINE_UNQUOTED(NX_PROTOCOL_VERSION,"${ac_cv_nxproto}",
+                   [Set to the NX protocol version])
 
-AC_CONFIG_FILES([Makefile po/Makefile.in m4/Makefile])
+AC_PATH_XTRA
+test -n "$x_includes" && CFLAGS="$CFLAGS -I$x_includes"
+test -n "$x_libraries" && LDFLAGS="$LDFLAGS -L$x_libraries"
+
+ac_cv_samba=
+AC_ARG_WITH([samba],
+            AS_HELP_STRING([--with-samba=DIR],
+                           [Specify path to samba source]),
+	[ac_cv_samba=$withval])
+test -n "$ac_cv_samba" && CPPFLAGS="$CPPFLAGS -I$ac_cv_samba/source/include"
+
+AC_CONFIG_FILES([Makefile po/Makefile.in m4/Makefile opennx.spec Info.plist])
 AC_OUTPUT

@@ -36,6 +36,9 @@
 
 ////@begin includes
 ////@end includes
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "AboutDialog.h"
 #include "ExtHtmlWindow.h"
 #include "Icon.h"

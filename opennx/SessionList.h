@@ -45,7 +45,12 @@ public:
     //wxString GetDir() { return m_dirName; }
 
     void ScanDir();
-    void ShowSesssionLog(int);
+    void ShowSessionLog(int);
+    void ShowSessionStats(int, bool);
+    void CleanupDir(int);
+    void TerminateSession(int);
+    void KillSession(int);
+    bool IsRunning(int);
 
 private:
     wxCriticalSection m_csDir;

@@ -24,9 +24,11 @@
 
 #include <wx/regex.h>
 
+#include "MyXmlConfig.h"
+
 class ConnectDialog;
 class MyIPC;
-class MyXmlConfig;
+class SessionWatch;
 
 class MySession : public wxEvtHandler
 {
@@ -47,7 +49,7 @@ public:
         Running,
     } tSessionStatus;
 
-    MySession() : m_pRunLog(NULL) { }
+    MySession();
     MySession(wxString dir, wxString status, wxString stype, wxString host, int port, wxString md5);
     MySession(const MySession &src);
     virtual ~MySession();
@@ -63,12 +65,14 @@ public:
     tSessionType eGetSessionType() { return m_eSessionType; }
     void bSetTouched(bool b) { m_bTouched = b; }
     bool bGetTouched() { return m_bTouched; }
+    long lGetPID() { return m_lPid; }
     bool bGetPidFromFile();
     void CheckState();
+    bool IsValid() { return m_bValid; }
     MySession &operator =(const MySession &src);
 
     // connection setup
-    bool Create(const wxString cfgFileName, const wxString password);
+    bool Create(const wxString cfgFileName, const wxString password, wxWindow *parent = NULL);
 
 private:
     // locals for connection setup
@@ -87,23 +91,40 @@ private:
     wxArrayString m_aParseBuffer;
     wxString getXauthCookie();
     wxString getXauthPath();
-    int getFirstFreePort();
+    int getFirstFreePort(int);
     void startProxy();
+    void startSharing();
     void parseSessions();
     long intver(const wxString&);
+    bool prepareCups();
+    bool isCupsRunning();
+    void printSsh(const wxString &s, bool doLog = true);
+    void cleanupOldSessions();
+    void clearSshKeys(const wxString &);
+    ArrayOfShareGroups getActiveCupsPrinters();
     virtual void OnSshEvent(wxCommandEvent &);
+    virtual void OnSessionEvent(wxCommandEvent &);
+    virtual void OnServiceEvent(wxCommandEvent &);
 
     tConnectState m_eConnectState;
     bool m_bGotError;
     bool m_bSslTunneling;
     bool m_bSessionRunning;
+    bool m_bEsdRunning;
+    bool m_bSessionEstablished;
     bool m_bCollectSessions;
+    bool m_bCollectConfig;
     bool m_Abort;
+    bool m_bCupsRunning;
+    bool m_bRemoveKey;
     int m_iProgress;
-    wxLog *m_pRunLog;
+    long m_lEsdPort;
+    unsigned long m_nSessionPushLength;
+    wxLog *m_pSshLog;
     MyIPC *m_pNxSsh;
     MyXmlConfig *m_pCfg;
     ConnectDialog *m_pDlg;
+    wxString m_sConfigBuffer;
     wxString m_sClearPassword;
     wxString m_sSessionID;
     wxString m_sSessionType;
@@ -112,18 +133,25 @@ private:
     wxString m_sProxyCookie;
     wxString m_sProxyIP;
     wxString m_sProxyPort;
+    wxString m_sSmbPort;
     wxString m_sSubscription;
     wxString m_sAgentCookie;
     wxString m_sOptFilename;
+    wxString m_sOffendingKey;
+    wxString m_sSessionDir;
     wxString m_sUserDir;
     wxString m_sSysDir;
     wxString m_sXauthCookie;
     wxString m_sResumeName;
     wxString m_sResumeType;
     wxString m_sResumeId;
+    wxString m_sTempDir;
+    wxWindow *m_pParent;
+    SessionWatch *m_pSessionWatch;
 
     // locals for admin tool
     bool m_bTouched;
+    bool m_bValid;
     int m_iPort;
     long m_lPid;
     tSessionType m_eSessionType;

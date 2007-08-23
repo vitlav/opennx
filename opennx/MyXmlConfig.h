@@ -30,24 +30,28 @@
 #include <wx/string.h>
 #include <wx/object.h>
 
+#include "WinShare.h"
+
 class wxXmlNode;
 
 class ShareGroup : public wxObject
 {
 public:
-    ShareGroup() : wxObject() {}
+    ShareGroup() : wxObject() {m_eType = SharedResource::SHARE_UNKNOWN; }
     virtual ~ShareGroup() {}
 
     bool operator ==(const ShareGroup &);
     bool operator !=(const ShareGroup &);
 
-    bool m_bMountNow;
-    int m_iType;
+    bool m_bDefault; // CUPS only
+    bool m_bPublic; // CUPS only
+    SharedResource::ShareType m_eType;
     wxString m_sGroupName;
-    wxString m_sMountPoint;
-    wxString m_sName;
-    wxString m_sUsername;
+    wxString m_sAlias; // SMB Only
+    wxString m_sDriver; // CUPS Only
     wxString m_sPassword;
+    wxString m_sShareName;
+    wxString m_sUsername;
 };
 
 WX_DECLARE_OBJARRAY(ShareGroup, ArrayOfShareGroups);
@@ -118,10 +122,12 @@ public:
     void saveState();
     bool checkChanged();
     bool SaveToFile();
+    bool LoadFromFile(const wxString &);
+    bool LoadFromString(const wxString &, bool);
 
-    wxString sGetSessionParams(const wxString &, bool);
-    wxString sGetListParams(const wxString &);
-    wxString sGetProxyParams(const wxString &);
+    wxString sGetSessionParams(const long, bool, const wxString &);
+    wxString sGetListParams(const long);
+    wxString sGetProxyParams(const long);
 
     bool IsValid() { return m_bValid; }
 
@@ -142,9 +148,10 @@ public:
     bool bGetEnableSSL() { return m_bEnableSSL; }
     bool bGetGuestMode() { return m_bGuestMode; }
     bool bGetKbdLayoutOther() { return m_bKbdLayoutOther; }
+    bool bGetRdpCache() { return m_bRdpCache; }
     bool bGetRdpRememberPassword() { return m_bRdpRememberPassword; }
     bool bGetRdpRunApplication() { return m_bRdpRunApplication; }
-    bool bGetRememberPassword() { return m_bRememberPassword; }
+    bool bGetRememberPassword() { return m_bRememberPassword || m_bGuestMode; }
     bool bGetRemoveOldSessionFiles() { return m_bRemoveOldSessionFiles; }
     bool bGetRunConsole() { return m_bRunConsole; }
     bool bGetRunXclients() { return m_bRunXclients; }
@@ -174,6 +181,7 @@ public:
     int iGetJpegQuality() { return m_iJpegQuality; }
     int iGetProxyPort() { return m_iProxyPort; }
     int iGetRdpAuthType() { return m_iRdpAuthType; }
+    int iGetRdpColors() { return m_iRdpColors; }
     int iGetRdpImageCompression() { return m_iRdpImageCompression; }
     int iGetServerPort() { return m_iServerPort; }
     int iGetUsedShareGroups() { return m_iUsedShareGroups; }
@@ -188,9 +196,10 @@ public:
     wxString sGetKbdLayoutLanguage() { return m_sKbdLayoutLanguage; }
     wxString sGetName() { return m_sName; }
     wxString sGetPassword() { return m_sPassword; }
-    wxString sGetDecryptedPassword();
+    wxString sGetProxyCommand() { return m_sProxyCommand; }
     wxString sGetProxyHost() { return m_sProxyHost; }
     wxString sGetRdpApplication() { return m_sRdpApplication; }
+    wxString sGetRdpDomain() { return m_sRdpDomain; }
     wxString sGetRdpHostName() { return m_sRdpHostName; }
     wxString sGetRdpPassword() { return m_sRdpPassword; }
     wxString sGetRdpUsername() { return m_sRdpUsername; }
@@ -199,6 +208,10 @@ public:
     wxString sGetUsername() { return m_sUsername; }
     wxString sGetVncHostName() { return m_sVncHostName; }
     wxString sGetVncPassword() { return m_sVncPassword; }
+
+    // For use by MySession
+    wxString sGetSessionUser();
+    wxString sGetSessionPassword();
 
     wxArrayString aGetUsedShareGroups() { return m_aUsedShareGroups; }
     ArrayOfShareGroups aGetShareGroups() { return m_aShareGroups; }
@@ -220,6 +233,7 @@ public:
     void bSetEnableSSL(bool b) { m_bEnableSSL = b; }
     void bSetGuestMode(bool b) { m_bGuestMode = b; }
     void bSetKbdLayoutOther(bool b) { m_bKbdLayoutOther = b; }
+    void bSetRdpCache(bool b) { m_bRdpCache = b; }
     void bSetRdpRememberPassword(bool b) { m_bRdpRememberPassword = b; }
     void bSetRdpRunApplication(bool b) { m_bRdpRunApplication = b; }
     void bSetRememberPassword(bool b) { m_bRememberPassword = b; }
@@ -252,6 +266,7 @@ public:
     void iSetJpegQuality(int i) { m_iJpegQuality = i; }
     void iSetProxyPort(int i) { m_iProxyPort = i; }
     void iSetRdpAuthType(int i) { m_iRdpAuthType = i; }
+    void iSetRdpColors(int i) { m_iRdpColors = i; }
     void iSetRdpImageCompression(int i) { m_iRdpImageCompression = i; }
     void iSetServerPort(int i) { m_iServerPort = i; }
     void iSetUsedShareGroups(int i) { m_iUsedShareGroups = i; }
@@ -266,8 +281,10 @@ public:
     void sSetKbdLayoutLanguage(const wxString &s) { m_sKbdLayoutLanguage = s; }
     void sSetName(const wxString &s) { m_sName = s; }
     void sSetPassword(const wxString &s) { m_sPassword = s; }
+    void sSetProxyCommand(const wxString &s) { m_sProxyCommand = s; }
     void sSetProxyHost(const wxString &s) { m_sProxyHost = s; }
     void sSetRdpApplication(const wxString &s) { m_sRdpApplication = s; }
+    void sSetRdpDomain(const wxString &s) { m_sRdpDomain = s; }
     void sSetRdpHostName(const wxString &s) { m_sRdpHostName = s; }
     void sSetRdpPassword(const wxString &s) { m_sRdpPassword = s; }
     void sSetRdpUsername(const wxString &s) { m_sRdpUsername = s; }
@@ -280,8 +297,10 @@ public:
     void aSetShareGroups(const ArrayOfShareGroups &a) { m_aShareGroups = a; }
     void aSetUsedShareGroups(const wxArrayString &a) { m_aUsedShareGroups = a; }
 
-private:
+    static wxString UrlEsc(const wxString &s);
 
+private:
+    void init();
     bool getBool(wxXmlNode *, const wxString &, bool defval = false);
     long getLong(wxXmlNode *, const wxString &, long defval = 0);
     bool getLongBool(wxXmlNode *, const wxString &, bool defval = false);
@@ -290,11 +309,13 @@ private:
     wxString *getStringNew(wxXmlNode *, const wxString &, wxString *defval = NULL);
     bool cmpShareGroups(const ArrayOfShareGroups, const ArrayOfShareGroups);
     bool cmpUsedShareGroups(const wxArrayString, const wxArrayString);
+    ShareGroup &findShare(const wxString &);
     void bAddOption(wxXmlNode *, const wxString &, const bool);
     void iAddOption(wxXmlNode *, const wxString &, const long);
     void iAddOptionBool(wxXmlNode *, const wxString &, const bool);
     void sAddOption(wxXmlNode *, const wxString &, const wxString &);
     wxXmlNode *AddGroup(wxXmlNode *, const wxString &);
+    bool loadFromStream(wxInputStream &is, bool);
 
     bool m_bDisableBackingstore;
     bool m_bDisableComposite;
@@ -316,6 +337,7 @@ private:
     bool m_bImageEncodingPlainX;
     bool m_bImageEncodingPNG;
     bool m_bKbdLayoutOther;
+    bool m_bRdpCache;
     bool m_bRdpRememberPassword;
     bool m_bRdpRunApplication;
     bool m_bRememberPassword;
@@ -339,6 +361,7 @@ private:
     int m_iJpegQuality;
     int m_iProxyPort;
     int m_iRdpAuthType;
+    int m_iRdpColors;
     int m_iRdpImageCompression;
     int m_iServerPort;
     int m_iUsedShareGroups;
@@ -353,8 +376,10 @@ private:
     wxString m_sKbdLayoutLanguage;
     wxString m_sName;
     wxString m_sPassword;
+    wxString m_sProxyCommand;
     wxString m_sProxyHost;
     wxString m_sRdpApplication;
+    wxString m_sRdpDomain;
     wxString m_sRdpHostName;
     wxString m_sRdpPassword;
     wxString m_sRdpUsername;

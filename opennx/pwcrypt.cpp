@@ -19,8 +19,14 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include <wx/datetime.h>
+#include <wx/log.h>
+#include <wx/textfile.h>
 #include "pwcrypt.h"
+#include "md5.h"
 
 static const wxString dummyString = wxT("{{{{");
 static const wxString validChars =
@@ -148,4 +154,45 @@ decryptString(const wxString &s)
         sRet.Remove(0, dummyString.Length());
 
     return decodeString(sRet);
+}
+
+wxString
+md5sum(const wxString &s)
+{
+    md5_state_t state;
+    md5_byte_t digest[16];
+
+    md5_init(&state);
+    const wxWX2MBbuf buf = wxConvCurrent->cWX2MB(s);
+    const char *cc = wx_static_cast(const char*, buf);
+    md5_append(&state, wx_reinterpret_cast(const md5_byte_t *, cc), s.Length());
+    md5_finish(&state, digest);
+    wxString ret;
+    for (int i = 0; i < 16; i++)
+        ret << wxString::Format(wxT("%02x"), digest[i]);
+    return ret;
+}
+
+wxString
+Md5OfFile(const wxString &name)
+{
+    wxLogNull dummy;
+    wxTextFile tf(name);
+    md5_state_t state;
+    md5_byte_t digest[16];
+
+    md5_init(&state);
+    if (tf.Exists() && tf.Open()) {
+        wxString line;
+        for (line = tf.GetFirstLine(); !tf.Eof(); line = tf.GetNextLine()) {
+            const wxWX2MBbuf buf = wxConvCurrent->cWX2MB(line);
+            const char *cc = wx_static_cast(const char*, buf);
+            md5_append(&state, wx_reinterpret_cast(const md5_byte_t *, cc), line.Length());
+        }
+    }
+    md5_finish(&state, digest);
+    wxString ret;
+    for (int i = 0; i < 16; i++)
+        ret << wxString::Format(wxT("%02x"), digest[i]);
+    return ret;
 }

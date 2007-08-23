@@ -37,12 +37,16 @@
 ////@begin includes
 ////@end includes
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "PanicDialog.h"
 
 ////@begin XPM images
 ////@end XPM images
 
 #include <wx/artprov.h>
+#include "Icon.h"
 
 /*!
  * PanicDialog type definition
@@ -93,6 +97,11 @@ bool PanicDialog::Create( wxWindow* parent, wxWindowID id, const wxString& capti
     }
     Centre();
 ////@end PanicDialog creation
+	wxUnusedVar(style);
+	wxUnusedVar(size);
+	wxUnusedVar(pos);
+	wxUnusedVar(caption);
+	wxUnusedVar(id);
     return true;
 }
 
@@ -155,10 +164,7 @@ bool PanicDialog::ShowToolTips()
 wxBitmap PanicDialog::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
-////@begin PanicDialog bitmap retrieval
-    wxUnusedVar(name);
-    return wxNullBitmap;
-////@end PanicDialog bitmap retrieval
+    return CreateBitmapFromFile(name);
 }
 
 /*!
@@ -168,8 +174,5 @@ wxBitmap PanicDialog::GetBitmapResource( const wxString& name )
 wxIcon PanicDialog::GetIconResource( const wxString& name )
 {
     // Icon retrieval
-////@begin PanicDialog icon retrieval
-    wxUnusedVar(name);
-    return wxNullIcon;
-////@end PanicDialog icon retrieval
+    return CreateIconFromFile(name);
 }

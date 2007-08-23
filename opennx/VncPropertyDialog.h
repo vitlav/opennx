@@ -121,6 +121,7 @@ private:
 ////@end VncPropertyDialog member variables
 
     MyXmlConfig *m_pCfg;
+    bool m_bStorePasswords;
 
 };
 

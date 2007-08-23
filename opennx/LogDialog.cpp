@@ -34,6 +34,9 @@
 #include "wx/wx.h"
 #endif
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 ////@begin includes
 ////@end includes
 #include <wx/textfile.h>
@@ -43,6 +46,8 @@
 
 ////@begin XPM images
 ////@end XPM images
+
+static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
 
 /*!
  * LogDialog type definition
@@ -85,7 +90,7 @@ bool LogDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStrin
 ////@end LogDialog member initialisation
 
 ////@begin LogDialog creation
-    SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
+    SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));
@@ -128,8 +133,12 @@ void LogDialog::ReadLogFile(wxString name)
     if (!name.IsEmpty())
         m_sFileName = name;
 
-    if (!m_sFileName.IsEmpty())
+    if (!m_sFileName.IsEmpty()) {
         m_TextCtrl->LoadFile(m_sFileName);
+        long n = m_TextCtrl->GetLastPosition();
+        if (m_TextCtrl->GetRange(n - 1, n) == wxT("\004"))
+            m_TextCtrl->Remove(n - 1, n);
+    }
 }
 
 /*!

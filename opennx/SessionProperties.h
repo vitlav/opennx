@@ -89,8 +89,6 @@ class SessionProperties: public wxDialog, KeyTypeCallback
     DECLARE_CLASS( SessionProperties )
     DECLARE_EVENT_TABLE()
 
-    friend class MyValidator;
-
 public:
     /// Constructors
     SessionProperties( );
@@ -112,7 +110,7 @@ private:
     /**
      * Handler for OnChar events.
      */
-    void KeyTyped();
+    virtual void KeyTyped();
     /**
      * Installs event handler for OnChar event in all wxTextCtrl and wxSpinCtrl
      * childs.
@@ -120,6 +118,8 @@ private:
     void InstallOnCharHandlers(wxWindow *w = NULL); 
 
 public:
+
+    void OnFocus( wxFocusEvent& event );
 
 ////@begin SessionProperties event handler declarations
 
@@ -378,6 +378,7 @@ private:
     wxString m_sSavedUserNxDir;
     wxString m_sSavedSystemNxDir;
     bool m_bKeyTyped;
+    bool m_bStorePasswords;
     int m_iUnixDesktopType;
 
     MyXmlConfig *m_pCfg;

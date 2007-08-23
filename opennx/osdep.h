@@ -27,5 +27,9 @@ extern const char *x11_socket_path;
 extern const char *x11_keyboard_type;
 extern void reparent_pulldown(long);
 extern void close_foreign(long);
+extern void close_sid(const char *);
+#ifdef __WXMSW__
+extern long getppid();
+#endif
 };
 #endif

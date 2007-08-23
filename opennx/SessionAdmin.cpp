@@ -64,9 +64,9 @@ BEGIN_EVENT_TABLE( SessionAdmin, wxFrame )
 ////@begin SessionAdmin event table entries
     EVT_MENU( XRCID("ID_MENU_SESSION_NEW"), SessionAdmin::OnMenuSessionNewClick )
 
-    EVT_MENU( XRCID("ID_MENU_FILE_CHDIR"), SessionAdmin::OnMenuFileChdirClick )
+    EVT_MENU( wxID_PREFERENCES, SessionAdmin::OnPREFERENCESClick )
 
-    EVT_MENU( XRCID("ID_MENU_FILE_EXIT"), SessionAdmin::OnMenuFileExitClick )
+    EVT_MENU( wxID_EXIT, SessionAdmin::OnEXITClick )
 
     EVT_MENU( XRCID("ID_MENU_SESSION_TERMINATE"), SessionAdmin::OnMenuSessionTerminateClick )
 
@@ -82,7 +82,7 @@ BEGIN_EVENT_TABLE( SessionAdmin, wxFrame )
 
     EVT_MENU( XRCID("ID_MENU_REFRESH"), SessionAdmin::OnMenuRefreshClick )
 
-    EVT_MENU( XRCID("ID_MENU_HELP_ABOUT"), SessionAdmin::OnMenuHelpAboutClick )
+    EVT_MENU( wxID_ABOUT, SessionAdmin::OnABOUTClick )
 
     EVT_MENU( XRCID("ID_TOOL_SESSION_NEW"), SessionAdmin::OnToolSessionNewClick )
 
@@ -182,20 +182,20 @@ void SessionAdmin::CreateControls()
 }
 
 
-void SessionAdmin::SessionToolsEnable(bool enable)
+void SessionAdmin::SessionToolsEnable(bool enable, bool running /* = false */)
 {
-    GetToolBar()->EnableTool(XRCID("ID_TOOL_SESSION_TERMINATE"), enable);
-    GetToolBar()->EnableTool(XRCID("ID_TOOL_SESSION_PSTATS"), enable);
-    GetToolBar()->EnableTool(XRCID("ID_TOOL_SESSION_FSTATS"), enable);
+    GetToolBar()->EnableTool(XRCID("ID_TOOL_SESSION_TERMINATE"), running);
+    GetToolBar()->EnableTool(XRCID("ID_TOOL_SESSION_PSTATS"), running);
+    GetToolBar()->EnableTool(XRCID("ID_TOOL_SESSION_FSTATS"), running);
     GetToolBar()->EnableTool(XRCID("ID_TOOL_SESSION_LOG"), enable);
-    GetToolBar()->EnableTool(XRCID("ID_TOOL_SESSION_REMOVE"), enable);
-    GetToolBar()->EnableTool(XRCID("ID_TOOL_SESSION_KILL"), enable);
-    GetMenuBar()->FindItem(XRCID("ID_MENU_SESSION_TERMINATE"))->Enable(enable);
-    GetMenuBar()->FindItem(XRCID("ID_MENU_SESSION_PSTATS"))->Enable(enable);
-    GetMenuBar()->FindItem(XRCID("ID_MENU_SESSION_FSTATS"))->Enable(enable);
+    GetToolBar()->EnableTool(XRCID("ID_TOOL_SESSION_REMOVE"), !running);
+    GetToolBar()->EnableTool(XRCID("ID_TOOL_SESSION_KILL"), running);
+    GetMenuBar()->FindItem(XRCID("ID_MENU_SESSION_TERMINATE"))->Enable(running);
+    GetMenuBar()->FindItem(XRCID("ID_MENU_SESSION_PSTATS"))->Enable(running);
+    GetMenuBar()->FindItem(XRCID("ID_MENU_SESSION_FSTATS"))->Enable(running);
     GetMenuBar()->FindItem(XRCID("ID_MENU_SESSION_LOG"))->Enable(enable);
-    GetMenuBar()->FindItem(XRCID("ID_MENU_SESSION_REMOVE"))->Enable(enable);
-    GetMenuBar()->FindItem(XRCID("ID_MENU_SESSION_KILL"))->Enable(enable);
+    GetMenuBar()->FindItem(XRCID("ID_MENU_SESSION_REMOVE"))->Enable(!running);
+    GetMenuBar()->FindItem(XRCID("ID_MENU_SESSION_KILL"))->Enable(running);
 }
 
 /*!
@@ -239,7 +239,7 @@ void SessionAdmin::OnToolSessionNewClick( wxCommandEvent& event )
  * wxEVT_COMMAND_MENU_SELECTED event handler for ID_MENU_FILE_CHDIR
  */
 
-void SessionAdmin::OnMenuFileChdirClick( wxCommandEvent& event )
+void SessionAdmin::OnPREFERENCESClick( wxCommandEvent& event )
 {
     const wxString& dir = wxDirSelector(_("Choose new NX session directory."),
         m_NxDirectory, wxDD_DEFAULT_STYLE, wxDefaultPosition, this);
@@ -254,7 +254,7 @@ void SessionAdmin::OnMenuFileChdirClick( wxCommandEvent& event )
  * wxEVT_COMMAND_MENU_SELECTED event handler for ID_MENU_FILE_EXIT
  */
 
-void SessionAdmin::OnMenuFileExitClick( wxCommandEvent& event )
+void SessionAdmin::OnEXITClick( wxCommandEvent& event )
 {
     // Insert custom code here
     Close();
@@ -328,7 +328,7 @@ void SessionAdmin::OnToolRefreshClick( wxCommandEvent& event )
  * wxEVT_COMMAND_MENU_SELECTED event handler for ID_MENU_HELP_ABOUT
  */
 
-void SessionAdmin::OnMenuHelpAboutClick( wxCommandEvent& event )
+void SessionAdmin::OnABOUTClick( wxCommandEvent& event )
 {
     AboutDialog d(this);
     d.ShowModal();
@@ -341,7 +341,7 @@ void SessionAdmin::OnMenuHelpAboutClick( wxCommandEvent& event )
 
 void SessionAdmin::OnListctrlSelected( wxListEvent& event )
 {
-    SessionToolsEnable(true);
+    SessionToolsEnable(true, m_sessions->IsRunning(event.GetIndex()));
     event.Skip();
 }
 
@@ -374,11 +374,9 @@ void SessionAdmin::OnMenuSessionNewClick( wxCommandEvent& event )
 
 void SessionAdmin::OnMenuSessionTerminateClick( wxCommandEvent& event )
 {
-    long item = item = m_SessionListCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
-    if (item != -1) {
-        m_SessionListCtrl->SetItem(item, 5, _("terminated"));
-        m_SessionListCtrl->SetColumnWidth(5, wxLIST_AUTOSIZE);
-    }
+    long item = m_SessionListCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+    if (item != -1)
+        m_sessions->TerminateSession(item);
     event.Skip();
 }
 
@@ -388,7 +386,9 @@ void SessionAdmin::OnMenuSessionTerminateClick( wxCommandEvent& event )
 
 void SessionAdmin::OnMenuSessionPstatsClick( wxCommandEvent& event )
 {
-    // Insert custom code here
+    long item = m_SessionListCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+    if (item != -1)
+        m_sessions->ShowSessionStats(item, false);
     event.Skip();
 }
 
@@ -398,7 +398,9 @@ void SessionAdmin::OnMenuSessionPstatsClick( wxCommandEvent& event )
 
 void SessionAdmin::OnMenuSessionFstatsClick( wxCommandEvent& event )
 {
-    // Insert custom code here
+    long item = m_SessionListCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+    if (item != -1)
+        m_sessions->ShowSessionStats(item, true);
     event.Skip();
 }
 
@@ -408,11 +410,9 @@ void SessionAdmin::OnMenuSessionFstatsClick( wxCommandEvent& event )
 
 void SessionAdmin::OnMenuSessionLogClick( wxCommandEvent& event )
 {
-    long item = item = m_SessionListCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
-    if (item != -1) {
-        m_sessions->ShowSesssionLog(item);
-    }
-    // Insert custom code here
+    long item = m_SessionListCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+    if (item != -1)
+        m_sessions->ShowSessionLog(item);
     event.Skip();
 }
 
@@ -422,9 +422,9 @@ void SessionAdmin::OnMenuSessionLogClick( wxCommandEvent& event )
 
 void SessionAdmin::OnMenuSessionRemoveClick( wxCommandEvent& event )
 {
-    long item = item = m_SessionListCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+    long item = m_SessionListCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
     if (item != -1)
-        m_SessionListCtrl->DeleteItem(item);
+        m_sessions->CleanupDir(item);
     event.Skip();
 }
 
@@ -434,7 +434,9 @@ void SessionAdmin::OnMenuSessionRemoveClick( wxCommandEvent& event )
 
 void SessionAdmin::OnMenuSessionKillClick( wxCommandEvent& event )
 {
-    // Insert custom code here
+    long item = m_SessionListCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+    if (item != -1)
+        m_sessions->KillSession(item);
     event.Skip();
 }
 
@@ -444,7 +446,7 @@ void SessionAdmin::OnMenuSessionKillClick( wxCommandEvent& event )
 
 void SessionAdmin::OnMenuRefreshClick( wxCommandEvent& event )
 {
-    // Insert custom code here
+    m_sessions->ScanDir();
     event.Skip();
 }
 

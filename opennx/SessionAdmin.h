@@ -79,7 +79,7 @@ class SessionAdmin: public wxFrame
 
 public:
 
-    void SessionToolsEnable(bool enable);
+    void SessionToolsEnable(bool enable, bool running = false);
     /// Constructors
     SessionAdmin( );
     SessionAdmin( wxWindow* parent, wxWindowID id = SYMBOL_SESSIONADMIN_IDNAME, const wxString& caption = SYMBOL_SESSIONADMIN_TITLE, const wxPoint& pos = SYMBOL_SESSIONADMIN_POSITION, const wxSize& size = SYMBOL_SESSIONADMIN_SIZE, long style = SYMBOL_SESSIONADMIN_STYLE );
@@ -95,11 +95,11 @@ public:
     /// wxEVT_COMMAND_MENU_SELECTED event handler for ID_MENU_SESSION_NEW
     void OnMenuSessionNewClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_MENU_SELECTED event handler for ID_MENU_FILE_CHDIR
-    void OnMenuFileChdirClick( wxCommandEvent& event );
+    /// wxEVT_COMMAND_MENU_SELECTED event handler for wxID_PREFERENCES
+    void OnPREFERENCESClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_MENU_SELECTED event handler for ID_MENU_FILE_EXIT
-    void OnMenuFileExitClick( wxCommandEvent& event );
+    /// wxEVT_COMMAND_MENU_SELECTED event handler for wxID_EXIT
+    void OnEXITClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_MENU_SELECTED event handler for ID_MENU_SESSION_TERMINATE
     void OnMenuSessionTerminateClick( wxCommandEvent& event );
@@ -122,8 +122,8 @@ public:
     /// wxEVT_COMMAND_MENU_SELECTED event handler for ID_MENU_REFRESH
     void OnMenuRefreshClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_MENU_SELECTED event handler for ID_MENU_HELP_ABOUT
-    void OnMenuHelpAboutClick( wxCommandEvent& event );
+    /// wxEVT_COMMAND_MENU_SELECTED event handler for wxID_ABOUT
+    void OnABOUTClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_MENU_SELECTED event handler for ID_TOOL_SESSION_NEW
     void OnToolSessionNewClick( wxCommandEvent& event );

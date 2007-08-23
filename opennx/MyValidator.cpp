@@ -33,6 +33,9 @@
 #ifndef WX_PRECOMP
   #include "wx/defs.h"
 #endif
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include <wx/config.h>
 #include <wx/fontdlg.h>
 
@@ -638,6 +641,8 @@ void MyValidator::OnChar(wxKeyEvent& event)
         if (!(keyCode < WXK_SPACE || keyCode == WXK_DELETE || keyCode > WXK_START)) {
             bool chOk = true;
             switch (m_type) {
+                case MYVAL_ANY:
+                    break;
                 case MYVAL_NUMERIC:
                     chOk = (wxIsdigit(keyCode) != 0);
                     break;

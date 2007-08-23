@@ -1123,7 +1123,7 @@
         <object class="wxBoxSizer">
             <orient>wxVERTICAL</orient>
             <object class="sizeritem">
-                <flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+                <flag>wxGROW|wxALL</flag>
                 <border>5</border>
                 <object class="wxStaticBoxSizer" name="wxID_ANY">
                     <orient>wxVERTICAL</orient>
@@ -2060,7 +2060,7 @@ remote VNC server</label>
         <object class="wxBoxSizer">
             <orient>wxVERTICAL</orient>
             <object class="sizeritem">
-                <flag>wxALIGN_LEFT|wxALL|wxADJUST_MINSIZE</flag>
+                <flag>wxALIGN_LEFT|wxALL</flag>
                 <border>5</border>
                 <object class="wxStaticText" name="wxID_STATIC">
                     <label>Please select the name of the shared resource on the
@@ -2073,7 +2073,7 @@ local computer.</label>
                 <object class="wxBoxSizer">
                     <orient>wxHORIZONTAL</orient>
                     <object class="sizeritem">
-                        <flag>wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                        <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                         <border>5</border>
                         <object class="wxStaticText" name="wxID_STATIC">
                             <label>Share</label>
@@ -2097,6 +2097,148 @@ local computer.</label>
             <object class="sizeritem">
                 <flag>wxGROW|wxLEFT|wxRIGHT|wxBOTTOM</flag>
                 <border>5</border>
+                <object class="wxPanel" name="ID_PANEL_SMB_PRINTER">
+                    <style>wxTAB_TRAVERSAL</style>
+                    <hidden>1</hidden>
+                    <object class="wxStaticBoxSizer" name="wxID_ANY">
+                        <orient>wxVERTICAL</orient>
+                        <label>SMB printer options</label>
+                        <object class="sizeritem">
+                            <flag>wxGROW|wxALL</flag>
+                            <border>5</border>
+                            <object class="wxStaticText" name="wxID_STATIC">
+                                <label>Please choose a printer driver:</label>
+                            </object>
+                        </object>
+                        <object class="sizeritem">
+                            <flag>wxGROW|wxALL</flag>
+                            <border>5</border>
+                            <object class="wxComboBox" name="ID_COMBOBOX_SMBDRIVER">
+                                <style>wxCB_DROPDOWN</style>
+                                <content>
+                                    <item>deskjet</item>
+                                    <item>deskjet2</item>
+                                    <item>dymo</item>
+                                    <item>epson24</item>
+                                    <item>epson9</item>
+                                    <item>laserjet</item>
+                                    <item>okidata24</item>
+                                    <item>okidata9</item>
+                                    <item>stcolor</item>
+                                    <item>stcolor2</item>
+                                    <item>stphoto</item>
+                                    <item>stphoto2</item>
+                                </content>
+                            </object>
+                        </object>
+                        <object class="sizeritem">
+                            <flag>wxGROW|wxALL</flag>
+                            <border>5</border>
+                            <object class="wxStaticText" name="wxID_STATIC">
+                                <label>Access control:</label>
+                            </object>
+                        </object>
+                        <object class="sizeritem">
+                            <flag>wxGROW|wxLEFT|wxRIGHT|wxBOTTOM</flag>
+                            <border>5</border>
+                            <object class="wxFlexGridSizer">
+                                <cols>2</cols>
+                                <rows>3</rows>
+                                <vgap>0</vgap>
+                                <hgap>0</hgap>
+                                <growablecols>1</growablecols>
+                                <growablerows>2</growablerows>
+                                <object class="spacer">
+                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                    <border>5</border>
+                                    <size>5,5d</size>
+                                </object>
+                                <object class="sizeritem">
+                                    <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                    <border>5</border>
+                                    <object class="wxRadioButton" name="ID_RADIOBUTTON_SMB_PRIVATE">
+                                        <style>wxRB_GROUP</style>
+                                        <label>Private printer</label>
+                                        <value>0</value>
+                                    </object>
+                                </object>
+                                <object class="spacer">
+                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                    <border>5</border>
+                                    <size>5,5d</size>
+                                </object>
+                                <object class="sizeritem">
+                                    <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                    <border>5</border>
+                                    <object class="wxRadioButton" name="ID_RADIOBUTTON_SMB_PUBLIC">
+                                        <label>Public printer</label>
+                                        <value>0</value>
+                                    </object>
+                                </object>
+                            </object>
+                        </object>
+                        <object class="sizeritem">
+                            <flag>wxGROW|wxALL</flag>
+                            <border>5</border>
+                            <object class="wxStaticLine" name="wxID_STATIC">
+                                <style>wxLI_HORIZONTAL</style>
+                            </object>
+                        </object>
+                        <object class="sizeritem">
+                            <flag>wxALIGN_LEFT|wxALL</flag>
+                            <border>5</border>
+                            <object class="wxStaticText" name="wxID_STATIC">
+                                <label>The remote system will need to provide security
+credentials to your local client. Please specify
+username and password with which you configured
+this share.</label>
+                            </object>
+                        </object>
+                        <object class="sizeritem">
+                            <flag>wxGROW|wxALL</flag>
+                            <border>0</border>
+                            <object class="wxFlexGridSizer">
+                                <cols>2</cols>
+                                <rows>2</rows>
+                                <vgap>0</vgap>
+                                <hgap>5</hgap>
+                                <growablecols>1</growablecols>
+                                <object class="sizeritem">
+                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                    <border>5</border>
+                                    <object class="wxStaticText" name="wxID_STATIC">
+                                        <label>Username</label>
+                                    </object>
+                                </object>
+                                <object class="sizeritem">
+                                    <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                    <border>5</border>
+                                    <object class="wxTextCtrl" name="ID_TEXTCTRL_SMBPRINT_USERNAME">
+                                    </object>
+                                </object>
+                                <object class="sizeritem">
+                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                    <border>5</border>
+                                    <object class="wxStaticText" name="wxID_STATIC">
+                                        <label>Password</label>
+                                    </object>
+                                </object>
+                                <object class="sizeritem">
+                                    <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                    <border>5</border>
+                                    <option>1</option>
+                                    <object class="wxTextCtrl" name="ID_TEXTCTRL_SMBPRINT_PASSWORD">
+                                        <style>wxTE_PASSWORD</style>
+                                    </object>
+                                </object>
+                            </object>
+                        </object>
+                    </object>
+                </object>
+            </object>
+            <object class="sizeritem">
+                <flag>wxGROW|wxLEFT|wxRIGHT|wxBOTTOM</flag>
+                <border>5</border>
                 <object class="wxPanel" name="ID_PANEL_CUPSOTIONS">
                     <style>wxTAB_TRAVERSAL</style>
                     <hidden>1</hidden>
@@ -2104,7 +2246,7 @@ local computer.</label>
                         <orient>wxVERTICAL</orient>
                         <label>CUPS options</label>
                         <object class="sizeritem">
-                            <flag>wxGROW|wxALL|wxADJUST_MINSIZE</flag>
+                            <flag>wxGROW|wxALL</flag>
                             <border>5</border>
                             <object class="wxStaticText" name="wxID_STATIC">
                                 <label>Please choose a printer driver:</label>
@@ -2115,10 +2257,14 @@ local computer.</label>
                             <border>5</border>
                             <object class="wxComboBox" name="ID_COMBOBOX_CUPSDRIVER">
                                 <style>wxCB_DROPDOWN</style>
+                                <enabled>0</enabled>
+                                <content>
+                                    <item>cups driver</item>
+                                </content>
                             </object>
                         </object>
                         <object class="sizeritem">
-                            <flag>wxGROW|wxALL|wxADJUST_MINSIZE</flag>
+                            <flag>wxGROW|wxALL</flag>
                             <border>5</border>
                             <object class="wxStaticText" name="wxID_STATIC">
                                 <label>Access control:</label>
@@ -2187,7 +2333,7 @@ local computer.</label>
                         <orient>wxVERTICAL</orient>
                         <label>SMB options</label>
                         <object class="sizeritem">
-                            <flag>wxALIGN_LEFT|wxALL|wxADJUST_MINSIZE</flag>
+                            <flag>wxALIGN_LEFT|wxALL</flag>
                             <border>5</border>
                             <object class="wxStaticText" name="wxID_STATIC">
                                 <label>Please specify the resource name on the remote
@@ -2200,7 +2346,7 @@ machine with which this share will be made available.</label>
                             <object class="wxBoxSizer">
                                 <orient>wxHORIZONTAL</orient>
                                 <object class="sizeritem">
-                                    <flag>wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                    <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                     <border>5</border>
                                     <object class="wxStaticText" name="wxID_STATIC">
                                         <label>Mount on</label>
@@ -2228,7 +2374,7 @@ machine with which this share will be made available.</label>
                             </object>
                         </object>
                         <object class="sizeritem">
-                            <flag>wxALIGN_LEFT|wxALL|wxADJUST_MINSIZE</flag>
+                            <flag>wxALIGN_LEFT|wxALL</flag>
                             <border>5</border>
                             <object class="wxStaticText" name="wxID_STATIC">
                                 <label>The remote system will need to provide security
@@ -2247,7 +2393,7 @@ this share.</label>
                                 <hgap>5</hgap>
                                 <growablecols>1</growablecols>
                                 <object class="sizeritem">
-                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                     <border>5</border>
                                     <object class="wxStaticText" name="wxID_STATIC">
                                         <label>Username</label>
@@ -2260,7 +2406,7 @@ this share.</label>
                                     </object>
                                 </object>
                                 <object class="sizeritem">
-                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                     <border>5</border>
                                     <object class="wxStaticText" name="wxID_STATIC">
                                         <label>Password</label>
@@ -2321,12 +2467,12 @@ this share.</label>
                     <label>New NX Session...</label>
                     <bitmap>memory:memrsc#zip:res/session_new_16.png</bitmap>
                 </object>
-                <object class="wxMenuItem" name="ID_MENU_FILE_CHDIR">
+                <object class="wxMenuItem" name="wxID_PREFERENCES">
                     <label>Change NX directory...</label>
                 </object>
                 <object class="separator">
                 </object>
-                <object class="wxMenuItem" name="ID_MENU_FILE_EXIT">
+                <object class="wxMenuItem" name="wxID_EXIT">
                     <label>Exit</label>
                 </object>
             </object>
@@ -2370,7 +2516,7 @@ this share.</label>
             </object>
             <object class="wxMenu">
                 <label>Help</label>
-                <object class="wxMenuItem" name="ID_MENU_HELP_ABOUT">
+                <object class="wxMenuItem" name="wxID_ABOUT">
                     <label>About OpenNX client...</label>
                 </object>
             </object>
@@ -2424,7 +2570,7 @@ this share.</label>
                 <border>5</border>
                 <option>1</option>
                 <object class="wxListCtrl" name="ID_LISTCTRL">
-                    <size>500,100</size>
+                    <size>700,150</size>
                     <style>wxLC_REPORT|wxLC_SINGLE_SEL|wxSUNKEN_BORDER</style>
                 </object>
             </object>
@@ -2718,7 +2864,7 @@ this share.</label>
                             <object class="wxSpinCtrl" name="ID_SPINCTRL_WIDTH">
                                 <size>52,-1</size>
                                 <style>wxSP_ARROW_KEYS</style>
-                                <value>800</value>
+                                <value>1024</value>
                                 <min>640</min>
                                 <max>1600</max>
                             </object>
@@ -2736,7 +2882,7 @@ this share.</label>
                             <object class="wxSpinCtrl" name="ID_SPINCTRL_HEIGHT">
                                 <size>52,-1</size>
                                 <style>wxSP_ARROW_KEYS</style>
-                                <value>600</value>
+                                <value>768</value>
                                 <min>480</min>
                                 <max>1400</max>
                             </object>
@@ -2884,6 +3030,10 @@ this share.</label>
                 <option>1</option>
                 <object class="wxTextCtrl" name="ID_TEXTCTRL">
                     <size>250,100d</size>
+                    <font>
+                        <size>10</size>
+                        <face>Fixed</face>
+                    </font>
                     <style>wxTE_MULTILINE|wxTE_READONLY</style>
                 </object>
             </object>

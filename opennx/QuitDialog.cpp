@@ -37,7 +37,11 @@
 ////@begin includes
 ////@end includes
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "QuitDialog.h"
+#include "Icon.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -91,6 +95,11 @@ bool QuitDialog::Create( wxWindow* parent, wxWindowID id, const wxString& captio
     }
     Centre();
 ////@end QuitDialog creation
+    wxUnusedVar(style);
+    wxUnusedVar(size);
+    wxUnusedVar(pos);
+    wxUnusedVar(caption);
+    wxUnusedVar(id);
     return true;
 }
 
@@ -153,10 +162,7 @@ bool QuitDialog::ShowToolTips()
 wxBitmap QuitDialog::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
-////@begin QuitDialog bitmap retrieval
-    wxUnusedVar(name);
-    return wxNullBitmap;
-////@end QuitDialog bitmap retrieval
+    return CreateBitmapFromFile(name);
 }
 
 /*!
@@ -166,8 +172,5 @@ wxBitmap QuitDialog::GetBitmapResource( const wxString& name )
 wxIcon QuitDialog::GetIconResource( const wxString& name )
 {
     // Icon retrieval
-////@begin QuitDialog icon retrieval
-    wxUnusedVar(name);
-    return wxNullIcon;
-////@end QuitDialog icon retrieval
+    return CreateIconFromFile(name);
 }

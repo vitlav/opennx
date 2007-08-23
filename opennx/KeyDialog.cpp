@@ -34,6 +34,9 @@
 #include "wx/wx.h"
 #endif
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include <wx/config.h>
 
 ////@begin includes
@@ -101,6 +104,11 @@ bool KeyDialog::Create( wxWindow* parent, wxWindowID id, const wxString& caption
     }
     Centre();
 ////@end KeyDialog creation
+	wxUnusedVar(style);
+	wxUnusedVar(size);
+	wxUnusedVar(pos);
+	wxUnusedVar(caption);
+	wxUnusedVar(id);
     return true;
 }
 
@@ -182,10 +190,21 @@ void KeyDialog::CheckChanged()
 
 void KeyDialog::OnButtonImportClick( wxCommandEvent& event )
 {
-////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_IMPORT in KeyDialog.
-    // Before editing this code, remove the block markers.
+    wxString keyDir;
+    if (!wxConfigBase::Get()->Read(wxT("Recent/KeyImport"), &keyDir)) {
+        keyDir = ::wxGetHomeDir() + wxFileName::GetPathSeparator() + wxT(".ssh");
+        if (!wxFileName(keyDir).IsDirReadable())
+            keyDir = ::wxGetHomeDir();
+    }
+    wxFileDialog d(this, _("Select key to import"), keyDir, wxT(""),
+            _("SSh key files (*.key;*.pub)|*.key;*.pub"), wxOPEN|wxFILE_MUST_EXIST);
+    d.SetDirectory(keyDir);
+    if (d.ShowModal() == wxID_OK) {
+        m_pCtrlSshKey->LoadFile(d.GetPath());
+        wxConfigBase::Get()->Write(wxT("Recent/KeyImport"), d.GetDirectory());
+        CheckChanged();
+    }
     event.Skip();
-////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_IMPORT in KeyDialog. 
 }
 
 /*!

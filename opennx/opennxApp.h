@@ -35,6 +35,9 @@ public:
         MODE_CLIENT,
         MODE_ADMIN,
         MODE_WIZARD,
+        MODE_DIALOG_OK,
+        MODE_DIALOG_YESNO,
+        MODE_DIALOG_ERROR,
         MODE_DIALOG_PANIC,
         MODE_DIALOG_QUIT,
         MODE_FOREIGN_TOOLBAR,
@@ -72,8 +75,10 @@ private:
     wxString m_sDialogMessage;
     long m_nOtherPID;
     long m_nWindowID;
-    int m_iDialogClass;
+    int m_iDialogStyle;
     enum mode m_eMode;
+
+    bool preInit();
 };
 
 DECLARE_APP(opennxApp)

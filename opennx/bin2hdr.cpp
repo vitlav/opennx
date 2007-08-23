@@ -19,6 +19,10 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -68,7 +72,6 @@ int main(int argc, char **argv) {
         exit(-1);
     }
     bool hdr = false;
-    bool fhdr = false;
     int n = 0;
     int i;
 

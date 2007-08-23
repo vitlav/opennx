@@ -266,6 +266,7 @@ void X11PropertyDialog::OnOkClick( wxCommandEvent& event )
 {
     wxASSERT_MSG(m_pCfg, _T("X11PropertyDialog::OnOkClick: No configuration"));
     if (m_pCfg) {
+        TransferDataFromWindow();
         m_pCfg->bSetRunConsole(m_bRunConsole);
         m_pCfg->bSetRunXclients(m_bRunXclients);
         m_pCfg->sSetCommandLine(m_sCustomCommand);

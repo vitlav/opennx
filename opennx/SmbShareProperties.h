@@ -33,10 +33,12 @@
 ////@begin includes
 #include "SmbShareProperties_symbols.h"
 #include "wx/xrc/xmlres.h"
+#include "wx/valgen.h"
 #include "wx/statline.h"
 ////@end includes
 
 #include "WinShare.h"
+#include "MyXmlConfig.h"
 
 /*!
  * Forward declarations
@@ -92,6 +94,8 @@ public:
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_SMBSHAREPROPERTIES_IDNAME, const wxString& caption = SYMBOL_SMBSHAREPROPERTIES_TITLE, const wxPoint& pos = SYMBOL_SMBSHAREPROPERTIES_POSITION, const wxSize& size = SYMBOL_SMBSHAREPROPERTIES_SIZE, long style = SYMBOL_SMBSHAREPROPERTIES_STYLE );
 
 private:
+    void askForDefault(ArrayOfShareGroups &, ShareGroup &);
+
     /// Creates the controls and sizers
     void CreateControls();
 
@@ -99,6 +103,12 @@ private:
 
     /// wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_SHARE_LOCALNAME
     void OnComboboxShareLocalnameSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SMBPRINT_USERNAME
+    void OnTextctrlSmbprintUsernameUpdated( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SMBPRINT_PASSWORD
+    void OnTextctrlSmbprintPasswordUpdated( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SHARE_MOUNTPOINT
     void OnTextctrlShareMountpointUpdated( wxCommandEvent& event );
@@ -128,14 +138,29 @@ private:
 
 ////@begin SmbShareProperties member variables
     wxBitmapComboBox* m_pCtrlLocalShares;
+    wxPanel* m_pCtrlSmbPrintOptions;
+    wxComboBox* m_pCtrlSmbDriver;
+    wxRadioButton* m_pCtrlSmbPrivate;
+    wxRadioButton* m_pCtrlSmbPublic;
+    wxTextCtrl* m_pCtrlSmbPrintUsername;
+    wxTextCtrl* m_pCtrlSmbPrintPassword;
     wxPanel* m_pCtrlCupsOptions;
-    wxPanel* m_pCtrlSmbOptions;
+    wxRadioButton* m_pCtrlCupsPrivate;
+    wxRadioButton* m_pCtrlCupsPublic;
+    wxPanel* m_pCtrlSmbDiskOptions;
     wxTextCtrl* m_pCtrlMountPoint;
     wxTextCtrl* m_pCtrlUsername;
     wxTextCtrl* m_pCtrlPassword;
+private:
     wxString m_sMountPoint;
-    wxString m_sUsername;
-    wxString m_sPassword;
+    wxString m_sSmbDiskUsername;
+    wxString m_sSmbDiskPassword;
+    bool m_bCupsPublic;
+    wxString m_sCupsDriver;
+    wxString m_sSmbDriver;
+    wxString m_sSmbPrintUsername;
+    wxString m_sSmbPrintPassword;
+    bool m_bSmbPublic;
 ////@end SmbShareProperties member variables
 
     int m_iCurrentShare;
