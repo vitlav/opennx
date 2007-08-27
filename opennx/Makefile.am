@@ -42,6 +42,7 @@ opennx_CXXFLAGS = $(WX_CXXFLAGS)
 opennx_CFLAGS = $(WX_CFLAGS)
 
 bootstrap:
+	test -e conf/mkinstalldirs || touch conf/mkinstalldirs
 	AUTOMAKE_VERSION=1.8 AUTOCONF_VERSION=2.59 autoreconf -isf
 
 ACLOCAL_AMFLAGS = -I m4
