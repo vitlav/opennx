@@ -101,7 +101,7 @@ AC_ARG_ENABLE([warn],
 ac_cv_enable_smartcard=NO
 AC_ARG_ENABLE([smartcard],
 	AS_HELP_STRING([--enable-smartcard],
-		[Enable debug build (Default: NO)]),
+		[Enable SmartCard support (Default: NO)]),
 	[ test "$enableval" = "yes" && ac_cv_enable_smartcard=YES ]
 )
 if test "$ac_cv_enable_smartcard" = "YES" ; then
