@@ -140,6 +140,7 @@ DllData::DllData(ClientType ct)
     handle = NULL;
     switch (ct) {
         case SmbClientUnix:
+            ::wxLogTrace(MYTRACETAG, wxT("DllData Constructor(SmbClientUnix)"));
             {
                 wxLogNull lognull;
                 wxDynamicLibrary dll(wxT("libsmbclient"));
@@ -154,6 +155,7 @@ DllData::DllData(ClientType ct)
             }
             break;
         case SmbClientWinNT:
+            ::wxLogTrace(MYTRACETAG, wxT("DllData Constructor(SmbClientWinNT)"));
             {
                 wxLogNull lognull;
                 wxDynamicLibrary dll(wxT("netapi32"));
@@ -166,6 +168,7 @@ DllData::DllData(ClientType ct)
             }
             break;
         case SmbClientWin95:
+            ::wxLogTrace(MYTRACETAG, wxT("DllData Constructor(SmbClientWin95)"));
             {
                 wxLogNull lognull;
                 wxDynamicLibrary dll(wxT("svrapi32"));
@@ -176,6 +179,7 @@ DllData::DllData(ClientType ct)
             }
             break;
         case CupsClientUnix:
+            ::wxLogTrace(MYTRACETAG, wxT("DllData Constructor(CupsClientUnix)"));
             {
                 wxLogNull lognull;
                 wxDynamicLibrary dll(wxT("libcups"));
@@ -187,6 +191,7 @@ DllData::DllData(ClientType ct)
             }
             break;
     }
+    ::wxLogTrace(MYTRACETAG, wxT("DllData Constructor handle=%08x"), handle);
 }
 
 DllData::~DllData()

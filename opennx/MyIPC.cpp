@@ -613,6 +613,7 @@ MyIPC::OnErrReceived(wxCommandEvent &event)
                         }
                         if (msg.Contains(wxT("Connection refused")) ||
                                 msg.Contains(wxT("no address associated")) ||
+                                msg.Contains(wxT("failed with error")) ||
                                 msg.Contains(wxT("proxy error:"))
                                 ) {
                             upevent.SetString(msg);
