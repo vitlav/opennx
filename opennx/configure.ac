@@ -14,6 +14,7 @@ AC_PROG_CC
 AC_PROG_LN_S
 dnl AM_GNU_GETTEXT_VERSION(0.14.5)
 AM_GNU_GETTEXT([external])
+ALL_LINGUAS="de"
 
 # Checks for libraries.
 

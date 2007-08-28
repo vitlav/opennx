@@ -577,9 +577,16 @@ SessionProperties::InstallOnCharHandlers(wxWindow *w /* = NULL*/)
                 else
                     ::wxLogError(wxT("Detected %s window with validator other than MyValidator!"),
                         w->IsKindOf(CLASSINFO(wxTextCtrl)) ? wxT("wxTextCtrl") : wxT("wxSpinCtrl"));
-            } else
-                ::wxLogError(wxT("Detected %s window without validator!"),
-                    w->IsKindOf(CLASSINFO(wxTextCtrl)) ? wxT("wxTextCtrl") : wxT("wxSpinCtrl"));
+            } else {
+#ifdef __WXMAC__
+                // wxWidgets on MacOSX generates additional windows
+                if (w->GetName().IsEmpty() || w->GetName().IsSameAs(wxT("text")))
+                    continue;
+#endif
+                ::wxLogError(wxT("Detected %s (name=%s) window without validator!"),
+                    (w->IsKindOf(CLASSINFO(wxTextCtrl)) ? wxT("wxTextCtrl") : wxT("wxSpinCtrl")),
+                    (w->GetName().IsEmpty() ? wxT("") : w->GetName().c_str()));
+            }
         } else {
             if (!w->GetChildren().IsEmpty())
                 InstallOnCharHandlers(w);
@@ -929,6 +936,7 @@ SessionProperties::readKbdLayouts()
 void SessionProperties::OnFocus( wxFocusEvent& event )
 {
     ::wxLogTrace(MYTRACETAG, wxT("wxSpinCtrl lost focus"));
+#if 0
     event.Skip();
     // In order to prevent endless recursion, instead of calling
     // CheckChanged() directly, we use a pending event
@@ -936,6 +944,7 @@ void SessionProperties::OnFocus( wxFocusEvent& event )
     // is then evaluated upon the next event-loop iteration.
     wxCommandEvent e(wxEVT_COMMAND_SLIDER_UPDATED, XRCID("ID_SLIDER_SPEED"));
     AddPendingEvent(e);
+#endif
 }
 
 /*!

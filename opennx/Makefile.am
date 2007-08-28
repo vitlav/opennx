@@ -73,7 +73,7 @@ opennxApp.cpp: memres.h
 CLEANFILES = memres.h tmpres.zip *~
 
 MAINTAINERCLEANFILES = Makefile.in configure aclocal.m4 conf/config.guess \
-	conf/config.sub  conf/depcomp  conf/install-sh  conf/missing
+	conf/config.sub  conf/depcomp  conf/install-sh  conf/missing conf/mkinstalldirs
 
 DISTCLEANFILES = res/*.prv.*
 
