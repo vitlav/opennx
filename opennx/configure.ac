@@ -78,11 +78,11 @@ case $build_os in
 		# Automatically build universal binary, if wxWidgets is a universal binary
 		if test -n "`echo -- $WX_LIBS|grep -- '-arch ppc'`" ; then
 			WX_CFLAGS="$WX_CFLAGS -arch ppc"
-			WX_CXXFLAGS="$WX_CFLAGS -arch ppc"
+			WX_CXXFLAGS="$WX_CXXFLAGS -arch ppc"
 		fi
 		if test -n "`echo -- $WX_LIBS|grep -- '-arch i386'`" ; then
 			WX_CFLAGS="$WX_CFLAGS -arch i386"
-			WX_CXXFLAGS="$WX_CFLAGS -arch i386"
+			WX_CXXFLAGS="$WX_CXXFLAGS -arch i386"
 		fi
 		;;
 esac
