@@ -113,7 +113,8 @@ AsyncProcess::Entry()
                         }
                         break;
                     default:
-                        m_sOutBuf += c;
+                        if (c >= ' ')
+                            m_sOutBuf += c;
                         break;
                 }
             }
@@ -146,7 +147,8 @@ AsyncProcess::Entry()
                         }
                         break;
                     default:
-                        m_sErrBuf += c;
+                        if (c >= ' ')
+                            m_sErrBuf += c;
                         break;
                 }
             }
