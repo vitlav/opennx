@@ -75,7 +75,7 @@ test ${wxWidgets} = 0 && AC_MSG_ERROR(Could not find wxWidgets library)
 APP_LDADD="-lstdc++ -lX11 -lXmu"
 case $build_os in
 	darwin8*)
-		APP_LDADD=
+		APP_LDADD="-lX11 -lXmu"
 		# Automatically build universal binary, if wxWidgets is a universal binary
 		if test -n "`echo -- $WX_LIBS|grep -- '-arch ppc'`" ; then
 			WX_CFLAGS="$WX_CFLAGS -arch ppc"

@@ -98,6 +98,7 @@ long getppid()
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <sys/unistd.h>
 #include <sys/socket.h>
 #include <sys/un.h>
@@ -116,7 +117,6 @@ static char _kbd[PATH_MAX+1];
 char *x11_socket_path = _spath;
 char *x11_keyboard_type = _kbd;
 
-#ifndef __WXMAC__
 /**
  * A horrific hack for retrieving the path of the X11 local server socket.
  *
@@ -152,6 +152,34 @@ int connect(int s, const struct sockaddr *name, socklen_t namelen)
     return real_connect(s, name, namelen);
 }
 
+#ifdef __WXMAC__
+# define X11_APPLE "/Applications/Utilities/X11.app"
+# define X11_DARWIN "/Applications/XDarwin.app"
+static Display *launchX11() {
+    struct stat st;
+    do_save = 1;
+    memset(&_spath, 0, sizeof(_spath));
+    memset(&_kbd, 0, sizeof(_kbd));
+    if (stat(X11_APPLE, &st) == 0) {
+        if (S_ISDIR(st.st_mode)) {
+            system(X11_APPLE "/Contents/MacOS/X11 &");
+            setenv("DISPLAY", ":0", 1);
+            sleep(4);
+            return XOpenDisplay(NULL);
+        }
+    }
+    if (stat(X11_DARWIN, &st) == 0) {
+        if (S_ISDIR(st.st_mode)) {
+            system(X11_DARWIN "/Contents/MacOS/XDarwin &");
+            setenv("DISPLAY", ":0", 1);
+            sleep(4);
+            return XOpenDisplay(NULL);
+        }
+    }
+    return NULL;
+}
+#endif
+
 static void __attribute__ ((constructor))
 getx11socket()
 {
@@ -183,6 +211,11 @@ getx11socket()
         exit(1);
     }
     Display *dpy = XOpenDisplay(NULL);
+#ifdef __WXMAC__
+    // Start X server, if necessary
+    if (!dpy)
+        dpy = launchX11();
+#endif
     if (dpy) {
         Atom a = XInternAtom(dpy, "_XKB_RULES_NAMES", True);
         if (a != None) {
@@ -223,8 +256,6 @@ free_libc()
     if (libc)
         dlclose(libc);
 }
-# endif /* !__WXMAC__ */
-
 #endif
 
 /*
@@ -232,7 +263,7 @@ free_libc()
  */
 void close_foreign(long parentID)
 {
-#if defined(__LINUX__) || defined(__OPENBSD__)
+#if defined(__LINUX__) || defined(__OPENBSD__) || defined(__WXMAC__)
     Display *dpy = XOpenDisplay(NULL);
     if (dpy) {
         XClientMessageEvent ev;
@@ -260,7 +291,7 @@ void close_foreign(long parentID)
  */
 void reparent_pulldown(long parentID)
 {
-#if defined(__LINUX__) || defined(__OPENBSD__)
+#if defined(__LINUX__) || defined(__OPENBSD__) || defined(__WXMAC__)
     Display *dpy = XOpenDisplay(NULL);
     if (dpy) {
         Atom a = XInternAtom(dpy, "_NET_WM_PID", True);
@@ -312,7 +343,7 @@ void reparent_pulldown(long parentID)
 
 void close_sid(const char *sid)
 {
-#if defined(__LINUX__) || defined(__OPENBSD__)
+#if defined(__LINUX__) || defined(__OPENBSD__) || defined(__WXMAC__)
     Display *dpy = XOpenDisplay(NULL);
     int closed = 0;
     if (dpy) {
