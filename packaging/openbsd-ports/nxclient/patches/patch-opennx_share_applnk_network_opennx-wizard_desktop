@@ -1,0 +1,14 @@
+$OpenBSD$
+--- opennx/share/applnk/network/opennx-wizard.desktop.orig.port	Wed Jan 10 16:52:59 2007
++++ opennx/share/applnk/network/opennx-wizard.desktop	Wed Jan 10 16:52:59 2007
+@@ -1,8 +1,8 @@
+ [Desktop Entry]
+ Encoding=UTF-8
+ Comment=Launch connection wizard
+-Exec=/usr/NX/bin/opennx --wizard
+-Icon=/usr/NX/share/icons/opennx-wizard.png
++Exec=/usr/local/NX/bin/opennx --wizard
++Icon=/usr/local/NX/share/icons/opennx-wizard.png
+ Name=OpenNX Connection Wizard
+ Type=Application
+ Categories=Application;Network

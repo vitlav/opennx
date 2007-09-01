@@ -1,0 +1,10 @@
+$OpenBSD$
+--- opennx/share/applnk/network-rh8/.directory.orig.port	Wed Jan 10 16:52:59 2007
++++ opennx/share/applnk/network-rh8/.directory	Wed Jan 10 16:52:59 2007
+@@ -2,5 +2,5 @@
+ Encoding=UTF-8
+ Type=Directory
+ Comment=
+-Icon=/usr/NX/share/icons/nx.png
++Icon=/usr/local/NX/share/icons/nx.png
+ Name=OpenNX client

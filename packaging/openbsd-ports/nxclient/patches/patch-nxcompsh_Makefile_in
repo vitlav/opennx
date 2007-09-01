@@ -1,0 +1,17 @@
+$OpenBSD$
+--- nxcompsh/Makefile.in.orig.port	Fri Dec 22 05:07:39 2006
++++ nxcompsh/Makefile.in	Fri Dec 22 05:15:25 2006
+@@ -101,12 +101,9 @@ LIBLOAD    = lib$(LIBRARY).so.$(LIBVERSI
+ LIBSHARED  = lib$(LIBRARY).so
+ LIBARCHIVE = lib$(LIBRARY).a
+ 
+-LIBCYGSHARED = cyg$(LIBRARY).dll
+-LIBCYGARCHIVE = lib$(LIBRARY).dll.a
+-
+ PROGRAM = test-nxcompsh
+ 
+-all: depend $(LIBFULL) $(LIBLOAD) $(LIBSHARED) $(LIBARCHIVE) $(LIBCYGSHARED) $(LIBCYGARCHIVE) 
++all: depend $(LIBFULL) $(LIBLOAD) $(LIBSHARED) $(LIBARCHIVE)
+ 
+ MSRC   = Main.cpp
+ 

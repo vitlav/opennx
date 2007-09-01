@@ -1,0 +1,21 @@
+$OpenBSD$
+--- nxcompsh/Socket.cpp.orig.port	Wed Dec  6 05:47:46 2006
++++ nxcompsh/Socket.cpp	Wed Dec  6 05:48:36 2006
+@@ -20,7 +20,7 @@
+ #include <sys/socket.h>
+ #include <sys/utsname.h>
+ 
+-#if defined(__CYGWIN32__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__sun)
++#if defined(__CYGWIN32__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__sun) || defined(OPENBSD)
+ #include <netinet/in_systm.h>
+ #endif
+ 
+@@ -43,7 +43,7 @@
+ // System specific defines.
+ //
+ 
+-#if defined(__APPLE__) || defined(__FreeBSD__) || defined(__sun)
++#if defined(__APPLE__) || defined(__FreeBSD__) || defined(__sun) || defined(OPENBSD)
+ #define SOL_IP  IPPROTO_IP
+ #endif
+ 

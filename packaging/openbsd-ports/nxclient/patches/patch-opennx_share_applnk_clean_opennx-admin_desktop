@@ -1,0 +1,13 @@
+$OpenBSD$
+--- opennx/share/applnk/clean/opennx-admin.desktop.orig.port	Wed Jan 10 16:52:58 2007
++++ opennx/share/applnk/clean/opennx-admin.desktop	Wed Jan 10 16:52:58 2007
+@@ -1,7 +1,7 @@
+ [Desktop Entry]
+ Encoding=UTF-8
+ Comment=Launch session administrator
+-Exec=/usr/NX/bin/opennx --admin
+-Icon=/usr/NX/share/icons/opennx-admin.png
++Exec=/usr/local/NX/bin/opennx --admin
++Icon=/usr/local/NX/share/icons/opennx-admin.png
+ Name=OpenNX Session Administrator
+ Type=Application

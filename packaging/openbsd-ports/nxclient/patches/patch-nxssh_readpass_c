@@ -1,0 +1,24 @@
+$OpenBSD$
+--- nxssh/readpass.c.orig.port	Wed Jan 10 02:53:40 2007
++++ nxssh/readpass.c	Wed Jan 10 02:55:21 2007
+@@ -160,6 +160,11 @@ read_passphrase(const char *prompt, int 
+                 fprintf(stdout, prompt);
+                 fflush(stdout);
+ 
++#ifdef __OpenBSD__
++		memset(buf, 0, sizeof(buf));
++		retr = fgets(buf, sizeof(buf) - 2, stdin);
++		len = strlen(buf);
++#else
+                 len = retr = 0;
+                 do
+                 {
+@@ -170,7 +175,7 @@ read_passphrase(const char *prompt, int 
+                                 break;
+                         len += retr;
+                 } while (sizeof(buf) - 1 - len > 0 && buf[len] == '\n');
+-
++#endif
+                 buf[len-1] = '\0';
+ 
+                 fprintf(stdout, "\n");

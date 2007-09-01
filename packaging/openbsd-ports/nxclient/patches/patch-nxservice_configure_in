@@ -1,0 +1,30 @@
+$OpenBSD$
+--- nxservice/configure.in.orig.port	Fri Dec 22 06:00:02 2006
++++ nxservice/configure.in	Fri Dec 22 06:03:57 2006
+@@ -78,7 +78,17 @@ FreeBSD=
+ test "$nxconf_cv_freebsd" = yes && FreeBSD=yes])
+ nxconf_FreeBSD
+ 
++dnl Check to see if we're running under FreeBSD.
++AC_DEFUN(nxconf_OpenBSD,
++[AC_CACHE_CHECK(for OpenBSD environment, nxconf_cv_openbsd,
++[AC_TRY_COMPILE(,[return __OpenBSD__;],
++nxconf_cv_openbsd=yes, nxconf_cv_openbsd=no)
++rm -f conftest*])
++OpenBSD=
++test "$nxconf_cv_openbsd" = yes && OpenBSD=yes])
++nxconf_OpenBSD
+ 
++
+ AC_DEFUN(nxconf_CYGWIN32,
+ [AC_CACHE_CHECK(for Cygwin32 environment, nxconf_cv_cygwin32,
+ [AC_TRY_COMPILE(,[return __CYGWIN32__;],
+@@ -93,6 +103,8 @@ dnl CygWin32 requires the stdc++ library
+ if test "$CYGWIN32" = yes; then
+     LIBS="$LIBS -lstdc++ -Wl,-e,_mainCRTStartup"
+ elif test "$FreeBSD" = yes; then
++    LIBS="$LIBS"
++elif test "$OpenBSD" = yes; then
+     LIBS="$LIBS"
+ else
+     LIBS="$LIBS -ldl"

@@ -1,0 +1,56 @@
+$OpenBSD$
+--- nxcomp/configure.in.orig.port	Fri Nov 24 18:28:22 2006
++++ nxcomp/configure.in	Fri Dec 22 04:48:10 2006
+@@ -56,9 +56,8 @@ dnl Check whether option -Wno-deprecated
+ dnl is needed by GCC compiler.
+ 
+ AC_MSG_CHECKING([whether compiler needs -Wno-deprecated])
+-gcc_version=`${CC} --version | grep 'gcc (GCC) [[3-4]].' | head -n 1`
+-case "${gcc_version}" in
+-     gcc*)
++case "${ac_cv_prog_gcc}" in
++     yes*)
+         AC_MSG_RESULT([yes])
+         CXXFLAGS="$CXXFLAGS -Wno-deprecated"
+         ;;
+@@ -69,9 +68,8 @@ case "${gcc_version}" in
+ esac
+ 
+ AC_MSG_CHECKING([whether compiler accepts -Wmissing-declarations and -Wnested-externs])
+-gcc_version=`${CC} --version | grep 'gcc (GCC) [[3-4]].' | head -n 1`
+-case "${gcc_version}" in
+-     gcc*)
++case "${ac_cv_prog_gcc}" in
++     yes*)
+         AC_MSG_RESULT([no])
+         ;;
+ 
+@@ -164,6 +162,15 @@ if test "$CYGWIN32" != yes -a "$DARWIN" 
+   CFLAGS="$CFLAGS -fPIC"
+ fi
+ 
++AC_DEFUN(nxconf_OpenBSD,
++[AC_CACHE_CHECK(for OpenBSD environment, nxconf_cv_openbsd,
++[AC_TRY_COMPILE(,[return __OpenBSD__;],
++nxconf_cv_openbsd=yes, nxconf_cv_openbsd=no)
++rm -f conftest*])
++OpenBSD=
++test "$nxconf_cv_openbsd" = yes && OpenBSD=yes])
++nxconf_OpenBSD
++
+ dnl Solaris requires the socket and gcc_s libs explicitly linked.
+ dnl Note also that headers from default /usr/openwin/include/X11
+ dnl cause a warning due to pragma in Xmd.h.
+@@ -182,6 +189,12 @@ if test "$FreeBSD" = yes; then
+   CFLAGS="$CFLAGS -I/usr/local/include"
+ fi
+ 
++dnl On OpenBSD search libraries and includes under /usr/local.
++if test "$OpenBSD" = yes; then
++  LIBS="$LIBS -L/usr/local/lib"
++  CXXFLAGS="$CXXFLAGS -DOPENBSD -I/usr/local/include -I/usr/local/include/libpng"
++  CFLAGS="$CFLAGS -DOPENBSD -I/usr/local/include -I/usr/local/include/libpng"
++fi
+ dnl Under Darwin we don't have support for -soname option and
+ dnl we need the -bundle flag. Under Solaris, instead, we need
+ dnl the options -G -h.

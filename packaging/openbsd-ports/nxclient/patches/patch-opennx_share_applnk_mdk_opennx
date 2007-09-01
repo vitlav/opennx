@@ -1,0 +1,10 @@
+$OpenBSD$
+--- opennx/share/applnk/mdk/opennx.orig.port	Wed Jan 10 16:52:58 2007
++++ opennx/share/applnk/mdk/opennx	Wed Jan 10 16:52:58 2007
+@@ -1,3 +1,3 @@
+-?package(opennx):	needs="X11" 	section="Internet/OpenNX client" 	title="OpenNX client" 	longtitle="Connect to a remote NX server" 	command="/usr/NX/bin/opennx" 	icon="/usr/NX/share/icons/nx.png" 	startup_notify="true"	mimetypes="application/nx-session"
+-?package(opennx):	needs="X11" 	section="Internet/OpenNX client" 	title="OpenNX Connection Wizard" 	longtitle="Launch connection wizard" 	command="/usr/NX/bin/opennx --wizard" 	icon="/usr/NX/share/icons/opennx-wizard.png" 	startup_notify="true"
+-?package(opennx):	needs="X11" 	section="Internet/OpenNX client" 	title="OpenNX Session Administrator" 	longtitle="Launch session administrator" 	command="/usr/NX/bin/opennx --admin" 	icon="/usr/NX/share/icons/opennx-admin.png" 	startup_notify="true"
++?package(opennx):	needs="X11" 	section="Internet/OpenNX client" 	title="OpenNX client" 	longtitle="Connect to a remote NX server" 	command="/usr/local/NX/bin/opennx" 	icon="/usr/local/NX/share/icons/nx.png" 	startup_notify="true"	mimetypes="application/nx-session"
++?package(opennx):	needs="X11" 	section="Internet/OpenNX client" 	title="OpenNX Connection Wizard" 	longtitle="Launch connection wizard" 	command="/usr/local/NX/bin/opennx --wizard" 	icon="/usr/local/NX/share/icons/opennx-wizard.png" 	startup_notify="true"
++?package(opennx):	needs="X11" 	section="Internet/OpenNX client" 	title="OpenNX Session Administrator" 	longtitle="Launch session administrator" 	command="/usr/local/NX/bin/opennx --admin" 	icon="/usr/local/NX/share/icons/opennx-admin.png" 	startup_notify="true"

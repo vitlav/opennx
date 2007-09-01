@@ -1,0 +1,14 @@
+$OpenBSD$
+--- opennx/share/applnk/network-rh8/opennx.desktop.orig.port	Wed Jan 10 16:52:59 2007
++++ opennx/share/applnk/network-rh8/opennx.desktop	Wed Jan 10 16:52:59 2007
+@@ -1,8 +1,8 @@
+ [Desktop Entry]
+ Encoding=UTF-8
+ Comment=Connect to a remote NX server
+-Exec=/usr/NX/bin/opennx
+-Icon=/usr/NX/share/icons/nx.png
++Exec=/usr/local/NX/bin/opennx
++Icon=/usr/local/NX/share/icons/nx.png
+ Name=OpenNX client
+ Type=Application
+ MimeType=application/nx-session

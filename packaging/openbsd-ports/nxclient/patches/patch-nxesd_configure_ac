@@ -1,0 +1,12 @@
+$OpenBSD$
+--- nxesd/configure.ac.orig.port	Fri Dec 22 05:37:49 2006
++++ nxesd/configure.ac	Fri Dec 22 05:38:32 2006
+@@ -440,7 +440,7 @@ AC_MSG_RESULT($dsp_ok)
+ 
+ if test "x$dsp_ok" = xyes; then
+    AC_CHECK_FUNC(dlopen, dsp_ok=yes,
+-      AC_CHECK_LIB(dl, dlopen, dsp_ok=yes DL_LIB=-ldl))
++      AC_CHECK_LIB(dl, dlopen, dsp_ok=yes DL_LIB=))
+    ESDDSP=esddsp
+    NXESDDSP=nxesddsp
+    LIBESDDSP=libesddsp.la

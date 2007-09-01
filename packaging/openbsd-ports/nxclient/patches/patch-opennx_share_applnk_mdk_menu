@@ -1,0 +1,7 @@
+$OpenBSD$
+--- opennx/share/applnk/mdk/menu.orig.port	Wed Jan 10 16:52:58 2007
++++ opennx/share/applnk/mdk/menu	Wed Jan 10 16:52:58 2007
+@@ -1,2 +1,2 @@
+ #
+-?package(menu): needs=x11 section="Internet" title="OpenNX client" icon="/usr/NX/share/icons/nx.png"
++?package(menu): needs=x11 section="Internet" title="OpenNX client" icon="/usr/local/NX/share/icons/nx.png"

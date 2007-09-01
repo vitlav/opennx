@@ -1,0 +1,66 @@
+$OpenBSD$
+--- nxcompsh/configure.in.orig.port	Fri Nov 24 17:29:02 2006
++++ nxcompsh/configure.in	Fri Dec 22 05:10:40 2006
+@@ -55,9 +55,8 @@ dnl Check whether option -Wno-deprecated
+ dnl is needed by GCC compiler.
+ 
+ AC_MSG_CHECKING([whether compiler needs -Wno-deprecated])
+-gcc_version=`${CC} --version | grep 'gcc (GCC) 3.' | head -n 1`
+-case "${gcc_version}" in
+-     gcc*)
++case "${ac_cv_prog_gcc}" in
++     yes*)
+         AC_MSG_RESULT([yes])
+         CXXFLAGS="$CXXFLAGS -Wno-deprecated"
+         CPPFLAGS="$CPPFLAGS -Wno-deprecated"
+@@ -69,9 +68,8 @@ case "${gcc_version}" in
+ esac
+ 
+ AC_MSG_CHECKING([whether compiler accepts -Wmissing-declarations and -Wnested-externs])
+-gcc_version=`${CC} --version | grep 'gcc (GCC) 3.' | head -n 1`
+-case "${gcc_version}" in
+-     gcc*)
++case "${ac_cv_prog_gcc}" in
++     yes*)
+         AC_MSG_RESULT([no])
+         ;;
+ 
+@@ -117,6 +115,8 @@ dnl Cygwin32 requires the stdc++ library
+ 
+ if test "$CYGWIN32" = yes; then
+     LIBS="$LIBS -lstdc++"
++    LIBCYGSHARED=cyg$(LIBRARY).dll
++    LIBCYGARCHIVE=lib$(LIBRARY).dll.a
+ fi
+ 
+ dnl Check for Darwin environment.
+@@ -152,6 +152,15 @@ FreeBSD=
+ test "$nxconf_cv_freebsd" = yes && FreeBSD=yes])
+ nxconf_FreeBSD
+ 
++AC_DEFUN(nxconf_OpenBSD,
++[AC_CACHE_CHECK(for OpenBSD environment, nxconf_cv_openbsd,
++[AC_TRY_COMPILE(,[return __OpenBSD__;],
++nxconf_cv_openbsd=yes, nxconf_cv_openbsd=no)
++rm -f conftest*])
++OpenBSD=
++test "$nxconf_cv_openbsd" = yes && OpenBSD=yes])
++nxconf_OpenBSD
++
+ dnl Solaris requires the socket and gcc_s libs explicitly linked.
+ dnl Note also that headers from default /usr/openwin/include/X11
+ dnl cause a warning due to pragma in Xmd.h.
+@@ -166,6 +175,13 @@ dnl On FreeBSD search libraries and incl
+ if test "$FreeBSD" = yes; then
+   LIBS="$LIBS  -L/usr/local/lib"
+   CXXFLAGS="$CXXFLAGS -I/usr/local/include"
++fi
++
++dnl On OpenBSD search libraries and includes under /usr/local.
++
++if test "$OpenBSD" = yes; then
++  LIBS="$LIBS  -L/usr/local/lib"
++  CXXFLAGS="$CXXFLAGS -DOPENBSD -I/usr/local/include -I/usr/local/include/libpng"
+ fi
+ 
+ dnl Under Darwin we don't have support for -soname option and

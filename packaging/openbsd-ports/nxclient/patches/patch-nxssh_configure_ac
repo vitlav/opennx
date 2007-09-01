@@ -1,0 +1,14 @@
+$OpenBSD$
+--- nxssh/configure.ac.orig.port	Sun Nov 13 08:16:18 2005
++++ nxssh/configure.ac	Wed Nov 29 02:07:42 2006
+@@ -50,8 +50,8 @@ AC_SUBST(NXCOMPLIBS)
+ 
+ CFLAGS="-g -O3"
+ 
+-NXCOMPINC="-I../nxcomp"
+-NXCOMPLIBS="-L../nxcomp -lXcomp -lstdc++ -lpng -ljpeg -lz"
++NXCOMPINC="-I../nxcomp -I/usr/local/include"
++NXCOMPLIBS="-L../nxcomp -L/usr/local/lib -lXcomp -lstdc++ -lpng -ljpeg -lm -lz"
+ 
+ dnl for buildpkg.sh
+ AC_PATH_PROG(PATH_GROUPADD_PROG, groupadd, groupadd,
