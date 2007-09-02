@@ -1,8 +1,8 @@
 # $OpenBSD$
 
 VERSION =					2.1.0
-RELEASE =					p9
-OPENNX_VERSION =			0.13
+RELEASE =					p10
+OPENNX_VERSION =			0.14
 NXSUBDIRS =					nxcomp nxcompsh nxssh nxesd nxservice
 OPENNXDIR =					opennx
 ONLY_FOR_ARCHS =			i386
