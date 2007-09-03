@@ -199,7 +199,8 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /GX /Zi /Od /I "$(WXWIN)\lib\vc_dll\mswud" /I "$(WXWIN)\include" /I "$(WXWIN)\contrib\include" /D "_DEBUG" /D "_UNICODE" /D "__WXDEBUG__" /D WXDEBUG=1 /D WXUSINGDLL=1 /D "WIN32" /D "_CONSOLE" /D "_MBCS" /D "_MT" /D "_WINDOWS" /D "__WINDOWS__" /D "__WIN32__" /D WINVER=0x0400 /D "__WXMSW__" /D wxUSE_GUI=1 /D CUPS_DEFAULT_PATH=\"\" /D NX_PROTOCOL_VERSION=\"2.1.0\" /YX /FD /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /GX /Zi /Od /I "$(WXWIN)\lib\vc_dll\mswud" /I "$(WXWIN)\include" /I "$(WXWIN)\contrib\include" /D "_DEBUG" /D "_UNICODE" /D "__WXDEBUG__" /D WXDEBUG=1 /D WXUSINGDLL=1 /D "WIN32" /D "_CONSOLE" /D "_MBCS" /D "_MT" /D "_WINDOWS" /D "__WINDOWS__" /D "__WIN32__" /D WINVER=0x0400 /D "__WXMSW__" /D wxUSE_GUI=1 /D CUPS_DEFAULT_PATH=\"\" /FD /GZ /c
+# SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x407 /d "_DEBUG"
 # ADD RSC /l 0x409 /i "$(WXWIN)\include" /d "_DEBUG"
 BSC32=bscmake.exe

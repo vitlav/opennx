@@ -104,11 +104,11 @@ bool KeyDialog::Create( wxWindow* parent, wxWindowID id, const wxString& caption
     }
     Centre();
 ////@end KeyDialog creation
-	wxUnusedVar(style);
-	wxUnusedVar(size);
-	wxUnusedVar(pos);
-	wxUnusedVar(caption);
-	wxUnusedVar(id);
+    wxUnusedVar(style);
+    wxUnusedVar(size);
+    wxUnusedVar(pos);
+    wxUnusedVar(caption);
+    wxUnusedVar(id);
     return true;
 }
 
