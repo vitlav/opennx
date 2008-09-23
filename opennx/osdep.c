@@ -127,7 +127,7 @@ char *x11_keyboard_type = _kbd;
  * /tmp/.X11-unix/. With that setting, the original client fails immediately
  * upon connect.
  * Normally, there's no way to retrieve the socket path via some X11 function.
- * So here is ho it works:
+ * So here is how it works:
  *
  *  1. We implement our own connect() function
  *  2. In getx11socket [called automatically during app-startup because of the
