@@ -31,6 +31,7 @@
 #include "config.h"
 #endif
 #ifdef __WXMSW__
+#define _WIN32_IE 0x0400
 #include <shlobj.h>
 #endif
 
@@ -354,7 +355,7 @@ opennxApp::RemoveDesktopEntry(MyXmlConfig *cfg)
 #ifdef __WXMSW__
     TCHAR dtPath[MAX_PATH];
     if (SHGetSpecialFolderPath(NULL, dtPath, CSIDL_DESKTOPDIRECTORY, FALSE)) {
-		wxString lpath = wxString::Format(_T("%s\\%s.lnk"), dtPath, cfg->sGetName().mb_str());
+		wxString lpath = wxString::Format(_T("%s\\%s.lnk"), dtPath, wx_static_cast(const char *,cfg->sGetName().mb_str()));
 		::wxLogTrace(MYTRACETAG, wxT("Removing '%s'"), lpath.c_str());
         ::wxRemoveFile(lpath);
 	}
