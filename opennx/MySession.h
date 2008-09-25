@@ -94,7 +94,7 @@ private:
     int getFirstFreePort(int);
     void startProxy();
     void startSharing();
-    void parseSessions();
+    void parseSessions(bool moreAllowed);
     long intver(const wxString&);
     bool prepareCups();
     bool isCupsRunning();

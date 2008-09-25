@@ -42,8 +42,7 @@ class SharedResource : public wxObject
             SHARE_CUPS_PRINTER,
         } ShareType;
 
-        SharedResource() : wxObject() {}
-        virtual ~SharedResource() {}
+        SharedResource() { }
 
         wxString name;
         wxString description;

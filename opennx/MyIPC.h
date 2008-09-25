@@ -78,6 +78,7 @@ public:
         ActionSessionListEnd,
         ActionSessionPushLength,
         ActionSessionPushStart,
+        ActionTerminated,
     } tSessionEvents;
 
     MyIPC();

@@ -181,6 +181,11 @@ MyIPC::OnTerminate(wxCommandEvent &event)
             break;
         case TypeSsh:
             ::wxLogTrace(MYTRACETAG, wxT("nxssh terminated"));
+            if (m_pEvtHandler) {
+                wxCommandEvent upevent(wxEVT_NXSSH, wxID_ANY);
+                upevent.SetInt(ActionTerminated);
+                m_pEvtHandler->AddPendingEvent(upevent);
+            }
             break;
         case TypeService:
             ::wxLogTrace(MYTRACETAG, wxT("nxservice terminated"));
@@ -209,6 +214,9 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
             break;
         case TypeSsh:
             msg = event.GetString();
+            // Normalize "FREENX>" -> "NX>"
+            if (msg.StartsWith(wxT("FREENX>")))
+                    msg = msg.Mid(4);
             code = parseCode(msg);
             ::wxLogTrace(MYTRACETAG, wxT("nxssh O[%04d]: '%s'"), code, msg.c_str());
             if (m_pEvtHandler) {
@@ -280,6 +288,9 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
                         upevent.SetInt(ActionSessionListStart);
                         m_pEvtHandler->AddPendingEvent(upevent);
                         break;
+                    case 134:
+                        // NX> 134 Accepted protocol: <version>
+                        break;
                     case 140:
                         // Set length for push session config
                         upevent.SetString(msg.Mid(8));
@@ -299,11 +310,9 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
                     case 148:
                         // Result: server capacity not reached
                         upevent.SetInt(ActionSessionListEnd);
+                        upevent.SetExtraLong(code);
                         m_pEvtHandler->AddPendingEvent(upevent);
                         break;
-                    case 134:
-                        // Accepted protocol: <version>
-                        //
                         // Codes 200 - 299 are from local nxssh
                     case 200:
                         // Connected to adress ...
@@ -429,8 +438,9 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
                     case 542:
                         // Max # of guest sessions reached
                     case 596:
-                        // No running session
+                        // No running session, resp. Session startup failed
                     case 599:
+                        // Reached the maximum number of concurrent sessions on this server.
                         upevent.SetString(msg.Mid(8));
                         upevent.SetInt(ActionError);
                         m_pEvtHandler->AddPendingEvent(upevent);
@@ -503,7 +513,7 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
                     case 718:
                         // session restore successful
                     case 719:
-                        // SMB running
+                        // SMB/CUPS running
                     case 1000:
                         // nxnode version
                     case 1001:
@@ -602,7 +612,7 @@ MyIPC::OnErrReceived(wxCommandEvent &event)
                             break;
                         }
                         if (msg.Contains(wxT("WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!"))) {
-                            m_sErrMessage = msg.AfterFirst(wxT('@')).BeforeLast(wxT('@')).Trim(wxString::both);
+                            m_sErrMessage = msg.AfterFirst(wxT('@')).BeforeLast(wxT('@')).Strip(wxString::both);
                             m_iErrCollect = 99;
                             break;
                         }

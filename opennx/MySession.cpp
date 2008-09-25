@@ -61,10 +61,12 @@
 #include <wx/dir.h>
 #include <wx/process.h>
 #include <wx/textfile.h>
-#ifdef __WXMSW__
+#ifdef _MSC_VER
 # include <fstream.h>
 #else
 # include <fstream>
+#endif
+#ifndef __WXMSW__
 # include <grp.h>
 #endif
 
@@ -99,8 +101,10 @@ class SessionCleaner : public wxDirTraverser
             m_sTopLevel = toplevel;
             wxString s = wxFileName::GetPathSeparator();
             if (!toplevel.EndsWith(s))
-                m_sTopLevel += wxFileName::GetPathSeparator();
-            m_cRegex.Compile(m_sTopLevel + wxT("temp") + wxFileName::GetPathSeparator() + wxT("([0-9]+)"), wxRE_ADVANCED);
+                m_sTopLevel += s;
+            wxString r = m_sTopLevel + wxT("temp") + s + wxT("([0-9]+)");
+            r.Replace(wxT("\\"), wxT("\\\\"));
+            m_cRegex.Compile(r, wxRE_ADVANCED);
             wxASSERT(m_cRegex.IsValid());
         }
 
@@ -768,7 +772,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
         case MyIPC::ActionPassphraseDialog:
             {
                 wxMessageDialog d(m_pParent,
-                        wxT("iMyIPC::ActionPassphraseDialog not implemnted"),
+                        wxT("MyIPC::ActionPassphraseDialog not implemnted"),
                         _("Error - OpenNX"), wxOK);
                 d.ShowModal();
             }
@@ -830,6 +834,13 @@ MySession::OnSshEvent(wxCommandEvent &event)
                 m_bSessionRunning = true;
             }
             break;
+        case MyIPC::ActionTerminated:
+            if (m_eConnectState <= STATE_PARSE_SESSIONS) {
+                msg = _("Unexpected termination of nxssh");
+                ::wxLogError(msg);
+                m_bGotError = true;
+            }
+            break;
         case MyIPC::ActionStartProxy:
             if (m_eConnectState == STATE_FINISH) {
                 m_pDlg->SetStatusText(_("Starting session"));
@@ -856,7 +867,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
             // Server has sent list of running & suspended sessions
             m_bCollectSessions = false;
             ::wxLogInfo(wxT("received end of session list"));
-            parseSessions();
+            parseSessions(event.GetExtraLong() == 148);
             break;
     }
 }
@@ -885,7 +896,7 @@ MySession::printSsh(const wxString &s, bool doLog /* = true */)
 }
 
     void
-MySession::parseSessions()
+MySession::parseSessions(bool moreAllowed)
 {
     size_t n = m_aParseBuffer.GetCount();
     wxRegEx re(
@@ -911,6 +922,7 @@ MySession::parseSessions()
         }
     }
     if (bFound) {
+#warning "TODO: Disable "New button" if moreAllowed is false
         switch (d.ShowModal()) {
             case wxID_OK:
                 switch (d.GetMode()) {
@@ -937,8 +949,18 @@ MySession::parseSessions()
                 printSsh(wxT("bye"));
                 break;
         }
-    } else
-        m_eConnectState = STATE_START_SESSION;
+    } else {
+        if (moreAllowed)
+            m_eConnectState = STATE_START_SESSION;
+        else {
+            printSsh(wxT("bye"));
+            wxMessageDialog d(m_pParent,
+                    _("You have reached your session limit. No more sessions allowed"),
+                    _("Error - OpenNX"), wxOK);
+            d.ShowModal();
+            m_bGotError = true;
+        }
+    }
 }
 
     void
@@ -1338,7 +1360,11 @@ MySession::Create(const wxString cfgFileName, const wxString password, wxWindow 
         wxFileName fn(m_sSysDir, wxT(""));
 
         fn.AppendDir(wxT("bin"));
+#ifdef __WXMSW__
+        fn.SetName(wxT("nxssh.exe"));
+#else
         fn.SetName(wxT("nxssh"));
+#endif
         wxString nxsshcmd = fn.GetShortPath();
         nxsshcmd << wxT(" -nx -x -2")
             << wxT(" -p ") << cfg.iGetServerPort()
@@ -1354,7 +1380,7 @@ MySession::Create(const wxString cfgFileName, const wxString password, wxWindow 
 
         wxString logfn = m_sTempDir +
             wxFileName::GetPathSeparator() + wxT("runlog");
-#ifdef __WXMSW__
+#ifdef _MSC_VER
         ofstream *log = new ofstream();
 #else
         std::ofstream *log = new std::ofstream();
@@ -1365,7 +1391,7 @@ MySession::Create(const wxString cfgFileName, const wxString password, wxWindow 
 
         logfn = m_sTempDir +
             wxFileName::GetPathSeparator() + wxT("sshlog");
-#ifdef __WXMSW__
+#ifdef _MSC_VER
         log = new ofstream();
 #else
         log = new std::ofstream();

@@ -1,19 +1,22 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.59)
-AC_INIT(opennx, 0.14, felfert@users.sf.net)
+AC_PREREQ(2.61)
+AC_INIT([opennx],[0.14],[felfert@users.sf.net])
 AC_CONFIG_AUX_DIR([conf])
 AC_CONFIG_SRCDIR([opennxApp.cpp])
-AM_INIT_AUTOMAKE(no-dependencies)
-AM_CONFIG_HEADER(config.h)
+AC_CANONICAL_TARGET
+AM_INIT_AUTOMAKE([foreign no-dependencies no-installinfo no-installman])
+AC_CONFIG_HEADERS([config.h])
+
 
 # Checks for programs.
+AC_DISABLE_SHARED
+AC_PROG_LIBTOOL
 AC_PROG_CXX
 AC_PROG_CC
 AC_PROG_LN_S
 dnl AM_GNU_GETTEXT_VERSION(0.14.5)
-ALL_LINGUAS="de"
 AM_GNU_GETTEXT([external])
 
 # Checks for libraries.
@@ -55,25 +58,47 @@ else
 	AC_MSG_NOTICE([will disable unicode build])
 fi
 
-ac_cv_enable_static=NO
-AC_ARG_ENABLE([static],
-	AS_HELP_STRING([--enable-static],
-		[link against static wxWidgets libs (Default: NO)]),
-	[ test "$enableval" = "yes" && ac_cv_enable_static=YES ]
-)
-if test "$ac_cv_enable_static" = "YES" ; then
+if test "$enable_static" = "yes" ; then
 	AC_MSG_NOTICE([will link against static wxWidgets libs])
 	WXPARAMS="$WXPARAMS --static"
 else
 	AC_MSG_NOTICE([will link against shared wxWidgets libs])
 fi
 
-AM_PATH_WXCONFIG(2.8.0,wxWidgets=1,wxWidgets=0,[xrc,xml,qa,html,core,adv,net], $WXPARAMS)
+AM_PATH_WXCONFIG(2.8.0,wxWidgets=1,wxWidgets=0,[xrc,xml,qa,html,adv,core,net], $WXPARAMS)
+
+# Fix incorrect references to builtin support libs of WX_
+if test "$enable_static" = "yes" ; then
+	bdir=
+	for part in $WX_LIBS ; do
+		case $part in
+			*/libwx_*)
+			bdir=`dirname $part`
+			;;
+		esac
+	done
+	if test -z "$bdir" ; then
+		AC_MSG_ERROR([Could not determine wx library directory])
+	fi
+	for lib in regex expat tiff jpeg png zlib ; do
+		[WX_LIBS="`echo $WX_LIBS|sed -e \"s@-lwx\($lib[^ ]*\)@$bdir/libwx\1.a@g\"`"]
+	done
+fi
+
 
 test ${wxWidgets} = 0 && AC_MSG_ERROR(Could not find wxWidgets library)
 
-APP_LDADD="-lstdc++ -lX11 -lXmu"
-case $build_os in
+APP_LDADD=
+WIN_RES=
+WIN_RESHDR=
+case $target_os in
+	mingw*)
+		APP_LDADD="-lstdc++ -lversion"
+		WIN_RES='opennx.$(OBJEXT)'
+		WIN_RESHDR="resource.h res/opennx.rc"
+		tagnames="RC"
+		_LT_AC_TAGCONFIG
+		;;
 	darwin8*)
 		APP_LDADD="-lX11 -lXmu"
 		# Automatically build universal binary, if wxWidgets is a universal binary
@@ -86,8 +111,13 @@ case $build_os in
 			WX_CXXFLAGS="$WX_CXXFLAGS -arch i386"
 		fi
 		;;
+	*)
+		APP_LDADD="-lstdc++ -lX11 -lXmu"
+		;;
 esac
 AC_SUBST(APP_LDADD)
+AC_SUBST(WIN_RES)
+AC_SUBST(WIN_RESHDR)
 
 AC_ARG_ENABLE([warn],
 	AS_HELP_STRING([--enable-warn],
@@ -140,5 +170,11 @@ AC_ARG_WITH([samba],
 	[ac_cv_samba=$withval])
 test -n "$ac_cv_samba" && CPPFLAGS="$CPPFLAGS -I$ac_cv_samba/source/include"
 
-AC_CONFIG_FILES([Makefile po/Makefile.in m4/Makefile opennx.spec Info.plist])
+VERSION_COMMASEPARATED=`echo $VERSION|sed -e 's/\./,/g'`
+while test -z "`echo -n $VERSION_COMMASEPARATED|cut -d, -f4`" ; do
+	VERSION_COMMASEPARATED="${VERSION_COMMASEPARATED},0"
+done
+AC_SUBST(VERSION_COMMASEPARATED)
+
+AC_CONFIG_FILES([Makefile opennx.spec Info.plist res/opennx.rc po/Makefile.in])
 AC_OUTPUT

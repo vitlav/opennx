@@ -1,6 +1,4 @@
-AUTOMAKE_OPTIONS = foreign no-installinfo no-installman
-
-SUBDIRS = m4 po
+SUBDIRS = po
 
 noinst_PROGRAMS = bin2hdr
 bin2hdr_SOURCES = bin2hdr.cpp
@@ -36,14 +34,33 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h ConnectDialo
 	VncPropertyDialog_symbols.h WinShare.h X11PropertyDialog.h \
 	X11PropertyDialog_symbols.h
 
-opennx_LDADD = $(WX_LIBS) $(APP_LDADD)
+EXTRA_HEADERS = resource.h res/opennx.rc
+
+EXTRA_opennx_SOURCES = opennx.rc
+
+opennx_LDADD = $(WIN_RES) $(WX_LIBS) $(APP_LDADD)
+opennx_DEPENDENCIES = $(WIN_RES)
 opennx_CPPFLAGS = $(WX_CPPFLAGS)
 opennx_CXXFLAGS = $(WX_CXXFLAGS)
 opennx_CFLAGS = $(WX_CFLAGS)
 
+GETTEXTIZE = $(shell which gettextize)
+
 bootstrap:
+# 	Convince gettextize not to modify EXTRA_DIST
+	test -f conf/config.rpath || touch conf/config.rpath
+# 	Convince gettextize not to modify AC_CONFIG_FILES
+	test -f po/Makefile.in.in || touch po/Makefile.in.in
+#	Tweak gettextize
+#	Stupid gettextize uses /dev/tty for interactively getting a
+#	confirm of it's "oh so incredibly important notes".
+#	YES, i've read them at least a dozen times and now, i REALLY
+#	don't want to hit RETURN anymore!
+	test -n "$(GETTEXTIZE)" && sed -e 's@/dev/tty@/dev/null@' "$(GETTEXTIZE)" > gettextize.local
+	test -f gettextize.local && sh gettextize.local -f --no-changelog
+	rm -f gettextize.local
 	test -e conf/mkinstalldirs || touch conf/mkinstalldirs
-	AUTOMAKE_VERSION=1.8 AUTOCONF_VERSION=2.59 autoreconf -isf
+	AUTOMAKE_VERSION=1.8 AUTOCONF_VERSION=2.59 autoreconf -if
 
 ACLOCAL_AMFLAGS = -I m4
 
@@ -54,9 +71,9 @@ macbundle:
 	ln -s -f `pwd`/$(top_builddir)/opennx OpenNX.app/Contents/MacOS/opennx
 	echo "APPL????" > OpenNX.app/Contents/PkgInfo
 
-distclean-local:
-	rm -f po/*~ *.bak *~ \#.* .#*
-	rm -rf OpenNX.app
+#distclean-local:
+#	rm -f po/*~ *.bak *~ \#.* .#*
+#	rm -rf OpenNX.app
 
 tmpres.zip: $(top_srcdir)/res/*.xrc $(top_srcdir)/res/*.png $(top_srcdir)/res/*.html $(top_srcdir)/res/*.txt $(top_srcdir)/res/*.rtf
 	if test "$(top_srcdir)" != "$(top_builddir)" ; then $(LN_S) $(top_srcdir)/res $(top_builddir) ; fi
@@ -70,12 +87,20 @@ $(top_srcdir)/opennxApp.cpp: memres.h
 
 opennxApp.cpp: memres.h
 
-CLEANFILES = memres.h tmpres.zip *~
+SUFFIXES = .rc
 
-MAINTAINERCLEANFILES = Makefile.in configure aclocal.m4 conf/config.guess \
-	conf/config.sub  conf/depcomp  conf/install-sh  conf/missing conf/mkinstalldirs
+.rc.o:
+	$(WX_RESCOMP) -o $@ $<
 
-DISTCLEANFILES = res/*.prv.*
+CLEANFILES = memres.h tmpres.zip *~ po/*~ *.bak *~ \#.* .\#* OpenNX.app
+
+MAINTAINERCLEANFILES = ABOUT-NLS Makefile.in configure aclocal.m4 \
+	conf/config.guess conf/config.sub conf/depcomp conf/install-sh conf/missing conf/mkinstalldirs \
+	conf/ltmain.sh conf/config.rpath \
+	m4/* \
+	po/*.sin po/*.sed po/*.header po/Rules-quot po/*.template po/Makefile*.in
+
+DISTCLEANFILES = res/*.prv.* 
 
 data_DATA = share/keyboards
 
@@ -108,5 +133,5 @@ uninstall-local:
 dist-hook:
 	find $(distdir) -type d -name .svn | xargs $(RM) -r
 
-EXTRA_DIST = INSTALL COPYING res share opennx.pjd opennx.dsw \
+EXTRA_DIST = conf/config.rpath INSTALL INSTALL.generic COPYING m4 res share opennx.pjd opennx.dsw \
 			 bin2hdr.dsp opennx.dsp Translations.dsp opennx.rc opennx.spec

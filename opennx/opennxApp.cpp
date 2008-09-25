@@ -47,6 +47,7 @@
 #include <wx/sysopt.h>
 #include <wx/tokenzr.h>
 #include <wx/wfstream.h>
+#include <wx/mimetype.h>
 
 #include "resource.h"
 #include "opennxApp.h"
@@ -533,10 +534,13 @@ static const wxChar *_dlgTypes[] = {
         wxT("yesno"), wxT("ok"), wxT("error"), wxT("panic"),
         wxT("quit"), wxT("pulldown"), wxT("yesnosuspend")
 };
+
 static wxArrayString aDlgTypes(sizeof(_dlgTypes)/sizeof(wxChar *), _dlgTypes);
+
 static const wxChar *_dlgClasses[] = {
         wxT("info"), wxT("warning"), wxT("error")
 };
+
 static wxArrayString aDlgClasses(sizeof(_dlgClasses)/sizeof(wxChar *), _dlgClasses);
 
 bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
@@ -653,7 +657,14 @@ bool opennxApp::OnInit()
     wxXmlResource::Get()->InitAllHandlers();
 
     const unsigned char *resptr = get_mem_res();
-    wxMemoryFSHandler::AddFile(wxT("memrsc"), resptr, cnt_mem_res);
+    wxMemoryFSHandler::AddFileWithMimeType(wxT("memrsc"), resptr, cnt_mem_res, wxT("application/zip"));
+    {
+        // The following code eliminates a stupid error dialog which shows up
+        // if some .desktop entires (in KDE or GNOME applink dirs) are dangling symlinks.
+        wxLogNull lognull;
+        wxTheMimeTypesManager->GetFileTypeFromExtension(wxT("zip"));
+    }
+
     free_mem_res(resptr);
     m_sResourcePrefix = wxT("memory:memrsc#zip:");
     if (!wxXmlResource::Get()->Load(m_sResourcePrefix + wxT("res/opennx.xrc"))) {

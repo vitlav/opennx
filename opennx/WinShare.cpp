@@ -43,6 +43,8 @@
 
 static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
 
+WX_DEFINE_OBJARRAY(ArrayOfShares);
+
 #ifdef __UNIX__
 
 #include <cups/cups.h>
@@ -99,8 +101,6 @@ typedef int (*FP_cupsGetDests)(cups_dest_t ** dests);
 typedef const char * (*FP_cupsServer)();
 
 #endif // __UNIX__
-
-WX_DEFINE_OBJARRAY(ArrayOfShares);
 
 class DllData
 {

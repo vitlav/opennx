@@ -16,7 +16,7 @@
     <bool name="extract_strings">1</bool>
     <string name="user_name">"Fritz Elfert"</string>
     <string name="copyright_string">"Copyright (C) 2006 The OpenNX team"</string>
-    <string name="resource_prefix">"memory:memrsc#zip:"</string>
+    <string name="resource_prefix">"memory:memrsc.zip#zip:"</string>
     <bool name="use_two_step_construction">0</bool>
     <bool name="use_enums">0</bool>
     <string name="current_platform">"&lt;All platforms&gt;"</string>
