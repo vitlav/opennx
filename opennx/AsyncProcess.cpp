@@ -205,6 +205,7 @@ AsyncProcess::OnTerminate(int pid, int status)
         m_thread->Delete();
         while (m_thread->IsRunning())
             wxThread::Sleep(100);
+        ::wxLogTrace(MYTRACETAG, wxT("OnTerminate(): IoThread has ended."));
         m_thread = NULL;
     }
     if (m_pEvtHandler) {
@@ -253,8 +254,10 @@ AsyncProcess::Detach()
     wxProcess::Detach();
     if (m_thread && m_thread->IsRunning()) {
         m_thread->Delete();
+        ::wxLogTrace(MYTRACETAG, wxT("Detatch(): waiting for IoThread"));
         while (m_thread->IsRunning())
             wxThread::Sleep(100);
+        ::wxLogTrace(MYTRACETAG, wxT("Detatch(): IoThread has ended"));
         m_thread = NULL;
     }
 }
@@ -264,10 +267,11 @@ AsyncProcess::Kill()
 {
     ::wxLogTrace(MYTRACETAG, wxT("Kill() called"));
     bool ret = false;
-    Detach();
-    if (GetPid() > 0) {
+    if (IsRunning()) {
+        ::wxLogTrace(MYTRACETAG, wxT("Kill(): actually send sig"));
         switch (wxProcess::Kill(GetPid(), wxSIGKILL)) {
             case wxKILL_OK:
+                Detach();
             case wxKILL_NO_PROCESS:
                 ret = true;
                 break;

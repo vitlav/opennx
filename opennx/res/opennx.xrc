@@ -20,7 +20,7 @@
                             <flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
                             <border>5</border>
                             <object class="wxStaticBitmap" name="wxID_STATIC">
-                                <size>146,47d</size>
+                                <size>146,44d</size>
                                 <bitmap>memory:memrsc#zip:res/opennx.png</bitmap>
                             </object>
                         </object>
@@ -158,34 +158,6 @@
         <object class="wxBoxSizer">
             <orient>wxVERTICAL</orient>
             <object class="sizeritem">
-                <flag>wxGROW|wxALL</flag>
-                <border>5</border>
-                <object class="wxBoxSizer">
-                    <orient>wxVERTICAL</orient>
-                    <object class="sizeritem">
-                        <flag>wxGROW|wxLEFT|wxRIGHT</flag>
-                        <border>5</border>
-                        <object class="wxPanel" name="ID_PANEL">
-                            <bg>#FFFFFF</bg>
-                            <object class="wxGridSizer">
-                                <cols>1</cols>
-                                <rows>1</rows>
-                                <vgap>0</vgap>
-                                <hgap>0</hgap>
-                                <object class="sizeritem">
-                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-                                    <border>5</border>
-                                    <object class="wxStaticBitmap" name="wxID_STATIC">
-                                        <size>146,47d</size>
-                                        <bitmap>memory:memrsc#zip:res/opennx.png</bitmap>
-                                    </object>
-                                </object>
-                            </object>
-                        </object>
-                    </object>
-                </object>
-            </object>
-            <object class="sizeritem">
                 <flag>wxGROW|wxLEFT|wxRIGHT</flag>
                 <border>5</border>
                 <object class="wxBoxSizer">
@@ -195,7 +167,7 @@
                         <border>5</border>
                         <option>1</option>
                         <object class="wxNotebook" name="ID_NOTEBOOK">
-                            <style>wxNB_DEFAULT</style>
+                            <style>wxBK_DEFAULT</style>
                             <object class="notebookpage">
                                 <label>General</label>
                                 <object class="wxPanel" name="ID_PANEL_GENERAL">
@@ -777,7 +749,7 @@
                                                     <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                        <size>16,16d</size>
+                                                        <size>16,15d</size>
                                                         <bitmap>memory:memrsc#zip:res/smbsharing.png</bitmap>
                                                     </object>
                                                 </object>
@@ -800,7 +772,7 @@
                                                     <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                        <size>16,16d</size>
+                                                        <size>16,15d</size>
                                                         <bitmap>memory:memrsc#zip:res/cupssharing.png</bitmap>
                                                     </object>
                                                 </object>
@@ -881,7 +853,7 @@
                                                     <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                        <size>16,16d</size>
+                                                        <size>16,15d</size>
                                                         <bitmap>memory:memrsc#zip:res/multimedia.png</bitmap>
                                                     </object>
                                                 </object>
@@ -1471,7 +1443,6 @@ remote VNC server</label>
         <icon>memory:memrsc#zip:res/nx.png</icon>
         <object class="wxBitmapButton" name="ID_BITMAPBUTTON_DUMMY0">
             <pos>0,0d</pos>
-            <style>wxBU_EXACTFIT</style>
         </object>
         <object class="wxBoxSizer">
             <orient>wxVERTICAL</orient>
@@ -1629,7 +1600,6 @@ remote VNC server</label>
         <icon>memory:memrsc#zip:res/nx.png</icon>
         <object class="wxBitmapButton" name="ID_BITMAPBUTTON_DUMMY0">
             <pos>0,0d</pos>
-            <style>wxBU_EXACTFIT</style>
         </object>
         <object class="wxBoxSizer">
             <orient>wxVERTICAL</orient>
@@ -3115,7 +3085,7 @@ this share.</label>
                 <border>5</border>
                 <object class="wxGauge" name="ID_GAUGE">
                     <size>50,-1d</size>
-                    <style>wxGA_HORIZONTAL|wxGA_PROGRESSBAR|wxGA_SMOOTH</style>
+                    <style>wxGA_HORIZONTAL|wxGA_SMOOTH</style>
                     <value>1</value>
                     <range>100</range>
                 </object>
@@ -3130,7 +3100,7 @@ this share.</label>
         </object>
     </object>
     <object class="wxDialog" name="ID_TEXTVIEWER" subclass="TextViewer">
-        <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxDIALOG_NO_PARENT|wxCLOSE_BOX|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxDIALOG_MODAL</style>
+        <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxDIALOG_NO_PARENT|wxCLOSE_BOX|wxMAXIMIZE_BOX|wxMINIMIZE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
         <title>Text Viewer - OpenNX</title>
         <centered>1</centered>
@@ -3310,7 +3280,7 @@ this share.</label>
         </object>
     </object>
     <object class="wxDialog" name="ID_PANICDIALOG" subclass="PanicDialog">
-        <style>wxCAPTION|wxSYSTEM_MENU|wxSTAY_ON_TOP|wxCLOSE_BOX|wxDIALOG_MODAL</style>
+        <style>wxCAPTION|wxSYSTEM_MENU|wxSTAY_ON_TOP|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
         <size>400,300d</size>
         <icon>memory:memrsc#zip:res/nx.png</icon>

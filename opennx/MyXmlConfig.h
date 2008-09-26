@@ -123,6 +123,7 @@ public:
     bool checkChanged();
     bool SaveToFile();
     bool LoadFromFile(const wxString &);
+    bool LoadFromURL(const wxString &);
     bool LoadFromString(const wxString &, bool);
 
     wxString sGetSessionParams(const long, bool, const wxString &);
@@ -130,6 +131,7 @@ public:
     wxString sGetProxyParams(const long);
 
     bool IsValid() { return m_bValid; }
+    bool IsWritable() { return m_bWritable; }
 
     bool bGetDisableBackingstore() { return m_bDisableBackingstore; }
     bool bGetDisableComposite() { return m_bDisableComposite; }
@@ -300,6 +302,9 @@ public:
     static wxString UrlEsc(const wxString &s);
 
 private:
+    // Disable copy constructor
+    MyXmlConfig(const MyXmlConfig &);
+
     void init();
     bool getBool(wxXmlNode *, const wxString &, bool defval = false);
     long getLong(wxXmlNode *, const wxString &, long defval = 0);
@@ -340,6 +345,7 @@ private:
     bool m_bRdpCache;
     bool m_bRdpRememberPassword;
     bool m_bRdpRunApplication;
+    bool m_bWritable;
     bool m_bRememberPassword;
     bool m_bRemoveOldSessionFiles;
     bool m_bRunConsole;

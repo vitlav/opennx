@@ -633,7 +633,8 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     ::wxLogInfo(wxT("session override finished"));
                     m_bCollectConfig = false;
                     m_pCfg->LoadFromString(m_sConfigBuffer, true);
-                    m_pCfg->SaveToFile();
+                    if (m_pCfg->IsWritable())
+                        m_pCfg->SaveToFile();
                 }
             }
             if (m_pSshLog) {
@@ -835,7 +836,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
             }
             break;
         case MyIPC::ActionTerminated:
-            if (m_eConnectState <= STATE_PARSE_SESSIONS) {
+            if ((m_eConnectState <= STATE_PARSE_SESSIONS) && (!m_bGotError)) {
                 msg = _("Unexpected termination of nxssh");
                 ::wxLogError(msg);
                 m_bGotError = true;
@@ -1340,7 +1341,7 @@ MySession::clearSshKeys(const wxString &keyloc)
 }
 
     bool
-MySession::Create(const wxString cfgFileName, const wxString password, wxWindow *parent)
+MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent)
 {
     m_sClearPassword = password;
     m_bSessionRunning = false;
@@ -1352,7 +1353,7 @@ MySession::Create(const wxString cfgFileName, const wxString password, wxWindow 
     m_bCollectConfig = false;
     m_sSessionID = wxT("");
     m_pParent = parent;
-    MyXmlConfig cfg(cfgFileName);
+    MyXmlConfig cfg(cfgpar.sGetFileName());
     m_pCfg = &cfg;
     if (cfg.IsValid()) {
         wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &m_sSysDir);
@@ -1386,7 +1387,7 @@ MySession::Create(const wxString cfgFileName, const wxString password, wxWindow 
         std::ofstream *log = new std::ofstream();
 #endif
         log->open(logfn.mb_str());
-        if (!wxLog::IsAllowedTraceMask(MYTRACETAG))
+        if (!wxLog::GetTraceMasks().GetCount())
             new RunLog(new wxLogStream(log));
 
         logfn = m_sTempDir +

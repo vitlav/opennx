@@ -6,7 +6,7 @@ AC_INIT([opennx],[0.14],[felfert@users.sf.net])
 AC_CONFIG_AUX_DIR([conf])
 AC_CONFIG_SRCDIR([opennxApp.cpp])
 AC_CANONICAL_TARGET
-AM_INIT_AUTOMAKE([foreign no-dependencies no-installinfo no-installman])
+AM_INIT_AUTOMAKE([foreign no-installinfo no-installman])
 AC_CONFIG_HEADERS([config.h])
 
 
@@ -138,7 +138,6 @@ AC_ARG_ENABLE([smartcard],
 if test "$ac_cv_enable_smartcard" = "YES" ; then
 	AC_MSG_NOTICE([SmartCard feature enabled])
     AC_DEFINE(ENABLE_SMARTCARD,1,[Define, if SmartCard support should be enabled])
-    CPPFLAGS="$CPPFLAGS -D"
 else
 	AC_MSG_NOTICE([SmartCard feature disabled])
 fi

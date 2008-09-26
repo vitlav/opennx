@@ -760,7 +760,7 @@ bool opennxApp::OnInit()
         if (!m_sSessionName.IsEmpty()) {
             MyXmlConfig cfg(m_sSessionName);
             if (cfg.IsValid())
-                m_sSessionName = cfg.sGetName();
+                m_sSessionName = cfg.sGetFileName();
         }
     }
 
@@ -774,10 +774,10 @@ bool opennxApp::OnInit()
     }
 
     LoginDialog d;
-    d.SetSessionName(m_sSessionName);
+    d.SetLastSessionFilename(m_sSessionName);
     d.Create(NULL);
     if (d.ShowModal() == wxID_OK) {
-        m_sSessionName = d.GetSessionName();
+        m_sSessionName = d.GetLastSessionFilename();
         if (!m_sSessionName.IsEmpty())
             wxConfigBase::Get()->Write(wxT("Config/LastSession"), m_sSessionName);
     }

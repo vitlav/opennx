@@ -29,6 +29,7 @@
 class ConnectDialog;
 class MyIPC;
 class SessionWatch;
+class MyXmlConfig;
 
 class MySession : public wxEvtHandler
 {
@@ -72,7 +73,7 @@ public:
     MySession &operator =(const MySession &src);
 
     // connection setup
-    bool Create(const wxString cfgFileName, const wxString password, wxWindow *parent = NULL);
+    bool Create(MyXmlConfig& cfg, const wxString password, wxWindow *parent = NULL);
 
 private:
     // locals for connection setup

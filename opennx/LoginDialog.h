@@ -125,6 +125,10 @@ public:
     /// Should we show tooltips?
     static bool ShowToolTips();
 
+    // Return filename of last successfully connected config
+    wxString GetLastSessionFilename() const { return m_sLastSessionFilename; }
+    void SetLastSessionFilename(wxString value) { m_sLastSessionFilename = value; }
+
 private:
     void ReadConfigDirectory();
 
@@ -134,6 +138,7 @@ private:
     wxComboBox* m_pCtrlSessionName;
     wxCheckBox* m_pCtrlUseSmartCard;
     wxCheckBox* m_pCtrlGuestLogin;
+    wxButton* m_pCtrlConfigure;
 private:
     wxString m_sUsername;
     wxString m_sPassword;
@@ -146,7 +151,7 @@ private:
 
     MyXmlConfig *m_pCurrentCfg;
     wxArrayString m_aConfigFiles;
-    wxArrayString m_aSessionNames;
+    wxString m_sLastSessionFilename;
 };
 
 #endif

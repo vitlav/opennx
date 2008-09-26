@@ -44,7 +44,7 @@ class AsyncProcess : public wxProcess, wxThreadHelper
         AsyncProcess(const wxString& cmd, const wxString &wdir, wxEvtHandler *h = NULL);
         AsyncProcess(const wxString& cmd, wxEvtHandler *h = NULL);
 
-        ~AsyncProcess();
+        virtual ~AsyncProcess();
 
         bool Start();
         bool Kill();

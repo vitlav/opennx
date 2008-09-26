@@ -44,6 +44,7 @@
 #include <wx/mstream.h>
 #include <wx/wfstream.h>
 #include <wx/regex.h>
+#include <wx/url.h>
 
 class wxConfigBase;
 
@@ -133,6 +134,7 @@ MyXmlConfig::init()
     m_bUseSmartCard = false;
     m_bUseTightJpeg = false;
     m_bValid = false;
+    m_bWritable = true;
     m_bVirtualDesktop = false;
     m_bVncRememberPassword = false;
     m_bVncUseNxAuth = false;
@@ -190,7 +192,12 @@ MyXmlConfig::MyXmlConfig()
 MyXmlConfig::MyXmlConfig(const wxString &filename)
 {
     init();
-    LoadFromFile(filename);
+    if (filename.StartsWith(wxT("http://")) ||
+            filename.StartsWith(wxT("ftp://")) ||
+            filename.StartsWith(wxT("file://")))
+        LoadFromURL(filename);
+    else
+        LoadFromFile(filename);
 }
 
 MyXmlConfig::~MyXmlConfig()
@@ -242,6 +249,7 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
     m_bUseSmartCard = other.m_bUseSmartCard;
     m_bUseTightJpeg = other.m_bUseTightJpeg;
     m_bValid = other.m_bValid;
+    // Don't copy readonly flag
     m_bVirtualDesktop = other.m_bVirtualDesktop;
     m_bVncRememberPassword = other.m_bVncRememberPassword;
     m_bVncUseNxAuth = other.m_bVncUseNxAuth;
@@ -724,6 +732,7 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
     if (m_bUseSmartCard != other.m_bUseSmartCard) return false;
     if (m_bUseTightJpeg != other.m_bUseTightJpeg) return false;
     if (m_bValid != other.m_bValid) return false;
+    // Don't compare readonly flag
     if (m_bVirtualDesktop != other.m_bVirtualDesktop) return false;
     if (m_bVncRememberPassword != other.m_bVncRememberPassword) return false;
     if (m_bVncUseNxAuth != other.m_bVncUseNxAuth) return false;
@@ -785,8 +794,6 @@ MyXmlConfig::LoadFromString(const wxString &content, bool isPush)
     bool
 MyXmlConfig::LoadFromFile(const wxString &filename)
 {
-    wxString tmp;
-
     {
         wxLogNull dummy; 
         wxFile *f = new wxFile(filename);
@@ -801,6 +808,32 @@ MyXmlConfig::LoadFromFile(const wxString &filename)
     if (loadFromStream(fis, false)) {
         m_sName = wxFileName(filename).GetName();
         m_sFileName = wxFileName(filename).GetFullPath();
+        m_bWritable = wxFileName::IsFileWritable(m_sFileName);
+        return true;
+    }
+    return false;
+}
+
+    bool
+MyXmlConfig::LoadFromURL(const wxString &filename)
+{
+    wxURL url(filename);
+    {
+        wxLogNull dummy;
+        if (!url.IsOk())
+            return false;
+    }
+    ::wxLogTrace(MYTRACETAG, wxT("Fetching %s"), filename.c_str());
+    wxInputStream *is = url.GetInputStream();
+    if (loadFromStream(*is, false)) {
+        m_sName = wxFileName(url.GetPath()).GetName();
+        if (0 == url.GetScheme().CmpNoCase(wxT("file"))) {
+            m_sFileName = wxFileName(url.GetPath()).GetFullPath();
+            m_bWritable = wxFileName::IsFileWritable(m_sFileName);
+        } else {
+            m_sFileName = url.BuildUnescapedURI();
+            m_bWritable = false;
+        }
         return true;
     }
     return false;
@@ -1364,6 +1397,8 @@ MyXmlConfig::SaveToFile()
     wxString optval;
     size_t i;
 
+    if (m_sFileName.StartsWith(wxT("http://")) || m_sFileName.StartsWith(wxT("ftp://")))
+        return false;
     r = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("NXClientSettings"));
     r->AddProperty(new wxXmlProperty(wxT("application"), wxT("nxclient"), NULL));
     r->AddProperty(new wxXmlProperty(wxT("version"), wxT("1.3"), NULL));
