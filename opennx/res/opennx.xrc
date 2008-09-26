@@ -2058,7 +2058,7 @@ local computer.</label>
                         <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                         <border>5</border>
                         <option>1</option>
-                        <object class="wxBitmapComboBox" name="ID_COMBOBOX_SHARE_LOCALNAME" >
+                        <object class="wxBitmapComboBox" name="ID_COMBOBOX_SHARE_LOCALNAME">
                             <style>wxCB_READONLY|wxCB_SORT</style>
                         </object>
                     </object>
@@ -3113,7 +3113,7 @@ this share.</label>
                 <option>1</option>
                 <object class="wxTextCtrl" name="ID_TEXTCTRL">
                     <size>600,300</size>
-                    <style>wxTE_MULTILINE|wxTE_READONLY</style>
+                    <style>wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxTE_RICH2</style>
                 </object>
             </object>
             <object class="sizeritem">

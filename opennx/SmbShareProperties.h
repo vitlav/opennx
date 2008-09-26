@@ -33,6 +33,7 @@
 ////@begin includes
 #include "SmbShareProperties_symbols.h"
 #include "wx/xrc/xmlres.h"
+#include "wx/bmpcbox.h"
 #include "wx/valgen.h"
 #include "wx/statline.h"
 ////@end includes

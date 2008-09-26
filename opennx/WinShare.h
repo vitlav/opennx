@@ -42,11 +42,11 @@ class SharedResource : public wxObject
             SHARE_CUPS_PRINTER,
         } ShareType;
 
-        SharedResource() { }
-
         wxString name;
         wxString description;
         ShareType sharetype;
+
+        void *GetThisVoid() { return (void*)this; }
 };
 
 WX_DECLARE_OBJARRAY(SharedResource, ArrayOfShares);

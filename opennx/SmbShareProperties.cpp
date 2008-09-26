@@ -50,22 +50,6 @@
 
 static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
 
-class cbItemData : public wxClientData
-{
-    public:
-        cbItemData() { }
-        cbItemData(const SharedResource& res) { m_pRes = res; }
-
-        // default copy ctor/assignment operator are ok
-
-        // accessor: get the item associated with us
-        const SharedResource& GetResource() const { return m_pRes; }
-        void SetResource(const SharedResource& res) { m_pRes = res; }
-
-    protected:
-        SharedResource m_pRes;
-};
-
 /*!
  * SmbShareProperties type definition
  */
@@ -91,7 +75,7 @@ BEGIN_EVENT_TABLE( SmbShareProperties, wxDialog )
 
     EVT_TEXT( XRCID("ID_TEXTCTRL_SHARE_PASSWORD"), SmbShareProperties::OnTextctrlSharePasswordUpdated )
 
-EVT_BUTTON( wxID_OK, SmbShareProperties::OnOkClick )
+    EVT_BUTTON( wxID_OK, SmbShareProperties::OnOkClick )
 
     ////@end SmbShareProperties event table entries
 
@@ -337,25 +321,25 @@ void SmbShareProperties::CreateControls()
                     bm = wxNullBitmap;
                     break;
             }
-            cbItemData data(m_aShares[i]);
-            m_pCtrlLocalShares->Append(m_aShares[i].name, bm, &data);
+            void *data =  m_aShares[i].GetThisVoid();
+            m_pCtrlLocalShares->Append(m_aShares[i].name, bm, data);
+            ::wxLogTrace(MYTRACETAG, wxT("cbi[%d].data = %p\n"), i, data);
         }
 
         if (m_aShares.GetCount() > 0) {
             // Select first element of ComboBox
             m_pCtrlLocalShares->SetSelection(0);
-            // size_t sidx = (size_t)m_pCtrlLocalShares->GetClientData(0);
-            cbItemData *data = (cbItemData *)m_pCtrlLocalShares->GetClientObject(0);
-            wxASSERT(data);
-            SharedResource res = data->GetResource();
-            switch (res.sharetype) {
+            SharedResource *res = wxDynamicCast(m_pCtrlLocalShares->GetClientData(0), SharedResource);
+            ::wxLogTrace(MYTRACETAG, wxT("CBI[0].data = %p\n"), res);
+            wxASSERT(res);
+            switch (res->sharetype) {
                 case SharedResource::SHARE_UNKNOWN:
                     break;
                 case SharedResource::SHARE_SMB_DISK:
                     m_pCtrlSmbPrintOptions->Show(false);
                     m_pCtrlCupsOptions->Show(false);
                     m_pCtrlSmbDiskOptions->Show(true);
-                    m_sMountPoint = wxT("$(SHARES)/") + res.name;
+                    m_sMountPoint = wxT("$(SHARES)/") + res->name;
                     Layout();
                     break;
                 case SharedResource::SHARE_SMB_PRINTER:
@@ -389,19 +373,17 @@ void SmbShareProperties::CreateControls()
 void SmbShareProperties::OnComboboxShareLocalnameSelected( wxCommandEvent& event )
 {
     // size_t sidx = (size_t)m_pCtrlLocalShares->GetClientData(event.GetInt());
-    // SharedResource *res = wxDynamicCast(m_pCtrlLocalShares->GetClientObject(event.GetInt()), SharedResource);
-    cbItemData *data = (cbItemData *)m_pCtrlLocalShares->GetClientObject(event.GetInt());
-    wxASSERT(data);
-    ::wxLogTrace(MYTRACETAG, wxT("selected: %d %p"), event.GetInt(), data);
-    SharedResource res = data->GetResource();
-    switch (res.sharetype) {
+    SharedResource *res = wxDynamicCast(m_pCtrlLocalShares->GetClientData(event.GetInt()), SharedResource);
+    wxASSERT(res);
+    ::wxLogTrace(MYTRACETAG, wxT("selected: %d %p"), event.GetInt(), res);
+    switch (res->sharetype) {
         case SharedResource::SHARE_UNKNOWN:
             break;
         case SharedResource::SHARE_SMB_DISK:
             m_pCtrlCupsOptions->Show(false);
             m_pCtrlSmbPrintOptions->Show(false);
             m_pCtrlSmbDiskOptions->Show(true);
-            m_sMountPoint = wxT("$(SHARES)/") + res.name;
+            m_sMountPoint = wxT("$(SHARES)/") + res->name;
             m_pCtrlMountPoint->SetValue(m_sMountPoint);
             Layout();
             break;
@@ -530,17 +512,15 @@ void SmbShareProperties::OnOkClick( wxCommandEvent& event )
     } else {
         ShareGroup g;
         // size_t sidx = (size_t)m_pCtrlLocalShares->GetClientData(m_pCtrlLocalShares->GetSelection());
-        // SharedResource *res = wxDynamicCast(m_pCtrlLocalShares->GetClientObject(m_pCtrlLocalShares->GetSelection()), SharedResource);
-        cbItemData *data = (cbItemData *)m_pCtrlLocalShares->GetClientObject(m_pCtrlLocalShares->GetSelection());
-        wxASSERT(data);
-        ::wxLogTrace(MYTRACETAG, wxT("selected: %d %p"), event.GetInt(), data);
-        SharedResource res = data->GetResource();
+        SharedResource *res = wxDynamicCast(m_pCtrlLocalShares->GetClientData(m_pCtrlLocalShares->GetSelection()), SharedResource);
+        wxASSERT(res);
+        ::wxLogTrace(MYTRACETAG, wxT("selected: %d %p"), event.GetInt(), res);
 
-        g.m_eType = res.sharetype;
-        g.m_sShareName = res.name;
+        g.m_eType = res->sharetype;
+        g.m_sShareName = res->name;
         g.m_sGroupName = wxString::Format(wxT("Share%d"), sg.GetCount());
         g.m_bDefault = false;
-        switch (res.sharetype) {
+        switch (res->sharetype) {
             case SharedResource::SHARE_UNKNOWN:
                 break;
             case SharedResource::SHARE_SMB_DISK:
