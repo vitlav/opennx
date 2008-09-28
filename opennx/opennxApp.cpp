@@ -48,6 +48,9 @@
 #include <wx/tokenzr.h>
 #include <wx/wfstream.h>
 #include <wx/mimetype.h>
+#include <wx/utils.h>
+#include <wx/stdpaths.h>
+#include <wx/apptrait.h>
 
 #include "resource.h"
 #include "opennxApp.h"
@@ -55,6 +58,7 @@
 #include "SessionProperties.h"
 #include "LoginDialog.h"
 #include "MyWizard.h"
+#include "MyIPC.h"
 #include "MyXmlConfig.h"
 #include "PanicDialog.h"
 #include "QuitDialog.h"
@@ -76,7 +80,8 @@ IMPLEMENT_APP(opennxApp);
 
 opennxApp::opennxApp()
     : wxApp(),
-    m_pCfg(NULL)
+    m_pCfg(NULL),
+    m_bNxSmartCardSupport(false)
 {
     SetAppName(wxT("OpenNX"));
 #ifdef __WXMSW__
@@ -388,13 +393,14 @@ opennxApp::preInit()
 
     wxFileName fn;
 #define NotImplemented
-#ifdef __WXMSW__
-    int ret = GetModuleFileName(NULL, tmp.GetWriteBuf(1024), 1024);
-    tmp.UngetWriteBuf(ret);
-    fn.Assign(tmp);
+#if defined(__WXMSW__) || defined(__WXMAC__) || defined(__LINUX__)
+    // On these platforms, wxAppTraits::GetExecutablePath() returns
+    // the *actual* path of the running executable, regardless of
+    // where it is installed.
+    fn.Assign(GetTraits()->GetStandardPaths().GetExecutablePath());
 #undef NotImplemented
 #endif
-#if defined(__OPENBSD__) || defined(__WXMAC__)
+#if defined(__OPENBSD__) 
     // FIXME: How to get one's own exe path on OpenBSD?
     // for now, we resemble sh's actions
     tmp = this->argv[0];
@@ -457,21 +463,11 @@ opennxApp::preInit()
     }
 # undef NotImplemented
 #endif
-#ifdef __LINUX__
-    // Get executable path from /proc/self/exe
-    char ldst[PATH_MAX+1];
-    memset(ldst, 0, sizeof(ldst));
-    if (readlink("/proc/self/exe", ldst, PATH_MAX) == -1) {
-        wxLogSysError(_("Could not read link /proc/self/exe"));
-        return false;
-    }
-    fn.Assign(wxConvLocal.cMB2WX(ldst));
-# undef NotImplemented
-#endif
 #ifdef NotImplemented
 # error Missing Implementation for this OS
 #endif
     m_sSelfPath = fn.GetFullPath();
+
     if (!wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp)) {
         fn.RemoveLastDir();
         wxConfigBase::Get()->Write(wxT("Config/SystemNxDir"),
@@ -500,7 +496,76 @@ opennxApp::preInit()
             wxLog::AddTraceMask(tag);
         }
     }
+
+    checkNxSmartCardSupport();
     return true;
+}
+
+#ifdef ENABLE_SMARTCARD
+int opennxApp::FilterEvent(wxEvent& event)
+{
+    if (event.IsCommandEvent()) {
+        wxCommandEvent *ce = (wxCommandEvent *)&event;
+        if (ce->GetEventType() == wxEVT_GENERIC) {
+            MyIPC::tSessionEvents e = wx_static_cast(MyIPC::tSessionEvents, ce->GetInt());
+            wxString msg(ce->GetString());
+            switch (e) {
+                case MyIPC::ActionTerminated:
+                    m_bRunproc = false;
+                    return true;
+                case MyIPC::ActionStderr:
+                    if (msg.IsSameAs(wxT("no support for smartcards.")))
+                        m_bNxSmartCardSupport = false;
+                    return true;
+            }
+            return false;
+        }
+    }
+    return -1;
+}
+#endif
+
+void opennxApp::checkNxSmartCardSupport()
+{
+#ifdef ENABLE_SMARTCARD
+    wxString sysdir;
+    wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &sysdir);
+    wxFileName fn(sysdir, wxT(""));
+    fn.AppendDir(wxT("bin"));
+#ifdef __WXMSW__
+    fn.SetName(wxT("nxssh.exe"));
+#else
+    fn.SetName(wxT("nxssh"));
+#endif
+    if (!fn.FileExists())
+        return;
+    time_t last_mtime;
+    long last_size;
+    time_t mtime = fn.GetModificationTime().GetTicks();
+    long size = fn.GetSize().ToULong();
+    wxConfigBase::Get()->Read(wxT("Config/NxSshStamp"), &last_mtime, 0);
+    wxConfigBase::Get()->Read(wxT("Config/NxSshSize"), &last_size, 0);
+    wxConfigBase::Get()->Read(wxT("Config/NxSshSmartCardSupport"), &m_bNxSmartCardSupport, false);
+
+    if ((mtime != last_mtime) || (size != last_size)) {
+        wxConfigBase::Get()->Write(wxT("Config/NxSshStamp"), mtime);
+        wxConfigBase::Get()->Write(wxT("Config/NxSshSize"), size);
+        wxString nxsshcmd = fn.GetShortPath();
+        nxsshcmd << wxT(" -I 0 -V");
+        MyIPC testproc;
+        if (testproc.GenericProcess(nxsshcmd, wxT(""), this)) {
+            m_bNxSmartCardSupport = true;
+            m_bRunproc = true;
+            while (m_bRunproc) {
+                wxLog::FlushActive();
+                Yield(true);
+                wxThread::Sleep(500);
+            }
+            wxConfigBase::Get()->Write(wxT("Config/NxSshSmartCardSupport"), m_bNxSmartCardSupport);
+        }
+        wxConfigBase::Get()->Flush();
+    }
+#endif
 }
 
 void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
@@ -531,14 +596,14 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
 }
 
 static const wxChar *_dlgTypes[] = {
-        wxT("yesno"), wxT("ok"), wxT("error"), wxT("panic"),
-        wxT("quit"), wxT("pulldown"), wxT("yesnosuspend")
+    wxT("yesno"), wxT("ok"), wxT("error"), wxT("panic"),
+    wxT("quit"), wxT("pulldown"), wxT("yesnosuspend")
 };
 
 static wxArrayString aDlgTypes(sizeof(_dlgTypes)/sizeof(wxChar *), _dlgTypes);
 
 static const wxChar *_dlgClasses[] = {
-        wxT("info"), wxT("warning"), wxT("error")
+    wxT("info"), wxT("warning"), wxT("error")
 };
 
 static wxArrayString aDlgClasses(sizeof(_dlgClasses)/sizeof(wxChar *), _dlgClasses);

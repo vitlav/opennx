@@ -49,6 +49,7 @@
 #include "SessionProperties.h"
 #include "MySession.h"
 #include "Icon.h"
+#include "opennxApp.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -140,11 +141,7 @@ void LoginDialog::ReadConfigDirectory()
                     m_sUsername = cfg.sGetUsername();
                     m_sPassword = cfg.sGetPassword();
                 }
-#ifdef ENABLE_SMARTCARD
-                m_bUseSmartCard = cfg.bGetUseSmartCard();
-#else
-                m_bUseSmartCard = false;
-#endif
+                m_bUseSmartCard = ::wxGetApp().NxSmartCardSupport() && cfg.bGetUseSmartCard();
             }
         }
     }
@@ -227,9 +224,8 @@ void LoginDialog::CreateControls()
 
     ////@begin LoginDialog content initialisation
     ////@end LoginDialog content initialisation
-#ifndef ENABLE_SMARTCARD
-    m_pCtrlUseSmartCard->Enable(false);
-#endif
+
+    m_pCtrlUseSmartCard->Enable(::wxGetApp().NxSmartCardSupport());
     ReadConfigDirectory();
     if (m_bGuestLogin) {
         m_pCtrlUsername->Enable(false);
@@ -322,10 +318,8 @@ void LoginDialog::OnButtonConfigureClick( wxCommandEvent& event )
                 ReadConfigDirectory();
                 break;
             case wxID_OK:
-#ifdef ENABLE_SMARTCARD
-                m_bUseSmartCard = m_pCurrentCfg->bGetUseSmartCard();
+                m_bUseSmartCard = ::wxGetApp().NxSmartCardSupport() && m_pCurrentCfg->bGetUseSmartCard();
                 m_pCtrlUseSmartCard->SetValue(m_bUseSmartCard);
-#endif
                 if (!m_pCurrentCfg->SaveToFile())
                     wxMessageBox(wxString::Format(_("Could not save session to\n%s"),
                                 m_pCurrentCfg->sGetFileName().c_str()), _("Error saving - OpenNX"),
@@ -368,9 +362,7 @@ void LoginDialog::OnComboboxSessionSelected( wxCommandEvent& event )
                 m_pCtrlPassword->Enable(true);
                 m_pCtrlUsername->Enable(true);
             }
-#ifdef ENABLE_SMARTCARD
-            m_pCtrlUseSmartCard->SetValue(cfg.bGetUseSmartCard());
-#endif
+            m_pCtrlUseSmartCard->SetValue(::wxGetApp().NxSmartCardSupport() && cfg.bGetUseSmartCard());
         }
     }
     m_pCtrlConfigure->Enable(m_pCurrentCfg && m_pCurrentCfg->IsWritable());

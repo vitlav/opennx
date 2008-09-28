@@ -290,6 +290,7 @@
                                                                     <item>Unix</item>
                                                                     <item>Windows</item>
                                                                     <item>VNC</item>
+                                                                    <item>Shadow</item>
                                                                 </content>
                                                             </object>
                                                         </object>
@@ -735,11 +736,11 @@
                                     <style>wxTAB_TRAVERSAL</style>
                                     <object class="wxFlexGridSizer">
                                         <cols>1</cols>
-                                        <rows>4</rows>
+                                        <rows>5</rows>
                                         <vgap>0</vgap>
                                         <hgap>0</hgap>
                                         <growablecols>0</growablecols>
-                                        <growablerows>2</growablerows>
+                                        <growablerows>3</growablerows>
                                         <object class="sizeritem">
                                             <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT</flag>
                                             <border>5</border>
@@ -749,7 +750,7 @@
                                                     <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                        <size>16,15d</size>
+                                                        <size>21,19d</size>
                                                         <bitmap>memory:memrsc#zip:res/smbsharing.png</bitmap>
                                                     </object>
                                                 </object>
@@ -772,7 +773,7 @@
                                                     <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                        <size>16,15d</size>
+                                                        <size>21,19d</size>
                                                         <bitmap>memory:memrsc#zip:res/cupssharing.png</bitmap>
                                                     </object>
                                                 </object>
@@ -802,6 +803,29 @@
                                                         <value>631</value>
                                                         <min>1</min>
                                                         <max>65535</max>
+                                                    </object>
+                                                </object>
+                                            </object>
+                                        </object>
+                                        <object class="sizeritem">
+                                            <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT</flag>
+                                            <border>5</border>
+                                            <object class="wxBoxSizer">
+                                                <orient>wxHORIZONTAL</orient>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticBitmap" name="wxID_STATIC">
+                                                        <size>21,19d</size>
+                                                        <bitmap>memory:memrsc#zip:res/usbstick.png</bitmap>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_CHECKBOX_USBENABLE">
+                                                        <label>Enable USB forwarding</label>
+                                                        <checked>0</checked>
                                                     </object>
                                                 </object>
                                             </object>
@@ -853,7 +877,7 @@
                                                     <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                        <size>16,15d</size>
+                                                        <size>21,19d</size>
                                                         <bitmap>memory:memrsc#zip:res/multimedia.png</bitmap>
                                                     </object>
                                                 </object>

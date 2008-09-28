@@ -159,8 +159,6 @@ AC_DEFINE_UNQUOTED(NX_PROTOCOL_VERSION,"${ac_cv_nxproto}",
                    [Set to the NX protocol version])
 
 AC_PATH_XTRA
-test -n "$x_includes" && CFLAGS="$CFLAGS -I$x_includes"
-test -n "$x_libraries" && LDFLAGS="$LDFLAGS -L$x_libraries"
 
 ac_cv_samba=
 AC_ARG_WITH([samba],

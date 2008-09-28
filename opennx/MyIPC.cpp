@@ -49,6 +49,7 @@ static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
 
 DEFINE_EVENT_TYPE(wxEVT_NXSSH);
 DEFINE_EVENT_TYPE(wxEVT_NXSERVICE);
+DEFINE_EVENT_TYPE(wxEVT_GENERIC);
 
 IMPLEMENT_CLASS(MyIPC, wxEvtHandler);
 
@@ -115,6 +116,25 @@ MyIPC::Print(const wxString &s, bool doLog /* = true */ )
 }
 
     bool
+MyIPC::GenericProcess(const wxString &cmd, const wxString &dir, wxEvtHandler *h)
+{
+    m_eType = TypeNone;
+    bool ret = false;
+    m_iOutCollect = 0;
+    m_iErrCollect = 0;
+    m_sOutMessage.Empty();
+    m_sErrMessage.Empty();
+    m_pEvtHandler = h;
+    m_pProcess = new AsyncProcess(cmd, dir, this);
+    ret = m_pProcess->Start();
+    if (!ret) {
+        delete m_pProcess;
+        m_pProcess = NULL;
+    }
+    return ret;
+}
+
+    bool
 MyIPC::SshProcess(const wxString &cmd, const wxString &dir, wxEvtHandler *h)
 {
     m_eType = TypeSsh;
@@ -178,6 +198,11 @@ MyIPC::OnTerminate(wxCommandEvent &event)
     switch (m_eType) {
         case TypeNone:
             ::wxLogTrace(MYTRACETAG, wxT("process terminated"));
+            if (m_pEvtHandler) {
+                wxCommandEvent upevent(wxEVT_GENERIC, wxID_ANY);
+                upevent.SetInt(ActionTerminated);
+                m_pEvtHandler->AddPendingEvent(upevent);
+            }
             break;
         case TypeSsh:
             ::wxLogTrace(MYTRACETAG, wxT("nxssh terminated"));
@@ -208,6 +233,12 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
     switch (m_eType) {
         case TypeNone:
             ::wxLogTrace(MYTRACETAG, wxT("process O: '%s'"), msg.c_str());
+            if (m_pEvtHandler) {
+                wxCommandEvent upevent(wxEVT_GENERIC, wxID_ANY);
+                upevent.SetInt(ActionStdout);
+                upevent.SetString(event.GetString());
+                m_pEvtHandler->AddPendingEvent(upevent);
+            }
             break;
         case TypeService:
             ::wxLogTrace(MYTRACETAG, wxT("service O: '%s'"), msg.c_str());
@@ -555,6 +586,12 @@ MyIPC::OnErrReceived(wxCommandEvent &event)
     switch (m_eType) {
         case TypeNone:
             ::wxLogTrace(MYTRACETAG, wxT("process E: '%s'"), msg.c_str());
+            if (m_pEvtHandler) {
+                wxCommandEvent upevent(wxEVT_GENERIC, wxID_ANY);
+                upevent.SetInt(ActionStderr);
+                upevent.SetString(event.GetString());
+                m_pEvtHandler->AddPendingEvent(upevent);
+            }
             break;
         case TypeService:
             ::wxLogTrace(MYTRACETAG, wxT("service E: '%s'"), msg.c_str());

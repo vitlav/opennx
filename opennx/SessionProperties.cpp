@@ -194,6 +194,8 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
     EVT_SPINCTRL( XRCID("ID_SPINCTRL_CUPSPORT"), SessionProperties::OnSpinctrlCupsportUpdated )
     EVT_TEXT( XRCID("ID_SPINCTRL_CUPSPORT"), SessionProperties::OnSpinctrlCupsportTextUpdated )
 
+    EVT_CHECKBOX( XRCID("ID_CHECKBOX_USBENABLE"), SessionProperties::OnCHECKBOXUSBENABLEClick )
+
     EVT_LIST_ITEM_SELECTED( XRCID("ID_LISTCTRL_SMB_SHARES"), SessionProperties::OnListctrlSmbSharesSelected )
     EVT_LIST_ITEM_ACTIVATED( XRCID("ID_LISTCTRL_SMB_SHARES"), SessionProperties::OnListctrlSmbSharesItemActivated )
 
@@ -270,9 +272,7 @@ SessionProperties::CheckChanged()
 
         // variables on 'General' Tab
         m_pCfg->bSetRememberPassword(m_bRememberPassword);
-#ifdef ENABLE_SMARTCARD
-        m_pCfg->bSetUseSmartCard(m_bUseSmartCard);
-#endif
+        m_pCfg->bSetUseSmartCard(::wxGetApp().NxSmartCardSupport());
         m_pCfg->bSetUseCustomImageEncoding(m_bUseCustomImageEncoding);
         m_pCfg->iSetServerPort(m_iPort);
         m_pCfg->eSetSessionType((MyXmlConfig::SessionType)m_iSessionType);
@@ -309,6 +309,7 @@ SessionProperties::CheckChanged()
         // variables on 'Services' tab
         m_pCfg->bSetEnableSmbSharing(m_bEnableSmbSharing);
         m_pCfg->bSetEnableMultimedia(m_bEnableMultimedia);
+        //m_pCfg->bSetEnableUSBIP(m_bEnableUSBIP);
         m_pCfg->bSetUseCups(m_bUseCups);
         m_pCfg->iSetCupsPort(m_iCupsPort);
 
@@ -357,6 +358,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlSmbEnable = NULL;
     m_pCtrlCupsEnable = NULL;
     m_pCtrlCupsPort = NULL;
+    m_pCtrlUsbEnable = NULL;
     m_pCtrlSmbShares = NULL;
     m_pCtrlShareAdd = NULL;
     m_pCtrlShareModify = NULL;
@@ -375,11 +377,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     if (m_pCfg) {
         // variables on 'General' Tab
         m_bRememberPassword = m_pCfg->bGetRememberPassword();
-#ifdef ENABLE_SMARTCARD
-        m_bUseSmartCard = m_pCfg->bGetUseSmartCard();
-#else
-        m_bUseSmartCard = false;
-#endif
+        m_bUseSmartCard = ::wxGetApp().NxSmartCardSupport() && m_pCfg->bGetUseSmartCard();
         m_bUseCustomImageEncoding = m_pCfg->bGetUseCustomImageEncoding();
         m_iPort = m_pCfg->iGetServerPort();
         m_iSessionType = m_pCfg->eGetSessionType();
@@ -550,9 +548,6 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlCupsPath->Enable(false);
     m_pCtrlCupsBrowse->Enable(false);
 #endif
-    //SetMinSize(wxSize(400, -1));
-    //SetMaxSize(wxSize(400, -1));
-    //SetSize(400, 600);
     return TRUE;
 }
 
@@ -613,6 +608,10 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
             m_pCtrlDesktopType->Enable(true);
             m_pCtrlDesktopSettings->Enable(m_iDesktopTypeDialog == MyXmlConfig::DTYPE_CUSTOM);
             m_pCtrlCupsEnable->Enable(c.IsAvailable());
+#ifdef __WXMSW___
+            m_pCtrlEnameUSBIP->Enable(false);
+#else
+#endif
             m_pCtrlSmbEnable->Enable(s.IsAvailable());
             break;
         case MyXmlConfig::STYPE_WINDOWS:
@@ -626,6 +625,8 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
             m_pCtrlSmbEnable->Enable(false);
             m_bUseCups = false;
             m_bEnableSmbSharing = false;
+            m_bEnableUSBIP = false;
+            m_pCtrlUsbEnable->Enable(false);
             break;
         case MyXmlConfig::STYPE_VNC:
             m_pCtrlDesktopType->SetString(0, _("RFB"));
@@ -638,6 +639,8 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
             m_pCtrlSmbEnable->Enable(false);
             m_bUseCups = false;
             m_bEnableSmbSharing = false;
+            m_bEnableUSBIP = false;
+            m_pCtrlUsbEnable->Enable(false);
             break;
     }
     switch (m_iDisplayType) {
@@ -706,6 +709,7 @@ void SessionProperties::CreateControls()
     m_pCtrlSmbEnable = XRCCTRL(*this, "ID_CHECKBOX_SMB", wxCheckBox);
     m_pCtrlCupsEnable = XRCCTRL(*this, "ID_CHECKBOX_CUPSENABLE", wxCheckBox);
     m_pCtrlCupsPort = XRCCTRL(*this, "ID_SPINCTRL_CUPSPORT", wxSpinCtrl);
+    m_pCtrlUsbEnable = XRCCTRL(*this, "ID_CHECKBOX_USBENABLE", wxCheckBox);
     m_pCtrlSmbShares = XRCCTRL(*this, "ID_LISTCTRL_SMB_SHARES", wxListCtrl);
     m_pCtrlShareAdd = XRCCTRL(*this, "ID_BUTTON_SMB_ADD", wxButton);
     m_pCtrlShareModify = XRCCTRL(*this, "ID_BUTTON_SMB_MODIFY", wxButton);
@@ -765,6 +769,8 @@ void SessionProperties::CreateControls()
         FindWindow(XRCID("ID_CHECKBOX_CUPSENABLE"))->SetValidator( wxGenericValidator(& m_bUseCups) );
     if (FindWindow(XRCID("ID_SPINCTRL_CUPSPORT")))
         FindWindow(XRCID("ID_SPINCTRL_CUPSPORT"))->SetValidator( MyValidator(MyValidator::MYVAL_NUMERIC, & m_iCupsPort) );
+    if (FindWindow(XRCID("ID_CHECKBOX_USBENABLE")))
+        FindWindow(XRCID("ID_CHECKBOX_USBENABLE"))->SetValidator( wxGenericValidator(& m_bEnableUSBIP) );
     if (FindWindow(XRCID("ID_CHECKBOX_MMEDIA")))
         FindWindow(XRCID("ID_CHECKBOX_MMEDIA"))->SetValidator( wxGenericValidator(& m_bEnableMultimedia) );
     if (FindWindow(XRCID("ID_TEXTCTRL_USERDIR")))
@@ -783,9 +789,7 @@ void SessionProperties::CreateControls()
 ////@begin SessionProperties content initialisation
 ////@end SessionProperties content initialisation
 
-#ifndef ENABLE_SMARTCARD
-    m_pCtrlUseSmartCard->Enable(false);
-#endif
+    m_pCtrlUseSmartCard->Enable(::wxGetApp().NxSmartCardSupport());
 
     int fs[7];
     wxFont fv = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
@@ -1732,3 +1736,16 @@ void SessionProperties::OnTextctrlCupspathUpdated( wxCommandEvent& event )
         CheckChanged();
     event.Skip();
 }
+
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_USBENABLE
+ */
+
+void SessionProperties::OnCHECKBOXUSBENABLEClick( wxCommandEvent& event )
+{
+    if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlUsbEnable))
+        CheckChanged();
+    event.Skip();
+}
+

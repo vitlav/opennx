@@ -30,6 +30,7 @@
 
 DECLARE_EVENT_TYPE(wxEVT_NXSSH, -1);
 DECLARE_EVENT_TYPE(wxEVT_NXSERVICE, -2);
+DECLARE_EVENT_TYPE(wxEVT_GENERIC, -3);
 
 class AsyncProcess;
 class wxRegEx;
@@ -79,10 +80,13 @@ public:
         ActionSessionPushLength,
         ActionSessionPushStart,
         ActionTerminated,
+        ActionStdout,
+        ActionStderr,
     } tSessionEvents;
 
     MyIPC();
     virtual ~MyIPC();
+    bool GenericProcess(const wxString&, const wxString&, wxEvtHandler *);
     bool SshProcess(const wxString&, const wxString&, wxEvtHandler *);
     bool ServiceProcess(const wxString&, wxEvtHandler *);
     bool IsRunning();

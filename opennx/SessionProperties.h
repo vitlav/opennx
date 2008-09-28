@@ -228,6 +228,9 @@ public:
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_CUPSPORT
     void OnSpinctrlCupsportTextUpdated( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_USBENABLE
+    void OnCHECKBOXUSBENABLEClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRL_SMB_SHARES
     void OnListctrlSmbSharesSelected( wxListEvent& event );
 
@@ -323,6 +326,7 @@ private:
     wxCheckBox* m_pCtrlSmbEnable;
     wxCheckBox* m_pCtrlCupsEnable;
     wxSpinCtrl* m_pCtrlCupsPort;
+    wxCheckBox* m_pCtrlUsbEnable;
     wxListCtrl* m_pCtrlSmbShares;
     wxButton* m_pCtrlShareAdd;
     wxButton* m_pCtrlShareModify;
@@ -367,6 +371,7 @@ private:
     wxString m_sProxyHost;
     bool m_bUseProxy;
     bool m_bUseCups;
+    bool m_bEnableUSBIP;
 ////@end SessionProperties member variables
 
     bool readKbdLayouts();

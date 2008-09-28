@@ -886,9 +886,7 @@ void WizardPageSecurity::CreateControls()
 
     ////@begin WizardPageSecurity content initialisation
     ////@end WizardPageSecurity content initialisation
-#ifndef ENABLE_SMARTCARD
-    m_pCtrlUseSmartCard->Enable(false);
-#endif
+    m_pCtrlUseSmartCard->Enable(::wxGetApp().NxSmartCardSupport());
 }
 
 /*!
@@ -1272,9 +1270,7 @@ void WizardPageSecurity::OnWizardpageSecurityPageChanging( wxWizardEvent& event 
         MyXmlConfig *cfg = wxDynamicCast(GetParent(), MyWizard)->pGetConfig();
         TransferDataFromWindow();
         cfg->bSetEnableSSL(m_bEnableSSL);
-#ifdef ENABLE_SMARTCARD
-        cfg->bSetUseSmartCard(m_bUseSmartCard);
-#endif
+        cfg->bSetUseSmartCard(::wxGetApp().NxSmartCardSupport());
     }
     event.Skip();
 }

@@ -61,7 +61,7 @@
 #include <wx/dir.h>
 #include <wx/process.h>
 #include <wx/textfile.h>
-#ifdef _MSC_VER
+#ifdef __VISUALC__
 # include <fstream.h>
 #else
 # include <fstream>
@@ -1381,7 +1381,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
 
         wxString logfn = m_sTempDir +
             wxFileName::GetPathSeparator() + wxT("runlog");
-#ifdef _MSC_VER
+#ifdef __VISUALC__
         ofstream *log = new ofstream();
 #else
         std::ofstream *log = new std::ofstream();
@@ -1392,7 +1392,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
 
         logfn = m_sTempDir +
             wxFileName::GetPathSeparator() + wxT("sshlog");
-#ifdef _MSC_VER
+#ifdef __VISUALC__
         log = new ofstream();
 #else
         log = new std::ofstream();
@@ -1428,6 +1428,8 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
             else if (!cfg.sGetProxyCommand().IsEmpty())
                 nxsshcmd << wxT(" -o 'ProxyCommand ") << cfg.sGetProxyCommand() << wxT("'");
         }
+        if (cfg.bGetUseSmartCard())
+            nxsshcmd << wxT(" -I 0"); // We always use SC reader 0
         if (cfg.bGetEnableSSL())
             nxsshcmd << wxT(" -B");
         nxsshcmd << wxT(" -E") << wxT(" nx@") << cfg.sGetServerHost();
@@ -1445,7 +1447,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
         ::wxSetEnv(wxT("XAUTHORITY"), getXauthPath());
         ::wxLogInfo(wxT("env: XAUTHORITY='%s'"), getXauthPath().c_str());
 #ifdef __UNIX__
-        // opennx needs TEMP or NX_TEMP to be set to the same dir
+        // NX needs TEMP or NX_TEMP to be set to the same dir
         // where .X11-unix resides (typically /tmp)
         wxString stmp = wxConvLocal.cMB2WX(x11_socket_path);
         if (!stmp.IsEmpty()) {

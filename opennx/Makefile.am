@@ -39,10 +39,13 @@ EXTRA_HEADERS = resource.h res/opennx.rc
 EXTRA_opennx_SOURCES = opennx.rc
 
 opennx_LDADD = $(WIN_RES) $(WX_LIBS) $(APP_LDADD)
+# $(X_PRE_LIBS) $(X_LIBS) $(X_EXTRA_LIBS)
 opennx_DEPENDENCIES = $(WIN_RES)
 opennx_CPPFLAGS = $(WX_CPPFLAGS)
+# $(X_CFLAGS)
 opennx_CXXFLAGS = $(WX_CXXFLAGS)
 opennx_CFLAGS = $(WX_CFLAGS)
+
 
 GETTEXTIZE = $(shell which gettextize)
 

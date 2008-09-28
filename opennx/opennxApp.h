@@ -30,55 +30,62 @@ class MyXmlConfig;
 // Define a new application type, each program should derive a class from wxApp
 class opennxApp : public wxApp
 {
-public:
-    enum mode {
-        MODE_CLIENT,
-        MODE_ADMIN,
-        MODE_WIZARD,
-        MODE_DIALOG_OK,
-        MODE_DIALOG_YESNO,
-        MODE_DIALOG_ERROR,
-        MODE_DIALOG_PANIC,
-        MODE_DIALOG_QUIT,
-        MODE_FOREIGN_TOOLBAR,
-    };
+    public:
+        opennxApp();
+        virtual ~opennxApp();
 
-    opennxApp();
-    virtual ~opennxApp();
-    wxLocale *GetLocale() { return &m_cLocale; }
-    const wxString &GetResourcePrefix() { return m_sResourcePrefix; }
-    const wxString &GetVersion() { return m_sVersion; }
-    const wxString &GetSelfPath() { return m_sSelfPath; }
-    wxString LoadFileFromResource(const wxString &loc, bool bUseLocale = true);
-    bool CreateDesktopEntry(MyXmlConfig *);
-    bool RemoveDesktopEntry(MyXmlConfig *);
+        wxLocale *GetLocale() { return &m_cLocale; }
+        const wxString &GetResourcePrefix() { return m_sResourcePrefix; }
+        const wxString &GetVersion() { return m_sVersion; }
+        const wxString &GetSelfPath() { return m_sSelfPath; }
+        wxString LoadFileFromResource(const wxString &loc, bool bUseLocale = true);
+        bool CreateDesktopEntry(MyXmlConfig *);
+        bool RemoveDesktopEntry(MyXmlConfig *);
+        /**
+         * Return status of SmartCard support
+         * in nxssh. If nxssh has SmartCard support
+         * compiled in, return true, otherwise return false.
+         */
+        bool NxSmartCardSupport() { return m_bNxSmartCardSupport; }
 
-    // override base class virtuals
-    // ----------------------------
+        virtual bool OnInit();
+        virtual void OnInitCmdLine(wxCmdLineParser& parser);
+        virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
+        virtual int OnExit();
+#ifdef ENABLE_SMARTCARD
+        int FilterEvent(wxEvent& event);
+#endif
 
-    // this one is called on application startup and is a good place for the app
-    // initialization (doing it here and not in the ctor allows to have an error
-    // return: if OnInit() returns false, the application terminates)
-    virtual bool OnInit();
-    virtual void OnInitCmdLine(wxCmdLineParser& parser);
-    virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
-    virtual int OnExit();
+    private:
+        enum mode {
+            MODE_CLIENT,
+            MODE_ADMIN,
+            MODE_WIZARD,
+            MODE_DIALOG_OK,
+            MODE_DIALOG_YESNO,
+            MODE_DIALOG_ERROR,
+            MODE_DIALOG_PANIC,
+            MODE_DIALOG_QUIT,
+            MODE_FOREIGN_TOOLBAR,
+        };
 
-private:
-    wxConfigBase *m_pCfg;
-    wxLocale m_cLocale;
-    wxString m_sSessionName;
-    wxString m_sResourcePrefix;
-    wxString m_sVersion;
-    wxString m_sSelfPath;
-    wxString m_sDialogCaption;
-    wxString m_sDialogMessage;
-    long m_nOtherPID;
-    long m_nWindowID;
-    int m_iDialogStyle;
-    enum mode m_eMode;
+        wxConfigBase *m_pCfg;
+        wxLocale m_cLocale;
+        wxString m_sSessionName;
+        wxString m_sResourcePrefix;
+        wxString m_sVersion;
+        wxString m_sSelfPath;
+        wxString m_sDialogCaption;
+        wxString m_sDialogMessage;
+        long m_nOtherPID;
+        long m_nWindowID;
+        int m_iDialogStyle;
+        enum mode m_eMode;
+        bool m_bNxSmartCardSupport;
+        bool m_bRunproc;
 
-    bool preInit();
+        bool preInit();
+        void checkNxSmartCardSupport();
 };
 
 DECLARE_APP(opennxApp)
