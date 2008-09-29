@@ -40,9 +40,10 @@ AC_ARG_ENABLE([debug],
 )
 if test "$ac_cv_enable_debug" = "YES" ; then
 	AC_MSG_NOTICE([will build debug version])
-	WXPARAMS="--debug"
+	WXPARAMS="--debug=yes"
 else
 	AC_MSG_NOTICE([will build release version])
+	WXPARAMS="--debug=no"
 fi
 
 ac_cv_enable_unicode=YES
@@ -53,16 +54,18 @@ AC_ARG_ENABLE([unicode],
 )
 if test "$ac_cv_enable_unicode" = "YES" ; then
 	AC_MSG_NOTICE([will enable unicode build])
-	WXPARAMS="$WXPARAMS --unicode"
+	WXPARAMS="$WXPARAMS --unicode=yes"
 else
 	AC_MSG_NOTICE([will disable unicode build])
+	WXPARAMS="$WXPARAMS --unicode=no"
 fi
 
 if test "$enable_static" = "yes" ; then
 	AC_MSG_NOTICE([will link against static wxWidgets libs])
-	WXPARAMS="$WXPARAMS --static"
+	WXPARAMS="$WXPARAMS --static=yes"
 else
 	AC_MSG_NOTICE([will link against shared wxWidgets libs])
+	WXPARAMS="$WXPARAMS --static=no"
 fi
 
 AM_PATH_WXCONFIG(2.8.0,wxWidgets=1,wxWidgets=0,[xrc,xml,qa,html,adv,core,net], $WXPARAMS)
