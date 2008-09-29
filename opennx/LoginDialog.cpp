@@ -225,8 +225,10 @@ void LoginDialog::CreateControls()
     ////@begin LoginDialog content initialisation
     ////@end LoginDialog content initialisation
 
-    m_pCtrlUseSmartCard->Enable(::wxGetApp().NxSmartCardSupport());
     ReadConfigDirectory();
+    m_bUseSmartCard = ::wxGetApp().NxSmartCardSupport() && m_pCurrentCfg && m_pCurrentCfg->bGetUseSmartCard();
+    m_pCtrlUseSmartCard->SetValue(m_bUseSmartCard);
+    m_pCtrlUseSmartCard->Enable(::wxGetApp().NxSmartCardSupport());
     if (m_bGuestLogin) {
         m_pCtrlUsername->Enable(false);
         m_pCtrlPassword->Enable(false);

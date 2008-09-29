@@ -923,7 +923,7 @@ MySession::parseSessions(bool moreAllowed)
         }
     }
     if (bFound) {
-#warning "TODO: Disable "New button" if moreAllowed is false
+#warning TODO: Disable "New button" if moreAllowed is false
         switch (d.ShowModal()) {
             case wxID_OK:
                 switch (d.GetMode()) {
