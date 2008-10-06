@@ -476,6 +476,16 @@ opennxApp::preInit()
     wxConfigBase::Get()->Flush();
     wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp);
 
+#ifdef __WXMSW__
+    wxString ldpath;
+    if (::wxGetEnv(wxT("PATH"), &ldpath))
+        ldpath += wxT(";");
+    ldpath = tmp + wxT("\\bin");
+    if (!::wxSetEnv(wxT("PATH"), ldpath)) {
+        ::wxLogSysError(wxT("Can not set PATH"));
+        return false;
+    }
+#endif
 #ifdef __UNIX__
     wxString ldpath;
     if (::wxGetEnv(wxT("LD_LIBRARY_PATH"), &ldpath))
@@ -483,7 +493,7 @@ opennxApp::preInit()
     ldpath = tmp + wxT("/lib");
     if (!::wxSetEnv(wxT("LD_LIBRARY_PATH"), ldpath)) {
         ::wxLogSysError(wxT("Can not set LD_LIBRARY_PATH"));
-	return false;
+        return false;
     }
 #endif
 
@@ -591,6 +601,8 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
             _("Run a session importing configuration settings from FILENAME."));
     parser.AddOption(wxT(""), wxT("window"),
             _("Specify window-ID for dialog mode."), wxCMD_LINE_VAL_NUMBER);
+    parser.AddOption(wxT(""), wxT("trace"),
+            _("Specify wxWidgets trace mask."));
     parser.AddSwitch(wxT(""), wxT("wizard"),
             _("Guide the user through the steps to configure a session."));
 }
@@ -689,6 +701,15 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
     if (parser.Found(wxT("wizard")))
         m_eMode = MODE_WIZARD;
     (void)parser.Found(wxT("session"), &m_sSessionName);
+    wxString traceTags;
+    if (parser.Found(wxT("trace"), &traceTags)) {
+        wxStringTokenizer t(traceTags, wxT(","));
+        while (t.HasMoreTokens()) {
+            wxString tag = t.GetNextToken();
+            ::wxLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
+            wxLog::AddTraceMask(tag);
+        }
+    }
     return true;
 }
 
