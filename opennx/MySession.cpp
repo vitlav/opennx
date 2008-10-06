@@ -667,10 +667,8 @@ MySession::OnSshEvent(wxCommandEvent &event)
                 msg << _("\nDo you want to delete the key and retry ?");
                 wxMessageDialog d(m_pParent, msg,
                         _("Warning - OpenNX"), wxYES_NO|wxICON_EXCLAMATION);
-                if (d.ShowModal() == wxID_YES) {
-                    m_sOffendingKey = wxT("");
+                if (d.ShowModal() == wxID_YES)
                     m_bRemoveKey = true;
-                }
                 m_bGotError = true;
             }
             break;
@@ -836,7 +834,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
             }
             break;
         case MyIPC::ActionTerminated:
-            if ((m_eConnectState <= STATE_PARSE_SESSIONS) && (!m_bGotError)) {
+            if ((m_eConnectState <= STATE_PARSE_SESSIONS) && (!m_bGotError) && (!m_bRemoveKey) && (m_sOffendingKey.IsEmpty())) {
                 msg = _("Unexpected termination of nxssh");
                 ::wxLogError(msg);
                 m_bGotError = true;
