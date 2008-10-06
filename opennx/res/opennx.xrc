@@ -2083,7 +2083,7 @@ local computer.</label>
                         <border>5</border>
                         <option>1</option>
                         <object class="wxBitmapComboBox" name="ID_COMBOBOX_SHARE_LOCALNAME">
-                            <style>wxCB_READONLY|wxCB_SORT</style>
+                            <style>wxCB_READONLY</style>
                         </object>
                     </object>
                 </object>

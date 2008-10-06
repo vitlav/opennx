@@ -37,13 +37,13 @@
 ////@begin includes
 ////@end includes
 
-#include <wx/bmpcbox.h>
-
 #include "MyValidator.h"
 #include "MyXmlConfig.h"
 #include "WinShare.h"
 #include "SmbShareProperties.h"
 #include "Icon.h"
+
+#include <wx/bmpcbox.h>
 
 ////@begin XPM images
 ////@end XPM images
@@ -156,6 +156,11 @@ bool SmbShareProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), cons
     Centre();
     ////@end SmbShareProperties creation
     return TRUE;
+}
+
+static int cmpshares(_wxObjArrayArrayOfShares **a, _wxObjArrayArrayOfShares **b)
+{
+    return (*a)->name.Cmp((*b)->name);
 }
 
 /*!
@@ -303,6 +308,12 @@ void SmbShareProperties::CreateControls()
             ArrayOfShares cupsShares = cc.GetShares();
             WX_APPEND_ARRAY(m_aShares, cupsShares);
         }
+        // Apparently, wxGTK (perhaps GTK itself) has a bug which
+        // results in data pointers not being associated properly to the
+        // ComboBox, if that ComboBox is sorted (wxCB_SORT attribute).
+        // As a woraround, we use an *unsorted* ComboBox and sort the
+        // shares before adding them to the ComboBox.
+        m_aShares.Sort(cmpshares);
 
         // Build ComboBox content
         for (size_t i = 0; i < m_aShares.GetCount(); i++) {
@@ -321,16 +332,13 @@ void SmbShareProperties::CreateControls()
                     bm = wxNullBitmap;
                     break;
             }
-            void *data =  m_aShares[i].GetThisVoid();
-            m_pCtrlLocalShares->Append(m_aShares[i].name, bm, data);
-            ::wxLogTrace(MYTRACETAG, wxT("cbi[%d].data = %p\n"), i, data);
+            m_pCtrlLocalShares->Append(m_aShares[i].name, bm, m_aShares[i].GetThisVoid());
         }
 
         if (m_aShares.GetCount() > 0) {
             // Select first element of ComboBox
             m_pCtrlLocalShares->SetSelection(0);
             SharedResource *res = wxDynamicCast(m_pCtrlLocalShares->GetClientData(0), SharedResource);
-            ::wxLogTrace(MYTRACETAG, wxT("CBI[0].data = %p\n"), res);
             wxASSERT(res);
             switch (res->sharetype) {
                 case SharedResource::SHARE_UNKNOWN:
@@ -372,10 +380,8 @@ void SmbShareProperties::CreateControls()
 
 void SmbShareProperties::OnComboboxShareLocalnameSelected( wxCommandEvent& event )
 {
-    // size_t sidx = (size_t)m_pCtrlLocalShares->GetClientData(event.GetInt());
     SharedResource *res = wxDynamicCast(m_pCtrlLocalShares->GetClientData(event.GetInt()), SharedResource);
     wxASSERT(res);
-    ::wxLogTrace(MYTRACETAG, wxT("selected: %d %p"), event.GetInt(), res);
     switch (res->sharetype) {
         case SharedResource::SHARE_UNKNOWN:
             break;
@@ -511,7 +517,6 @@ void SmbShareProperties::OnOkClick( wxCommandEvent& event )
         m_pCfg->aSetShareGroups(sg);
     } else {
         ShareGroup g;
-        // size_t sidx = (size_t)m_pCtrlLocalShares->GetClientData(m_pCtrlLocalShares->GetSelection());
         SharedResource *res = wxDynamicCast(m_pCtrlLocalShares->GetClientData(m_pCtrlLocalShares->GetSelection()), SharedResource);
         wxASSERT(res);
         ::wxLogTrace(MYTRACETAG, wxT("selected: %d %p"), event.GetInt(), res);

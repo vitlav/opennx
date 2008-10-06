@@ -49,6 +49,7 @@
 class wxBitmapComboBox;
 ////@end forward declarations
 class MyXmlConfig;
+class SharedResource;
 
 /*!
  * Control identifiers
