@@ -173,7 +173,6 @@ AsyncProcess::Entry()
     bool
 AsyncProcess::IsRunning() {
     bool ret = ((m_pid > 0) && Exists(m_pid));
-    //::wxLogTrace(MYTRACETAG, wxT("IsRunning returning %d"), ret);
     return ret;
 }
 
@@ -186,8 +185,9 @@ AsyncProcess::Print(const wxString &s, bool doLog)
             ::wxLogTrace(MYTRACETAG, wxT("Sending: '%s'"), s.c_str());
         else
             ::wxLogTrace(MYTRACETAG, wxT("Sending (hidden): '************'"));
-        wxTextOutputStream tos(*os);
-        tos << s << wxT("\n");
+        wxString sbuf = s + wxT("\n");
+        const wxWX2MBbuf buf = wxConvCurrent->cWX2MB(sbuf);
+        os->Write(buf, strlen(buf));
         return true;
     }
     return false;
