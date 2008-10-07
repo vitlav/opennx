@@ -92,6 +92,7 @@ private:
     wxArrayString m_aParseBuffer;
     wxString getXauthCookie();
     wxString getXauthPath();
+    wxString formatOptFilename();
     int getFirstFreePort(int);
     void startProxy();
     void startSharing();

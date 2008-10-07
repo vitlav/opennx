@@ -562,6 +562,20 @@ MySession::getXauthPath()
     return wxString();
 }
 
+wxString
+MySession::formatOptFilename()
+{
+#ifdef __WXMSW__
+    wxFileName fn(m_sOptFilename);
+    wxString ret = wxT("/cygdrive/");
+    ret += fn.GetVolume().Lower();
+    ret += fn.GetFullPath(wxPATH_UNIX);
+    return ret;
+#else
+    return m_sOptFilename;
+#endif
+}
+
     void
 MySession::OnSessionEvent(wxCommandEvent &event)
 {
@@ -823,7 +837,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                 msg = wxT("NX> 299 Switch connection to: ");
                 if (intver(NX_PROTO) > 0x00020000) {
                     msg << wxT("NX mode: encrypted options: nx,options=")
-                        << m_sOptFilename << wxT(":") << m_sSessionDisplay;
+                        << formatOptFilename() << wxT(":") << m_sSessionDisplay;
                 } else {
                     msg << m_sProxyIP << wxT(":") << m_sProxyPort
                         << wxT(" cookie: ") << m_sProxyCookie;
