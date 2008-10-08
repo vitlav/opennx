@@ -18,6 +18,9 @@
 // Free Software Foundation, Inc.,
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
 #pragma implementation "WinShare.h"
@@ -47,7 +50,13 @@ WX_DEFINE_OBJARRAY(ArrayOfShares);
 
 #ifdef __UNIX__
 
-#include <cups/cups.h>
+#ifdef HAVE_CUPS_CUPS_H
+# include <cups/cups.h>
+#else
+# ifdef HAVE_CUPS_H
+#  include <cups.h>
+# endif
+#endif
 #include <libsmbclient.h>
 
 typedef int (*SMBC_init)(smbc_get_auth_data_fn fn, int debug);
@@ -73,8 +82,8 @@ smbc_auth_fn(const char *, const char *, char *, int,
 }
 
 #else // __UNIX__
-// Windows
 
+// Windows
 #include <lm.h>
 
 struct share_info_1 {

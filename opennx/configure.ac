@@ -132,19 +132,6 @@ AC_ARG_ENABLE([warn],
 	]
 )
 
-ac_cv_enable_smartcard=NO
-AC_ARG_ENABLE([smartcard],
-	AS_HELP_STRING([--enable-smartcard],
-		[Enable SmartCard support (Default: NO)]),
-	[ test "$enableval" = "yes" && ac_cv_enable_smartcard=YES ]
-)
-if test "$ac_cv_enable_smartcard" = "YES" ; then
-	AC_MSG_NOTICE([SmartCard feature enabled])
-    AC_DEFINE(ENABLE_SMARTCARD,1,[Define, if SmartCard support should be enabled])
-else
-	AC_MSG_NOTICE([SmartCard feature disabled])
-fi
-
 dnl AC_CHECK_LIB(cups,cupsServer)
 
 CUPS_DEFAULT_PATH=
@@ -169,6 +156,20 @@ AC_ARG_WITH([samba],
                            [Specify path to samba source]),
 	[ac_cv_samba=$withval])
 test -n "$ac_cv_samba" && CPPFLAGS="$CPPFLAGS -I$ac_cv_samba/source/include"
+
+AC_CHECK_HEADERS([cups/cups.h cups.h libsmbclient.h])
+case $target_os in
+	mingw*)
+        ;;
+    *)
+        if test "$ac_cv_header_libsmbclient_h" != "yes" ; then
+            AC_MSG_ERROR([Need libsmbclient.h for compiling on Unix]);
+        fi
+        if test "$ac_cv_header_cups_cups_h" != "yes" -a "$ac_cv_header_cups_h" != "yes" ; then
+            AC_MSG_ERROR([Need cups.h for compiling on Unix]);
+        fi
+        ;;
+esac
 
 VERSION_COMMASEPARATED=`echo $VERSION|sed -e 's/\./,/g'`
 while test -z "`echo -n $VERSION_COMMASEPARATED|cut -d, -f4`" ; do

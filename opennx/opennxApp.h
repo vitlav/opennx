@@ -52,9 +52,7 @@ class opennxApp : public wxApp
         virtual void OnInitCmdLine(wxCmdLineParser& parser);
         virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
         virtual int OnExit();
-#ifdef ENABLE_SMARTCARD
         int FilterEvent(wxEvent& event);
-#endif
 
     private:
         enum mode {

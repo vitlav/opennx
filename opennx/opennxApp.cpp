@@ -511,10 +511,9 @@ opennxApp::preInit()
     return true;
 }
 
-#ifdef ENABLE_SMARTCARD
 int opennxApp::FilterEvent(wxEvent& event)
 {
-    if (event.IsCommandEvent()) {
+    if (m_bRunproc && event.IsCommandEvent()) {
         wxCommandEvent *ce = (wxCommandEvent *)&event;
         if (ce->GetEventType() == wxEVT_GENERIC) {
             MyIPC::tSessionEvents e = wx_static_cast(MyIPC::tSessionEvents, ce->GetInt());
@@ -533,11 +532,9 @@ int opennxApp::FilterEvent(wxEvent& event)
     }
     return -1;
 }
-#endif
 
 void opennxApp::checkNxSmartCardSupport()
 {
-#ifdef ENABLE_SMARTCARD
     wxString sysdir;
     wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &sysdir);
     wxFileName fn(sysdir, wxT(""));
@@ -575,7 +572,6 @@ void opennxApp::checkNxSmartCardSupport()
         }
         wxConfigBase::Get()->Flush();
     }
-#endif
 }
 
 void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
