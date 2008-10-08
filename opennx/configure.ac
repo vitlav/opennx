@@ -157,25 +157,25 @@ AC_ARG_WITH([samba],
 	[ac_cv_samba=$withval])
 test -n "$ac_cv_samba" && CPPFLAGS="$CPPFLAGS -I$ac_cv_samba/source/include"
 
+VERSION_COMMASEPARATED=`echo $VERSION|sed -e 's/\./,/g'`
 AC_CHECK_HEADERS([cups/cups.h cups.h libsmbclient.h])
 case $target_os in
 	mingw*)
+        while test -z "`echo -n $VERSION_COMMASEPARATED|cut -d, -f4`" ; do
+	        VERSION_COMMASEPARATED="${VERSION_COMMASEPARATED},0"
+        done
         ;;
     *)
         if test "$ac_cv_header_libsmbclient_h" != "yes" ; then
-            AC_MSG_ERROR([Need libsmbclient.h for compiling on Unix]);
+            AC_MSG_ERROR([Need libsmbclient.h for compiling on Unix])
         fi
         if test "$ac_cv_header_cups_cups_h" != "yes" -a "$ac_cv_header_cups_h" != "yes" ; then
-            AC_MSG_ERROR([Need cups.h for compiling on Unix]);
+            AC_MSG_ERROR([Need cups.h for compiling on Unix])
         fi
         ;;
 esac
-
-VERSION_COMMASEPARATED=`echo $VERSION|sed -e 's/\./,/g'`
-while test -z "`echo -n $VERSION_COMMASEPARATED|cut -d, -f4`" ; do
-	VERSION_COMMASEPARATED="${VERSION_COMMASEPARATED},0"
-done
 AC_SUBST(VERSION_COMMASEPARATED)
+
 
 AC_CONFIG_FILES([Makefile opennx.spec Info.plist res/opennx.rc po/Makefile.in])
 AC_OUTPUT
