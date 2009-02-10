@@ -337,6 +337,7 @@ private:
     wxButton* m_pCtrlCupsBrowse;
     wxButton* m_pCtrlFontDefault;
     wxButton* m_pCtrlFontFixed;
+    wxPanel* m_pCtrlPanelAbout;
     extHtmlWindow* m_pHtmlWindow;
     wxButton* m_pCtrlApplyButton;
 private:

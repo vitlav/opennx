@@ -336,7 +336,7 @@ void SessionAdmin::OnABOUTClick( wxCommandEvent& event )
 {
     AboutDialog d(this);
     d.ShowModal();
-    event.Skip();
+    //event.Skip();
 }
 
 /*!

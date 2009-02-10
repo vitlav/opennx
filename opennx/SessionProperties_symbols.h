@@ -1,6 +1,6 @@
 // $Id$
 //
-// Copyright (C) 2006 The OpenNX team
+// Copyright (C) 2008 The OpenNX team
 // Author: Fritz Elfert
 //
 // This program is free software; you can redistribute it and/or modify

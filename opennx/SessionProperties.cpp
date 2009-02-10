@@ -370,6 +370,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlCupsBrowse = NULL;
     m_pCtrlFontDefault = NULL;
     m_pCtrlFontFixed = NULL;
+    m_pCtrlPanelAbout = NULL;
     m_pHtmlWindow = NULL;
     m_pCtrlApplyButton = NULL;
 ////@end SessionProperties member initialisation
@@ -731,6 +732,7 @@ void SessionProperties::CreateControls()
     m_pCtrlCupsBrowse = XRCCTRL(*this, "ID_BUTTON_BROWSE_CUPSPATH", wxButton);
     m_pCtrlFontDefault = XRCCTRL(*this, "ID_BUTTON_FONT_DEFAULT", wxButton);
     m_pCtrlFontFixed = XRCCTRL(*this, "ID_BUTTON_FONT_FIXED", wxButton);
+    m_pCtrlPanelAbout = XRCCTRL(*this, "ID_PANEL_ABOUT", wxPanel);
     m_pHtmlWindow = XRCCTRL(*this, "ID_HTMLWINDOW_ABOUT", extHtmlWindow);
     m_pCtrlApplyButton = XRCCTRL(*this, "wxID_APPLY", wxButton);
     // Set validators
@@ -834,7 +836,9 @@ void SessionProperties::CreateControls()
         width = m_pHtmlWindow->GetInternalRepresentation()->GetWidth();
         m_pHtmlWindow->SetSize(width, height);
         m_pHtmlWindow->SetSizeHints(width, height);
-        m_pHtmlWindow->GetParent()->Fit();
+        m_pCtrlPanelAbout->SetClientSize(width - 2, height);
+#warning Check geometry on all platforms
+        //m_pHtmlWindow->GetParent()->SetClientSize(width, height);
     }
 }
 

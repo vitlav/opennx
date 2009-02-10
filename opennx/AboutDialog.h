@@ -90,6 +90,9 @@ public:
 
 ////@begin AboutDialog event handler declarations
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
+    void OnOKClick( wxCommandEvent& event );
+
 ////@end AboutDialog event handler declarations
 
 ////@begin AboutDialog member function declarations

@@ -64,6 +64,8 @@ IMPLEMENT_DYNAMIC_CLASS( AboutDialog, wxDialog )
 BEGIN_EVENT_TABLE( AboutDialog, wxDialog )
 
 ////@begin AboutDialog event table entries
+    EVT_BUTTON( wxID_OK, AboutDialog::OnOKClick )
+
 ////@end AboutDialog event table entries
 
 END_EVENT_TABLE()
@@ -92,7 +94,7 @@ bool AboutDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
 ////@end AboutDialog member initialisation
 
 ////@begin AboutDialog creation
-    SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
+    SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));
@@ -147,7 +149,7 @@ bool AboutDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
 void AboutDialog::CreateControls()
 {    
     ////@begin AboutDialog content construction
-    if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), wxT("ID_DIALOG_ABOUT")))
+    if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_ABOUT")))
         wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
     m_pHtmlWindow = XRCCTRL(*this, "ID_HTMLWINDOW_ABOUT", extHtmlWindow);
     ////@end AboutDialog content construction
@@ -187,3 +189,14 @@ wxIcon AboutDialog::GetIconResource( const wxString& name )
     // Icon retrieval
     return CreateIconFromFile(name);
 }
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
+ */
+
+void AboutDialog::OnOKClick( wxCommandEvent& event )
+{
+    EndDialog(0);
+}
+
