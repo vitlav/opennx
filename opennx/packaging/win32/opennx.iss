@@ -15,9 +15,7 @@
 #define APPIDSTR "{56D797D7-543C-408F-BBEB-B56787873D2F}"
 #define APPIDVAL "{" + APPIDSTR
 
-//#define NXDLURL "http://64.34.161.181/download/3.2.0/Windows/nxclient-3.2.0-13.exe"
-#define NXDLPAGE "http://www.nomachine.com/download-package.php?Prod_Id=65"
-#define NXRELEASE "3.2.0-13"
+#define NXDLURL "http://www.nomachine.com/download-client-windows.php"
 #define NXINSTALLER "nxclient-setup.exe"
 
 [Setup]
@@ -197,34 +195,45 @@ begin
         isxdl_InitLanguage;
         tmp := ExpandConstant('{tmp}\nxdlpage.txt');
         hwnd := StrToInt(ExpandConstant('{wizardhwnd}'));
-        if isxdl_Download(hwnd, '{#=NXDLPAGE}', tmp) <> 1 then
+        if isxdl_Download(hwnd, '{#=NXDLURL}', tmp) <> 1 then
           RaiseException('Could not fetch NoMachine download page. Aborting setup.');
-        isxdl_ClearFiles;
         if (not LoadStringFromFile(tmp, content)) then
           RaiseException('Could not read NoMachine download page. Aborting setup.');
-
-        ires := Pos('<B>Release:', content);
+        ires := Pos('http://www.nomachine.com/download-package.php?', content);
         if (ires = 0) then
           RaiseException('Could not parse NoMachine download page. Aborting setup.');
+        Delete(content, 1, ires - 1);
+        ires := Pos('''', content);
+        if (ires = 0) then
+          RaiseException('Could not parse NoMachine download page. Aborting setup.');
+        content := Copy(content, 1, ires - 1);
+        if isxdl_Download(hwnd, content, tmp) <> 1 then
+          RaiseException('Could not fetch NoMachine product download page. Aborting setup.');
+        isxdl_ClearFiles;
+        if (not LoadStringFromFile(tmp, content)) then
+          RaiseException('Could not read NoMachine product download page. Aborting setup.');
+        ires := Pos('<B>Release:', content);
+        if (ires = 0) then
+          RaiseException('Could not parse NoMachine product download page. Aborting setup.');
         Delete(content, 1, ires + 28);
         ires := Pos('</FONT>', content);
         if (ires = 0) then
-          RaiseException('Could not parse NoMachine download page. Aborting setup.');
+          RaiseException('Could not parse NoMachine product download page. Aborting setup.');
         j := ires - 1;
         while ((j > 1) and (content[j-1] <> '>')) do j := j - 1;
         nxver := Copy(content, j, ires - j);
         Delete(content, 1, ires + 7);
         ires := Pos('method="post"', content);
         if (ires = 0) then
-          RaiseException('Could not parse NoMachine download page. Aborting setup.');
+          RaiseException('Could not parse NoMachine product download page. Aborting setup.');
         Delete(content, 1, ires + 13);
         ires := Pos('HREF="', content);
         if (ires = 0) then
-          RaiseException('Could not parse NoMachine download page. Aborting setup.');
+          RaiseException('Could not parse NoMachine product download page. Aborting setup.');
         Delete(content, 1, ires + 5);
         ires := Pos('"', content);
         if (ires < 2) then
-          RaiseException('Could not parse NoMachine download page. Aborting setup.');
+          RaiseException('Could not parse NoMachine product download page. Aborting setup.');
         nxurl := Copy(content, 1, ires - 1);
 
         tmp := ExpandConstant('{tmp}\{#=NXINSTALLER}');
