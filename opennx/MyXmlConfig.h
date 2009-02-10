@@ -169,6 +169,7 @@ public:
     bool bGetVirtualDesktop() { return m_bVirtualDesktop; }
     bool bGetVncRememberPassword() { return m_bVncRememberPassword; }
     bool bGetVncUseNxAuth() { return m_bVncUseNxAuth; }
+    bool bGetEnableUSBIP() { return m_bEnableUSBIP; }
     
     MyXmlConfig::ConnectionSpeed eGetConnectionSpeed() { return m_eConnectionSpeed; }
     MyXmlConfig::DesktopType eGetDesktopType() { return m_eDesktopType; }
@@ -254,6 +255,7 @@ public:
     void bSetVirtualDesktop(bool b) { m_bVirtualDesktop = b; }
     void bSetVncRememberPassword(bool b) { m_bVncRememberPassword = b; }
     void bSetVncUseNxAuth(bool b) { m_bVncUseNxAuth = b; }
+    void bSetEnableUSBIP(bool b) { m_bEnableUSBIP = b; }
     
     void eSetCacheDisk(MyXmlConfig::CacheDisk e) { m_eCacheDisk = e; }
     void eSetCacheMemory(MyXmlConfig::CacheMemory e) { m_eCacheMemory = e; }
@@ -337,6 +339,7 @@ private:
     bool m_bEnableMultimedia;
     bool m_bEnableSmbSharing;
     bool m_bEnableSSL;
+    bool m_bEnableUSBIP;
     bool m_bGuestMode;
     bool m_bImageEncodingJpeg;
     bool m_bImageEncodingPlainX;

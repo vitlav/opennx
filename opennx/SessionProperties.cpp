@@ -310,7 +310,7 @@ SessionProperties::CheckChanged()
         // variables on 'Services' tab
         m_pCfg->bSetEnableSmbSharing(m_bEnableSmbSharing);
         m_pCfg->bSetEnableMultimedia(m_bEnableMultimedia);
-        //m_pCfg->bSetEnableUSBIP(m_bEnableUSBIP);
+        m_pCfg->bSetEnableUSBIP(m_bEnableUSBIP);
         m_pCfg->bSetUseCups(m_bUseCups);
         m_pCfg->iSetCupsPort(m_iCupsPort);
 
@@ -412,6 +412,12 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
         m_bUseCups = false;
 #endif
         m_iCupsPort = m_pCfg->iGetCupsPort();
+#ifdef SUPPORT_USBIP
+        m_bEnableUSBIP = m_pCfg->bGetEnableUSBIP();
+#else
+        m_bEnableUSBIP = false;
+        m_pCfg->bSetEnableUSBIP(false);
+#endif
 
         // variabless on 'Environment' tab
         m_bRemoveOldSessionFiles = m_pCfg->bGetRemoveOldSessionFiles();
@@ -549,6 +555,9 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlCupsPath->Enable(false);
     m_pCtrlCupsBrowse->Enable(false);
 #endif
+#ifndef SUPPORT_USBIP
+    m_pCtrlUsbEnable->Enable(false);
+#endif
     return TRUE;
 }
 
@@ -609,11 +618,12 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
             m_pCtrlDesktopType->Enable(true);
             m_pCtrlDesktopSettings->Enable(m_iDesktopTypeDialog == MyXmlConfig::DTYPE_CUSTOM);
             m_pCtrlCupsEnable->Enable(c.IsAvailable());
-#ifdef __WXMSW___
-            m_pCtrlEnameUSBIP->Enable(false);
-#else
-#endif
             m_pCtrlSmbEnable->Enable(s.IsAvailable());
+#ifdef SUPPORT_USBIP
+            m_pCtrlUsbEnable->Enable(true);
+#else
+            m_pCtrlUsbEnable->Enable(false);
+#endif
             break;
         case MyXmlConfig::STYPE_WINDOWS:
             m_pCtrlDesktopType->SetString(0, _("RDP"));
@@ -1745,8 +1755,7 @@ void SessionProperties::OnTextctrlCupspathUpdated( wxCommandEvent& event )
 
 void SessionProperties::OnCHECKBOXUSBENABLEClick( wxCommandEvent& event )
 {
-    if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlUsbEnable))
-        CheckChanged();
+    CheckChanged();
     event.Skip();
 }
 
