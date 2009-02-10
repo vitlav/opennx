@@ -19,6 +19,10 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #if defined(__GNUG__) && !defined(__APPLE__)
 #pragma implementation "AboutDialog.h"
 #endif
@@ -28,10 +32,6 @@
 
 #ifdef __BORLANDC__
 #pragma hdrstop
-#endif
-
-#ifdef HAVE_CONFIG_H
-#include "config.h"
 #endif
 
 #ifndef WX_PRECOMP

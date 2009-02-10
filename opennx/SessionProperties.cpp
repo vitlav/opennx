@@ -65,7 +65,8 @@
 ////@begin XPM images
 ////@end XPM images
 
-static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
+#include "trace.h"
+ENABLE_TRACE;
 
 class KbdLayout {
     public:
@@ -580,7 +581,7 @@ SessionProperties::InstallOnCharHandlers(wxWindow *w /* = NULL*/)
 #endif
                 ::wxLogError(wxT("Detected %s (name=%s) window without validator!"),
                     (w->IsKindOf(CLASSINFO(wxTextCtrl)) ? wxT("wxTextCtrl") : wxT("wxSpinCtrl")),
-                    (w->GetName().IsEmpty() ? wxT("") : w->GetName().c_str()));
+                    (w->GetName().IsEmpty() ? wxEmptyString : w->GetName().c_str()));
             }
         } else {
             if (!w->GetChildren().IsEmpty())
@@ -1579,7 +1580,7 @@ void SessionProperties::OnButtonBrowseCupspathClick( wxCommandEvent& event )
 {
     wxFileName fn(m_sCupsPath);
     const wxString& file = ::wxFileSelector(_("Select System CUPS daemon"),
-            fn.GetPath(), fn.GetName(), wxT(""), wxT("*"), wxOPEN|wxFILE_MUST_EXIST, this);
+            fn.GetPath(), fn.GetName(), wxEmptyString, wxT("*"), wxOPEN|wxFILE_MUST_EXIST, this);
     if (!file.IsEmpty()) {
         m_pCtrlCupsPath->SetValue(file);
         CheckChanged();

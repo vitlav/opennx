@@ -19,6 +19,10 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #if defined(__GNUG__) && !defined(__APPLE__)
 #pragma implementation "SessionList.h"
 #endif
@@ -34,9 +38,6 @@
 #include "wx/wx.h"
 #endif
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 #include "ConnectDialog.h"
 #include "MySession.h"
 #include "MyXmlConfig.h"
@@ -70,7 +71,8 @@
 # include <grp.h>
 #endif
 
-static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
+#include "trace.h"
+ENABLE_TRACE;
 
 static const int CUPS_PORT_OFFSET  = 2000;
 static const int SMB_PORT_OFFSET   = 3000;
@@ -80,6 +82,43 @@ static const int SOUND_PORT_OFFSET = 7000;
 static const int KBD_PORT_OFFSET   = 8000;
 
 #define NX_PROTO wxT(NX_PROTOCOL_VERSION)
+
+#ifdef __WXMSW__
+wxString cygPath(const wxString &dir, const wxString &file = wxEmptyString)
+{
+    wxFileName fn(dir);
+    wxString ret = wxT("/cygdrive/");
+    ret += fn.GetVolume().Lower();
+    ret += fn.GetShortPath().AfterFirst(wxT(':'));
+    if (!file.IsEmpty())
+        ret << wxT("\\") << file;
+    ret.Replace(wxT("\\"), wxT("/"));
+    return ret;
+}
+
+class FontpathTraverser : public wxDirTraverser
+{
+    public:
+        wxString GetFontPath() { return m_sFontPath; }
+
+        virtual wxDirTraverseResult OnFile(const wxString& WXUNUSED(filename))
+        {
+            return wxDIR_CONTINUE;
+        }
+
+        virtual wxDirTraverseResult OnDir(const wxString& dirname)
+        {
+            if (!m_sFontPath.IsEmpty())
+                m_sFontPath += wxT(",");
+            m_sFontPath += cygPath(dirname);
+            return wxDIR_IGNORE;
+        }
+
+    private:
+        wxString m_sFontPath;
+
+};
+#endif
 
 class RunLog : public wxLogChain
 {
@@ -509,7 +548,7 @@ MySession::getFirstFreePort(int startPort)
 }
 
     wxString
-MySession::getXauthCookie()
+MySession::getXauthCookie(int display /* = 0 */)
 {
 #ifdef __UNIX__
     wxString dpy;
@@ -533,6 +572,24 @@ MySession::getXauthCookie()
             }
         }
     }
+#endif
+#ifdef __WXMSW__
+    // On windows we *create* the cookie instead
+    wxString cookie = md5sum(::wxGetUserId() + wxDateTime::Now().Format());
+    wxString domain = wxString::Format(wxT("%s:%d"),
+            ::wxGetFullHostName().c_str(), display);
+    wxFileName fn(m_sSysDir, wxEmptyString);
+    fn.AppendDir(wxT("bin"));
+    fn.SetName(wxT("nxauth.exe"));
+    wxString cmd = fn.GetShortPath();
+    cmd << wxT(" -i");
+    cmd << wxT(" -f");
+    cmd << wxT(" ") << getXauthPath();
+    cmd << wxT(" add");
+    cmd << wxT(" ") << domain;
+    cmd << wxT(" MIT-MAGIC-COOKIE-1");
+    cmd << wxT(" ") << cookie;
+    return ::wxExecute(cmd) ? wxString() : cookie;
 #endif
     return wxString();
 }
@@ -559,6 +616,9 @@ MySession::getXauthPath()
         }
     }
 #endif
+#ifdef __WXMSW__
+    return cygPath(m_sUserDir, wxT(".Xauthority"));
+#endif
     return wxString();
 }
 
@@ -566,11 +626,7 @@ wxString
 MySession::formatOptFilename()
 {
 #ifdef __WXMSW__
-    wxFileName fn(m_sOptFilename);
-    wxString ret = wxT("/cygdrive/");
-    ret += fn.GetVolume().Lower();
-    ret += fn.GetFullPath(wxPATH_UNIX);
-    return ret;
+    return cygPath(m_sOptFilename);
 #else
     return m_sOptFilename;
 #endif
@@ -749,17 +805,11 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     m_eConnectState = STATE_PARSE_SESSIONS;
                     break;
                 case STATE_PARSE_SESSIONS:
-                    printSsh(wxT(""));
+                    printSsh(wxEmptyString);
                     break;
                 case STATE_START_SESSION:
                     scmd = wxT("startsession ");
                     scmd << m_pCfg->sGetSessionParams(intver(NX_PROTO), true, m_sClearPassword);
-#if 0
-#ifdef __UNIX__
-                    if (!m_sXauthCookie.IsEmpty())
-                        scmd << wxT(" --cookie=\"") << m_sXauthCookie << wxT("\"");
-#endif
-#endif
                     printSsh(scmd);
                     m_eConnectState = STATE_FINISH;
                     break;
@@ -769,12 +819,6 @@ MySession::OnSshEvent(wxCommandEvent &event)
                         << wxT(" --session=\"") << m_sResumeName
                         << wxT("\" --type=\"") << m_sResumeType
                         << wxT("\" --id=\"") << m_sResumeId << wxT("\"");
-#if 0
-#ifdef __UNIX__
-                    if (!m_sXauthCookie.IsEmpty())
-                        scmd << wxT(" --cookie=\"") << m_sXauthCookie << wxT("\"");
-#endif
-#endif
                     printSsh(scmd);
                     m_eConnectState = STATE_FINISH;
                     break;
@@ -935,7 +979,7 @@ MySession::parseSessions(bool moreAllowed)
         }
     }
     if (bFound) {
-#warning TODO: Disable "New button" if moreAllowed is false
+        d.EnableNew(moreAllowed);
         switch (d.ShowModal()) {
             case wxID_OK:
                 switch (d.GetMode()) {
@@ -995,7 +1039,7 @@ MySession::startSharing()
     m_sSessionDisplay.ToLong(&smbport);
     cupsport += CUPS_PORT_OFFSET;
     smbport += SMB_PORT_OFFSET;
-    wxString cupspw = decodeString(wxConfigBase::Get()->Read(wxT("Config/CupsPasswd"), wxT("")));
+    wxString cupspw = decodeString(wxConfigBase::Get()->Read(wxT("Config/CupsPasswd"), wxEmptyString));
     for (size_t i = 0; i < sg.GetCount(); i++) {
         if (used.Index(sg[i].m_sGroupName) == wxNOT_FOUND)
             continue;
@@ -1009,7 +1053,7 @@ MySession::startSharing()
             }
         }
         ::wxLogTrace(MYTRACETAG, wxT("'%s' is %savailable"), sn.c_str(),
-                (bAvailable ? wxT("") : wxT("not ")));
+                (bAvailable ? wxEmptyString : wxT("not ")));
         if (!bAvailable)
             continue;
         wxString shcmd;
@@ -1071,8 +1115,66 @@ MySession::startSharing()
 }
 
     void
+MySession::startXserver()
+{
+#ifdef __WXMSW__
+    int display = getFirstFreePort(X_PORT_OFFSET);
+::wxLogTrace(MYTRACETAG, wxT("startXServer first free port is %d"), display);
+    if (0 == display) {
+#warning error-handling
+        return;
+    }
+    display -= X_PORT_OFFSET;
+    wxString dpyStr = wxT(":");
+    dpyStr << display;
+    m_sXauthCookie = getXauthCookie(display);
+
+    wxFileName fn(m_sSysDir, wxT("nxwin.exe"));
+    fn.AppendDir(wxT("bin"));
+
+    wxString wxWinCmd = fn.GetShortPath();
+    wxWinCmd << wxT(" -nowinkill");
+    wxWinCmd << wxT(" -clipboard");
+    wxWinCmd << wxT(" -noloadxkb");
+    wxWinCmd << wxT(" -agent");
+    //wxWinCmd << wxT(" -hide");
+    wxWinCmd << wxT(" -noreset");
+    wxWinCmd << wxT(" -nolisten tcp");
+    wxWinCmd << wxT(" -auth ") << getXauthPath();
+
+    {
+        wxLogNull l;
+        fn.AssignDir(m_sSysDir);
+        fn.AppendDir(wxT("share"));
+        fn.AppendDir(wxT("fonts"));
+        wxDir d(fn.GetShortPath());
+        FontpathTraverser t;
+        d.Traverse(t);
+        wxWinCmd << wxT(" -fp ") << t.GetFontPath();
+    }
+
+    wxWinCmd << wxT(" -screen 0 800x600");
+
+    wxString user;
+    if (m_pCfg->bGetGuestMode()) {
+        user = m_pCfg->sGetGuestUser();
+        if (user.IsEmpty())
+            user << wxT("guest");
+    } else
+        user = m_pCfg->sGetUsername();
+    wxWinCmd << wxT(" -name ") << user << wxT("@") << m_pCfg->sGetServerHost() << wxT(":");
+    // wxWinCmd << wxT(" -nokeyhook");
+
+    wxWinCmd << wxT(" ") << dpyStr;
+::wxLogTrace(MYTRACETAG, wxT("startXServer executing %s"), wxWinCmd.c_str());
+    ::wxExecute(wxWinCmd, wxEXEC_ASYNC);
+#endif
+}
+
+    void
 MySession::startProxy()
 {
+    ::wxLogTrace(MYTRACETAG, wxT("MySession::startProxy() called"));
     long cupsport = wxConfigBase::Get()->Read(wxT("Config/CupsPort"), -1);
     wxString popts;
     popts << wxT("nx,cookie=") << m_sProxyCookie
@@ -1091,7 +1193,7 @@ MySession::startProxy()
 #ifdef __UNIX__
         << wxT(",client=linux")
 #else
-        << wxT(",client=win")
+        << wxT(",client=winnt")
 #endif
         << wxT(",id=") << m_sSessionID;
     if (intver(NX_PROTO) <= 0x00020000) {
@@ -1169,7 +1271,7 @@ MySession::getActiveCupsPrinters()
                 }
             }
             ::wxLogTrace(MYTRACETAG, wxT("'%s' is %savailable"),
-                    ret[idx].m_sShareName.c_str(), (bAvailable ? wxT("") : wxT("not ")));
+                    ret[idx].m_sShareName.c_str(), (bAvailable ? wxEmptyString : wxT("not ")));
             if (!bAvailable) {
                 ::wxLogTrace(MYTRACETAG, wxT("removing[%d] '%s'"),
                         idx, ret[idx].m_sShareName.c_str());
@@ -1363,14 +1465,14 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
     m_bSessionEstablished = false;
     m_bCollectSessions = false;
     m_bCollectConfig = false;
-    m_sSessionID = wxT("");
+    m_sSessionID = wxEmptyString;
     m_pParent = parent;
     MyXmlConfig cfg(cfgpar.sGetFileName());
     m_pCfg = &cfg;
     if (cfg.IsValid()) {
         wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &m_sSysDir);
         wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &m_sUserDir);
-        wxFileName fn(m_sSysDir, wxT(""));
+        wxFileName fn(m_sSysDir, wxEmptyString);
 
         fn.AppendDir(wxT("bin"));
 #ifdef __WXMSW__
@@ -1446,8 +1548,9 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
             nxsshcmd << wxT(" -B");
         nxsshcmd << wxT(" -E") << wxT(" nx@") << cfg.sGetServerHost();
 
-        ::wxSetEnv(wxT("NX_HOME"), wxFileName::GetHomeDir());
-        ::wxLogInfo(wxT("env: NX_HOME='%s'"), wxFileName::GetHomeDir().c_str());
+        fn.Assign(wxFileName::GetHomeDir());
+        ::wxSetEnv(wxT("NX_HOME"), fn.GetShortPath());
+        ::wxLogInfo(wxT("env: NX_HOME='%s'"), fn.GetShortPath().c_str());
         ::wxSetEnv(wxT("NX_ROOT"), m_sUserDir);
         ::wxLogInfo(wxT("env: NX_ROOT='%s'"), m_sUserDir.c_str());
         ::wxSetEnv(wxT("NX_SYSTEM"), m_sSysDir);
@@ -1465,7 +1568,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
         if (!stmp.IsEmpty()) {
             fn.Assign(stmp);
             fn.RemoveLastDir();
-            fn.SetName(wxT(""));
+            fn.SetName(wxEmptyString);
             ::wxSetEnv(wxT("NX_TEMP"), fn.GetShortPath());
             ::wxLogInfo(wxT("env: NX_TEMP='%s'"), fn.GetShortPath().c_str());
         } else {
@@ -1473,10 +1576,14 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
             ::wxLogInfo(wxT("env: NX_TEMP='/tmp'"));
         }
 #else
-#pragma message(__FILE__ " : warning: Need NX_TEMP on win32?")
+        ::wxSetEnv(wxT("NX_TEMP"), cygPath(m_sTempDir));
+        ::wxLogInfo(wxT("env: NX_TEMP='%s'"), cygPath(m_sTempDir).c_str());
 #endif
 
-        m_sXauthCookie = getXauthCookie();
+#ifdef __WXMSW__
+        startXserver();
+#endif
+
         fn.Assign(m_sSysDir, wxT("bin"));
         m_iProgress = 0;
         ConnectDialog dlg(m_pParent);
@@ -1486,7 +1593,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
                     cfg.sGetServerHost().c_str()));
 
         if (m_pCfg->bGetEnableMultimedia()) {
-            wxFileName fn(m_sSysDir, wxT(""));
+            wxFileName fn(m_sSysDir, wxEmptyString);
             fn.AppendDir(wxT("bin"));
             fn.SetName(wxT("nxservice"));
             dlg.SetStatusText(_("Preparing multimedia service ..."));
@@ -1531,7 +1638,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
         ::wxLogInfo(wxT("Starting %s"), nxsshcmd.c_str());
         do {
             m_bRemoveKey = false;
-            m_sOffendingKey = wxT("");
+            m_sOffendingKey = wxEmptyString;
             if (nxssh.SshProcess(nxsshcmd, fn.GetShortPath(), this)) {
                 m_bGotError = false;
                 m_eConnectState = STATE_HELLO;

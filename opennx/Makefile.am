@@ -3,7 +3,9 @@ SUBDIRS = po
 noinst_PROGRAMS = bin2hdr
 bin2hdr_SOURCES = bin2hdr.cpp
 
-bin_PROGRAMS = opennx
+bin_PROGRAMS = opennx $(TRACELOG)
+
+EXTRA_PROGRAMS = tracelog$(EXEEXT)
 
 opennx_SOURCES = AboutDialog.cpp AsyncProcess.cpp ConnectDialog.cpp ExtHtmlWindow.cpp \
 	ForeignFrame.cpp Icon.cpp LogDialog.cpp KeyDialog.cpp LoginDialog.cpp \
@@ -24,7 +26,7 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h ConnectDialo
 	opennxApp.h osdep.h  PanicDialog.h PanicDialog_symbols.h pwcrypt.h \
 	QuitDialog.h QuitDialog_symbols.h RdpImageSettingsDialog.h \
 	RdpImageSettingsDialog_symbols.h RdpPropertyDialog.h \
-	RdpPropertyDialog_symbols.h resource.h ResumeDialog.h \
+	RdpPropertyDialog_symbols.h ResumeDialog.h \
 	ResumeDialog_symbols.h SessionAdmin.h SessionAdmin_symbols.h \
 	SessionList.h SessionProperties.h SessionProperties_symbols.h \
 	SmbShareProperties.h SmbShareProperties_symbols.h TextViewer.h \
@@ -32,15 +34,25 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h ConnectDialo
 	UnixImageSettingsDialog_symbols.h VncImageSettingsDialog.h \
 	VncImageSettingsDialog_symbols.h VncPropertyDialog.h \
 	VncPropertyDialog_symbols.h WinShare.h X11PropertyDialog.h \
-	X11PropertyDialog_symbols.h
+	X11PropertyDialog_symbols.h trace.h
 
-EXTRA_HEADERS = resource.h res/opennx.rc
+tracelog_SOURCES = tracelogApp.cpp TraceLogFrame.cpp DebugStringGrabber.cpp \
+				   wxprec.cpp Icon.cpp
+
+tracelog_LDADD = $(WX_LIBS) $(X_LIBS) $(X_PRE_LIBS) $(X_EXTRA_LIBS) $(APP_LDADD)
+tracelog_DEPENDENCIES = $(TRACELOG_RES)
+tracelog_CPPFLAGS = $(WX_CPPFLAGS) $(X_CFLAGS) -DAPP_TRACELOG
+tracelog_CXXFLAGS = $(WX_CXXFLAGS)
+tracelog_CFLAGS = $(WX_CFLAGS)
+
+EXTRA_HEADERS = res/opennx.rc
 
 EXTRA_opennx_SOURCES = opennx.rc
+EXTRA_tracelog_SOURCES = tracelog.rc
 
-opennx_LDADD = $(WIN_RES) $(WX_LIBS) $(X_LIBS) $(X_PRE_LIBS) $(X_EXTRA_LIBS) $(APP_LDADD)
-opennx_DEPENDENCIES = $(WIN_RES)
-opennx_CPPFLAGS = $(WX_CPPFLAGS) $(X_CFLAGS)
+opennx_LDADD = $(OPENNX_RES) $(WX_LIBS) $(X_LIBS) $(X_PRE_LIBS) $(X_EXTRA_LIBS) $(APP_LDADD)
+opennx_DEPENDENCIES = $(OPENNX_RES)
+opennx_CPPFLAGS = $(WX_CPPFLAGS) $(X_CFLAGS) -DAPP_OPENNX
 opennx_CXXFLAGS = $(WX_CXXFLAGS)
 opennx_CFLAGS = $(WX_CFLAGS)
 
@@ -76,10 +88,13 @@ macbundle:
 #	rm -f po/*~ *.bak *~ \#.* .#*
 #	rm -rf OpenNX.app
 
-tmpres.zip: $(top_srcdir)/res/*.xrc $(top_srcdir)/res/*.png $(top_srcdir)/res/*.html $(top_srcdir)/res/*.txt $(top_srcdir)/res/*.rtf
-	if test "$(top_srcdir)" != "$(top_builddir)" ; then $(LN_S) $(top_srcdir)/res $(top_builddir) ; fi
-	zip -q9r $(top_builddir)/$@ res -i *.png -i *.xrc -i *.html -i *.txt -i *.rtf res/nx-desktop.icns -x res/.svn/*
-	if test "$(top_srcdir)" != "$(top_builddir)" ; then $(RM) $(top_builddir)/res ; fi
+RESDEPS = $(wildcard $(srcdir)/res/*.xrc $(srcdir)/res/*.png \
+		  $(srcdir)/res/*.html $(srcdir)/res/*.txt $(srcdir)/res/*.rtf)
+RESSRC = $(subst $(srcdir)/,,$(RESDEPS))
+THISDIR = $(abspath $(builddir))
+
+tmpres.zip: $(RESDEPS)
+	cd $(srcdir) && zip -q9r $(THISDIR)/$(@F) $(RESSRC)
 
 memres.h: tmpres.zip bin2hdr
 	./bin2hdr tmpres.zip memres.h mem_res
@@ -87,6 +102,8 @@ memres.h: tmpres.zip bin2hdr
 $(top_srcdir)/opennxApp.cpp: memres.h
 
 opennxApp.cpp: memres.h
+
+tracelogApp.cpp: memres.h
 
 SUFFIXES = .rc
 
@@ -134,5 +151,4 @@ uninstall-local:
 dist-hook:
 	find $(distdir) -type d -name .svn | xargs $(RM) -r
 
-EXTRA_DIST = conf/config.rpath INSTALL INSTALL.generic COPYING m4 res share opennx.pjd opennx.dsw \
-			 bin2hdr.dsp opennx.dsp Translations.dsp opennx.rc opennx.spec
+EXTRA_DIST = conf/config.rpath INSTALL INSTALL.generic COPYING m4 share opennx.pjd opennx.rc opennx.spec $(RESDEPS)

@@ -19,6 +19,10 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #if defined(__GNUG__) && !defined(__APPLE__)
 #pragma implementation "SessionList.h"
 #endif
@@ -52,7 +56,8 @@
 
 #include "osdep.h"
 
-static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
+#include "trace.h"
+ENABLE_TRACE;
 
 class SessionTraverser : public wxDirTraverser
 {
@@ -173,7 +178,7 @@ void SessionList::ScanDir()
         if (m_dirName.IsEmpty())
             return;
         if (!wxDir::Exists(m_dirName)) {
-            m_dirName = wxT("");
+            m_dirName = wxEmptyString;
             return;
         }
         m_dir = new wxDir(m_dirName);

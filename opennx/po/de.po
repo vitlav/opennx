@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2008-09-29 11:43+0200\n"
+"POT-Creation-Date: 2009-01-17 08:00+0100\n"
 "PO-Revision-Date: 2008-09-29 12:11+0200\n"
 "Last-Translator: Fritz Elfert <felfert@users.sf.net>\n"
 "Language-Team:  <de@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Poedit-Language: German\n"
 "X-Poedit-Country: GERMANY\n"
 
-#: AboutDialog.cpp:112 SessionProperties.cpp:803
+#: AboutDialog.cpp:114 SessionProperties.cpp:804
 msgid "Version"
 msgstr "Version"
 
@@ -54,11 +54,11 @@ msgstr "&Abbruch"
 msgid "OPENNX-PULLDOWN"
 msgstr ""
 
-#: KeyDialog.cpp:199
+#: KeyDialog.cpp:200
 msgid "Select key to import"
 msgstr "Schlüssel zum Import wählen"
 
-#: KeyDialog.cpp:200
+#: KeyDialog.cpp:201
 msgid "SSh key files (*.key;*.pub)|*.key;*.pub"
 msgstr "SSh Schlüsseldateien (*.key;*.pub)|*.key;*.pub"
 
@@ -86,7 +86,7 @@ msgstr "Sitzungsprotokoll - OpenNX"
 msgid "Close"
 msgstr "Schließen"
 
-#: LoginDialog.cpp:324 LoginDialog.cpp:401
+#: LoginDialog.cpp:328 LoginDialog.cpp:405
 #, c-format
 msgid ""
 "Could not save session to\n"
@@ -96,7 +96,7 @@ msgstr ""
 "%s\n"
 "speichern."
 
-#: LoginDialog.cpp:325 LoginDialog.cpp:402
+#: LoginDialog.cpp:329 LoginDialog.cpp:406
 msgid "Error saving - OpenNX"
 msgstr "Fehler beim Speichern - OpenNX"
 
@@ -134,63 +134,66 @@ msgstr "Einstellungen..."
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: MyIPC.cpp:374
+#: MyIPC.cpp:376
 msgid "Authentication failed"
 msgstr "Authentisierung fehlgeshlagen"
 
-#: MySession.cpp:427 SessionList.cpp:259 SessionList.cpp:304
+#: MySession.cpp:466 SessionList.cpp:264 SessionList.cpp:309
 msgid "unknown"
 msgstr "unbekannt"
 
-#: MySession.cpp:656 MySession.cpp:669
+#: MySession.cpp:726 MySession.cpp:739
 msgid "Warning - OpenNX"
 msgstr "Warnung - OpenNX"
 
-#: MySession.cpp:667
+#: MySession.cpp:737
 msgid ""
 "\n"
 "Do you want to delete the key and retry ?"
-msgstr "\nWollen Sie den Schlüssel löschen und es erneut versuchen? "
+msgstr ""
+"\n"
+"Wollen Sie den Schlüssel löschen und es erneut versuchen? "
 
-#: MySession.cpp:689
+#: MySession.cpp:757
 msgid "Sending username"
 msgstr "Sende Benutzername"
 
-#: MySession.cpp:693 MySession.cpp:718
+#: MySession.cpp:761 MySession.cpp:786
 msgid "Authenticating"
 msgstr "Authentisierung"
 
-#: MySession.cpp:700
+#: MySession.cpp:768
 msgid "Authentication successful"
 msgstr "Authentisierung erfolgreich"
 
-#: MySession.cpp:734
+#: MySession.cpp:802
 msgid "Query server-side sessions"
 msgstr "Abfrage der Sitzungsliste"
 
-#: MySession.cpp:777 MySession.cpp:960
+#: MySession.cpp:833 MySession.cpp:1016
 msgid "Error - OpenNX"
 msgstr "Fehler - OpenNX"
 
-#: MySession.cpp:783 MySession.cpp:787 MySession.cpp:791 MySession.cpp:795
-#: MySession.cpp:799 MySession.cpp:803 MySession.cpp:807 MySession.cpp:811
-#: MySession.cpp:815 MySession.cpp:819
+#: MySession.cpp:839 MySession.cpp:843 MySession.cpp:847 MySession.cpp:851
+#: MySession.cpp:855 MySession.cpp:859 MySession.cpp:863 MySession.cpp:867
+#: MySession.cpp:871 MySession.cpp:875
 msgid "Negotiating session parameter"
 msgstr "Aushandlung der Sitzungsparameter"
 
-#: MySession.cpp:824 MySession.cpp:847
+#: MySession.cpp:880 MySession.cpp:903
 msgid "Starting session"
 msgstr "Starte Sitzung"
 
-#: MySession.cpp:840
+#: MySession.cpp:896
 msgid "Unexpected termination of nxssh"
 msgstr "Unerwartetes Ende von nxssh"
 
-#: MySession.cpp:959
+#: MySession.cpp:1015
 msgid "You have reached your session limit. No more sessions allowed"
-msgstr "Sie haben Ihr Sitzungs-Limit erreicht. Keine weiteren Sitzungen erlaubt"
+msgstr ""
+"Sie haben Ihr Sitzungs-Limit erreicht. Keine weiteren Sitzungen erlaubt"
 
-#: MySession.cpp:1100
+#: MySession.cpp:1214
 #, c-format
 msgid ""
 "Could not create session directory\n"
@@ -199,7 +202,7 @@ msgstr ""
 "Konnte Sitzungsverzeichnis nicht anlegen\n"
 "%s\n"
 
-#: MySession.cpp:1120
+#: MySession.cpp:1234
 #, c-format
 msgid ""
 "Could not write session options\n"
@@ -209,41 +212,41 @@ msgstr ""
 "%s\n"
 "speichern.\n"
 
-#: MySession.cpp:1419
+#: MySession.cpp:1533
 #, c-format
 msgid "Could not write %s"
 msgstr "Konnte %s nicht schreiben"
 
-#: MySession.cpp:1473 MySession.cpp:1504 MySession.cpp:1512
+#: MySession.cpp:1592 MySession.cpp:1623 MySession.cpp:1631
 #, c-format
 msgid "Connecting to %s ..."
 msgstr "Verbinde mit %s ..."
 
-#: MySession.cpp:1480
+#: MySession.cpp:1599
 msgid "Preparing multimedia service ..."
 msgstr "Multimedia Dienst vorbereiten ..."
 
-#: MySession.cpp:1490
+#: MySession.cpp:1609
 msgid "Could not query multimedia support"
 msgstr "Konnte Multimedia Unterstützung nicht ermitteln"
 
-#: MySession.cpp:1502
+#: MySession.cpp:1621
 msgid "Could not start multimedia support"
 msgstr "Konnte Multimedia Unterstützung nicht starten"
 
-#: MySession.cpp:1510
+#: MySession.cpp:1629
 msgid "Preparing CUPS service ..."
 msgstr "CUPS Dienst vorbereiten ..."
 
-#: MySession.cpp:1544
+#: MySession.cpp:1663
 msgid "Called command was: "
 msgstr "Aufgerufenes Kommando war:"
 
-#: MySession.cpp:1545
+#: MySession.cpp:1664
 msgid "Could not start nxssh."
 msgstr "Konnte nxssh nicht starten."
 
-#: MyWizard.cpp:318
+#: MyWizard.cpp:320
 msgid ""
 "Welcome to the OpenNX Client Connection Wizard which will guide you through "
 "the steps needed to setup your login. Please select the 'Next' button to "
@@ -253,16 +256,16 @@ msgstr ""
 "Schritten werden Sie die Einstellungen Ihrer Sitzung konfigurieren. Bitte "
 "wählen Sie die Schaltfläche 'Next' um zu beginnen."
 
-#: MyWizard.cpp:440
+#: MyWizard.cpp:442
 msgid "New Session"
 msgstr "Neue Sitzung"
 
-#: MyWizard.cpp:443
+#: MyWizard.cpp:445
 #, c-format
 msgid "New Session %d"
 msgstr "Neue Sitzung %d"
 
-#: MyWizard.cpp:457
+#: MyWizard.cpp:459
 msgid ""
 "Insert the name of the session. Your configuration settings will be saved "
 "with this name."
@@ -270,15 +273,15 @@ msgstr ""
 "Geben Sie den Namen der Sitzung ein. Die Einstellungen werden unter diesem "
 "Namen gespeichert."
 
-#: MyWizard.cpp:458
+#: MyWizard.cpp:460
 msgid "Insert the name and port of the server you want to connect."
 msgstr "Geben Sie den Namen und Port des Servers ein."
 
-#: MyWizard.cpp:459
+#: MyWizard.cpp:461
 msgid "Select the type of your internet connection."
 msgstr "Wählen Sie den Typ (Geschwindigkeit) Ihrer Internet-Anbindung."
 
-#: MyWizard.cpp:639
+#: MyWizard.cpp:641
 msgid ""
 "Using OpenNX Client, you can run RDP, VNC and X desktops, depending on what "
 "your service provider has made available."
@@ -287,20 +290,20 @@ msgstr ""
 "zugreifen. Dies ist von der Verfügbarkeit dieser Dienste bei Ihrem Service-"
 "Provider abhängig."
 
-#: MyWizard.cpp:686 MyWizard_symbols.h:34 SessionProperties.cpp:606
+#: MyWizard.cpp:688 MyWizard_symbols.h:34 SessionProperties.cpp:607
 #: SessionProperties_symbols.h:35
 msgid "KDE"
 msgstr "KDE"
 
-#: MyWizard.cpp:692 SessionProperties.cpp:618
+#: MyWizard.cpp:694 SessionProperties.cpp:619
 msgid "RDP"
 msgstr "RDP"
 
-#: MyWizard.cpp:700 SessionProperties.cpp:632
+#: MyWizard.cpp:702 SessionProperties.cpp:633
 msgid "RFB"
 msgstr "RFB"
 
-#: MyWizard.cpp:862
+#: MyWizard.cpp:864
 msgid ""
 "OpenNX Client supports authentication using a variety of USB SmartCard "
 "tokens. Enable this option if you intend to use such a token."
@@ -309,7 +312,7 @@ msgstr ""
 "SmartCard Tokens. Aktivieren Sie dies, wenn sie ein solches Token verwenden "
 "wollen."
 
-#: MyWizard.cpp:863
+#: MyWizard.cpp:865
 msgid ""
 "Authorization credentials are always encrypted while establishing a "
 "connection. For increased security, you can enable the following option."
@@ -317,7 +320,7 @@ msgstr ""
 "Zugangsdaten werden stets verschlüsselt übertragen. Für erhöhte Sicherheit "
 "können Sie die folgende Option aktivieren."
 
-#: MyWizard.cpp:1154
+#: MyWizard.cpp:1156
 #, c-format
 msgid ""
 "Congratulations. The connection to '%s' will be saved as '%s'. You may "
@@ -336,7 +339,7 @@ msgstr "Verbindungs Assistent - OpenNX"
 msgid "Host"
 msgstr "Host"
 
-#: MyWizard_symbols.h:25 ResumeDialog.cpp:143 SessionAdmin.cpp:174
+#: MyWizard_symbols.h:25 ResumeDialog.cpp:149 SessionAdmin.cpp:178
 #: SessionProperties_symbols.h:26
 msgid "Port"
 msgstr "Port"
@@ -502,7 +505,7 @@ msgstr "Aktiviere RDP Bild-Cache"
 msgid "RDP Session Settings - OpenNX"
 msgstr "RDP Sitzungs-Einstellungen - OpenNX"
 
-#: RdpPropertyDialog_symbols.h:23 SessionAdmin.cpp:173 SessionList.cpp:265
+#: RdpPropertyDialog_symbols.h:23 SessionAdmin.cpp:177 SessionList.cpp:270
 #: SessionProperties_symbols.h:24 VncPropertyDialog_symbols.h:23
 msgid "Server"
 msgstr "Server"
@@ -548,28 +551,28 @@ msgstr "Starte Arbeitsplatz"
 msgid "Run application"
 msgstr "Starte Anwendung"
 
-#: ResumeDialog.cpp:139
+#: ResumeDialog.cpp:145
 msgid "Name"
 msgstr "Name"
 
-#: ResumeDialog.cpp:140
+#: ResumeDialog.cpp:146
 msgid "State"
 msgstr "Status"
 
-#: ResumeDialog.cpp:141 SessionAdmin.cpp:179
+#: ResumeDialog.cpp:147 SessionAdmin.cpp:183
 msgid "Type"
 msgstr "Typ"
 
-#: ResumeDialog.cpp:142
+#: ResumeDialog.cpp:148
 msgid "Screen"
 msgstr "Bildschirm"
 
-#: ResumeDialog.cpp:144 SessionAdmin_symbols.h:34
+#: ResumeDialog.cpp:150 SessionAdmin_symbols.h:34
 #: X11PropertyDialog_symbols.h:27
 msgid "Options"
 msgstr "Optionen"
 
-#: ResumeDialog.cpp:145 SessionAdmin.cpp:175
+#: ResumeDialog.cpp:151 SessionAdmin.cpp:179
 msgid "Session ID"
 msgstr "Sitzungs-ID"
 
@@ -581,7 +584,9 @@ msgstr "Wähle Sitzung - OpenNX"
 msgid ""
 "There are multiple sessions available, please select one or click New to "
 "create a session."
-msgstr "Es sind mehrere Sitzungen verfügbar. Bitte wählen Sie eine Sitzung oder wählen Sie Neu um eine neue Sitzung anzulegen."
+msgstr ""
+"Es sind mehrere Sitzungen verfügbar. Bitte wählen Sie eine Sitzung oder "
+"wählen Sie Neu um eine neue Sitzung anzulegen."
 
 #: ResumeDialog_symbols.h:24
 msgid "&Takeover"
@@ -595,19 +600,19 @@ msgstr "&Fortsetzen"
 msgid "&New"
 msgstr "&Neu"
 
-#: SessionAdmin.cpp:176
+#: SessionAdmin.cpp:180
 msgid "Creation Date"
 msgstr "Erstellungsdatum"
 
-#: SessionAdmin.cpp:177
+#: SessionAdmin.cpp:181
 msgid "PID"
 msgstr "PID"
 
-#: SessionAdmin.cpp:178
+#: SessionAdmin.cpp:182
 msgid "Status"
 msgstr "Status"
 
-#: SessionAdmin.cpp:244
+#: SessionAdmin.cpp:248
 msgid "Choose new NX session directory."
 msgstr "Wähle neues OpenNX Sitzungs-Verzeichnis"
 
@@ -675,102 +680,102 @@ msgstr "Über OpenNX..."
 msgid "New NX session"
 msgstr "Neue NX Sitzung"
 
-#: SessionList.cpp:250 SessionList.cpp:295
+#: SessionList.cpp:255 SessionList.cpp:300
 msgid "terminated"
 msgstr "beendet"
 
-#: SessionList.cpp:253 SessionList.cpp:298
+#: SessionList.cpp:258 SessionList.cpp:303
 msgid "failed"
 msgstr "gescheitert"
 
-#: SessionList.cpp:256 SessionList.cpp:301
+#: SessionList.cpp:261 SessionList.cpp:306
 msgid "running"
 msgstr "laufend"
 
-#: SessionList.cpp:265
+#: SessionList.cpp:270
 msgid "Client"
 msgstr "Client"
 
-#: SessionList.cpp:390
+#: SessionList.cpp:395
 msgid "Full session statistics - OpenNX"
 msgstr "Vollstatistik - OpenNX"
 
-#: SessionList.cpp:391
+#: SessionList.cpp:396
 msgid "Partial session statistics - OpenNX"
 msgstr "Teilstatistik - OpenNX"
 
-#: SessionProperties.cpp:465 SmbShareProperties_symbols.h:24
+#: SessionProperties.cpp:466 SmbShareProperties_symbols.h:24
 msgid "Share"
 msgstr "Freigabe"
 
-#: SessionProperties.cpp:466 SmbShareProperties_symbols.h:49
+#: SessionProperties.cpp:467 SmbShareProperties_symbols.h:49
 msgid "Mount on"
 msgstr "Eingehängt unter"
 
-#: SessionProperties.cpp:467
+#: SessionProperties.cpp:468
 msgid "Comment"
 msgstr "Kommentar"
 
-#: SessionProperties.cpp:479 SessionProperties.cpp:1131
+#: SessionProperties.cpp:480 SessionProperties.cpp:1132
 msgid "Currently not available"
 msgstr "Nicht verfügbar"
 
-#: SessionProperties.cpp:864 SessionProperties_symbols.h:95
+#: SessionProperties.cpp:865 SessionProperties_symbols.h:95
 msgid "Font"
 msgstr "Font"
 
-#: SessionProperties.cpp:895
+#: SessionProperties.cpp:896
 msgid "Error while reading keyboard table"
 msgstr "Fehler beim Lesen der Tastatur-Tabelle"
 
-#: SessionProperties.cpp:924
+#: SessionProperties.cpp:925
 #, c-format
 msgid "Invalid line='%s'"
 msgstr "Ungültige Zeile='%s'"
 
-#: SessionProperties.cpp:925
+#: SessionProperties.cpp:926
 #, c-format
 msgid "Invalid entry in %s"
 msgstr "Ungültiger Eintrag in %s"
 
-#: SessionProperties.cpp:1055
+#: SessionProperties.cpp:1056
 msgid "Do you really want to delete all cache directories?"
 msgstr "Wollen Sie wirklich sämliche Cache-Verzeichnissse löschen?"
 
-#: SessionProperties.cpp:1056
+#: SessionProperties.cpp:1057
 msgid "Clean cache - OpenNX"
 msgstr "Cache bereinigen - OpenNX"
 
-#: SessionProperties.cpp:1104
+#: SessionProperties.cpp:1105
 msgid "No local samba server is running."
 msgstr "Es läuft kein lokaler Samba-Server."
 
-#: SessionProperties.cpp:1166 SmbShareProperties.cpp:360
+#: SessionProperties.cpp:1167 SmbShareProperties.cpp:369
 msgid "No shares found"
 msgstr "Keine Freigaben gefunden"
 
-#: SessionProperties.cpp:1242
+#: SessionProperties.cpp:1243
 msgid "Select User NX directory"
 msgstr "Wähle persönliches NX Verzeichnis"
 
-#: SessionProperties.cpp:1259
+#: SessionProperties.cpp:1260
 msgid "Select System NX directory"
 msgstr "Wähle System NX Verzeichnis"
 
-#: SessionProperties.cpp:1308
+#: SessionProperties.cpp:1309
 #, c-format
 msgid "Really delete Session '%s' ?"
 msgstr "Die Sitzung '%s' wirklich löschen ?"
 
-#: SessionProperties.cpp:1309
+#: SessionProperties.cpp:1310
 msgid "Delete Session"
 msgstr "Lösche Sitzung"
 
-#: SessionProperties.cpp:1566
+#: SessionProperties.cpp:1567
 msgid "No cups server available."
 msgstr "Kein CUPS-Server verfügbar."
 
-#: SessionProperties.cpp:1581
+#: SessionProperties.cpp:1582
 msgid "Select System CUPS daemon"
 msgstr "Wähle System CUPS-Dämon"
 
@@ -970,11 +975,11 @@ msgstr "&Löschen"
 msgid "&Apply"
 msgstr "&Anwenden"
 
-#: SmbShareProperties.cpp:252
+#: SmbShareProperties.cpp:258
 msgid "Modify shared resource - OpenNX"
 msgstr "Bearbeite Freigabe - OpenNX"
 
-#: SmbShareProperties.cpp:447
+#: SmbShareProperties.cpp:454
 #, c-format
 msgid ""
 "Do you want to make\n"
@@ -985,17 +990,17 @@ msgstr ""
 "%s\n"
 "als Standard definieren?"
 
-#: SmbShareProperties.cpp:448
+#: SmbShareProperties.cpp:455
 msgid "Default printer"
 msgstr "Standard Drucker"
 
-#: SmbShareProperties.cpp:477
+#: SmbShareProperties.cpp:484
 msgid "Mountpoint is already used. Please chose another mountpoint"
 msgstr ""
 "Der Einhängepunkt ist in Verwendung. Bitte wählen Sie einen anderen "
 "Einhängepunkt."
 
-#: SmbShareProperties.cpp:478
+#: SmbShareProperties.cpp:485
 msgid "Invalid mountpoint"
 msgstr "Ungültiger Einhängepunkt"
 
@@ -1234,66 +1239,76 @@ msgstr "Deaktiviere X-Agent-Kodierung"
 msgid "Disable taint of X replies"
 msgstr "Deaktiviere X-Packetmodifikation"
 
-#: opennxApp.cpp:205
+#: opennxApp.cpp:207
 msgid "Launch NX Session"
 msgstr "Starte NX Sitzung"
 
-#: opennxApp.cpp:417
+#: opennxApp.cpp:425
 msgid "Could not get PATH environment"
 msgstr "Konnte PATH nicht in der Umgebung ermitteln"
 
-#: opennxApp.cpp:432
+#: opennxApp.cpp:440
 #, c-format
 msgid "Could not find %s in PATH"
 msgstr "Konnte %s nicht im PATH finden"
 
-#: opennxApp.cpp:442
+#: opennxApp.cpp:450
 #, c-format
 msgid "Could not stat %s"
 msgstr "Konnte Attribute von %s nicht ermitteln"
 
-#: opennxApp.cpp:448
+#: opennxApp.cpp:456
 #, c-format
 msgid "Could not read link %s"
 msgstr "Konnte Verknüpfung %s nicht lesen"
 
-#: opennxApp.cpp:577
+#: opennxApp.cpp:615
+msgid ""
+"\n"
+"\n"
+"Supported trace tags: "
+msgstr ""
+
+#: opennxApp.cpp:618
 msgid "Start the session administration tool."
 msgstr "Starte das Sitzungs-Administrations-Werkzeug."
 
-#: opennxApp.cpp:579
+#: opennxApp.cpp:620
 msgid "Secify window title for dialog mode."
 msgstr "Spezifiziere Fenstertitel für Dialog-Modus."
 
-#: opennxApp.cpp:581
+#: opennxApp.cpp:622
 msgid "Secify dialog style for dialog mode."
 msgstr "Spezifiziere Dialog-Stil für Dialog-Modus."
 
-#: opennxApp.cpp:583
+#: opennxApp.cpp:624
 msgid "Run in dialog mode."
 msgstr "Aktiviere Dialog-Modus."
 
-#: opennxApp.cpp:585
+#: opennxApp.cpp:626
 msgid "Dialog mode proxy."
 msgstr "Proxy des Dialog-Modus."
 
-#: opennxApp.cpp:587
+#: opennxApp.cpp:628
 msgid "Specify message for dialog mode."
 msgstr "Spezifiziere Mitteilungstext für Dialog-Modus."
 
-#: opennxApp.cpp:589
+#: opennxApp.cpp:630
 msgid "Specify parent PID for dialog mode."
 msgstr "Spezifiziere Eltern-PID für Dialog-Modus."
 
-#: opennxApp.cpp:591
+#: opennxApp.cpp:632
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr "Starte eine Sitzung mit den Einstellungen aus FILENAME."
 
-#: opennxApp.cpp:593
+#: opennxApp.cpp:634
 msgid "Specify window-ID for dialog mode."
 msgstr "Spezifiziere Window-ID für Dialog-Modus."
 
-#: opennxApp.cpp:595
+#: opennxApp.cpp:636
+msgid "Specify wxWidgets trace mask."
+msgstr ""
+
+#: opennxApp.cpp:638
 msgid "Guide the user through the steps to configure a session."
 msgstr "Führe den Benutzer durch die Schritte zu Konfiguration einer Sitzung."
-

@@ -19,6 +19,10 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
 #pragma implementation "QuitDialog.h"
 #endif
@@ -37,9 +41,6 @@
 ////@begin includes
 ////@end includes
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 #include "QuitDialog.h"
 #include "Icon.h"
 
@@ -111,7 +112,7 @@ void QuitDialog::Init()
 {
 ////@begin QuitDialog member initialisation
     m_iDialogClass = wxICON_WARNING;
-    m_sMessage = wxT("");
+    m_sMessage = wxEmptyString;
     m_pCtrlBitmap = NULL;
     m_pCtrlMessage = NULL;
 ////@end QuitDialog member initialisation

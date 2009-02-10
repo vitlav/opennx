@@ -19,6 +19,10 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
 #pragma implementation "ResumeDialog.h"
 #endif
@@ -87,7 +91,7 @@ ResumeDialog::ResumeDialog( wxWindow* parent, wxWindowID id, const wxString& cap
 bool ResumeDialog::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
 ////@begin ResumeDialog creation
-    SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
+    SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
     if (GetSizer())
@@ -116,6 +120,7 @@ void ResumeDialog::Init()
     m_pCtrlSessions = NULL;
     m_pCtrlTakeover = NULL;
     m_pCtrlResume = NULL;
+    m_pCtrlNew = NULL;
 ////@end ResumeDialog member initialisation
 }
 /*!
@@ -130,6 +135,7 @@ void ResumeDialog::CreateControls()
     m_pCtrlSessions = XRCCTRL(*this, "ID_LISTCTRL_SESSIONS", wxListCtrl);
     m_pCtrlTakeover = XRCCTRL(*this, "ID_BUTTON_TAKEOVER", wxButton);
     m_pCtrlResume = XRCCTRL(*this, "ID_BUTTON_RESUME", wxButton);
+    m_pCtrlNew = XRCCTRL(*this, "wxID_OK", wxButton);
 ////@end ResumeDialog content construction
 
     // Create custom windows not generated automatically here.
@@ -172,6 +178,12 @@ ResumeDialog::AddSession(const wxString& name, const wxString& state, const wxSt
         info.m_stateMask = wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED;
         m_pCtrlSessions->SetItem(info);
     }
+}
+
+void
+ResumeDialog::EnableNew(bool b)
+{
+    m_pCtrlNew->Enable(b);
 }
 
 /*!

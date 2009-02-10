@@ -48,7 +48,8 @@
 ////@begin XPM images
 ////@end XPM images
 
-static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
+#include "trace.h"
+ENABLE_TRACE;
 
 /*!
  * SmbShareProperties type definition

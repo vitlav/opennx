@@ -19,6 +19,10 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "wx/wxprec.h"
 
 #ifndef WX_PRECOMP
@@ -33,10 +37,12 @@
 #include <wx/image.h>
 #include <wx/filesys.h>
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
+#ifdef APP_OPENNX
+# include "opennxApp.h"
 #endif
-#include "opennxApp.h"
+#ifdef APP_TRACELOG
+# include "tracelogApp.h"
+#endif
 
 static char * broken_xpm[] = {
 "14 16 17 1",

@@ -19,6 +19,10 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #if defined(__GNUG__) && !defined(__APPLE__)
 #pragma implementation "MyXmlConfig.h"
 #endif
@@ -34,9 +38,6 @@
 #include "wx/wx.h"
 #endif
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 #include <wx/filename.h>
 #include <wx/xml/xml.h>
 #include <wx/arrimpl.cpp>
@@ -54,7 +55,8 @@ class wxConfigBase;
 #include "pwcrypt.h"
 #include "osdep.h"
 
-static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
+#include "trace.h"
+ENABLE_TRACE;
 
 #define STR_TRUE wxT("true")
 #define STR_FALSE wxT("false");
@@ -159,26 +161,26 @@ MyXmlConfig::init()
     m_eDisplayType = DPTYPE_AVAILABLE;
     m_eSessionType = STYPE_UNIX;
 
-    m_sCommandLine = wxT("");
+    m_sCommandLine = wxEmptyString;
     m_sCupsPath = wxT(CUPS_DEFAULT_PATH);
-    m_sFileName = wxT("");
-    m_sGuestUser = wxT("");
-    m_sGuestPassword = wxT("");
+    m_sFileName = wxEmptyString;
+    m_sGuestUser = wxEmptyString;
+    m_sGuestPassword = wxEmptyString;
     m_sKbdLayoutLanguage = wxString(wxConvLocal.cMB2WX(x11_keyboard_type)).AfterFirst(wxT('/')).BeforeFirst(wxT(','));
-    m_sName = wxT("");
-    m_sPassword = wxT("");
-    m_sProxyCommand = wxT("");
-    m_sProxyHost = wxT("");
-    m_sRdpApplication = wxT("");
-    m_sRdpDomain = wxT("");
-    m_sRdpHostName = wxT("");
-    m_sRdpPassword = wxT("");
-    m_sRdpUsername = wxT("");
-    m_sServerHost = wxT("");
-    m_sSshKey = wxT("");
-    m_sUsername = wxT("");
-    m_sVncHostName = wxT("");
-    m_sVncPassword = wxT("");
+    m_sName = wxEmptyString;
+    m_sPassword = wxEmptyString;
+    m_sProxyCommand = wxEmptyString;
+    m_sProxyHost = wxEmptyString;
+    m_sRdpApplication = wxEmptyString;
+    m_sRdpDomain = wxEmptyString;
+    m_sRdpHostName = wxEmptyString;
+    m_sRdpPassword = wxEmptyString;
+    m_sRdpUsername = wxEmptyString;
+    m_sServerHost = wxEmptyString;
+    m_sSshKey = wxEmptyString;
+    m_sUsername = wxEmptyString;
+    m_sVncHostName = wxEmptyString;
+    m_sVncPassword = wxEmptyString;
 
     m_pMd5Password = NULL;
     m_pClrPassword = NULL;
@@ -315,7 +317,7 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
 MyXmlConfig::sGetProxyParams(const long protocolVersion)
 {
     wxUnusedVar(protocolVersion);
-    wxString ret = wxT("");
+    wxString ret = wxEmptyString;
     ret << wxT(",shmem=") << (m_bDisableShmem ? 0 : 1)
         << wxT(",shpix=") << (m_bDisableShpix ? 0 : 1)
         ;
@@ -379,7 +381,7 @@ MyXmlConfig::sGetListParams(const long protocolVersion)
     int w, h;
     ::wxDisplaySize(&w, &h);
     ret << wxT(" --geometry=\"") << w << wxT("x") << h << wxT("x")
-       << ::wxDisplayDepth() << (m_bDisableRender ? wxT("") : wxT("+render")) << wxT("\"");
+       << ::wxDisplayDepth() << (m_bDisableRender ? wxEmptyString : wxT("+render")) << wxT("\"");
     return ret;
 }
 
@@ -412,7 +414,7 @@ MyXmlConfig::UrlEsc(const wxString &s)
 MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxString &clrpass)
 {
     wxUnusedVar(protocolVersion);
-    wxString ret = wxT("");
+    wxString ret = wxEmptyString;
     bool bNeedGeometry = bNew;
 
     if (bNew) {
@@ -603,7 +605,7 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
     int w, h;
     ::wxDisplaySize(&w, &h);
     ret << wxT(" --screeninfo=\"") << w << wxT("x") << h << wxT("x")
-        << ::wxDisplayDepth() << (m_bDisableRender ? wxT("") : wxT("+render")) << wxT("\"");
+        << ::wxDisplayDepth() << (m_bDisableRender ? wxEmptyString : wxT("+render")) << wxT("\"");
 
     wxString kbdLocal = wxString(wxConvLocal.cMB2WX(x11_keyboard_type)).BeforeFirst(wxT(','));
     ret << wxT(" --keyboard=\"");
@@ -848,16 +850,16 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
 
     wxXmlNode *cfgnode = cfg.GetRoot();
     if (cfgnode && (cfgnode->GetName() == wxT("NXClientSettings"))) {
-        if (!(cfgnode->GetPropVal(wxT("application"), wxT("")) == wxT("nxclient")))
+        if (!(cfgnode->GetPropVal(wxT("application"), wxEmptyString) == wxT("nxclient")))
             return false;
-        if (!(cfgnode->GetPropVal(wxT("version"), wxT("")) == wxT("1.3")))
+        if (!(cfgnode->GetPropVal(wxT("version"), wxEmptyString) == wxT("1.3")))
             return false;
         cfgnode = cfgnode->GetChildren();
         while (cfgnode) {
             if (cfgnode->GetName() == wxT("group")) {
 
                 // Tab "Advanced"
-                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Advanced")) {
+                if (cfgnode->GetPropVal(wxT("name"), wxEmptyString) == wxT("Advanced")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
 
@@ -938,7 +940,7 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                 }
 
                 // Tab "Environment"
-                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Environment")) {
+                if (cfgnode->GetPropVal(wxT("name"), wxEmptyString) == wxT("Environment")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
                         m_sCupsPath = getString(opt, wxT("CUPSD path"), m_sCupsPath);
@@ -949,14 +951,14 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                 }
 
                 // Tab "General"
-                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("General")) {
+                if (cfgnode->GetPropVal(wxT("name"), wxEmptyString) == wxT("General")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
 
 // Automatic reconnect true
                         m_sCommandLine = getString(opt, wxT("Command line"), m_sCommandLine);
                         tmp = getString(opt,
-                                wxT("Custom Unix desktop"), wxT(""));
+                                wxT("Custom Unix desktop"), wxEmptyString);
                         if (!tmp.IsEmpty()) {
                             if (tmp.CmpNoCase(wxT("application")) == 0) {
                                 m_bRunConsole = false;
@@ -1067,7 +1069,7 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                 }
 
                 // Sub-Dialog Custom image compresion
-                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Images")) {
+                if (cfgnode->GetPropVal(wxT("name"), wxEmptyString) == wxT("Images")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
                         m_bDisableJpeg = getLongBool(opt, wxT("Disable JPEG Compression"),
@@ -1119,13 +1121,13 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                 }
 
                 // Main login params
-                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Login")) {
+                if (cfgnode->GetPropVal(wxT("name"), wxEmptyString) == wxT("Login")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
                         m_bGuestMode = getBool(opt, wxT("Guest Mode"), m_bGuestMode);
                         if (m_bGuestMode && isPush) {
                             m_sGuestUser = getString(opt, wxT("User"), m_sGuestUser);
-                            tmp = getString(opt, wxT("Auth"), wxT(""));
+                            tmp = getString(opt, wxT("Auth"), wxEmptyString);
                             if (!tmp.IsEmpty())
                                 m_sGuestPassword = cryptString(tmp);
                         } else {
@@ -1158,7 +1160,7 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                 }
 
                 // Tab "Services"
-                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Services")) {
+                if (cfgnode->GetPropVal(wxT("name"), wxEmptyString) == wxT("Services")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
                         m_bEnableMultimedia = getBool(opt, wxT("Audio"), m_bEnableMultimedia);
@@ -1171,7 +1173,7 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                     continue;
                 }
 
-                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("VNC Session")) {
+                if (cfgnode->GetPropVal(wxT("name"), wxEmptyString) == wxT("VNC Session")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
                         tmp = getString(opt, wxT("Display"));
@@ -1193,7 +1195,7 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                     continue;
                 }
 
-                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("Windows Session")) {
+                if (cfgnode->GetPropVal(wxT("name"), wxEmptyString) == wxT("Windows Session")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
                         m_sRdpApplication = getString(opt, wxT("Application"),
@@ -1229,17 +1231,17 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                     continue;
                 }
 
-                if (cfgnode->GetPropVal(wxT("name"), wxT("")) == wxT("share chosen")) {
+                if (cfgnode->GetPropVal(wxT("name"), wxEmptyString) == wxT("share chosen")) {
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
-                        wxString key = opt->GetPropVal(wxT("key"), wxT(""));
+                        wxString key = opt->GetPropVal(wxT("key"), wxEmptyString);
                         if (key == wxT("Share number")) {
                             m_iUsedShareGroups = getLong(opt, wxT("Share number"),
                                     m_iUsedShareGroups);
                         } else if (key == wxT("default printer")) {
                             // Ignoring this key, because it is set in the share as well.
                         } else
-                            m_aUsedShareGroups.Add(opt->GetPropVal(wxT("value"), wxT("")));
+                            m_aUsedShareGroups.Add(opt->GetPropVal(wxT("value"), wxEmptyString));
                         opt = opt->GetNext();
                     }
                     cfgnode = cfgnode->GetNext();
@@ -1251,14 +1253,14 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                 {
                     int shareOptions = 0;
                     ShareGroup s;
-                    s.m_sGroupName = cfgnode->GetPropVal(wxT("name"), wxT(""));
+                    s.m_sGroupName = cfgnode->GetPropVal(wxT("name"), wxEmptyString);
                     s.m_eType = SharedResource::SHARE_UNKNOWN;
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
-                        wxString key = opt->GetPropVal(wxT("key"), wxT(""));
+                        wxString key = opt->GetPropVal(wxT("key"), wxEmptyString);
                         if (key == wxT("Alias")) {
                             shareOptions++;
-                            s.m_sAlias = getString(opt, wxT("Alias"), wxT(""));
+                            s.m_sAlias = getString(opt, wxT("Alias"), wxEmptyString);
                         }
                         if (key == wxT("Default")) {
                             shareOptions++;
@@ -1266,11 +1268,11 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                         }
                         if (key == wxT("Driver")) {
                             shareOptions++;
-                            s.m_sDriver = getString(opt, wxT("Driver"), wxT(""));
+                            s.m_sDriver = getString(opt, wxT("Driver"), wxEmptyString);
                         }
                         if (key == wxT("Password")) {
                             shareOptions++;
-                            s.m_sPassword = getPassword(opt, wxT("Password"), wxT(""));
+                            s.m_sPassword = getPassword(opt, wxT("Password"), wxEmptyString);
                         }
                         if (key == wxT("Public")) {
                             shareOptions++;
@@ -1278,11 +1280,11 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                         }
                         if (key == wxT("Sharename")) {
                             shareOptions++;
-                            s.m_sShareName = getString(opt, wxT("Sharename"), wxT(""));
+                            s.m_sShareName = getString(opt, wxT("Sharename"), wxEmptyString);
                         }
                         if (key == wxT("Type")) {
                             shareOptions++;
-                            wxString tmp = getString(opt, wxT("Type"), wxT(""));
+                            wxString tmp = getString(opt, wxT("Type"), wxEmptyString);
                             if (tmp.CmpNoCase(wxT("cupsprinter")) == 0)
                                 s.m_eType = SharedResource::SHARE_CUPS_PRINTER;
                             if (tmp.CmpNoCase(wxT("disk")) == 0)
@@ -1292,7 +1294,7 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                         }
                         if (key == wxT("Username")) {
                             shareOptions++;
-                            s.m_sUsername = getString(opt, wxT("Username"), wxT(""));
+                            s.m_sUsername = getString(opt, wxT("Username"), wxEmptyString);
                         }
                         opt = opt->GetNext();
                     }
@@ -1311,8 +1313,8 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
             m_sPassword = DUMMY_CLR_PASSWORD;
         }
     } else {
-        m_sUsername = wxT("");
-        m_sPassword = wxT("");
+        m_sUsername = wxEmptyString;
+        m_sPassword = wxEmptyString;
     }
 	return m_bValid;
 }
@@ -1528,7 +1530,7 @@ MyXmlConfig::SaveToFile()
     bAddOption(g, wxT("Image JPEG Encoding"), m_bUseTightJpeg);
     iAddOption(g, wxT("JPEG Quality"), m_iJpegQuality);
     bAddOption(g, wxT("RDP optimization for low-bandwidth link"), false); // ??
-    sAddOption(g, wxT("Reduce colors to"), wxT("")); // ??
+    sAddOption(g, wxT("Reduce colors to"), wxEmptyString); // ??
     bAddOption(g, wxT("Use PNG Compression"), m_bImageEncodingPNG);
     iAddOption(g, wxT("VNC images compression"), 0); // Not in original GUI but in config ?!
     iAddOption(g, wxT("Windows Image Compression"), m_iRdpImageCompression);
@@ -1546,7 +1548,7 @@ MyXmlConfig::SaveToFile()
                 sAddOption(g, wxT("Password"), *m_pClrPassword);
         }
     } else {
-        optval = wxT("");
+        optval = wxEmptyString;
         sAddOption(g, wxT("Auth"), optval);
         sAddOption(g, wxT("Password"), optval);
     }
@@ -1569,7 +1571,7 @@ MyXmlConfig::SaveToFile()
     if (m_aUsedShareGroups.GetCount()) {
         g = AddGroup(r, wxT("share chosen"));
         iAddOption(g, wxT("Share number"), m_iUsedShareGroups);
-        wxString sDefaultPrinter = wxT(""); 
+        wxString sDefaultPrinter = wxEmptyString; 
         for (i = 0; i < m_aUsedShareGroups.GetCount(); i++) {
             optval = wxString::Format(wxT("Share%d"), i);
             sAddOption(g, optval, m_aUsedShareGroups[i]);
@@ -1647,7 +1649,7 @@ MyXmlConfig::SaveToFile()
     sAddOption(g, wxT("HTTP proxy host"), m_sProxyHost);
     iAddOption(g, wxT("HTTP proxy port"), m_iProxyPort);
     bAddOption(g, wxT("Restore cache"), true); // ???
-    sAddOption(g, wxT("StreamCompression"), wxT("")); // ???
+    sAddOption(g, wxT("StreamCompression"), wxEmptyString); // ???
 
     g = AddGroup(r, wxT("Windows Session"));
     bAddOption(g, wxT("Remember"), m_bRdpRememberPassword);
@@ -1776,8 +1778,8 @@ bool MyXmlConfig::getBool(wxXmlNode *opt, const wxString &key, bool defval)
     bool val = defval;
 
     if (opt->GetName() == wxT("option")) {
-        if (opt->GetPropVal(wxT("key"), wxT("")) == key) {
-            wxString tmp = opt->GetPropVal(wxT("value"), wxT(""));
+        if (opt->GetPropVal(wxT("key"), wxEmptyString) == key) {
+            wxString tmp = opt->GetPropVal(wxT("value"), wxEmptyString);
             if (!tmp.IsEmpty())
                 val = ((tmp == STR_TRUE) || (tmp == STR_ONE));
         }
@@ -1790,8 +1792,8 @@ long MyXmlConfig::getLong(wxXmlNode *opt, const wxString &key, long defval)
     long val = defval;
 
     if (opt->GetName() == wxT("option")) {
-        if (opt->GetPropVal(wxT("key"), wxT("")) == key) {
-            wxString tmp = opt->GetPropVal(wxT("value"), wxT(""));
+        if (opt->GetPropVal(wxT("key"), wxEmptyString) == key) {
+            wxString tmp = opt->GetPropVal(wxT("value"), wxEmptyString);
             if (tmp.IsNumber())
                 tmp.ToLong(&val, 0);
         }
@@ -1804,8 +1806,8 @@ bool MyXmlConfig::getLongBool(wxXmlNode *opt, const wxString &key, bool defval)
     long val = defval ? 1 : 0;
 
     if (opt->GetName() == wxT("option")) {
-        if (opt->GetPropVal(wxT("key"), wxT("")) == key) {
-            wxString tmp = opt->GetPropVal(wxT("value"), wxT(""));
+        if (opt->GetPropVal(wxT("key"), wxEmptyString) == key) {
+            wxString tmp = opt->GetPropVal(wxT("value"), wxEmptyString);
             if (tmp.IsNumber())
                 tmp.ToLong(&val, 0);
         }
@@ -1818,7 +1820,7 @@ wxString MyXmlConfig::getString(wxXmlNode *opt, const wxString &key, const wxStr
     wxString tmp = defval;
 
     if (opt->GetName() == wxT("option")) {
-        if (opt->GetPropVal(wxT("key"), wxT("")) == key)
+        if (opt->GetPropVal(wxT("key"), wxEmptyString) == key)
             tmp = opt->GetPropVal(wxT("value"), defval);
     }
     return tmp;
@@ -1829,7 +1831,7 @@ wxString *MyXmlConfig::getStringNew(wxXmlNode *opt, const wxString &key, wxStrin
     wxString *val = defval;
 
     if (opt->GetName() == wxT("option")) {
-        if (opt->GetPropVal(wxT("key"), wxT("")) == key) {
+        if (opt->GetPropVal(wxT("key"), wxEmptyString) == key) {
             if (opt->HasProp(wxT("value"))) {
                 val = new wxString(opt->GetPropVal(wxT("value"), defval ? *defval : wxT("")));
                 if (val && val->IsEmpty() && (!defval)) {
@@ -1850,7 +1852,7 @@ wxString MyXmlConfig::getPassword(wxXmlNode *opt, const wxString &key, const wxS
     wxString *enc = getStringNew(opt, key, NULL);
     if (enc && enc->Left(1) == wxT(":") && enc->Right(1) == wxT(":") && enc->Length() > 1) {
         int idx = 1;
-        wxString newpw = wxT("");
+        wxString newpw = wxEmptyString;
         enc->Remove(0, 1);
         while (enc->Length()) {
             int p = enc->Find(wxT(":"));

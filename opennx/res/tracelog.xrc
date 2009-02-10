@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource version="2.3.0.1" xmlns="http://www.wxwidgets.org/wxxrc">
+    <object class="wxFrame" name="ID_TRACELOGFRAME" subclass="TraceLogFrame">
+        <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
+        <size>400,300d</size>
+        <title>Trace Log</title>
+        <icon>memory:memrsc#zip:res/nx.png</icon>
+        <object class="wxListCtrl" name="ID_LISTCTRL_TRACELOG">
+            <size>600,100d</size>
+            <style>wxLC_REPORT|wxLC_VRULES|wxCLIP_CHILDREN</style>
+        </object>
+        <object class="wxMenuBar" name="ID_MENUBAR">
+            <object class="wxMenu">
+                <label>&amp;File</label>
+                <object class="wxMenuItem" name="wxID_CLOSE">
+                    <label>Close</label>
+                </object>
+                <object class="wxMenuItem" name="wxID_SAVEAS">
+                    <label>Save as ...</label>
+                </object>
+                <object class="separator">
+                </object>
+                <object class="wxMenuItem" name="wxID_EXIT">
+                    <label>&amp;Exit</label>
+                </object>
+            </object>
+        </object>
+    </object>
+</resource>

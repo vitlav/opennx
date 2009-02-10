@@ -19,6 +19,10 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #if defined(__GNUG__) && !defined(__APPLE__)
 #pragma implementation "MyWizard.h"
 #endif
@@ -34,9 +38,6 @@
 #include "wx/wx.h"
 #endif
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 ////@begin includes
 ////@end includes
 #include <wx/config.h>
@@ -54,7 +55,8 @@
 ////@begin XPM images
 ////@end XPM images
 
-static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
+#include "trace.h"
+ENABLE_TRACE;
 
 /*!
  * MyWizard type definition

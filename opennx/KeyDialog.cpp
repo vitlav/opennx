@@ -19,6 +19,10 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
 #pragma implementation "KeyDialog.h"
 #endif
@@ -34,9 +38,6 @@
 #include "wx/wx.h"
 #endif
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 #include <wx/config.h>
 
 ////@begin includes
@@ -119,7 +120,7 @@ bool KeyDialog::Create( wxWindow* parent, wxWindowID id, const wxString& caption
 void KeyDialog::Init()
 {
 ////@begin KeyDialog member initialisation
-    m_sSshKey = wxT("");
+    m_sSshKey = wxEmptyString;
     m_pCtrlSshKey = NULL;
     m_pCtrlSave = NULL;
 ////@end KeyDialog member initialisation
@@ -196,7 +197,7 @@ void KeyDialog::OnButtonImportClick( wxCommandEvent& event )
         if (!wxFileName(keyDir).IsDirReadable())
             keyDir = ::wxGetHomeDir();
     }
-    wxFileDialog d(this, _("Select key to import"), keyDir, wxT(""),
+    wxFileDialog d(this, _("Select key to import"), keyDir, wxEmptyString,
             _("SSh key files (*.key;*.pub)|*.key;*.pub"), wxOPEN|wxFILE_MUST_EXIST);
     d.SetDirectory(keyDir);
     if (d.ShowModal() == wxID_OK) {

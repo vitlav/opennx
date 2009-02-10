@@ -42,7 +42,7 @@ wxString
 encodeString(const wxString &s)
 {
     size_t i;
-    wxString ret = wxT("");
+    wxString ret = wxEmptyString;
 
     if (s.Length()) {
         ret = wxT(":");
@@ -56,7 +56,7 @@ wxString
 decodeString(const wxString &s)
 {
     wxString val = s;
-    wxString ret = wxT("");
+    wxString ret = wxEmptyString;
 
     if (val.Left(1) == wxT(":") && val.Right(1) == wxT(":") && val.Length() > 1) {
         int idx = 1;
@@ -79,7 +79,7 @@ wxString
 cryptString(const wxString &s)
 {
     size_t i;
-    wxString sRet = wxT("");
+    wxString sRet = wxEmptyString;
     
     if (s.IsEmpty())
         return s;
@@ -117,7 +117,7 @@ wxString
 decryptString(const wxString &s)
 {
     size_t i;
-    wxString sRet = wxT("");
+    wxString sRet = wxEmptyString;
     
     if (s.IsEmpty() || s.Length() < 5)
         return s;
@@ -145,7 +145,7 @@ decryptString(const wxString &s)
         sRet.Remove(0, dummyString.Length());
     
     wxString str = sRet;
-    sRet = wxT("");
+    sRet = wxEmptyString;
     // Reverse string
     for (i = (str.Length() - 1); (int)i >= 0; i--)
         sRet += str[i];

@@ -19,6 +19,10 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
 #pragma implementation "MyValidator.h"
 #endif
@@ -32,9 +36,6 @@
 
 #ifndef WX_PRECOMP
   #include "wx/defs.h"
-#endif
-#ifdef HAVE_CONFIG_H
-#include "config.h"
 #endif
 #include <wx/config.h>
 #include <wx/fontdlg.h>

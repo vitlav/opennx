@@ -20,7 +20,7 @@
                             <flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
                             <border>5</border>
                             <object class="wxStaticBitmap" name="wxID_STATIC">
-                                <size>146,44d</size>
+                                <size>195,58d</size>
                                 <bitmap>memory:memrsc#zip:res/opennx.png</bitmap>
                             </object>
                         </object>
@@ -750,7 +750,7 @@
                                                     <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                        <size>16,15d</size>
+                                                        <size>21,19d</size>
                                                         <bitmap>memory:memrsc#zip:res/smbsharing.png</bitmap>
                                                     </object>
                                                 </object>
@@ -773,7 +773,7 @@
                                                     <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                        <size>16,15d</size>
+                                                        <size>21,19d</size>
                                                         <bitmap>memory:memrsc#zip:res/cupssharing.png</bitmap>
                                                     </object>
                                                 </object>
@@ -816,7 +816,7 @@
                                                     <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                        <size>16,16d</size>
+                                                        <size>21,19d</size>
                                                         <bitmap>memory:memrsc#zip:res/usb.png</bitmap>
                                                     </object>
                                                 </object>
@@ -877,7 +877,7 @@
                                                     <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                        <size>16,15d</size>
+                                                        <size>21,19d</size>
                                                         <bitmap>memory:memrsc#zip:res/multimedia.png</bitmap>
                                                     </object>
                                                 </object>

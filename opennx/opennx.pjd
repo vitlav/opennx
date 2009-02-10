@@ -16,7 +16,7 @@
     <bool name="make_unicode_strings">1</bool>
     <bool name="extract_strings">1</bool>
     <string name="user_name">"Fritz Elfert"</string>
-    <string name="copyright_string">"Copyright (C) 2006 The OpenNX team"</string>
+    <string name="copyright_string">"Copyright (C) 2008 The OpenNX team"</string>
     <string name="resource_prefix">"memory:memrsc#zip:"</string>
     <bool name="use_two_step_construction">0</bool>
     <bool name="use_enums">0</bool>
@@ -557,8 +557,8 @@
                   <string name="proxy-Custom styles">""</string>
                   <long name="proxy-X">-1</long>
                   <long name="proxy-Y">-1</long>
-                  <long name="proxy-Width">146</long>
-                  <long name="proxy-Height">44</long>
+                  <long name="proxy-Width">195</long>
+                  <long name="proxy-Height">58</long>
                   <string name="proxy-AlignH">"Centre"</string>
                   <string name="proxy-AlignV">"Centre"</string>
                   <long name="proxy-Stretch factor">0</long>
@@ -5463,8 +5463,8 @@
                         <string name="proxy-Custom styles">""</string>
                         <long name="proxy-X">-1</long>
                         <long name="proxy-Y">-1</long>
-                        <long name="proxy-Width">16</long>
-                        <long name="proxy-Height">15</long>
+                        <long name="proxy-Width">21</long>
+                        <long name="proxy-Height">19</long>
                         <string name="proxy-AlignH">"Centre"</string>
                         <string name="proxy-AlignV">"Centre"</string>
                         <long name="proxy-Stretch factor">0</long>
@@ -5618,8 +5618,8 @@
                         <string name="proxy-Custom styles">""</string>
                         <long name="proxy-X">-1</long>
                         <long name="proxy-Y">-1</long>
-                        <long name="proxy-Width">16</long>
-                        <long name="proxy-Height">15</long>
+                        <long name="proxy-Width">21</long>
+                        <long name="proxy-Height">19</long>
                         <string name="proxy-AlignH">"Centre"</string>
                         <string name="proxy-AlignV">"Centre"</string>
                         <long name="proxy-Stretch factor">0</long>
@@ -5915,8 +5915,8 @@
                         <string name="proxy-Custom styles">""</string>
                         <long name="proxy-X">-1</long>
                         <long name="proxy-Y">-1</long>
-                        <long name="proxy-Width">16</long>
-                        <long name="proxy-Height">16</long>
+                        <long name="proxy-Width">21</long>
+                        <long name="proxy-Height">19</long>
                         <string name="proxy-AlignH">"Centre"</string>
                         <string name="proxy-AlignV">"Centre"</string>
                         <long name="proxy-Stretch factor">0</long>
@@ -6375,8 +6375,8 @@
                         <string name="proxy-Custom styles">""</string>
                         <long name="proxy-X">-1</long>
                         <long name="proxy-Y">-1</long>
-                        <long name="proxy-Width">16</long>
-                        <long name="proxy-Height">15</long>
+                        <long name="proxy-Width">21</long>
+                        <long name="proxy-Height">19</long>
                         <string name="proxy-AlignH">"Centre"</string>
                         <string name="proxy-AlignV">"Centre"</string>
                         <long name="proxy-Stretch factor">0</long>
@@ -15032,6 +15032,14 @@ remote VNC server"</string>
             <string name="proxy-type">"wbBoxSizerProxy"</string>
             <string name="proxy-Orientation">"Vertical"</string>
             <string name="proxy-Member variable name">""</string>
+            <string name="proxy-AlignH">"Centre"</string>
+            <string name="proxy-AlignV">"Centre"</string>
+            <long name="proxy-Stretch factor">0</long>
+            <long name="proxy-Border">5</long>
+            <bool name="proxy-wxLEFT">1</bool>
+            <bool name="proxy-wxRIGHT">1</bool>
+            <bool name="proxy-wxTOP">1</bool>
+            <bool name="proxy-wxBOTTOM">1</bool>
             <bool name="proxy-wxSHAPED">0</bool>
             <bool name="proxy-wxADJUST_MINSIZE">0</bool>
             <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -22305,7 +22313,6 @@ this share."</string>
           <long name="proxy-Height">-1</long>
           <bool name="proxy-AUI manager">0</bool>
           <string name="proxy-Event sources">""</string>
-          <bool name="proxy-wxTHICK_FRAME">0</bool>
           <document>
             <string name="title">"wxBoxSizer V"</string>
             <string name="type">"dialog-control-document"</string>
@@ -23860,7 +23867,6 @@ this share."</string>
           <long name="proxy-Height">300</long>
           <bool name="proxy-AUI manager">0</bool>
           <string name="proxy-Event sources">""</string>
-          <bool name="proxy-wxTHICK_FRAME">0</bool>
           <document>
             <string name="title">"wxBoxSizer V"</string>
             <string name="type">"dialog-control-document"</string>
@@ -24272,7 +24278,7 @@ this share."</string>
                 <bool name="proxy-Separate files">0</bool>
                 <string name="proxy-Implementation filename">""</string>
                 <string name="proxy-Header filename">""</string>
-                <string name="proxy-Member variable name">""</string>
+                <string name="proxy-Member variable name">"m_pCtrlNew"</string>
                 <string name="proxy-Label">"&amp;New"</string>
                 <bool name="proxy-Default">0</bool>
                 <string name="proxy-Help text">""</string>
@@ -24467,7 +24473,6 @@ this share."</string>
           <long name="proxy-Height">300</long>
           <bool name="proxy-AUI manager">0</bool>
           <string name="proxy-Event sources">""</string>
-          <bool name="proxy-wxTHICK_FRAME">0</bool>
           <document>
             <string name="title">"wxBoxSizer V"</string>
             <string name="type">"dialog-control-document"</string>
@@ -24893,7 +24898,6 @@ this share."</string>
           <long name="proxy-Height">300</long>
           <bool name="proxy-AUI manager">0</bool>
           <string name="proxy-Event sources">""</string>
-          <bool name="proxy-wxTHICK_FRAME">0</bool>
           <document>
             <string name="title">"wxBoxSizer V"</string>
             <string name="type">"dialog-control-document"</string>

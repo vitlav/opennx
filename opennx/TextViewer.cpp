@@ -87,7 +87,7 @@ TextViewer::TextViewer( wxWindow* parent, wxWindowID id, const wxString& caption
 bool TextViewer::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
     ////@begin TextViewer member initialisation
-    m_sFileName = wxT("");
+    m_sFileName = wxEmptyString;
     m_pTextCtrl = NULL;
     ////@end TextViewer member initialisation
 

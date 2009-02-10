@@ -44,7 +44,8 @@
 #include <wx/log.h>
 #include <wx/arrimpl.cpp>
 
-static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
+#include "trace.h"
+ENABLE_TRACE;
 
 WX_DEFINE_OBJARRAY(ArrayOfShares);
 

@@ -9,6 +9,12 @@ AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE([foreign no-installinfo no-installman])
 AC_CONFIG_HEADERS([config.h])
 
+case $build_os in
+	mingw*)
+        CPPFLAGS="$CPPFLAGS -I/usr/include"
+        LDFLAGS="$LDFLAGS -L/usr/lib"
+        ;;
+esac
 
 # Checks for programs.
 AC_DISABLE_SHARED
@@ -67,38 +73,34 @@ else
 	AC_MSG_NOTICE([will link against shared wxWidgets libs])
 	WXPARAMS="$WXPARAMS --static=no"
 fi
-
-AM_PATH_WXCONFIG(2.8.0,wxWidgets=1,wxWidgets=0,[xrc,xml,qa,html,adv,core,net], $WXPARAMS)
-
-# Fix incorrect references to builtin support libs of WX_
-if test "$enable_static" = "yes" ; then
-	bdir=
-	for part in $WX_LIBS ; do
-		case $part in
-			*/libwx_*)
-			bdir=`dirname $part`
-			;;
-		esac
-	done
-	if test -z "$bdir" ; then
-		AC_MSG_ERROR([Could not determine wx library directory])
-	fi
-	for lib in regex expat tiff jpeg png zlib ; do
-		[WX_LIBS="`echo $WX_LIBS|sed -e \"s@-lwx\($lib[^ ]*\)@$bdir/libwx\1.a@g\"`"]
-	done
-fi
-
-
+case $target_os in
+	mingw*)
+        # On mingw, we don't use qa
+        _wx_required=xrc,xml,html,adv,core,net
+        ;;
+        *)
+        _wx_required=xrc,xml,qa,html,adv,core,net
+        ;;
+esac
+AM_PATH_WXCONFIG(2.8.0,wxWidgets=1,wxWidgets=0,[$_wx_required], $WXPARAMS)
 test ${wxWidgets} = 0 && AC_MSG_ERROR(Could not find wxWidgets library)
 
 APP_LDADD=
-WIN_RES=
-WIN_RESHDR=
+OPENNX_RES=
+OPENNX_RESHDR=
+TRACELOG=
 case $target_os in
 	mingw*)
-		APP_LDADD="-lstdc++ -lversion"
-		WIN_RES='opennx.$(OBJEXT)'
-		WIN_RESHDR="resource.h res/opennx.rc"
+        # On mingw, the default lib path is /mingw/lib
+        # If wxWidgets was built with a different prefix, we therefore
+        # must add that prefic to the linker flags.
+        [_wx_libpath="`$WX_CONFIG_WITH_ARGS --prefix`/lib"]
+        test "$_wx_libpath" != "/mingw/lib" && LDFLAGS="$LDFLAGS -L$_wx_libpath"
+        APP_LDADD="-lstdc++ -lole32 -luuid -lversion"
+		OPENNX_RES='opennx.$(OBJEXT)'
+		OPENNX_RESHDR="res/opennx.rc"
+        TRACELOG='tracelog$(EXEEXT)'
+		TRACELOG_RES='tracelog.$(OBJEXT)'
 		tagnames="RC"
 		_LT_AC_TAGCONFIG
 		;;
@@ -119,8 +121,10 @@ case $target_os in
 		;;
 esac
 AC_SUBST(APP_LDADD)
-AC_SUBST(WIN_RES)
-AC_SUBST(WIN_RESHDR)
+AC_SUBST(OPENNX_RES)
+AC_SUBST(OPENNX_RESHDR)
+AC_SUBST(TRACELOG)
+AC_SUBST(TRACELOG_RES)
 
 AC_ARG_ENABLE([warn],
 	AS_HELP_STRING([--enable-warn],
@@ -176,6 +180,7 @@ case $target_os in
 esac
 AC_SUBST(VERSION_COMMASEPARATED)
 
+AC_DEFINE(wxUSE_DEBUG_LOG,1,[Set to 1 for enabling trace logging])
 
 AC_CONFIG_FILES([Makefile opennx.spec Info.plist res/opennx.rc po/Makefile.in])
 AC_OUTPUT

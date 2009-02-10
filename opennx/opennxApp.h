@@ -25,6 +25,7 @@
 #include <wx/intl.h>
 
 class wxConfigBase;
+class wxTaskBarIcon;
 class MyXmlConfig;
 
 // Define a new application type, each program should derive a class from wxApp
@@ -83,6 +84,9 @@ class opennxApp : public wxApp
         bool m_bRunproc;
 
         bool preInit();
+        bool realInit();
+        bool setSelfPath();
+        void setUserDir();
         void checkNxSmartCardSupport();
 };
 

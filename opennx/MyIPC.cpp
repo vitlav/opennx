@@ -19,6 +19,10 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #if defined(__GNUG__) && !defined(__APPLE__)
 #pragma implementation "MyIPC.h"
 #endif
@@ -34,9 +38,6 @@
 #include "wx/wx.h"
 #endif
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 #include <wx/process.h>
 #include <wx/txtstrm.h>
 #include <wx/filename.h>
@@ -45,11 +46,12 @@
 #include "MyIPC.h"
 #include "AsyncProcess.h"
 
-static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
+#include "trace.h"
+ENABLE_TRACE;
 
-DEFINE_EVENT_TYPE(wxEVT_NXSSH);
-DEFINE_EVENT_TYPE(wxEVT_NXSERVICE);
-DEFINE_EVENT_TYPE(wxEVT_GENERIC);
+DEFINE_LOCAL_EVENT_TYPE(wxEVT_NXSSH);
+DEFINE_LOCAL_EVENT_TYPE(wxEVT_NXSERVICE);
+DEFINE_LOCAL_EVENT_TYPE(wxEVT_GENERIC);
 
 IMPLEMENT_CLASS(MyIPC, wxEvtHandler);
 
@@ -65,8 +67,8 @@ MyIPC::MyIPC()
     , m_eType(TypeNone)
     , m_iOutCollect(0)
     , m_iErrCollect(0)
-    , m_sOutMessage(wxT(""))
-    , m_sErrMessage(wxT(""))
+    , m_sOutMessage(wxEmptyString)
+    , m_sErrMessage(wxEmptyString)
 {
 #ifdef __WXMSW__
     m_MsgSession = ::RegisterWindowMessage(wxT("NX_SESSION_MESSAGE"));
@@ -163,7 +165,7 @@ MyIPC::ServiceProcess(const wxString &cmd, wxEvtHandler *h)
     m_sOutMessage.Empty();
     m_sErrMessage.Empty();
     m_pEvtHandler = h;
-    m_pProcess = new AsyncProcess(cmd, wxT(""), this);
+    m_pProcess = new AsyncProcess(cmd, wxEmptyString, this);
     m_pProcess->CloseOutput();
     ret = m_pProcess->Start();
     if (!ret) {
@@ -262,7 +264,7 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
                             m_iOutCollect--;
                             m_sOutMessage << wxT("\n") << msg;
                             if (m_iOutCollect == 0) {
-                                m_re->Replace(&m_sOutMessage, wxT(""));
+                                m_re->Replace(&m_sOutMessage, wxEmptyString);
                                 upevent.SetString(m_sOutMessage + wxT("?"));
                                 upevent.SetInt(ActionPromptYesNo);
                                 m_pEvtHandler->AddPendingEvent(upevent);
@@ -678,7 +680,7 @@ MyIPC::OnErrReceived(wxCommandEvent &event)
                     case 209:
                         // Remote host identification changed
                         m_iErrCollect = 0;
-                        m_sErrMessage.Replace(wxT("@"), wxT(""));
+                        m_sErrMessage.Replace(wxT("@"), wxEmptyString);
                         m_sErrMessage.Remove(m_sErrMessage.Find(wxT("Please contact")));
                         upevent.SetString(m_sErrMessage);
                         upevent.SetInt(ActionKeyChangedYesNo);

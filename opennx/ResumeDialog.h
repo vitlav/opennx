@@ -95,6 +95,7 @@ public:
     /// Creates the controls and sizers
     void CreateControls();
 
+    void EnableNew(bool);
     void SetPreferredSession(const wxString &name) { m_sPreferredSession = name; };
     void AddSession(const wxString&, const wxString&, const wxString&, const wxString&,
             const wxString&, const wxString&, const wxString&, const wxString&);
@@ -144,6 +145,7 @@ private:
     wxListCtrl* m_pCtrlSessions;
     wxButton* m_pCtrlTakeover;
     wxButton* m_pCtrlResume;
+    wxButton* m_pCtrlNew;
 private:
     long m_lActiveSession;
     Mode m_eMode;

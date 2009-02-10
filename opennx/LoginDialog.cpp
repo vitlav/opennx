@@ -19,6 +19,10 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #if defined(__GNUG__) && !defined(__APPLE__)
 #pragma implementation "LoginDialog.h"
 #endif
@@ -34,9 +38,6 @@
 #include "wx/wx.h"
 #endif
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 #include <wx/config.h>
 #include <wx/dir.h>
 #include <wx/xml/xml.h>
@@ -54,7 +55,8 @@
 ////@begin XPM images
 ////@end XPM images
 
-static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
+#include "trace.h"
+ENABLE_TRACE;
 
 /*!
  * LoginDialog type definition
@@ -135,8 +137,8 @@ void LoginDialog::ReadConfigDirectory()
                 if (m_bGuestLogin) {
                     m_sTmpUsername = cfg.sGetUsername();
                     m_sTmpPassword = cfg.sGetPassword();
-                    m_sUsername = wxT("");
-                    m_sPassword = wxT("");
+                    m_sUsername = wxEmptyString;
+                    m_sPassword = wxEmptyString;
                 } else {
                     m_sUsername = cfg.sGetUsername();
                     m_sPassword = cfg.sGetPassword();
@@ -167,8 +169,8 @@ void LoginDialog::ReadConfigDirectory()
 bool LoginDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxString& WXUNUSED(caption), const wxPoint& WXUNUSED(pos), const wxSize& WXUNUSED(size), long WXUNUSED(style) )
 {
     ////@begin LoginDialog member initialisation
-    m_sTmpUsername = wxT("");
-    m_sTmpPassword = wxT("");
+    m_sTmpUsername = wxEmptyString;
+    m_sTmpPassword = wxEmptyString;
     m_pCtrlUsername = NULL;
     m_pCtrlPassword = NULL;
     m_pCtrlSessionName = NULL;
@@ -256,8 +258,8 @@ void LoginDialog::OnCheckboxGuestloginClick( wxCommandEvent& event )
     if (m_pCtrlGuestLogin->IsChecked()) {
         m_sTmpUsername = m_pCtrlUsername->GetValue();
         m_sTmpPassword = m_pCtrlPassword->GetValue();
-        m_pCtrlUsername->SetValue(wxT(""));
-        m_pCtrlPassword->SetValue(wxT(""));
+        m_pCtrlUsername->SetValue(wxEmptyString);
+        m_pCtrlPassword->SetValue(wxEmptyString);
         m_pCtrlUsername->Enable(false);
         m_pCtrlPassword->Enable(false);
     } else {
@@ -353,9 +355,9 @@ void LoginDialog::OnComboboxSessionSelected( wxCommandEvent& event )
             m_pCtrlGuestLogin->SetValue(m_bGuestLogin);
             if (m_bGuestLogin) {
                 m_sTmpUsername = cfg.sGetUsername();
-                m_pCtrlUsername->SetValue(wxT(""));
+                m_pCtrlUsername->SetValue(wxEmptyString);
                 m_sTmpPassword = cfg.sGetPassword();
-                m_pCtrlPassword->SetValue(wxT(""));
+                m_pCtrlPassword->SetValue(wxEmptyString);
                 m_pCtrlPassword->Enable(false);
                 m_pCtrlUsername->Enable(false);
             } else {

@@ -19,6 +19,10 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #if defined(__GNUG__) && !defined(__APPLE__)
 #pragma implementation "AboutDialog.h"
 #endif
@@ -36,9 +40,6 @@
 
 ////@begin includes
 ////@end includes
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 #include "AboutDialog.h"
 #include "ExtHtmlWindow.h"
 #include "Icon.h"
@@ -47,7 +48,8 @@
 ////@begin XPM images
 ////@end XPM images
 
-static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
+#include "trace.h"
+ENABLE_TRACE;
 
 /*!
  * AboutDialog type definition

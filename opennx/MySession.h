@@ -90,11 +90,12 @@ private:
     } tConnectState;
 
     wxArrayString m_aParseBuffer;
-    wxString getXauthCookie();
+    wxString getXauthCookie(int display = 0);
     wxString getXauthPath();
     wxString formatOptFilename();
     int getFirstFreePort(int);
     void startProxy();
+    void startXserver();
     void startSharing();
     void parseSessions(bool moreAllowed);
     long intver(const wxString&);
