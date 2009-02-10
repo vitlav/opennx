@@ -19,6 +19,10 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #if defined(__GNUG__) && !defined(__APPLE__)
 #pragma implementation "AsyncProcess.h"
 #endif
@@ -34,20 +38,17 @@
 #include "wx/wx.h"
 #endif
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <wx/filename.h>
 #include <wx/txtstrm.h>
 
 #include "AsyncProcess.h"
 
-static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
+#include "trace.h"
+ENABLE_TRACE;
 
-DEFINE_EVENT_TYPE(wxEVT_PROCESS_STDOUT);
-DEFINE_EVENT_TYPE(wxEVT_PROCESS_STDERR);
-DEFINE_EVENT_TYPE(wxEVT_PROCESS_EXIT);
+DEFINE_LOCAL_EVENT_TYPE(wxEVT_PROCESS_STDOUT);
+DEFINE_LOCAL_EVENT_TYPE(wxEVT_PROCESS_STDERR);
+DEFINE_LOCAL_EVENT_TYPE(wxEVT_PROCESS_EXIT);
 
 IMPLEMENT_DYNAMIC_CLASS(AsyncProcess, wxProcess)
 
