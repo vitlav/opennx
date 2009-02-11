@@ -904,8 +904,10 @@ bool opennxApp::realInit()
 bool opennxApp::OnInit()
 {
     bool ret = realInit();
-    if (!ret)
+    if (!ret) {
+        wxLogNull lognull;
         wxMemoryFSHandler::RemoveFile(wxT("memrsc"));
+    }
     return ret;
 }
 
@@ -914,6 +916,9 @@ bool opennxApp::OnInit()
  */
 int opennxApp::OnExit()
 {
-    wxMemoryFSHandler::RemoveFile(wxT("memrsc"));
+    {
+        wxLogNull lognull;
+        wxMemoryFSHandler::RemoveFile(wxT("memrsc"));
+    }
     return wxApp::OnExit();
 }
