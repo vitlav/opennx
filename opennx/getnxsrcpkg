@@ -1,0 +1,28 @@
+#!/usr/bin/perl
+
+my @urls;
+
+open(P, "wget -q -O - http://www.nomachine.com/sources.php|") || die "Can't run wget: $!\n";
+while (<P>) {
+        chomp;
+        if (/A\s+HREF="([^"]+)"\s+class=link2/) {
+                push @urls, $1;
+        }
+}
+close P;
+
+foreach (@urls) {
+    my $skipit = 0;
+    my $fn = $_;
+    $fn =~ s/.*\///;
+    if ($#ARGV ge 0) {
+        $skipit = 1;
+        foreach $req (@ARGV) {
+            $skipit = 0 if ($fn =~ m/^$req\-/);
+        }
+        next if ($skipit);
+    }
+    print "Fetching $fn ...";
+    system("wget -q $_");
+    print " done\n";
+}

@@ -3,14 +3,10 @@
 %define rel 1
 
 %define nxversion 2.1.0
-%define nxdlurl http://web04.nomachine.com/download/%{nxversion}/sources
-%define nxpkgs nxcomp nxcompsh nxproxy nxservice nxesd nxssh
-%define rel_nxcomp 6
-%define rel_nxcompsh 2
-%define rel_nxproxy 2
-%define rel_nxservice 5
-%define rel_nxesd 2
-%define rel_nxssh 1
+%define nxdlurl http://www.nomachine.com/sources.php
+#http://web04.nomachine.com/download/%{nxversion}/sources
+%define nxpkgs nxcomp nxcompsh nxproxy nxservice nxesd
+%define nxpkgsall nxcomp nxcompsh nxproxy nxservice nxesd nxssh
 
 ##
 ## OS detection
@@ -29,7 +25,7 @@
 %define ostag FC%(rpm -q --queryformat='%{VERSION}' fedora-release)
 %endif
 %if %{is_suse}
-%define ostag SuSE%(rpm -q --queryformat='%{VERSION}' suse-release)
+%define ostag SuSE%(rpm -q --queryformat='%{VERSION}' `rpm -qf /etc/SuSE-release`)
 %endif
 
 %define release %{rel}%{ostag}
@@ -42,18 +38,6 @@ License: LGPL/GPL
 Group: Applications/Internet
 URL: http://sourceforge.net/projects/opennx
 Source0: opennx-%{version}.tar.gz
-Source1: %{nxdlurl}/nxcomp-%{nxversion}-%{rel_nxcomp}.tar.gz
-Source2: %{nxdlurl}/nxcompsh-%{nxversion}-%{rel_nxcompsh}.tar.gz
-Source3: %{nxdlurl}/nxesd-%{nxversion}-%{rel_nxesd}.tar.gz
-Source4: %{nxdlurl}/nxproxy-%{nxversion}-%{rel_nxproxy}.tar.gz
-Source5: %{nxdlurl}/nxservice-%{nxversion}-%{rel_nxservice}.tar.gz
-Source6: %{nxdlurl}/nxssh-%{nxversion}-%{rel_nxssh}.tar.gz
-Nosource: 1
-Nosource: 2
-Nosource: 3
-Nosource: 4
-Nosource: 5
-Nosource: 6
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 Obsoletes: nxclient
@@ -61,8 +45,17 @@ Obsoletes: nxclient
 BuildRequires: libtool
 BuildRequires: automake
 BuildRequires: wxGTK2-devel >= 2.8.0
+BuildRequires: audiofile-devel
 BuildRequires: cups-devel
+%if %{is_suse}
+%if "%{ostag}"=="SuSE11.1"
+BuildRequires: libsmbclient-devel
+%else
 BuildRequires: samba-common
+%endif
+%else
+BuildRequires: samba-common
+%endif
 BuildRequires: xorg-x11-proto-devel
 BuildRequires: xorg-x11-xtrans-devel
 BuildRequires: wget
@@ -72,25 +65,35 @@ opennx is an OSS replacement for Nomachine's NX client.
 
 %prep
 %setup -q
-wget %{nxdlurl}/`basename %{SOURCE1}` && tar xzf `basename %{SOURCE1} && touch %{SOURCE1}`
-wget %{nxdlurl}/`basename %{SOURCE2}` && tar xzf `basename %{SOURCE2} && touch %{SOURCE2}`
-wget %{nxdlurl}/`basename %{SOURCE3}` && tar xzf `basename %{SOURCE3} && touch %{SOURCE3}`
-wget %{nxdlurl}/`basename %{SOURCE4}` && tar xzf `basename %{SOURCE4} && touch %{SOURCE4}`
-wget %{nxdlurl}/`basename %{SOURCE5}` && tar xzf `basename %{SOURCE5} && touch %{SOURCE5}`
-wget %{nxdlurl}/`basename %{SOURCE6}` && tar xzf `basename %{SOURCE6} && touch %{SOURCE6}`
+./getnxsrcpkg %{nxpkgsall}
+for pkg in %{nxpkgsall} ; do
+    tar xzf ${pkg}-*.tar.gz
+done
+
+# Workaround for obsolete include in nxcompsh
+(
+cd nxcompsh
+cat>iostream.h<<EOF
+#include <iostream>
+using namespace std;
+EOF
+)
 
 %build
 %configure --enable-static
 make
 for pkg in %{nxpkgs} ; do
-	(cd $pkg && ./configure --prefix=%{_prefix} && make)
+	margs=
+	test $pkg = nxcompsh && margs="CXXINCLUDES=-I."
+	cd $pkg && ./configure --prefix=%{_prefix} && make $margs && cd ..
 done
+cd nxssh && ./configure --prefix=%{_prefix} --with-openct && make && cd ..
 
 %install
 %makeinstall
 %{__install} -d -m 755 %{buildroot}%{_libdir}
-%{__install} -m 755 nxcomp/libXcomp.so.2.1.0 %{buildroot}%{_libdir}
-%{__install} -m 755 nxcompsh/libXcompsh.so.2.1.0 %{buildroot}%{_libdir}
+%{__install} -m 755 nxcomp/libXcomp.so.*.*.* %{buildroot}%{_libdir}
+%{__install} -m 755 nxcompsh/libXcompsh.so.*.*.* %{buildroot}%{_libdir}
 %{__install} -m 755 nxesd/nxesd %{buildroot}%{_bindir}
 %{__install} -m 755 nxproxy/nxproxy %{buildroot}%{_bindir}
 %{__install} -m 755 nxservice/nxservice %{buildroot}%{_bindir}
