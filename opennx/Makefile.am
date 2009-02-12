@@ -151,4 +151,5 @@ uninstall-local:
 dist-hook:
 	find $(distdir) -type d -name .svn | xargs $(RM) -r
 
-EXTRA_DIST = conf/config.rpath INSTALL INSTALL.generic COPYING m4 share opennx.pjd opennx.rc opennx.spec $(RESDEPS)
+EXTRA_DIST = conf/config.rpath INSTALL INSTALL.generic COPYING share \
+			 opennx.pjd opennx.rc opennx.spec getnxsrcpkg $(RESDEPS)
