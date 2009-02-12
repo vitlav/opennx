@@ -47,6 +47,7 @@ BuildRequires: automake
 BuildRequires: wxGTK2-devel >= 2.8.0
 BuildRequires: audiofile-devel
 BuildRequires: cups-devel
+BuildRequires: opensc-devel
 %if %{is_suse}
 %if "%{ostag}"=="SuSE11.1"
 BuildRequires: libsmbclient-devel
@@ -87,7 +88,7 @@ for pkg in %{nxpkgs} ; do
 	test $pkg = nxcompsh && margs="CXXINCLUDES=-I."
 	cd $pkg && ./configure --prefix=%{_prefix} && make $margs && cd ..
 done
-cd nxssh && ./configure --prefix=%{_prefix} --with-openct && make && cd ..
+cd nxssh && ./configure --prefix=%{_prefix} --with-opensc && make && cd ..
 
 %install
 %makeinstall
