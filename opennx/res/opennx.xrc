@@ -3,7 +3,6 @@
     <object class="wxDialog" name="ID_DIALOG_LOGIN" subclass="LoginDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
-        <size>200,150d</size>
         <title>Login - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -1112,7 +1111,6 @@
     <object class="wxDialog" name="ID_DIALOG_SETTINGS_VNC" subclass="VncPropertyDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
-        <size>200,150d</size>
         <title>VNC Session Settings - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -1256,7 +1254,6 @@ remote VNC server</label>
     <object class="wxDialog" name="ID_DIALOG_SETTINGS_RDP" subclass="RdpPropertyDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
-        <size>200,150d</size>
         <title>RDP Session Settings - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -1884,7 +1881,6 @@ remote VNC server</label>
     <object class="wxDialog" name="ID_DIALOG_IMAGE_X11" subclass="UnixImageSettingsDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
-        <size>114,75d</size>
         <title>Unix Image Settings - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -2047,7 +2043,6 @@ remote VNC server</label>
     <object class="wxDialog" name="ID_DIALOG_SHARE_ADD" subclass="SmbShareProperties">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
-        <size>114,75d</size>
         <title>New shared resource - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -2453,6 +2448,7 @@ this share.</label>
     <object class="wxFrame" name="ID_FRAME_ADMIN" subclass="SessionAdmin">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxMINIMIZE_BOX|wxMAXIMIZE_BOX|wxCLOSE_BOX</style>
         <title>Session Administrator - OpenNX</title>
+        <centered>1</centered>
         <icon>memory:memrsc#zip:res/opennx-admin.png</icon>
         <object class="wxMenuBar" name="ID_MENUBAR">
             <object class="wxMenu">
@@ -3012,7 +3008,6 @@ this share.</label>
     <object class="wxDialog" name="ID_DIALOG_LOG" subclass="LogDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxMAXIMIZE_BOX|wxMINIMIZE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
-        <size>200,150d</size>
         <title>Session Log - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -3076,7 +3071,6 @@ this share.</label>
     <object class="wxDialog" name="ID_DIALOG_CONNECT" subclass="ConnectDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
-        <size>200,150d</size>
         <title>Connecting</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -3091,7 +3085,7 @@ this share.</label>
                         <flag>wxGROW|wxALL</flag>
                         <border>5</border>
                         <object class="wxStaticBitmap" name="wxID_STATIC">
-                            <size>146,47d</size>
+                            <size>146,44d</size>
                             <bitmap>memory:memrsc#zip:res/opennx.png</bitmap>
                         </object>
                     </object>
@@ -3101,7 +3095,7 @@ this share.</label>
                 <flag>wxGROW|wxALL</flag>
                 <border>5</border>
                 <object class="wxStaticText" name="ID_STATIC_STATUS">
-                    <label>Static text</label>
+                    <label> </label>
                 </object>
             </object>
             <object class="sizeritem">
@@ -3167,7 +3161,6 @@ this share.</label>
     <object class="wxDialog" name="ID_KEYDIALOG" subclass="KeyDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
-        <size>400,300d</size>
         <title>Key Management - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -3235,7 +3228,6 @@ this share.</label>
     <object class="wxDialog" name="ID_RESUMEDIALOG" subclass="ResumeDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
-        <size>400,300d</size>
         <title>Select session - OpenNX</title>
         <centered>1</centered>
         <object class="wxBoxSizer">
@@ -3306,7 +3298,6 @@ this share.</label>
     <object class="wxDialog" name="ID_PANICDIALOG" subclass="PanicDialog">
         <style>wxCAPTION|wxSYSTEM_MENU|wxSTAY_ON_TOP|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
-        <size>400,300d</size>
         <icon>memory:memrsc#zip:res/nx.png</icon>
         <object class="wxBoxSizer">
             <orient>wxVERTICAL</orient>
@@ -3358,7 +3349,6 @@ this share.</label>
     <object class="wxDialog" name="ID_QUITDIALOG" subclass="QuitDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxSTAY_ON_TOP|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
-        <size>400,300d</size>
         <icon>memory:memrsc#zip:res/nx.png</icon>
         <object class="wxBoxSizer">
             <orient>wxVERTICAL</orient>

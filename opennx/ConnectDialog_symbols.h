@@ -1,6 +1,6 @@
 // $Id$
 //
-// Copyright (C) 2006 The OpenNX team
+// Copyright (C) 2008 The OpenNX team
 // Author: Fritz Elfert
 //
 // This program is free software; you can redistribute it and/or modify
@@ -20,5 +20,5 @@
 //
 
 #define ID_DIALOG_CONNECT_SYMBOL_0 _("Connecting")
-#define ID_DIALOG_CONNECT_SYMBOL_1 _("Static text")
+#define ID_DIALOG_CONNECT_SYMBOL_1 _(" ")
 #define ID_DIALOG_CONNECT_SYMBOL_2 _("&Cancel")

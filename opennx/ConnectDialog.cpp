@@ -92,7 +92,7 @@ bool ConnectDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxS
 ////@end ConnectDialog member initialisation
 
 ////@begin ConnectDialog creation
-    SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
+    SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));
