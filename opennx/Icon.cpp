@@ -44,7 +44,7 @@
 # include "tracelogApp.h"
 #endif
 
-static char * broken_xpm[] = {
+static const char * broken_xpm[] = {
 "14 16 17 1",
 " 	c None",
 ".	c #000000",
@@ -78,7 +78,8 @@ static char * broken_xpm[] = {
 ".!*...     *!.",
 ".!**     ***!.",
 ".!!     !!!!!.",
-"..      ......"};
+"..      ......"
+};
 
 wxBitmap CreateBitmapFromFile(const wxString &filename, int width, int height)
 {
