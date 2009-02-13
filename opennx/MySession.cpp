@@ -826,14 +826,17 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     break;
             }
             break;
+        case MyIPC::ActionPinDialog:
+            printSsh(wxGetPasswordFromUser(
+                        _("Enter PIN for Smart Card access."), _("Smart Card PIN")), false);
+            break;
         case MyIPC::ActionPassphraseDialog:
-            {
-                wxMessageDialog d(m_pParent,
-                        wxT("MyIPC::ActionPassphraseDialog not implemnted"),
-                        _("Error - OpenNX"), wxOK);
-                d.ShowModal();
+            scmd = ::wxGetPasswordFromUser(::wxGetTranslation(msg), _("Enter passphrase"));
+            if (scmd.IsEmpty()) {
+                msg = _("Empty passphrase");
+                m_bGotError = true;
             }
-            printSsh(wxT("notimplemented"));
+            printSsh(scmd, false);
             break;
         case MyIPC::ActionSetSessionID:
             m_pDlg->SetStatusText(_("Negotiating session parameter"));
@@ -1470,6 +1473,11 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
     MyXmlConfig cfg(cfgpar.sGetFileName());
     m_pCfg = &cfg;
     if (cfg.IsValid()) {
+        // Copy misc values from login dialog
+        m_pCfg->bSetUseSmartCard(cfgpar.bGetUseSmartCard());
+        m_pCfg->bSetEnableSSL(cfgpar.bGetEnableSSL());
+        m_pCfg->bSetGuestMode(cfgpar.bGetGuestMode());
+
         wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &m_sSysDir);
         wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &m_sUserDir);
         wxFileName fn(m_sSysDir, wxEmptyString);
@@ -1482,7 +1490,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
 #endif
         wxString nxsshcmd = fn.GetShortPath();
         nxsshcmd << wxT(" -nx -x -2")
-            << wxT(" -p ") << cfg.iGetServerPort()
+            << wxT(" -p ") << m_pCfg->iGetServerPort()
             << wxT(" -o 'RhostsAuthentication no'")
             << wxT(" -o 'PasswordAuthentication no'")
             << wxT(" -o 'RSAAuthentication no'")
@@ -1515,38 +1523,40 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
         m_pSshLog = new wxLogStream(log);
         wxLog::SetLogLevel(wxLOG_Max);
 
-        if (cfg.bGetRemoveOldSessionFiles())
+        if (m_pCfg->bGetRemoveOldSessionFiles())
             cleanupOldSessions();
 
-        if (cfg.sGetSshKey().IsEmpty()) {
-            fn.Assign(m_sSysDir, wxT("server.id_dsa.key"));
-            fn.AppendDir(wxT("share"));
-            fn.AppendDir(wxT("keys"));
+        if (m_pCfg->bGetUseSmartCard()) {
+            nxsshcmd << wxT(" -I 0"); // We always use SC reader 0
         } else {
-            fn.Assign(m_sTempDir, wxT("keylog"));
-            wxFile f;
-            ::wxRemoveFile(fn.GetFullPath());
-            if (f.Open(fn.GetFullPath(), wxFile::write_excl, wxS_IRUSR|wxS_IWUSR)) {
-                f.Write(cfg.sGetSshKey());
-                f.Close();
+            if (m_pCfg->sGetSshKey().IsEmpty()) {
+                fn.Assign(m_sSysDir, wxT("server.id_dsa.key"));
+                fn.AppendDir(wxT("share"));
+                fn.AppendDir(wxT("keys"));
             } else {
-                ::wxLogSysError(_("Could not write %s"), fn.GetFullPath().c_str());
-                return false;
+                fn.Assign(m_sTempDir, wxT("keylog"));
+                wxFile f;
+                ::wxRemoveFile(fn.GetFullPath());
+                if (f.Open(fn.GetFullPath(), wxFile::write_excl, wxS_IRUSR|wxS_IWUSR)) {
+                    f.Write(m_pCfg->sGetSshKey());
+                    f.Close();
+                } else {
+                    ::wxLogSysError(_("Could not write %s"), fn.GetFullPath().c_str());
+                    return false;
+                }
             }
+            nxsshcmd << wxT(" -i ") << fn.GetShortPath();
         }
 
-        nxsshcmd << wxT(" -i ") << fn.GetShortPath();
-        if (cfg.bGetUseProxy()) {
-            if (!cfg.sGetProxyHost().IsEmpty())
-                nxsshcmd << wxT(" -P ") << cfg.sGetProxyHost() << wxT(":") << cfg.iGetProxyPort();
-            else if (!cfg.sGetProxyCommand().IsEmpty())
-                nxsshcmd << wxT(" -o 'ProxyCommand ") << cfg.sGetProxyCommand() << wxT("'");
+        if (m_pCfg->bGetUseProxy()) {
+            if (!m_pCfg->sGetProxyHost().IsEmpty())
+                nxsshcmd << wxT(" -P ") << m_pCfg->sGetProxyHost() << wxT(":") << m_pCfg->iGetProxyPort();
+            else if (!m_pCfg->sGetProxyCommand().IsEmpty())
+                nxsshcmd << wxT(" -o 'ProxyCommand ") << m_pCfg->sGetProxyCommand() << wxT("'");
         }
-        if (cfg.bGetUseSmartCard())
-            nxsshcmd << wxT(" -I 0"); // We always use SC reader 0
-        if (cfg.bGetEnableSSL())
+        if (m_pCfg->bGetEnableSSL())
             nxsshcmd << wxT(" -B");
-        nxsshcmd << wxT(" -E") << wxT(" nx@") << cfg.sGetServerHost();
+        nxsshcmd << wxT(" -E") << wxT(" nx@") << m_pCfg->sGetServerHost();
 
         fn.Assign(wxFileName::GetHomeDir());
         ::wxSetEnv(wxT("NX_HOME"), fn.GetShortPath());
@@ -1590,7 +1600,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
         m_pDlg = &dlg;
         dlg.Show(true);
         dlg.SetStatusText(wxString::Format(_("Connecting to %s ..."),
-                    cfg.sGetServerHost().c_str()));
+                    m_pCfg->sGetServerHost().c_str()));
 
         if (m_pCfg->bGetEnableMultimedia()) {
             wxFileName fn(m_sSysDir, wxEmptyString);
@@ -1621,7 +1631,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
                     ::wxLogWarning(_("Could not start multimedia support"));
             }
             dlg.SetStatusText(wxString::Format(_("Connecting to %s ..."),
-                        cfg.sGetServerHost().c_str()));
+                        m_pCfg->sGetServerHost().c_str()));
         }
         if (dlg.bGetAbort())
             return false;
@@ -1629,7 +1639,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
             dlg.SetStatusText(_("Preparing CUPS service ..."));
             prepareCups();
             dlg.SetStatusText(wxString::Format(_("Connecting to %s ..."),
-                        cfg.sGetServerHost().c_str()));
+                        m_pCfg->sGetServerHost().c_str()));
         }
 
         MyIPC nxssh;

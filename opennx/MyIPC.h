@@ -62,6 +62,7 @@ public:
         ActionNextCommand,
         ActionWelcome,
         ActionPassphraseDialog,
+        ActionPinDialog,
         ActionSetSessionID,
         ActionSetProxyCookie,
         ActionSetProxyIP,

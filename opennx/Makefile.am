@@ -152,4 +152,4 @@ dist-hook:
 	find $(distdir) -type d -name .svn | xargs $(RM) -r
 
 EXTRA_DIST = conf/config.rpath INSTALL INSTALL.generic COPYING share \
-			 opennx.pjd opennx.rc opennx.spec getnxsrcpkg $(RESDEPS)
+			 opennx.pjd opennx.rc opennx.spec patches getnxsrcpkg $(RESDEPS)

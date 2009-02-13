@@ -71,6 +71,10 @@ for pkg in %{nxpkgsall} ; do
     tar xzf ${pkg}-*.tar.gz
 done
 
+# Apply openssh askPIN patch (see https://bugzilla.mindrot.org/show_bug.cgi?id=608)
+cd nxssh && patch -p0 < ../patches/openssh-scard-pin.patch
+cd ..
+
 # Workaround for obsolete include in nxcompsh
 (
 cd nxcompsh
@@ -86,9 +90,11 @@ make
 for pkg in %{nxpkgs} ; do
 	margs=
 	test $pkg = nxcompsh && margs="CXXINCLUDES=-I."
-	cd $pkg && ./configure --prefix=%{_prefix} && make $margs && cd ..
+	cd $pkg && ./configure --prefix=%{_prefix} && make $margs
+    cd ..
 done
-cd nxssh && ./configure --prefix=%{_prefix} --with-opensc && make && cd ..
+cd nxssh && ./configure --prefix=%{_prefix} --with-opensc && make
+cd ..
 
 %install
 %makeinstall
