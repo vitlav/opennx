@@ -38,6 +38,7 @@
 #include "wx/wx.h"
 #endif
 
+#include "CardWaiter.h"
 #include "ConnectDialog.h"
 #include "MySession.h"
 #include "MyXmlConfig.h"
@@ -1527,7 +1528,11 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
             cleanupOldSessions();
 
         if (m_pCfg->bGetUseSmartCard()) {
-            nxsshcmd << wxT(" -I 0"); // We always use SC reader 0
+            CardWaiter w(parent);
+            int reader = w.WaitForCard();
+            if ((reader == -1) || (reader == wxID_CANCEL))
+                return false;
+            nxsshcmd << wxT(" -I ") << reader; // We always use SC reader 0
         } else {
             if (m_pCfg->sGetSshKey().IsEmpty()) {
                 fn.Assign(m_sSysDir, wxT("server.id_dsa.key"));

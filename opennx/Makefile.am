@@ -7,19 +7,20 @@ bin_PROGRAMS = opennx $(TRACELOG)
 
 EXTRA_PROGRAMS = tracelog$(EXEEXT)
 
-opennx_SOURCES = AboutDialog.cpp AsyncProcess.cpp ConnectDialog.cpp ExtHtmlWindow.cpp \
-	ForeignFrame.cpp Icon.cpp LogDialog.cpp KeyDialog.cpp LoginDialog.cpp \
-	md5.c MyIPC.cpp MySession.cpp MyValidator.cpp MyWizard.cpp \
-	MyXmlConfig.cpp opennxApp.cpp osdep.c PanicDialog.cpp pwcrypt.cpp \
-	QuitDialog.cpp RdpImageSettingsDialog.cpp RdpPropertyDialog.cpp \
+opennx_SOURCES = AboutDialog.cpp AsyncProcess.cpp CardWaiter.cpp \
+	CardWaiterDialog.cpp ConnectDialog.cpp ExtHtmlWindow.cpp ForeignFrame.cpp \
+	Icon.cpp LogDialog.cpp KeyDialog.cpp LoginDialog.cpp md5.c MyIPC.cpp \
+	MySession.cpp MyValidator.cpp MyWizard.cpp MyXmlConfig.cpp opennxApp.cpp \
+	osdep.c PanicDialog.cpp pwcrypt.cpp QuitDialog.cpp \
+	RdpImageSettingsDialog.cpp RdpPropertyDialog.cpp \
 	ResumeDialog.cpp SessionAdmin.cpp SessionList.cpp \
 	SessionProperties.cpp SmbShareProperties.cpp TextViewer.cpp \
 	UnixImageSettingsDialog.cpp VncImageSettingsDialog.cpp \
 	VncPropertyDialog.cpp wxprec.cpp WinShare.cpp X11PropertyDialog.cpp
 
-noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h ConnectDialog.h \
-	ConnectDialog_symbols.h debugleak.h ExtHtmlWindow.h \
-	ForeignFrame.h ForeignFrame_symbols.h Icon.h \
+noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h CardWaiter.h \
+	CardWaiterDialog.h ConnectDialog.h ConnectDialog_symbols.h debugleak.h \
+	ExtHtmlWindow.h ForeignFrame.h ForeignFrame_symbols.h Icon.h \
 	KeyDialog.h KeyDialog_symbols.h LogDialog.h LogDialog_symbols.h \
 	LoginDialog.h LoginDialog_symbols.h md5.h memres.h MyIPC.h \
 	MySession.h MyValidator.h MyWizard.h MyWizard_symbols.h MyXmlConfig.h \
