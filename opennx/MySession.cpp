@@ -230,7 +230,7 @@ class SessionCleaner : public wxDirTraverser
                         ::wxLogTrace(MYTRACETAG, wxT("Ssh-PID: %d"), spid);
                     }
                 }
-                if (mpid && spid && (!wxProcess::Exists(mpid)) && (!wxProcess::Exists(spid))) {
+                if (mpid && (!wxProcess::Exists(mpid)) && ((!spid) || (!wxProcess::Exists(spid)))) {
                     ::wxLogTrace(MYTRACETAG, wxT("PIDs do not exist, adding '%s'"), name.c_str());
                     m_aDirs.Add(name);
                     return wxDIR_CONTINUE;
@@ -1528,6 +1528,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
             cleanupOldSessions();
 
         if (m_pCfg->bGetUseSmartCard()) {
+            ::wxLogTrace(MYTRACETAG, wxT("Checking for SmartCard"));
             CardWaiter w(parent);
             int reader = w.WaitForCard();
             if ((reader == -1) || (reader == wxID_CANCEL))
