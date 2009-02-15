@@ -4,6 +4,7 @@
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
         <size>400,300d</size>
         <title>Trace Log</title>
+        <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
         <object class="wxListCtrl" name="ID_LISTCTRL_TRACELOG">
             <size>600,100d</size>

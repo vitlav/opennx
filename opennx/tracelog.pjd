@@ -16,7 +16,7 @@
     <bool name="make_unicode_strings">1</bool>
     <bool name="extract_strings">1</bool>
     <string name="user_name">"Fritz Elfert"</string>
-    <string name="copyright_string">"Copyright (C) 2008 The OpenNX team"</string>
+    <string name="copyright_string">"Copyright (C) 2009 The OpenNX team"</string>
     <string name="resource_prefix">"memory:memrsc#zip:"</string>
     <bool name="use_two_step_construction">0</bool>
     <bool name="use_enums">0</bool>
@@ -113,9 +113,9 @@
  */
 
 "</string>
-    <string name="resource_file_header">"app_resources.h"</string>
-    <string name="resource_file_implementation">"app_resources.cpp"</string>
-    <string name="resource_class_name">"AppResources"</string>
+    <string name="resource_file_header">""</string>
+    <string name="resource_file_implementation">""</string>
+    <string name="resource_class_name">""</string>
     <string name="app_file_header">"app.h"</string>
     <string name="app_file_implementation">"app.cpp"</string>
     <string name="app_class_name">"Application"</string>
@@ -196,6 +196,7 @@
         <string name="Optimizations">"%AUTO%"</string>
         <string name="Warnings">"%AUTO%"</string>
         <string name="Debug flags">"%AUTO%"</string>
+        <string name="Extra compile flags">"%AUTO%"</string>
         <string name="Libraries">"%AUTO%"</string>
         <string name="Library path">"%AUTO%"</string>
         <string name="Linker flags">"%AUTO%"</string>
@@ -208,6 +209,7 @@
         <string name="PATH variable">"%AUTO%"</string>
         <bool name="Suppress source rules">0</bool>
         <bool name="Enable makefile generation">1</bool>
+        <string name="CFG">""</string>
       </document>
     </document>
   </data>
@@ -383,6 +385,7 @@
             <bool name="proxy-wxLC_USER_TEXT">0</bool>
             <bool name="proxy-wxLC_EDIT_LABELS">0</bool>
             <bool name="proxy-wxLC_NO_HEADER">0</bool>
+            <bool name="proxy-wxLC_NO_SORT_HEADER">0</bool>
             <bool name="proxy-wxLC_SINGLE_SEL">0</bool>
             <bool name="proxy-wxLC_SORT_ASCENDING">0</bool>
             <bool name="proxy-wxLC_SORT_DESCENDING">0</bool>
