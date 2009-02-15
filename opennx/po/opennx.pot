@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-02-13 17:59+0100\n"
+"POT-Creation-Date: 2009-02-15 15:12+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,21 +32,30 @@ msgstr ""
 msgid "&OK"
 msgstr ""
 
-#: ConnectDialog_symbols.h:22
-msgid "Connecting"
+#: CardWaiterDialog_symbols.h:22
+msgid "Insert card"
 msgstr ""
 
-#: ConnectDialog_symbols.h:23
-msgid " "
+#: CardWaiterDialog_symbols.h:23
+msgid "Please insert smart card"
 msgstr ""
 
-#: ConnectDialog_symbols.h:24 KeyDialog_symbols.h:26 PanicDialog_symbols.h:23
+#: CardWaiterDialog_symbols.h:24 ConnectDialog_symbols.h:24
+#: KeyDialog_symbols.h:26 PanicDialog_symbols.h:23
 #: RdpImageSettingsDialog_symbols.h:36 RdpPropertyDialog_symbols.h:36
 #: ResumeDialog_symbols.h:27 SessionProperties_symbols.h:101
 #: SmbShareProperties_symbols.h:51 UnixImageSettingsDialog_symbols.h:35
 #: VncImageSettingsDialog_symbols.h:28 VncPropertyDialog_symbols.h:32
 #: X11PropertyDialog_symbols.h:33
 msgid "&Cancel"
+msgstr ""
+
+#: ConnectDialog_symbols.h:22
+msgid "Connecting"
+msgstr ""
+
+#: ConnectDialog_symbols.h:23
+msgid " "
 msgstr ""
 
 #: ForeignFrame_symbols.h:22
@@ -134,119 +143,119 @@ msgstr ""
 msgid "Authentication failed"
 msgstr ""
 
-#: MySession.cpp:466 SessionList.cpp:264 SessionList.cpp:309
+#: MySession.cpp:467 SessionList.cpp:264 SessionList.cpp:309
 msgid "unknown"
 msgstr ""
 
-#: MySession.cpp:726 MySession.cpp:739
+#: MySession.cpp:727 MySession.cpp:740
 msgid "Warning - OpenNX"
 msgstr ""
 
-#: MySession.cpp:737
+#: MySession.cpp:738
 msgid ""
 "\n"
 "Do you want to delete the key and retry ?"
 msgstr ""
 
-#: MySession.cpp:757
+#: MySession.cpp:758
 msgid "Sending username"
 msgstr ""
 
-#: MySession.cpp:761 MySession.cpp:786
+#: MySession.cpp:762 MySession.cpp:787
 msgid "Authenticating"
 msgstr ""
 
-#: MySession.cpp:768
+#: MySession.cpp:769
 msgid "Authentication successful"
 msgstr ""
 
-#: MySession.cpp:802
+#: MySession.cpp:803
 msgid "Query server-side sessions"
 msgstr ""
 
-#: MySession.cpp:831
+#: MySession.cpp:832
 msgid "Enter PIN for Smart Card access."
 msgstr ""
 
-#: MySession.cpp:831
+#: MySession.cpp:832
 msgid "Smart Card PIN"
 msgstr ""
 
-#: MySession.cpp:834
+#: MySession.cpp:835
 msgid "Enter passphrase"
 msgstr ""
 
-#: MySession.cpp:836
+#: MySession.cpp:837
 msgid "Empty passphrase"
 msgstr ""
 
-#: MySession.cpp:842 MySession.cpp:846 MySession.cpp:850 MySession.cpp:854
-#: MySession.cpp:858 MySession.cpp:862 MySession.cpp:866 MySession.cpp:870
-#: MySession.cpp:874 MySession.cpp:878
+#: MySession.cpp:843 MySession.cpp:847 MySession.cpp:851 MySession.cpp:855
+#: MySession.cpp:859 MySession.cpp:863 MySession.cpp:867 MySession.cpp:871
+#: MySession.cpp:875 MySession.cpp:879
 msgid "Negotiating session parameter"
 msgstr ""
 
-#: MySession.cpp:883 MySession.cpp:906
+#: MySession.cpp:884 MySession.cpp:907
 msgid "Starting session"
 msgstr ""
 
-#: MySession.cpp:899
+#: MySession.cpp:900
 msgid "Unexpected termination of nxssh"
 msgstr ""
 
-#: MySession.cpp:1018
+#: MySession.cpp:1019
 msgid "You have reached your session limit. No more sessions allowed"
 msgstr ""
 
-#: MySession.cpp:1019
+#: MySession.cpp:1020
 msgid "Error - OpenNX"
 msgstr ""
 
-#: MySession.cpp:1217
+#: MySession.cpp:1218
 #, c-format
 msgid ""
 "Could not create session directory\n"
 "%s\n"
 msgstr ""
 
-#: MySession.cpp:1237
+#: MySession.cpp:1238
 #, c-format
 msgid ""
 "Could not write session options\n"
 "%s\n"
 msgstr ""
 
-#: MySession.cpp:1544
+#: MySession.cpp:1550
 #, c-format
 msgid "Could not write %s"
 msgstr ""
 
-#: MySession.cpp:1602 MySession.cpp:1633 MySession.cpp:1641
+#: MySession.cpp:1608 MySession.cpp:1639 MySession.cpp:1647
 #, c-format
 msgid "Connecting to %s ..."
 msgstr ""
 
-#: MySession.cpp:1609
+#: MySession.cpp:1615
 msgid "Preparing multimedia service ..."
 msgstr ""
 
-#: MySession.cpp:1619
+#: MySession.cpp:1625
 msgid "Could not query multimedia support"
 msgstr ""
 
-#: MySession.cpp:1631
+#: MySession.cpp:1637
 msgid "Could not start multimedia support"
 msgstr ""
 
-#: MySession.cpp:1639
+#: MySession.cpp:1645
 msgid "Preparing CUPS service ..."
 msgstr ""
 
-#: MySession.cpp:1673
+#: MySession.cpp:1679
 msgid "Called command was: "
 msgstr ""
 
-#: MySession.cpp:1674
+#: MySession.cpp:1680
 msgid "Could not start nxssh."
 msgstr ""
 

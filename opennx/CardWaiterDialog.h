@@ -98,6 +98,10 @@ public:
     /// Should we show tooltips?
     static bool ShowToolTips();
     void OnCardInserted(wxCommandEvent &);
+    int GetReader() { return m_iReader; }
+
+private:
+    int m_iReader;
 
 ////@begin CardWaiterDialog member variables
 ////@end CardWaiterDialog member variables

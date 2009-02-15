@@ -26,9 +26,9 @@
 #pragma interface "CardWaiter.cpp"
 #endif
 
-class wxWindow;
-
 DECLARE_LOCAL_EVENT_TYPE(wxEVT_CARDINSERTED, -5);
+
+class wxWindow;
 
 /**
  * CardWaiter uses opensc (http://www.opensc-project.org/) to access
@@ -39,10 +39,11 @@ DECLARE_LOCAL_EVENT_TYPE(wxEVT_CARDINSERTED, -5);
 class CardWaiter
 {
     public:
-        CardWaiter(wxWindow *);
+        CardWaiter();
+        virtual ~CardWaiter();
 
-        /*
-         * Waits fro insertion of a smart card.
+        /**
+         * Waits for insertion of a smart card.
          * Returns immediately, if a card is already
          * inserted. Otherwise, shows a dialog which instructs
          * the user to insert a card. The user can hit a Cancel
@@ -51,10 +52,7 @@ class CardWaiter
          * @return: -1 on abort or error. The reader-number where
          * the card was inserted otherwise.
          */
-        int WaitForCard();
-
-    private:
-        wxWindow *parent;
+        int WaitForCard(wxWindow *parent);
 };
 
 #endif

@@ -1529,11 +1529,11 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
 
         if (m_pCfg->bGetUseSmartCard()) {
             ::wxLogTrace(MYTRACETAG, wxT("Checking for SmartCard"));
-            CardWaiter w(parent);
-            int reader = w.WaitForCard();
-            if ((reader == -1) || (reader == wxID_CANCEL))
+            CardWaiter w;
+            int reader = w.WaitForCard(parent);
+            if (reader == -1)
                 return false;
-            nxsshcmd << wxT(" -I ") << reader; // We always use SC reader 0
+            nxsshcmd << wxT(" -I ") << reader;
         } else {
             if (m_pCfg->sGetSshKey().IsEmpty()) {
                 fn.Assign(m_sSysDir, wxT("server.id_dsa.key"));

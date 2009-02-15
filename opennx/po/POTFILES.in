@@ -1,6 +1,9 @@
 AboutDialog.cpp
 AboutDialog_symbols.h
 AsyncProcess.cpp
+CardWaiter.cpp
+CardWaiterDialog.cpp
+CardWaiterDialog_symbols.h
 ConnectDialog.cpp
 ConnectDialog_symbols.h
 ExtHtmlWindow.cpp

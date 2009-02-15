@@ -119,6 +119,7 @@ void CardWaiterDialog::Init()
 {
 ////@begin CardWaiterDialog member initialisation
 ////@end CardWaiterDialog member initialisation
+    m_iReader = -1;
 }
 
 
@@ -150,7 +151,9 @@ bool CardWaiterDialog::ShowToolTips()
 
 void CardWaiterDialog::OnCardInserted(wxCommandEvent &ev)
 {
-    EndModal(ev.GetInt());
+    m_iReader = ev.GetInt();
+    ev.Skip();
+    EndModal(wxID_OK);
 }
 
 /*!
