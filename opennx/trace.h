@@ -2,6 +2,7 @@
 #define _TRACE_H_
 
 #include <wx/arrstr.h>
+#include <wx/filename.h>
 
 extern wxArrayString *allTraceTags;
 
