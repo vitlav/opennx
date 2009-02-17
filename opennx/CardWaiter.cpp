@@ -50,10 +50,10 @@ ENABLE_TRACE;
 
 #include <opensc/opensc.h>
 typedef int (*Tsc_context_create)(sc_context_t **ctx, const sc_context_param_t *parm);
+typedef int (*Tsc_establish_context)(sc_context_t **ctx, const char *app_name);
 typedef int (*Tsc_release_context)(sc_context_t *ctx);
-typedef unsigned int (*Tsc_ctx_get_reader_count)(sc_context_t *ctx);
-typedef sc_reader_t *(*Tsc_ctx_get_reader)(sc_context_t *ctx, unsigned int i);
 typedef int (*Tsc_detect_card_presence)(sc_reader_t *reader, int slot_id);
+
 
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_CARDINSERTED);
 
@@ -115,26 +115,34 @@ CardWaitThread::~CardWaitThread()
 CardWaitThread::Entry()
 {
     sc_context *ctx;
+    wxDynamicLibrary dll;
+    {
+        wxLogNull ignoreErrors;
+        if (!dll.Load(wxT("libopensc")))
+            return 0;
+    }
 
-    wxDynamicLibrary dll(wxT("libopensc"));
+#if 1
+    wxDYNLIB_FUNCTION(Tsc_establish_context, sc_establish_context, dll);
+    if (!pfnsc_establish_context)
+        return 0;
+    if (SC_SUCCESS != pfnsc_establish_context(&ctx, NULL))
+        return 0;
+#else
     wxDYNLIB_FUNCTION(Tsc_context_create, sc_context_create, dll);
     if (!pfnsc_context_create)
         return 0;
+    if (SC_SUCCESS != pfnsc_context_create(&ctx, NULL))
+        return 0;
+#endif
     wxDYNLIB_FUNCTION(Tsc_release_context, sc_release_context, dll);
     if (!pfnsc_release_context)
         return 0;
-    wxDYNLIB_FUNCTION(Tsc_ctx_get_reader_count, sc_ctx_get_reader_count, dll);
-    if (!pfnsc_ctx_get_reader_count)
-        return 0;
-    wxDYNLIB_FUNCTION(Tsc_ctx_get_reader, sc_ctx_get_reader, dll);
-    if (!pfnsc_ctx_get_reader)
-        return 0;
+
     wxDYNLIB_FUNCTION(Tsc_detect_card_presence, sc_detect_card_presence, dll);
     if (!pfnsc_detect_card_presence)
         return 0;
 
-    if (SC_SUCCESS != pfnsc_context_create(&ctx, NULL))
-        return 0;
     m_bOk = true;
     while (!m_thread->TestDestroy()) {
         if (m_bTerminate)
@@ -143,11 +151,15 @@ CardWaitThread::Entry()
         int r, j;
 		unsigned int i;
 
-        unsigned int rc = pfnsc_ctx_get_reader_count(ctx);
+        unsigned int rc = ctx->reader_count;
         if (rc > 0) {
             unsigned int errc = 0;
+
             for (i = 0; i < rc; i++) {
-                sc_reader_t *reader = pfnsc_ctx_get_reader(ctx, i);
+                sc_reader_t *reader = ctx->reader[i];
+                if (!reader)
+                    continue;
+                ::wxLogTrace(MYTRACETAG, wxT("Trying reader %d"), i);
                 for (j = 0; j < reader->slot_count; j++) {
                     r = pfnsc_detect_card_presence(reader, j);
                     if (r > 0) {
