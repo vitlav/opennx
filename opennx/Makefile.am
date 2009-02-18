@@ -9,7 +9,7 @@ EXTRA_PROGRAMS = tracelog$(EXEEXT)
 
 opennx_SOURCES = AboutDialog.cpp AsyncProcess.cpp CardWaiter.cpp \
 	CardWaiterDialog.cpp ConnectDialog.cpp ExtHtmlWindow.cpp ForeignFrame.cpp \
-	Icon.cpp LogDialog.cpp KeyDialog.cpp LoginDialog.cpp md5.c MyIPC.cpp \
+	Icon.cpp LogDialog.cpp KeyDialog.cpp LibUSB.cpp LoginDialog.cpp md5.c MyIPC.cpp \
 	MySession.cpp MyValidator.cpp MyWizard.cpp MyXmlConfig.cpp opennxApp.cpp \
 	osdep.c PanicDialog.cpp pwcrypt.cpp QuitDialog.cpp \
 	RdpImageSettingsDialog.cpp RdpPropertyDialog.cpp \
@@ -21,7 +21,7 @@ opennx_SOURCES = AboutDialog.cpp AsyncProcess.cpp CardWaiter.cpp \
 noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h CardWaiter.h \
 	CardWaiterDialog.h ConnectDialog.h ConnectDialog_symbols.h debugleak.h \
 	ExtHtmlWindow.h ForeignFrame.h ForeignFrame_symbols.h Icon.h \
-	KeyDialog.h KeyDialog_symbols.h LogDialog.h LogDialog_symbols.h \
+	KeyDialog.h KeyDialog_symbols.h LibUSB.h LogDialog.h LogDialog_symbols.h \
 	LoginDialog.h LoginDialog_symbols.h md5.h memres.h MyIPC.h \
 	MySession.h MyValidator.h MyWizard.h MyWizard_symbols.h MyXmlConfig.h \
 	opennxApp.h osdep.h  PanicDialog.h PanicDialog_symbols.h pwcrypt.h \

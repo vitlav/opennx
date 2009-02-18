@@ -636,6 +636,10 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
             _("Specify wxWidgets trace mask."));
     parser.AddSwitch(wxEmptyString, wxT("wizard"),
             _("Guide the user through the steps to configure a session.") + tags);
+#if defined(SUPPORT_USBIP) && defined(__LINUX__)
+    parser.AddSwitch(wxEmptyString, wxT("hotplug"),
+            _("To be called from udev hotplug."));
+#endif
 }
 
 static const wxChar *_dlgTypes[] = {
@@ -658,6 +662,10 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
     wxString sDlgType;
 
     m_eMode = MODE_CLIENT;
+    if (parser.Found(wxT("hotplug"))) {
+        m_eMode = MODE_HOTPLUG;
+        return false;
+    }
     if (parser.Found(wxT("dialog"), &sDlgType)) {
         wxString tmp;
         m_iDialogStyle = wxICON_WARNING;
@@ -792,6 +800,8 @@ bool opennxApp::realInit()
         return false;
 
     switch (m_eMode) {
+        case MODE_HOTPLUG:
+            return false;
         case MODE_CLIENT:
         case MODE_WIZARD:
             break;

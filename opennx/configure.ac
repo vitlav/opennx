@@ -38,6 +38,16 @@ AC_TYPE_SIZE_T
 WXPARAMS=
 AM_OPTIONS_WXCONFIG
 
+ac_cv_enable_usbip=NO
+AC_ARG_ENABLE([usbip],
+	AS_HELP_STRING([--enable-usbip],
+		[Enable usbip support (Default: NO, currently on Linux only)]),
+	[ test "$enableval" = "yes" && ac_cv_enable_usbip=YES ]
+)
+if test "$ac_cv_enable_usbip" = "YES" ; then
+    AC_DEFINE(SUPPORT_USBIP,1,[Set to 1 for enabling USBIP support])
+fi
+
 ac_cv_enable_debug=NO
 AC_ARG_ENABLE([debug],
 	AS_HELP_STRING([--enable-debug],
@@ -180,7 +190,7 @@ case $target_os in
 esac
 AC_SUBST(VERSION_COMMASEPARATED)
 
-AC_DEFINE(wxUSE_DEBUG_LOG,1,[Set to 1 for enabling trace logging])
+dnl AC_DEFINE(wxUSE_LOG_DEBUG,1,[Set to 1 for enabling trace logging])
 
 AC_CONFIG_FILES([Makefile opennx.spec Info.plist res/opennx.rc po/Makefile.in])
 AC_OUTPUT
