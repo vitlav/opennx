@@ -746,10 +746,10 @@
                                             <object class="wxBoxSizer">
                                                 <orient>wxHORIZONTAL</orient>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <flag>wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                        <size>21,19d</size>
+                                                        <size>16,15d</size>
                                                         <bitmap>memory:memrsc#zip:res/smbsharing.png</bitmap>
                                                     </object>
                                                 </object>
@@ -769,10 +769,10 @@
                                             <object class="wxBoxSizer">
                                                 <orient>wxHORIZONTAL</orient>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <flag>wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                        <size>21,19d</size>
+                                                        <size>16,15d</size>
                                                         <bitmap>memory:memrsc#zip:res/cupssharing.png</bitmap>
                                                     </object>
                                                 </object>
@@ -807,24 +807,27 @@
                                             </object>
                                         </object>
                                         <object class="sizeritem">
-                                            <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT</flag>
+                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                             <border>5</border>
-                                            <object class="wxBoxSizer">
-                                                <orient>wxHORIZONTAL</orient>
-                                                <object class="sizeritem">
-                                                    <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
-                                                    <border>5</border>
-                                                    <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                        <size>21,19d</size>
-                                                        <bitmap>memory:memrsc#zip:res/usb.png</bitmap>
+                                            <object class="wxPanel" name="ID_PANEL_USBOPTION">
+                                                <style>wxNO_BORDER|wxTAB_TRAVERSAL</style>
+                                                <object class="wxBoxSizer">
+                                                    <orient>wxHORIZONTAL</orient>
+                                                    <object class="sizeritem">
+                                                        <flag>wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
+                                                        <border>5</border>
+                                                        <object class="wxStaticBitmap" name="wxID_STATIC">
+                                                            <size>16,15d</size>
+                                                            <bitmap>memory:memrsc#zip:res/usb.png</bitmap>
+                                                        </object>
                                                     </object>
-                                                </object>
-                                                <object class="sizeritem">
-                                                    <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
-                                                    <border>5</border>
-                                                    <object class="wxCheckBox" name="ID_CHECKBOX_USBENABLE">
-                                                        <label>Enable USB forwarding</label>
-                                                        <checked>0</checked>
+                                                    <object class="sizeritem">
+                                                        <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                        <border>5</border>
+                                                        <object class="wxCheckBox" name="ID_CHECKBOX_USBENABLE">
+                                                            <label>Enable USB forwarding</label>
+                                                            <checked>0</checked>
+                                                        </object>
                                                     </object>
                                                 </object>
                                             </object>
@@ -873,10 +876,10 @@
                                             <object class="wxBoxSizer">
                                                 <orient>wxHORIZONTAL</orient>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <flag>wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                        <size>21,19d</size>
+                                                        <size>16,15d</size>
                                                         <bitmap>memory:memrsc#zip:res/multimedia.png</bitmap>
                                                     </object>
                                                 </object>

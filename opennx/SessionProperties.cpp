@@ -19,6 +19,10 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #if defined(__GNUG__) && !defined(__APPLE__)
 #pragma implementation "SessionProperties.h"
 #endif
@@ -273,7 +277,7 @@ SessionProperties::CheckChanged()
 
         // variables on 'General' Tab
         m_pCfg->bSetRememberPassword(m_bRememberPassword);
-        m_pCfg->bSetUseSmartCard(::wxGetApp().NxSmartCardSupport());
+        m_pCfg->bSetUseSmartCard(m_bUseSmartCard);
         m_pCfg->bSetUseCustomImageEncoding(m_bUseCustomImageEncoding);
         m_pCfg->iSetServerPort(m_iPort);
         m_pCfg->eSetSessionType((MyXmlConfig::SessionType)m_iSessionType);
@@ -359,6 +363,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlSmbEnable = NULL;
     m_pCtrlCupsEnable = NULL;
     m_pCtrlCupsPort = NULL;
+    m_pCtrlUsbOption = NULL;
     m_pCtrlUsbEnable = NULL;
     m_pCtrlSmbShares = NULL;
     m_pCtrlShareAdd = NULL;
@@ -624,6 +629,7 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
             m_pCtrlUsbEnable->Enable(true);
 #else
             m_pCtrlUsbEnable->Enable(false);
+            m_pCtrlUsbOption->Hide();
 #endif
             break;
         case MyXmlConfig::STYPE_WINDOWS:
@@ -639,6 +645,7 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
             m_bEnableSmbSharing = false;
             m_bEnableUSBIP = false;
             m_pCtrlUsbEnable->Enable(false);
+            m_pCtrlUsbOption->Hide();
             break;
         case MyXmlConfig::STYPE_VNC:
             m_pCtrlDesktopType->SetString(0, _("RFB"));
@@ -653,6 +660,7 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
             m_bEnableSmbSharing = false;
             m_bEnableUSBIP = false;
             m_pCtrlUsbEnable->Enable(false);
+            m_pCtrlUsbOption->Hide();
             break;
     }
     switch (m_iDisplayType) {
@@ -721,6 +729,7 @@ void SessionProperties::CreateControls()
     m_pCtrlSmbEnable = XRCCTRL(*this, "ID_CHECKBOX_SMB", wxCheckBox);
     m_pCtrlCupsEnable = XRCCTRL(*this, "ID_CHECKBOX_CUPSENABLE", wxCheckBox);
     m_pCtrlCupsPort = XRCCTRL(*this, "ID_SPINCTRL_CUPSPORT", wxSpinCtrl);
+    m_pCtrlUsbOption = XRCCTRL(*this, "ID_PANEL_USBOPTION", wxPanel);
     m_pCtrlUsbEnable = XRCCTRL(*this, "ID_CHECKBOX_USBENABLE", wxCheckBox);
     m_pCtrlSmbShares = XRCCTRL(*this, "ID_LISTCTRL_SMB_SHARES", wxListCtrl);
     m_pCtrlShareAdd = XRCCTRL(*this, "ID_BUTTON_SMB_ADD", wxButton);

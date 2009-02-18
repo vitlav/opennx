@@ -122,15 +122,13 @@ void LoginDialog::ReadConfigDirectory()
         delete m_pCurrentCfg;
     m_pCurrentCfg = NULL;
     m_pCtrlSessionName->Clear();
-    if (!m_sLastSessionFilename.IsEmpty()) {
-        if (m_aConfigFiles.Index(m_sLastSessionFilename) == wxNOT_FOUND)
-            m_aConfigFiles.Add(m_sLastSessionFilename);
-    }
+    ::wxLogTrace(MYTRACETAG, wxT("ReadConfigDirectory: LastSession='%s'"), m_sLastSessionFilename.c_str()); 
     for (i = 0; i < m_aConfigFiles.GetCount(); i++) {
         MyXmlConfig cfg(m_aConfigFiles[i]);
         if (cfg.IsValid()) {
             m_pCtrlSessionName->Append(cfg.sGetName(), (void *)m_aConfigFiles[i].c_str());
-            if (cfg.sGetFileName() == m_sLastSessionFilename) {
+            if ((cfg.sGetFileName() == m_sLastSessionFilename) ||
+                    (cfg.sGetName() == m_sLastSessionFilename)) {
                 m_pCurrentCfg = new MyXmlConfig(m_aConfigFiles[i]);
                 m_sSessionName = cfg.sGetName();
                 m_bGuestLogin = cfg.bGetGuestMode();
@@ -147,14 +145,11 @@ void LoginDialog::ReadConfigDirectory()
             }
         }
     }
-    /*
-    if (aSessionNames.GetCount() == 0) {
-        m_sSessionName.Empty();
-        aSessionNames.Add(m_sSessionName);
-    }
-    m_pCtrlSessionName->Append(aSessionNames);
-    */
-    if (!m_pCurrentCfg) {
+    if (m_pCurrentCfg) {
+        m_pCtrlSessionName->SetStringSelection(m_sSessionName);
+        wxCommandEvent event;
+        OnComboboxSessionSelected(event);
+    } else {
         // Last session name might be a plain session name (backward compatibility)
         m_pCtrlSessionName->SetStringSelection(m_sLastSessionFilename);
         wxCommandEvent event;

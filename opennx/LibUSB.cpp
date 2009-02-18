@@ -68,7 +68,8 @@ USBDevice::USBDevice(int v, int p, unsigned char c) {
 }
 
 wxString USBDevice::toString() {
-    wxString ret = wxString::Format(wxT("%04X/%04X/%02X"), m_iVendor, m_iProduct, m_iClass);
+    wxString ret = wxString::Format(wxT("%d-%d %04X/%04X/%02X"),
+            m_iBusNum, m_iDevNum, m_iVendor, m_iProduct, m_iClass);
     if (!m_sVendor.IsEmpty())
         ret.Append(wxT(" ")).Append(m_sVendor);
     if (!m_sProduct.IsEmpty())
@@ -119,6 +120,8 @@ void USB::adddev(wxDynamicLibrary *dll, struct usb_device *dev, unsigned char dc
                     dev->descriptor.iSerialNumber, string, sizeof(string)))
             d.m_sSerial = wxConvUTF8.cMB2WX(string);
     }
+    d.m_iBusNum = dev->bus->location;
+    d.m_iDevNum = dev->devnum;
     m_aDevices.Add(d);
     pfnusb_close(udev);
 #endif
@@ -168,7 +171,6 @@ USB::USB() {
         wxDYNLIB_FUNCTION(Tusb_init, usb_init, dll);
         if (!pfnusb_init)
             return;
-
         pfnusb_init();
         usbscan(&dll);
     }

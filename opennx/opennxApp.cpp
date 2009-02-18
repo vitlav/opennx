@@ -64,6 +64,7 @@
 #include "QuitDialog.h"
 #include "ForeignFrame.h"
 #include "Icon.h"
+#include "LibUSB.h"
 #include "osdep.h"
 
 #include "memres.h"
@@ -614,6 +615,10 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
     }
     tags.Prepend(_("\n\nSupported trace tags: "));
 
+#if defined(SUPPORT_USBIP) && defined(__LINUX__)
+    parser.AddSwitch(wxEmptyString, wxT("hotplug"),
+            _("To be called from udev hotplug."));
+#endif
     parser.AddSwitch(wxEmptyString, wxT("admin"),
             _("Start the session administration tool."));
     parser.AddOption(wxEmptyString, wxT("caption"),
@@ -636,10 +641,6 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
             _("Specify wxWidgets trace mask."));
     parser.AddSwitch(wxEmptyString, wxT("wizard"),
             _("Guide the user through the steps to configure a session.") + tags);
-#if defined(SUPPORT_USBIP) && defined(__LINUX__)
-    parser.AddSwitch(wxEmptyString, wxT("hotplug"),
-            _("To be called from udev hotplug."));
-#endif
 }
 
 static const wxChar *_dlgTypes[] = {
@@ -664,7 +665,7 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
     m_eMode = MODE_CLIENT;
     if (parser.Found(wxT("hotplug"))) {
         m_eMode = MODE_HOTPLUG;
-        return false;
+        return true;
     }
     if (parser.Found(wxT("dialog"), &sDlgType)) {
         wxString tmp;
@@ -801,6 +802,7 @@ bool opennxApp::realInit()
 
     switch (m_eMode) {
         case MODE_HOTPLUG:
+            handleHotplug();
             return false;
         case MODE_CLIENT:
         case MODE_WIZARD:
@@ -931,4 +933,33 @@ int opennxApp::OnExit()
         wxMemoryFSHandler::RemoveFile(wxT("memrsc"));
     }
     return wxApp::OnExit();
+}
+
+void opennxApp::handleHotplug()
+{
+    /* If we arrive here, we have been called from
+     * usbip's bind_driver --hotplug.
+     */
+    wxString tmp;
+    long devnum;
+    // First, get misc. env vars from the hotplug event
+    if (!::wxGetEnv(wxT("ACTION"), &tmp))
+        return;
+    if (!tmp.IsSameAs(wxT("add")))
+        return;
+    if (!::wxGetEnv(wxT("DEVNUM"), &tmp))
+        return;
+    tmp.ToLong(&devnum);
+
+    /*
+     * Finally, if this device should be exported via usbip,
+     * the print the server-IP (with NX always 127.0.0.1) and
+     * port to stdout
+     */
+    USB u;
+    ArrayOfUSBDevices a = u.GetDevices();
+    for (int i = 0; i < a.GetCount(); i++) {
+        wxString s = a[i].toString();
+        printf("%s\n", (const char *)s.utf8_str());
+    }
 }

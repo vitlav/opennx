@@ -326,6 +326,7 @@ private:
     wxCheckBox* m_pCtrlSmbEnable;
     wxCheckBox* m_pCtrlCupsEnable;
     wxSpinCtrl* m_pCtrlCupsPort;
+    wxPanel* m_pCtrlUsbOption;
     wxCheckBox* m_pCtrlUsbEnable;
     wxListCtrl* m_pCtrlSmbShares;
     wxButton* m_pCtrlShareAdd;

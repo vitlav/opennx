@@ -69,6 +69,7 @@ ENABLE_TRACE;
 #define DEFAULT_GUEST_USER wxT("NX guest user")
 
 WX_DEFINE_OBJARRAY(ArrayOfShareGroups);
+WX_DEFINE_OBJARRAY(ArrayOfUsbForwards);
 
 bool ShareGroup::operator ==(const ShareGroup &other)
 {
@@ -94,6 +95,22 @@ bool ShareGroup::operator ==(const ShareGroup &other)
 }
 
 bool ShareGroup::operator !=(const ShareGroup &other)
+{
+    return (!(*this == other));
+}
+
+bool SharedUsbDevice::operator ==(const SharedUsbDevice &other)
+{
+    if (m_eMode != other.m_eMode) return false;
+    if (m_sVendor != other.m_sVendor) return false;
+    if (m_sProduct != other.m_sProduct) return false;
+    if (m_sSerial != other.m_sSerial) return false;
+    if (m_iVendorID != other.m_iVendorID) return false;
+    if (m_iProductID != other.m_iProductID) return false;
+    return true;
+}
+
+bool SharedUsbDevice::operator !=(const SharedUsbDevice &other)
 {
     return (!(*this == other));
 }
@@ -300,6 +317,7 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
 
     m_aShareGroups = other.m_aShareGroups;
     m_aUsedShareGroups = other.m_aUsedShareGroups;
+    m_aUsbForwards = other.m_aUsbForwards;
 
     if (other.m_pMd5Password) {
         if (m_pMd5Password)
@@ -681,6 +699,31 @@ MyXmlConfig::cmpShareGroups(ArrayOfShareGroups a1, ArrayOfShareGroups a2)
     return (ca.GetCount() != 0);
 }
 
+// Compare two arrays of UsbForwards where sequence of elements is irrelevant
+// return true, if arrays are different.
+    bool
+MyXmlConfig::cmpUsbForwards(ArrayOfUsbForwards a1, ArrayOfUsbForwards a2)
+{
+    size_t cnt = a1.GetCount();
+    if (cnt != a2.GetCount())
+        return true;
+    ArrayOfUsbForwards ca = a2;
+    for (size_t i = 0; i < cnt; i++) {
+        size_t cnt2 = ca.GetCount();
+        int idx = wxNOT_FOUND;
+        for (size_t j = 0; j < cnt2; j++) {
+            if (a1[i] == ca[j]) {
+                idx = j;
+                break;
+            }
+        }
+        if (idx == wxNOT_FOUND)
+            return true;
+        ca.RemoveAt(idx);
+    }
+    return (ca.GetCount() != 0);
+}
+
 // Compare two wxArrayString where sequence of elements is irrelevant
 // return true, if arrays are different.
     bool
@@ -783,6 +826,7 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
 
     if (cmpUsedShareGroups(m_aUsedShareGroups, other.m_aUsedShareGroups)) return false;
     if (cmpShareGroups(m_aShareGroups, other.m_aShareGroups)) return false;
+    if (cmpUsbForwards(m_aUsbForwards, other.m_aUsbForwards)) return false;
     return true;
 }
 
@@ -1253,6 +1297,54 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                 }
 
                 // When we reach here, we got an "unknown" group name. This is usually
+                // either a mounted share description or an UsbForward entry.
+                if (cfgnode->GetPropVal(wxT("name"), wxEmptyString).StartsWith(wxT("UsbForward"))) {
+                    SharedUsbDevice dev;
+                    wxXmlNode *opt = cfgnode->GetChildren();
+                    int optcount = 0;
+                    while (opt) {
+                        wxString key = opt->GetPropVal(wxT("key"), wxEmptyString);
+                        if (key == wxT("Vendor")) {
+                            optcount++;
+                            dev.m_sVendor = getString(opt, wxT("Vendor"), wxEmptyString);
+                            continue;
+                        }
+                        if (key == wxT("Product")) {
+                            optcount++;
+                            dev.m_sProduct = getString(opt, wxT("Product"), wxEmptyString);
+                            continue;
+                        }
+                        if (key == wxT("Serial")) {
+                            optcount++;
+                            dev.m_sSerial = getString(opt, wxT("Serial"), wxEmptyString);
+                            continue;
+                        }
+                        if (key == wxT("VendorID")) {
+                            optcount++;
+                            dev.m_iVendorID = getLong(opt, wxT("VendorID"), 0);
+                            continue;
+                        }
+                        if (key == wxT("ProductID")) {
+                            optcount++;
+                            dev.m_iProductID = getLong(opt, wxT("ProductID"), 0);
+                            continue;
+                        }
+                        if (key == wxT("Mode")) {
+                            optcount++;
+                            wxString tmp = getString(opt, wxT("Mode"), wxEmptyString);
+                            if (tmp.IsSameAs(wxT("local")))
+                                dev.m_eMode = SharedUsbDevice::MODE_LOCAL;
+                            if (tmp.IsSameAs(wxT("remote")))
+                                dev.m_eMode = SharedUsbDevice::MODE_REMOTE;
+                            continue;
+                        }
+                    }
+                    if ((6 == optcount) && (dev.m_eMode != SharedUsbDevice::MODE_UNKNOWN))
+                        m_aUsbForwards.Add(dev);
+                    continue;
+                }
+
+                // When we reach here, we got an "unknown" group name. This is usually
                 // a mounted share description.
                 {
                     int shareOptions = 0;
@@ -1714,6 +1806,25 @@ MyXmlConfig::SaveToFile()
                 sAddOption(g, wxT("Driver"), m_aShareGroups[i].m_sDriver);
                 bAddOption(g, wxT("Public"), m_aShareGroups[i].m_bPublic);
                 sAddOption(g, wxT("Type"), wxT("cupsprinter"));
+                break;
+        }
+    }
+    for (i = 0; i < m_aUsbForwards.GetCount(); i++) {
+        g = AddGroup(r, wxString::Format(wxT("UsbForward%d"), i));
+        sAddOption(g, wxT("Vendor"), m_aUsbForwards[i].m_sVendor);
+        sAddOption(g, wxT("Product"), m_aUsbForwards[i].m_sProduct);
+        sAddOption(g, wxT("Serial"), m_aUsbForwards[i].m_sSerial);
+        iAddOption(g, wxT("VendorID"), m_aUsbForwards[i].m_iVendorID);
+        iAddOption(g, wxT("ProductID"), m_aUsbForwards[i].m_iProductID);
+        switch (m_aUsbForwards[i].m_eMode) {
+            case SharedUsbDevice::MODE_UNKNOWN:
+                sAddOption(g, wxT("Mode"), wxT("unknown"));
+                break;
+            case SharedUsbDevice::MODE_LOCAL:
+                sAddOption(g, wxT("Mode"), wxT("local"));
+                break;
+            case SharedUsbDevice::MODE_REMOTE:
+                sAddOption(g, wxT("Mode"), wxT("remote"));
                 break;
         }
     }

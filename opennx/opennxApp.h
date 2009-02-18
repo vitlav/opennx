@@ -89,6 +89,7 @@ class opennxApp : public wxApp
         bool setSelfPath();
         void setUserDir();
         void checkNxSmartCardSupport();
+        void handleHotplug();
 };
 
 DECLARE_APP(opennxApp)

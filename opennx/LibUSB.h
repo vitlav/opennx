@@ -29,6 +29,7 @@
 #include <wx/dynarray.h>
 #include <wx/string.h>
 #include <wx/object.h>
+#include <memory>
 
 class USB;
 
@@ -41,6 +42,8 @@ class USBDevice : public wxObject {
     private:
         int m_iVendor;
         int m_iProduct;
+        int m_iBusNum;
+        int m_iDevNum;
         unsigned char m_iClass;
         wxString m_sVendor;
         wxString m_sProduct;

@@ -1478,6 +1478,10 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
         m_pCfg->bSetUseSmartCard(cfgpar.bGetUseSmartCard());
         m_pCfg->bSetEnableSSL(cfgpar.bGetEnableSSL());
         m_pCfg->bSetGuestMode(cfgpar.bGetGuestMode());
+        if (!cfgpar.bGetGuestMode()) {
+            m_pCfg->sSetUsername(cfgpar.sGetUsername());
+            m_pCfg->sSetPassword(password);
+        }
 
         wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &m_sSysDir);
         wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &m_sUserDir);
