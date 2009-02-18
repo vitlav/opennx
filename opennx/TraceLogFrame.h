@@ -84,6 +84,9 @@ public:
     /// wxEVT_COMMAND_MENU_SELECTED event handler for wxID_SAVEAS
     void OnSAVEASClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_MENU_SELECTED event handler for wxID_CLEAR
+    void OnCLEARClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_MENU_SELECTED event handler for wxID_EXIT
     void OnEXITClick( wxCommandEvent& event );
 

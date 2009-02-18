@@ -52,6 +52,8 @@ BEGIN_EVENT_TABLE( TraceLogFrame, wxFrame )
 
     EVT_MENU( wxID_SAVEAS, TraceLogFrame::OnSAVEASClick )
 
+    EVT_MENU( wxID_CLEAR, TraceLogFrame::OnCLEARClick )
+
     EVT_MENU( wxID_EXIT, TraceLogFrame::OnEXITClick )
 
 ////@end TraceLogFrame event table entries
@@ -150,6 +152,9 @@ void TraceLogFrame::AddEntry(const wxDateTime &stamp, int pid, const wxString &t
     i.SetColumn(2);
     i.SetText(txt);
     m_pCtrlTraceLog->SetItem(i);
+    m_pCtrlTraceLog->SetColumnWidth(0, wxLIST_AUTOSIZE);
+    m_pCtrlTraceLog->SetColumnWidth(1, wxLIST_AUTOSIZE);
+    m_pCtrlTraceLog->SetColumnWidth(2, wxLIST_AUTOSIZE);
 }
 
 /*!
@@ -262,5 +267,16 @@ void TraceLogFrame::OnSAVEASClick( wxCommandEvent& event )
         tf.Write();
         tf.Close();
     }
+}
+
+
+/*!
+ * wxEVT_COMMAND_MENU_SELECTED event handler for wxID_CLEAR
+ */
+
+void TraceLogFrame::OnCLEARClick( wxCommandEvent& event )
+{
+    m_pCtrlTraceLog->DeleteAllItems();
+    event.Skip();
 }
 

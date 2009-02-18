@@ -49,7 +49,6 @@
 ENABLE_TRACE;
 
 #include <opensc/opensc.h>
-typedef int (*Tsc_context_create)(sc_context_t **ctx, const sc_context_param_t *parm);
 typedef int (*Tsc_establish_context)(sc_context_t **ctx, const char *app_name);
 typedef int (*Tsc_release_context)(sc_context_t *ctx);
 typedef int (*Tsc_detect_card_presence)(sc_reader_t *reader, int slot_id);

@@ -1141,7 +1141,7 @@ MySession::startXserver()
     wxWinCmd << wxT(" -clipboard");
     wxWinCmd << wxT(" -noloadxkb");
     wxWinCmd << wxT(" -agent");
-    //wxWinCmd << wxT(" -hide");
+    wxWinCmd << wxT(" -hide");
     wxWinCmd << wxT(" -noreset");
     wxWinCmd << wxT(" -nolisten tcp");
     wxWinCmd << wxT(" -auth ") << getXauthPath();
@@ -1170,7 +1170,7 @@ MySession::startXserver()
     // wxWinCmd << wxT(" -nokeyhook");
 
     wxWinCmd << wxT(" ") << dpyStr;
-::wxLogTrace(MYTRACETAG, wxT("startXServer executing %s"), wxWinCmd.c_str());
+    ::wxLogTrace(MYTRACETAG, wxT("startXServer executing %s"), wxWinCmd.c_str());
     ::wxExecute(wxWinCmd, wxEXEC_ASYNC);
 #endif
 }

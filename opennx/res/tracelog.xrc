@@ -19,6 +19,9 @@
                 <object class="wxMenuItem" name="wxID_SAVEAS">
                     <label>Save as ...</label>
                 </object>
+                <object class="wxMenuItem" name="wxID_CLEAR">
+                    <label>Clear</label>
+                </object>
                 <object class="separator">
                 </object>
                 <object class="wxMenuItem" name="wxID_EXIT">

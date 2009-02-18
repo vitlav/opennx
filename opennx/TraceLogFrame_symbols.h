@@ -1,6 +1,6 @@
 // $Id$
 //
-// Copyright (C) 2008 The OpenNX team
+// Copyright (C) 2009 The OpenNX team
 // Author: Fritz Elfert
 //
 // This program is free software; you can redistribute it and/or modify
@@ -24,4 +24,5 @@
 #define ID_TRACELOGFRAME_SYMBOL_1 _("&File")
 #define ID_TRACELOGFRAME_SYMBOL_2 _("Close")
 #define ID_TRACELOGFRAME_SYMBOL_3 _("Save as ...")
-#define ID_TRACELOGFRAME_SYMBOL_4 _("&Exit")
+#define ID_TRACELOGFRAME_SYMBOL_4 _("Clear")
+#define ID_TRACELOGFRAME_SYMBOL_5 _("&Exit")
