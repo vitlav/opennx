@@ -81,6 +81,7 @@ static const int PROXY_PORT_OFFSET = 4000;
 static const int X_PORT_OFFSET     = 6000;
 static const int SOUND_PORT_OFFSET = 7000;
 static const int KBD_PORT_OFFSET   = 8000;
+static const int HTTP_PORT_OFFSET  = 9000;
 
 #define NX_PROTO wxT(NX_PROTOCOL_VERSION)
 
@@ -1189,6 +1190,8 @@ MySession::startProxy()
         popts << wxT(",samba=") << m_sSmbPort;
     if ((getActiveCupsPrinters().GetCount() > 0) && (isCupsRunning()))
         popts << wxT(",cups=") << cupsport;
+    if (m_pCfg->bGetEnableUSBIP())
+        popts << wxT(",http=") << getFirstFreePort(HTTP_PORT_OFFSET);
     if (m_lEsdPort != 0)
         popts << wxT(",media=") << m_lEsdPort;
     popts
@@ -1558,12 +1561,12 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
             nxsshcmd << wxT(" -i ") << fn.GetShortPath();
         }
 
-        if (m_pCfg->bGetUseProxy()) {
-            if (!m_pCfg->sGetProxyHost().IsEmpty())
+        if (m_pCfg->bGetUseProxy() && (!m_pCfg->sGetProxyHost().IsEmpty()))
                 nxsshcmd << wxT(" -P ") << m_pCfg->sGetProxyHost() << wxT(":") << m_pCfg->iGetProxyPort();
-            else if (!m_pCfg->sGetProxyCommand().IsEmpty())
-                nxsshcmd << wxT(" -o 'ProxyCommand ") << m_pCfg->sGetProxyCommand() << wxT("'");
-        }
+
+        if (m_pCfg->bGetExternalProxy() && (!m_pCfg->sGetProxyCommand().IsEmpty()))
+            nxsshcmd << wxT(" -o 'ProxyCommand ") << m_pCfg->sGetProxyCommand() << wxT("'");
+
         if (m_pCfg->bGetEnableSSL())
             nxsshcmd << wxT(" -B");
         nxsshcmd << wxT(" -E") << wxT(" nx@") << m_pCfg->sGetServerHost();

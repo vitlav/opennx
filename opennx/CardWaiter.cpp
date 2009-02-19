@@ -121,19 +121,11 @@ CardWaitThread::Entry()
             return 0;
     }
 
-#if 1
     wxDYNLIB_FUNCTION(Tsc_establish_context, sc_establish_context, dll);
     if (!pfnsc_establish_context)
         return 0;
     if (SC_SUCCESS != pfnsc_establish_context(&ctx, NULL))
         return 0;
-#else
-    wxDYNLIB_FUNCTION(Tsc_context_create, sc_context_create, dll);
-    if (!pfnsc_context_create)
-        return 0;
-    if (SC_SUCCESS != pfnsc_context_create(&ctx, NULL))
-        return 0;
-#endif
     wxDYNLIB_FUNCTION(Tsc_release_context, sc_release_context, dll);
     if (!pfnsc_release_context)
         return 0;
@@ -212,6 +204,23 @@ CardWaiter::CardWaiter()
 CardWaiter::~CardWaiter()
 {
     ::wxLogTrace(MYTRACETAG, wxT("~CardWaiter()"));
+}
+
+bool CardWaiter::HasOpenSC() {
+    wxLogNull ignoreErrors;
+    wxDynamicLibrary dll;
+    if (!dll.Load(wxT("libopensc")))
+        return false;
+    wxDYNLIB_FUNCTION(Tsc_establish_context, sc_establish_context, dll);
+    if (!pfnsc_establish_context)
+        return false;
+    wxDYNLIB_FUNCTION(Tsc_release_context, sc_release_context, dll);
+    if (!pfnsc_release_context)
+        return false;
+    wxDYNLIB_FUNCTION(Tsc_detect_card_presence, sc_detect_card_presence, dll);
+    if (!pfnsc_detect_card_presence)
+        return false;
+    return true;
 }
 
 int CardWaiter::WaitForCard(wxWindow *parent) {

@@ -135,6 +135,7 @@ MyXmlConfig::init()
     m_bEnableSmbSharing = false;
     m_bEnableSSL = true;
     m_bEnableUSBIP = false;
+    m_bExternalProxy = false;
     m_bGuestMode = false;
     m_bImageEncodingJpeg = true;
     m_bImageEncodingPlainX = false;
@@ -251,6 +252,7 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
     m_bEnableSmbSharing = other.m_bEnableSmbSharing;
     m_bEnableSSL = other.m_bEnableSSL;
     m_bEnableUSBIP = other.m_bEnableUSBIP;
+    m_bExternalProxy = other.m_bExternalProxy;
     m_bGuestMode = other.m_bGuestMode;
     m_bImageEncodingJpeg = other.m_bImageEncodingJpeg;
     m_bImageEncodingPlainX = other.m_bImageEncodingPlainX;
@@ -761,6 +763,7 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
     if (m_bEnableSmbSharing != other.m_bEnableSmbSharing) return false;
     if (m_bEnableSSL != other.m_bEnableSSL) return false;
     if (m_bEnableUSBIP != other.m_bEnableUSBIP) return false;
+    if (m_bExternalProxy != other.m_bExternalProxy) return false;
     if (m_bGuestMode != other.m_bGuestMode) return false;
     if (m_bImageEncodingJpeg != other.m_bImageEncodingJpeg) return false;
     if (m_bImageEncodingPlainX != other.m_bImageEncodingPlainX) return false;
@@ -972,6 +975,7 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                                 wxT("Disable ZLIB stream compression"),
                                 m_bDisableZlibCompression);
                         m_bUseProxy = getBool(opt, wxT("Enable HTTP proxy"), m_bUseProxy);
+                        m_bExternalProxy = getBool(opt, wxT("Enable external proxy"), m_bExternalProxy);
                         m_bEnableSSL = getBool(opt, wxT("Enable SSL encryption"), m_bEnableSSL);
                         m_bEnableUSBIP = getBool(opt, wxT("Enable USBIP"), m_bEnableUSBIP);
 // Enable response time optimizations false
@@ -1739,6 +1743,7 @@ MyXmlConfig::SaveToFile()
     bAddOption(g, wxT("Disable TCP no-delay"), m_bDisableTcpNoDelay);
     bAddOption(g, wxT("Disable ZLIB stream compression"), m_bDisableZlibCompression);
     bAddOption(g, wxT("Enable HTTP proxy"), m_bUseProxy);
+    bAddOption(g, wxT("Enable external proxy"), m_bExternalProxy);
     bAddOption(g, wxT("Enable USBIP"), m_bEnableUSBIP);
     bAddOption(g, wxT("Enable response time optimisations"), false); // ???
     sAddOption(g, wxT("Proxy command"), m_sProxyCommand);

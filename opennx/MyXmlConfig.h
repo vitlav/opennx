@@ -173,6 +173,7 @@ class MyXmlConfig
         bool bGetEnableMultimedia() { return m_bEnableMultimedia; }
         bool bGetEnableSmbSharing() { return m_bEnableSmbSharing; }
         bool bGetEnableSSL() { return m_bEnableSSL; }
+        bool bGetExternalProxy() { return m_bExternalProxy; }
         bool bGetGuestMode() { return m_bGuestMode; }
         bool bGetKbdLayoutOther() { return m_bKbdLayoutOther; }
         bool bGetRdpCache() { return m_bRdpCache; }
@@ -260,6 +261,7 @@ class MyXmlConfig
         void bSetEnableMultimedia(bool b) { m_bEnableMultimedia = b; }
         void bSetEnableSmbSharing(bool b) { m_bEnableSmbSharing = b; }
         void bSetEnableSSL(bool b) { m_bEnableSSL = b; }
+        void bSetExternalProxy(bool b) { m_bExternalProxy = b; }
         void bSetGuestMode(bool b) { m_bGuestMode = b; }
         void bSetKbdLayoutOther(bool b) { m_bKbdLayoutOther = b; }
         void bSetRdpCache(bool b) { m_bRdpCache = b; }
@@ -368,6 +370,7 @@ class MyXmlConfig
         bool m_bEnableSmbSharing;
         bool m_bEnableSSL;
         bool m_bEnableUSBIP;
+        bool m_bExternalProxy;
         bool m_bGuestMode;
         bool m_bImageEncodingJpeg;
         bool m_bImageEncodingPlainX;

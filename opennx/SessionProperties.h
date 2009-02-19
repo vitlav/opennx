@@ -4,7 +4,7 @@
 // Author: Fritz Elfert
 //
 // This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU Library General Public License as
+// it under the terms of the GNU LibroxyCommary General Public License as
 // published by the Free Software Foundation; either version 2 of the
 // License, or (at your option) any later version.
 // 
@@ -186,8 +186,11 @@ public:
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_ENABLESSL
     void OnCheckboxEnablesslClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_HTTPPROXY
-    void OnCheckboxHttpproxyClick( wxCommandEvent& event );
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_NOPROXY
+    void OnRadiobuttonNoproxySelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_HTTPPROXY
+    void OnRadiobuttonHttpproxySelected( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_PROXYHOST
     void OnTextctrlProxyhostUpdated( wxCommandEvent& event );
@@ -197,6 +200,12 @@ public:
 
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_PROXYPORT
     void OnSpinctrlProxyportTextUpdated( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_EXTERNALPROXY
+    void OnRadiobuttonExternalproxySelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_PROXYCOMMAND
+    void OnTextctrlProxycommandTextUpdated( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_CACHEMEM
     void OnComboboxCachememSelected( wxCommandEvent& event );
@@ -320,6 +329,7 @@ private:
     wxCheckBox* m_pCtrlEnableSSL;
     wxTextCtrl* m_pCtrlProxyHost;
     wxSpinCtrl* m_pCtrlProxyPort;
+    wxTextCtrl* m_pCtrlProxyCommand;
     wxRadioButton* m_pCtrlKeyboardCurrent;
     wxRadioButton* m_pCtrlKeyboardOther;
     wxComboBox* m_pCtrlKeyboardLayout;
@@ -374,6 +384,8 @@ private:
     bool m_bUseProxy;
     bool m_bUseCups;
     bool m_bEnableUSBIP;
+    wxString m_sProxyCommand;
+    bool m_bExternalProxy;
 ////@end SessionProperties member variables
 
     bool readKbdLayouts();

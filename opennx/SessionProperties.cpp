@@ -173,12 +173,18 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
 
     EVT_CHECKBOX( XRCID("ID_CHECKBOX_ENABLESSL"), SessionProperties::OnCheckboxEnablesslClick )
 
-    EVT_CHECKBOX( XRCID("ID_CHECKBOX_HTTPPROXY"), SessionProperties::OnCheckboxHttpproxyClick )
+    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_NOPROXY"), SessionProperties::OnRadiobuttonNoproxySelected )
+
+    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_HTTPPROXY"), SessionProperties::OnRadiobuttonHttpproxySelected )
 
     EVT_TEXT( XRCID("ID_TEXTCTRL_PROXYHOST"), SessionProperties::OnTextctrlProxyhostUpdated )
 
     EVT_SPINCTRL( XRCID("ID_SPINCTRL_PROXYPORT"), SessionProperties::OnSpinctrlProxyportUpdated )
     EVT_TEXT( XRCID("ID_SPINCTRL_PROXYPORT"), SessionProperties::OnSpinctrlProxyportTextUpdated )
+
+    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_EXTERNALPROXY"), SessionProperties::OnRadiobuttonExternalproxySelected )
+
+    EVT_TEXT( XRCID("ID_TEXTCTRL_PROXYCOMMAND"), SessionProperties::OnTextctrlProxycommandTextUpdated )
 
     EVT_COMBOBOX( XRCID("ID_COMBOBOX_CACHEMEM"), SessionProperties::OnComboboxCachememSelected )
 
@@ -308,8 +314,10 @@ SessionProperties::CheckChanged()
         m_pCfg->bSetKbdLayoutOther(m_bKbdLayoutOther);
         m_pCfg->sSetKbdLayoutLanguage(m_sKbdLayoutLanguage);
         m_pCfg->bSetUseProxy(m_bUseProxy);
+        m_pCfg->bSetExternalProxy(m_bExternalProxy);
         m_pCfg->sSetProxyHost(m_sProxyHost);
         m_pCfg->iSetProxyPort(m_iProxyPort);
+        m_pCfg->sSetProxyCommand(m_sProxyCommand);
 
         // variables on 'Services' tab
         m_pCfg->bSetEnableSmbSharing(m_bEnableSmbSharing);
@@ -357,6 +365,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlEnableSSL = NULL;
     m_pCtrlProxyHost = NULL;
     m_pCtrlProxyPort = NULL;
+    m_pCtrlProxyCommand = NULL;
     m_pCtrlKeyboardCurrent = NULL;
     m_pCtrlKeyboardOther = NULL;
     m_pCtrlKeyboardLayout = NULL;
@@ -402,12 +411,14 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
         m_bDisableZlibCompression = m_pCfg->bGetDisableZlibCompression();
         m_bEnableSSL = m_pCfg->bGetEnableSSL();
         m_bUseProxy = m_pCfg->bGetUseProxy();
+        m_bExternalProxy = m_pCfg->bGetExternalProxy();
         m_bKbdLayoutOther = m_pCfg->bGetKbdLayoutOther();
         m_iCacheMem = m_pCfg->eGetCacheMemory();
         m_iCacheDisk = m_pCfg->eGetCacheDisk();
         m_sKbdLayoutLanguage = m_pCfg->sGetKbdLayoutLanguage();
         m_iProxyPort = m_pCfg->iGetProxyPort();
         m_sProxyHost = m_pCfg->sGetProxyHost();
+        m_sProxyCommand = m_pCfg->sGetProxyCommand();
         
         // variables on 'Services' tab
         m_bEnableSmbSharing = m_pCfg->bGetEnableSmbSharing();
@@ -683,7 +694,7 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
     m_pCtrlImageSettings->Enable(m_bUseCustomImageEncoding);
 
     // 'Services' tab
-    bool bTmp = m_bEnableSmbSharing || m_bUseCups;
+    bool bTmp = m_bEnableSmbSharing || m_bUseCups || m_bEnableUSBIP;
     m_pCtrlSmbShares->Enable(bTmp);
     m_pCtrlShareAdd->Enable(bTmp);
     m_pCtrlShareDelete->Enable(bTmp && (m_pCtrlSmbShares->GetSelectedItemCount() > 0));
@@ -694,6 +705,7 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
     m_pCtrlKeyboardLayout->Enable(m_bKbdLayoutOther);
     m_pCtrlProxyHost->Enable(m_bUseProxy);
     m_pCtrlProxyPort->Enable(m_bUseProxy);
+    m_pCtrlProxyCommand->Enable(m_bExternalProxy);
 
     // 'Environment' tab
 }
@@ -723,6 +735,7 @@ void SessionProperties::CreateControls()
     m_pCtrlEnableSSL = XRCCTRL(*this, "ID_CHECKBOX_ENABLESSL", wxCheckBox);
     m_pCtrlProxyHost = XRCCTRL(*this, "ID_TEXTCTRL_PROXYHOST", wxTextCtrl);
     m_pCtrlProxyPort = XRCCTRL(*this, "ID_SPINCTRL_PROXYPORT", wxSpinCtrl);
+    m_pCtrlProxyCommand = XRCCTRL(*this, "ID_TEXTCTRL_PROXYCOMMAND", wxTextCtrl);
     m_pCtrlKeyboardCurrent = XRCCTRL(*this, "ID_RADIOBUTTON_KBDKEEP", wxRadioButton);
     m_pCtrlKeyboardOther = XRCCTRL(*this, "ID_RADIOBUTTON_KBDOTHER", wxRadioButton);
     m_pCtrlKeyboardLayout = XRCCTRL(*this, "ID_COMBOBOX_KBDLAYOUT", wxComboBox);
@@ -773,12 +786,16 @@ void SessionProperties::CreateControls()
         FindWindow(XRCID("ID_CHECKBOX_DISABLEZCOMP"))->SetValidator( wxGenericValidator(& m_bDisableZlibCompression) );
     if (FindWindow(XRCID("ID_CHECKBOX_ENABLESSL")))
         FindWindow(XRCID("ID_CHECKBOX_ENABLESSL"))->SetValidator( wxGenericValidator(& m_bEnableSSL) );
-    if (FindWindow(XRCID("ID_CHECKBOX_HTTPPROXY")))
-        FindWindow(XRCID("ID_CHECKBOX_HTTPPROXY"))->SetValidator( wxGenericValidator(& m_bUseProxy) );
+    if (FindWindow(XRCID("ID_RADIOBUTTON_HTTPPROXY")))
+        FindWindow(XRCID("ID_RADIOBUTTON_HTTPPROXY"))->SetValidator( wxGenericValidator(& m_bUseProxy) );
     if (FindWindow(XRCID("ID_TEXTCTRL_PROXYHOST")))
         FindWindow(XRCID("ID_TEXTCTRL_PROXYHOST"))->SetValidator( MyValidator(MyValidator::MYVAL_HOST, & m_sProxyHost) );
     if (FindWindow(XRCID("ID_SPINCTRL_PROXYPORT")))
         FindWindow(XRCID("ID_SPINCTRL_PROXYPORT"))->SetValidator( MyValidator(MyValidator::MYVAL_NUMERIC, & m_iProxyPort) );
+    if (FindWindow(XRCID("ID_RADIOBUTTON_EXTERNALPROXY")))
+        FindWindow(XRCID("ID_RADIOBUTTON_EXTERNALPROXY"))->SetValidator( wxGenericValidator(& m_bExternalProxy) );
+    if (FindWindow(XRCID("ID_TEXTCTRL_PROXYCOMMAND")))
+        FindWindow(XRCID("ID_TEXTCTRL_PROXYCOMMAND"))->SetValidator( MyValidator(& m_sProxyCommand) );
     if (FindWindow(XRCID("ID_COMBOBOX_CACHEMEM")))
         FindWindow(XRCID("ID_COMBOBOX_CACHEMEM"))->SetValidator( wxGenericValidator(& m_iCacheMem) );
     if (FindWindow(XRCID("ID_COMBOBOX_CACHEDISK")))
@@ -1687,17 +1704,6 @@ void SessionProperties::OnSpinctrlHeightTextUpdated( wxCommandEvent& event )
 
 
 /*!
- * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_HTTPPROXY
- */
-
-void SessionProperties::OnCheckboxHttpproxyClick( wxCommandEvent& event )
-{
-    UpdateDialogConstraints(true);
-    CheckChanged();
-    event.Skip();
-}
-
-/*!
  * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_PROXYHOST
  */
 
@@ -1768,7 +1774,56 @@ void SessionProperties::OnTextctrlCupspathUpdated( wxCommandEvent& event )
 
 void SessionProperties::OnCHECKBOXUSBENABLEClick( wxCommandEvent& event )
 {
+    UpdateDialogConstraints(true);
     CheckChanged();
+    event.Skip();
+}
+
+
+/*!
+ * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_NOPROXY
+ */
+
+void SessionProperties::OnRadiobuttonNoproxySelected( wxCommandEvent& event )
+{
+    UpdateDialogConstraints(true);
+    CheckChanged();
+    event.Skip();
+}
+
+
+/*!
+ * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_HTTPPROXY
+ */
+
+void SessionProperties::OnRadiobuttonHttpproxySelected( wxCommandEvent& event )
+{
+    UpdateDialogConstraints(true);
+    CheckChanged();
+    event.Skip();
+}
+
+
+/*!
+ * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_EXTERNALPROXY
+ */
+
+void SessionProperties::OnRadiobuttonExternalproxySelected( wxCommandEvent& event )
+{
+    UpdateDialogConstraints(true);
+    CheckChanged();
+    event.Skip();
+}
+
+
+/*!
+ * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_PROXYCOMMAND
+ */
+
+void SessionProperties::OnTextctrlProxycommandTextUpdated( wxCommandEvent& event )
+{
+    if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlProxyCommand))
+        CheckChanged();
     event.Skip();
 }
 

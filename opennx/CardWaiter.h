@@ -53,6 +53,7 @@ class CardWaiter
          * the card was inserted otherwise.
          */
         int WaitForCard(wxWindow *parent);
+        bool HasOpenSC();
 };
 
 #endif
