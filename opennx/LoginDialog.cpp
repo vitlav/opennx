@@ -164,8 +164,8 @@ void LoginDialog::ReadConfigDirectory()
 bool LoginDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxString& WXUNUSED(caption), const wxPoint& WXUNUSED(pos), const wxSize& WXUNUSED(size), long WXUNUSED(style) )
 {
     ////@begin LoginDialog member initialisation
-    m_sTmpUsername = wxEmptyString;
-    m_sTmpPassword = wxEmptyString;
+    m_sTmpUsername = wxT("");
+    m_sTmpPassword = wxT("");
     m_pCtrlUsername = NULL;
     m_pCtrlPassword = NULL;
     m_pCtrlSessionName = NULL;

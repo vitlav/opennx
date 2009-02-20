@@ -57,6 +57,7 @@
 #include "SessionAdmin.h"
 #include "SessionProperties.h"
 #include "LoginDialog.h"
+#include "LibOpenSC.h"
 #include "MyWizard.h"
 #include "MyIPC.h"
 #include "MyXmlConfig.h"
@@ -65,7 +66,7 @@
 #include "ForeignFrame.h"
 #include "Icon.h"
 #include "LibUSB.h"
-#include "CardWaiter.h"
+#include "LibOpenSC.h"
 #include "osdep.h"
 
 #include "memres.h"
@@ -562,8 +563,8 @@ int opennxApp::FilterEvent(wxEvent& event)
 
 void opennxApp::checkNxSmartCardSupport()
 {
-    CardWaiter cw;
-    if (!cw.HasOpenSC()) {
+    LibOpenSC l;
+    if (!l.HasOpenSC()) {
         m_bNxSmartCardSupport = false;
         wxConfigBase::Get()->Write(wxT("Config/NxSshSmartCardSupport"), m_bNxSmartCardSupport);
         wxConfigBase::Get()->Flush();

@@ -121,6 +121,8 @@ private:
     bool m_bCupsRunning;
     bool m_bRemoveKey;
     int m_iProgress;
+    int m_iReader;
+    int m_iHttpPort;
     long m_lEsdPort;
     unsigned long m_nSessionPushLength;
     wxLog *m_pSshLog;

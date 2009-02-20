@@ -99,6 +99,7 @@ public:
     static bool ShowToolTips();
     void OnCardInserted(wxCommandEvent &);
     int GetReader() { return m_iReader; }
+    int WaitForCard(wxWindow *parent);
 
 private:
     int m_iReader;

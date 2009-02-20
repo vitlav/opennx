@@ -24,7 +24,7 @@
 #endif
 
 #if defined(__GNUG__) && !defined(__APPLE__)
-#pragma implementation "CardWaiter.h"
+#pragma implementation "LibOpenSC.h"
 #endif
 
 // For compilers that support precompilation, includes "wx/wx.h".
@@ -41,9 +41,16 @@
 #include "wx/dynlib.h"
 #include <wx/event.h>
 #include <wx/thread.h>
+#include <wx/process.h>
 
-#include "CardWaiter.h"
-#include "CardWaiterDialog.h"
+#include "LibOpenSC.h"
+#ifdef APP_OPENNX
+# include "CardWaiterDialog.h"
+# include "opennxApp.h"
+#endif
+#ifdef APP_WATCHREADER
+# include "watchReaderApp.h"
+#endif
 
 #include "trace.h"
 ENABLE_TRACE;
@@ -196,17 +203,29 @@ CardWaitThread::Entry()
     return 0;
 }
 
-CardWaiter::CardWaiter()
+class WatchRemovalThread : public wxThreadHelper
 {
-    ::wxLogTrace(MYTRACETAG, wxT("CardWaiter()"));
+    public:
+        WatchRemovalThread(int, long);
+
+        virtual wxThread::ExitCode Entry();
+
+    private:
+        int  m_iReader;
+        long m_lSshPid;
+};
+
+LibOpenSC::LibOpenSC()
+{
+    ::wxLogTrace(MYTRACETAG, wxT("LibOpenSC()"));
 }
 
-CardWaiter::~CardWaiter()
+LibOpenSC::~LibOpenSC()
 {
-    ::wxLogTrace(MYTRACETAG, wxT("~CardWaiter()"));
+    ::wxLogTrace(MYTRACETAG, wxT("~LibOpenSC()"));
 }
 
-bool CardWaiter::HasOpenSC() {
+bool LibOpenSC::HasOpenSC() {
     wxLogNull ignoreErrors;
     wxDynamicLibrary dll;
     if (!dll.Load(wxT("libopensc")))
@@ -223,11 +242,89 @@ bool CardWaiter::HasOpenSC() {
     return true;
 }
 
-int CardWaiter::WaitForCard(wxWindow *parent) {
-    CardWaiterDialog d(parent);
-    CardWaitThread t(&d);
+#ifdef APP_OPENNX
+int LibOpenSC::WaitForCard(CardWaiterDialog *d) {
+    CardWaitThread t(d);
     if (t.IsOk() && (t.GetReader() != -1))
         return t.GetReader();
-    d.ShowModal();
-    return d.GetReader();
+    d->ShowModal();
+    return d->GetReader();
+}
+#endif
+
+void LibOpenSC::WatchHotRemove(int ridx, long sshpid) {
+    wxDynamicLibrary dll;
+    {
+        wxLogNull ignoreErrors;
+        if (!dll.Load(wxT("libopensc")))
+            return;
+    }
+
+    wxDYNLIB_FUNCTION(Tsc_establish_context, sc_establish_context, dll);
+    if (!pfnsc_establish_context)
+        return;
+    wxDYNLIB_FUNCTION(Tsc_release_context, sc_release_context, dll);
+    if (!pfnsc_release_context)
+        return;
+    wxDYNLIB_FUNCTION(Tsc_detect_card_presence, sc_detect_card_presence, dll);
+    if (!pfnsc_detect_card_presence)
+        return;
+
+    sc_context *ctx;
+    while (true) {
+        ctx = NULL;
+        if (!wxProcess::Exists(sshpid)) {
+            ::wxLogTrace(MYTRACETAG, wxT("nxssh pid %d has terminated"), sshpid);
+            return;
+        }
+        if (SC_SUCCESS == pfnsc_establish_context(&ctx, NULL)) {
+            unsigned int rc = ctx->reader_count;
+            if (rc <= ridx) {
+                // reader is gone
+                ::wxLogTrace(MYTRACETAG, wxT("reader is gone"));
+                break;
+            }
+            sc_reader_t *reader = ctx->reader[ridx];
+            if (reader) {
+                int r, j;
+                for (j = 0; j < reader->slot_count; j++) {
+                    r = pfnsc_detect_card_presence(reader, j);
+                    if (r == 0) {
+                        // card is gone
+                        ::wxLogTrace(MYTRACETAG, wxT("card is gone"));
+                        break;
+                    }
+                    if (r < 0) {
+                        ::wxLogTrace(MYTRACETAG, wxT("error %d during sc_detect_card_presence"), r);
+                        break;
+                    }
+                }
+                if (r <= 0)
+                    break;
+            } else {
+                ::wxLogTrace(MYTRACETAG, wxT("no readers found"));
+                break;
+            }
+            if (ctx)
+                pfnsc_release_context(ctx);
+        } else {
+            ::wxLogTrace(MYTRACETAG, wxT("could not establish context"));
+            break;
+        }
+        while (wxGetApp().Pending())
+            wxGetApp().Dispatch();
+        wxThread::Sleep(1000);
+    }
+    if (ctx)
+        pfnsc_release_context(ctx);
+    ::wxLogTrace(MYTRACETAG, wxT("Sending HUP to nxssh pid %d"), sshpid);
+    while (wxProcess::Exists(sshpid)) {
+        wxProcess::Kill(sshpid, wxSIGHUP);
+        while (wxGetApp().Pending())
+            wxGetApp().Dispatch();
+        wxThread::Sleep(1000);
+    }
+    wxMessageBox(
+            _("OpenNX session has been suspended, because\nthe authenticating smart card has been removed."),
+            _("Smart card removed"), wxOK|wxICON_INFORMATION); 
 }

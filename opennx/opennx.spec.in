@@ -48,6 +48,7 @@ BuildRequires: wxGTK2-devel >= 2.8.0
 BuildRequires: audiofile-devel
 BuildRequires: cups-devel
 BuildRequires: opensc-devel
+BuildRequires: libusb-devel
 %if %{is_suse}
 %if "%{ostag}"=="SuSE11.1"
 BuildRequires: libsmbclient-devel
@@ -72,7 +73,7 @@ for pkg in %{nxpkgsall} ; do
 done
 
 # Apply openssh askPIN patch (see https://bugzilla.mindrot.org/show_bug.cgi?id=608)
-cd nxssh && patch -p0 < ../patches/openssh-scard-pin.patch
+cd nxssh && patch -p1 < ../patches/openssh-scard-pin.patch
 cd ..
 
 # Workaround for obsolete include in nxcompsh

@@ -477,6 +477,8 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
                         // Max # of guest sessions reached
                     case 596:
                         // No running session, resp. Session startup failed
+                    case 598:
+                        // Unrecoverable exception
                     case 599:
                         // Reached the maximum number of concurrent sessions on this server.
                         upevent.SetString(msg.Mid(8));
@@ -707,6 +709,13 @@ MyIPC::OnErrReceived(wxCommandEvent &event)
             }
     }
     event.Skip();
+}
+
+long MyIPC::GetPID()
+{
+    if (m_pProcess && (m_pProcess->IsRunning()))
+        return m_pProcess->GetPid();
+    return 0;
 }
 
 // vim:cindent:expandtab:shiftwidth=4

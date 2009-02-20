@@ -112,6 +112,9 @@ private:
 public:
 ////@begin LoginDialog member function declarations
 
+    bool GetUseSmartCard() const { return m_bUseSmartCard ; }
+    void SetUseSmartCard(bool value) { m_bUseSmartCard = value ; }
+
     wxString GetSessionName() const { return m_sSessionName ; }
     void SetSessionName(wxString value) { m_sSessionName = value ; }
 

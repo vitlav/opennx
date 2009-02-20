@@ -94,6 +94,8 @@ public:
     bool Kill();
     void Print(const wxString &s, bool doLog = true);
     int GetResult();
+    long GetPID();
+
 
 private:
     typedef enum {

@@ -1,7 +1,7 @@
 AboutDialog.cpp
 AboutDialog_symbols.h
 AsyncProcess.cpp
-CardWaiter.cpp
+LibOpenSC.cpp
 CardWaiterDialog.cpp
 CardWaiterDialog_symbols.h
 ConnectDialog.cpp

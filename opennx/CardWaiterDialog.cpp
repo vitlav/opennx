@@ -19,6 +19,10 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
 #pragma implementation "CardWaiterDialog.h"
 #endif
@@ -38,7 +42,7 @@
 ////@end includes
 
 #include "CardWaiterDialog.h"
-#include "CardWaiter.h"
+#include "LibOpenSC.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -180,4 +184,13 @@ wxIcon CardWaiterDialog::GetIconResource( const wxString& name )
     wxUnusedVar(name);
     return wxNullIcon;
 ////@end CardWaiterDialog icon retrieval
+}
+
+int CardWaiterDialog::WaitForCard(wxWindow *parent) {
+    Init();
+    if (Create(parent)) {
+        LibOpenSC osc;
+        return osc.WaitForCard(this);
+    }
+    return -1;
 }

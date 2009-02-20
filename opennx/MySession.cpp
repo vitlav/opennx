@@ -38,7 +38,7 @@
 #include "wx/wx.h"
 #endif
 
-#include "CardWaiter.h"
+#include "CardWaiterDialog.h"
 #include "ConnectDialog.h"
 #include "MySession.h"
 #include "MyXmlConfig.h"
@@ -414,6 +414,7 @@ MySession::MySession(const MySession &src)
     m_sDir = src.m_sDir;
     m_bTouched = src.m_bTouched;
     m_rePID.Compile(wxT("([[:digit:]]+)"));
+    m_iReader = src.m_iReader;
 }
 
 MySession::MySession()
@@ -424,6 +425,7 @@ MySession::MySession()
     , m_pParent(NULL)
     , m_pSessionWatch(NULL)
 {
+    m_iReader = -1;
 }
 
 MySession & MySession::operator =(const MySession &src)
@@ -437,6 +439,7 @@ MySession & MySession::operator =(const MySession &src)
     m_sHost = src.m_sHost;
     m_iPort = src.m_iPort;
     m_lPid = src.m_lPid;
+    m_iReader = src.m_iReader;
     m_sMd5 = src.m_sMd5;
     m_eSessionType = src.m_eSessionType;
     m_eSessionStatus = src.m_eSessionStatus;
@@ -830,10 +833,12 @@ MySession::OnSshEvent(wxCommandEvent &event)
             break;
         case MyIPC::ActionPinDialog:
             printSsh(wxGetPasswordFromUser(
-                        _("Enter PIN for Smart Card access."), _("Smart Card PIN")), false);
+                        _("Enter PIN for Smart Card access."), _("Smart Card PIN"),
+                        wxEmptyString, m_pParent), false);
             break;
         case MyIPC::ActionPassphraseDialog:
-            scmd = ::wxGetPasswordFromUser(::wxGetTranslation(msg), _("Enter passphrase"));
+            scmd = ::wxGetPasswordFromUser(::wxGetTranslation(msg),
+                    _("Enter passphrase"), wxEmptyString, m_pParent);
             if (scmd.IsEmpty()) {
                 msg = _("Empty passphrase");
                 m_bGotError = true;
@@ -1182,16 +1187,22 @@ MySession::startProxy()
     ::wxLogTrace(MYTRACETAG, wxT("MySession::startProxy() called"));
     long cupsport = wxConfigBase::Get()->Read(wxT("Config/CupsPort"), -1);
     wxString popts;
-    popts << wxT("nx,cookie=") << m_sProxyCookie
-        << wxT(",root=") << m_sUserDir
-        << m_pCfg->sGetProxyParams(intver(NX_PROTO))
+    int inxproto = intver(NX_PROTO);
+    if (inxproto >= 0x00030000)
+        popts << wxT("nx/");
+    popts << wxT("nx,cookie=") << m_sProxyCookie;
+    if (inxproto < 0x00030000)
+        popts << wxT(",root=") << m_sUserDir;
+    popts << m_pCfg->sGetProxyParams(inxproto)
         << wxT(",product=") << m_sSubscription;
     if (!m_sSmbPort.IsEmpty())
         popts << wxT(",samba=") << m_sSmbPort;
     if ((getActiveCupsPrinters().GetCount() > 0) && (isCupsRunning()))
         popts << wxT(",cups=") << cupsport;
+#ifdef SUPPORT_USBIP
     if (m_pCfg->bGetEnableUSBIP())
-        popts << wxT(",http=") << getFirstFreePort(HTTP_PORT_OFFSET);
+        popts << wxT(",http=25");
+#endif
     if (m_lEsdPort != 0)
         popts << wxT(",media=") << m_lEsdPort;
     popts
@@ -1203,7 +1214,7 @@ MySession::startProxy()
         << wxT(",client=winnt")
 #endif
         << wxT(",id=") << m_sSessionID;
-    if (intver(NX_PROTO) <= 0x00020000) {
+    if (inxproto <= 0x00020000) {
         if (m_bSslTunneling) {
             m_sProxyIP = wxT("127.0.0.1");
             m_sProxyPort = wxString::Format(wxT("%d"), getFirstFreePort(PROXY_PORT_OFFSET));
@@ -1536,11 +1547,11 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
 
         if (m_pCfg->bGetUseSmartCard()) {
             ::wxLogTrace(MYTRACETAG, wxT("Checking for SmartCard"));
-            CardWaiter w;
-            int reader = w.WaitForCard(parent);
-            if (reader == -1)
+            CardWaiterDialog wd;
+            m_iReader = wd.WaitForCard(parent);
+            if (m_iReader == -1)
                 return false;
-            nxsshcmd << wxT(" -I ") << reader;
+            nxsshcmd << wxT(" -I ") << m_iReader;
         } else {
             if (m_pCfg->sGetSshKey().IsEmpty()) {
                 fn.Assign(m_sSysDir, wxT("server.id_dsa.key"));
@@ -1690,6 +1701,20 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
             if (m_bRemoveKey)
                 clearSshKeys(m_sOffendingKey);
         } while (m_bRemoveKey);
+        if ((-1 != m_iReader) && m_pCfg->bGetUseSmartCard()) {
+            wxLogNull noerrors;
+
+            wxFileName fn(m_sSysDir, wxEmptyString);
+            fn.AppendDir(wxT("bin"));
+#ifdef __WXMSW__
+            fn.SetName(wxT("watchreader.exe"));
+#else
+            fn.SetName(wxT("watchreader"));
+#endif
+            wxString watchcmd = fn.GetShortPath();
+            watchcmd << wxT(" -r ") << m_iReader << wxT(" -p ") << nxssh.GetPID();
+            ::wxExecute(watchcmd);
+        }
         return true;
     }
     return false;

@@ -99,6 +99,7 @@ APP_LDADD=
 OPENNX_RES=
 OPENNX_RESHDR=
 TRACELOG=
+WATCHREADER=
 case $target_os in
 	mingw*)
         # On mingw, the default lib path is /mingw/lib
@@ -128,6 +129,7 @@ case $target_os in
 		;;
 	*)
 		APP_LDADD="-lstdc++ -lX11 -lXmu"
+        WATCHREADER='watchreader$(EXEEXT)'
 		;;
 esac
 AC_SUBST(APP_LDADD)
@@ -135,6 +137,7 @@ AC_SUBST(OPENNX_RES)
 AC_SUBST(OPENNX_RESHDR)
 AC_SUBST(TRACELOG)
 AC_SUBST(TRACELOG_RES)
+AC_SUBST(WATCHREADER)
 
 AC_ARG_ENABLE([warn],
 	AS_HELP_STRING([--enable-warn],
@@ -154,7 +157,7 @@ test -n "$cupsd" && CUPS_DEFAULT_PATH=$cupsd
 AC_DEFINE_UNQUOTED(CUPS_DEFAULT_PATH,"$CUPS_DEFAULT_PATH",
                    [Set to the path of your CUPS daemon])
 
-ac_cv_nxproto="2.1.0"
+ac_cv_nxproto="3.2.0"
 AC_ARG_WITH([nxproto],
             AS_HELP_STRING([--with-nxproto],
                            [Specify NX protocol version (Default: 2.1.0)]),

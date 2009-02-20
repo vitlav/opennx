@@ -19,28 +19,28 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
-#ifndef _CARDWAITER_H_
-#define _CARDWAITER_H_
+#ifndef _LIBOPENSC_H_
+#define _LIBOPENSC_H_
 
 #if defined(__GNUG__) && !defined(__APPLE__)
-#pragma interface "CardWaiter.cpp"
+#pragma interface "LibOpenSC.cpp"
 #endif
 
 DECLARE_LOCAL_EVENT_TYPE(wxEVT_CARDINSERTED, -5);
 
-class wxWindow;
+class CardWaiterDialog;
 
 /**
- * CardWaiter uses opensc (http://www.opensc-project.org/) to access
+ * LibOpenSC uses opensc (http://www.opensc-project.org/) to access
  * local smart cards. It watches for insertion of a smart card
  * and shows a message box for instructing the user to insert a
  * smart card if none is found.
  */
-class CardWaiter
+class LibOpenSC
 {
     public:
-        CardWaiter();
-        virtual ~CardWaiter();
+        LibOpenSC();
+        virtual ~LibOpenSC();
 
         /**
          * Waits for insertion of a smart card.
@@ -52,8 +52,11 @@ class CardWaiter
          * @return: -1 on abort or error. The reader-number where
          * the card was inserted otherwise.
          */
-        int WaitForCard(wxWindow *parent);
+#ifdef APP_OPENNX
+        int WaitForCard(CardWaiterDialog *);
+#endif
         bool HasOpenSC();
+        void WatchHotRemove(int, long);
 };
 
 #endif
