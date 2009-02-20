@@ -317,14 +317,14 @@ void LibOpenSC::WatchHotRemove(int ridx, long sshpid) {
     }
     if (ctx)
         pfnsc_release_context(ctx);
+    wxMessageBox(
+            _("OpenNX session has been suspended, because\nthe authenticating smart card has been removed."),
+            _("Smart card removed"), wxOK|wxICON_INFORMATION); 
     ::wxLogTrace(MYTRACETAG, wxT("Sending HUP to nxssh pid %d"), sshpid);
     while (wxProcess::Exists(sshpid)) {
         wxProcess::Kill(sshpid, wxSIGHUP);
         while (wxGetApp().Pending())
             wxGetApp().Dispatch();
-        wxThread::Sleep(1000);
+        wxThread::Sleep(500);
     }
-    wxMessageBox(
-            _("OpenNX session has been suspended, because\nthe authenticating smart card has been removed."),
-            _("Smart card removed"), wxOK|wxICON_INFORMATION); 
 }
