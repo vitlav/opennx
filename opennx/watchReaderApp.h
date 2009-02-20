@@ -22,6 +22,8 @@
 #ifndef _WATCHREADERAPP_H_
 #define _WATCHREADERAPP_H_
 
+#include <wx/intl.h>
+
 class watchReaderApp: public wxApp
 {    
     DECLARE_CLASS(watchReaderApp);
@@ -35,6 +37,7 @@ class watchReaderApp: public wxApp
         virtual int OnExit();
 
     private:
+        wxLocale m_cLocale;
         int m_iReader;
         long m_lSshPid;
 };

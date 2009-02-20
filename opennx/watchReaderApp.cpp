@@ -32,6 +32,8 @@
 
 #include <wx/cmdline.h>
 #include <wx/msgdlg.h>
+#include <wx/config.h>
+#include <wx/wfstream.h>
 #include <wx/sysopt.h>
 
 #include "watchReaderApp.h"
@@ -50,6 +52,29 @@ END_EVENT_TABLE()
 
 watchReaderApp::watchReaderApp()
 {
+    SetAppName(wxT("OpenNX"));
+    wxConfig *cfg;
+#ifdef __WXMSW__
+    cfg = new wxConfig(wxT("OpenNX"), wxT("InnoviData"));
+#else
+    cfg = new wxConfig(wxT("OpenNX"), wxT("InnoviData"), wxT(".opennx"), wxT("opennx.conf"));
+#endif
+    wxConfigBase::Set(cfg);
+
+    wxLogNull dummy;
+    // Try to get KDE language settings and set locale accordingly
+    wxFileInputStream fis(::wxGetHomeDir() +
+            wxFileName::GetPathSeparator() + wxT(".kde") + 
+            wxFileName::GetPathSeparator() + wxT("share") + 
+            wxFileName::GetPathSeparator() + wxT("config") + 
+            wxFileName::GetPathSeparator() + wxT("kdeglobals"));
+    if (fis.IsOk()) {
+        wxFileConfig cfg(fis);
+        wxString country = cfg.Read(wxT("Locale/Country"), wxEmptyString);
+        wxString lang = cfg.Read(wxT("Locale/Language"), wxEmptyString);
+        if ((!lang.IsEmpty()) && (!country.IsEmpty()))
+            ::wxSetEnv(wxT("LANG"), lang + wxT("_") + country.Upper() + wxT(".UTF-8"));
+    }
 }
 
 
@@ -76,6 +101,14 @@ bool watchReaderApp::OnCmdLineParsed(wxCmdLineParser& parser)
 
 bool watchReaderApp::OnInit()
 {    
+    wxString tmp;
+    wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp);
+    m_cLocale.AddCatalogLookupPathPrefix(tmp + wxFileName::GetPathSeparator()
+            + wxT("share") + wxFileName::GetPathSeparator() + wxT("locale"));
+    m_cLocale.AddCatalogLookupPathPrefix(wxT("locale"));
+    m_cLocale.Init();
+    m_cLocale.AddCatalog(wxT("opennx"));
+
     // Win: Don't remap bitmaps to system colors
     wxSystemOptions::SetOption(wxT("msw.remap"), 0);
 
@@ -91,6 +124,6 @@ bool watchReaderApp::OnInit()
 
 int watchReaderApp::OnExit()
 {
-	return wxApp::OnExit();
+    return wxApp::OnExit();
 }
 
