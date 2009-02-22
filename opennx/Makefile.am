@@ -14,8 +14,8 @@ opennx_SOURCES = AboutDialog.cpp AsyncProcess.cpp LibOpenSC.cpp \
 	osdep.c PanicDialog.cpp pwcrypt.cpp QuitDialog.cpp \
 	RdpImageSettingsDialog.cpp RdpPropertyDialog.cpp \
 	ResumeDialog.cpp SessionAdmin.cpp SessionList.cpp \
-	SessionProperties.cpp SmbShareProperties.cpp TextViewer.cpp \
-	UnixImageSettingsDialog.cpp VncImageSettingsDialog.cpp \
+	SessionProperties.cpp ShareProperties.cpp TextViewer.cpp \
+	UnixImageSettingsDialog.cpp UsbFilterDetailsDialog.cpp VncImageSettingsDialog.cpp \
 	VncPropertyDialog.cpp wxprec.cpp WinShare.cpp X11PropertyDialog.cpp
 
 noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h LibOpenSC.h \
@@ -31,9 +31,10 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h LibOpenSC.h 
 	RdpPropertyDialog_symbols.h ResumeDialog.h \
 	ResumeDialog_symbols.h SessionAdmin.h SessionAdmin_symbols.h \
 	SessionList.h SessionProperties.h SessionProperties_symbols.h \
-	SmbShareProperties.h SmbShareProperties_symbols.h TextViewer.h \
+	ShareProperties.h ShareProperties_symbols.h TextViewer.h \
 	TextViewer_symbols.h UnixImageSettingsDialog.h \
-	UnixImageSettingsDialog_symbols.h VncImageSettingsDialog.h \
+	UnixImageSettingsDialog_symbols.h UsbFilterDetailsDialog.h \
+	UsbFilterDetailsDialog_symbols.h VncImageSettingsDialog.h \
 	VncImageSettingsDialog_symbols.h VncPropertyDialog.h \
 	VncPropertyDialog_symbols.h WinShare.h X11PropertyDialog.h \
 	X11PropertyDialog_symbols.h trace.h watchReaderApp.h

@@ -949,6 +949,7 @@ void opennxApp::handleHotplug()
     /* If we arrive here, we have been called from
      * usbip's bind_driver --hotplug.
      */
+#if 0
     wxString tmp;
     long devnum;
     // First, get misc. env vars from the hotplug event
@@ -959,6 +960,7 @@ void opennxApp::handleHotplug()
     if (!::wxGetEnv(wxT("DEVNUM"), &tmp))
         return;
     tmp.ToLong(&devnum);
+#endif
 
     /*
      * Finally, if this device should be exported via usbip,

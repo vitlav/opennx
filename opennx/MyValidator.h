@@ -44,6 +44,7 @@ public:
     typedef enum {
         MYVAL_ANY,
         MYVAL_NUMERIC,
+        MYVAL_HEX,
         MYVAL_HOST,
         MYVAL_FILENAME,
     } MyValidatorType;

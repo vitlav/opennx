@@ -37,8 +37,8 @@ SessionAdmin_symbols.h
 SessionList.cpp
 SessionProperties.cpp
 SessionProperties_symbols.h
-SmbShareProperties.cpp
-SmbShareProperties_symbols.h
+ShareProperties.cpp
+ShareProperties_symbols.h
 TextViewer.cpp
 TextViewer_symbols.h
 UnixImageSettingsDialog.cpp
@@ -54,3 +54,5 @@ bin2hdr.cpp
 opennxApp.cpp
 pwcrypt.cpp
 wxprec.cpp
+UsbFilterDetailsDialog.cpp
+UsbFilterDetailsDialog_symbols.h

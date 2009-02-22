@@ -86,7 +86,7 @@ EOF
 )
 
 %build
-%configure --enable-static
+%configure --enable-static --enable-usbip
 make
 for pkg in %{nxpkgs} ; do
 	margs=

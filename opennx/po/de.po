@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-02-20 05:44+0100\n"
+"POT-Creation-Date: 2009-02-22 04:51+0100\n"
 "PO-Revision-Date: 2009-02-20 11:45+0100\n"
 "Last-Translator: Fritz Elfert <felfert@users.sf.net>\n"
 "Language-Team:  <de@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Poedit-Language: German\n"
 "X-Poedit-Country: GERMANY\n"
 
-#: AboutDialog.cpp:116 SessionProperties.cpp:842
+#: AboutDialog.cpp:116 SessionProperties.cpp:914
 msgid "Version"
 msgstr "Version"
 
@@ -26,14 +26,14 @@ msgid "About OpenNX"
 msgstr "Über OpenNX"
 
 #: AboutDialog_symbols.h:23 RdpImageSettingsDialog_symbols.h:35
-#: RdpPropertyDialog_symbols.h:35 SessionProperties_symbols.h:103
-#: SmbShareProperties_symbols.h:50 UnixImageSettingsDialog_symbols.h:34
+#: RdpPropertyDialog_symbols.h:35 SessionProperties_symbols.h:104
+#: ShareProperties_symbols.h:51 UnixImageSettingsDialog_symbols.h:34
 #: VncImageSettingsDialog_symbols.h:27 VncPropertyDialog_symbols.h:31
-#: X11PropertyDialog_symbols.h:32
+#: X11PropertyDialog_symbols.h:32 UsbFilterDetailsDialog_symbols.h:35
 msgid "&OK"
 msgstr "&OK"
 
-#: LibOpenSC.cpp:328
+#: LibOpenSC.cpp:321
 msgid ""
 "OpenNX session has been suspended, because\n"
 "the authenticating smart card has been removed."
@@ -41,7 +41,7 @@ msgstr ""
 "Die OpenNX Sitzung wurde ausgesetzt, weil\n"
 "die erforderliche SmartCard entfernt wurde."
 
-#: LibOpenSC.cpp:329
+#: LibOpenSC.cpp:322
 msgid "Smart card removed"
 msgstr "SmartCard entfernt"
 
@@ -56,10 +56,10 @@ msgstr "Bitte stecken Sie Ihre SmartCard ein"
 #: CardWaiterDialog_symbols.h:24 ConnectDialog_symbols.h:24
 #: KeyDialog_symbols.h:26 PanicDialog_symbols.h:23
 #: RdpImageSettingsDialog_symbols.h:36 RdpPropertyDialog_symbols.h:36
-#: ResumeDialog_symbols.h:27 SessionProperties_symbols.h:104
-#: SmbShareProperties_symbols.h:51 UnixImageSettingsDialog_symbols.h:35
+#: ResumeDialog_symbols.h:27 SessionProperties_symbols.h:105
+#: ShareProperties_symbols.h:52 UnixImageSettingsDialog_symbols.h:35
 #: VncImageSettingsDialog_symbols.h:28 VncPropertyDialog_symbols.h:32
-#: X11PropertyDialog_symbols.h:33
+#: X11PropertyDialog_symbols.h:33 UsbFilterDetailsDialog_symbols.h:36
 msgid "&Cancel"
 msgstr "&Abbruch"
 
@@ -130,7 +130,7 @@ msgid "Login"
 msgstr "Login"
 
 #: LoginDialog_symbols.h:24 RdpPropertyDialog_symbols.h:30
-#: SmbShareProperties_symbols.h:44 VncPropertyDialog_symbols.h:29
+#: ShareProperties_symbols.h:44 VncPropertyDialog_symbols.h:29
 msgid "Password"
 msgstr "Passwort"
 
@@ -327,16 +327,16 @@ msgstr ""
 "zugreifen. Dies ist von der Verfügbarkeit dieser Dienste bei Ihrem Service-"
 "Provider abhängig."
 
-#: MyWizard.cpp:688 MyWizard_symbols.h:34 SessionProperties.cpp:633
+#: MyWizard.cpp:688 MyWizard_symbols.h:34 SessionProperties.cpp:695
 #: SessionProperties_symbols.h:35
 msgid "KDE"
 msgstr "KDE"
 
-#: MyWizard.cpp:694 SessionProperties.cpp:647
+#: MyWizard.cpp:694 SessionProperties.cpp:709
 msgid "RDP"
 msgstr "RDP"
 
-#: MyWizard.cpp:702 SessionProperties.cpp:662
+#: MyWizard.cpp:702 SessionProperties.cpp:724
 msgid "RFB"
 msgstr "RFB"
 
@@ -567,7 +567,7 @@ msgstr "Verwende NX Benutzerkennung"
 msgid "Use the following credentials"
 msgstr "Verwende folgende Kennung"
 
-#: RdpPropertyDialog_symbols.h:29 SmbShareProperties_symbols.h:43
+#: RdpPropertyDialog_symbols.h:29 ShareProperties_symbols.h:43
 msgid "Username"
 msgstr "Username"
 
@@ -588,7 +588,7 @@ msgstr "Starte Arbeitsplatz"
 msgid "Run application"
 msgstr "Starte Anwendung"
 
-#: ResumeDialog.cpp:145
+#: ResumeDialog.cpp:145 SessionProperties.cpp:584
 msgid "Name"
 msgstr "Name"
 
@@ -741,78 +741,97 @@ msgstr "Vollstatistik - OpenNX"
 msgid "Partial session statistics - OpenNX"
 msgstr "Teilstatistik - OpenNX"
 
-#: SessionProperties.cpp:489 SmbShareProperties_symbols.h:24
+#: SessionProperties.cpp:516 ShareProperties_symbols.h:24
 msgid "Share"
 msgstr "Freigabe"
 
-#: SessionProperties.cpp:490 SmbShareProperties_symbols.h:49
+#: SessionProperties.cpp:517 ShareProperties_symbols.h:50
 msgid "Mount on"
 msgstr "Eingehängt unter"
 
-#: SessionProperties.cpp:491
+#: SessionProperties.cpp:518
 msgid "Comment"
 msgstr "Kommentar"
 
-#: SessionProperties.cpp:503 SessionProperties.cpp:1172
+#: SessionProperties.cpp:530 SessionProperties.cpp:1245
 msgid "Currently not available"
 msgstr "Nicht verfügbar"
 
-#: SessionProperties.cpp:905 SessionProperties_symbols.h:98
+#: SessionProperties.cpp:581
+msgid "VendorID"
+msgstr ""
+
+#: SessionProperties.cpp:582
+msgid "ProductID"
+msgstr ""
+
+#: SessionProperties.cpp:583
+#, fuzzy
+msgid "Class"
+msgstr "Schließen"
+
+#: SessionProperties.cpp:585
+#, fuzzy
+msgid "Serial"
+msgstr "Allgemein"
+
+#: SessionProperties.cpp:977 SessionProperties_symbols.h:99
 msgid "Font"
 msgstr "Font"
 
-#: SessionProperties.cpp:936
+#: SessionProperties.cpp:1019
 msgid "Error while reading keyboard table"
 msgstr "Fehler beim Lesen der Tastatur-Tabelle"
 
-#: SessionProperties.cpp:965
+#: SessionProperties.cpp:1048
 #, c-format
 msgid "Invalid line='%s'"
 msgstr "Ungültige Zeile='%s'"
 
-#: SessionProperties.cpp:966
+#: SessionProperties.cpp:1049
 #, c-format
 msgid "Invalid entry in %s"
 msgstr "Ungültiger Eintrag in %s"
 
-#: SessionProperties.cpp:1096
+#: SessionProperties.cpp:1173
 msgid "Do you really want to delete all cache directories?"
 msgstr "Wollen Sie wirklich sämliche Cache-Verzeichnissse löschen?"
 
-#: SessionProperties.cpp:1097
+#: SessionProperties.cpp:1174
 msgid "Clean cache - OpenNX"
 msgstr "Cache bereinigen - OpenNX"
 
-#: SessionProperties.cpp:1145
+#: SessionProperties.cpp:1219
 msgid "No local samba server is running."
 msgstr "Es läuft kein lokaler Samba-Server."
 
-#: SessionProperties.cpp:1207 SmbShareProperties.cpp:369
-msgid "No shares found"
+#: SessionProperties.cpp:1274
+#, fuzzy
+msgid "No sharable resources found"
 msgstr "Keine Freigaben gefunden"
 
-#: SessionProperties.cpp:1283
+#: SessionProperties.cpp:1348
 msgid "Select User NX directory"
 msgstr "Wähle persönliches NX Verzeichnis"
 
-#: SessionProperties.cpp:1300
+#: SessionProperties.cpp:1363
 msgid "Select System NX directory"
 msgstr "Wähle System NX Verzeichnis"
 
-#: SessionProperties.cpp:1349
+#: SessionProperties.cpp:1409
 #, c-format
 msgid "Really delete Session '%s' ?"
 msgstr "Die Sitzung '%s' wirklich löschen ?"
 
-#: SessionProperties.cpp:1350
+#: SessionProperties.cpp:1410
 msgid "Delete Session"
 msgstr "Lösche Sitzung"
 
-#: SessionProperties.cpp:1607
+#: SessionProperties.cpp:1641
 msgid "No cups server available."
 msgstr "Kein CUPS-Server verfügbar."
 
-#: SessionProperties.cpp:1622
+#: SessionProperties.cpp:1655
 msgid "Select System CUPS daemon"
 msgstr "Wähle System CUPS-Dämon"
 
@@ -957,78 +976,86 @@ msgid "Enable CUPS printing"
 msgstr "Aktiviere CUPS Druckfreigabe"
 
 #: SessionProperties_symbols.h:85
-msgid "Enable USB forwarding"
-msgstr "Aktiviere USB Weiterleitung"
-
-#: SessionProperties_symbols.h:86
 msgid "Add"
 msgstr "Hinzufügen"
 
-#: SessionProperties_symbols.h:87
+#: SessionProperties_symbols.h:86
 msgid "Modify"
 msgstr "Ändern"
 
-#: SessionProperties_symbols.h:88
+#: SessionProperties_symbols.h:87
 msgid "Delete"
 msgstr "Löschen"
 
-#: SessionProperties_symbols.h:89
+#: SessionProperties_symbols.h:88
 msgid "Enable multimedia support"
 msgstr "Aktiviere Multimedia Unterstützung"
 
+#: SessionProperties_symbols.h:89
+msgid "USB"
+msgstr ""
+
 #: SessionProperties_symbols.h:90
+msgid "Enable USB forwarding"
+msgstr "Aktiviere USB Weiterleitung"
+
+#: SessionProperties_symbols.h:91
 msgid "Environment"
 msgstr "Umgebung"
 
-#: SessionProperties_symbols.h:91
+#: SessionProperties_symbols.h:92
 msgid "User NX directory"
 msgstr "Persönliches NX Verzeichnis"
 
-#: SessionProperties_symbols.h:92
+#: SessionProperties_symbols.h:93
 msgid "..."
 msgstr "..."
 
-#: SessionProperties_symbols.h:93
+#: SessionProperties_symbols.h:94
 msgid "Remove old session files"
 msgstr "Entferne alte Sitzungs-Dateien"
 
-#: SessionProperties_symbols.h:94
+#: SessionProperties_symbols.h:95
 msgid "System NX directory"
 msgstr "System NX Verzeichnis"
 
-#: SessionProperties_symbols.h:95
+#: SessionProperties_symbols.h:96
 msgid "System CUPS daemon"
 msgstr "System CUPS-Dämon"
 
-#: SessionProperties_symbols.h:96
+#: SessionProperties_symbols.h:97
 msgid "Select NX fonts"
 msgstr "Wähle NX Fonts"
 
-#: SessionProperties_symbols.h:97
+#: SessionProperties_symbols.h:98
 msgid "Default"
 msgstr "Vorgabe"
 
-#: SessionProperties_symbols.h:99
+#: SessionProperties_symbols.h:100
 msgid "Fixed"
 msgstr "Feste Breite"
 
-#: SessionProperties_symbols.h:100
+#: SessionProperties_symbols.h:101
 msgid "About"
 msgstr "Info"
 
-#: SessionProperties_symbols.h:101
+#: SessionProperties_symbols.h:102
 msgid "&Delete"
 msgstr "&Löschen"
 
-#: SessionProperties_symbols.h:102
+#: SessionProperties_symbols.h:103
 msgid "&Apply"
 msgstr "&Anwenden"
 
-#: SmbShareProperties.cpp:258
+#: ShareProperties.cpp:260
 msgid "Modify shared resource - OpenNX"
 msgstr "Bearbeite Freigabe - OpenNX"
 
-#: SmbShareProperties.cpp:454
+#: ShareProperties.cpp:371
+msgid "No shares found"
+msgstr "Keine Freigaben gefunden"
+
+#: ShareProperties.cpp:456
 #, c-format
 msgid ""
 "Do you want to make\n"
@@ -1039,25 +1066,25 @@ msgstr ""
 "%s\n"
 "als Standard definieren?"
 
-#: SmbShareProperties.cpp:455
+#: ShareProperties.cpp:457
 msgid "Default printer"
 msgstr "Standard Drucker"
 
-#: SmbShareProperties.cpp:484
+#: ShareProperties.cpp:486
 msgid "Mountpoint is already used. Please chose another mountpoint"
 msgstr ""
 "Der Einhängepunkt ist in Verwendung. Bitte wählen Sie einen anderen "
 "Einhängepunkt."
 
-#: SmbShareProperties.cpp:485
+#: ShareProperties.cpp:487
 msgid "Invalid mountpoint"
 msgstr "Ungültiger Einhängepunkt"
 
-#: SmbShareProperties_symbols.h:22
+#: ShareProperties_symbols.h:22
 msgid "New shared resource - OpenNX"
 msgstr "Neue Freigabe - OpenNX"
 
-#: SmbShareProperties_symbols.h:23
+#: ShareProperties_symbols.h:23
 msgid ""
 "Please select the name of the shared resource on the\n"
 "local computer."
@@ -1065,75 +1092,75 @@ msgstr ""
 "Bitte wählen Sie den Namen der Freigabe auf dem\n"
 "lokalen Rechner."
 
-#: SmbShareProperties_symbols.h:25
+#: ShareProperties_symbols.h:25
 msgid "SMB printer options"
 msgstr "SMB Drucker Optionen"
 
-#: SmbShareProperties_symbols.h:26
+#: ShareProperties_symbols.h:26
 msgid "Please choose a printer driver:"
 msgstr "Bitte wählen Sie einen Druckertreiber:"
 
-#: SmbShareProperties_symbols.h:27
+#: ShareProperties_symbols.h:27
 msgid "deskjet"
 msgstr "deskjet"
 
-#: SmbShareProperties_symbols.h:28
+#: ShareProperties_symbols.h:28
 msgid "deskjet2"
 msgstr "deskjet2"
 
-#: SmbShareProperties_symbols.h:29
+#: ShareProperties_symbols.h:29
 msgid "dymo"
 msgstr "dymo"
 
-#: SmbShareProperties_symbols.h:30
+#: ShareProperties_symbols.h:30
 msgid "epson24"
 msgstr "epson24"
 
-#: SmbShareProperties_symbols.h:31
+#: ShareProperties_symbols.h:31
 msgid "epson9"
 msgstr "epson9"
 
-#: SmbShareProperties_symbols.h:32
+#: ShareProperties_symbols.h:32
 msgid "laserjet"
 msgstr "laserjet"
 
-#: SmbShareProperties_symbols.h:33
+#: ShareProperties_symbols.h:33
 msgid "okidata24"
 msgstr "okidata24"
 
-#: SmbShareProperties_symbols.h:34
+#: ShareProperties_symbols.h:34
 msgid "okidata9"
 msgstr "okidata9"
 
-#: SmbShareProperties_symbols.h:35
+#: ShareProperties_symbols.h:35
 msgid "stcolor"
 msgstr "stcolor"
 
-#: SmbShareProperties_symbols.h:36
+#: ShareProperties_symbols.h:36
 msgid "stcolor2"
 msgstr "stcolor2"
 
-#: SmbShareProperties_symbols.h:37
+#: ShareProperties_symbols.h:37
 msgid "stphoto"
 msgstr "stphoto"
 
-#: SmbShareProperties_symbols.h:38
+#: ShareProperties_symbols.h:38
 msgid "stphoto2"
 msgstr "stphoto2"
 
-#: SmbShareProperties_symbols.h:39
+#: ShareProperties_symbols.h:39
 msgid "Access control:"
 msgstr "Zugriffskontrolle:"
 
-#: SmbShareProperties_symbols.h:40
+#: ShareProperties_symbols.h:40
 msgid "Private printer"
 msgstr "Perönlicher Drucker"
 
-#: SmbShareProperties_symbols.h:41
+#: ShareProperties_symbols.h:41
 msgid "Public printer"
 msgstr "Öffentlicher Drucker"
 
-#: SmbShareProperties_symbols.h:42
+#: ShareProperties_symbols.h:42
 msgid ""
 "The remote system will need to provide security\n"
 "credentials to your local client. Please specify\n"
@@ -1144,19 +1171,23 @@ msgstr ""
 "Rechner anmelden müssen. Bitte geben Sie\n"
 "Benutzername und Passwort für diese Freigabe an."
 
-#: SmbShareProperties_symbols.h:45
+#: ShareProperties_symbols.h:45
 msgid "CUPS options"
 msgstr "CUPS Optionen"
 
-#: SmbShareProperties_symbols.h:46
+#: ShareProperties_symbols.h:46
 msgid "cups driver"
 msgstr "cups driver"
 
-#: SmbShareProperties_symbols.h:47
+#: ShareProperties_symbols.h:47 UsbFilterDetailsDialog_symbols.h:22
+msgid "USB Filter Details"
+msgstr ""
+
+#: ShareProperties_symbols.h:48
 msgid "SMB options"
 msgstr "SMB Optionen"
 
-#: SmbShareProperties_symbols.h:48
+#: ShareProperties_symbols.h:49
 msgid ""
 "Please specify the resource name on the remote\n"
 "machine with which this share will be made available."
@@ -1368,3 +1399,61 @@ msgstr "Spezifiziere wxWidgets Trace-Maske."
 #: opennxApp.cpp:652
 msgid "Guide the user through the steps to configure a session."
 msgstr "Führe den Benutzer durch die Schritte zu Konfiguration einer Sitzung."
+
+#: UsbFilterDetailsDialog_symbols.h:23
+msgid ""
+"A new USB device has been detected. The\n"
+"parameters for this device have been filled\n"
+"into the form below. Please decide, if you\n"
+"want to use this device locally, or if you want\n"
+"to use it on the remote machine."
+msgstr ""
+
+#: UsbFilterDetailsDialog_symbols.h:24
+#, fuzzy
+msgid "Remember this decision"
+msgstr "Sitzung entfernen"
+
+#: UsbFilterDetailsDialog_symbols.h:25
+msgid ""
+"Select from existing devices below or\n"
+"enter the filter specification directly."
+msgstr ""
+
+#: UsbFilterDetailsDialog_symbols.h:26
+msgid "Vendor ID"
+msgstr ""
+
+#: UsbFilterDetailsDialog_symbols.h:27
+msgid "Product ID"
+msgstr ""
+
+#: UsbFilterDetailsDialog_symbols.h:28
+#, fuzzy
+msgid "Device Class"
+msgstr "Dienste"
+
+#: UsbFilterDetailsDialog_symbols.h:29
+msgid "Vendor"
+msgstr ""
+
+#: UsbFilterDetailsDialog_symbols.h:30
+msgid "Product"
+msgstr ""
+
+#: UsbFilterDetailsDialog_symbols.h:31
+msgid "Serial Nr."
+msgstr ""
+
+#: UsbFilterDetailsDialog_symbols.h:32
+#, fuzzy
+msgid "Mode"
+msgstr "Ändern"
+
+#: UsbFilterDetailsDialog_symbols.h:33
+msgid "Use locally"
+msgstr ""
+
+#: UsbFilterDetailsDialog_symbols.h:34
+msgid "Forward to remote"
+msgstr ""

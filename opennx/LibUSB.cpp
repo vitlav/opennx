@@ -79,6 +79,14 @@ wxString USBDevice::toString() {
     return ret;
 }
 
+wxString USBDevice::toShortString() {
+    wxString ret = m_sVendor;
+    if ((!ret.IsEmpty()) && (!m_sProduct.IsEmpty()))
+        ret.Append(wxT(" "));
+    ret.Append(m_sProduct);
+    return ret;
+}
+
 void USB::adddev(wxDynamicLibrary *dll, struct usb_device *dev, unsigned char dclass)
 {
 #ifdef SUPPORT_USBIP

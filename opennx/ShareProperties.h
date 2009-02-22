@@ -19,11 +19,11 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
-#ifndef _SMBSHAREPROPERTIES_H_
-#define _SMBSHAREPROPERTIES_H_
+#ifndef _SHAREPROPERTIES_H_
+#define _SHAREPROPERTIES_H_
 
 #if defined(__GNUG__) && !defined(__APPLE__)
-#pragma interface "SmbShareProperties.cpp"
+#pragma interface "ShareProperties.cpp"
 #endif
 
 /*!
@@ -31,7 +31,7 @@
  */
 
 ////@begin includes
-#include "SmbShareProperties_symbols.h"
+#include "ShareProperties_symbols.h"
 #include "wx/xrc/xmlres.h"
 #include "wx/bmpcbox.h"
 #include "wx/valgen.h"
@@ -57,11 +57,11 @@ class SharedResource;
 
 ////@begin control identifiers
 #define ID_DIALOG_SHARE_ADD 10098
-#define SYMBOL_SMBSHAREPROPERTIES_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
-#define SYMBOL_SMBSHAREPROPERTIES_TITLE _("New shared resource - OpenNX")
-#define SYMBOL_SMBSHAREPROPERTIES_IDNAME ID_DIALOG_SHARE_ADD
-#define SYMBOL_SMBSHAREPROPERTIES_SIZE wxSize(114, 75)
-#define SYMBOL_SMBSHAREPROPERTIES_POSITION wxDefaultPosition
+#define SYMBOL_SHAREPROPERTIES_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
+#define SYMBOL_SHAREPROPERTIES_TITLE _("New shared resource - OpenNX")
+#define SYMBOL_SHAREPROPERTIES_IDNAME ID_DIALOG_SHARE_ADD
+#define SYMBOL_SHAREPROPERTIES_SIZE wxSize(114, 75)
+#define SYMBOL_SHAREPROPERTIES_POSITION wxDefaultPosition
 ////@end control identifiers
 
 /*!
@@ -76,24 +76,24 @@ class SharedResource;
 #endif
 
 /*!
- * SmbShareProperties class declaration
+ * ShareProperties class declaration
  */
 
-class SmbShareProperties: public wxDialog
+class ShareProperties: public wxDialog
 {    
-    DECLARE_DYNAMIC_CLASS( SmbShareProperties )
+    DECLARE_DYNAMIC_CLASS( ShareProperties )
     DECLARE_EVENT_TABLE()
 
 public:
     /// Constructors
-    SmbShareProperties( );
-    SmbShareProperties( wxWindow* parent, wxWindowID id = SYMBOL_SMBSHAREPROPERTIES_IDNAME, const wxString& caption = SYMBOL_SMBSHAREPROPERTIES_TITLE, const wxPoint& pos = SYMBOL_SMBSHAREPROPERTIES_POSITION, const wxSize& size = SYMBOL_SMBSHAREPROPERTIES_SIZE, long style = SYMBOL_SMBSHAREPROPERTIES_STYLE );
+    ShareProperties( );
+    ShareProperties( wxWindow* parent, wxWindowID id = SYMBOL_SHAREPROPERTIES_IDNAME, const wxString& caption = SYMBOL_SHAREPROPERTIES_TITLE, const wxPoint& pos = SYMBOL_SHAREPROPERTIES_POSITION, const wxSize& size = SYMBOL_SHAREPROPERTIES_SIZE, long style = SYMBOL_SHAREPROPERTIES_STYLE );
     void SetConfig(MyXmlConfig *);
     void SetCurrentShare(int);
     void SetUse(bool, bool);
 
     /// Creation
-    bool Create( wxWindow* parent, wxWindowID id = SYMBOL_SMBSHAREPROPERTIES_IDNAME, const wxString& caption = SYMBOL_SMBSHAREPROPERTIES_TITLE, const wxPoint& pos = SYMBOL_SMBSHAREPROPERTIES_POSITION, const wxSize& size = SYMBOL_SMBSHAREPROPERTIES_SIZE, long style = SYMBOL_SMBSHAREPROPERTIES_STYLE );
+    bool Create( wxWindow* parent, wxWindowID id = SYMBOL_SHAREPROPERTIES_IDNAME, const wxString& caption = SYMBOL_SHAREPROPERTIES_TITLE, const wxPoint& pos = SYMBOL_SHAREPROPERTIES_POSITION, const wxSize& size = SYMBOL_SHAREPROPERTIES_SIZE, long style = SYMBOL_SHAREPROPERTIES_STYLE );
 
 private:
     void askForDefault(ArrayOfShareGroups &, ShareGroup &);
@@ -101,7 +101,7 @@ private:
     /// Creates the controls and sizers
     void CreateControls();
 
-////@begin SmbShareProperties event handler declarations
+////@begin ShareProperties event handler declarations
 
     /// wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_SHARE_LOCALNAME
     void OnComboboxShareLocalnameSelected( wxCommandEvent& event );
@@ -124,21 +124,21 @@ private:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
     void OnOkClick( wxCommandEvent& event );
 
-////@end SmbShareProperties event handler declarations
+////@end ShareProperties event handler declarations
 
-////@begin SmbShareProperties member function declarations
+////@begin ShareProperties member function declarations
 
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
 
     /// Retrieves icon resources
     wxIcon GetIconResource( const wxString& name );
-////@end SmbShareProperties member function declarations
+////@end ShareProperties member function declarations
 
     /// Should we show tooltips?
     static bool ShowToolTips();
 
-////@begin SmbShareProperties member variables
+////@begin ShareProperties member variables
     wxBitmapComboBox* m_pCtrlLocalShares;
     wxPanel* m_pCtrlSmbPrintOptions;
     wxComboBox* m_pCtrlSmbDriver;
@@ -149,6 +149,7 @@ private:
     wxPanel* m_pCtrlCupsOptions;
     wxRadioButton* m_pCtrlCupsPrivate;
     wxRadioButton* m_pCtrlCupsPublic;
+    wxPanel* m_pCtrlUsbOptions;
     wxPanel* m_pCtrlSmbDiskOptions;
     wxTextCtrl* m_pCtrlMountPoint;
     wxTextCtrl* m_pCtrlUsername;
@@ -163,7 +164,7 @@ private:
     wxString m_sSmbPrintUsername;
     wxString m_sSmbPrintPassword;
     bool m_bSmbPublic;
-////@end SmbShareProperties member variables
+////@end ShareProperties member variables
 
     int m_iCurrentShare;
     ArrayOfShares m_aShares;
@@ -173,4 +174,4 @@ private:
 };
 
 #endif
-    // _SMBSHAREPROPERTIES_H_
+    // _SHAREPROPERTIES_H_

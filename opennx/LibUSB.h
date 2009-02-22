@@ -38,6 +38,15 @@ class USBDevice : public wxObject {
         USBDevice(int, int, unsigned char);
 
         wxString toString();
+        wxString toShortString();
+        int GetVendorID() { return m_iVendor; }
+        int GetProductID() { return m_iProduct; }
+        int GetBusNum() { return m_iBusNum; }
+        int GetDevNum() { return m_iDevNum; }
+        unsigned char GetDeviceClass() { return m_iClass; }
+        wxString& GetVendor() { return m_sVendor; }
+        wxString& GetProduct() { return m_sProduct; }
+        wxString& GetSerial() { return m_sSerial; }
 
     private:
         int m_iVendor;

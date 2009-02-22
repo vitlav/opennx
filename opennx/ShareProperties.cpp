@@ -20,7 +20,7 @@
 //
 
 #if defined(__GNUG__) && !defined(__APPLE__)
-#pragma implementation "SmbShareProperties.h"
+#pragma implementation "ShareProperties.h"
 #endif
 
 // For compilers that support precompilation, includes "wx/wx.h".
@@ -40,7 +40,7 @@
 #include "MyValidator.h"
 #include "MyXmlConfig.h"
 #include "WinShare.h"
-#include "SmbShareProperties.h"
+#include "ShareProperties.h"
 #include "Icon.h"
 
 #include <wx/bmpcbox.h>
@@ -52,48 +52,48 @@
 ENABLE_TRACE;
 
 /*!
- * SmbShareProperties type definition
+ * ShareProperties type definition
  */
 
-IMPLEMENT_DYNAMIC_CLASS( SmbShareProperties, wxDialog )
+IMPLEMENT_DYNAMIC_CLASS( ShareProperties, wxDialog )
 
     /*!
-     * SmbShareProperties event table definition
+     * ShareProperties event table definition
      */
 
-BEGIN_EVENT_TABLE( SmbShareProperties, wxDialog )
+BEGIN_EVENT_TABLE( ShareProperties, wxDialog )
 
-    ////@begin SmbShareProperties event table entries
-    EVT_COMBOBOX( XRCID("ID_COMBOBOX_SHARE_LOCALNAME"), SmbShareProperties::OnComboboxShareLocalnameSelected )
+    ////@begin ShareProperties event table entries
+    EVT_COMBOBOX( XRCID("ID_COMBOBOX_SHARE_LOCALNAME"), ShareProperties::OnComboboxShareLocalnameSelected )
 
-    EVT_TEXT( XRCID("ID_TEXTCTRL_SMBPRINT_USERNAME"), SmbShareProperties::OnTextctrlSmbprintUsernameUpdated )
+    EVT_TEXT( XRCID("ID_TEXTCTRL_SMBPRINT_USERNAME"), ShareProperties::OnTextctrlSmbprintUsernameUpdated )
 
-    EVT_TEXT( XRCID("ID_TEXTCTRL_SMBPRINT_PASSWORD"), SmbShareProperties::OnTextctrlSmbprintPasswordUpdated )
+    EVT_TEXT( XRCID("ID_TEXTCTRL_SMBPRINT_PASSWORD"), ShareProperties::OnTextctrlSmbprintPasswordUpdated )
 
-    EVT_TEXT( XRCID("ID_TEXTCTRL_SHARE_MOUNTPOINT"), SmbShareProperties::OnTextctrlShareMountpointUpdated )
+    EVT_TEXT( XRCID("ID_TEXTCTRL_SHARE_MOUNTPOINT"), ShareProperties::OnTextctrlShareMountpointUpdated )
 
-    EVT_TEXT( XRCID("ID_TEXTCTRL_SHARE_USERNAME"), SmbShareProperties::OnTextctrlShareUsernameUpdated )
+    EVT_TEXT( XRCID("ID_TEXTCTRL_SHARE_USERNAME"), ShareProperties::OnTextctrlShareUsernameUpdated )
 
-    EVT_TEXT( XRCID("ID_TEXTCTRL_SHARE_PASSWORD"), SmbShareProperties::OnTextctrlSharePasswordUpdated )
+    EVT_TEXT( XRCID("ID_TEXTCTRL_SHARE_PASSWORD"), ShareProperties::OnTextctrlSharePasswordUpdated )
 
-    EVT_BUTTON( wxID_OK, SmbShareProperties::OnOkClick )
+    EVT_BUTTON( wxID_OK, ShareProperties::OnOkClick )
 
-    ////@end SmbShareProperties event table entries
+    ////@end ShareProperties event table entries
 
 END_EVENT_TABLE()
 
     /*!
-     * SmbShareProperties constructors
+     * ShareProperties constructors
      */
 
-    SmbShareProperties::SmbShareProperties( )
+    ShareProperties::ShareProperties( )
     : m_iCurrentShare(-1)
     , m_bUseSmb(false)
       , m_bUseCups(false)
 {
 }
 
-    SmbShareProperties::SmbShareProperties( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
+    ShareProperties::ShareProperties( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
     : m_iCurrentShare(-1)
     , m_bUseSmb(false)
       , m_bUseCups(false)
@@ -101,29 +101,29 @@ END_EVENT_TABLE()
     Create(parent, id, caption, pos, size, style);
 }
 
-void SmbShareProperties::SetConfig(MyXmlConfig *cfg)
+void ShareProperties::SetConfig(MyXmlConfig *cfg)
 {
     m_pCfg = cfg;
 }
 
-void SmbShareProperties::SetCurrentShare(int cs)
+void ShareProperties::SetCurrentShare(int cs)
 {
     m_iCurrentShare = cs;
 }
 
-void SmbShareProperties::SetUse(bool useSmb, bool useCups)
+void ShareProperties::SetUse(bool useSmb, bool useCups)
 {
     m_bUseSmb = useSmb;
     m_bUseCups = useCups;
 }
 
 /*!
- * SmbShareProperties creator
+ * ShareProperties creator
  */
 
-bool SmbShareProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxString& WXUNUSED(caption), const wxPoint& WXUNUSED(pos), const wxSize& WXUNUSED(size), long WXUNUSED(style) )
+bool ShareProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxString& WXUNUSED(caption), const wxPoint& WXUNUSED(pos), const wxSize& WXUNUSED(size), long WXUNUSED(style) )
 {
-    ////@begin SmbShareProperties member initialisation
+    ////@begin ShareProperties member initialisation
     m_sSmbDiskUsername = ::wxGetUserId();
     m_bCupsPublic = false;
     m_sCupsDriver = wxT("cups driver");
@@ -139,13 +139,14 @@ bool SmbShareProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), cons
     m_pCtrlCupsOptions = NULL;
     m_pCtrlCupsPrivate = NULL;
     m_pCtrlCupsPublic = NULL;
+    m_pCtrlUsbOptions = NULL;
     m_pCtrlSmbDiskOptions = NULL;
     m_pCtrlMountPoint = NULL;
     m_pCtrlUsername = NULL;
     m_pCtrlPassword = NULL;
-    ////@end SmbShareProperties member initialisation
+    ////@end ShareProperties member initialisation
 
-    ////@begin SmbShareProperties creation
+    ////@begin ShareProperties creation
     SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
@@ -155,7 +156,7 @@ bool SmbShareProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), cons
         GetSizer()->SetSizeHints(this);
     }
     Centre();
-    ////@end SmbShareProperties creation
+    ////@end ShareProperties creation
     return TRUE;
 }
 
@@ -165,12 +166,12 @@ static int cmpshares(_wxObjArrayArrayOfShares **a, _wxObjArrayArrayOfShares **b)
 }
 
 /*!
- * Control creation for SmbShareProperties
+ * Control creation for ShareProperties
  */
 
-void SmbShareProperties::CreateControls()
+void ShareProperties::CreateControls()
 {    
-    ////@begin SmbShareProperties content construction
+    ////@begin ShareProperties content construction
     if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_SHARE_ADD")))
         wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
     m_pCtrlLocalShares = XRCCTRL(*this, "ID_COMBOBOX_SHARE_LOCALNAME", wxBitmapComboBox);
@@ -180,9 +181,10 @@ void SmbShareProperties::CreateControls()
     m_pCtrlSmbPublic = XRCCTRL(*this, "ID_RADIOBUTTON_SMB_PUBLIC", wxRadioButton);
     m_pCtrlSmbPrintUsername = XRCCTRL(*this, "ID_TEXTCTRL_SMBPRINT_USERNAME", wxTextCtrl);
     m_pCtrlSmbPrintPassword = XRCCTRL(*this, "ID_TEXTCTRL_SMBPRINT_PASSWORD", wxTextCtrl);
-    m_pCtrlCupsOptions = XRCCTRL(*this, "ID_PANEL_CUPSOTIONS", wxPanel);
+    m_pCtrlCupsOptions = XRCCTRL(*this, "ID_PANEL_CUPSOPTIONS", wxPanel);
     m_pCtrlCupsPrivate = XRCCTRL(*this, "ID_RADIOBUTTON_CUPS_PRIVATE", wxRadioButton);
     m_pCtrlCupsPublic = XRCCTRL(*this, "ID_RADIOBUTTON_CUPS_PUBLIC", wxRadioButton);
+    m_pCtrlUsbOptions = XRCCTRL(*this, "ID_PANEL_USBIP", wxPanel);
     m_pCtrlSmbDiskOptions = XRCCTRL(*this, "ID_PANEL_SMBOPTIONS", wxPanel);
     m_pCtrlMountPoint = XRCCTRL(*this, "ID_TEXTCTRL_SHARE_MOUNTPOINT", wxTextCtrl);
     m_pCtrlUsername = XRCCTRL(*this, "ID_TEXTCTRL_SHARE_USERNAME", wxTextCtrl);
@@ -206,12 +208,12 @@ void SmbShareProperties::CreateControls()
         FindWindow(XRCID("ID_TEXTCTRL_SHARE_USERNAME"))->SetValidator( MyValidator(& m_sSmbDiskUsername) );
     if (FindWindow(XRCID("ID_TEXTCTRL_SHARE_PASSWORD")))
         FindWindow(XRCID("ID_TEXTCTRL_SHARE_PASSWORD"))->SetValidator( MyValidator(& m_sSmbDiskPassword) );
-    ////@end SmbShareProperties content construction
+    ////@end ShareProperties content construction
 
     // Create custom windows not generated automatically here.
 
-    ////@begin SmbShareProperties content initialisation
-    ////@end SmbShareProperties content initialisation
+    ////@begin ShareProperties content initialisation
+    ////@end ShareProperties content initialisation
 
     int minw = 0;
     int minh = 0;
@@ -379,7 +381,7 @@ void SmbShareProperties::CreateControls()
  * wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_SHARE_LOCALNAME
  */
 
-void SmbShareProperties::OnComboboxShareLocalnameSelected( wxCommandEvent& event )
+void ShareProperties::OnComboboxShareLocalnameSelected( wxCommandEvent& event )
 {
     SharedResource *res = wxDynamicCast(m_pCtrlLocalShares->GetClientData(event.GetInt()), SharedResource);
     wxASSERT(res);
@@ -420,7 +422,7 @@ void SmbShareProperties::OnComboboxShareLocalnameSelected( wxCommandEvent& event
  * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SHARE_MOUNTPOINT
  */
 
-void SmbShareProperties::OnTextctrlShareMountpointUpdated( wxCommandEvent& event )
+void ShareProperties::OnTextctrlShareMountpointUpdated( wxCommandEvent& event )
 {
     // Insert custom code here
     event.Skip();
@@ -430,7 +432,7 @@ void SmbShareProperties::OnTextctrlShareMountpointUpdated( wxCommandEvent& event
  * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SHARE_USERNAME
  */
 
-void SmbShareProperties::OnTextctrlShareUsernameUpdated( wxCommandEvent& event )
+void ShareProperties::OnTextctrlShareUsernameUpdated( wxCommandEvent& event )
 {
     // Insert custom code here
     event.Skip();
@@ -440,13 +442,13 @@ void SmbShareProperties::OnTextctrlShareUsernameUpdated( wxCommandEvent& event )
  * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SHARE_PASSWORD
  */
 
-void SmbShareProperties::OnTextctrlSharePasswordUpdated( wxCommandEvent& event )
+void ShareProperties::OnTextctrlSharePasswordUpdated( wxCommandEvent& event )
 {
     // Insert custom code here
     event.Skip();
 }
 
-void SmbShareProperties::askForDefault(ArrayOfShareGroups &sg, ShareGroup &g)
+void ShareProperties::askForDefault(ArrayOfShareGroups &sg, ShareGroup &g)
 {
     if (g.m_bDefault)
         return;
@@ -464,7 +466,7 @@ void SmbShareProperties::askForDefault(ArrayOfShareGroups &sg, ShareGroup &g)
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
  */
 
-void SmbShareProperties::OnOkClick( wxCommandEvent& event )
+void ShareProperties::OnOkClick( wxCommandEvent& event )
 {
     ArrayOfShareGroups sg = m_pCfg->aGetShareGroups();
     int nPrinters = 0;
@@ -564,7 +566,7 @@ void SmbShareProperties::OnOkClick( wxCommandEvent& event )
  * Should we show tooltips?
  */
 
-bool SmbShareProperties::ShowToolTips()
+bool ShareProperties::ShowToolTips()
 {
     return TRUE;
 }
@@ -573,7 +575,7 @@ bool SmbShareProperties::ShowToolTips()
  * Get bitmap resources
  */
 
-wxBitmap SmbShareProperties::GetBitmapResource( const wxString& name )
+wxBitmap ShareProperties::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
     return CreateBitmapFromFile(name);
@@ -583,7 +585,7 @@ wxBitmap SmbShareProperties::GetBitmapResource( const wxString& name )
  * Get icon resources
  */
 
-wxIcon SmbShareProperties::GetIconResource( const wxString& name )
+wxIcon ShareProperties::GetIconResource( const wxString& name )
 {
     // Icon retrieval
     return CreateIconFromFile(name);
@@ -592,24 +594,24 @@ wxIcon SmbShareProperties::GetIconResource( const wxString& name )
  * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SMBPRINT_USERNAME
  */
 
-void SmbShareProperties::OnTextctrlSmbprintUsernameUpdated( wxCommandEvent& event )
+void ShareProperties::OnTextctrlSmbprintUsernameUpdated( wxCommandEvent& event )
 {
-    ////@begin wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SMBPRINT_USERNAME in SmbShareProperties.
+    ////@begin wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SMBPRINT_USERNAME in ShareProperties.
     // Before editing this code, remove the block markers.
     event.Skip();
-    ////@end wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SMBPRINT_USERNAME in SmbShareProperties. 
+    ////@end wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SMBPRINT_USERNAME in ShareProperties. 
 }
 
 /*!
  * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SMBPRINT_PASSWORD
  */
 
-void SmbShareProperties::OnTextctrlSmbprintPasswordUpdated( wxCommandEvent& event )
+void ShareProperties::OnTextctrlSmbprintPasswordUpdated( wxCommandEvent& event )
 {
-    ////@begin wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SMBPRINT_PASSWORD in SmbShareProperties.
+    ////@begin wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SMBPRINT_PASSWORD in ShareProperties.
     // Before editing this code, remove the block markers.
     event.Skip();
-    ////@end wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SMBPRINT_PASSWORD in SmbShareProperties. 
+    ////@end wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SMBPRINT_PASSWORD in ShareProperties. 
 }
 
 

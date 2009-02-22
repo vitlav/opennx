@@ -1,6 +1,6 @@
 // $Id$
 //
-// Copyright (C) 2006 The OpenNX team
+// Copyright (C) 2009 The OpenNX team
 // Author: Fritz Elfert
 //
 // This program is free software; you can redistribute it and/or modify
@@ -44,8 +44,9 @@
 #define ID_DIALOG_SHARE_ADD_SYMBOL_22 _("Password")
 #define ID_DIALOG_SHARE_ADD_SYMBOL_23 _("CUPS options")
 #define ID_DIALOG_SHARE_ADD_SYMBOL_24 _("cups driver")
-#define ID_DIALOG_SHARE_ADD_SYMBOL_25 _("SMB options")
-#define ID_DIALOG_SHARE_ADD_SYMBOL_26 _("Please specify the resource name on the remote\nmachine with which this share will be made available.")
-#define ID_DIALOG_SHARE_ADD_SYMBOL_27 _("Mount on")
-#define ID_DIALOG_SHARE_ADD_SYMBOL_28 _("&OK")
-#define ID_DIALOG_SHARE_ADD_SYMBOL_29 _("&Cancel")
+#define ID_DIALOG_SHARE_ADD_SYMBOL_25 _("USB Filter Details")
+#define ID_DIALOG_SHARE_ADD_SYMBOL_26 _("SMB options")
+#define ID_DIALOG_SHARE_ADD_SYMBOL_27 _("Please specify the resource name on the remote\nmachine with which this share will be made available.")
+#define ID_DIALOG_SHARE_ADD_SYMBOL_28 _("Mount on")
+#define ID_DIALOG_SHARE_ADD_SYMBOL_29 _("&OK")
+#define ID_DIALOG_SHARE_ADD_SYMBOL_30 _("&Cancel")

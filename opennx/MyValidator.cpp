@@ -352,7 +352,7 @@ bool MyValidator::TransferToWindow(void)
         else if (m_pInt)
         {
             wxString str;
-            str.Printf(wxT("%d"), *m_pInt);
+            str.Printf(((m_type == MYVAL_HEX) ? wxT("%X") : wxT("%d")), *m_pInt);
             pControl->SetValue(str);
             return TRUE;
         }
@@ -646,6 +646,9 @@ void MyValidator::OnChar(wxKeyEvent& event)
                     break;
                 case MYVAL_NUMERIC:
                     chOk = (wxIsdigit(keyCode) != 0);
+                    break;
+                case MYVAL_HEX:
+                    chOk = (wxIsxdigit(keyCode) != 0);
                     break;
                 case MYVAL_HOST:
                     chOk = (wxIsalnum(keyCode) || (keyCode == _T('.')) || (keyCode == _T('-')));

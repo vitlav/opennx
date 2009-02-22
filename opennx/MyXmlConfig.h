@@ -67,7 +67,8 @@ class SharedUsbDevice : public wxObject
 
         SharedUsbDevice() : wxObject() { m_eMode = MODE_UNKNOWN; }
         virtual ~SharedUsbDevice() {}
-
+        wxString toShortString();
+        bool cmpNoMode(const SharedUsbDevice &);
         bool operator ==(const SharedUsbDevice &);
         bool operator !=(const SharedUsbDevice &);
 
@@ -75,6 +76,7 @@ class SharedUsbDevice : public wxObject
         wxString m_sVendor;
         wxString m_sProduct;
         wxString m_sSerial;
+        int m_iClass;
         int m_iVendorID;
         int m_iProductID;
 };

@@ -52,9 +52,9 @@ class wxListCtrl;
 class extHtmlWindow;
 ////@end forward declarations
 class wxFont;
-class MyXmlConfig;
 
 #include "MyValidator.h"
+#include "MyXmlConfig.h"
 
 /*!
  * Control identifiers
@@ -237,9 +237,6 @@ public:
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_CUPSPORT
     void OnSpinctrlCupsportTextUpdated( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_USBENABLE
-    void OnCHECKBOXUSBENABLEClick( wxCommandEvent& event );
-
     /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRL_SMB_SHARES
     void OnListctrlSmbSharesSelected( wxListEvent& event );
 
@@ -257,6 +254,24 @@ public:
 
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_MMEDIA
     void OnCheckboxMmediaClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_USBENABLE
+    void OnCHECKBOXUSBENABLEClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRL_USBFILTER
+    void OnListctrlUsbfilterSelected( wxListEvent& event );
+
+    /// wxEVT_COMMAND_LIST_ITEM_ACTIVATED event handler for ID_LISTCTRL_USBFILTER
+    void OnListctrlUsbfilterItemActivated( wxListEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_USBADD
+    void OnButtonUsbaddClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_USBMODIFY
+    void OnButtonUsbmodifyClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_USBDELETE
+    void OnButtonUsbdeleteClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_USERDIR
     void OnTextctrlUserdirUpdated( wxCommandEvent& event );
@@ -336,12 +351,16 @@ private:
     wxCheckBox* m_pCtrlSmbEnable;
     wxCheckBox* m_pCtrlCupsEnable;
     wxSpinCtrl* m_pCtrlCupsPort;
-    wxPanel* m_pCtrlUsbOption;
-    wxCheckBox* m_pCtrlUsbEnable;
     wxListCtrl* m_pCtrlSmbShares;
     wxButton* m_pCtrlShareAdd;
     wxButton* m_pCtrlShareModify;
     wxButton* m_pCtrlShareDelete;
+    wxPanel* m_pCtrlUsbOptions;
+    wxCheckBox* m_pCtrlUsbEnable;
+    wxListCtrl* m_pCtrlUsbFilter;
+    wxButton* m_pCtrlUsbAdd;
+    wxButton* m_pCtrlUsbModify;
+    wxButton* m_pCtrlUsbDelete;
     wxTextCtrl* m_pCtrlUserNxDir;
     wxTextCtrl* m_pCtrlSystemNxDir;
     wxTextCtrl* m_pCtrlCupsPath;
@@ -391,6 +410,9 @@ private:
     bool readKbdLayouts();
     void setFontLabel(wxButton *, const wxFont &);
     int findSelectedShare();
+    int findSelectedUsbDevice();
+    void appendUsbDevice(SharedUsbDevice &, int);
+    void updateListCtrlColumnWidth(wxListCtrl *);
 
     wxFont m_cFontDefault;
     wxFont m_cFontFixed;
@@ -402,6 +424,7 @@ private:
 
     MyXmlConfig *m_pCfg;
     KbdLayoutTable m_aKbdLayoutTable;
+    ArrayOfUsbForwards m_aUsbForwards;
 };
 
 #endif

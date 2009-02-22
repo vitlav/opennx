@@ -107,12 +107,33 @@ bool SharedUsbDevice::operator ==(const SharedUsbDevice &other)
     if (m_sSerial != other.m_sSerial) return false;
     if (m_iVendorID != other.m_iVendorID) return false;
     if (m_iProductID != other.m_iProductID) return false;
+    if (m_iClass != other.m_iClass) return false;
+    return true;
+}
+
+bool SharedUsbDevice::cmpNoMode(const SharedUsbDevice &other)
+{
+    if (m_sVendor != other.m_sVendor) return false;
+    if (m_sProduct != other.m_sProduct) return false;
+    if (m_sSerial != other.m_sSerial) return false;
+    if (m_iVendorID != other.m_iVendorID) return false;
+    if (m_iProductID != other.m_iProductID) return false;
+    if (m_iClass != other.m_iClass) return false;
     return true;
 }
 
 bool SharedUsbDevice::operator !=(const SharedUsbDevice &other)
 {
     return (!(*this == other));
+}
+
+wxString SharedUsbDevice::toShortString()
+{
+    wxString ret = m_sVendor.Strip(wxString::both);
+    if ((!ret.IsEmpty()) && (!m_sProduct.IsEmpty()))
+        ret.Append(wxT(" "));
+    ret.Append(m_sProduct.Strip(wxString::both));
+    return ret;
 }
 
 void
@@ -1311,26 +1332,37 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                         if (key == wxT("Vendor")) {
                             optcount++;
                             dev.m_sVendor = getString(opt, wxT("Vendor"), wxEmptyString);
+                            opt = opt->GetNext();
                             continue;
                         }
                         if (key == wxT("Product")) {
                             optcount++;
                             dev.m_sProduct = getString(opt, wxT("Product"), wxEmptyString);
+                            opt = opt->GetNext();
                             continue;
                         }
                         if (key == wxT("Serial")) {
                             optcount++;
                             dev.m_sSerial = getString(opt, wxT("Serial"), wxEmptyString);
+                            opt = opt->GetNext();
                             continue;
                         }
                         if (key == wxT("VendorID")) {
                             optcount++;
                             dev.m_iVendorID = getLong(opt, wxT("VendorID"), 0);
+                            opt = opt->GetNext();
                             continue;
                         }
                         if (key == wxT("ProductID")) {
                             optcount++;
                             dev.m_iProductID = getLong(opt, wxT("ProductID"), 0);
+                            opt = opt->GetNext();
+                            continue;
+                        }
+                        if (key == wxT("Class")) {
+                            optcount++;
+                            dev.m_iClass = getLong(opt, wxT("Class"), 0);
+                            opt = opt->GetNext();
                             continue;
                         }
                         if (key == wxT("Mode")) {
@@ -1340,11 +1372,14 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                                 dev.m_eMode = SharedUsbDevice::MODE_LOCAL;
                             if (tmp.IsSameAs(wxT("remote")))
                                 dev.m_eMode = SharedUsbDevice::MODE_REMOTE;
+                            opt = opt->GetNext();
                             continue;
                         }
+                        opt = opt->GetNext();
                     }
-                    if ((6 == optcount) && (dev.m_eMode != SharedUsbDevice::MODE_UNKNOWN))
+                    if ((7 == optcount) && (dev.m_eMode != SharedUsbDevice::MODE_UNKNOWN))
                         m_aUsbForwards.Add(dev);
+                    cfgnode = cfgnode->GetNext();
                     continue;
                 }
 
@@ -1821,6 +1856,7 @@ MyXmlConfig::SaveToFile()
         sAddOption(g, wxT("Serial"), m_aUsbForwards[i].m_sSerial);
         iAddOption(g, wxT("VendorID"), m_aUsbForwards[i].m_iVendorID);
         iAddOption(g, wxT("ProductID"), m_aUsbForwards[i].m_iProductID);
+        iAddOption(g, wxT("Class"), m_aUsbForwards[i].m_iClass);
         switch (m_aUsbForwards[i].m_eMode) {
             case SharedUsbDevice::MODE_UNKNOWN:
                 sAddOption(g, wxT("Mode"), wxT("unknown"));

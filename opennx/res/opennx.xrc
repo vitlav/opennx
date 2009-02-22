@@ -786,7 +786,7 @@
                                         <vgap>0</vgap>
                                         <hgap>0</hgap>
                                         <growablecols>0</growablecols>
-                                        <growablerows>3</growablerows>
+                                        <growablerows>2</growablerows>
                                         <object class="sizeritem">
                                             <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT</flag>
                                             <border>5</border>
@@ -854,34 +854,9 @@
                                             </object>
                                         </object>
                                         <object class="sizeritem">
-                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
-                                            <border>5</border>
-                                            <object class="wxPanel" name="ID_PANEL_USBOPTION">
-                                                <style>wxNO_BORDER|wxTAB_TRAVERSAL</style>
-                                                <object class="wxBoxSizer">
-                                                    <orient>wxHORIZONTAL</orient>
-                                                    <object class="sizeritem">
-                                                        <flag>wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
-                                                        <border>5</border>
-                                                        <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                            <size>16,15d</size>
-                                                            <bitmap>memory:memrsc#zip:res/usb.png</bitmap>
-                                                        </object>
-                                                    </object>
-                                                    <object class="sizeritem">
-                                                        <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
-                                                        <border>5</border>
-                                                        <object class="wxCheckBox" name="ID_CHECKBOX_USBENABLE">
-                                                            <label>Enable USB forwarding</label>
-                                                            <checked>0</checked>
-                                                        </object>
-                                                    </object>
-                                                </object>
-                                            </object>
-                                        </object>
-                                        <object class="sizeritem">
                                             <flag>wxGROW|wxGROW|wxALL</flag>
                                             <border>5</border>
+                                            <option>1</option>
                                             <object class="wxListCtrl" name="ID_LISTCTRL_SMB_SHARES">
                                                 <style>wxLC_REPORT|wxLC_SINGLE_SEL|wxSUNKEN_BORDER</style>
                                             </object>
@@ -936,6 +911,82 @@
                                                     <object class="wxCheckBox" name="ID_CHECKBOX_MMEDIA">
                                                         <label>Enable multimedia support</label>
                                                         <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                            </object>
+                                        </object>
+                                    </object>
+                                </object>
+                            </object>
+                            <object class="notebookpage">
+                                <label>USB</label>
+                                <object class="wxPanel" name="ID_PANEL_USBIP">
+                                    <style>wxSUNKEN_BORDER|wxTAB_TRAVERSAL</style>
+                                    <object class="wxFlexGridSizer">
+                                        <cols>1</cols>
+                                        <rows>3</rows>
+                                        <vgap>0</vgap>
+                                        <hgap>0</hgap>
+                                        <growablecols>0</growablecols>
+                                        <growablerows>1</growablerows>
+                                        <object class="sizeritem">
+                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                            <border>5</border>
+                                            <object class="wxBoxSizer">
+                                                <orient>wxHORIZONTAL</orient>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticBitmap" name="wxID_STATIC">
+                                                        <size>16,15d</size>
+                                                        <bitmap>memory:memrsc#zip:res/usb.png</bitmap>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_CHECKBOX_USBENABLE">
+                                                        <label>Enable USB forwarding</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                            </object>
+                                        </object>
+                                        <object class="sizeritem">
+                                            <flag>wxGROW|wxGROW|wxALL</flag>
+                                            <border>5</border>
+                                            <option>1</option>
+                                            <object class="wxListCtrl" name="ID_LISTCTRL_USBFILTER">
+                                                <style>wxLC_REPORT</style>
+                                            </object>
+                                        </object>
+                                        <object class="sizeritem">
+                                            <flag>wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
+                                            <border>5</border>
+                                            <object class="wxBoxSizer">
+                                                <orient>wxHORIZONTAL</orient>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxButton" name="ID_BUTTON_USBADD">
+                                                        <enabled>0</enabled>
+                                                        <label>Add</label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxButton" name="ID_BUTTON_USBMODIFY">
+                                                        <enabled>0</enabled>
+                                                        <label>Modify</label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxButton" name="ID_BUTTON_USBDELETE">
+                                                        <enabled>0</enabled>
+                                                        <label>Delete</label>
                                                     </object>
                                                 </object>
                                             </object>
@@ -2090,7 +2141,7 @@ remote VNC server</label>
             </object>
         </object>
     </object>
-    <object class="wxDialog" name="ID_DIALOG_SHARE_ADD" subclass="SmbShareProperties">
+    <object class="wxDialog" name="ID_DIALOG_SHARE_ADD" subclass="ShareProperties">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
         <title>New shared resource - OpenNX</title>
@@ -2278,7 +2329,7 @@ this share.</label>
             <object class="sizeritem">
                 <flag>wxGROW|wxLEFT|wxRIGHT|wxBOTTOM</flag>
                 <border>5</border>
-                <object class="wxPanel" name="ID_PANEL_CUPSOTIONS">
+                <object class="wxPanel" name="ID_PANEL_CUPSOPTIONS">
                     <style>wxTAB_TRAVERSAL</style>
                     <hidden>1</hidden>
                     <object class="wxStaticBoxSizer" name="wxID_ANY">
@@ -2360,6 +2411,18 @@ this share.</label>
                                 </object>
                             </object>
                         </object>
+                    </object>
+                </object>
+            </object>
+            <object class="sizeritem">
+                <flag>wxGROW|wxLEFT|wxRIGHT|wxBOTTOM</flag>
+                <border>5</border>
+                <object class="wxPanel" name="ID_PANEL_USBIP">
+                    <style>wxTAB_TRAVERSAL</style>
+                    <hidden>1</hidden>
+                    <object class="wxStaticBoxSizer" name="wxID_ANY">
+                        <orient>wxVERTICAL</orient>
+                        <label>USB Filter Details</label>
                     </object>
                 </object>
             </object>
@@ -3492,6 +3555,210 @@ this share.</label>
                 <object class="wxStdDialogButtonSizer">
                     <object class="button">
                         <flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxButton" name="wxID_CANCEL">
+                            <label>&amp;Cancel</label>
+                        </object>
+                    </object>
+                </object>
+            </object>
+        </object>
+    </object>
+    <object class="wxDialog" name="ID_USBFILTERDETAILSDIALOG" subclass="UsbFilterDetailsDialog">
+        <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxTAB_TRAVERSAL</style>
+        <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
+        <title>USB Filter Details</title>
+        <centered>1</centered>
+        <icon>memory:memrsc#zip:res/nx.png</icon>
+        <object class="wxBoxSizer">
+            <orient>wxVERTICAL</orient>
+            <object class="sizeritem">
+                <flag>wxGROW|wxALL</flag>
+                <border>5</border>
+                <object class="wxPanel" name="ID_PANEL_HOTPLUG">
+                    <style>wxSUNKEN_BORDER|wxTAB_TRAVERSAL</style>
+                    <object class="wxBoxSizer">
+                        <orient>wxVERTICAL</orient>
+                        <object class="sizeritem">
+                            <flag>wxGROW|wxALL</flag>
+                            <border>5</border>
+                            <object class="wxStaticText" name="wxID_STATIC">
+                                <label>A new USB device has been detected. The
+parameters for this device have been filled
+into the form below. Please decide, if you
+want to use this device locally, or if you want
+to use it on the remote machine.</label>
+                            </object>
+                        </object>
+                        <object class="sizeritem">
+                            <flag>wxGROW|wxALL</flag>
+                            <border>5</border>
+                            <object class="wxCheckBox" name="ID_CHECKBOX_FILTER_STORE">
+                                <label>Remember this decision</label>
+                                <checked>0</checked>
+                            </object>
+                        </object>
+                    </object>
+                </object>
+            </object>
+            <object class="sizeritem">
+                <flag>wxGROW|wxALL</flag>
+                <border>5</border>
+                <object class="wxPanel" name="ID_PANEL_DEVSELECT">
+                    <style>wxSUNKEN_BORDER|wxTAB_TRAVERSAL</style>
+                    <object class="wxBoxSizer">
+                        <orient>wxVERTICAL</orient>
+                        <object class="sizeritem">
+                            <flag>wxGROW|wxALL</flag>
+                            <border>5</border>
+                            <object class="wxStaticText" name="wxID_STATIC">
+                                <label>Select from existing devices below or
+enter the filter specification directly.</label>
+                            </object>
+                        </object>
+                        <object class="sizeritem">
+                            <flag>wxGROW|wxALL</flag>
+                            <border>5</border>
+                            <object class="wxComboBox" name="ID_COMBOBOX_USBDEVS">
+                                <style>wxCB_READONLY|wxCB_SORT</style>
+                            </object>
+                        </object>
+                    </object>
+                </object>
+            </object>
+            <object class="sizeritem">
+                <flag>wxGROW|wxALL</flag>
+                <border>5</border>
+                <object class="wxFlexGridSizer">
+                    <cols>2</cols>
+                    <rows>7</rows>
+                    <vgap>0</vgap>
+                    <hgap>0</hgap>
+                    <growablecols>1</growablecols>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxStaticText" name="wxID_STATIC">
+                            <label>Vendor ID</label>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxTextCtrl" name="ID_TEXTCTRL_USB_VENDORID">
+                            <maxlength>4</maxlength>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxStaticText" name="wxID_STATIC">
+                            <label>Product ID</label>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxTextCtrl" name="ID_TEXTCTRL_USB_PRODUCTID">
+                            <maxlength>4</maxlength>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxStaticText" name="wxID_STATIC">
+                            <label>Device Class</label>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxTextCtrl" name="ID_TEXTCTRL_USB_CLASS">
+                            <maxlength>2</maxlength>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxStaticText" name="wxID_STATIC">
+                            <label>Vendor</label>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxTextCtrl" name="ID_TEXTCTRL_USB_VENDOR">
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxStaticText" name="wxID_STATIC">
+                            <label>Product</label>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxTextCtrl" name="ID_TEXTCTRL_USB_PRODUCT">
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxStaticText" name="wxID_STATIC">
+                            <label>Serial Nr.</label>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxTextCtrl" name="ID_TEXTCTRL_USB_SERIAL">
+                            <size>100,-1d</size>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxStaticText" name="wxID_STATIC">
+                            <label>Mode</label>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxComboBox" name="ID_COMBOBOX_MODE">
+                            <style>wxCB_DROPDOWN</style>
+                            <content>
+                                <item>Use locally</item>
+                                <item>Forward to remote</item>
+                            </content>
+                            <selection>1</selection>
+                        </object>
+                    </object>
+                </object>
+            </object>
+            <object class="sizeritem">
+                <flag>wxGROW|wxALL</flag>
+                <border>5</border>
+                <object class="wxStaticLine" name="wxID_STATIC">
+                    <style>wxLI_HORIZONTAL</style>
+                </object>
+            </object>
+            <object class="sizeritem">
+                <flag>wxALIGN_RIGHT|wxALL</flag>
+                <border>5</border>
+                <object class="wxBoxSizer">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxButton" name="wxID_OK">
+                            <label>&amp;OK</label>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                         <border>5</border>
                         <object class="wxButton" name="wxID_CANCEL">
                             <label>&amp;Cancel</label>
