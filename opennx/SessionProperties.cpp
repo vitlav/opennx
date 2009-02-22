@@ -284,6 +284,17 @@ SessionProperties::SetConfig(MyXmlConfig *cfg)
 }
 
     void
+SessionProperties::removePage(const wxString &title)
+{
+    for (int i = 0; i < m_pNoteBook->GetPageCount(); i++) {
+        if (m_pNoteBook->GetPageText(i).IsSameAs(title)) {
+            m_pNoteBook->DeletePage(i);
+            break;
+        }
+    }
+}
+
+    void
 SessionProperties::CheckChanged()
 {
     wxASSERT_MSG(m_pCfg, _T("SessionProperties::CheckChanged: No configuration"));
@@ -335,9 +346,11 @@ SessionProperties::CheckChanged()
         m_pCfg->bSetUseCups(m_bUseCups);
         m_pCfg->iSetCupsPort(m_iCupsPort);
 
+#ifdef SUPPORT_USBIP
         // variables on the 'USB' tab
         m_pCfg->bSetEnableUSBIP(m_bEnableUSBIP);
         m_pCfg->aSetUsbForwards(m_aUsbForwards);
+#endif
 
         // variabless on 'Environment' tab
         m_pCfg->bSetRemoveOldSessionFiles(m_bRemoveOldSessionFiles);
@@ -389,7 +402,6 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlShareAdd = NULL;
     m_pCtrlShareModify = NULL;
     m_pCtrlShareDelete = NULL;
-    m_pCtrlUsbOptions = NULL;
     m_pCtrlUsbEnable = NULL;
     m_pCtrlUsbFilter = NULL;
     m_pCtrlUsbAdd = NULL;
@@ -477,6 +489,9 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     }
     Centre();
 ////@end SessionProperties creation
+#ifndef SUPPORT_USBIP
+    removePage(_("USB"));
+#endif
     setFontLabel(m_pCtrlFontDefault, m_cFontDefault);
     setFontLabel(m_pCtrlFontFixed, m_cFontFixed);
 
@@ -609,10 +624,6 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlCupsPath->Enable(false);
     m_pCtrlCupsBrowse->Enable(false);
 #endif
-
-#ifndef SUPPORT_USBIP
-    m_pCtrlUsbEnable->Enable(false);
-#endif
     return TRUE;
 }
 
@@ -624,6 +635,7 @@ void SessionProperties::updateListCtrlColumnWidth(wxListCtrl *ctrl)
         ctrl->SetColumnWidth(i, w);
 }
 
+#ifdef SUPPORT_USBIP
 void SessionProperties::appendUsbDevice(SharedUsbDevice &dev, int aidx)
 {
     long idx;
@@ -639,6 +651,7 @@ void SessionProperties::appendUsbDevice(SharedUsbDevice &dev, int aidx)
     lbl = dev.m_sSerial.IsEmpty() ? wxT("*") : dev.m_sSerial;
     m_pCtrlUsbFilter->SetItem(idx, 4, lbl);
 }
+#endif
 
 /**
  * Installs event handler for OnChar event in all wxTextCtrl and wxSpinCtrl
@@ -700,9 +713,6 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
             m_pCtrlSmbEnable->Enable(s.IsAvailable());
 #ifdef SUPPORT_USBIP
             m_pCtrlUsbEnable->Enable(true);
-#else
-            m_pCtrlUsbEnable->Enable(false);
-            m_pCtrlUsbOptions->Hide();
 #endif
             break;
         case MyXmlConfig::STYPE_WINDOWS:
@@ -717,8 +727,9 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
             m_bUseCups = false;
             m_bEnableSmbSharing = false;
             m_bEnableUSBIP = false;
+#ifdef SUPPORT_USBIP
             m_pCtrlUsbEnable->Enable(false);
-            m_pCtrlUsbOptions->Hide();
+#endif
             break;
         case MyXmlConfig::STYPE_VNC:
             m_pCtrlDesktopType->SetString(0, _("RFB"));
@@ -732,8 +743,9 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
             m_bUseCups = false;
             m_bEnableSmbSharing = false;
             m_bEnableUSBIP = false;
+#ifdef SUPPORT_USBIP
             m_pCtrlUsbEnable->Enable(false);
-            m_pCtrlUsbOptions->Hide();
+#endif
             break;
     }
     switch (m_iDisplayType) {
@@ -763,11 +775,13 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
     m_pCtrlShareModify->Enable(bTmp && (m_pCtrlSmbShares->GetSelectedItemCount() > 0));
     m_pCtrlCupsPort->Enable(m_bUseCups);
 
+#ifdef SUPPORT_USBIP
     // 'USB' tab
     m_pCtrlUsbFilter->Enable(m_bEnableUSBIP);
     m_pCtrlUsbAdd->Enable(m_bEnableUSBIP);
     m_pCtrlUsbDelete->Enable(m_bEnableUSBIP && (m_pCtrlUsbFilter->GetSelectedItemCount() > 0));
     m_pCtrlUsbModify->Enable(m_bEnableUSBIP && (m_pCtrlUsbFilter->GetSelectedItemCount() > 0));
+#endif
 
     // 'Advanced' tab
     m_pCtrlKeyboardLayout->Enable(m_bKbdLayoutOther);
@@ -814,7 +828,6 @@ void SessionProperties::CreateControls()
     m_pCtrlShareAdd = XRCCTRL(*this, "ID_BUTTON_SMB_ADD", wxButton);
     m_pCtrlShareModify = XRCCTRL(*this, "ID_BUTTON_SMB_MODIFY", wxButton);
     m_pCtrlShareDelete = XRCCTRL(*this, "ID_BUTTON_SMB_DELETE", wxButton);
-    m_pCtrlUsbOptions = XRCCTRL(*this, "ID_PANEL_USBIP", wxPanel);
     m_pCtrlUsbEnable = XRCCTRL(*this, "ID_CHECKBOX_USBENABLE", wxCheckBox);
     m_pCtrlUsbFilter = XRCCTRL(*this, "ID_LISTCTRL_USBFILTER", wxListCtrl);
     m_pCtrlUsbAdd = XRCCTRL(*this, "ID_BUTTON_USBADD", wxButton);
@@ -996,6 +1009,7 @@ SessionProperties::findSelectedShare()
     return -1;
 }
 
+#ifdef SUPPORT_USBIP
     int
 SessionProperties::findSelectedUsbDevice()
 {
@@ -1006,6 +1020,7 @@ SessionProperties::findSelectedUsbDevice()
     }
     return -1;
 }
+#endif
 
     bool
 SessionProperties::readKbdLayouts()
@@ -1849,6 +1864,7 @@ void SessionProperties::OnTextctrlProxycommandTextUpdated( wxCommandEvent& event
 
 void SessionProperties::OnButtonUsbaddClick( wxCommandEvent& event )
 {
+#ifdef SUPPORT_USBIP
     UsbFilterDetailsDialog d(this);
     d.SetDialogMode(UsbFilterDetailsDialog::MODE_ADD);
     if (d.ShowModal() == wxID_OK) {
@@ -1891,6 +1907,7 @@ void SessionProperties::OnButtonUsbaddClick( wxCommandEvent& event )
             CheckChanged();
         }
     }
+#endif
 }
 
 
@@ -1900,6 +1917,7 @@ void SessionProperties::OnButtonUsbaddClick( wxCommandEvent& event )
 
 void SessionProperties::OnButtonUsbmodifyClick( wxCommandEvent& event )
 {
+#ifdef SUPPORT_USBIP
     int idx = findSelectedUsbDevice();
     if (idx != -1) {
         int aidx = m_pCtrlUsbFilter->GetItemData(idx);
@@ -1953,6 +1971,7 @@ void SessionProperties::OnButtonUsbmodifyClick( wxCommandEvent& event )
             CheckChanged();
         }
     }
+#endif
 }
 
 
@@ -1962,6 +1981,7 @@ void SessionProperties::OnButtonUsbmodifyClick( wxCommandEvent& event )
 
 void SessionProperties::OnButtonUsbdeleteClick( wxCommandEvent& event )
 {
+#ifdef SUPPORT_USBIP
     int idx = findSelectedUsbDevice();
     if (idx != -1) {
         int aidx = m_pCtrlUsbFilter->GetItemData(idx);
@@ -1976,6 +1996,7 @@ void SessionProperties::OnButtonUsbdeleteClick( wxCommandEvent& event )
         CheckChanged();
         UpdateDialogConstraints(false);
     }
+#endif
 }
 
 
@@ -1985,8 +2006,10 @@ void SessionProperties::OnButtonUsbdeleteClick( wxCommandEvent& event )
 
 void SessionProperties::OnListctrlUsbfilterSelected( wxListEvent& event )
 {
+#ifdef SUPPORT_USBIP
     m_pCtrlUsbModify->Enable(true);
     m_pCtrlUsbDelete->Enable(true);
+#endif
 }
 
 
@@ -1996,6 +2019,8 @@ void SessionProperties::OnListctrlUsbfilterSelected( wxListEvent& event )
 
 void SessionProperties::OnListctrlUsbfilterItemActivated( wxListEvent& event )
 {
+#ifdef SUPPORT_USBIP
     OnButtonUsbmodifyClick(event);
+#endif
 }
 

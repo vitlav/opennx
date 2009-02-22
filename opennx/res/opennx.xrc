@@ -796,7 +796,7 @@
                                                     <flag>wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                        <size>16,15d</size>
+                                                        <size>21,19d</size>
                                                         <bitmap>memory:memrsc#zip:res/smbsharing.png</bitmap>
                                                     </object>
                                                 </object>
@@ -819,7 +819,7 @@
                                                     <flag>wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                        <size>16,15d</size>
+                                                        <size>21,19d</size>
                                                         <bitmap>memory:memrsc#zip:res/cupssharing.png</bitmap>
                                                     </object>
                                                 </object>
@@ -901,7 +901,7 @@
                                                     <flag>wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                        <size>16,15d</size>
+                                                        <size>21,19d</size>
                                                         <bitmap>memory:memrsc#zip:res/multimedia.png</bitmap>
                                                     </object>
                                                 </object>
@@ -921,7 +921,7 @@
                             <object class="notebookpage">
                                 <label>USB</label>
                                 <object class="wxPanel" name="ID_PANEL_USBIP">
-                                    <style>wxSUNKEN_BORDER|wxTAB_TRAVERSAL</style>
+                                    <style>wxTAB_TRAVERSAL</style>
                                     <object class="wxFlexGridSizer">
                                         <cols>1</cols>
                                         <rows>3</rows>
@@ -938,7 +938,7 @@
                                                     <flag>wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                        <size>16,15d</size>
+                                                        <size>21,19d</size>
                                                         <bitmap>memory:memrsc#zip:res/usb.png</bitmap>
                                                     </object>
                                                 </object>
@@ -3536,7 +3536,7 @@ this share.</label>
                         <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                         <border>5</border>
                         <object class="wxStaticBitmap" name="wxID_STATIC">
-                            <size>16,15d</size>
+                            <size>21,19d</size>
                             <bitmap>memory:memrsc#zip:res/usbstick.png</bitmap>
                         </object>
                     </object>
@@ -3576,7 +3576,7 @@ this share.</label>
                 <flag>wxGROW|wxALL</flag>
                 <border>5</border>
                 <object class="wxPanel" name="ID_PANEL_HOTPLUG">
-                    <style>wxSUNKEN_BORDER|wxTAB_TRAVERSAL</style>
+                    <style>wxTAB_TRAVERSAL</style>
                     <object class="wxBoxSizer">
                         <orient>wxVERTICAL</orient>
                         <object class="sizeritem">
@@ -3605,7 +3605,7 @@ to use it on the remote machine.</label>
                 <flag>wxGROW|wxALL</flag>
                 <border>5</border>
                 <object class="wxPanel" name="ID_PANEL_DEVSELECT">
-                    <style>wxSUNKEN_BORDER|wxTAB_TRAVERSAL</style>
+                    <style>wxTAB_TRAVERSAL</style>
                     <object class="wxBoxSizer">
                         <orient>wxVERTICAL</orient>
                         <object class="sizeritem">

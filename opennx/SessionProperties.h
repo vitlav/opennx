@@ -355,7 +355,6 @@ private:
     wxButton* m_pCtrlShareAdd;
     wxButton* m_pCtrlShareModify;
     wxButton* m_pCtrlShareDelete;
-    wxPanel* m_pCtrlUsbOptions;
     wxCheckBox* m_pCtrlUsbEnable;
     wxListCtrl* m_pCtrlUsbFilter;
     wxButton* m_pCtrlUsbAdd;
@@ -410,9 +409,12 @@ private:
     bool readKbdLayouts();
     void setFontLabel(wxButton *, const wxFont &);
     int findSelectedShare();
+#ifdef SUPPORT_USBIP
     int findSelectedUsbDevice();
     void appendUsbDevice(SharedUsbDevice &, int);
+#endif
     void updateListCtrlColumnWidth(wxListCtrl *);
+    void removePage(const wxString &);
 
     wxFont m_cFontDefault;
     wxFont m_cFontFixed;

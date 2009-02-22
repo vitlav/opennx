@@ -48,6 +48,7 @@ class opennxApp : public wxApp
          * compiled in, return true, otherwise return false.
          */
         bool NxSmartCardSupport() { return m_bNxSmartCardSupport; }
+        bool LibUSBAvailable() { return m_bLibUSBAvailable; }
 
         virtual bool OnInit();
         virtual void OnInitCmdLine(wxCmdLineParser& parser);
@@ -83,12 +84,14 @@ class opennxApp : public wxApp
         enum mode m_eMode;
         bool m_bNxSmartCardSupport;
         bool m_bRunproc;
+        bool m_bLibUSBAvailable;
 
         bool preInit();
         bool realInit();
         bool setSelfPath();
         void setUserDir();
         void checkNxSmartCardSupport();
+        void checkLibUSB();
         void handleHotplug();
 };
 

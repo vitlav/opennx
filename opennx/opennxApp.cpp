@@ -536,6 +536,7 @@ opennxApp::preInit()
     }
 
     checkNxSmartCardSupport();
+    checkLibUSB();
     return true;
 }
 
@@ -559,6 +560,16 @@ int opennxApp::FilterEvent(wxEvent& event)
         }
     }
     return -1;
+}
+
+void opennxApp::checkLibUSB()
+{
+#ifdef SUPPORT_USBIP
+    USB u;
+    m_bLibUSBAvailable = u.IsAvailable();
+#else
+    m_bLibUSBAvailable = false;
+#endif
 }
 
 void opennxApp::checkNxSmartCardSupport()
@@ -946,6 +957,10 @@ int opennxApp::OnExit()
 
 void opennxApp::handleHotplug()
 {
+    if (!m_bLibUSBAvailable) {
+        printf("libusb unavailable\n");
+        return;
+    }
     /* If we arrive here, we have been called from
      * usbip's bind_driver --hotplug.
      */

@@ -19,8 +19,8 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
-#ifndef _USBLINUX_H_
-#define _USBLINUX_H_
+#ifndef _LIBUSB_H_
+#define _LIBUSB_H_
 
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
 #pragma interface "LibUSB.h"
@@ -69,6 +69,7 @@ struct usb_device;
 class USB {
     public:
         USB();
+        bool IsAvailable() { return m_bAvailable; }
         ArrayOfUSBDevices GetDevices();
 
     private:
@@ -76,7 +77,8 @@ class USB {
         void usbscan(wxDynamicLibrary *);
 
         ArrayOfUSBDevices m_aDevices;
+        bool m_bAvailable;
 };
 
 #endif
-// _USBLINUX_H_
+// _LIBUSB_H_

@@ -175,7 +175,7 @@ AC_ARG_WITH([samba],
 test -n "$ac_cv_samba" && CPPFLAGS="$CPPFLAGS -I$ac_cv_samba/source/include"
 
 VERSION_COMMASEPARATED=`echo $VERSION|sed -e 's/\./,/g'`
-AC_CHECK_HEADERS([cups/cups.h cups.h libsmbclient.h opensc/opensc.h])
+AC_CHECK_HEADERS([cups/cups.h cups.h libsmbclient.h opensc/opensc.h usb.h])
 case $target_os in
 	mingw*)
         while test -z "`echo -n $VERSION_COMMASEPARATED|cut -d, -f4`" ; do
@@ -192,6 +192,10 @@ case $target_os in
         ;;
 esac
 AC_SUBST(VERSION_COMMASEPARATED)
+
+if test "$ac_cv_enable_usbip" = "YES" -a "$ac_cv_header_usb_h" != "yes"; then
+    AC_MSG_ERROR([Need usb.h when compiling with usbip support])
+fi
 
 dnl AC_DEFINE(wxUSE_LOG_DEBUG,1,[Set to 1 for enabling trace logging])
 

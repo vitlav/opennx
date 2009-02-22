@@ -122,18 +122,21 @@ public:
     wxString GetSerial() const { return m_sSerial ; }
     void SetSerial(wxString value) { m_sSerial = value ; }
 
-    bool GetForwarding() { return ((NULL != m_pCtrlMode) && (m_pCtrlMode->GetSelection() == 1)); }
-    bool SetForwarding(bool b) {
-        if (NULL != m_pCtrlMode)
-            m_pCtrlMode->Select(b ? 1 : 0);
-    }
-
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
 
     /// Retrieves icon resources
     wxIcon GetIconResource( const wxString& name );
 ////@end UsbFilterDetailsDialog member function declarations
+
+    bool GetForwarding() {
+        return ((NULL != m_pCtrlMode) &&
+                (m_pCtrlMode->GetSelection() == 1));
+    }
+    bool SetForwarding(bool b) {
+        if (NULL != m_pCtrlMode)
+            m_pCtrlMode->Select(b ? 1 : 0);
+    }
 
     /// Should we show tooltips?
     static bool ShowToolTips();

@@ -173,13 +173,33 @@ void USB::usbscan(wxDynamicLibrary *dll)
 }
 
 USB::USB() {
+    m_bAvailable = false;
 #ifdef SUPPORT_USBIP
     wxDynamicLibrary dll;
     if (dll.Load(wxT("libusb"))) {
         wxDYNLIB_FUNCTION(Tusb_init, usb_init, dll);
         if (!pfnusb_init)
             return;
+        wxDYNLIB_FUNCTION(Tusb_find_busses, usb_find_busses, dll);
+        if (!pfnusb_find_busses)
+            return;
+        wxDYNLIB_FUNCTION(Tusb_find_devices, usb_find_devices, dll);
+        if (!pfnusb_find_devices)
+            return;
+        wxDYNLIB_FUNCTION(Tusb_get_busses, usb_get_busses, dll);
+        if (!pfnusb_get_busses)
+            return;
+        wxDYNLIB_FUNCTION(Tusb_open, usb_open, dll);
+        if (!pfnusb_open)
+            return;
+        wxDYNLIB_FUNCTION(Tusb_close, usb_close, dll);
+        if (!pfnusb_close)
+            return;
+        wxDYNLIB_FUNCTION(Tusb_get_string_simple, usb_get_string_simple, dll);
+        if (!pfnusb_get_string_simple)
+            return;
         pfnusb_init();
+        m_bAvailable = true;
         usbscan(&dll);
     }
 #endif
