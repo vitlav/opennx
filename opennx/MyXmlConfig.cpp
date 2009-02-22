@@ -190,6 +190,7 @@ MyXmlConfig::init()
     m_iRdpColors = 8;
     m_iRdpImageCompression = 1;
     m_iServerPort = 22;
+    m_iUsbLocalPort = 3240;
     m_iUsedShareGroups = 0;
     m_iVncDisplayNumber = 0;
     m_iVncImageEncoding = 0;
@@ -308,6 +309,7 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
     m_iRdpColors = other.m_iRdpColors;
     m_iRdpImageCompression = other.m_iRdpImageCompression;
     m_iServerPort = other.m_iServerPort;
+    m_iUsbLocalPort = other.m_iUsbLocalPort;
     m_iUsedShareGroups = other.m_iUsedShareGroups;
     m_iVncDisplayNumber = other.m_iVncDisplayNumber;
     m_iVncImageEncoding = other.m_iVncImageEncoding;
@@ -818,6 +820,7 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
     if (m_iRdpColors != other.m_iRdpColors) return false;
     if (m_iRdpImageCompression != other.m_iRdpImageCompression) return false;
     if (m_iServerPort != other.m_iServerPort) return false;
+    if (m_iUsbLocalPort != other.m_iUsbLocalPort) return false;
     if (m_iUsedShareGroups != other.m_iUsedShareGroups) return false;
     if (m_iVncDisplayNumber != other.m_iVncDisplayNumber) return false;
     if (m_iVncImageEncoding != other.m_iVncImageEncoding) return false;
@@ -1240,6 +1243,7 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                         m_iCupsPort = getLong(opt, wxT("IPPPort"), m_iCupsPort);
                         m_bUseCups = getBool(opt, wxT("IPPPrinting"), m_bUseCups);
                         m_bEnableSmbSharing = getBool(opt, wxT("Shares"), m_bEnableSmbSharing);
+                        m_iUsbLocalPort = getLong(opt, wxT("USBIP local port"), m_iUsbLocalPort);
                         opt = opt->GetNext();
                     }
                     cfgnode = cfgnode->GetNext();
@@ -1702,6 +1706,7 @@ MyXmlConfig::SaveToFile()
     bAddOption(g, wxT("Shares"), m_bEnableSmbSharing);
     bAddOption(g, wxT("IPPPrinting"), m_bUseCups);
     iAddOption(g, wxT("IPPPort"), m_iCupsPort);
+    iAddOption(g, wxT("USBIP local port"), m_iUsbLocalPort);
 
     if (m_aUsedShareGroups.GetCount()) {
         g = AddGroup(r, wxT("share chosen"));

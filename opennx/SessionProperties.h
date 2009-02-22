@@ -258,6 +258,12 @@ public:
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_USBENABLE
     void OnCHECKBOXUSBENABLEClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINCTRL_USB_LOCALPORT
+    void OnSpinctrlUsbLocalportUpdated( wxSpinEvent& event );
+
+    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_USB_LOCALPORT
+    void OnSpinctrlUsbLocalportTextUpdated( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRL_USBFILTER
     void OnListctrlUsbfilterSelected( wxListEvent& event );
 
@@ -316,6 +322,9 @@ public:
     wxString GetsSystemNxDir() const { return m_sSystemNxDir ; }
     void SetsSystemNxDir(wxString value) { m_sSystemNxDir = value ; }
 
+    int GetUsbLocalPort() const { return m_iUsbLocalPort ; }
+    void SetUsbLocalPort(int value) { m_iUsbLocalPort = value ; }
+
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
 
@@ -356,6 +365,7 @@ private:
     wxButton* m_pCtrlShareModify;
     wxButton* m_pCtrlShareDelete;
     wxCheckBox* m_pCtrlUsbEnable;
+    wxSpinCtrl* m_pCtrlUsbLocalPort;
     wxListCtrl* m_pCtrlUsbFilter;
     wxButton* m_pCtrlUsbAdd;
     wxButton* m_pCtrlUsbModify;
@@ -404,6 +414,7 @@ private:
     bool m_bEnableUSBIP;
     wxString m_sProxyCommand;
     bool m_bExternalProxy;
+    int m_iUsbLocalPort;
 ////@end SessionProperties member variables
 
     bool readKbdLayouts();

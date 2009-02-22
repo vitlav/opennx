@@ -219,6 +219,9 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
 
     EVT_CHECKBOX( XRCID("ID_CHECKBOX_USBENABLE"), SessionProperties::OnCHECKBOXUSBENABLEClick )
 
+    EVT_SPINCTRL( XRCID("ID_SPINCTRL_USB_LOCALPORT"), SessionProperties::OnSpinctrlUsbLocalportUpdated )
+    EVT_TEXT( XRCID("ID_SPINCTRL_USB_LOCALPORT"), SessionProperties::OnSpinctrlUsbLocalportTextUpdated )
+
     EVT_LIST_ITEM_SELECTED( XRCID("ID_LISTCTRL_USBFILTER"), SessionProperties::OnListctrlUsbfilterSelected )
     EVT_LIST_ITEM_ACTIVATED( XRCID("ID_LISTCTRL_USBFILTER"), SessionProperties::OnListctrlUsbfilterItemActivated )
 
@@ -349,6 +352,7 @@ SessionProperties::CheckChanged()
 #ifdef SUPPORT_USBIP
         // variables on the 'USB' tab
         m_pCfg->bSetEnableUSBIP(m_bEnableUSBIP);
+        m_pCfg->iSetUsbLocalPort(m_iUsbLocalPort);
         m_pCfg->aSetUsbForwards(m_aUsbForwards);
 #endif
 
@@ -375,6 +379,7 @@ SessionProperties::KeyTyped() {
 bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxString& WXUNUSED(caption), const wxPoint& WXUNUSED(pos), const wxSize& WXUNUSED(size), long WXUNUSED(style) )
 {
 ////@begin SessionProperties member initialisation
+    m_iUsbLocalPort = 3240;
     m_pNoteBook = NULL;
     m_pCtrlHostname = NULL;
     m_pCtrlPort = NULL;
@@ -403,6 +408,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlShareModify = NULL;
     m_pCtrlShareDelete = NULL;
     m_pCtrlUsbEnable = NULL;
+    m_pCtrlUsbLocalPort = NULL;
     m_pCtrlUsbFilter = NULL;
     m_pCtrlUsbAdd = NULL;
     m_pCtrlUsbModify = NULL;
@@ -462,6 +468,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
         // variables on 'USB' tab
 #ifdef SUPPORT_USBIP
         m_bEnableUSBIP = m_pCfg->bGetEnableUSBIP();
+        m_iUsbLocalPort = m_pCfg->iGetUsbLocalPort();
         m_aUsbForwards = m_pCfg->aGetUsbForwards();
 #else
         m_bEnableUSBIP = false;
@@ -777,6 +784,7 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
 
 #ifdef SUPPORT_USBIP
     // 'USB' tab
+    m_pCtrlUsbLocalPort->Enable(m_bEnableUSBIP);
     m_pCtrlUsbFilter->Enable(m_bEnableUSBIP);
     m_pCtrlUsbAdd->Enable(m_bEnableUSBIP);
     m_pCtrlUsbDelete->Enable(m_bEnableUSBIP && (m_pCtrlUsbFilter->GetSelectedItemCount() > 0));
@@ -829,6 +837,7 @@ void SessionProperties::CreateControls()
     m_pCtrlShareModify = XRCCTRL(*this, "ID_BUTTON_SMB_MODIFY", wxButton);
     m_pCtrlShareDelete = XRCCTRL(*this, "ID_BUTTON_SMB_DELETE", wxButton);
     m_pCtrlUsbEnable = XRCCTRL(*this, "ID_CHECKBOX_USBENABLE", wxCheckBox);
+    m_pCtrlUsbLocalPort = XRCCTRL(*this, "ID_SPINCTRL_USB_LOCALPORT", wxSpinCtrl);
     m_pCtrlUsbFilter = XRCCTRL(*this, "ID_LISTCTRL_USBFILTER", wxListCtrl);
     m_pCtrlUsbAdd = XRCCTRL(*this, "ID_BUTTON_USBADD", wxButton);
     m_pCtrlUsbModify = XRCCTRL(*this, "ID_BUTTON_USBMODIFY", wxButton);
@@ -897,6 +906,8 @@ void SessionProperties::CreateControls()
         FindWindow(XRCID("ID_CHECKBOX_MMEDIA"))->SetValidator( wxGenericValidator(& m_bEnableMultimedia) );
     if (FindWindow(XRCID("ID_CHECKBOX_USBENABLE")))
         FindWindow(XRCID("ID_CHECKBOX_USBENABLE"))->SetValidator( wxGenericValidator(& m_bEnableUSBIP) );
+    if (FindWindow(XRCID("ID_SPINCTRL_USB_LOCALPORT")))
+        FindWindow(XRCID("ID_SPINCTRL_USB_LOCALPORT"))->SetValidator( MyValidator(MyValidator::MYVAL_NUMERIC, & m_iUsbLocalPort) );
     if (FindWindow(XRCID("ID_TEXTCTRL_USERDIR")))
         FindWindow(XRCID("ID_TEXTCTRL_USERDIR"))->SetValidator( MyValidator(& m_sUserNxDir) );
     if (FindWindow(XRCID("ID_CHECKBOX_REMOVEOLDSF")))
@@ -2022,5 +2033,26 @@ void SessionProperties::OnListctrlUsbfilterItemActivated( wxListEvent& event )
 #ifdef SUPPORT_USBIP
     OnButtonUsbmodifyClick(event);
 #endif
+}
+
+
+/*!
+ * wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINCTRL_USB_LOCALPORT
+ */
+
+void SessionProperties::OnSpinctrlUsbLocalportUpdated( wxSpinEvent& event )
+{
+    CheckChanged();
+}
+
+
+/*!
+ * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_USB_LOCALPORT
+ */
+
+void SessionProperties::OnSpinctrlUsbLocalportTextUpdated( wxCommandEvent& event )
+{
+    if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlUsbLocalPort))
+        m_pCtrlApplyButton->Enable(true);
 }
 
