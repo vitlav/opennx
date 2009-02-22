@@ -636,10 +636,26 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
 
 void SessionProperties::updateListCtrlColumnWidth(wxListCtrl *ctrl)
 {
-    int w = (ctrl->GetItemCount() > 0) ? wxLIST_AUTOSIZE : wxLIST_AUTOSIZE_USEHEADER;
     int cc = ctrl->GetColumnCount();
-    for (int i = 0; i < cc; i++)
-        ctrl->SetColumnWidth(i, w);
+    int i;
+    if (0 == cc) {
+        for (i = 0; i < cc; i++)
+            ctrl->SetColumnWidth(i, wxLIST_AUTOSIZE_USEHEADER);
+        return;
+    }
+    int *w = new int[cc];
+    // int w = (ctrl->GetItemCount() > 0) ? wxLIST_AUTOSIZE : wxLIST_AUTOSIZE_USEHEADER;
+    for (i = 0; i < cc; i++)
+        ctrl->SetColumnWidth(i, wxLIST_AUTOSIZE);
+    for (i = 0; i < cc; i++)
+        w[i] = ctrl->GetColumnWidth(i);
+    for (i = 0; i < cc; i++)
+        ctrl->SetColumnWidth(i, wxLIST_AUTOSIZE_USEHEADER);
+    for (i = 0; i < cc; i++) {
+        if (w[i] > ctrl->GetColumnWidth(i))
+            ctrl->SetColumnWidth(i, wxLIST_AUTOSIZE);
+    }
+    delete []w;
 }
 
 #ifdef SUPPORT_USBIP

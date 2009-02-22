@@ -990,7 +990,7 @@
                                             <border>5</border>
                                             <option>1</option>
                                             <object class="wxListCtrl" name="ID_LISTCTRL_USBFILTER">
-                                                <style>wxLC_REPORT</style>
+                                                <style>wxLC_REPORT|wxLC_SINGLE_SEL|wxSUNKEN_BORDER</style>
                                             </object>
                                         </object>
                                         <object class="sizeritem">

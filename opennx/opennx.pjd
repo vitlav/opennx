@@ -7128,7 +7128,7 @@
                       <bool name="proxy-wxLC_EDIT_LABELS">0</bool>
                       <bool name="proxy-wxLC_NO_HEADER">0</bool>
                       <bool name="proxy-wxLC_NO_SORT_HEADER">0</bool>
-                      <bool name="proxy-wxLC_SINGLE_SEL">0</bool>
+                      <bool name="proxy-wxLC_SINGLE_SEL">1</bool>
                       <bool name="proxy-wxLC_SORT_ASCENDING">0</bool>
                       <bool name="proxy-wxLC_SORT_DESCENDING">0</bool>
                       <bool name="proxy-wxLC_HRULES">0</bool>
@@ -7136,7 +7136,7 @@
                       <bool name="proxy-wxNO_BORDER">0</bool>
                       <bool name="proxy-wxSIMPLE_BORDER">0</bool>
                       <bool name="proxy-wxDOUBLE_BORDER">0</bool>
-                      <bool name="proxy-wxSUNKEN_BORDER">0</bool>
+                      <bool name="proxy-wxSUNKEN_BORDER">1</bool>
                       <bool name="proxy-wxRAISED_BORDER">0</bool>
                       <bool name="proxy-wxSTATIC_BORDER">0</bool>
                       <bool name="proxy-wxWANTS_CHARS">0</bool>
@@ -26892,6 +26892,14 @@ this share."</string>
             <string name="proxy-type">"wbBoxSizerProxy"</string>
             <string name="proxy-Orientation">"Vertical"</string>
             <string name="proxy-Member variable name">""</string>
+            <string name="proxy-AlignH">"Centre"</string>
+            <string name="proxy-AlignV">"Centre"</string>
+            <long name="proxy-Stretch factor">0</long>
+            <long name="proxy-Border">5</long>
+            <bool name="proxy-wxLEFT">1</bool>
+            <bool name="proxy-wxRIGHT">1</bool>
+            <bool name="proxy-wxTOP">1</bool>
+            <bool name="proxy-wxBOTTOM">1</bool>
             <bool name="proxy-wxSHAPED">0</bool>
             <bool name="proxy-wxADJUST_MINSIZE">0</bool>
             <bool name="proxy-wxFIXED_MINSIZE">0</bool>

@@ -1201,7 +1201,7 @@ MySession::startProxy()
         popts << wxT(",cups=") << cupsport;
 #ifdef SUPPORT_USBIP
     if (m_pCfg->bGetEnableUSBIP())
-        popts << wxT(",http=25");
+        popts << wxT(",http=") << m_pCfg->iGetUsbLocalPort();
 #endif
     if (m_lEsdPort != 0)
         popts << wxT(",media=") << m_lEsdPort;
