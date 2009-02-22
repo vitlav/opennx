@@ -175,7 +175,7 @@ AC_ARG_WITH([samba],
 test -n "$ac_cv_samba" && CPPFLAGS="$CPPFLAGS -I$ac_cv_samba/source/include"
 
 FE_SVNREV([SVNREV])
-AC_DEFINE(SVNREV,$SVNREV,[SVN revision])
+AC_DEFINE_UNQUOTED(SVNREV,"$SVNREV",[SVN revision])
 FE_RCVERSION
 
 AC_CHECK_HEADERS([cups/cups.h cups.h libsmbclient.h opensc/opensc.h usb.h])

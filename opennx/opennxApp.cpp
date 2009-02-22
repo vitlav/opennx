@@ -127,6 +127,9 @@ opennxApp::opennxApp()
     }
 #else
     m_sVersion = wxT(PACKAGE_VERSION);
+    while (m_sVersion.Freq(wxT('.')) < 2)
+        m_sVersion.Append(wxT(".0"));
+    m_sVersion.Append(wxT(".")).Append(wxT(SVNREV));
     {
         wxLogNull dummy;
         // Try to get KDE language settings and set locale accordingly
