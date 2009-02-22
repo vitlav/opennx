@@ -174,13 +174,13 @@ AC_ARG_WITH([samba],
 	[ac_cv_samba=$withval])
 test -n "$ac_cv_samba" && CPPFLAGS="$CPPFLAGS -I$ac_cv_samba/source/include"
 
-VERSION_COMMASEPARATED=`echo $VERSION|sed -e 's/\./,/g'`
+FE_SVNREV([SVNREV])
+AC_DEFINE(SVNREV,$SVNREV,[SVN revision])
+FE_RCVERSION
+
 AC_CHECK_HEADERS([cups/cups.h cups.h libsmbclient.h opensc/opensc.h usb.h])
 case $target_os in
 	mingw*)
-        while test -z "`echo -n $VERSION_COMMASEPARATED|cut -d, -f4`" ; do
-	        VERSION_COMMASEPARATED="${VERSION_COMMASEPARATED},0"
-        done
         ;;
     *)
         if test "$ac_cv_header_libsmbclient_h" != "yes" ; then
@@ -191,8 +191,10 @@ case $target_os in
         fi
         ;;
 esac
-AC_SUBST(VERSION_COMMASEPARATED)
 
+if test "$ac_cv_header_opensc_opensc_h" != "yes"; then
+    AC_MSG_ERROR([Need opensc/opensc.h])
+fi
 if test "$ac_cv_enable_usbip" = "YES" -a "$ac_cv_header_usb_h" != "yes"; then
     AC_MSG_ERROR([Need usb.h when compiling with usbip support])
 fi

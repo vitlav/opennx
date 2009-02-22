@@ -125,7 +125,7 @@ CLEANFILES = memres.h tmpres.zip *~ po/*~ *.bak *~ \#.* .\#* OpenNX.app
 MAINTAINERCLEANFILES = ABOUT-NLS Makefile.in configure aclocal.m4 \
 	conf/config.guess conf/config.sub conf/depcomp conf/install-sh conf/missing conf/mkinstalldirs \
 	conf/ltmain.sh conf/config.rpath \
-	m4/* \
+	m4/*~ m4/gettext.m4 m4/iconv.m4 m4/lib-*.m4 m4/nls.m4 m4/po.m4 m4/progtest.m4 \
 	po/*.sin po/*.sed po/*.header po/Rules-quot po/*.template po/Makefile*.in
 
 DISTCLEANFILES = res/*.prv.* 
