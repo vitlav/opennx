@@ -809,20 +809,47 @@ bool opennxApp::realInit()
     wxBitmap::InitStandardHandlers();
     wxXmlResource::Get()->InitAllHandlers();
 
-    const unsigned char *resptr = get_mem_res();
-    if (!resptr) {
+    bool resok = false;
+    wxString optionalRsc = tmp + wxFileName::GetPathSeparator() + wxT("share")
+        + wxFileName::GetPathSeparator() + wxT("opennx.rsc");
+    if (wxFileName::FileExists(optionalRsc)) {
+        wxFile rf(optionalRsc);
+        if (rf.IsOpened()) {
+            unsigned char *resptr = (unsigned char *)malloc(rf.Length());
+            if (resptr) {
+                if (rf.Read(resptr, rf.Length()) == rf.Length()) {
+                    wxMemoryFSHandler::AddFileWithMimeType(wxT("memrsc"), resptr, rf.Length(), wxT("application/zip"));
+                    {
+                        // The following code eliminates a stupid error dialog which shows up
+                        // if some .desktop entires (in KDE or GNOME applink dirs) are dangling symlinks.
+                        wxLogNull lognull;
+                        wxTheMimeTypesManager->GetFileTypeFromExtension(wxT("zip"));
+                    }
+                    resok = true;
+                }
+                free(resptr);
+            }
+        }
+    }
+    if (!resok) {
+        const unsigned char *resptr = get_mem_res();
+        if (resptr) {
+            wxMemoryFSHandler::AddFileWithMimeType(wxT("memrsc"), resptr, cnt_mem_res, wxT("application/zip"));
+            {
+                // The following code eliminates a stupid error dialog which shows up
+                // if some .desktop entires (in KDE or GNOME applink dirs) are dangling symlinks.
+                wxLogNull lognull;
+                wxTheMimeTypesManager->GetFileTypeFromExtension(wxT("zip"));
+            }
+            free_mem_res(resptr);
+        }
+        resok = true;
+    }
+    if (!resok) {
         wxLogFatalError(wxT("Could not load application resource."));
         return false;
     }
-    wxMemoryFSHandler::AddFileWithMimeType(wxT("memrsc"), resptr, cnt_mem_res, wxT("application/zip"));
-    {
-        // The following code eliminates a stupid error dialog which shows up
-        // if some .desktop entires (in KDE or GNOME applink dirs) are dangling symlinks.
-        wxLogNull lognull;
-        wxTheMimeTypesManager->GetFileTypeFromExtension(wxT("zip"));
-    }
 
-    free_mem_res(resptr);
     m_sResourcePrefix = wxT("memory:memrsc#zip:");
     if (!wxXmlResource::Get()->Load(m_sResourcePrefix + wxT("res/opennx.xrc")))
         return false;
