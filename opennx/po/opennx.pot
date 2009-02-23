@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-02-22 04:51+0100\n"
+"POT-Creation-Date: 2009-02-22 20:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: AboutDialog.cpp:116 SessionProperties.cpp:914
+#: AboutDialog.cpp:116 SessionProperties.cpp:954
 msgid "Version"
 msgstr ""
 
@@ -25,7 +25,7 @@ msgid "About OpenNX"
 msgstr ""
 
 #: AboutDialog_symbols.h:23 RdpImageSettingsDialog_symbols.h:35
-#: RdpPropertyDialog_symbols.h:35 SessionProperties_symbols.h:104
+#: RdpPropertyDialog_symbols.h:35 SessionProperties_symbols.h:105
 #: ShareProperties_symbols.h:51 UnixImageSettingsDialog_symbols.h:34
 #: VncImageSettingsDialog_symbols.h:27 VncPropertyDialog_symbols.h:31
 #: X11PropertyDialog_symbols.h:32 UsbFilterDetailsDialog_symbols.h:35
@@ -53,7 +53,7 @@ msgstr ""
 #: CardWaiterDialog_symbols.h:24 ConnectDialog_symbols.h:24
 #: KeyDialog_symbols.h:26 PanicDialog_symbols.h:23
 #: RdpImageSettingsDialog_symbols.h:36 RdpPropertyDialog_symbols.h:36
-#: ResumeDialog_symbols.h:27 SessionProperties_symbols.h:105
+#: ResumeDialog_symbols.h:27 SessionProperties_symbols.h:106
 #: ShareProperties_symbols.h:52 UnixImageSettingsDialog_symbols.h:35
 #: VncImageSettingsDialog_symbols.h:28 VncPropertyDialog_symbols.h:32
 #: X11PropertyDialog_symbols.h:33 UsbFilterDetailsDialog_symbols.h:36
@@ -305,16 +305,16 @@ msgid ""
 "your service provider has made available."
 msgstr ""
 
-#: MyWizard.cpp:688 MyWizard_symbols.h:34 SessionProperties.cpp:695
+#: MyWizard.cpp:688 MyWizard_symbols.h:34 SessionProperties.cpp:731
 #: SessionProperties_symbols.h:35
 msgid "KDE"
 msgstr ""
 
-#: MyWizard.cpp:694 SessionProperties.cpp:709
+#: MyWizard.cpp:694 SessionProperties.cpp:742
 msgid "RDP"
 msgstr ""
 
-#: MyWizard.cpp:702 SessionProperties.cpp:724
+#: MyWizard.cpp:702 SessionProperties.cpp:758
 msgid "RFB"
 msgstr ""
 
@@ -558,7 +558,7 @@ msgstr ""
 msgid "Run application"
 msgstr ""
 
-#: ResumeDialog.cpp:145 SessionProperties.cpp:584
+#: ResumeDialog.cpp:145 SessionProperties.cpp:606
 msgid "Name"
 msgstr ""
 
@@ -709,94 +709,98 @@ msgstr ""
 msgid "Partial session statistics - OpenNX"
 msgstr ""
 
-#: SessionProperties.cpp:516 ShareProperties_symbols.h:24
+#: SessionProperties.cpp:500 SessionProperties_symbols.h:89
+msgid "USB"
+msgstr ""
+
+#: SessionProperties.cpp:538 ShareProperties_symbols.h:24
 msgid "Share"
 msgstr ""
 
-#: SessionProperties.cpp:517 ShareProperties_symbols.h:50
+#: SessionProperties.cpp:539 ShareProperties_symbols.h:50
 msgid "Mount on"
 msgstr ""
 
-#: SessionProperties.cpp:518
+#: SessionProperties.cpp:540
 msgid "Comment"
 msgstr ""
 
-#: SessionProperties.cpp:530 SessionProperties.cpp:1245
+#: SessionProperties.cpp:552 SessionProperties.cpp:1287
 msgid "Currently not available"
 msgstr ""
 
-#: SessionProperties.cpp:581
+#: SessionProperties.cpp:603
 msgid "VendorID"
 msgstr ""
 
-#: SessionProperties.cpp:582
+#: SessionProperties.cpp:604
 msgid "ProductID"
 msgstr ""
 
-#: SessionProperties.cpp:583
+#: SessionProperties.cpp:605
 msgid "Class"
 msgstr ""
 
-#: SessionProperties.cpp:585
+#: SessionProperties.cpp:607
 msgid "Serial"
 msgstr ""
 
-#: SessionProperties.cpp:977 SessionProperties_symbols.h:99
+#: SessionProperties.cpp:1017 SessionProperties_symbols.h:100
 msgid "Font"
 msgstr ""
 
-#: SessionProperties.cpp:1019
+#: SessionProperties.cpp:1061
 msgid "Error while reading keyboard table"
 msgstr ""
 
-#: SessionProperties.cpp:1048
+#: SessionProperties.cpp:1090
 #, c-format
 msgid "Invalid line='%s'"
 msgstr ""
 
-#: SessionProperties.cpp:1049
+#: SessionProperties.cpp:1091
 #, c-format
 msgid "Invalid entry in %s"
 msgstr ""
 
-#: SessionProperties.cpp:1173
+#: SessionProperties.cpp:1215
 msgid "Do you really want to delete all cache directories?"
 msgstr ""
 
-#: SessionProperties.cpp:1174
+#: SessionProperties.cpp:1216
 msgid "Clean cache - OpenNX"
 msgstr ""
 
-#: SessionProperties.cpp:1219
+#: SessionProperties.cpp:1261
 msgid "No local samba server is running."
 msgstr ""
 
-#: SessionProperties.cpp:1274
+#: SessionProperties.cpp:1316
 msgid "No sharable resources found"
 msgstr ""
 
-#: SessionProperties.cpp:1348
+#: SessionProperties.cpp:1390
 msgid "Select User NX directory"
 msgstr ""
 
-#: SessionProperties.cpp:1363
+#: SessionProperties.cpp:1405
 msgid "Select System NX directory"
 msgstr ""
 
-#: SessionProperties.cpp:1409
+#: SessionProperties.cpp:1451
 #, c-format
 msgid "Really delete Session '%s' ?"
 msgstr ""
 
-#: SessionProperties.cpp:1410
+#: SessionProperties.cpp:1452
 msgid "Delete Session"
 msgstr ""
 
-#: SessionProperties.cpp:1641
+#: SessionProperties.cpp:1683
 msgid "No cups server available."
 msgstr ""
 
-#: SessionProperties.cpp:1655
+#: SessionProperties.cpp:1697
 msgid "Select System CUPS daemon"
 msgstr ""
 
@@ -956,59 +960,59 @@ msgstr ""
 msgid "Enable multimedia support"
 msgstr ""
 
-#: SessionProperties_symbols.h:89
-msgid "USB"
-msgstr ""
-
 #: SessionProperties_symbols.h:90
 msgid "Enable USB forwarding"
 msgstr ""
 
 #: SessionProperties_symbols.h:91
-msgid "Environment"
+msgid "Local port"
 msgstr ""
 
 #: SessionProperties_symbols.h:92
-msgid "User NX directory"
+msgid "Environment"
 msgstr ""
 
 #: SessionProperties_symbols.h:93
-msgid "..."
+msgid "User NX directory"
 msgstr ""
 
 #: SessionProperties_symbols.h:94
-msgid "Remove old session files"
+msgid "..."
 msgstr ""
 
 #: SessionProperties_symbols.h:95
-msgid "System NX directory"
+msgid "Remove old session files"
 msgstr ""
 
 #: SessionProperties_symbols.h:96
-msgid "System CUPS daemon"
+msgid "System NX directory"
 msgstr ""
 
 #: SessionProperties_symbols.h:97
-msgid "Select NX fonts"
+msgid "System CUPS daemon"
 msgstr ""
 
 #: SessionProperties_symbols.h:98
+msgid "Select NX fonts"
+msgstr ""
+
+#: SessionProperties_symbols.h:99
 msgid "Default"
 msgstr ""
 
-#: SessionProperties_symbols.h:100
+#: SessionProperties_symbols.h:101
 msgid "Fixed"
 msgstr ""
 
-#: SessionProperties_symbols.h:101
+#: SessionProperties_symbols.h:102
 msgid "About"
 msgstr ""
 
-#: SessionProperties_symbols.h:102
+#: SessionProperties_symbols.h:103
 msgid "&Delete"
 msgstr ""
 
-#: SessionProperties_symbols.h:103
+#: SessionProperties_symbols.h:104
 msgid "&Apply"
 msgstr ""
 
@@ -1268,82 +1272,86 @@ msgstr ""
 msgid "Disable taint of X replies"
 msgstr ""
 
-#: opennxApp.cpp:210
+#: opennxApp.cpp:213
 msgid "Launch NX Session"
 msgstr ""
 
-#: opennxApp.cpp:428
+#: opennxApp.cpp:431
 msgid "Could not get PATH environment"
 msgstr ""
 
-#: opennxApp.cpp:443
+#: opennxApp.cpp:446
 #, c-format
 msgid "Could not find %s in PATH"
 msgstr ""
 
-#: opennxApp.cpp:453
+#: opennxApp.cpp:456
 #, c-format
 msgid "Could not stat %s"
 msgstr ""
 
-#: opennxApp.cpp:459
+#: opennxApp.cpp:462
 #, c-format
 msgid "Could not read link %s"
 msgstr ""
 
-#: opennxApp.cpp:625
+#: opennxApp.cpp:639
 msgid ""
 "\n"
 "\n"
 "Supported trace tags: "
 msgstr ""
 
-#: opennxApp.cpp:629
+#: opennxApp.cpp:643
 msgid "To be called from udev hotplug."
 msgstr ""
 
-#: opennxApp.cpp:632
+#: opennxApp.cpp:646
 msgid "Start the session administration tool."
 msgstr ""
 
-#: opennxApp.cpp:634
+#: opennxApp.cpp:648
 msgid "Secify window title for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:636
+#: opennxApp.cpp:650
 msgid "Secify dialog style for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:638
+#: opennxApp.cpp:652
 msgid "Run in dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:640
+#: opennxApp.cpp:654
 msgid "Dialog mode proxy."
 msgstr ""
 
-#: opennxApp.cpp:642
+#: opennxApp.cpp:656
 msgid "Specify message for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:644
+#: opennxApp.cpp:658
 msgid "Specify parent PID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:646
+#: opennxApp.cpp:660
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr ""
 
-#: opennxApp.cpp:648
+#: opennxApp.cpp:662
 msgid "Specify window-ID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:650
+#: opennxApp.cpp:664
 msgid "Specify wxWidgets trace mask."
 msgstr ""
 
-#: opennxApp.cpp:652
+#: opennxApp.cpp:666
 msgid "Guide the user through the steps to configure a session."
+msgstr ""
+
+#: UsbFilterDetailsDialog.cpp:143
+msgid "No USB devices available."
 msgstr ""
 
 #: UsbFilterDetailsDialog_symbols.h:23
