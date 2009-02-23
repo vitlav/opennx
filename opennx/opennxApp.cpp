@@ -810,6 +810,10 @@ bool opennxApp::realInit()
     wxXmlResource::Get()->InitAllHandlers();
 
     const unsigned char *resptr = get_mem_res();
+    if (!resptr) {
+        wxLogFatalError(wxT("Could not load application resource."));
+        return false;
+    }
     wxMemoryFSHandler::AddFileWithMimeType(wxT("memrsc"), resptr, cnt_mem_res, wxT("application/zip"));
     {
         // The following code eliminates a stupid error dialog which shows up

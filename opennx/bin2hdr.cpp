@@ -121,10 +121,11 @@ int main(int argc, char **argv) {
             long bi;
             fprintf(fo, "static const unsigned char *get_%s() {\n", ident);
             fprintf(fo, "    const unsigned char *ret = (const unsigned char *)malloc(%ld);\n", bssize * bcount);
+            fprintf(fo, "    if (!ret) return ret;\n");
             for (bi = 0; bi < bcount; bi++)
                 fprintf(fo, "    memcpy((void *)(ret + %ld), %s%ld, %ld);\n", bssize * bi, ident, bi, bssize);
             fprintf(fo, "    return ret;\n}\n");
-            fprintf(fo, "static void free_%s(const unsigned char *ptr) { free((void *)ptr); }\n", ident);
+            fprintf(fo, "static void free_%s(const unsigned char *ptr) { if (ptr) free((void *)ptr); }\n", ident);
         }
         fprintf(fo, "#endif\n");
     }
