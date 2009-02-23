@@ -82,6 +82,7 @@ static const int X_PORT_OFFSET     = 6000;
 static const int SOUND_PORT_OFFSET = 7000;
 static const int KBD_PORT_OFFSET   = 8000;
 static const int HTTP_PORT_OFFSET  = 9000;
+static const int USBIP_PORT_OFFSET = 40000;
 
 #define NX_PROTO wxT(NX_PROTOCOL_VERSION)
 
@@ -1508,8 +1509,16 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
         fn.SetName(wxT("nxssh"));
 #endif
         wxString nxsshcmd = fn.GetShortPath();
+#define USBIB_TEST
+#ifdef USBID_TEST
+#warning To be discussed, if we can use this for the usbaid port
+        int usbaid = getFirstFreePort(USBIP_PORT_OFFSET);
+#endif
         nxsshcmd << wxT(" -nx -x -2")
             << wxT(" -p ") << m_pCfg->iGetServerPort()
+#ifdef USBID_TEST
+            << wxT(" -L 127.0.0.1:") << usbaid << wxT(":127.0.0.1:3420")
+#endif
             << wxT(" -o 'RhostsAuthentication no'")
             << wxT(" -o 'PasswordAuthentication no'")
             << wxT(" -o 'RSAAuthentication no'")
