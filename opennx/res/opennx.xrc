@@ -3275,9 +3275,9 @@ this share.</label>
                 <flag>wxGROW|wxALL|wxFIXED_MINSIZE</flag>
                 <border>5</border>
                 <option>1</option>
-                <object class="wxTextCtrl" name="ID_TEXTCTRL">
+                <object class="wxRichTextCtrl" name="ID_RICHTEXTCTRL" subclass="myRichTextCtrl">
                     <size>600,300</size>
-                    <style>wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxTE_RICH2</style>
+                    <style>wxTE_READONLY|wxWANTS_CHARS|wxTE_AUTO_URL</style>
                 </object>
             </object>
             <object class="sizeritem">

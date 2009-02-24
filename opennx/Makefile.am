@@ -16,7 +16,7 @@ opennx_SOURCES = AboutDialog.cpp AsyncProcess.cpp LibOpenSC.cpp \
 	ResumeDialog.cpp SessionAdmin.cpp SessionList.cpp \
 	SessionProperties.cpp ShareProperties.cpp TextViewer.cpp \
 	UnixImageSettingsDialog.cpp UsbFilterDetailsDialog.cpp VncImageSettingsDialog.cpp \
-	VncPropertyDialog.cpp wxprec.cpp WinShare.cpp X11PropertyDialog.cpp
+	VncPropertyDialog.cpp wxprec.cpp WinShare.cpp X11PropertyDialog.cpp xh_richtext.cpp
 
 noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h LibOpenSC.h \
 	CardWaiterDialog.h CardWaiterDialog_symbols.h \
@@ -99,7 +99,7 @@ macbundle:
 #	rm -rf OpenNX.app
 
 RESDEPS = $(wildcard $(srcdir)/res/*.xrc $(srcdir)/res/*.png \
-		  $(srcdir)/res/*.html $(srcdir)/res/*.txt $(srcdir)/res/*.rtf)
+		  $(srcdir)/res/*.html $(srcdir)/res/*.xml)
 RESSRC = $(subst $(srcdir)/,,$(RESDEPS))
 THISDIR = $(abspath $(builddir))
 

@@ -68,6 +68,7 @@
 #include "LibUSB.h"
 #include "LibOpenSC.h"
 #include "osdep.h"
+#include "xh_richtext.h"
 
 #include "memres.h"
 
@@ -132,7 +133,7 @@ opennxApp::opennxApp()
     m_sVersion.Append(wxT(".")).Append(wxT(SVNREV));
     {
         wxLogNull dummy;
-        // Try to get KDE language settings and set locale accordingly
+        // Try to get KDE language settings and override locale accordingly
         wxFileInputStream fis(::wxGetHomeDir() +
                 wxFileName::GetPathSeparator() + wxT(".kde") + 
                 wxFileName::GetPathSeparator() + wxT("share") + 
@@ -808,6 +809,7 @@ bool opennxApp::realInit()
     wxInitAllImageHandlers();
     wxBitmap::InitStandardHandlers();
     wxXmlResource::Get()->InitAllHandlers();
+    wxXmlResource::Get()->AddHandler(new wxRichTextCtrlXmlHandler());
 
     bool resok = false;
     wxString optionalRsc = tmp + wxFileName::GetPathSeparator() + wxT("share")

@@ -86,10 +86,10 @@ fi
 case $target_os in
 	mingw*)
         # On mingw, we don't use qa
-        _wx_required=xrc,xml,html,adv,core,net
+        _wx_required=xrc,xml,richtext,html,adv,core,net
         ;;
         *)
-        _wx_required=xrc,xml,qa,html,adv,core,net
+        _wx_required=xrc,xml,richtext,qa,html,adv,core,net
         ;;
 esac
 AM_PATH_WXCONFIG(2.8.0,wxWidgets=1,wxWidgets=0,[$_wx_required], $WXPARAMS)

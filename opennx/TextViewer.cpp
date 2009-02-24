@@ -36,6 +36,8 @@
 
 #include <wx/wfstream.h>
 #include <wx/txtstrm.h>
+#include <wx/mstream.h>
+#include <wx/richtext/richtextxml.h>
 
 #include "debugleak.h"
 
@@ -47,6 +49,63 @@
 
 ////@begin XPM images
 ////@end XPM images
+
+#if 0
+class myRichTextXMLHandler : public wxRichTextXMLHandler {
+    DECLARE_DYNAMIC_CLASS(myRichTextXMLHandler);
+    public:
+         myRichTextXMLHandler(const wxString& name = wxT("XML"),
+                 const wxString& ext = wxT("xml"), int type = wxRICHTEXT_TYPE_XML)
+             : wxRichTextXMLHandler(name, ext, type)
+         {
+         }
+        bool LoadFile(wxRichTextBuffer *buffer, const wxString& filename)
+        {
+            wxFileSystem fs;
+            wxFSFile *f = fs.OpenFile(filename);
+            if (f) {
+                wxInputStream *is = f->GetStream();
+                DoLoadFile(buffer, *is);
+            }
+        }
+};
+IMPLEMENT_DYNAMIC_CLASS(myRichTextXMLHandler, wxRichTextXMLHandler);
+#endif
+
+class myRichTextCtrl : public wxRichTextCtrl {
+DECLARE_DYNAMIC_CLASS(myRichTextCtrl);
+
+    public:
+
+    bool DoLoadFile(const wxString& filename, int fileType = wxRICHTEXT_TYPE_XML)
+    {
+        bool success = false;
+        wxFileSystem fs;
+        wxFSFile *f = fs.OpenFile(filename);
+        if (f) {
+            wxInputStream *is = f->GetStream();
+            if (is->IsOk()) {
+                success = GetBuffer().LoadFile(*is, fileType);
+                if (success)
+                    m_filename = filename;
+            }
+        }
+
+        DiscardEdits();
+        SetInsertionPoint(0);
+        LayoutContent();
+        PositionCaret();
+        SetupScrollbars(true);
+        Refresh(false);
+        SendTextUpdatedEvent();
+
+        if (success)
+            return true;
+        wxLogError(_("File couldn't be loaded."));
+        return false;
+    }
+};
+IMPLEMENT_DYNAMIC_CLASS(myRichTextCtrl, wxRichTextCtrl);
 
 /*!
  * TextViewer type definition
@@ -60,16 +119,16 @@ IMPLEMENT_DYNAMIC_CLASS( TextViewer, wxDialog )
 
 BEGIN_EVENT_TABLE( TextViewer, wxDialog )
 
-////@begin TextViewer event table entries
+    ////@begin TextViewer event table entries
     EVT_BUTTON( wxID_CLOSE, TextViewer::OnCloseClick )
 
-////@end TextViewer event table entries
+    ////@end TextViewer event table entries
 
 END_EVENT_TABLE()
 
-/*!
- * TextViewer constructors
- */
+    /*!
+     * TextViewer constructors
+     */
 
 TextViewer::TextViewer( )
 {
@@ -87,8 +146,8 @@ TextViewer::TextViewer( wxWindow* parent, wxWindowID id, const wxString& caption
 bool TextViewer::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
     ////@begin TextViewer member initialisation
-    m_sFileName = wxEmptyString;
-    m_pTextCtrl = NULL;
+    m_sFileName = wxT("");
+    m_pRichTextCtrl = NULL;
     ////@end TextViewer member initialisation
 
     ////@begin TextViewer creation
@@ -119,11 +178,12 @@ void TextViewer::CreateControls()
     ////@begin TextViewer content construction
     if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_TEXTVIEWER")))
         wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
-    m_pTextCtrl = XRCCTRL(*this, "ID_TEXTCTRL", wxTextCtrl);
+    m_pRichTextCtrl = XRCCTRL(*this, "ID_RICHTEXTCTRL", myRichTextCtrl);
     ////@end TextViewer content construction
 
-    // Create custom windows not generated automatically here.
-
+    m_pRichTextCtrl->GetBuffer().AddHandler(new wxRichTextXMLHandler());
+    //m_pRichTextCtrl->GetBuffer().AddHandler(new myRichTextXMLHandler());
+ 
     ////@begin TextViewer content initialisation
     ////@end TextViewer content initialisation
 }
@@ -179,42 +239,13 @@ TextViewer::LoadFile(const wxString &sFileName)
     bool ret = false;
     m_sFileName = sFileName;
     wxFileName fn(sFileName);
-    bool isRtf = (fn.GetExt().CmpNoCase(wxT("rtf")) == 0);
+    bool isXml = (fn.GetExt().CmpNoCase(wxT("xml")) == 0);
 
-#ifdef __UNIX__
-    // On unix, wxTextCtrl doesn't support RTF, so we use .txt there
-    if (isRtf)
-        fn.SetExt(wxT("txt"));
-    m_sFileName = fn.GetFullPath();
-    isRtf = false;
-#endif
     {
         wxLogNull l;
-        ret = m_pTextCtrl->LoadFile(m_sFileName);
+        ret = m_pRichTextCtrl->LoadFile(m_sFileName, wxRICHTEXT_TYPE_XML);
     }
-    if (ret) {
+    if (ret)
         SetTitle(fn.GetName());
-    } else {
-        wxFileSystem fs;
-        wxFSFile *f = fs.OpenFile(m_sFileName);
-        if (f) {
-            size_t sz = f->GetStream()->GetSize();
-            if (!isRtf) {
-                char *buf = new char[sz + 1];
-                f->GetStream()->Read(buf, sz);
-                buf[sz] = '\0';
-                m_pTextCtrl->SetValue(wxConvLocal.cMB2WX(buf));
-                delete buf;
-            } else {
-                wxString s;
-                f->GetStream()->Read(s.GetWriteBuf(sz), sz);
-                s.UngetWriteBuf();
-                m_pTextCtrl->SetValue(s);
-            }
-            m_pTextCtrl->DiscardEdits();
-            ret = true;
-            delete f;
-        }
-    }
     return ret;
 }

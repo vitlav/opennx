@@ -33,6 +33,7 @@
 ////@begin includes
 #include "TextViewer_symbols.h"
 #include "wx/xrc/xmlres.h"
+#include "wx/richtext/richtextctrl.h"
 #include "wx/statline.h"
 ////@end includes
 
@@ -41,6 +42,7 @@
  */
 
 ////@begin forward declarations
+class myRichTextCtrl;
 ////@end forward declarations
 
 /*!
@@ -107,7 +109,7 @@ private:
     static bool ShowToolTips();
 
 ////@begin TextViewer member variables
-    wxTextCtrl* m_pTextCtrl;
+    myRichTextCtrl* m_pRichTextCtrl;
     wxString m_sFileName;
 ////@end TextViewer member variables
 };
