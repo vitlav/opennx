@@ -1194,8 +1194,9 @@ MySession::startProxy()
     popts << wxT("nx,cookie=") << m_sProxyCookie;
     if (inxproto < 0x00030000)
         popts << wxT(",root=") << m_sUserDir;
-    popts << m_pCfg->sGetProxyParams(inxproto)
-        << wxT(",product=") << m_sSubscription;
+    popts << m_pCfg->sGetProxyParams(inxproto);
+    if (!m_sSubscription.IsEmpty())
+        popts << wxT(",product=") << m_sSubscription;
     if (!m_sSmbPort.IsEmpty())
         popts << wxT(",samba=") << m_sSmbPort;
     if ((getActiveCupsPrinters().GetCount() > 0) && (isCupsRunning()))
