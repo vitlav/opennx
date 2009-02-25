@@ -1,6 +1,6 @@
 %define _prefix /usr/NX
 %define version @VERSION@
-%define rel 1
+%define rel @SVNREV@
 
 %define nxversion 2.1.0
 %define nxdlurl http://www.nomachine.com/sources.php
@@ -283,6 +283,15 @@ fi
   mksingle $LINK_DIR_NG $XDG_DESKTOP_NOVELL
 %endif
 %if "%{ostag}"=="SuSE10.1"
+  if [ -d /etc/xdg ]; then
+    mkxgd $LINK_DIR_X $XDK_LINK_DIR_X
+  else
+    mklnk $LINK_DIR_C $KDE2_APPLNK_SUSE "Internet"
+    mklnk $LINK_DIR_C $KDE3_APPLNK_SUSE "Internet"
+    mklnk $LINK_DIR_C $GNOME_APPLNK_SUSE "Internet"
+  fi
+%endif
+%if "%{ostag}"=="SuSE11.1"
   if [ -d /etc/xdg ]; then
     mkxgd $LINK_DIR_X $XDK_LINK_DIR_X
   else
