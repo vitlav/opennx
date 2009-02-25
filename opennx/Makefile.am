@@ -37,7 +37,7 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h LibOpenSC.h 
 	UsbFilterDetailsDialog_symbols.h VncImageSettingsDialog.h \
 	VncImageSettingsDialog_symbols.h VncPropertyDialog.h \
 	VncPropertyDialog_symbols.h WinShare.h X11PropertyDialog.h \
-	X11PropertyDialog_symbols.h trace.h watchReaderApp.h
+	X11PropertyDialog_symbols.h trace.h watchReaderApp.h xh_richtext.h
 
 watchreader_SOURCES = watchReaderApp.cpp LibOpenSC.cpp
 watchreader_LDADD = $(WX_LIBS) $(X_LIBS) $(X_PRE_LIBS) $(X_EXTRA_LIBS) $(APP_LDADD)

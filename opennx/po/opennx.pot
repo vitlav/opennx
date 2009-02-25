@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-02-23 12:45+0100\n"
+"POT-Creation-Date: 2009-02-25 11:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1152,6 +1152,10 @@ msgid ""
 "machine with which this share will be made available."
 msgstr ""
 
+#: TextViewer.cpp:104
+msgid "File couldn't be loaded."
+msgstr ""
+
 #: TextViewer_symbols.h:22
 msgid "Text Viewer - OpenNX"
 msgstr ""
@@ -1272,81 +1276,81 @@ msgstr ""
 msgid "Disable taint of X replies"
 msgstr ""
 
-#: opennxApp.cpp:213
+#: opennxApp.cpp:214
 msgid "Launch NX Session"
 msgstr ""
 
-#: opennxApp.cpp:431
+#: opennxApp.cpp:432
 msgid "Could not get PATH environment"
 msgstr ""
 
-#: opennxApp.cpp:446
+#: opennxApp.cpp:447
 #, c-format
 msgid "Could not find %s in PATH"
 msgstr ""
 
-#: opennxApp.cpp:456
+#: opennxApp.cpp:457
 #, c-format
 msgid "Could not stat %s"
 msgstr ""
 
-#: opennxApp.cpp:462
+#: opennxApp.cpp:463
 #, c-format
 msgid "Could not read link %s"
 msgstr ""
 
-#: opennxApp.cpp:639
+#: opennxApp.cpp:640
 msgid ""
 "\n"
 "\n"
 "Supported trace tags: "
 msgstr ""
 
-#: opennxApp.cpp:643
+#: opennxApp.cpp:644
 msgid "To be called from udev hotplug."
 msgstr ""
 
-#: opennxApp.cpp:646
+#: opennxApp.cpp:647
 msgid "Start the session administration tool."
 msgstr ""
 
-#: opennxApp.cpp:648
+#: opennxApp.cpp:649
 msgid "Secify window title for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:650
+#: opennxApp.cpp:651
 msgid "Secify dialog style for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:652
+#: opennxApp.cpp:653
 msgid "Run in dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:654
+#: opennxApp.cpp:655
 msgid "Dialog mode proxy."
 msgstr ""
 
-#: opennxApp.cpp:656
+#: opennxApp.cpp:657
 msgid "Specify message for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:658
+#: opennxApp.cpp:659
 msgid "Specify parent PID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:660
+#: opennxApp.cpp:661
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr ""
 
-#: opennxApp.cpp:662
+#: opennxApp.cpp:663
 msgid "Specify window-ID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:664
+#: opennxApp.cpp:665
 msgid "Specify wxWidgets trace mask."
 msgstr ""
 
-#: opennxApp.cpp:666
+#: opennxApp.cpp:667
 msgid "Guide the user through the steps to configure a session."
 msgstr ""
 
