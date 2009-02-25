@@ -393,7 +393,10 @@ void LoginDialog::OnOkClick( wxCommandEvent& event )
             m_pCurrentCfg->bSetRdpRememberPassword(true);
 
         MySession s;
-        if (!s.Create(*m_pCurrentCfg, m_sPassword, this))
+        Disable();
+        bool b = s.Create(*m_pCurrentCfg, m_sPassword, this);
+        Enable();
+        if (!b)
             return;
         if (m_pCurrentCfg->IsWritable()) {
             if (!m_pCurrentCfg->SaveToFile())

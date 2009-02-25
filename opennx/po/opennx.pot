@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-02-25 11:08+0100\n"
+"POT-Creation-Date: 2009-02-25 17:47+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -221,51 +221,51 @@ msgstr ""
 msgid "Error - OpenNX"
 msgstr ""
 
-#: MySession.cpp:1233
+#: MySession.cpp:1234
 #, c-format
 msgid ""
 "Could not create session directory\n"
 "%s\n"
 msgstr ""
 
-#: MySession.cpp:1253
+#: MySession.cpp:1254
 #, c-format
 msgid ""
 "Could not write session options\n"
 "%s\n"
 msgstr ""
 
-#: MySession.cpp:1577
+#: MySession.cpp:1578
 #, c-format
 msgid "Could not write %s"
 msgstr ""
 
-#: MySession.cpp:1635 MySession.cpp:1666 MySession.cpp:1674
+#: MySession.cpp:1636 MySession.cpp:1667 MySession.cpp:1675
 #, c-format
 msgid "Connecting to %s ..."
 msgstr ""
 
-#: MySession.cpp:1642
+#: MySession.cpp:1643
 msgid "Preparing multimedia service ..."
 msgstr ""
 
-#: MySession.cpp:1652
+#: MySession.cpp:1653
 msgid "Could not query multimedia support"
 msgstr ""
 
-#: MySession.cpp:1664
+#: MySession.cpp:1665
 msgid "Could not start multimedia support"
 msgstr ""
 
-#: MySession.cpp:1672
+#: MySession.cpp:1673
 msgid "Preparing CUPS service ..."
 msgstr ""
 
-#: MySession.cpp:1706
+#: MySession.cpp:1707
 msgid "Called command was: "
 msgstr ""
 
-#: MySession.cpp:1707
+#: MySession.cpp:1708
 msgid "Could not start nxssh."
 msgstr ""
 
