@@ -64,6 +64,7 @@
 #include "Icon.h"
 #include "KeyDialog.h"
 #include "ExtHtmlWindow.h"
+#include "LibUSB.h"
 #include "opennxApp.h"
 #include "osdep.h"
 
@@ -673,6 +674,7 @@ void SessionProperties::appendUsbDevice(SharedUsbDevice &dev, int aidx)
     m_pCtrlUsbFilter->SetItem(idx, 3, lbl);
     lbl = dev.m_sSerial.IsEmpty() ? wxT("*") : dev.m_sSerial;
     m_pCtrlUsbFilter->SetItem(idx, 4, lbl);
+    m_pCtrlUsbFilter->SetItemData(idx, aidx);
 }
 #endif
 
@@ -1892,7 +1894,14 @@ void SessionProperties::OnTextctrlProxycommandTextUpdated( wxCommandEvent& event
 void SessionProperties::OnButtonUsbaddClick( wxCommandEvent& event )
 {
 #ifdef SUPPORT_USBIP
+    USB u;
+    ArrayOfUSBDevices a = u.GetDevices();
+    if (a.IsEmpty()) {
+        ::wxLogWarning(_("No USB devices available."));
+        return;
+    }
     UsbFilterDetailsDialog d(this);
+    d.SetDeviceList(a);
     d.SetDialogMode(UsbFilterDetailsDialog::MODE_ADD);
     if (d.ShowModal() == wxID_OK) {
         SharedUsbDevice dev;

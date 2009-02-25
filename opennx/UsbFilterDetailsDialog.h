@@ -39,6 +39,8 @@
 
 #include "MyXmlConfig.h"
 
+class ArrayOfUSBDevices;
+
 /*!
  * Forward declarations
  */
@@ -128,6 +130,8 @@ public:
     /// Retrieves icon resources
     wxIcon GetIconResource( const wxString& name );
 ////@end UsbFilterDetailsDialog member function declarations
+
+    void SetDeviceList(const ArrayOfUSBDevices &);
 
     bool GetForwarding() {
         return ((NULL != m_pCtrlMode) &&

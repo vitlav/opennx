@@ -137,21 +137,20 @@ void UsbFilterDetailsDialog::Init()
     m_pCtrlSerial = NULL;
     m_pCtrlMode = NULL;
 ////@end UsbFilterDetailsDialog member initialisation
-    USB u;
-    ArrayOfUSBDevices a = u.GetDevices();
-    if (a.IsEmpty())
-        ::wxLogWarning(_("No USB devices available."));
-    else {
-        for (int i = 0; i < a.GetCount(); i++) {
-            SharedUsbDevice dev;
-            dev.m_iVendorID = a[i].GetVendorID();
-            dev.m_iProductID = a[i].GetProductID();
-            dev.m_iClass = a[i].GetDeviceClass();
-            dev.m_sVendor = a[i].GetVendor();
-            dev.m_sProduct = a[i].GetProduct();
-            dev.m_sSerial = a[i].GetSerial();
-            m_aUsbForwards.Add(dev);
-        }
+}
+
+void UsbFilterDetailsDialog::SetDeviceList(const ArrayOfUSBDevices &a)
+{
+    m_aUsbForwards.Clear();
+    for (int i = 0; i < a.GetCount(); i++) {
+        SharedUsbDevice dev;
+        dev.m_iVendorID = a[i].GetVendorID();
+        dev.m_iProductID = a[i].GetProductID();
+        dev.m_iClass = a[i].GetDeviceClass();
+        dev.m_sVendor = a[i].GetVendor();
+        dev.m_sProduct = a[i].GetProduct();
+        dev.m_sSerial = a[i].GetSerial();
+        m_aUsbForwards.Add(dev);
     }
 }
 
