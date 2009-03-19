@@ -7,7 +7,7 @@
 // it under the terms of the GNU Library General Public License as
 // published by the Free Software Foundation; either version 2 of the
 // License, or (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -18,39 +18,33 @@
 // Free Software Foundation, Inc.,
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
-
-#ifndef _EXTHTMLWINDOW_H_
-#define _EXTHTMLWINDOW_H_
-
-#if defined(__GNUG__) && !defined(__APPLE__)
-#pragma interface "ExtHtmlWindow.cpp"
+#ifdef HAVE_CONFIG_H
+# include "config.h"
 #endif
 
-#include "wx/html/htmlwin.h"
-
-/**
- * Custom HTML window.
- * This derivate of wxHtmlWindow interpretes links in a special
- * way:<br>
- * <ul>
- * <li>If "TV" is specified as target, a builting TextViewer is used.
- * <li>Other links are opened in an external browser.
- * </ul>
- */
-class extHtmlWindow : public wxHtmlWindow
-{
-    DECLARE_DYNAMIC_CLASS( extHtmlWindow )
-
-public:
-    extHtmlWindow() : wxHtmlWindow() { }
-
-    /**
-     * Performs the actual action.
-     * If target is TV, open url in internal TextViewer,
-     * otherwise in external browser.
-     */
-    virtual void OnLinkClicked(const wxHtmlLinkInfo&);
-};
-
+#if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
+#pragma implementation "UsbIp.h"
 #endif
-    // _EXTHTMLWINDOW_H_
+
+// For compilers that support precompilation, includes "wx.h".
+#include "wx/wxprec.h"
+
+#ifdef __BORLANDC__
+#pragma hdrstop
+#endif
+
+#ifndef WX_PRECOMP
+#include "wx/defs.h"
+#endif
+
+#include "UsbIp.h"
+
+#include <wx/log.h>
+
+#include "trace.h"
+ENABLE_TRACE;
+
+IMPLEMENT_DYNAMIC_CLASS(UsbIp, wxEvtHandler);
+
+#ifdef SUPPORT_USBIP
+#endif

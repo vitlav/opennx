@@ -24,7 +24,7 @@
 #endif
 
 #if defined(__GNUG__) && !defined(__APPLE__)
-#pragma implementation "AboutDialog.h"
+#pragma implementation "ExtHtmlWindow.h"
 #endif
 
 // For compilers that support precompilation, includes "wx/wx.h".
