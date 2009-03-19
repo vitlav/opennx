@@ -28,8 +28,24 @@
 
 #include <wx/event.h>
 
+class wxSocketClient;
+class wxSocketEvent;
+
 class UsbIp : public wxEvtHandler {
-    DECLARE_DYNAMIC_CLASS(UsbIp);
+    DECLARE_CLASS(UsbIp);
+    DECLARE_EVENT_TABLE();
+
+    public:
+        UsbIp();
+        virtual ~UsbIp();
+
+    private:
+        virtual void OnInput(wxSocketEvent &);
+        virtual void OnOutput(wxSocketEvent &);
+        virtual void OnConnect(wxSocketEvent &);
+        virtual void OnLost(wxSocketEvent &);
+
+        wxSocketClient *m_pSocketClient;
 };
 
 #endif

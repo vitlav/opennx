@@ -40,11 +40,56 @@
 #include "UsbIp.h"
 
 #include <wx/log.h>
+#include <wx/socket.h>
 
 #include "trace.h"
 ENABLE_TRACE;
 
-IMPLEMENT_DYNAMIC_CLASS(UsbIp, wxEvtHandler);
+IMPLEMENT_CLASS(UsbIp, wxEvtHandler);
+
+BEGIN_EVENT_TABLE(UsbIp, wxEvtHandler)
+    EVT_SOCKET(wxSOCKET_INPUT, UsbIp::OnInput)
+    EVT_SOCKET(wxSOCKET_OUTPUT, UsbIp::OnOutput)
+    EVT_SOCKET(wxSOCKET_CONNECTION, UsbIp::OnConnect)
+    EVT_SOCKET(wxSOCKET_LOST, UsbIp::OnLost)
+END_EVENT_TABLE();
+
+UsbIp::UsbIp()
+{
+    wxUNIXaddress addr;
+    addr.Filename(wxT("/tmp/xyzsock"));
+    // for testing during development, use hardcoded path for now
+#warning Replace hardcoded socket path
+    m_pSocketClient = new wxSocketClient();
+    m_pSocketClient->SetNotify(
+            wxSOCKET_INPUT_FLAG|wxSOCKET_OUTPUT_FLAG|wxSOCKET_CONNECTION_FLAG|wxSOCKET_LOST_FLAG);
+    m_pSocketClient->Notify(true);
+    m_pSocketClient->SetTimeout(10); // 10 sec.
+    m_pSocketClient->Connect(addr, false);
+}
+
+UsbIp::~UsbIp()
+{
+    if (m_pSocketClient)
+        m_pSocketClient->Destroy();
+    m_pSocketClient = NULL;
+}
+
+void UsbIp::OnInput(wxSocketEvent &event)
+{
+}
+
+void UsbIp::OnOutput(wxSocketEvent &event)
+{
+}
+
+void UsbIp::OnConnect(wxSocketEvent &event)
+{
+}
+
+void UsbIp::OnLost(wxSocketEvent &event)
+{
+}
 
 #ifdef SUPPORT_USBIP
 #endif
