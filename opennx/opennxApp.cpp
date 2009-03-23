@@ -520,7 +520,7 @@ opennxApp::preInit()
     }
 #endif
 
-
+    wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp);
 #ifdef __WXMSW__
     wxString ldpath;
     if (::wxGetEnv(wxT("PATH"), &ldpath))
@@ -531,6 +531,7 @@ opennxApp::preInit()
         return false;
     }
 #endif
+
 #ifdef __UNIX__
     wxString ldpath;
     if (::wxGetEnv(wxT("LD_LIBRARY_PATH"), &ldpath))

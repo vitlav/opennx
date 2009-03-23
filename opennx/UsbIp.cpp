@@ -45,6 +45,7 @@
 #include <wx/socket.h>
 #include <wx/stopwatch.h>
 #include <wx/tokenzr.h>
+#include <wx/regex.h>
 #include <wx/arrimpl.cpp>
 
 #include "opennxApp.h"
@@ -78,6 +79,7 @@ UsbIp::UsbIp()
     m_pSocketClient->Notify(true);
     m_pSocketClient->SetTimeout(10); // 10 sec.
     m_bConnected = false;
+    m_bError = false;
     m_sSid = wxEmptyString;
     m_sLineBuffer = wxEmptyString;
     m_eState = None;
@@ -128,6 +130,30 @@ void UsbIp::SetSession(const wxString &sid)
     m_sSid = sid;
 }
 
+bool UsbIp::WaitForSession(int secs /* = 10 */)
+{
+    long timeout = secs * 1000;
+    if (m_sSid.IsEmpty())
+        return false;
+    if (Initializing > m_eState)
+        return false;
+    if (!waitforstate(Idle))
+        return false;
+    wxStopWatch sw;
+    wxLogTrace(MYTRACETAG, wxT("waiting for session ..."));
+    while (!findsession(m_sSid)) {
+        ::wxGetApp().Yield(true);
+        wxLog::FlushActive();
+        m_pSocketClient->Wait(0, 1000);
+        if (0 < timeout) {
+            if (sw.Time() > timeout) {
+                wxLogTrace(MYTRACETAG, wxT("waitforsession timed out"));
+                return false;
+            }
+        }
+    }
+}
+
 bool UsbIp::ExportDevice(const wxString &busid)
 {
     if (m_sSid.IsEmpty())
@@ -150,6 +176,7 @@ bool UsbIp::ExportDevice(const wxString &busid)
         m_eState = Idle;
         return false;
     }
+    m_eState = Idle;
     return true;
 }
 
@@ -187,6 +214,7 @@ ArrayOfUsbIpDevices UsbIp::GetDevices() {
         m_eState = Idle;
         return m_aDevices;
     }
+    m_eState = Idle;
     return m_aDevices;
 }
 
@@ -196,7 +224,6 @@ bool UsbIp::findsession(const wxString &sid)
         return false;
     if (!waitforstate(Idle))
         return false;
-    wxLogTrace(MYTRACETAG, wxT("Fetching session list ..."));
     m_aSessions.Empty();
     m_eState = ListSessions;
     if (!send(wxT("sessions\n"))) {
@@ -232,11 +259,24 @@ bool UsbIp::waitforstate(tStates state, long timeout /* = 5000 */)
         wxLog::FlushActive();
         m_pSocketClient->Wait(0, 100);
         if (0 < timeout) {
-            if (watch.Time() > timeout)
+            if (watch.Time() > timeout) {
                 return false;
+            }
         }
     }
     return !m_bError;
+}
+
+void UsbIp::parsesession(const wxString &line)
+{
+    wxRegEx re(wxT("\\[\\d+\\.\\d+\\.\\d+\\.\\d+\\]:\\d+\\s+\\(SID:\\s+([0-9,A-F]+)\\)"),
+            wxRE_ADVANCED);
+    if (!re.IsValid()) {
+        wxLogError(wxT("Invalid regular expression"));
+        return;
+    }
+    if (re.Matches(line))
+        m_aSessions.Add(re.GetMatch(line, 1));
 }
 
 void UsbIp::parsedevice(const wxString &line)
@@ -257,10 +297,10 @@ void UsbIp::parsedevice(const wxString &line)
         dev.m_sDriver = tkz.GetNextToken();
         if (2 != tkz2.CountTokens())
             return;
-        if (!tkz2.GetNextToken().ToLong(&lval))
+        if (!tkz2.GetNextToken().ToLong(&lval, 16))
             return;
         dev.m_iVendorID = lval;
-        if (!tkz2.GetNextToken().ToLong(&lval))
+        if (!tkz2.GetNextToken().ToLong(&lval, 16))
             return;
         dev.m_iProductID = lval;
         m_aDevices.Add(dev);
@@ -269,15 +309,16 @@ void UsbIp::parsedevice(const wxString &line)
 
 void UsbIp::parse(const wxString &line)
 {
-    wxLogTrace(MYTRACETAG, wxT("Got Line: '%s'"), line.c_str());
     wxString cs = line.Left(4).Trim();
     if (cs.Len() == 3) {
         long code;
         if (cs.ToLong(&code)) {
+            if (200 != code)
+                wxLogTrace(MYTRACETAG, wxT("Got Line: '%s'"), line.c_str());
             switch (code) {
                 case 100:
                     if (m_eState == Initializing)
-                        m_bError = send(wxT("\n"));
+                        m_bError = !send(wxT("\n"));
                     break;
                 case 101:
                     if (m_eState == Initializing)
@@ -307,7 +348,7 @@ void UsbIp::parse(const wxString &line)
                 case 202:
                     switch (m_eState) {
                         case ListSessions:
-                            m_aSessions.Add(line.Mid(4));
+                            parsesession(line.Mid(4));
                             break;
                         case ListDevices:
                             parsedevice(line.Mid(4));
@@ -348,7 +389,6 @@ void UsbIp::OnSocketEvent(wxSocketEvent &event)
     char *p;
     char *q;
     char buf[128];
-    wxLogTrace(MYTRACETAG, wxT("SocketEvent"));
     switch (event.GetSocketEvent()) {
         case wxSOCKET_INPUT:
             m_pSocketClient->Read(buf, sizeof(buf) - 1);

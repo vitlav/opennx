@@ -69,6 +69,7 @@ class UsbIp : public wxEvtHandler {
 
         bool Connect(const wxString &);
         void SetSession(const wxString &);
+        bool WaitForSession(int secs = 10);
         bool ExportDevice(const wxString &);
         bool UnexportDevice(const wxString &);
         ArrayOfUsbIpDevices GetDevices();

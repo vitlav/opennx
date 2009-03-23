@@ -1491,7 +1491,7 @@ MySession::startUsbIp()
         wxLogTrace(MYTRACETAG, wxT("connected to usbipd2"));
         usbip.SetSession(m_sSessionID.Right(32));
         ArrayOfUsbForwards af = m_pCfg->aGetUsbForwards();
-        ArrayOfUsbIpDevices aid;
+        ArrayOfUsbIpDevices aid = usbip.GetDevices();
         ArrayOfUSBDevices ad;
         if (lusbok) {
             USB u;
@@ -1512,6 +1512,8 @@ MySession::startUsbIp()
                             if (aid[k].GetUsbBusID().IsSameAs(ad[j].GetBusID())) {
                                 wxString exBusID = aid[k].GetUsbIpBusID();
                                 wxLogTrace(MYTRACETAG, wxT("Exporting busid %s"), exBusID.c_str());
+                                if (!usbip.WaitForSession(20))
+                                    wxLogError(_("Unable to export USB device %s"), af[i].toShortString().c_str());
                                 if (!usbip.ExportDevice(exBusID))
                                     wxLogError(_("Unable to export USB device %s"), af[i].toShortString().c_str());
                             }
