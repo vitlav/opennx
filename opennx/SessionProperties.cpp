@@ -254,8 +254,6 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
 
     EVT_BUTTON( XRCID("ID_BUTTON_FONT_FIXED"), SessionProperties::OnButtonFontFixedClick )
 
-    EVT_BUTTON( XRCID("ID_BUTTON_TEST1"), SessionProperties::OnButtonTest1Click )
-
     EVT_BUTTON( wxID_DELETE, SessionProperties::OnDeleteClick )
 
     EVT_BUTTON( wxID_APPLY, SessionProperties::OnApplyClick )
@@ -515,15 +513,6 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     Centre();
 ////@end SessionProperties creation
 
-#ifdef __WXDEBUG__
-    {
-        wxString tmp;
-        if (!::wxGetEnv(wxT("SHOWTESTTAB"), &tmp))
-            removePage(_("Test"));
-    }
-#else
-    removePage(_("Test"));
-#endif
 #ifndef SUPPORT_USBIP
     removePage(_("USB"));
     m_pCtrlUsbipdDaemon->Hide();
@@ -2146,14 +2135,3 @@ void SessionProperties::OnButtonBrowseUsbipdSocketClick( wxCommandEvent& event )
         CheckChanged();
     }
 }
-
-
-/*!
- * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_TEST1
- */
-
-void SessionProperties::OnButtonTest1Click( wxCommandEvent& event )
-{
-    ::wxGetApp().HandleHotplug();
-}
-

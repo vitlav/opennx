@@ -42,11 +42,22 @@
 #include <wx/log.h>
 #include <wx/socket.h>
 #include <wx/stopwatch.h>
+#include <wx/tokenzr.h>
+#include <wx/arrimpl.cpp>
 
 #include "opennxApp.h"
 
 #include "trace.h"
 ENABLE_TRACE;
+
+WX_DEFINE_OBJARRAY(ArrayOfUsbIpDevices);
+
+wxString UsbIpDevice::toString() {
+    wxString ret = wxString::Format(
+            wxT("%s %d-%d %04X/%04X %s"), m_sUsbIpBusId, m_iUsbBusnum,
+            m_iUsbDevnum, m_iVendorID, m_iProductID, m_sDriver);
+    return ret;
+}
 
 IMPLEMENT_CLASS(UsbIp, wxEvtHandler);
 
@@ -150,6 +161,25 @@ bool UsbIp::UnexportDevice(const wxString &busid)
     return true;
 }
 
+ArrayOfUsbIpDevices UsbIp::GetDevices() {
+    m_aDevices.Empty();
+    if (Initializing > m_eState)
+        return m_aDevices;
+    if (!waitforstate(Idle))
+        return m_aDevices;
+    wxLogTrace(MYTRACETAG, wxT("Fetching device list ..."));
+    m_eState = ListDevices;
+    if (!print(wxT("list\n"))) {
+        m_eState = Idle;
+        return m_aDevices;
+    }
+    if (!waitforstate(GotDevices)) {
+        m_eState = Idle;
+        return m_aDevices;
+    }
+    return m_aDevices;
+}
+
 bool UsbIp::findsession(const wxString &sid)
 {
     if (Initializing > m_eState)
@@ -198,6 +228,34 @@ bool UsbIp::waitforstate(tStates state, long timeout /* = 5000 */)
     return true;
 }
 
+void UsbIp::parsedevice(const wxString &line)
+{
+    wxStringTokenizer tkz(line, wxT(" "));
+    if (6 == tkz.CountTokens()) {
+        UsbIpDevice dev;
+        long lval;
+        dev.m_sUsbIpBusId = tkz.GetNextToken();
+        dev.m_sConfig = tkz.GetNextToken();
+        if (!tkz.GetNextToken().ToLong(&lval))
+            return;
+        dev.m_iUsbBusnum = lval;
+        if (!tkz.GetNextToken().ToLong(&lval))
+            return;
+        dev.m_iUsbDevnum = lval;
+        wxStringTokenizer tkz2(tkz.GetNextToken(), wxT(":"));
+        dev.m_sDriver = tkz.GetNextToken();
+        if (2 != tkz2.CountTokens())
+            return;
+        if (!tkz2.GetNextToken().ToLong(&lval))
+            return;
+        dev.m_iVendorID = lval;
+        if (!tkz2.GetNextToken().ToLong(&lval))
+            return;
+        dev.m_iProductID = lval;
+        m_aDevices.Add(dev);
+    }
+}
+
 void UsbIp::parse(const wxString &line)
 {
     wxLogTrace(MYTRACETAG, wxT("Got Line: '%s'"), line.c_str());
@@ -241,7 +299,7 @@ void UsbIp::parse(const wxString &line)
                             m_aSessions.Add(line.Mid(4));
                             break;
                         case ListDevices:
-                            m_aDevices.Add(line.Mid(4));
+                            parsedevice(line.Mid(4));
                             break;
                     }
                     break;

@@ -27,6 +27,7 @@
 #endif
 
 #include <wx/event.h>
+#include <wx/dynarray.h>
 
 class wxSocketClient;
 class wxSocketEvent;
@@ -36,11 +37,18 @@ class UsbIpDevice : public wxObject {
         UsbIpDevice() : wxObject() { }
         virtual ~UsbIpDevice() {}
 
-        wxString m_sBusId;
-        wxString m_sUsage;
+        wxString toString();
+
+        wxString m_sUsbIpBusId;
+        wxString m_sDriver;
+        wxString m_sConfig;
+        int m_iUsbBusnum;
+        int m_iUsbDevnum;
         int m_iVendorID;
         int m_iProductID;
 };
+
+WX_DECLARE_OBJARRAY(UsbIpDevice, ArrayOfUsbIpDevices);
 
 class UsbIp : public wxEvtHandler {
     DECLARE_CLASS(UsbIp);
@@ -54,6 +62,7 @@ class UsbIp : public wxEvtHandler {
         void SetSession(const wxString &);
         bool ExportDevice(const wxString &);
         bool UnexportDevice(const wxString &);
+        ArrayOfUsbIpDevices GetDevices();
 
         bool IsConnected() { return m_bConnected; }
         bool HasError();
@@ -90,7 +99,7 @@ class UsbIp : public wxEvtHandler {
         bool m_bError;
         tStates m_eState;
         wxArrayString m_aSessions;
-        wxArrayString m_aDevices;
+        ArrayOfUsbIpDevices m_aDevices;
 };
 
 #endif

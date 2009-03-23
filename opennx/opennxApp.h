@@ -57,8 +57,6 @@ class opennxApp : public wxApp
         virtual int OnExit();
         int FilterEvent(wxEvent& event);
 
-        void HandleHotplug();
-
     private:
         enum mode {
             MODE_CLIENT,

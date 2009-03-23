@@ -39,6 +39,7 @@
 #endif
 
 #include "UsbIp.h"
+#include "LibUSB.h"
 #include "CardWaiterDialog.h"
 #include "ConnectDialog.h"
 #include "MySession.h"
@@ -1478,6 +1479,8 @@ MySession::clearSshKeys(const wxString &keyloc)
     void
 MySession::startUsbIp()
 {
+#ifdef SUPPORT_USBIP
+    bool lusbok = wxGetApp().LibUSBAvailable();
     wxString usid = m_sSessionID.Right(32);
     wxString usock = wxConfigBase::Get()->Read(wxT("Config/UsbipdSocket"),
             wxT("/var/run/usbipd.socket"));
@@ -1487,14 +1490,24 @@ MySession::startUsbIp()
         int i;
         wxLogTrace(MYTRACETAG, wxT("connected to usbipd2"));
         usbip.SetSession(m_sSessionID.Right(32));
-        ArrayOfUsbForwards auf = m_pCfg->aGetUsbForwards();
-        for (i = 0; i < auf.GetCount(); i++)
-            if (SharedUsbDevice::MODE_REMOTE == auf[i].m_eMode) {
+        ArrayOfUsbForwards af = m_pCfg->aGetUsbForwards();
+        ArrayOfUSBDevices ad;
+        if (lusbok) {
+            USB u;
+            ad = u.GetDevices();
+        }
+        for (i = 0; i < af.GetCount(); i++)
+            if (SharedUsbDevice::MODE_REMOTE == af[i].m_eMode) {
+                if (!lusbok) {
+                    wxLogError(_("libusb is not available. No USB devices will be exported"));
+                    break;
+                }
                 wxLogTrace(MYTRACETAG, wxT("possibly exported USB device: %04x/%04x %s"),
-                        auf[i].m_iVendorID, auf[i].m_iProductID, auf[i].toShortString().c_str());
+                        af[i].m_iVendorID, af[i].m_iProductID, af[i].toShortString().c_str());
             }
     } else
-        wxLogError(wxT("Could not connect to usbipd2"));
+        wxLogError(_("Could not connect to usbipd2. No USB devices will be exported"));
+#endif
 }
 
     bool

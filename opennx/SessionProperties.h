@@ -312,9 +312,6 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_FONT_FIXED
     void OnButtonFontFixedClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_TEST1
-    void OnButtonTest1Click( wxCommandEvent& event );
-
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_DELETE
     void OnDeleteClick( wxCommandEvent& event );
 
