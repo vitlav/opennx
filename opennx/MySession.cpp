@@ -1511,6 +1511,7 @@ MySession::startUsbIp()
                         for (k = 0; k < aid.GetCount(); k++) {
                             if (aid[k].GetUsbBusID().IsSameAs(ad[j].GetBusID())) {
                                 wxString exBusID = aid[k].GetUsbIpBusID();
+                                wxLogTrace(MYTRACETAG, wxT("Exporting busid %s"), exBusID.c_str());
                                 if (!usbip.ExportDevice(exBusID))
                                     wxLogError(_("Unable to export USB device %s"), af[i].toShortString().c_str());
                             }
