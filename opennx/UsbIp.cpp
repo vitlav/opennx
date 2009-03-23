@@ -52,19 +52,19 @@ ENABLE_TRACE;
 
 WX_DEFINE_OBJARRAY(ArrayOfUsbIpDevices);
 
-wxString UsbIpDevice::toString() {
-    wxString ret = wxString::Format(
-            wxT("%s %d-%d %04X/%04X %s"), m_sUsbIpBusId, m_iUsbBusnum,
-            m_iUsbDevnum, m_iVendorID, m_iProductID, m_sDriver);
+wxString UsbIpDevice::toString() const {
+    wxString ret = wxString::Format(wxT("%s %d-%d %04X/%04X %s"),
+            m_sUsbIpBusId.c_str(), m_iUsbBusnum, m_iUsbDevnum,
+            m_iVendorID, m_iProductID, m_sDriver.c_str());
     return ret;
 }
 
 IMPLEMENT_CLASS(UsbIp, wxEvtHandler);
 
 #define SOCKET_ID 55555
-BEGIN_EVENT_TABLE(UsbIp, wxEvtHandler)
-    EVT_SOCKET(SOCKET_ID, UsbIp::OnSocketEvent)
-END_EVENT_TABLE();
+    BEGIN_EVENT_TABLE(UsbIp, wxEvtHandler)
+EVT_SOCKET(SOCKET_ID, UsbIp::OnSocketEvent)
+    END_EVENT_TABLE();
 
 UsbIp::UsbIp()
 {
@@ -85,7 +85,7 @@ UsbIp::~UsbIp()
     if (m_pSocketClient) {
         if (m_bConnected) {
             m_eState = Terminating;
-            if (print(wxT("quit\n")))
+            if (send(wxT("quit\n")))
                 waitforstate(None);
         }
         m_pSocketClient->Destroy();
@@ -138,8 +138,15 @@ bool UsbIp::ExportDevice(const wxString &busid)
         wxLogTrace(MYTRACETAG, wxT("Session not found"));
         return false;
     }
-    if (!print(wxT("export %s %s\n"), busid.c_str(), m_sSid.c_str()))
+    m_eState = Exporting;
+    if (!send(wxT("export %s %s\n"), busid.c_str(), m_sSid.c_str())) {
+        m_eState = Idle;
         return false;
+    }
+    if (!waitforstate(Exported)) {
+        m_eState = Idle;
+        return false;
+    }
     return true;
 }
 
@@ -156,7 +163,7 @@ bool UsbIp::UnexportDevice(const wxString &busid)
         wxLogTrace(MYTRACETAG, wxT("Session not found"));
         return false;
     }
-    if (!print(wxT("unexport %s %s\n"), busid.c_str(), m_sSid.c_str()))
+    if (!send(wxT("unexport %s %s\n"), busid.c_str(), m_sSid.c_str()))
         return false;
     return true;
 }
@@ -169,7 +176,7 @@ ArrayOfUsbIpDevices UsbIp::GetDevices() {
         return m_aDevices;
     wxLogTrace(MYTRACETAG, wxT("Fetching device list ..."));
     m_eState = ListDevices;
-    if (!print(wxT("list\n"))) {
+    if (!send(wxT("list\n"))) {
         m_eState = Idle;
         return m_aDevices;
     }
@@ -189,7 +196,7 @@ bool UsbIp::findsession(const wxString &sid)
     wxLogTrace(MYTRACETAG, wxT("Fetching session list ..."));
     m_aSessions.Empty();
     m_eState = ListSessions;
-    if (!print(wxT("sessions\n"))) {
+    if (!send(wxT("sessions\n"))) {
         m_eState = Idle;
         return false;
     }
@@ -202,13 +209,14 @@ bool UsbIp::findsession(const wxString &sid)
     return found;
 }
 
-bool UsbIp::print(const wxChar *fmt, ...)
+bool UsbIp::send(const wxChar *fmt, ...)
 {
     wxString buf;
     va_list args;
     va_start(args, fmt);
     if (0 > buf.PrintfV(fmt, args))
         return false;
+    m_bError = false;
     m_pSocketClient->Write(buf.mb_str(wxConvUTF8), buf.Len());
     return ((m_pSocketClient->LastCount() == buf.Len()) && (!HasError()));
 }
@@ -225,7 +233,7 @@ bool UsbIp::waitforstate(tStates state, long timeout /* = 5000 */)
                 return false;
         }
     }
-    return true;
+    return !m_bError;
 }
 
 void UsbIp::parsedevice(const wxString &line)
@@ -266,7 +274,7 @@ void UsbIp::parse(const wxString &line)
             switch (code) {
                 case 100:
                     if (m_eState == Initializing)
-                        m_bError = print(wxT("\n"));
+                        m_bError = send(wxT("\n"));
                     break;
                 case 101:
                     if (m_eState == Initializing)

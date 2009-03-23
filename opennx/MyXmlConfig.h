@@ -56,6 +56,8 @@ class ShareGroup : public wxObject
 
 WX_DECLARE_OBJARRAY(ShareGroup, ArrayOfShareGroups);
 
+class USBDevice;
+
 class SharedUsbDevice : public wxObject
 {
     public:
@@ -71,6 +73,7 @@ class SharedUsbDevice : public wxObject
         bool cmpNoMode(const SharedUsbDevice &);
         bool operator ==(const SharedUsbDevice &);
         bool operator !=(const SharedUsbDevice &);
+        bool MatchHotplug(const USBDevice &);
 
         Mode m_eMode;
         wxString m_sVendor;

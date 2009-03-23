@@ -37,7 +37,14 @@ class UsbIpDevice : public wxObject {
         UsbIpDevice() : wxObject() { }
         virtual ~UsbIpDevice() {}
 
-        wxString toString();
+        wxString toString() const;
+        wxString GetUsbBusID() const {
+            return wxString::Format(wxT("%d-%d"), m_iUsbBusnum, m_iUsbDevnum);
+        }
+        const wxString& GetUsbIpBusID() const { return m_sUsbIpBusId; }
+
+    private:
+        friend class UsbIp;
 
         wxString m_sUsbIpBusId;
         wxString m_sDriver;
@@ -90,7 +97,7 @@ class UsbIp : public wxEvtHandler {
         void parsedevice(const wxString &);
         bool findsession(const wxString &);
         bool waitforstate(tStates, long state = 5000);
-        bool print(const wxChar *fmt, ...) ATTRIBUTE_PRINTF_1;
+        bool send(const wxChar *fmt, ...) ATTRIBUTE_PRINTF_1;
 
         wxSocketClient *m_pSocketClient;
         wxString m_sSid;

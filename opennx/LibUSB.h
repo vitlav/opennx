@@ -39,14 +39,17 @@ class USBDevice : public wxObject {
 
         wxString toString();
         wxString toShortString();
-        int GetVendorID() { return m_iVendor; }
-        int GetProductID() { return m_iProduct; }
-        int GetBusNum() { return m_iBusNum; }
-        int GetDevNum() { return m_iDevNum; }
-        unsigned char GetDeviceClass() { return m_iClass; }
-        wxString& GetVendor() { return m_sVendor; }
-        wxString& GetProduct() { return m_sProduct; }
-        wxString& GetSerial() { return m_sSerial; }
+        int GetVendorID() const { return m_iVendor; }
+        int GetProductID() const { return m_iProduct; }
+        int GetBusNum() const { return m_iBusNum; }
+        int GetDevNum() const { return m_iDevNum; }
+        unsigned char GetDeviceClass() const { return m_iClass; }
+        const wxString& GetVendor() const { return m_sVendor; }
+        const wxString& GetProduct() const { return m_sProduct; }
+        const wxString& GetSerial() const { return m_sSerial; }
+        wxString GetBusID() const {
+            return wxString::Format(wxT("%d-%d"), m_iBusNum, m_iDevNum);
+        }
 
     private:
         int m_iVendor;

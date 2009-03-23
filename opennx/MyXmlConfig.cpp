@@ -49,6 +49,7 @@
 
 class wxConfigBase;
 
+#include "LibUSB.h"
 #include "MyXmlConfig.h"
 #include "WinShare.h"
 #include "opennxApp.h"
@@ -125,6 +126,35 @@ bool SharedUsbDevice::cmpNoMode(const SharedUsbDevice &other)
 bool SharedUsbDevice::operator !=(const SharedUsbDevice &other)
 {
     return (!(*this == other));
+}
+
+bool SharedUsbDevice::MatchHotplug(const USBDevice &udev)
+{
+    if (m_iVendorID >= 0) {
+        if (m_iVendorID != udev.GetVendorID())
+            return false;
+    }
+    if (m_iProductID >= 0) {
+        if (m_iProductID != udev.GetProductID())
+            return false;
+    }
+    if (m_iClass >= 0) {
+        if (m_iClass != udev.GetDeviceClass())
+            return false;
+    }
+    if (!m_sVendor.IsEmpty()) {
+        if (!udev.GetVendor().StartsWith(m_sVendor))
+            return false;
+    }
+    if (!m_sProduct.IsEmpty()) {
+        if (!udev.GetProduct().StartsWith(m_sProduct))
+            return false;
+    }
+    if (!m_sSerial.IsEmpty()) {
+        if (!udev.GetSerial().StartsWith(m_sSerial))
+            return false;
+    }
+    return true;
 }
 
 wxString SharedUsbDevice::toShortString()

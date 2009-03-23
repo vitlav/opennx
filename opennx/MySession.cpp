@@ -1487,10 +1487,11 @@ MySession::startUsbIp()
 
     UsbIp usbip;
     if (usbip.Connect(usock)) {
-        int i;
+        int i, j, k;
         wxLogTrace(MYTRACETAG, wxT("connected to usbipd2"));
         usbip.SetSession(m_sSessionID.Right(32));
         ArrayOfUsbForwards af = m_pCfg->aGetUsbForwards();
+        ArrayOfUsbIpDevices aid;
         ArrayOfUSBDevices ad;
         if (lusbok) {
             USB u;
@@ -1504,6 +1505,17 @@ MySession::startUsbIp()
                 }
                 wxLogTrace(MYTRACETAG, wxT("possibly exported USB device: %04x/%04x %s"),
                         af[i].m_iVendorID, af[i].m_iProductID, af[i].toShortString().c_str());
+                for (j = 0; j < ad.GetCount(); j++)
+                    if (af[i].MatchHotplug(ad[j])) {
+                        wxLogTrace(MYTRACETAG, wxT("Match on USB dev %s"), ad[j].toString().c_str());
+                        for (k = 0; k < aid.GetCount(); k++) {
+                            if (aid[k].GetUsbBusID().IsSameAs(ad[j].GetBusID())) {
+                                wxString exBusID = aid[k].GetUsbIpBusID();
+                                if (!usbip.ExportDevice(exBusID))
+                                    wxLogError(_("Unable to export USB device %s"), af[i].toShortString().c_str());
+                            }
+                        }
+                    }
             }
     } else
         wxLogError(_("Could not connect to usbipd2. No USB devices will be exported"));
