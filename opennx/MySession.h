@@ -95,6 +95,7 @@ private:
     wxString formatOptFilename();
     int getFirstFreePort(int);
     void startProxy();
+    void startUsbIp();
     void startXserver();
     void startSharing();
     void parseSessions(bool moreAllowed);

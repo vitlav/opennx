@@ -128,7 +128,11 @@ void USB::adddev(wxDynamicLibrary *dll, struct usb_device *dev, unsigned char dc
                     dev->descriptor.iSerialNumber, string, sizeof(string)))
             d.m_sSerial = wxConvUTF8.cMB2WX(string);
     }
-    d.m_iBusNum = dev->bus->location;
+    //wxLogTrace(MYTRACETAG, wxT("busdir='%s'"), dev->bus->dirname);
+    wxString tmp(dev->bus->dirname, wxConvUTF8);
+    long lval;
+    tmp.ToLong(&lval);
+    d.m_iBusNum = lval;
     d.m_iDevNum = dev->devnum;
     m_aDevices.Add(d);
     pfnusb_close(udev);

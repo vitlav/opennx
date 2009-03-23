@@ -31,6 +31,17 @@
 class wxSocketClient;
 class wxSocketEvent;
 
+class UsbIpDevice : public wxObject {
+    public:
+        UsbIpDevice() : wxObject() { }
+        virtual ~UsbIpDevice() {}
+
+        wxString m_sBusId;
+        wxString m_sUsage;
+        int m_iVendorID;
+        int m_iProductID;
+};
+
 class UsbIp : public wxEvtHandler {
     DECLARE_CLASS(UsbIp);
     DECLARE_EVENT_TABLE();
@@ -39,13 +50,47 @@ class UsbIp : public wxEvtHandler {
         UsbIp();
         virtual ~UsbIp();
 
+        bool Connect(const wxString &);
+        void SetSession(const wxString &);
+        bool ExportDevice(const wxString &);
+        bool UnexportDevice(const wxString &);
+
+        bool IsConnected() { return m_bConnected; }
+        bool HasError();
+        bool Wait(long, long);
+
     private:
-        virtual void OnInput(wxSocketEvent &);
-        virtual void OnOutput(wxSocketEvent &);
-        virtual void OnConnect(wxSocketEvent &);
-        virtual void OnLost(wxSocketEvent &);
+        typedef enum {
+            None,
+            Terminating,
+            Initializing,
+            Idle,
+            Exporting,
+            UnExporting,
+            ListSessions,
+            ListDevices,
+            Exported,
+            UnExported,
+            GotSessions,
+            GotDevices,
+        } tStates;
+
+        virtual void OnSocketEvent(wxSocketEvent &);
+        void parse(const wxString &);
+        void parsesession(const wxString &);
+        void parsedevice(const wxString &);
+        bool findsession(const wxString &);
+        bool waitforstate(tStates, long state = 5000);
+        bool print(const wxChar *fmt, ...) ATTRIBUTE_PRINTF_1;
 
         wxSocketClient *m_pSocketClient;
+        wxString m_sSid;
+        wxString m_sLineBuffer;
+        bool m_bConnected;
+        bool m_bError;
+        tStates m_eState;
+        wxArrayString m_aSessions;
+        wxArrayString m_aDevices;
 };
 
 #endif

@@ -39,7 +39,7 @@
 #include "wx/listctrl.h"
 #include "wx/html/htmlwin.h"
 ////@end includes
-
+#include "wx/sizer.h"
 
 /*!
  * Forward declarations
@@ -258,12 +258,6 @@ public:
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_USBENABLE
     void OnCHECKBOXUSBENABLEClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINCTRL_USB_LOCALPORT
-    void OnSpinctrlUsbLocalportUpdated( wxSpinEvent& event );
-
-    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_USB_LOCALPORT
-    void OnSpinctrlUsbLocalportTextUpdated( wxCommandEvent& event );
-
     /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRL_USBFILTER
     void OnListctrlUsbfilterSelected( wxListEvent& event );
 
@@ -300,11 +294,26 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BROWSE_CUPSPATH
     void OnButtonBrowseCupspathClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_USBIPD_SOCKET
+    void OnTextctrlUsbipdSocketTextUpdated( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BROWSE_USBIPD_SOCKET
+    void OnButtonBrowseUsbipdSocketClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINCTRL_USB_LOCALPORT
+    void OnSpinctrlUsbLocalportUpdated( wxSpinEvent& event );
+
+    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_USB_LOCALPORT
+    void OnSpinctrlUsbLocalportTextUpdated( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_FONT_DEFAULT
     void OnButtonFontDefaultClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_FONT_FIXED
     void OnButtonFontFixedClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_TEST1
+    void OnButtonTest1Click( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_DELETE
     void OnDeleteClick( wxCommandEvent& event );
@@ -365,7 +374,6 @@ private:
     wxButton* m_pCtrlShareModify;
     wxButton* m_pCtrlShareDelete;
     wxCheckBox* m_pCtrlUsbEnable;
-    wxSpinCtrl* m_pCtrlUsbLocalPort;
     wxListCtrl* m_pCtrlUsbFilter;
     wxButton* m_pCtrlUsbAdd;
     wxButton* m_pCtrlUsbModify;
@@ -374,6 +382,10 @@ private:
     wxTextCtrl* m_pCtrlSystemNxDir;
     wxTextCtrl* m_pCtrlCupsPath;
     wxButton* m_pCtrlCupsBrowse;
+    wxPanel* m_pCtrlUsbipdDaemon;
+    wxTextCtrl* m_pCtrlUsbIpdSocket;
+    wxButton* m_pCtrlUsbipdSocketBrowse;
+    wxSpinCtrl* m_pCtrlUsbLocalPort;
     wxButton* m_pCtrlFontDefault;
     wxButton* m_pCtrlFontFixed;
     wxPanel* m_pCtrlPanelAbout;
@@ -415,6 +427,8 @@ private:
     wxString m_sProxyCommand;
     bool m_bExternalProxy;
     int m_iUsbLocalPort;
+    wxString m_sUsbipdSocket;
+    int m_iSavedUsbLocalPort;
 ////@end SessionProperties member variables
 
     bool readKbdLayouts();
@@ -431,6 +445,7 @@ private:
     wxFont m_cFontFixed;
     wxString m_sSavedUserNxDir;
     wxString m_sSavedSystemNxDir;
+    wxString m_sSavedUsbipdSocket;
     bool m_bKeyTyped;
     bool m_bStorePasswords;
     int m_iUnixDesktopType;

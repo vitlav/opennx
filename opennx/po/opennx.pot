@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-02-25 17:47+0100\n"
+"POT-Creation-Date: 2009-02-25 23:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: AboutDialog.cpp:116 SessionProperties.cpp:954
+#: AboutDialog.cpp:116 SessionProperties.cpp:956
 msgid "Version"
 msgstr ""
 
@@ -104,14 +104,14 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: LoginDialog.cpp:323 LoginDialog.cpp:400
+#: LoginDialog.cpp:323 LoginDialog.cpp:403
 #, c-format
 msgid ""
 "Could not save session to\n"
 "%s"
 msgstr ""
 
-#: LoginDialog.cpp:324 LoginDialog.cpp:401
+#: LoginDialog.cpp:324 LoginDialog.cpp:404
 msgid "Error saving - OpenNX"
 msgstr ""
 
@@ -305,16 +305,16 @@ msgid ""
 "your service provider has made available."
 msgstr ""
 
-#: MyWizard.cpp:688 MyWizard_symbols.h:34 SessionProperties.cpp:731
+#: MyWizard.cpp:688 MyWizard_symbols.h:34 SessionProperties.cpp:733
 #: SessionProperties_symbols.h:35
 msgid "KDE"
 msgstr ""
 
-#: MyWizard.cpp:694 SessionProperties.cpp:742
+#: MyWizard.cpp:694 SessionProperties.cpp:744
 msgid "RDP"
 msgstr ""
 
-#: MyWizard.cpp:702 SessionProperties.cpp:758
+#: MyWizard.cpp:702 SessionProperties.cpp:760
 msgid "RFB"
 msgstr ""
 
@@ -558,7 +558,7 @@ msgstr ""
 msgid "Run application"
 msgstr ""
 
-#: ResumeDialog.cpp:145 SessionProperties.cpp:606
+#: ResumeDialog.cpp:145 SessionProperties.cpp:607
 msgid "Name"
 msgstr ""
 
@@ -709,99 +709,103 @@ msgstr ""
 msgid "Partial session statistics - OpenNX"
 msgstr ""
 
-#: SessionProperties.cpp:500 SessionProperties_symbols.h:89
+#: SessionProperties.cpp:501 SessionProperties_symbols.h:89
 msgid "USB"
 msgstr ""
 
-#: SessionProperties.cpp:538 ShareProperties_symbols.h:24
+#: SessionProperties.cpp:539 ShareProperties_symbols.h:24
 msgid "Share"
 msgstr ""
 
-#: SessionProperties.cpp:539 ShareProperties_symbols.h:50
+#: SessionProperties.cpp:540 ShareProperties_symbols.h:50
 msgid "Mount on"
 msgstr ""
 
-#: SessionProperties.cpp:540
+#: SessionProperties.cpp:541
 msgid "Comment"
 msgstr ""
 
-#: SessionProperties.cpp:552 SessionProperties.cpp:1287
+#: SessionProperties.cpp:553 SessionProperties.cpp:1289
 msgid "Currently not available"
 msgstr ""
 
-#: SessionProperties.cpp:603
+#: SessionProperties.cpp:604
 msgid "VendorID"
 msgstr ""
 
-#: SessionProperties.cpp:604
+#: SessionProperties.cpp:605
 msgid "ProductID"
 msgstr ""
 
-#: SessionProperties.cpp:605
+#: SessionProperties.cpp:606
 msgid "Class"
 msgstr ""
 
-#: SessionProperties.cpp:607
+#: SessionProperties.cpp:608
 msgid "Serial"
 msgstr ""
 
-#: SessionProperties.cpp:1017 SessionProperties_symbols.h:100
+#: SessionProperties.cpp:1019 SessionProperties_symbols.h:100
 msgid "Font"
 msgstr ""
 
-#: SessionProperties.cpp:1061
+#: SessionProperties.cpp:1063
 msgid "Error while reading keyboard table"
 msgstr ""
 
-#: SessionProperties.cpp:1090
+#: SessionProperties.cpp:1092
 #, c-format
 msgid "Invalid line='%s'"
 msgstr ""
 
-#: SessionProperties.cpp:1091
+#: SessionProperties.cpp:1093
 #, c-format
 msgid "Invalid entry in %s"
 msgstr ""
 
-#: SessionProperties.cpp:1215
+#: SessionProperties.cpp:1217
 msgid "Do you really want to delete all cache directories?"
 msgstr ""
 
-#: SessionProperties.cpp:1216
+#: SessionProperties.cpp:1218
 msgid "Clean cache - OpenNX"
 msgstr ""
 
-#: SessionProperties.cpp:1261
+#: SessionProperties.cpp:1263
 msgid "No local samba server is running."
 msgstr ""
 
-#: SessionProperties.cpp:1316
+#: SessionProperties.cpp:1318
 msgid "No sharable resources found"
 msgstr ""
 
-#: SessionProperties.cpp:1390
+#: SessionProperties.cpp:1392
 msgid "Select User NX directory"
 msgstr ""
 
-#: SessionProperties.cpp:1405
+#: SessionProperties.cpp:1407
 msgid "Select System NX directory"
 msgstr ""
 
-#: SessionProperties.cpp:1451
+#: SessionProperties.cpp:1453
 #, c-format
 msgid "Really delete Session '%s' ?"
 msgstr ""
 
-#: SessionProperties.cpp:1452
+#: SessionProperties.cpp:1454
 msgid "Delete Session"
 msgstr ""
 
-#: SessionProperties.cpp:1683
+#: SessionProperties.cpp:1685
 msgid "No cups server available."
 msgstr ""
 
-#: SessionProperties.cpp:1697
+#: SessionProperties.cpp:1699
 msgid "Select System CUPS daemon"
+msgstr ""
+
+#: SessionProperties.cpp:1900
+msgid "No USB devices available."
 msgstr ""
 
 #: SessionProperties_symbols.h:22
@@ -1352,10 +1356,6 @@ msgstr ""
 
 #: opennxApp.cpp:667
 msgid "Guide the user through the steps to configure a session."
-msgstr ""
-
-#: UsbFilterDetailsDialog.cpp:143
-msgid "No USB devices available."
 msgstr ""
 
 #: UsbFilterDetailsDialog_symbols.h:23

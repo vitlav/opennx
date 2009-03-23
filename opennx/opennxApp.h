@@ -25,6 +25,7 @@
 #include <wx/intl.h>
 
 class wxConfigBase;
+class wxCmdLineParser2;
 class wxTaskBarIcon;
 class MyXmlConfig;
 
@@ -55,6 +56,8 @@ class opennxApp : public wxApp
         virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
         virtual int OnExit();
         int FilterEvent(wxEvent& event);
+
+        void HandleHotplug();
 
     private:
         enum mode {
@@ -92,7 +95,6 @@ class opennxApp : public wxApp
         void setUserDir();
         void checkNxSmartCardSupport();
         void checkLibUSB();
-        void handleHotplug();
 };
 
 DECLARE_APP(opennxApp)

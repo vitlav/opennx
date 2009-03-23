@@ -52,6 +52,7 @@
 #include <wx/utils.h>
 #include <wx/stdpaths.h>
 #include <wx/apptrait.h>
+#include <wx/socket.h>
 
 #include "opennxApp.h"
 #include "SessionAdmin.h"
@@ -69,6 +70,7 @@
 #include "LibOpenSC.h"
 #include "osdep.h"
 #include "xh_richtext.h"
+#include "UsbIp.h"
 
 #include "memres.h"
 
@@ -506,6 +508,18 @@ opennxApp::preInit()
         wxConfigBase::Get()->Write(wxT("Config/SystemNxDir"), tmp);
         wxConfigBase::Get()->Flush();
     }
+#ifdef SUPPORT_USBIP
+    if (!wxConfigBase::Get()->Read(wxT("Config/UsbipdSocket"), &tmp)) {
+        tmp = wxT("/var/run/usbipd.socket");
+        wxConfigBase::Get()->Write(wxT("Config/UsbipdSocket"), tmp);
+        wxConfigBase::Get()->Flush();
+    }
+    if (!wxConfigBase::Get()->Read(wxT("Config/UsbipPort"), &tmp)) {
+        wxConfigBase::Get()->Write(wxT("Config/UsbipPort"), 3420);
+        wxConfigBase::Get()->Flush();
+    }
+#endif
+
 
 #ifdef __WXMSW__
     wxString ldpath;
@@ -639,10 +653,6 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
     }
     tags.Prepend(_("\n\nSupported trace tags: "));
 
-#if defined(SUPPORT_USBIP) && defined(__LINUX__)
-    parser.AddSwitch(wxEmptyString, wxT("hotplug"),
-            _("To be called from udev hotplug."));
-#endif
     parser.AddSwitch(wxEmptyString, wxT("admin"),
             _("Start the session administration tool."));
     parser.AddOption(wxEmptyString, wxT("caption"),
@@ -687,10 +697,6 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
     wxString sDlgType;
 
     m_eMode = MODE_CLIENT;
-    if (parser.Found(wxT("hotplug"))) {
-        m_eMode = MODE_HOTPLUG;
-        return true;
-    }
     if (parser.Found(wxT("dialog"), &sDlgType)) {
         wxString tmp;
         m_iDialogStyle = wxICON_WARNING;
@@ -811,6 +817,9 @@ bool opennxApp::realInit()
     wxXmlResource::Get()->InitAllHandlers();
     wxXmlResource::Get()->AddHandler(new wxRichTextCtrlXmlHandler());
 
+    // This enable socket-I/O from other threads.
+    wxSocketBase::Initialize();
+
     bool resok = false;
     wxString optionalRsc = tmp + wxFileName::GetPathSeparator() + wxT("share")
         + wxFileName::GetPathSeparator() + wxT("opennx.rsc");
@@ -857,9 +866,6 @@ bool opennxApp::realInit()
         return false;
 
     switch (m_eMode) {
-        case MODE_HOTPLUG:
-            handleHotplug();
-            return false;
         case MODE_CLIENT:
         case MODE_WIZARD:
             break;
@@ -991,8 +997,18 @@ int opennxApp::OnExit()
     return wxApp::OnExit();
 }
 
-void opennxApp::handleHotplug()
+void opennxApp::HandleHotplug()
 {
+    UsbIp usbip;
+
+    if (usbip.Connect(
+                wxConfigBase::Get()->Read(wxT("Config/UsbipdSocket"),
+                    wxT("/var/run/usbipd.socket")))) {
+        wxLogDebug(wxT("connected to usbipd2"));
+        usbip.SetSession(wxT("xfoo"));
+        usbip.ExportDevice(wxT("2-1"));
+    } else
+        wxLogDebug(wxT("Could not connect"));
     if (!m_bLibUSBAvailable) {
         printf("libusb unavailable\n");
         return;

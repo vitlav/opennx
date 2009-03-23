@@ -220,9 +220,6 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
 
     EVT_CHECKBOX( XRCID("ID_CHECKBOX_USBENABLE"), SessionProperties::OnCHECKBOXUSBENABLEClick )
 
-    EVT_SPINCTRL( XRCID("ID_SPINCTRL_USB_LOCALPORT"), SessionProperties::OnSpinctrlUsbLocalportUpdated )
-    EVT_TEXT( XRCID("ID_SPINCTRL_USB_LOCALPORT"), SessionProperties::OnSpinctrlUsbLocalportTextUpdated )
-
     EVT_LIST_ITEM_SELECTED( XRCID("ID_LISTCTRL_USBFILTER"), SessionProperties::OnListctrlUsbfilterSelected )
     EVT_LIST_ITEM_ACTIVATED( XRCID("ID_LISTCTRL_USBFILTER"), SessionProperties::OnListctrlUsbfilterItemActivated )
 
@@ -246,9 +243,18 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
 
     EVT_BUTTON( XRCID("ID_BUTTON_BROWSE_CUPSPATH"), SessionProperties::OnButtonBrowseCupspathClick )
 
+    EVT_TEXT( XRCID("ID_TEXTCTRL_USBIPD_SOCKET"), SessionProperties::OnTextctrlUsbipdSocketTextUpdated )
+
+    EVT_BUTTON( XRCID("ID_BUTTON_BROWSE_USBIPD_SOCKET"), SessionProperties::OnButtonBrowseUsbipdSocketClick )
+
+    EVT_SPINCTRL( XRCID("ID_SPINCTRL_USB_LOCALPORT"), SessionProperties::OnSpinctrlUsbLocalportUpdated )
+    EVT_TEXT( XRCID("ID_SPINCTRL_USB_LOCALPORT"), SessionProperties::OnSpinctrlUsbLocalportTextUpdated )
+
     EVT_BUTTON( XRCID("ID_BUTTON_FONT_DEFAULT"), SessionProperties::OnButtonFontDefaultClick )
 
     EVT_BUTTON( XRCID("ID_BUTTON_FONT_FIXED"), SessionProperties::OnButtonFontFixedClick )
+
+    EVT_BUTTON( XRCID("ID_BUTTON_TEST1"), SessionProperties::OnButtonTest1Click )
 
     EVT_BUTTON( wxID_DELETE, SessionProperties::OnDeleteClick )
 
@@ -353,7 +359,6 @@ SessionProperties::CheckChanged()
 #ifdef SUPPORT_USBIP
         // variables on the 'USB' tab
         m_pCfg->bSetEnableUSBIP(m_bEnableUSBIP);
-        m_pCfg->iSetUsbLocalPort(m_iUsbLocalPort);
         m_pCfg->aSetUsbForwards(m_aUsbForwards);
 #endif
 
@@ -364,6 +369,8 @@ SessionProperties::CheckChanged()
         bool changed = m_pCfg->checkChanged();
         changed |= (m_sSavedUserNxDir != m_sUserNxDir);
         changed |= (m_sSavedSystemNxDir != m_sSystemNxDir);
+        changed |= (m_sSavedUsbipdSocket != m_sUsbipdSocket);
+        changed |= (m_iSavedUsbLocalPort != m_iUsbLocalPort);
         m_pCtrlApplyButton->Enable(changed);
     }
 }
@@ -409,7 +416,6 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlShareModify = NULL;
     m_pCtrlShareDelete = NULL;
     m_pCtrlUsbEnable = NULL;
-    m_pCtrlUsbLocalPort = NULL;
     m_pCtrlUsbFilter = NULL;
     m_pCtrlUsbAdd = NULL;
     m_pCtrlUsbModify = NULL;
@@ -418,6 +424,10 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlSystemNxDir = NULL;
     m_pCtrlCupsPath = NULL;
     m_pCtrlCupsBrowse = NULL;
+    m_pCtrlUsbipdDaemon = NULL;
+    m_pCtrlUsbIpdSocket = NULL;
+    m_pCtrlUsbipdSocketBrowse = NULL;
+    m_pCtrlUsbLocalPort = NULL;
     m_pCtrlFontDefault = NULL;
     m_pCtrlFontFixed = NULL;
     m_pCtrlPanelAbout = NULL;
@@ -469,19 +479,26 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
         // variables on 'USB' tab
 #ifdef SUPPORT_USBIP
         m_bEnableUSBIP = m_pCfg->bGetEnableUSBIP();
-        m_iUsbLocalPort = m_pCfg->iGetUsbLocalPort();
         m_aUsbForwards = m_pCfg->aGetUsbForwards();
 #else
         m_bEnableUSBIP = false;
         m_pCfg->bSetEnableUSBIP(false);
 #endif
 
-        // variabless on 'Environment' tab
+        // variables on 'Environment' tab
         m_bRemoveOldSessionFiles = m_pCfg->bGetRemoveOldSessionFiles();
         m_sCupsPath = m_pCfg->sGetCupsPath();
     }
     wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &m_sUserNxDir);
     wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &m_sSystemNxDir);
+#ifdef SUPPORT_USBIP
+    wxConfigBase::Get()->Read(wxT("Config/UsbipdSocket"), &m_sUsbipdSocket);
+    wxConfigBase::Get()->Read(wxT("Config/UsbipPort"), &m_iUsbLocalPort);
+#else
+    m_sUsbipdSocket = wxEmptyString;
+#endif
+    // This setting can be used by an admin to disable storing passwords
+    // It has to be set amnually in the global config file.
     wxConfigBase::Get()->Read(wxT("Config/StorePasswords"), &m_bStorePasswords, true);
     if (!m_bStorePasswords)
         m_bRememberPassword = false;
@@ -497,8 +514,19 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     }
     Centre();
 ////@end SessionProperties creation
+
+#ifdef __WXDEBUG__
+    {
+        wxString tmp;
+        if (!::wxGetEnv(wxT("SHOWTESTTAB"), &tmp))
+            removePage(_("Test"));
+    }
+#else
+    removePage(_("Test"));
+#endif
 #ifndef SUPPORT_USBIP
     removePage(_("USB"));
+    m_pCtrlUsbipdDaemon->Hide();
 #endif
     setFontLabel(m_pCtrlFontDefault, m_cFontDefault);
     setFontLabel(m_pCtrlFontFixed, m_cFontFixed);
@@ -621,6 +649,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCfg->saveState();
     m_sSavedUserNxDir = m_sUserNxDir;
     m_sSavedSystemNxDir = m_sSystemNxDir;
+    m_sSavedUsbipdSocket = m_sUsbipdSocket;
 
     // Hook into OnChar events of wxTextCtrl's and wxSpinCtrl's
     InstallOnCharHandlers();
@@ -802,7 +831,6 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
 
 #ifdef SUPPORT_USBIP
     // 'USB' tab
-    m_pCtrlUsbLocalPort->Enable(m_bEnableUSBIP);
     m_pCtrlUsbFilter->Enable(m_bEnableUSBIP);
     m_pCtrlUsbAdd->Enable(m_bEnableUSBIP);
     m_pCtrlUsbDelete->Enable(m_bEnableUSBIP && (m_pCtrlUsbFilter->GetSelectedItemCount() > 0));
@@ -855,7 +883,6 @@ void SessionProperties::CreateControls()
     m_pCtrlShareModify = XRCCTRL(*this, "ID_BUTTON_SMB_MODIFY", wxButton);
     m_pCtrlShareDelete = XRCCTRL(*this, "ID_BUTTON_SMB_DELETE", wxButton);
     m_pCtrlUsbEnable = XRCCTRL(*this, "ID_CHECKBOX_USBENABLE", wxCheckBox);
-    m_pCtrlUsbLocalPort = XRCCTRL(*this, "ID_SPINCTRL_USB_LOCALPORT", wxSpinCtrl);
     m_pCtrlUsbFilter = XRCCTRL(*this, "ID_LISTCTRL_USBFILTER", wxListCtrl);
     m_pCtrlUsbAdd = XRCCTRL(*this, "ID_BUTTON_USBADD", wxButton);
     m_pCtrlUsbModify = XRCCTRL(*this, "ID_BUTTON_USBMODIFY", wxButton);
@@ -864,6 +891,10 @@ void SessionProperties::CreateControls()
     m_pCtrlSystemNxDir = XRCCTRL(*this, "ID_TEXTCTRL_SYSDIR", wxTextCtrl);
     m_pCtrlCupsPath = XRCCTRL(*this, "ID_TEXTCTRL_CUPSPATH", wxTextCtrl);
     m_pCtrlCupsBrowse = XRCCTRL(*this, "ID_BUTTON_BROWSE_CUPSPATH", wxButton);
+    m_pCtrlUsbipdDaemon = XRCCTRL(*this, "ID_PANEL_USBIP_DAEMON", wxPanel);
+    m_pCtrlUsbIpdSocket = XRCCTRL(*this, "ID_TEXTCTRL_USBIPD_SOCKET", wxTextCtrl);
+    m_pCtrlUsbipdSocketBrowse = XRCCTRL(*this, "ID_BUTTON_BROWSE_USBIPD_SOCKET", wxButton);
+    m_pCtrlUsbLocalPort = XRCCTRL(*this, "ID_SPINCTRL_USB_LOCALPORT", wxSpinCtrl);
     m_pCtrlFontDefault = XRCCTRL(*this, "ID_BUTTON_FONT_DEFAULT", wxButton);
     m_pCtrlFontFixed = XRCCTRL(*this, "ID_BUTTON_FONT_FIXED", wxButton);
     m_pCtrlPanelAbout = XRCCTRL(*this, "ID_PANEL_ABOUT", wxPanel);
@@ -924,8 +955,6 @@ void SessionProperties::CreateControls()
         FindWindow(XRCID("ID_CHECKBOX_MMEDIA"))->SetValidator( wxGenericValidator(& m_bEnableMultimedia) );
     if (FindWindow(XRCID("ID_CHECKBOX_USBENABLE")))
         FindWindow(XRCID("ID_CHECKBOX_USBENABLE"))->SetValidator( wxGenericValidator(& m_bEnableUSBIP) );
-    if (FindWindow(XRCID("ID_SPINCTRL_USB_LOCALPORT")))
-        FindWindow(XRCID("ID_SPINCTRL_USB_LOCALPORT"))->SetValidator( MyValidator(MyValidator::MYVAL_NUMERIC, & m_iUsbLocalPort) );
     if (FindWindow(XRCID("ID_TEXTCTRL_USERDIR")))
         FindWindow(XRCID("ID_TEXTCTRL_USERDIR"))->SetValidator( MyValidator(& m_sUserNxDir) );
     if (FindWindow(XRCID("ID_CHECKBOX_REMOVEOLDSF")))
@@ -934,6 +963,10 @@ void SessionProperties::CreateControls()
         FindWindow(XRCID("ID_TEXTCTRL_SYSDIR"))->SetValidator( MyValidator(& m_sSystemNxDir) );
     if (FindWindow(XRCID("ID_TEXTCTRL_CUPSPATH")))
         FindWindow(XRCID("ID_TEXTCTRL_CUPSPATH"))->SetValidator( MyValidator(& m_sCupsPath) );
+    if (FindWindow(XRCID("ID_TEXTCTRL_USBIPD_SOCKET")))
+        FindWindow(XRCID("ID_TEXTCTRL_USBIPD_SOCKET"))->SetValidator( MyValidator(& m_sUsbipdSocket) );
+    if (FindWindow(XRCID("ID_SPINCTRL_USB_LOCALPORT")))
+        FindWindow(XRCID("ID_SPINCTRL_USB_LOCALPORT"))->SetValidator( MyValidator(MyValidator::MYVAL_NUMERIC, & m_iUsbLocalPort) );
     ////@end SessionProperties content construction
 
     if ((!m_bStorePasswords) && FindWindow(XRCID("ID_CHECKBOX_PWSAVE")))
@@ -1465,8 +1498,14 @@ void SessionProperties::OnDeleteClick( wxCommandEvent& event )
 void SessionProperties::OnApplyClick( wxCommandEvent& event )
 {
     m_pCfg->saveState();
+    wxConfigBase::Get()->Write(wxT("Config/UserNxDir"), m_sUserNxDir);
+    wxConfigBase::Get()->Write(wxT("Config/SystemNxDir"), m_sSystemNxDir);
+    wxConfigBase::Get()->Write(wxT("Config/UsbipdSocket"), m_sUsbipdSocket);
+    wxConfigBase::Get()->Write(wxT("Config/UsbipPort"), m_iUsbLocalPort);
+    m_iSavedUsbLocalPort = m_iUsbLocalPort;
     m_sSavedUserNxDir = m_sUserNxDir;
     m_sSavedSystemNxDir = m_sSystemNxDir;
+    m_sSavedUsbipdSocket = m_sUsbipdSocket;
     m_pCtrlApplyButton->Enable(false);
 }
 
@@ -2079,5 +2118,42 @@ void SessionProperties::OnSpinctrlUsbLocalportTextUpdated( wxCommandEvent& event
 {
     if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlUsbLocalPort))
         m_pCtrlApplyButton->Enable(true);
+}
+
+
+/*!
+ * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_USBIPD_SOCKET
+ */
+
+void SessionProperties::OnTextctrlUsbipdSocketTextUpdated( wxCommandEvent& event )
+{
+    if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlUsbIpdSocket))
+        CheckChanged();
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BROWSE_USBIPD_SOCKET
+ */
+
+void SessionProperties::OnButtonBrowseUsbipdSocketClick( wxCommandEvent& event )
+{
+    wxFileName fn(m_sUsbipdSocket);
+    const wxString& file = ::wxFileSelector(_("Select path of USBIPD socket"),
+            fn.GetPath(), fn.GetName(), wxEmptyString, wxT("*"), wxOPEN|wxFILE_MUST_EXIST, this);
+    if (!file.IsEmpty()) {
+        m_pCtrlUsbIpdSocket->SetValue(file);
+        CheckChanged();
+    }
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_TEST1
+ */
+
+void SessionProperties::OnButtonTest1Click( wxCommandEvent& event )
+{
+    ::wxGetApp().HandleHotplug();
 }
 

@@ -38,6 +38,7 @@
 #include "wx/wx.h"
 #endif
 
+#include "UsbIp.h"
 #include "CardWaiterDialog.h"
 #include "ConnectDialog.h"
 #include "MySession.h"
@@ -1203,7 +1204,7 @@ MySession::startProxy()
         popts << wxT(",cups=") << cupsport;
 #ifdef SUPPORT_USBIP
     if (m_pCfg->bGetEnableUSBIP())
-        popts << wxT(",http=") << m_pCfg->iGetUsbLocalPort();
+        popts << wxT(",http=") << wxConfigBase::Get()->Read(wxT("Config/UsbipPort"), 3420);
 #endif
     if (m_lEsdPort != 0)
         popts << wxT(",media=") << m_lEsdPort;
@@ -1474,6 +1475,28 @@ MySession::clearSshKeys(const wxString &keyloc)
     }
 }
 
+    void
+MySession::startUsbIp()
+{
+    wxString usid = m_sSessionID.Right(32);
+    wxString usock = wxConfigBase::Get()->Read(wxT("Config/UsbipdSocket"),
+            wxT("/var/run/usbipd.socket"));
+
+    UsbIp usbip;
+    if (usbip.Connect(usock)) {
+        int i;
+        wxLogTrace(MYTRACETAG, wxT("connected to usbipd2"));
+        usbip.SetSession(m_sSessionID.Right(32));
+        ArrayOfUsbForwards auf = m_pCfg->aGetUsbForwards();
+        for (i = 0; i < auf.GetCount(); i++)
+            if (SharedUsbDevice::MODE_REMOTE == auf[i].m_eMode) {
+                wxLogTrace(MYTRACETAG, wxT("possibly exported USB device: %04x/%04x %s"),
+                        auf[i].m_iVendorID, auf[i].m_iProductID, auf[i].toShortString().c_str());
+            }
+    } else
+        wxLogError(wxT("Could not connect to usbipd2"));
+}
+
     bool
 MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent)
 {
@@ -1583,7 +1606,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
         }
 
         if (m_pCfg->bGetUseProxy() && (!m_pCfg->sGetProxyHost().IsEmpty()))
-                nxsshcmd << wxT(" -P ") << m_pCfg->sGetProxyHost() << wxT(":") << m_pCfg->iGetProxyPort();
+            nxsshcmd << wxT(" -P ") << m_pCfg->sGetProxyHost() << wxT(":") << m_pCfg->iGetProxyPort();
 
         if (m_pCfg->bGetExternalProxy() && (!m_pCfg->sGetProxyCommand().IsEmpty()))
             nxsshcmd << wxT(" -o 'ProxyCommand ") << m_pCfg->sGetProxyCommand() << wxT("'");
@@ -1725,6 +1748,8 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
             watchcmd << wxT(" -r ") << m_iReader << wxT(" -p ") << nxssh.GetPID();
             ::wxExecute(watchcmd);
         }
+        if (m_pCfg->bGetEnableUSBIP())
+            startUsbIp();
         return true;
     }
     return false;
