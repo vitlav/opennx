@@ -26,8 +26,10 @@
 #pragma interface "UsbIp.h"
 #endif
 
-#include <wx/event.h>
-#include <wx/dynarray.h>
+#ifdef SUPPORT_USBIP
+
+# include <wx/event.h>
+# include <wx/dynarray.h>
 
 class wxSocketClient;
 class wxSocketEvent;
@@ -108,6 +110,9 @@ class UsbIp : public wxEvtHandler {
         wxArrayString m_aSessions;
         ArrayOfUsbIpDevices m_aDevices;
 };
+
+#endif
+// SUPPORT_USBIP
 
 #endif
 // _USBIP_H_

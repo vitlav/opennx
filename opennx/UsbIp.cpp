@@ -26,6 +26,8 @@
 #pragma implementation "UsbIp.h"
 #endif
 
+#ifdef SUPPORT_USBIP
+
 // For compilers that support precompilation, includes "wx.h".
 #include "wx/wxprec.h"
 
@@ -62,9 +64,10 @@ wxString UsbIpDevice::toString() const {
 IMPLEMENT_CLASS(UsbIp, wxEvtHandler);
 
 #define SOCKET_ID 55555
-    BEGIN_EVENT_TABLE(UsbIp, wxEvtHandler)
+
+BEGIN_EVENT_TABLE(UsbIp, wxEvtHandler)
 EVT_SOCKET(SOCKET_ID, UsbIp::OnSocketEvent)
-    END_EVENT_TABLE();
+END_EVENT_TABLE()
 
 UsbIp::UsbIp()
 {
@@ -370,5 +373,5 @@ void UsbIp::OnSocketEvent(wxSocketEvent &event)
     }
 }
 
-#ifdef SUPPORT_USBIP
 #endif
+// SUPPORT_USBIP
