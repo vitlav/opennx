@@ -38,8 +38,6 @@
 #include "wx/wx.h"
 #endif
 
-#include "UsbIp.h"
-#include "LibUSB.h"
 #include "CardWaiterDialog.h"
 #include "ConnectDialog.h"
 #include "MySession.h"
@@ -1476,55 +1474,6 @@ MySession::clearSshKeys(const wxString &keyloc)
     }
 }
 
-    void
-MySession::startUsbIp()
-{
-#ifdef SUPPORT_USBIP
-    bool lusbok = wxGetApp().LibUSBAvailable();
-    wxString usid = m_sSessionID.Right(32);
-    wxString usock = wxConfigBase::Get()->Read(wxT("Config/UsbipdSocket"),
-            wxT("/var/run/usbipd.socket"));
-
-    UsbIp usbip;
-    if (usbip.Connect(usock)) {
-        int i, j, k;
-        wxLogTrace(MYTRACETAG, wxT("connected to usbipd2"));
-        usbip.SetSession(m_sSessionID.Right(32));
-        ArrayOfUsbForwards af = m_pCfg->aGetUsbForwards();
-        ArrayOfUsbIpDevices aid = usbip.GetDevices();
-        ArrayOfUSBDevices ad;
-        if (lusbok) {
-            USB u;
-            ad = u.GetDevices();
-        }
-        for (i = 0; i < af.GetCount(); i++)
-            if (SharedUsbDevice::MODE_REMOTE == af[i].m_eMode) {
-                if (!lusbok) {
-                    wxLogError(_("libusb is not available. No USB devices will be exported"));
-                    break;
-                }
-                wxLogTrace(MYTRACETAG, wxT("possibly exported USB device: %04x/%04x %s"),
-                        af[i].m_iVendorID, af[i].m_iProductID, af[i].toShortString().c_str());
-                for (j = 0; j < ad.GetCount(); j++)
-                    if (af[i].MatchHotplug(ad[j])) {
-                        wxLogTrace(MYTRACETAG, wxT("Match on USB dev %s"), ad[j].toString().c_str());
-                        for (k = 0; k < aid.GetCount(); k++) {
-                            if (aid[k].GetUsbBusID().IsSameAs(ad[j].GetBusID())) {
-                                wxString exBusID = aid[k].GetUsbIpBusID();
-                                wxLogTrace(MYTRACETAG, wxT("Exporting busid %s"), exBusID.c_str());
-                                if (!usbip.WaitForSession(20))
-                                    wxLogError(_("Unable to export USB device %s"), af[i].toShortString().c_str());
-                                if (!usbip.ExportDevice(exBusID))
-                                    wxLogError(_("Unable to export USB device %s"), af[i].toShortString().c_str());
-                            }
-                        }
-                    }
-            }
-    } else
-        wxLogError(_("Could not connect to usbipd2. No USB devices will be exported"));
-#endif
-}
-
     bool
 MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent)
 {
@@ -1561,16 +1510,8 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
         fn.SetName(wxT("nxssh"));
 #endif
         wxString nxsshcmd = fn.GetShortPath();
-#define USBIB_TEST
-#ifdef USBID_TEST
-#warning To be discussed, if we can use this for the usbaid port
-        int usbaid = getFirstFreePort(USBIP_PORT_OFFSET);
-#endif
         nxsshcmd << wxT(" -nx -x -2")
             << wxT(" -p ") << m_pCfg->iGetServerPort()
-#ifdef USBID_TEST
-            << wxT(" -L 127.0.0.1:") << usbaid << wxT(":127.0.0.1:3420")
-#endif
             << wxT(" -o 'RhostsAuthentication no'")
             << wxT(" -o 'PasswordAuthentication no'")
             << wxT(" -o 'RSAAuthentication no'")
@@ -1762,22 +1703,21 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
             if (m_bRemoveKey)
                 clearSshKeys(m_sOffendingKey);
         } while (m_bRemoveKey);
-        if ((-1 != m_iReader) && m_pCfg->bGetUseSmartCard()) {
-            wxLogNull noerrors;
 
-            wxFileName fn(m_sSysDir, wxEmptyString);
-            fn.AppendDir(wxT("bin"));
-#ifdef __WXMSW__
-            fn.SetName(wxT("watchreader.exe"));
-#else
-            fn.SetName(wxT("watchreader"));
-#endif
-            wxString watchcmd = fn.GetShortPath();
-            watchcmd << wxT(" -r ") << m_iReader << wxT(" -p ") << nxssh.GetPID();
-            ::wxExecute(watchcmd);
+        if (m_pCfg->bGetEnableUSBIP()) {
+            ::wxLogTrace(MYTRACETAG, wxT("Enabling UsbIp"));
+            ::wxGetApp().SetNxSshPID(nxssh.GetPID());
+            ::wxGetApp().SetSessionCfg(*m_pCfg);
+            ::wxGetApp().SetSessionID(m_sSessionID.Right(32));
+            ::wxGetApp().SetRequireStartUsbIp(true);
+        } else {
+            if (m_pCfg->bGetUseSmartCard()) {
+                ::wxLogTrace(MYTRACETAG, wxT("Enabling WatchReader %d"), m_iReader);
+                ::wxGetApp().SetNxSshPID(nxssh.GetPID());
+                ::wxGetApp().SetReader(m_iReader);
+                ::wxGetApp().SetRequireWatchReader(true);
+            }
         }
-        if (m_pCfg->bGetEnableUSBIP())
-            startUsbIp();
         return true;
     }
     return false;

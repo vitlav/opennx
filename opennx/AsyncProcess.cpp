@@ -46,6 +46,17 @@
 #include "trace.h"
 ENABLE_TRACE;
 
+#if 0
+// trying to get rid of file descriptors which are left
+// open by redirected wxExecute ...
+#define private public
+#define protected public
+#include <wx/file.h>
+#include <wx/wfstream.h>
+#undef private
+#undef protected
+#endif
+
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_PROCESS_STDOUT);
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_PROCESS_STDERR);
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_PROCESS_EXIT);
@@ -89,6 +100,7 @@ AsyncProcess::~AsyncProcess()
             wxThread::Sleep(100);
         m_thread = NULL;
     }
+    ::wxLogTrace(MYTRACETAG, wxT("~AsyncProcess exit"));
     m_pEvtHandler = NULL;
 }
 
@@ -252,6 +264,12 @@ AsyncProcess::Detach()
 {
     ::wxLogTrace(MYTRACETAG, wxT("Detach() called"));
     m_pEvtHandler = NULL;
+#if 0
+    int out_fd = reinterpret_cast<wxFileOutputStream*>(m_outputStream)->m_file->m_fd;
+    int err_fd = reinterpret_cast<wxFileInputStream*>(m_errorStream)->m_file->m_fd;
+    int inp_fd = reinterpret_cast<wxFileInputStream*>(m_inputStream)->m_file->m_fd;
+    ::wxLogTrace(MYTRACETAG, wxT("inp=%d out=%d err=%d"), inp_fd, out_fd, err_fd);
+#endif
     wxProcess::Detach();
     if (m_thread && m_thread->IsRunning()) {
         m_thread->Delete();
@@ -261,6 +279,11 @@ AsyncProcess::Detach()
         ::wxLogTrace(MYTRACETAG, wxT("Detatch(): IoThread has ended"));
         m_thread = NULL;
     }
+#if 0
+    close(inp_fd);
+    close(out_fd);
+    close(err_fd);
+#endif
 }
 
     bool

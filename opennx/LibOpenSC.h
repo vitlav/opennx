@@ -56,7 +56,7 @@ class LibOpenSC
         int WaitForCard(CardWaiterDialog *);
 #endif
         bool HasOpenSC();
-        void WatchHotRemove(int, long);
+        bool WatchHotRemove(int, long);
 };
 
 #endif

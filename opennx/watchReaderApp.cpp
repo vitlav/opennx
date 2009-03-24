@@ -116,7 +116,10 @@ bool watchReaderApp::OnInit()
         return false;
 
     LibOpenSC opensc;
-    opensc.WatchHotRemove(m_iReader, m_lSshPid);
+    if (opensc.WatchHotRemove(m_iReader, m_lSshPid))
+        wxMessageBox(
+                _("OpenNX session has been suspended, because\nthe authenticating smart card has been removed."),
+                _("Smart card removed"), wxOK|wxICON_INFORMATION);
     SetExitOnFrameDelete(true);
     return false;
 }

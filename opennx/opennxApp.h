@@ -25,7 +25,6 @@
 #include <wx/intl.h>
 
 class wxConfigBase;
-class wxCmdLineParser2;
 class wxTaskBarIcon;
 class MyXmlConfig;
 
@@ -51,6 +50,13 @@ class opennxApp : public wxApp
         bool NxSmartCardSupport() { return m_bNxSmartCardSupport; }
         bool LibUSBAvailable() { return m_bLibUSBAvailable; }
 
+        void SetRequireWatchReader(bool b) { m_bRequireWatchReader = b; }
+        void SetRequireStartUsbIp(bool b) { m_bRequireStartUsbIp = b; }
+        void SetNxSshPID(long l) { m_nNxSshPID = l; }
+        void SetReader(int i) { m_iReader = i; }
+        void SetSessionCfg(const MyXmlConfig &);
+        void SetSessionID(const wxString &s) { m_sSessionID = s; };
+
         virtual bool OnInit();
         virtual void OnInitCmdLine(wxCmdLineParser& parser);
         virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
@@ -72,20 +78,26 @@ class opennxApp : public wxApp
         };
 
         wxConfigBase *m_pCfg;
+        MyXmlConfig *m_pSessionCfg;
         wxLocale m_cLocale;
         wxString m_sSessionName;
+        wxString m_sSessionID;
         wxString m_sResourcePrefix;
         wxString m_sVersion;
         wxString m_sSelfPath;
         wxString m_sDialogCaption;
         wxString m_sDialogMessage;
+        long m_nNxSshPID;
         long m_nOtherPID;
         long m_nWindowID;
         int m_iDialogStyle;
+        int m_iReader;
         enum mode m_eMode;
         bool m_bNxSmartCardSupport;
         bool m_bRunproc;
         bool m_bLibUSBAvailable;
+        bool m_bRequireWatchReader;
+        bool m_bRequireStartUsbIp;
 
         bool preInit();
         bool realInit();

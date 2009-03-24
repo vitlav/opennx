@@ -86,10 +86,17 @@ DECLARE_TRACETAGS;
 
 IMPLEMENT_APP(opennxApp);
 
-opennxApp::opennxApp()
-    : wxApp(),
-    m_pCfg(NULL),
-    m_bNxSmartCardSupport(false)
+    opennxApp::opennxApp()
+    : wxApp()
+    ,m_pCfg(NULL)
+    ,m_pSessionCfg(NULL)
+    ,m_nNxSshPID(-1)
+    ,m_iReader(-1)
+    ,m_bNxSmartCardSupport(false)
+    ,m_bRunproc(false)
+    ,m_bLibUSBAvailable(false)
+    ,m_bRequireWatchReader(false)
+      ,m_bRequireStartUsbIp(false)
 {
     SetAppName(wxT("OpenNX"));
 #ifdef __WXMSW__
@@ -156,6 +163,8 @@ opennxApp::~opennxApp()
 {
     if (m_pCfg)
         delete m_pCfg;
+    if (m_pSessionCfg)
+        delete m_pSessionCfg;
 }
 
     wxString
@@ -179,10 +188,10 @@ opennxApp::LoadFileFromResource(const wxString &loc, bool bUseLocale /* = true *
 
         // try plain loc first
         f = fs.OpenFile(tryloc);
-        
+
         if (!f)
             f = fs.OpenFile(GetResourcePrefix() + tryloc);
-        
+
         if (f) {
             wxInputStream *is = f->GetStream();
             size_t size = is->GetSize();
@@ -204,7 +213,7 @@ static const wxChar *desktopDirs[] = {
     bool
 opennxApp::CreateDesktopEntry(MyXmlConfig *cfg)
 {
-	bool ret = false;
+    bool ret = false;
 
     wxString appDir;
     wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &appDir);
@@ -231,7 +240,7 @@ opennxApp::CreateDesktopEntry(MyXmlConfig *cfg)
             if (SUCCEEDED(hres)) {
                 hres = ppf->Save(wxConvLocal.cWX2WC(linkPath), TRUE);
                 ppf->Release();
-				ret = true;
+                ret = true;
             }
             psl->Release();
         }
@@ -356,14 +365,14 @@ opennxApp::CreateDesktopEntry(MyXmlConfig *cfg)
             if (f.Create(fn, true, wxS_IRUSR|wxS_IWUSR|wxS_IRGRP|wxS_IROTH)) {
                 f.Write(dtEntry);
                 f.Close();
-				ret = true;
+                ret = true;
             }
         }
         p++;
     }
 # endif // !__WXMAC__
 #endif // __UNIX__
-	return ret;
+    return ret;
 }
 
     bool
@@ -372,10 +381,10 @@ opennxApp::RemoveDesktopEntry(MyXmlConfig *cfg)
 #ifdef __WXMSW__
     TCHAR dtPath[MAX_PATH];
     if (SHGetSpecialFolderPath(NULL, dtPath, CSIDL_DESKTOPDIRECTORY, FALSE)) {
-		wxString lpath = wxString::Format(_T("%s\\%s.lnk"), dtPath, wx_static_cast(const char *,cfg->sGetName().mb_str()));
-		::wxLogTrace(MYTRACETAG, wxT("Removing '%s'"), lpath.c_str());
+        wxString lpath = wxString::Format(_T("%s\\%s.lnk"), dtPath, wx_static_cast(const char *,cfg->sGetName().mb_str()));
+        ::wxLogTrace(MYTRACETAG, wxT("Removing '%s'"), lpath.c_str());
         ::wxRemoveFile(lpath);
-	}
+    }
 #endif
 #ifdef __UNIX__
     const wxChar **p = desktopDirs;
@@ -388,7 +397,7 @@ opennxApp::RemoveDesktopEntry(MyXmlConfig *cfg)
 #endif
     ::wxLogTrace(MYTRACETAG, wxT("Removing '%s'"), cfg->sGetFileName().c_str());
     ::wxRemoveFile(cfg->sGetFileName());
-	return true;
+    return true;
 }
 
     void
@@ -920,6 +929,9 @@ bool opennxApp::realInit()
         case MODE_FOREIGN_TOOLBAR:
             {
                 ForeignFrame *ff = new ForeignFrame(NULL);
+                // If we return true, the global config will
+                // be deleted by the framework, so we set it to NULL here
+                // to prevent double free.
                 m_pCfg = NULL;
                 ff->SetOtherPID(m_nOtherPID);
                 ff->SetForeignWindowID(m_nWindowID);
@@ -979,6 +991,79 @@ bool opennxApp::realInit()
 bool opennxApp::OnInit()
 {
     bool ret = realInit();
+#ifdef SUPPORT_USBIP
+    if (m_bRequireStartUsbIp) {
+        wxString usock = wxConfigBase::Get()->Read(wxT("Config/UsbipdSocket"),
+                wxT("/var/run/usbipd.socket"));
+        UsbIp usbip;
+        if (usbip.Connect(usock)) {
+            int i, j, k;
+            wxLogTrace(MYTRACETAG, wxT("connected to usbipd2"));
+            usbip.SetSession(m_sSessionID);
+            ArrayOfUsbForwards af = m_pSessionCfg->aGetUsbForwards();
+            ArrayOfUsbIpDevices aid = usbip.GetDevices();
+            ArrayOfUSBDevices ad;
+            if (LibUSBAvailable()) {
+                USB u;
+                ad = u.GetDevices();
+            }
+            for (i = 0; i < af.GetCount(); i++)
+                if (SharedUsbDevice::MODE_REMOTE == af[i].m_eMode) {
+                    if (!LibUSBAvailable()) {
+                        ::wxLogError(_("libusb is not available. No USB devices will be exported"));
+                        break;
+                    }
+                    ::wxLogTrace(MYTRACETAG, wxT("possibly exported USB device: %04x/%04x %s"),
+                            af[i].m_iVendorID, af[i].m_iProductID, af[i].toShortString().c_str());
+                    for (j = 0; j < ad.GetCount(); j++)
+                        if (af[i].MatchHotplug(ad[j])) {
+                            ::wxLogTrace(MYTRACETAG, wxT("Match on USB dev %s"), ad[j].toString().c_str());
+                            for (k = 0; k < aid.GetCount(); k++) {
+                                if (aid[k].GetUsbBusID().IsSameAs(ad[j].GetBusID())) {
+                                    wxString exBusID = aid[k].GetUsbIpBusID();
+                                    ::wxLogTrace(MYTRACETAG, wxT("Exporting busid %s"), exBusID.c_str());
+                                    if (!usbip.WaitForSession(20))
+                                        ::wxLogError(_("Unable to export USB device %s"), af[i].toShortString().c_str());
+                                    if (!usbip.ExportDevice(exBusID))
+                                        ::wxLogError(_("Unable to export USB device %s"), af[i].toShortString().c_str());
+                                }
+                            }
+                        }
+                }
+        } else
+            ::wxLogError(_("Could not connect to usbipd2. No USB devices will be exported"));
+    }
+#endif
+    if (m_bRequireWatchReader) {
+        ::wxLogTrace(MYTRACETAG, wxT("require Watchreader: m_iReader = %d, m_nNxSshPID = %ld"), m_iReader, m_nNxSshPID);
+        if (-1 != m_iReader) {
+            wxLogNull noerrors;
+            wxString appDir;
+            wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &appDir);
+            wxFileName fn(appDir, wxEmptyString);
+            fn.AppendDir(wxT("bin"));
+#ifdef __WXMSW__
+            fn.SetName(wxT("watchreader.exe"));
+#else
+            fn.SetName(wxT("watchreader"));
+#endif
+            wxString watchcmd = fn.GetShortPath();
+            watchcmd << wxT(" -r ") << m_iReader << wxT(" -p ") << m_nNxSshPID;
+            ::wxExecute(watchcmd);
+        }
+#if 0
+        LibOpenSC opensc;
+        if ((-1 < m_iReader) && (1 < m_nNxSshPID)) {
+            if (opensc.WatchHotRemove(m_iReader, m_nNxSshPID))
+                wxMessageBox(
+                        _("OpenNX session has been suspended, because\nthe authenticating smart card has been removed."),
+                        _("Smart card removed"), wxOK|wxICON_INFORMATION);
+        }
+        SetExitOnFrameDelete(true);
+#endif
+    }
+    while (::wxGetApp().Pending())
+        ::wxGetApp().Dispatch();
     if (!ret) {
         wxLogNull lognull;
         wxMemoryFSHandler::RemoveFile(wxT("memrsc"));
@@ -996,4 +1081,10 @@ int opennxApp::OnExit()
         wxMemoryFSHandler::RemoveFile(wxT("memrsc"));
     }
     return wxApp::OnExit();
+}
+
+void opennxApp::SetSessionCfg(const MyXmlConfig &cfg)
+{
+    m_pSessionCfg = new MyXmlConfig();
+    *m_pSessionCfg = cfg;
 }

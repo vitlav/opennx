@@ -252,30 +252,34 @@ int LibOpenSC::WaitForCard(CardWaiterDialog *d) {
 }
 #endif
 
-void LibOpenSC::WatchHotRemove(int ridx, long sshpid) {
+bool LibOpenSC::WatchHotRemove(int ridx, long sshpid) {
+
     wxDynamicLibrary dll;
     {
         wxLogNull ignoreErrors;
         if (!dll.Load(wxT("libopensc")))
-            return;
+            return false;
     }
 
     wxDYNLIB_FUNCTION(Tsc_establish_context, sc_establish_context, dll);
     if (!pfnsc_establish_context)
-        return;
+        return false;
     wxDYNLIB_FUNCTION(Tsc_release_context, sc_release_context, dll);
     if (!pfnsc_release_context)
-        return;
+        return false;
     wxDYNLIB_FUNCTION(Tsc_detect_card_presence, sc_detect_card_presence, dll);
     if (!pfnsc_detect_card_presence)
-        return;
+        return false;
 
-    sc_context *ctx;
+    sc_context *ctx = NULL;
+    ::wxLogTrace(MYTRACETAG, wxT("WatchHotRemove waiting for card removal"));
     while (true) {
+        if (ctx)
+            pfnsc_release_context(ctx);
         ctx = NULL;
         if (!wxProcess::Exists(sshpid)) {
             ::wxLogTrace(MYTRACETAG, wxT("nxssh pid %d has terminated"), sshpid);
-            return;
+            return false;
         }
         if (SC_SUCCESS == pfnsc_establish_context(&ctx, NULL)) {
             unsigned int rc = ctx->reader_count;
@@ -305,8 +309,6 @@ void LibOpenSC::WatchHotRemove(int ridx, long sshpid) {
                 ::wxLogTrace(MYTRACETAG, wxT("no readers found"));
                 break;
             }
-            if (ctx)
-                pfnsc_release_context(ctx);
         } else {
             ::wxLogTrace(MYTRACETAG, wxT("could not establish context"));
             break;
@@ -317,14 +319,41 @@ void LibOpenSC::WatchHotRemove(int ridx, long sshpid) {
     }
     if (ctx)
         pfnsc_release_context(ctx);
-    wxMessageBox(
-            _("OpenNX session has been suspended, because\nthe authenticating smart card has been removed."),
-            _("Smart card removed"), wxOK|wxICON_INFORMATION); 
     ::wxLogTrace(MYTRACETAG, wxT("Sending HUP to nxssh pid %d"), sshpid);
-    while (wxProcess::Exists(sshpid)) {
+    int trycount = 10;
+    while (wxProcess::Exists(sshpid) && (0 < trycount)) {
         wxProcess::Kill(sshpid, wxSIGHUP);
-        while (wxGetApp().Pending())
-            wxGetApp().Dispatch();
+        while (::wxGetApp().Pending())
+            ::wxGetApp().Dispatch();
         wxThread::Sleep(500);
+        trycount--;
     }
+    if (!wxProcess::Exists(sshpid))
+        return true;
+    // Again, this time SIGTERM
+    ::wxLogTrace(MYTRACETAG, wxT("Sending TERM to nxssh pid %d"), sshpid);
+    trycount = 10;
+    while (wxProcess::Exists(sshpid) && (0 < trycount)) {
+        wxProcess::Kill(sshpid, wxSIGTERM);
+        while (::wxGetApp().Pending())
+            ::wxGetApp().Dispatch();
+        wxThread::Sleep(500);
+        trycount--;
+    }
+    if (!wxProcess::Exists(sshpid))
+        return true;
+    // Finally, use brute force
+    ::wxLogTrace(MYTRACETAG, wxT("Sending KILL to nxssh pid %d"), sshpid);
+    trycount = 10;
+    while (wxProcess::Exists(sshpid) && (0 < trycount)) {
+        wxProcess::Kill(sshpid, wxSIGKILL);
+        while (::wxGetApp().Pending())
+            ::wxGetApp().Dispatch();
+        wxThread::Sleep(500);
+        trycount--;
+    }
+    if (!wxProcess::Exists(sshpid))
+        return true;
+    ::wxLogError(_("Could not terminate nxssh"));
+    return false;
 }
