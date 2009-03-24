@@ -43,6 +43,9 @@
 #ifdef APP_TRACELOG
 # include "tracelogApp.h"
 #endif
+#ifdef APP_WATCHUSBIP
+# include "watchUsbIpApp.h"
+#endif
 
 static const char * broken_xpm[] = {
 "14 16 17 1",

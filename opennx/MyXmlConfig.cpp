@@ -52,7 +52,14 @@ class wxConfigBase;
 #include "LibUSB.h"
 #include "MyXmlConfig.h"
 #include "WinShare.h"
-#include "opennxApp.h"
+
+#ifdef APP_OPENNX
+# include "opennxApp.h"
+#endif
+#ifdef APP_WATCHUSBIP
+# include "watchUsbIpApp.h"
+#endif
+
 #include "pwcrypt.h"
 #include "osdep.h"
 

@@ -100,6 +100,7 @@ OPENNX_RES=
 OPENNX_RESHDR=
 TRACELOG=
 WATCHREADER=
+WATCHUSBIP=
 case $target_os in
 	mingw*)
         # On mingw, the default lib path is /mingw/lib
@@ -130,6 +131,7 @@ case $target_os in
 	*)
 		APP_LDADD="-lstdc++ -lX11 -lXmu"
         WATCHREADER='watchreader$(EXEEXT)'
+        WATCHUSBIP='watchusbip$(EXEEXT)'
 		;;
 esac
 AC_SUBST(APP_LDADD)
@@ -138,6 +140,7 @@ AC_SUBST(OPENNX_RESHDR)
 AC_SUBST(TRACELOG)
 AC_SUBST(TRACELOG_RES)
 AC_SUBST(WATCHREADER)
+AC_SUBST(WATCHUSBIP)
 
 AC_ARG_ENABLE([warn],
 	AS_HELP_STRING([--enable-warn],

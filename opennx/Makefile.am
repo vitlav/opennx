@@ -3,9 +3,9 @@ SUBDIRS = po
 noinst_PROGRAMS = bin2hdr
 bin2hdr_SOURCES = bin2hdr.cpp
 
-bin_PROGRAMS = opennx $(TRACELOG) $(WATCHREADER)
+bin_PROGRAMS = opennx $(TRACELOG) $(WATCHREADER) $(WATCHUSBIP)
 
-EXTRA_PROGRAMS = tracelog$(EXEEXT) watchreader$(EXEEXT)
+EXTRA_PROGRAMS = tracelog$(EXEEXT) watchreader$(EXEEXT) watchusbip$(EXEEXT)
 
 opennx_SOURCES = AboutDialog.cpp AsyncProcess.cpp LibOpenSC.cpp \
 	CardWaiterDialog.cpp ConnectDialog.cpp ExtHtmlWindow.cpp ForeignFrame.cpp \
@@ -38,14 +38,20 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h LibOpenSC.h 
 	UsbFilterDetailsDialog_symbols.h UsbIp.h VncImageSettingsDialog.h \
 	VncImageSettingsDialog_symbols.h VncPropertyDialog.h \
 	VncPropertyDialog_symbols.h WinShare.h X11PropertyDialog.h \
-	X11PropertyDialog_symbols.h trace.h watchReaderApp.h xh_richtext.h
+	X11PropertyDialog_symbols.h trace.h watchReaderApp.h watchUsbIpApp.h xh_richtext.h
 
 watchreader_SOURCES = watchReaderApp.cpp LibOpenSC.cpp
 watchreader_LDADD = $(WX_LIBS) $(X_LIBS) $(X_PRE_LIBS) $(X_EXTRA_LIBS) $(APP_LDADD)
-watchreader_DEPENDENCIES = $(TRACELOG_RES)
 watchreader_CPPFLAGS = $(WX_CPPFLAGS) $(X_CFLAGS) -DAPP_WATCHREADER
 watchreader_CXXFLAGS = $(WX_CXXFLAGS)
 watchreader_CFLAGS = $(WX_CFLAGS)
+
+watchusbip_SOURCES = watchUsbIpApp.cpp UsbIp.cpp Icon.cpp LibUSB.cpp md5.c \
+					 MyXmlConfig.cpp osdep.c pwcrypt.cpp wxprec.cpp xh_richtext.cpp
+watchusbip_LDADD = $(WX_LIBS) $(X_LIBS) $(X_PRE_LIBS) $(X_EXTRA_LIBS) $(APP_LDADD)
+watchusbip_CPPFLAGS = $(WX_CPPFLAGS) $(X_CFLAGS) -DAPP_WATCHUSBIP
+watchusbip_CXXFLAGS = $(WX_CXXFLAGS)
+watchusbip_CFLAGS = $(WX_CFLAGS)
 
 tracelog_SOURCES = tracelogApp.cpp TraceLogFrame.cpp DebugStringGrabber.cpp \
 				   wxprec.cpp Icon.cpp
@@ -115,6 +121,8 @@ $(top_srcdir)/opennxApp.cpp: memres.h
 opennxApp.cpp: memres.h
 
 tracelogApp.cpp: memres.h
+
+watchUsbIpApp.cpp: memres.h
 
 SUFFIXES = .rc
 

@@ -48,7 +48,12 @@
 #include <wx/regex.h>
 #include <wx/arrimpl.cpp>
 
-#include "opennxApp.h"
+#ifdef APP_OPENNX
+# include "opennxApp.h"
+#endif
+#ifdef APP_WATCHUSBIP
+# include "watchUsbIpApp.h"
+#endif
 
 #include "trace.h"
 ENABLE_TRACE;
