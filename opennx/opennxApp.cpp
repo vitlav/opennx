@@ -519,7 +519,7 @@ opennxApp::preInit()
     }
 #ifdef SUPPORT_USBIP
     if (!wxConfigBase::Get()->Read(wxT("Config/UsbipdSocket"), &tmp)) {
-        tmp = wxT("/var/run/usbipd.socket");
+        tmp = wxT("/var/run/usbipd2.socket");
         wxConfigBase::Get()->Write(wxT("Config/UsbipdSocket"), tmp);
         wxConfigBase::Get()->Flush();
     }
@@ -998,7 +998,7 @@ bool opennxApp::OnInit()
 #ifdef SUPPORT_USBIP
     if (m_bRequireStartUsbIp) {
         wxString usock = wxConfigBase::Get()->Read(wxT("Config/UsbipdSocket"),
-                wxT("/var/run/usbipd.socket"));
+                wxT("/var/run/usbipd2.socket"));
         UsbIp usbip;
         if (usbip.Connect(usock)) {
             int i, j, k;
