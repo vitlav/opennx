@@ -44,18 +44,19 @@ Obsoletes: nxclient
 
 BuildRequires: libtool
 BuildRequires: automake
-BuildRequires: wxGTK2-devel >= 2.8.0
 BuildRequires: audiofile-devel
 BuildRequires: cups-devel
 BuildRequires: opensc-devel
 BuildRequires: libusb-devel
 %if %{is_suse}
+BuildRequires: wxGTK-devel >= 2.8.0
 %if "%{ostag}"=="SuSE11.1"
 BuildRequires: libsmbclient-devel
 %else
 BuildRequires: samba-common
 %endif
 %else
+BuildRequires: wxGTK2-devel >= 2.8.0
 BuildRequires: samba-common
 %endif
 BuildRequires: xorg-x11-proto-devel
