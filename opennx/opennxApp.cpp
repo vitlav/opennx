@@ -545,7 +545,11 @@ opennxApp::preInit()
     wxString ldpath;
     if (::wxGetEnv(wxT("LD_LIBRARY_PATH"), &ldpath))
         ldpath += wxT(":");
+#ifdef defined(__x86_64) || defined(__IA64__)
+    ldpath = tmp + wxT("/lib64");
+#else
     ldpath = tmp + wxT("/lib");
+#endif
     if (!::wxSetEnv(wxT("LD_LIBRARY_PATH"), ldpath)) {
         ::wxLogSysError(wxT("Can not set LD_LIBRARY_PATH"));
         return false;
