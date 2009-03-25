@@ -3612,7 +3612,7 @@ this share.</label>
                         <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                         <border>5</border>
                         <object class="wxStaticBitmap" name="wxID_STATIC">
-                            <size>21,19d</size>
+                            <size>16,15d</size>
                             <bitmap>memory:memrsc#zip:res/usbstick.png</bitmap>
                         </object>
                     </object>

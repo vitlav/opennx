@@ -1654,6 +1654,14 @@
             <string name="proxy-type">"wbBoxSizerProxy"</string>
             <string name="proxy-Orientation">"Vertical"</string>
             <string name="proxy-Member variable name">""</string>
+            <string name="proxy-AlignH">"Centre"</string>
+            <string name="proxy-AlignV">"Centre"</string>
+            <long name="proxy-Stretch factor">0</long>
+            <long name="proxy-Border">5</long>
+            <bool name="proxy-wxLEFT">1</bool>
+            <bool name="proxy-wxRIGHT">1</bool>
+            <bool name="proxy-wxTOP">1</bool>
+            <bool name="proxy-wxBOTTOM">1</bool>
             <bool name="proxy-wxSHAPED">0</bool>
             <bool name="proxy-wxADJUST_MINSIZE">0</bool>
             <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -1776,8 +1784,6 @@
                   <string name="proxy-Implementation filename">""</string>
                   <string name="proxy-Header filename">""</string>
                   <string name="proxy-Member variable name">""</string>
-                  <string name="proxy-Tab label">"General"</string>
-                  <string name="proxy-Tab icon">""</string>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
                   <string name="proxy-Background colour">""</string>
@@ -1830,6 +1836,8 @@
                   <string name="proxy-Custom ctor arguments">""</string>
                   <string name="proxy-Event sources">""</string>
                   <bool name="proxy-AUI manager">0</bool>
+                  <string name="proxy-Tab label">"General"</string>
+                  <string name="proxy-Tab icon">""</string>
                   <document>
                     <string name="title">"wxFlexGridSizer"</string>
                     <string name="type">"dialog-control-document"</string>
@@ -3898,8 +3906,6 @@
                   <string name="proxy-Implementation filename">""</string>
                   <string name="proxy-Header filename">""</string>
                   <string name="proxy-Member variable name">""</string>
-                  <string name="proxy-Tab label">"Advanced"</string>
-                  <string name="proxy-Tab icon">""</string>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
                   <string name="proxy-Background colour">""</string>
@@ -3952,6 +3958,8 @@
                   <string name="proxy-Custom ctor arguments">""</string>
                   <string name="proxy-Event sources">""</string>
                   <bool name="proxy-AUI manager">0</bool>
+                  <string name="proxy-Tab label">"Advanced"</string>
+                  <string name="proxy-Tab icon">""</string>
                   <document>
                     <string name="title">"wxFlexGridSizer"</string>
                     <string name="type">"dialog-control-document"</string>
@@ -5636,8 +5644,6 @@
                   <string name="proxy-Implementation filename">""</string>
                   <string name="proxy-Header filename">""</string>
                   <string name="proxy-Member variable name">""</string>
-                  <string name="proxy-Tab label">"Services"</string>
-                  <string name="proxy-Tab icon">""</string>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
                   <string name="proxy-Background colour">""</string>
@@ -5690,6 +5696,8 @@
                   <string name="proxy-Custom ctor arguments">""</string>
                   <string name="proxy-Event sources">""</string>
                   <bool name="proxy-AUI manager">0</bool>
+                  <string name="proxy-Tab label">"Services"</string>
+                  <string name="proxy-Tab icon">""</string>
                   <document>
                     <string name="title">"wxFlexGridSizer"</string>
                     <string name="type">"dialog-control-document"</string>
@@ -6651,8 +6659,6 @@
                   <string name="proxy-Implementation filename">""</string>
                   <string name="proxy-Header filename">""</string>
                   <string name="proxy-Member variable name">""</string>
-                  <string name="proxy-Tab label">"USB"</string>
-                  <string name="proxy-Tab icon">""</string>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
                   <string name="proxy-Background colour">""</string>
@@ -6705,6 +6711,8 @@
                   <string name="proxy-Custom ctor arguments">""</string>
                   <string name="proxy-Event sources">""</string>
                   <bool name="proxy-AUI manager">0</bool>
+                  <string name="proxy-Tab label">"USB"</string>
+                  <string name="proxy-Tab icon">""</string>
                   <document>
                     <string name="title">"wxFlexGridSizer"</string>
                     <string name="type">"dialog-control-document"</string>
@@ -7221,8 +7229,6 @@
                   <string name="proxy-Implementation filename">""</string>
                   <string name="proxy-Header filename">""</string>
                   <string name="proxy-Member variable name">""</string>
-                  <string name="proxy-Tab label">"Environment"</string>
-                  <string name="proxy-Tab icon">""</string>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
                   <string name="proxy-Background colour">""</string>
@@ -7275,6 +7281,8 @@
                   <string name="proxy-Custom ctor arguments">""</string>
                   <string name="proxy-Event sources">""</string>
                   <bool name="proxy-AUI manager">0</bool>
+                  <string name="proxy-Tab label">"Environment"</string>
+                  <string name="proxy-Tab icon">""</string>
                   <document>
                     <string name="title">"wxFlexGridSizer"</string>
                     <string name="type">"dialog-control-document"</string>
@@ -8855,8 +8863,6 @@
                   <string name="proxy-Implementation filename">""</string>
                   <string name="proxy-Header filename">""</string>
                   <string name="proxy-Member variable name">"m_pCtrlPanelAbout"</string>
-                  <string name="proxy-Tab label">"About"</string>
-                  <string name="proxy-Tab icon">""</string>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
                   <string name="proxy-Background colour">""</string>
@@ -8909,6 +8915,8 @@
                   <string name="proxy-Custom ctor arguments">""</string>
                   <string name="proxy-Event sources">""</string>
                   <bool name="proxy-AUI manager">0</bool>
+                  <string name="proxy-Tab label">"About"</string>
+                  <string name="proxy-Tab icon">""</string>
                   <document>
                     <string name="title">"wxFlexGridSizer"</string>
                     <string name="type">"dialog-control-document"</string>
@@ -26948,8 +26956,8 @@ this share."</string>
                 <string name="proxy-Custom styles">""</string>
                 <long name="proxy-X">-1</long>
                 <long name="proxy-Y">-1</long>
-                <long name="proxy-Width">21</long>
-                <long name="proxy-Height">19</long>
+                <long name="proxy-Width">16</long>
+                <long name="proxy-Height">15</long>
                 <string name="proxy-AlignH">"Centre"</string>
                 <string name="proxy-AlignV">"Centre"</string>
                 <long name="proxy-Stretch factor">0</long>
@@ -27156,6 +27164,7 @@ this share."</string>
           <string name="variable-3">"m_sVendor|wxString|Vendor||2|0|"</string>
           <string name="variable-4">"m_sProduct|wxString|Product||2|0|"</string>
           <string name="variable-5">"m_sSerial|wxString|Serial||2|0|"</string>
+          <string name="variable-6">"m_bStoreFilter|bool|StoreFilter|false|2|0|"</string>
           <string name="proxy-Id name">"ID_USBFILTERDETAILSDIALOG"</string>
           <long name="proxy-Id value">10168</long>
           <string name="proxy-Class">"UsbFilterDetailsDialog"</string>
@@ -27228,14 +27237,6 @@ this share."</string>
             <string name="proxy-type">"wbBoxSizerProxy"</string>
             <string name="proxy-Orientation">"Vertical"</string>
             <string name="proxy-Member variable name">""</string>
-            <string name="proxy-AlignH">"Centre"</string>
-            <string name="proxy-AlignV">"Centre"</string>
-            <long name="proxy-Stretch factor">0</long>
-            <long name="proxy-Border">5</long>
-            <bool name="proxy-wxLEFT">1</bool>
-            <bool name="proxy-wxRIGHT">1</bool>
-            <bool name="proxy-wxTOP">1</bool>
-            <bool name="proxy-wxBOTTOM">1</bool>
             <bool name="proxy-wxSHAPED">0</bool>
             <bool name="proxy-wxADJUST_MINSIZE">0</bool>
             <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -27433,8 +27434,8 @@ to use it on the remote machine."</string>
                   <bool name="proxy-Initial value">0</bool>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
-                  <string name="proxy-Data variable">""</string>
-                  <string name="proxy-Data validator">""</string>
+                  <string name="proxy-Data variable">"m_bStoreFilter"</string>
+                  <string name="proxy-Data validator">"wxGenericValidator(&amp; %VARIABLE%)"</string>
                   <string name="proxy-Data source">""</string>
                   <string name="proxy-Data class name">""</string>
                   <string name="proxy-Data class implementation filename">""</string>
@@ -28856,7 +28857,6 @@ enter the filter specification directly."</string>
                 <long name="title-mode">0</long>
                 <long name="locked">0</long>
                 <string name="proxy-type">"wbButtonProxy"</string>
-                <string name="event-handler-0">"wxEVT_COMMAND_BUTTON_CLICKED|OnOKClick"</string>
                 <string name="proxy-Id name">"wxID_OK"</string>
                 <long name="proxy-Id value">5100</long>
                 <string name="proxy-Name">""</string>

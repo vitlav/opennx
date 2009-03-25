@@ -58,6 +58,9 @@
 #include "trace.h"
 ENABLE_TRACE;
 
+IMPLEMENT_DYNAMIC_CLASS(HotplugEvent, wxEvent)
+DEFINE_LOCAL_EVENT_TYPE(wxEVT_HOTPLUG)
+
 WX_DEFINE_OBJARRAY(ArrayOfUsbIpDevices);
 
 wxString UsbIpDevice::toString() const {
@@ -76,6 +79,7 @@ EVT_SOCKET(SOCKET_ID, UsbIp::OnSocketEvent)
 END_EVENT_TABLE()
 
 UsbIp::UsbIp()
+    : m_pEvtHandler(NULL)
 {
     m_pSocketClient = new wxSocketClient();
     m_pSocketClient->SetEventHandler(*this, SOCKET_ID);
@@ -117,12 +121,13 @@ bool UsbIp::Connect(const wxString &socketPath)
 {
     wxUNIXaddress addr;
     addr.Filename(socketPath);
-    wxLogTrace(MYTRACETAG, wxT("Connecting to %s"), socketPath.c_str());
+    ::wxLogTrace(MYTRACETAG, wxT("Connecting to %s"), socketPath.c_str());
     m_pSocketClient->Connect(addr, false);
     // It's a local unix socket and the server must be running already,
     // so 5 secs should be more than enough.
     m_pSocketClient->WaitOnConnect(5);
     m_bConnected = m_pSocketClient->IsConnected();
+    ::wxLogTrace(MYTRACETAG, wxT("m_bConnected = %d"), m_bConnected);
     if (m_bConnected)
         m_eState = Initializing;
     else
@@ -145,14 +150,14 @@ bool UsbIp::WaitForSession(int secs /* = 10 */)
     if (!waitforstate(Idle))
         return false;
     wxStopWatch sw;
-    wxLogTrace(MYTRACETAG, wxT("waiting for session ..."));
+    ::wxLogTrace(MYTRACETAG, wxT("waiting for session ..."));
     while (!findsession(m_sSid)) {
         ::wxGetApp().Yield(true);
         wxLog::FlushActive();
         m_pSocketClient->Wait(0, 1000);
         if (0 < timeout) {
             if (sw.Time() > timeout) {
-                wxLogTrace(MYTRACETAG, wxT("waitforsession timed out"));
+                ::wxLogTrace(MYTRACETAG, wxT("waitforsession timed out"));
                 return false;
             }
         }
@@ -167,9 +172,9 @@ bool UsbIp::ExportDevice(const wxString &busid)
         return false;
     if (!waitforstate(Idle))
         return false;
-    wxLogTrace(MYTRACETAG, wxT("Exporting ..."));
+    ::wxLogTrace(MYTRACETAG, wxT("Exporting ..."));
     if (!findsession(m_sSid)) {
-        wxLogTrace(MYTRACETAG, wxT("Session not found"));
+        ::wxLogTrace(MYTRACETAG, wxT("Session not found"));
         return false;
     }
     m_eState = Exporting;
@@ -193,13 +198,57 @@ bool UsbIp::UnexportDevice(const wxString &busid)
         return false;
     if (!waitforstate(Idle))
         return false;
-    wxLogTrace(MYTRACETAG, wxT("Unexporting ..."));
+    ::wxLogTrace(MYTRACETAG, wxT("Unexporting ..."));
     if (!findsession(m_sSid)) {
-        wxLogTrace(MYTRACETAG, wxT("Session not found"));
+        ::wxLogTrace(MYTRACETAG, wxT("Session not found"));
         return false;
     }
     if (!send(wxT("unexport %s %s\n"), busid.c_str(), m_sSid.c_str()))
         return false;
+    return true;
+}
+
+bool UsbIp::RegisterHotplug()
+{
+    if (m_sSid.IsEmpty())
+        return false;
+    if (Initializing > m_eState)
+        return false;
+    if (!waitforstate(Idle))
+        return false;
+    m_eState = Registering;
+    ::wxLogTrace(MYTRACETAG, wxT("Registering for hotplug ..."));
+    if (!send(wxT("setsid %s\n"), m_sSid.c_str())) {
+        m_eState = Idle;
+        return false;
+    }
+    if (!waitforstate(Registered)) {
+        m_eState = Idle;
+        return false;
+    }
+    m_eState = Idle;
+    return true;
+}
+
+bool UsbIp::SendHotplugResponse(const wxString &cookie)
+{
+    if (m_sSid.IsEmpty())
+        return false;
+    if (Initializing > m_eState)
+        return false;
+    if (!waitforstate(Idle))
+        return false;
+    m_eState = Responding;
+    ::wxLogTrace(MYTRACETAG, wxT("Sending hotplug response ..."));
+    if (!send(wxT("handled %s\n"), cookie.c_str())) {
+        m_eState = Idle;
+        return false;
+    }
+    if (!waitforstate(Responded)) {
+        m_eState = Idle;
+        return false;
+    }
+    m_eState = Idle;
     return true;
 }
 
@@ -209,7 +258,7 @@ ArrayOfUsbIpDevices UsbIp::GetDevices() {
         return m_aDevices;
     if (!waitforstate(Idle))
         return m_aDevices;
-    wxLogTrace(MYTRACETAG, wxT("Fetching device list ..."));
+    ::wxLogTrace(MYTRACETAG, wxT("Fetching device list ..."));
     m_eState = ListDevices;
     if (!send(wxT("list\n"))) {
         m_eState = Idle;
@@ -272,12 +321,44 @@ bool UsbIp::waitforstate(tStates state, long timeout /* = 5000 */)
     return !m_bError;
 }
 
+void UsbIp::parsehev(const wxString &line)
+{
+    wxRegEx re(wxT("([a-f\\d]+)\\s+(\\d+-[\\d\\.]+)\\s+(\\d+)\\s+(\\d+)\\s+([a-f\\d]+)\\s+([a-f\\d]+)"),
+            wxRE_ADVANCED);
+    if (!re.IsValid()) {
+        ::wxLogFatalError(_("Invalid regular expression in %s %d"), __FILE__, __LINE__);
+        return;
+    }
+    if (re.Matches(line)) {
+        HotplugEvent ev;
+        long lval;
+        ev.SetCookie(re.GetMatch(line, 1));
+        ev.SetBusID(re.GetMatch(line, 2));
+        if (!re.GetMatch(line, 3).ToLong(&lval, 10))
+            return;
+        ev.SetBusNum(lval);
+        if (!re.GetMatch(line, 4).ToLong(&lval, 10))
+            return;
+        ev.SetDevNum(lval);
+        if (!re.GetMatch(line, 5).ToLong(&lval, 16))
+            return;
+        ev.SetProduct(lval);
+        if (!re.GetMatch(line, 6).ToLong(&lval, 16))
+            return;
+        ev.SetVendor(lval);
+        ev.SetEventObject(this);
+        if (m_pEvtHandler)
+            m_pEvtHandler->AddPendingEvent(ev);
+    } else
+        ::wxLogTrace(MYTRACETAG, wxT("hev not matched"));
+}
+
 void UsbIp::parsesession(const wxString &line)
 {
     wxRegEx re(wxT("\\[\\d+\\.\\d+\\.\\d+\\.\\d+\\]:\\d+\\s+\\(SID:\\s+([0-9,A-F]+)\\)"),
             wxRE_ADVANCED);
     if (!re.IsValid()) {
-        wxLogError(wxT("Invalid regular expression"));
+        ::wxLogFatalError(_("Invalid regular expression %s %d"), __FILE__, __LINE__);
         return;
     }
     if (re.Matches(line))
@@ -319,7 +400,7 @@ void UsbIp::parse(const wxString &line)
         long code;
         if (cs.ToLong(&code)) {
             if (200 != code)
-                wxLogTrace(MYTRACETAG, wxT("Got Line: '%s'"), line.c_str());
+                ::wxLogTrace(MYTRACETAG, wxT("Got Line: '%s'"), line.c_str());
             switch (code) {
                 case 100:
                     if (m_eState == Initializing)
@@ -344,6 +425,12 @@ void UsbIp::parse(const wxString &line)
                         case ListDevices:
                             m_eState = GotDevices;
                             break;
+                        case Registering:
+                            m_eState = Registered;
+                            break;
+                        case Responding:
+                            m_eState = Responded;
+                            break;
                     }
                     break;
                 case 201:
@@ -359,6 +446,9 @@ void UsbIp::parse(const wxString &line)
                             parsedevice(line.Mid(4));
                             break;
                     }
+                    break;
+                case 203:
+                    parsehev(line.Mid(4));
                     break;
                 case 400:
                 case 401:
@@ -382,6 +472,12 @@ void UsbIp::parse(const wxString &line)
                         case ListDevices:
                             m_eState = GotDevices;
                             break;
+                        case Registering:
+                            m_eState = Registered;
+                            break;
+                        case Responding:
+                            m_eState = Responded;
+                            break;
                     }
                     break;
             }
@@ -394,6 +490,7 @@ void UsbIp::OnSocketEvent(wxSocketEvent &event)
     char *p;
     char *q;
     char buf[128];
+    ::wxLogTrace(MYTRACETAG, wxT("SocketEvent"));
     switch (event.GetSocketEvent()) {
         case wxSOCKET_INPUT:
             m_pSocketClient->Read(buf, sizeof(buf) - 1);
@@ -408,11 +505,11 @@ void UsbIp::OnSocketEvent(wxSocketEvent &event)
             m_sLineBuffer.Append(wxString(q, wxConvUTF8));
             break;
         case wxSOCKET_CONNECTION:
-            wxLogTrace(MYTRACETAG, wxT("OnConnection"));
+            ::wxLogTrace(MYTRACETAG, wxT("OnConnection"));
             m_bConnected = true;
             break;
         case wxSOCKET_LOST:
-            wxLogTrace(MYTRACETAG, wxT("OnLost"));
+            ::wxLogTrace(MYTRACETAG, wxT("OnLost"));
             m_bConnected = false;
             break;
     }

@@ -24,6 +24,11 @@
 
 #include <wx/intl.h>
 
+class MyXmlConfig;
+class UsbIp;
+class UsbFilterDetailsDialog;
+class HotplugEvent;
+
 class watchUsbIpApp: public wxApp
 {    
     DECLARE_CLASS(watchUsbIpApp);
@@ -39,13 +44,18 @@ class watchUsbIpApp: public wxApp
         virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
         virtual int OnExit();
 
+        void OnHotplug(HotplugEvent &);
+        void SendHotplugResponse(int, wxString);
+
     private:
+        MyXmlConfig *m_pSessionCfg;
         wxLocale m_cLocale;
         wxString m_sResourcePrefix;
         wxString m_sSessionID;
         wxString m_sSessionConfig;
-        int m_iReader;
         long m_lSshPid;
+        UsbIp *m_pUsbIp;
+        UsbFilterDetailsDialog *m_pDialog;
 };
 
 DECLARE_APP(watchUsbIpApp)

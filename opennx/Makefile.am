@@ -46,8 +46,9 @@ watchreader_CPPFLAGS = $(WX_CPPFLAGS) $(X_CFLAGS) -DAPP_WATCHREADER
 watchreader_CXXFLAGS = $(WX_CXXFLAGS)
 watchreader_CFLAGS = $(WX_CFLAGS)
 
-watchusbip_SOURCES = watchUsbIpApp.cpp UsbIp.cpp Icon.cpp LibUSB.cpp md5.c \
-					 MyXmlConfig.cpp osdep.c pwcrypt.cpp wxprec.cpp xh_richtext.cpp
+watchusbip_SOURCES = watchUsbIpApp.cpp UsbIp.cpp Icon.cpp LibUSB.cpp md5.c MyValidator.cpp \
+					 MyXmlConfig.cpp osdep.c pwcrypt.cpp UsbFilterDetailsDialog.cpp \
+					 wxprec.cpp xh_richtext.cpp
 watchusbip_LDADD = $(WX_LIBS) $(X_LIBS) $(X_PRE_LIBS) $(X_EXTRA_LIBS) $(APP_LDADD)
 watchusbip_CPPFLAGS = $(WX_CPPFLAGS) $(X_CFLAGS) -DAPP_WATCHUSBIP
 watchusbip_CXXFLAGS = $(WX_CXXFLAGS)

@@ -34,6 +34,62 @@
 class wxSocketClient;
 class wxSocketEvent;
 
+BEGIN_DECLARE_EVENT_TYPES()
+DECLARE_LOCAL_EVENT_TYPE(wxEVT_HOTPLUG, -1)
+END_DECLARE_EVENT_TYPES()
+
+class HotplugEvent : public wxEvent {
+    public:
+        HotplugEvent(wxEventType t = wxEVT_HOTPLUG)
+        { m_eventType = t; }
+
+        HotplugEvent(const HotplugEvent &event)
+            : wxEvent(event)
+            , m_sBusID(event.m_sBusID)
+            , m_sCookie(event.m_sCookie)
+            , m_iBusNum(event.m_iBusNum)
+            , m_iDevNum(event.m_iDevNum)
+            , m_iVendor(event.m_iVendor)
+            , m_iProduct(event.m_iProduct) { }
+
+        void SetBusID(wxString id) { m_sBusID = id; }
+        const wxString & GetBusID() { return m_sBusID; }
+
+        void SetCookie(wxString id) { m_sCookie = id; }
+        const wxString & GetCookie() { return m_sCookie; }
+
+        void SetBusNum(int i) { m_iBusNum = i; }
+        int GetBusNum() { return m_iBusNum; }
+
+        void SetDevNum(int i) { m_iDevNum = i; }
+        int GetDevNum() { return m_iDevNum; }
+
+        void SetProduct(int i) { m_iProduct = i; }
+        int GetProduct() { return m_iProduct; }
+
+        void SetVendor(int i) { m_iVendor = i; }
+        int GetVendor() { return m_iVendor; }
+
+        virtual wxEvent *Clone() const { return new HotplugEvent(*this); }
+
+    private:
+        wxString m_sBusID;
+        wxString m_sCookie;
+        int m_iBusNum;
+        int m_iDevNum;
+        int m_iVendor;
+        int m_iProduct;
+
+        DECLARE_DYNAMIC_CLASS(HotplugEvent)
+};
+
+typedef void (wxEvtHandler::*HotplugEventFunction)(HotplugEvent &);
+#define HotplugEventHandler(func) \
+    (wxObjectEventFunction)(wxEventFunction)wxStaticCastEvent(HotplugEventFunction, &func)
+#define EVT_HOTPLUG(func) \
+    wx__DECLARE_EVT0(wxEVT_HOTPLUG, HotplugEventHandler(func))
+
+
 class UsbIpDevice : public wxObject {
     public:
         UsbIpDevice() : wxObject() { }
@@ -72,11 +128,15 @@ class UsbIp : public wxEvtHandler {
         bool WaitForSession(int secs = 10);
         bool ExportDevice(const wxString &);
         bool UnexportDevice(const wxString &);
+        bool RegisterHotplug();
+        bool SendHotplugResponse(const wxString &);
         ArrayOfUsbIpDevices GetDevices();
 
         bool IsConnected() { return m_bConnected; }
         bool HasError();
         bool Wait(long, long);
+
+        void SetEventHandler(wxEvtHandler *h) { m_pEvtHandler = h; }
 
     private:
         typedef enum {
@@ -88,10 +148,14 @@ class UsbIp : public wxEvtHandler {
             UnExporting,
             ListSessions,
             ListDevices,
+            Registering,
+            Responding,
             Exported,
             UnExported,
             GotSessions,
             GotDevices,
+            Registered,
+            Responded,
         } tStates;
 
         virtual void OnSocketEvent(wxSocketEvent &);
@@ -99,9 +163,11 @@ class UsbIp : public wxEvtHandler {
         void parsesession(const wxString &);
         void parsedevice(const wxString &);
         bool findsession(const wxString &);
+        void parsehev(const wxString &);
         bool waitforstate(tStates, long state = 5000);
         bool send(const wxChar *fmt, ...) ATTRIBUTE_PRINTF_1;
 
+        wxEvtHandler *m_pEvtHandler;
         wxSocketClient *m_pSocketClient;
         wxString m_sSid;
         wxString m_sLineBuffer;

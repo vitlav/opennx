@@ -39,6 +39,7 @@
 #endif
 #include <wx/config.h>
 #include <wx/fontdlg.h>
+#include <wx/filename.h>
 
 #ifndef WX_PRECOMP
   #include "wx/utils.h"
@@ -68,7 +69,6 @@
 #endif
 
 #include "MyValidator.h"
-#include "SessionProperties.h"
 
 IMPLEMENT_DYNAMIC_CLASS(MyValidator, wxValidator)
 

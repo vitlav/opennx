@@ -99,9 +99,6 @@ public:
     /// wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_USBDEVS
     void OnComboboxUsbdevsSelected( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
-    void OnOKClick( wxCommandEvent& event );
-
 ////@end UsbFilterDetailsDialog event handler declarations
 
 ////@begin UsbFilterDetailsDialog member function declarations
@@ -123,6 +120,9 @@ public:
 
     wxString GetSerial() const { return m_sSerial ; }
     void SetSerial(wxString value) { m_sSerial = value ; }
+
+    bool GetStoreFilter() const { return m_bStoreFilter ; }
+    void SetStoreFilter(bool value) { m_bStoreFilter = value ; }
 
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
@@ -165,6 +165,7 @@ private:
     wxString m_sVendor;
     wxString m_sProduct;
     wxString m_sSerial;
+    bool m_bStoreFilter;
 ////@end UsbFilterDetailsDialog member variables
 
     eDialogMode m_eMode;

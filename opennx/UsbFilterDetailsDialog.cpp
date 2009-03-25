@@ -19,6 +19,10 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
 #pragma implementation "UsbFilterDetailsDialog.h"
 #endif
@@ -40,7 +44,13 @@
 #include "UsbFilterDetailsDialog.h"
 #include "MyValidator.h"
 #include "Icon.h"
+#include "watchUsbIpApp.h"
 #include "LibUSB.h"
+
+#include <wx/config.h>
+
+#include "trace.h"
+ENABLE_TRACE;
 
 ////@begin XPM images
 ////@end XPM images
@@ -50,28 +60,26 @@
  * UsbFilterDetailsDialog type definition
  */
 
-IMPLEMENT_DYNAMIC_CLASS( UsbFilterDetailsDialog, wxDialog )
+IMPLEMENT_DYNAMIC_CLASS(UsbFilterDetailsDialog, wxDialog)
 
 
-/*!
- * UsbFilterDetailsDialog event table definition
- */
+    /*!
+     * UsbFilterDetailsDialog event table definition
+     */
 
 BEGIN_EVENT_TABLE( UsbFilterDetailsDialog, wxDialog )
 
-////@begin UsbFilterDetailsDialog event table entries
+    ////@begin UsbFilterDetailsDialog event table entries
     EVT_COMBOBOX( XRCID("ID_COMBOBOX_USBDEVS"), UsbFilterDetailsDialog::OnComboboxUsbdevsSelected )
 
-    EVT_BUTTON( wxID_OK, UsbFilterDetailsDialog::OnOKClick )
-
-////@end UsbFilterDetailsDialog event table entries
+    ////@end UsbFilterDetailsDialog event table entries
 
 END_EVENT_TABLE()
 
 
-/*!
- * UsbFilterDetailsDialog constructors
- */
+    /*!
+     * UsbFilterDetailsDialog constructors
+     */
 
 UsbFilterDetailsDialog::UsbFilterDetailsDialog()
 {
@@ -91,7 +99,7 @@ UsbFilterDetailsDialog::UsbFilterDetailsDialog( wxWindow* parent, wxWindowID id,
 
 bool UsbFilterDetailsDialog::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
-////@begin UsbFilterDetailsDialog creation
+    ////@begin UsbFilterDetailsDialog creation
     SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
@@ -101,7 +109,7 @@ bool UsbFilterDetailsDialog::Create( wxWindow* parent, wxWindowID id, const wxSt
         GetSizer()->SetSizeHints(this);
     }
     Centre();
-////@end UsbFilterDetailsDialog creation
+    ////@end UsbFilterDetailsDialog creation
     return true;
 }
 
@@ -112,8 +120,8 @@ bool UsbFilterDetailsDialog::Create( wxWindow* parent, wxWindowID id, const wxSt
 
 UsbFilterDetailsDialog::~UsbFilterDetailsDialog()
 {
-////@begin UsbFilterDetailsDialog destruction
-////@end UsbFilterDetailsDialog destruction
+    ////@begin UsbFilterDetailsDialog destruction
+    ////@end UsbFilterDetailsDialog destruction
 }
 
 
@@ -124,7 +132,8 @@ UsbFilterDetailsDialog::~UsbFilterDetailsDialog()
 void UsbFilterDetailsDialog::Init()
 {
     m_eMode = MODE_EDIT;
-////@begin UsbFilterDetailsDialog member initialisation
+    ////@begin UsbFilterDetailsDialog member initialisation
+    m_bStoreFilter = false;
     m_pCtrlHotplug = NULL;
     m_pCtrlRemember = NULL;
     m_pCtrlDevSelect = NULL;
@@ -136,7 +145,7 @@ void UsbFilterDetailsDialog::Init()
     m_pCtrlProduct = NULL;
     m_pCtrlSerial = NULL;
     m_pCtrlMode = NULL;
-////@end UsbFilterDetailsDialog member initialisation
+    ////@end UsbFilterDetailsDialog member initialisation
 }
 
 void UsbFilterDetailsDialog::SetDeviceList(const ArrayOfUSBDevices &a)
@@ -206,6 +215,8 @@ void UsbFilterDetailsDialog::CreateControls()
     m_pCtrlSerial = XRCCTRL(*this, "ID_TEXTCTRL_USB_SERIAL", wxTextCtrl);
     m_pCtrlMode = XRCCTRL(*this, "ID_COMBOBOX_MODE", wxComboBox);
     // Set validators
+    if (FindWindow(XRCID("ID_CHECKBOX_FILTER_STORE")))
+        FindWindow(XRCID("ID_CHECKBOX_FILTER_STORE"))->SetValidator( wxGenericValidator(& m_bStoreFilter) );
     if (FindWindow(XRCID("ID_TEXTCTRL_USB_VENDORID")))
         FindWindow(XRCID("ID_TEXTCTRL_USB_VENDORID"))->SetValidator( MyValidator(MyValidator::MYVAL_HEX, & m_sVendorID) );
     if (FindWindow(XRCID("ID_TEXTCTRL_USB_PRODUCTID")))
@@ -261,20 +272,6 @@ wxIcon UsbFilterDetailsDialog::GetIconResource( const wxString& name )
     return wxNullIcon;
     ////@end UsbFilterDetailsDialog icon retrieval
 }
-
-
-/*!
- * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
- */
-
-void UsbFilterDetailsDialog::OnOKClick( wxCommandEvent& event )
-{
-    ////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK in UsbFilterDetailsDialog.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-    ////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK in UsbFilterDetailsDialog. 
-}
-
 
 /*!
  * wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_USBDEVS

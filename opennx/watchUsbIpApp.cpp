@@ -19,6 +19,10 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
 
@@ -40,12 +44,15 @@
 #include <wx/mimetype.h>
 #include <wx/sysopt.h>
 #include <wx/socket.h>
+#include <wx/tokenzr.h>
 
 #include "watchUsbIpApp.h"
 #include "Icon.h"
-#include "LibUSB.h"
 #include "xh_richtext.h"
+#include "MyXmlConfig.h"
+#include "UsbFilterDetailsDialog.h"
 #include "UsbIp.h"
+#include "LibUSB.h"
 
 #include "memres.h"
 
@@ -57,10 +64,14 @@ IMPLEMENT_APP( watchUsbIpApp )
 IMPLEMENT_CLASS( watchUsbIpApp, wxApp )
 
 BEGIN_EVENT_TABLE(watchUsbIpApp, wxApp)
+    EVT_HOTPLUG(watchUsbIpApp::OnHotplug)
 END_EVENT_TABLE()
 
 
 watchUsbIpApp::watchUsbIpApp()
+    : m_pSessionCfg(NULL)
+    , m_pUsbIp(NULL)
+    , m_pDialog(NULL)
 {
     SetAppName(wxT("OpenNX"));
     wxConfig *cfg;
@@ -92,12 +103,25 @@ void watchUsbIpApp::OnInitCmdLine(wxCmdLineParser& parser)
 {
     // Init standard options (--help, --verbose);
     wxApp::OnInitCmdLine(parser);
+
+    // tags will be appended to the last switch/option
+    wxString tags;
+    allTraceTags->Sort();
+    for (int i = 0; i < allTraceTags->GetCount(); i++) {
+        if (!tags.IsEmpty())
+            tags += wxT(" ");
+        tags += allTraceTags->Item(i);
+    }
+    tags.Prepend(_("\n\nSupported trace tags: "));
+
     parser.AddOption(wxT("s"), wxT("sessionid"), _("NX SessionID to watch for."),
             wxCMD_LINE_VAL_STRING, wxCMD_LINE_OPTION_MANDATORY);
     parser.AddOption(wxT("c"), wxT("config"), _("Path of session config file."),
             wxCMD_LINE_VAL_STRING, wxCMD_LINE_OPTION_MANDATORY);
     parser.AddOption(wxT("p"), wxT("pid"), _("Process ID of the nxssh process."),
             wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_OPTION_MANDATORY);
+    parser.AddOption(wxEmptyString, wxT("trace"),
+            _("Specify wxWidgets trace mask.") + tags);
 }
 
 bool watchUsbIpApp::OnCmdLineParsed(wxCmdLineParser& parser)
@@ -105,13 +129,42 @@ bool watchUsbIpApp::OnCmdLineParsed(wxCmdLineParser& parser)
     if (!wxApp::OnCmdLineParsed(parser))
         return false;
     parser.Found(wxT("s"), &m_sSessionID);
-    parser.Found(wxT("c"), &m_sSessionConfig);
+    if (parser.Found(wxT("c"), &m_sSessionConfig)) {
+        if (!m_sSessionConfig.IsEmpty())
+            m_pSessionCfg = new MyXmlConfig(m_sSessionConfig);
+    }
     parser.Found(wxT("p"), &m_lSshPid);
+
+    wxString traceTags;
+    if (parser.Found(wxT("trace"), &traceTags)) {
+        wxStringTokenizer t(traceTags, wxT(","));
+        while (t.HasMoreTokens()) {
+            wxString tag = t.GetNextToken();
+            if (allTraceTags->Index(tag) == wxNOT_FOUND) {
+                OnCmdLineError(parser);
+                return false;
+            }
+            ::wxLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
+            wxLog::AddTraceMask(tag);
+        }
+    }
 }
 
 bool watchUsbIpApp::OnInit()
 {    
     wxString tmp;
+
+    if (::wxGetEnv(wxT("WXTRACE"), &tmp)) {
+        wxStringTokenizer t(tmp, wxT(",:"));
+        while (t.HasMoreTokens()) {
+            wxString tag = t.GetNextToken();
+            if (allTraceTags->Index(tag) != wxNOT_FOUND) {
+                ::wxLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
+                wxLog::AddTraceMask(tag);
+            }
+        }
+    }
+
     wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp);
     m_cLocale.AddCatalogLookupPathPrefix(tmp + wxFileName::GetPathSeparator()
             + wxT("share") + wxFileName::GetPathSeparator() + wxT("locale"));
@@ -171,7 +224,7 @@ bool watchUsbIpApp::OnInit()
         resok = true;
     }
     if (!resok) {
-        wxLogFatalError(wxT("Could not load application resource."));
+        ::wxLogFatalError(wxT("Could not load application resource."));
         return false;
     }
 
@@ -182,13 +235,151 @@ bool watchUsbIpApp::OnInit()
     if (!wxApp::OnInit())
         return false;
 
-    SetExitOnFrameDelete(true);
-    return false;
+    if (m_sSessionID.IsEmpty()) {
+        ::wxLogError(_("An empty session ID is not allowed"));
+        return false;
+    }
+
+    if ((!m_pSessionCfg) || (!m_pSessionCfg->IsValid())) {
+        ::wxLogError(_("Could not load session config file"));
+        return false;
+    }
+    if (!m_pSessionCfg->bGetEnableUSBIP())
+        // No need to watch for hotplug events, siletly exit
+        return false;
+
+    UsbIp *usbip = new UsbIp();
+    wxString usock = wxConfigBase::Get()->Read(wxT("Config/UsbipdSocket"),
+            wxT("/var/run/usbipd2.socket"));
+    if (usbip->Connect(usock)) {
+        usbip->SetSession(m_sSessionID);
+        if (usbip->IsConnected()) {
+            m_pDialog = new UsbFilterDetailsDialog(NULL);
+            m_pDialog->SetDialogMode(UsbFilterDetailsDialog::MODE_HOTPLUG);
+            // SetTopWindow(m_pDialog);
+            usbip->SetEventHandler(m_pDialog);
+            if (!usbip->RegisterHotplug()) {
+                ::wxLogError(_("Could not register at usbipd2! No hotplugging functionality."));
+                m_pDialog->Destroy();
+                return false;
+            }
+            m_pUsbIp = usbip;
+        }
+    } else
+        ::wxLogError(_("Could not connect to usbipd2! No hotplugging functionality."));
+    return true;
 }
 
+void watchUsbIpApp::OnHotplug(HotplugEvent &event)
+{
+    ArrayOfUsbForwards af = m_pSessionCfg->aGetUsbForwards();
+    USB u;
+    ArrayOfUSBDevices au = u.GetDevices();
+    SharedUsbDevice *sdev = NULL;
+    int i;
+    for (i = 0; i < au.GetCount(); i++) {
+        if ((au[i].GetBusNum() == event.GetBusNum()) && (au[i].GetDevNum() == event.GetDevNum())) {
+            sdev = new SharedUsbDevice;
+            sdev->m_iVendorID = au[i].GetVendorID();
+            sdev->m_iProductID = au[i].GetProductID();
+            sdev->m_iClass = au[i].GetDeviceClass();
+            sdev->m_sVendor = au[i].GetVendor();
+            sdev->m_sProduct = au[i].GetProduct();
+            sdev->m_sSerial = au[i].GetSerial();
+            break;
+        }
+    }
+    if (NULL == sdev) {
+        m_pUsbIp->SendHotplugResponse(event.GetCookie());
+        ::wxLogError(_("Got hotplug event, but device is not available in libusb"));
+        return;
+    }
+    bool found = false;
+    bool doexport = false;
+    for (i = 0; i < af.GetCount(); i++) {
+        if (af[i].cmpNoMode(*sdev)) {
+            found = true;
+            doexport = (af[i].m_eMode == SharedUsbDevice::MODE_REMOTE);
+            break;
+        }
+    }
+    if (found) {
+        // Found device in session config. Silently act on configuration
+        ::wxLogTrace(MYTRACETAG, wxT("Found device in session config action=%s"),
+                doexport ? wxT("export") : wxT("local"));
+        if (!m_pUsbIp->SendHotplugResponse(event.GetCookie()))
+            ::wxLogError(_("Could not send hotplug response"));
+    } else {
+        // Device not in session config. Ask user
+        m_pDialog->SetVendorID(wxString::Format(wxT("%04X"), sdev->m_iVendorID));
+        m_pDialog->SetProductID(wxString::Format(wxT("%04X"), sdev->m_iProductID));
+        m_pDialog->SetDeviceClass(wxString::Format(wxT("%02X"), sdev->m_iClass));
+        m_pDialog->SetVendor(sdev->m_sVendor);
+        m_pDialog->SetProduct(sdev->m_sProduct);
+        m_pDialog->SetSerial(sdev->m_sSerial);
+        int result = m_pDialog->ShowModal();
+
+        m_pUsbIp->SendHotplugResponse(event.GetCookie());
+        // Do NOT report an error here, because user might inot have responded in time.
+
+        if (wxID_OK == result) {
+            doexport = m_pDialog->GetForwarding();
+            ::wxLogTrace(MYTRACETAG, wxT("Dialog OK, store=%d action=%s"),
+                    m_pDialog->GetStoreFilter(), doexport ? wxT("export") : wxT("local"));
+            if (m_pDialog->GetStoreFilter()) {
+                ArrayOfUsbForwards a = m_pSessionCfg->aGetUsbForwards();
+                SharedUsbDevice dev;
+                long tmp;
+                if (m_pDialog->GetVendorID().IsEmpty())
+                    dev.m_iVendorID = -1;
+                else {
+                    m_pDialog->GetVendorID().ToLong(&tmp, 16);
+                    dev.m_iVendorID = tmp;
+                }
+                if (m_pDialog->GetProductID().IsEmpty())
+                    dev.m_iProductID = -1;
+                else {
+                    m_pDialog->GetProductID().ToLong(&tmp, 16);
+                    dev.m_iProductID = tmp;
+                }
+                if (m_pDialog->GetDeviceClass().IsEmpty())
+                    dev.m_iClass = -1;
+                else {
+                    m_pDialog->GetDeviceClass().ToLong(&tmp, 16);
+                    dev.m_iClass = tmp;
+                }
+                dev.m_sVendor = m_pDialog->GetVendor();
+                dev.m_sProduct = m_pDialog->GetProduct();
+                dev.m_sSerial = m_pDialog->GetSerial();
+                dev.m_eMode = doexport ? SharedUsbDevice::MODE_REMOTE : SharedUsbDevice::MODE_LOCAL;
+                found = false;
+                for (int i = 0; i < a.GetCount(); i++) {
+                    if (dev.cmpNoMode(a[i])) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    a.Add(dev);
+                    m_pSessionCfg->aSetUsbForwards(a);
+                    ::wxLogTrace(wxT("saving to %s"), m_pSessionCfg->sGetFileName().c_str());
+                    if (!m_pSessionCfg->SaveToFile())
+                        ::wxLogError(_("Could not save session config"));
+                }
+            }
+            ::wxLogTrace(wxT("action=%s"), doexport ? wxT("export") : wxT("local"));
+            if (doexport) {
+                if (!m_pUsbIp->ExportDevice(event.GetBusID()))
+                    ::wxLogError(_("Could not export USB device"));
+            }
+        }
+    }
+}
 
 int watchUsbIpApp::OnExit()
 {
+    if (m_pUsbIp)
+        delete m_pUsbIp;
     return wxApp::OnExit();
 }
 
