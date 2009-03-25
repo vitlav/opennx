@@ -28,6 +28,7 @@ class MyXmlConfig;
 class UsbIp;
 class UsbFilterDetailsDialog;
 class HotplugEvent;
+class ProcessWatcher;
 
 class watchUsbIpApp: public wxApp
 {    
@@ -45,7 +46,9 @@ class watchUsbIpApp: public wxApp
         virtual int OnExit();
 
         void OnHotplug(HotplugEvent &);
+        void OnSshDied(wxCommandEvent &);
         void SendHotplugResponse(int, wxString);
+        void Terminate();
 
     private:
         MyXmlConfig *m_pSessionCfg;
@@ -56,6 +59,7 @@ class watchUsbIpApp: public wxApp
         long m_lSshPid;
         UsbIp *m_pUsbIp;
         UsbFilterDetailsDialog *m_pDialog;
+        ProcessWatcher *m_pProcessWatcher;
 };
 
 DECLARE_APP(watchUsbIpApp)

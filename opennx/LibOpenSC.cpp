@@ -203,18 +203,6 @@ CardWaitThread::Entry()
     return 0;
 }
 
-class WatchRemovalThread : public wxThreadHelper
-{
-    public:
-        WatchRemovalThread(int, long);
-
-        virtual wxThread::ExitCode Entry();
-
-    private:
-        int  m_iReader;
-        long m_lSshPid;
-};
-
 LibOpenSC::LibOpenSC()
 {
     ::wxLogTrace(MYTRACETAG, wxT("LibOpenSC()"));

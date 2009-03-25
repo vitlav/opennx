@@ -45,6 +45,7 @@
 #include <wx/sysopt.h>
 #include <wx/socket.h>
 #include <wx/tokenzr.h>
+#include <wx/process.h>
 
 #include "watchUsbIpApp.h"
 #include "Icon.h"
@@ -60,18 +61,96 @@
 ENABLE_TRACE;
 DECLARE_TRACETAGS;
 
+DECLARE_LOCAL_EVENT_TYPE(wxEVT_PROCESS_DIED, -1);
+DEFINE_LOCAL_EVENT_TYPE(wxEVT_PROCESS_DIED);
+
 IMPLEMENT_APP( watchUsbIpApp )
 IMPLEMENT_CLASS( watchUsbIpApp, wxApp )
 
 BEGIN_EVENT_TABLE(watchUsbIpApp, wxApp)
     EVT_HOTPLUG(watchUsbIpApp::OnHotplug)
+    EVT_COMMAND(wxID_ANY, wxEVT_PROCESS_DIED, watchUsbIpApp::OnSshDied)
 END_EVENT_TABLE()
 
+#ifdef __UNIX__
+# include <signal.h>
+static void terminate(int sig __attribute((unused)))
+{
+    ::wxGetApp().Terminate();
+    signal(SIGTERM, terminate);
+    signal(SIGINT, terminate);
+}
+#endif
 
-watchUsbIpApp::watchUsbIpApp()
+class ProcessWatcher : public wxThreadHelper
+{
+    public:
+        ProcessWatcher(wxEvtHandler *handler, long pid)
+            :wxThreadHelper()
+            ,m_pEvtHandler(handler)
+            ,m_bOk(false)
+            ,m_bTerminate(false)
+            ,m_lPid(pid)
+            {
+                if (Create(
+#ifdef __OPENBSD__
+                            32768
+#endif
+                          ) == wxTHREAD_NO_ERROR) {
+                    GetThread()->Run();
+                    while ((!m_bOk) && GetThread()->IsRunning())
+                        wxThread::Sleep(100);
+                    if (!m_bOk)
+                        ::wxLogTrace(MYTRACETAG, wxT("ssh watch thread terminated unexpectedly"));
+                } else
+                    ::wxLogTrace(MYTRACETAG, wxT("could not create ssh watch thread"));
+            }
+
+        virtual ~ProcessWatcher()
+        {
+            m_pEvtHandler = NULL;
+            if (m_bOk) {
+                m_bTerminate = true;
+                GetThread()->Delete();
+                while (m_bOk)
+                    wxThread::Sleep(100);
+            }
+        }
+
+        virtual wxThread::ExitCode Entry()
+        {
+            m_bOk = true;
+            while (!m_thread->TestDestroy()) {
+                if (m_bTerminate)
+                    break;
+                if (!wxProcess::Exists(m_lPid)) {
+                    wxCommandEvent ev(wxEVT_PROCESS_DIED, wxID_ANY);
+                    ev.SetInt(m_lPid);
+                    if (m_pEvtHandler) {
+                        m_bTerminate = true;
+                        m_pEvtHandler->AddPendingEvent(ev);
+                    }
+                } else
+                    wxThread::Sleep(1000);
+            }
+            m_bOk = false;
+            return 0;
+        }
+
+        bool IsOk() { return m_bOk; }
+        void SetHandler(wxEvtHandler *handler) { m_pEvtHandler = handler; }
+
+    private:
+        wxEvtHandler *m_pEvtHandler;
+        bool m_bOk;
+        bool m_bTerminate;
+        long m_lPid;
+};
+
+    watchUsbIpApp::watchUsbIpApp()
     : m_pSessionCfg(NULL)
     , m_pUsbIp(NULL)
-    , m_pDialog(NULL)
+      , m_pDialog(NULL)
 {
     SetAppName(wxT("OpenNX"));
     wxConfig *cfg;
@@ -97,7 +176,6 @@ watchUsbIpApp::watchUsbIpApp()
             ::wxSetEnv(wxT("LANG"), lang + wxT("_") + country.Upper() + wxT(".UTF-8"));
     }
 }
-
 
 void watchUsbIpApp::OnInitCmdLine(wxCmdLineParser& parser)
 {
@@ -267,7 +345,18 @@ bool watchUsbIpApp::OnInit()
         }
     } else
         ::wxLogError(_("Could not connect to usbipd2! No hotplugging functionality."));
+#ifdef __UNIX__
+    signal(SIGTERM, terminate);
+    signal(SIGINT, terminate);
+#endif
+    m_pProcessWatcher = new ProcessWatcher(this, m_lSshPid);
     return true;
+}
+
+void watchUsbIpApp::OnSshDied(wxCommandEvent &event)
+{
+    ::wxLogTrace(MYTRACETAG, wxT("nxssh has terminated"));
+    m_pDialog->Destroy();
 }
 
 void watchUsbIpApp::OnHotplug(HotplugEvent &event)
@@ -362,12 +451,12 @@ void watchUsbIpApp::OnHotplug(HotplugEvent &event)
                 if (!found) {
                     a.Add(dev);
                     m_pSessionCfg->aSetUsbForwards(a);
-                    ::wxLogTrace(wxT("saving to %s"), m_pSessionCfg->sGetFileName().c_str());
+                    ::wxLogTrace(MYTRACETAG, wxT("saving to %s"), m_pSessionCfg->sGetFileName().c_str());
                     if (!m_pSessionCfg->SaveToFile())
                         ::wxLogError(_("Could not save session config"));
                 }
             }
-            ::wxLogTrace(wxT("action=%s"), doexport ? wxT("export") : wxT("local"));
+            ::wxLogTrace(MYTRACETAG, wxT("action=%s"), doexport ? wxT("export") : wxT("local"));
             if (doexport) {
                 if (!m_pUsbIp->ExportDevice(event.GetBusID()))
                     ::wxLogError(_("Could not export USB device"));
@@ -376,10 +465,21 @@ void watchUsbIpApp::OnHotplug(HotplugEvent &event)
     }
 }
 
+void watchUsbIpApp::Terminate()
+{
+    ::wxMutexGuiEnter();
+    ::wxLogTrace(MYTRACETAG, wxT("Terminate()"));
+    wxCommandEvent ev(wxEVT_PROCESS_DIED, wxID_ANY);
+    ev.SetInt(0);
+    AddPendingEvent(ev);
+    ::wxMutexGuiLeave();
+}
+
 int watchUsbIpApp::OnExit()
 {
     if (m_pUsbIp)
         delete m_pUsbIp;
+    m_pUsbIp = NULL;
     return wxApp::OnExit();
 }
 

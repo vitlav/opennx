@@ -1037,6 +1037,23 @@ bool opennxApp::OnInit()
         } else
             ::wxLogError(_("Could not connect to usbipd2. No USB devices will be exported"));
     }
+
+    if (m_bRequireStartUsbIp) {
+        wxLogNull noerrors;
+        wxString appDir;
+        wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &appDir);
+        wxFileName fn(appDir, wxEmptyString);
+        fn.AppendDir(wxT("bin"));
+#ifdef __WXMSW__
+        fn.SetName(wxT("watchusbip.exe"));
+#else
+        fn.SetName(wxT("watchusbip"));
+#endif
+        wxString watchcmd = fn.GetShortPath();
+        watchcmd << wxT(" -s ") << m_sSessionID << wxT(" -p ")
+            << m_nNxSshPID << wxT(" -c ") << m_pSessionCfg->sGetFileName();
+        ::wxExecute(watchcmd);
+    }
 #endif
     if (m_bRequireWatchReader) {
         ::wxLogTrace(MYTRACETAG, wxT("require Watchreader: m_iReader = %d, m_nNxSshPID = %ld"), m_iReader, m_nNxSshPID);
