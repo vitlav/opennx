@@ -457,11 +457,11 @@ void watchUsbIpApp::OnHotplug(HotplugEvent &event)
                 }
             }
             ::wxLogTrace(MYTRACETAG, wxT("action=%s"), doexport ? wxT("export") : wxT("local"));
-            if (doexport) {
-                if (!m_pUsbIp->ExportDevice(event.GetBusID()))
-                    ::wxLogError(_("Could not export USB device"));
-            }
         }
+    }
+    if (doexport) {
+        if (!m_pUsbIp->ExportDevice(event.GetBusID()))
+            ::wxLogError(_("Could not export USB device"));
     }
 }
 

@@ -54,7 +54,7 @@ class opennxApp : public wxApp
         void SetRequireStartUsbIp(bool b) { m_bRequireStartUsbIp = b; }
         void SetNxSshPID(long l) { m_nNxSshPID = l; }
         void SetReader(int i) { m_iReader = i; }
-        void SetSessionCfg(const MyXmlConfig &);
+        void SetSessionCfg(MyXmlConfig &);
         void SetSessionID(const wxString &s) { m_sSessionID = s; };
 
         virtual bool OnInit();

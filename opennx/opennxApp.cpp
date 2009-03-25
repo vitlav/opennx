@@ -1039,7 +1039,6 @@ bool opennxApp::OnInit()
     }
 
     if (m_bRequireStartUsbIp) {
-        wxLogNull noerrors;
         wxString appDir;
         wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &appDir);
         wxFileName fn(appDir, wxEmptyString);
@@ -1050,9 +1049,17 @@ bool opennxApp::OnInit()
         fn.SetName(wxT("watchusbip"));
 #endif
         wxString watchcmd = fn.GetShortPath();
+        ::wxLogTrace(MYTRACETAG, wxT("cfgfile='%s'"), m_pSessionCfg->sGetFileName().c_str());
         watchcmd << wxT(" -s ") << m_sSessionID << wxT(" -p ")
             << m_nNxSshPID << wxT(" -c ") << m_pSessionCfg->sGetFileName();
-        ::wxExecute(watchcmd);
+        watchcmd << wxT(" --trace=UsbIp,watchUsbIpApp");
+        ::wxLogTrace(MYTRACETAG, wxT("starting %s"), watchcmd.c_str());
+        {
+            wxLogNull noerrors;
+            ::wxExecute(watchcmd);
+        }
+        while (Pending())
+            Dispatch();
     }
 #endif
     if (m_bRequireWatchReader) {
@@ -1104,8 +1111,9 @@ int opennxApp::OnExit()
     return wxApp::OnExit();
 }
 
-void opennxApp::SetSessionCfg(const MyXmlConfig &cfg)
+void opennxApp::SetSessionCfg(MyXmlConfig &cfg)
 {
     m_pSessionCfg = new MyXmlConfig();
     *m_pSessionCfg = cfg;
+    m_pSessionCfg->sSetFileName(cfg.sGetFileName());
 }
