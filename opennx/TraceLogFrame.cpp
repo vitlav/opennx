@@ -173,10 +173,7 @@ bool TraceLogFrame::ShowToolTips()
 wxBitmap TraceLogFrame::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
-////@begin TraceLogFrame bitmap retrieval
-    wxUnusedVar(name);
-    return wxNullBitmap;
-////@end TraceLogFrame bitmap retrieval
+    return CreateBitmapFromFile(name);
 }
 
 /*!
@@ -186,14 +183,8 @@ wxBitmap TraceLogFrame::GetBitmapResource( const wxString& name )
 wxIcon TraceLogFrame::GetIconResource( const wxString& name )
 {
     // Icon retrieval
-////@begin TraceLogFrame icon retrieval
-    wxUnusedVar(name);
-    return wxNullIcon;
-////@end TraceLogFrame icon retrieval
+    return CreateIconFromFile(name);
 }
-
-
-
 
 /*!
  * wxEVT_CLOSE_WINDOW event handler for ID_TRACELOGFRAME

@@ -46,6 +46,7 @@
 
 #include "TextViewer.h"
 #include "opennxApp.h"
+#include "Icon.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -214,10 +215,7 @@ bool TextViewer::ShowToolTips()
 wxBitmap TextViewer::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
-    ////@begin TextViewer bitmap retrieval
-    wxUnusedVar(name);
-    return wxNullBitmap;
-    ////@end TextViewer bitmap retrieval
+    return CreateBitmapFromFile(name);
 }
 
 /*!
@@ -227,10 +225,7 @@ wxBitmap TextViewer::GetBitmapResource( const wxString& name )
 wxIcon TextViewer::GetIconResource( const wxString& name )
 {
     // Icon retrieval
-    ////@begin TextViewer icon retrieval
-    wxUnusedVar(name);
-    return wxNullIcon;
-    ////@end TextViewer icon retrieval
+    return CreateIconFromFile(name);
 }
 
     bool

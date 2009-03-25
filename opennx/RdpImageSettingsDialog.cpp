@@ -205,10 +205,7 @@ bool RdpImageSettingsDialog::ShowToolTips()
 wxBitmap RdpImageSettingsDialog::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
-////@begin RdpImageSettingsDialog bitmap retrieval
-    wxUnusedVar(name);
-    return wxNullBitmap;
-////@end RdpImageSettingsDialog bitmap retrieval
+    return CreateBitmapFromFile(name);
 }
 
 /*!

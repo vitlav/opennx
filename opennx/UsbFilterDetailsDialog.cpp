@@ -100,7 +100,7 @@ UsbFilterDetailsDialog::UsbFilterDetailsDialog( wxWindow* parent, wxWindowID id,
 bool UsbFilterDetailsDialog::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
     ////@begin UsbFilterDetailsDialog creation
-    SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
+    SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));
@@ -189,6 +189,7 @@ void UsbFilterDetailsDialog::SetDialogMode(eDialogMode mode)
                 m_pCtrlHotplug->Show();
             if (m_pCtrlDevSelect)
                 m_pCtrlDevSelect->Hide();
+            SetTitle(_("New USB device - OpenNX"));
             break;
     }
     Fit();
@@ -254,10 +255,7 @@ bool UsbFilterDetailsDialog::ShowToolTips()
 wxBitmap UsbFilterDetailsDialog::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
-    ////@begin UsbFilterDetailsDialog bitmap retrieval
-    wxUnusedVar(name);
-    return wxNullBitmap;
-    ////@end UsbFilterDetailsDialog bitmap retrieval
+    return CreateBitmapFromFile(name);
 }
 
 /*!
@@ -267,10 +265,7 @@ wxBitmap UsbFilterDetailsDialog::GetBitmapResource( const wxString& name )
 wxIcon UsbFilterDetailsDialog::GetIconResource( const wxString& name )
 {
     // Icon retrieval
-    ////@begin UsbFilterDetailsDialog icon retrieval
-    wxUnusedVar(name);
-    return wxNullIcon;
-    ////@end UsbFilterDetailsDialog icon retrieval
+    return CreateIconFromFile(name);
 }
 
 /*!

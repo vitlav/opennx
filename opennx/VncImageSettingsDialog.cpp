@@ -181,10 +181,7 @@ bool VncImageSettingsDialog::ShowToolTips()
 wxBitmap VncImageSettingsDialog::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
-////@begin VncImageSettingsDialog bitmap retrieval
-    wxUnusedVar(name);
-    return wxNullBitmap;
-////@end VncImageSettingsDialog bitmap retrieval
+    return CreateBitmapFromFile(name);
 }
 
 /*!

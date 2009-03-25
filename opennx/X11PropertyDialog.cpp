@@ -183,10 +183,7 @@ bool X11PropertyDialog::ShowToolTips()
 wxBitmap X11PropertyDialog::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
-////@begin X11PropertyDialog bitmap retrieval
-    wxUnusedVar(name);
-    return wxNullBitmap;
-////@end X11PropertyDialog bitmap retrieval
+    return CreateBitmapFromFile(name);
 }
 
 /*!

@@ -19,6 +19,6 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
-#define ID_DIALOG_CONNECT_SYMBOL_0 _("Connecting")
+#define ID_DIALOG_CONNECT_SYMBOL_0 _("Connecting - OpenNX")
 #define ID_DIALOG_CONNECT_SYMBOL_1 _(" ")
 #define ID_DIALOG_CONNECT_SYMBOL_2 _("&Cancel")

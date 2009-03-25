@@ -42,6 +42,7 @@
 ////@end includes
 
 #include "ResumeDialog.h"
+#include "Icon.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -257,10 +258,7 @@ bool ResumeDialog::ShowToolTips()
 wxBitmap ResumeDialog::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
-////@begin ResumeDialog bitmap retrieval
-    wxUnusedVar(name);
-    return wxNullBitmap;
-////@end ResumeDialog bitmap retrieval
+    return CreateBitmapFromFile(name);
 }
 
 /*!
@@ -270,8 +268,5 @@ wxBitmap ResumeDialog::GetBitmapResource( const wxString& name )
 wxIcon ResumeDialog::GetIconResource( const wxString& name )
 {
     // Icon retrieval
-////@begin ResumeDialog icon retrieval
-    wxUnusedVar(name);
-    return wxNullIcon;
-////@end ResumeDialog icon retrieval
+    return CreateIconFromFile(name);
 }

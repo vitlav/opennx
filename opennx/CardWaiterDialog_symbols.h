@@ -19,6 +19,6 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
-#define ID_CARDWAITERDIALOG_SYMBOL_0 _("Insert card")
+#define ID_CARDWAITERDIALOG_SYMBOL_0 _("Insert card - OpenNX")
 #define ID_CARDWAITERDIALOG_SYMBOL_1 _("Please insert smart card")
 #define ID_CARDWAITERDIALOG_SYMBOL_2 _("&Cancel")

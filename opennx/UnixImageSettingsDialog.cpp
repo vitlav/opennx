@@ -174,10 +174,7 @@ bool UnixImageSettingsDialog::ShowToolTips()
 wxBitmap UnixImageSettingsDialog::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
-////@begin UnixImageSettingsDialog bitmap retrieval
-    wxUnusedVar(name);
-    return wxNullBitmap;
-////@end UnixImageSettingsDialog bitmap retrieval
+    return CreateBitmapFromFile(name);
 }
 
 /*!

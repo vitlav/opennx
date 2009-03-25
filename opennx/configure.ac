@@ -131,7 +131,9 @@ case $target_os in
 	*)
 		APP_LDADD="-lstdc++ -lX11 -lXmu"
         WATCHREADER='watchreader$(EXEEXT)'
-        WATCHUSBIP='watchusbip$(EXEEXT)'
+        if test "$ac_cv_enable_usbip" = "YES" ; then
+            WATCHUSBIP='watchusbip$(EXEEXT)'
+        fi
 		;;
 esac
 AC_SUBST(APP_LDADD)

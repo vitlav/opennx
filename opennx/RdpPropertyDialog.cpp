@@ -223,10 +223,7 @@ bool RdpPropertyDialog::ShowToolTips()
 wxBitmap RdpPropertyDialog::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
-////@begin RdpPropertyDialog bitmap retrieval
-    wxUnusedVar(name);
-    return wxNullBitmap;
-////@end RdpPropertyDialog bitmap retrieval
+    return CreateBitmapFromFile(name);
 }
 
 /*!

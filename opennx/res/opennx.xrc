@@ -3260,7 +3260,7 @@ this share.</label>
     <object class="wxDialog" name="ID_DIALOG_CONNECT" subclass="ConnectDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
-        <title>Connecting</title>
+        <title>Connecting - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
         <object class="wxBoxSizer">
@@ -3598,9 +3598,9 @@ this share.</label>
     <object class="wxDialog" name="ID_CARDWAITERDIALOG" subclass="CardWaiterDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxTAB_TRAVERSAL</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
-        <title>Insert card</title>
+        <title>Insert card - OpenNX</title>
         <centered>1</centered>
-        <icon>memory:memrsc#zip:res/opennx.png</icon>
+        <icon>memory:memrsc#zip:res/nx.png</icon>
         <object class="wxBoxSizer">
             <orient>wxVERTICAL</orient>
             <object class="sizeritem">
@@ -3642,8 +3642,8 @@ this share.</label>
     </object>
     <object class="wxDialog" name="ID_USBFILTERDETAILSDIALOG" subclass="UsbFilterDetailsDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxTAB_TRAVERSAL</style>
-        <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
-        <title>USB Filter Details</title>
+        <exstyle>wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS</exstyle>
+        <title>USB Filter Details - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
         <object class="wxBoxSizer">

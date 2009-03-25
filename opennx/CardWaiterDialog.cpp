@@ -43,6 +43,7 @@
 
 #include "CardWaiterDialog.h"
 #include "LibOpenSC.h"
+#include "Icon.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -93,7 +94,7 @@ bool CardWaiterDialog::Create( wxWindow* parent, wxWindowID id, const wxString& 
     SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
-    SetIcon(GetIconResource(wxT("res/opennx.png")));
+    SetIcon(GetIconResource(wxT("res/nx.png")));
     if (GetSizer())
     {
         GetSizer()->SetSizeHints(this);
@@ -167,10 +168,7 @@ void CardWaiterDialog::OnCardInserted(wxCommandEvent &ev)
 wxBitmap CardWaiterDialog::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
-////@begin CardWaiterDialog bitmap retrieval
-    wxUnusedVar(name);
-    return wxNullBitmap;
-////@end CardWaiterDialog bitmap retrieval
+    return CreateBitmapFromFile(name);
 }
 
 /*!

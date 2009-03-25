@@ -44,6 +44,7 @@
 ////@end includes
 
 #include "KeyDialog.h"
+#include "Icon.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -161,10 +162,7 @@ bool KeyDialog::ShowToolTips()
 wxBitmap KeyDialog::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
-////@begin KeyDialog bitmap retrieval
-    wxUnusedVar(name);
-    return wxNullBitmap;
-////@end KeyDialog bitmap retrieval
+    return CreateBitmapFromFile(name);
 }
 
 /*!

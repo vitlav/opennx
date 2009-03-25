@@ -159,8 +159,7 @@ bool LogDialog::ShowToolTips()
 wxBitmap LogDialog::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
-    wxUnusedVar(name);
-    return wxNullBitmap;
+    return CreateBitmapFromFile(name);
 }
 
 /*!

@@ -19,7 +19,7 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
-#define ID_USBFILTERDETAILSDIALOG_SYMBOL_0 _("USB Filter Details")
+#define ID_USBFILTERDETAILSDIALOG_SYMBOL_0 _("USB Filter Details - OpenNX")
 #define ID_USBFILTERDETAILSDIALOG_SYMBOL_1 _("A new USB device has been detected. The\nparameters for this device have been filled\ninto the form below. Please decide, if you\nwant to use this device locally, or if you want\nto use it on the remote machine.")
 #define ID_USBFILTERDETAILSDIALOG_SYMBOL_2 _("Remember this decision")
 #define ID_USBFILTERDETAILSDIALOG_SYMBOL_3 _("Select from existing devices below or\nenter the filter specification directly.")
