@@ -1051,8 +1051,10 @@ bool opennxApp::OnInit()
         wxString watchcmd = fn.GetShortPath();
         ::wxLogTrace(MYTRACETAG, wxT("cfgfile='%s'"), m_pSessionCfg->sGetFileName().c_str());
         watchcmd << wxT(" -s ") << m_sSessionID << wxT(" -p ")
-            << m_nNxSshPID << wxT(" -c ") << m_pSessionCfg->sGetFileName();
+            << m_nNxSshPID << wxT(" -c \"") << m_pSessionCfg->sGetFileName() << wxT("\"");
+#ifdef __WXDEBUG__
         watchcmd << wxT(" --trace=UsbIp,watchUsbIpApp");
+#endif
         ::wxLogTrace(MYTRACETAG, wxT("starting %s"), watchcmd.c_str());
         {
             wxLogNull noerrors;
