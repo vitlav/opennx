@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-03-24 16:24+0100\n"
+"POT-Creation-Date: 2009-03-25 17:48+0100\n"
 "PO-Revision-Date: 2009-02-25 11:24+0100\n"
 "Last-Translator: Fritz Elfert <felfert@users.sf.net>\n"
 "Language-Team:  <de@li.org>\n"
@@ -33,13 +33,14 @@ msgstr "Über OpenNX"
 msgid "&OK"
 msgstr "&OK"
 
-#: LibOpenSC.cpp:357
+#: LibOpenSC.cpp:345
 #, fuzzy
 msgid "Could not terminate nxssh"
 msgstr "Konnte nxssh nicht starten."
 
 #: CardWaiterDialog_symbols.h:22
-msgid "Insert card"
+#, fuzzy
+msgid "Insert card - OpenNX"
 msgstr "SmartCard einstecken"
 
 #: CardWaiterDialog_symbols.h:23
@@ -57,8 +58,9 @@ msgid "&Cancel"
 msgstr "&Abbruch"
 
 #: ConnectDialog_symbols.h:22
-msgid "Connecting"
-msgstr "Verbinden"
+#, fuzzy
+msgid "Connecting - OpenNX"
+msgstr "Verbindungs Assistent - OpenNX"
 
 #: ConnectDialog_symbols.h:23
 msgid " "
@@ -68,11 +70,11 @@ msgstr " "
 msgid "OPENNX-PULLDOWN"
 msgstr "OPENNX-PULLDOWN"
 
-#: KeyDialog.cpp:200
+#: KeyDialog.cpp:198
 msgid "Select key to import"
 msgstr "Schlüssel zum Import wählen"
 
-#: KeyDialog.cpp:201
+#: KeyDialog.cpp:199
 msgid "SSh key files (*.key;*.pub)|*.key;*.pub"
 msgstr "SSh Schlüsseldateien (*.key;*.pub)|*.key;*.pub"
 
@@ -369,7 +371,7 @@ msgstr "Verbindungs Assistent - OpenNX"
 msgid "Host"
 msgstr "Host"
 
-#: MyWizard_symbols.h:25 ResumeDialog.cpp:149 SessionAdmin.cpp:178
+#: MyWizard_symbols.h:25 ResumeDialog.cpp:150 SessionAdmin.cpp:178
 #: SessionProperties_symbols.h:26
 msgid "Port"
 msgstr "Port"
@@ -581,28 +583,28 @@ msgstr "Starte Arbeitsplatz"
 msgid "Run application"
 msgstr "Starte Anwendung"
 
-#: ResumeDialog.cpp:145 SessionProperties.cpp:624
+#: ResumeDialog.cpp:146 SessionProperties.cpp:624
 msgid "Name"
 msgstr "Name"
 
-#: ResumeDialog.cpp:146
+#: ResumeDialog.cpp:147
 msgid "State"
 msgstr "Status"
 
-#: ResumeDialog.cpp:147 SessionAdmin.cpp:183
+#: ResumeDialog.cpp:148 SessionAdmin.cpp:183
 msgid "Type"
 msgstr "Typ"
 
-#: ResumeDialog.cpp:148
+#: ResumeDialog.cpp:149
 msgid "Screen"
 msgstr "Bildschirm"
 
-#: ResumeDialog.cpp:150 SessionAdmin_symbols.h:34
+#: ResumeDialog.cpp:151 SessionAdmin_symbols.h:34
 #: X11PropertyDialog_symbols.h:27
 msgid "Options"
 msgstr "Optionen"
 
-#: ResumeDialog.cpp:151 SessionAdmin.cpp:179
+#: ResumeDialog.cpp:152 SessionAdmin.cpp:179
 msgid "Session ID"
 msgstr "Sitzungs-ID"
 
@@ -1190,7 +1192,7 @@ msgstr "CUPS Optionen"
 msgid "cups driver"
 msgstr "cups driver"
 
-#: ShareProperties_symbols.h:47 UsbFilterDetailsDialog_symbols.h:22
+#: ShareProperties_symbols.h:47
 msgid "USB Filter Details"
 msgstr "USB Filterdetails"
 
@@ -1206,7 +1208,7 @@ msgstr ""
 "Bitte geben Sie den Namen des Einhängepunktes an\n"
 "unter dem die Freigabe auf dem entfernten Rechner verfügbar sein soll."
 
-#: TextViewer.cpp:104
+#: TextViewer.cpp:105
 msgid "File couldn't be loaded."
 msgstr "Datei konnte nicht geladen werden."
 
@@ -1424,7 +1426,7 @@ msgstr ""
 msgid "Could not connect to usbipd2. No USB devices will be exported"
 msgstr ""
 
-#: opennxApp.cpp:1063
+#: opennxApp.cpp:1080
 msgid ""
 "OpenNX session has been suspended, because\n"
 "the authenticating smart card has been removed."
@@ -1432,9 +1434,19 @@ msgstr ""
 "Die OpenNX Sitzung wurde ausgesetzt, weil\n"
 "die erforderliche SmartCard entfernt wurde."
 
-#: opennxApp.cpp:1064
+#: opennxApp.cpp:1081
 msgid "Smart card removed"
 msgstr "SmartCard entfernt"
+
+#: UsbFilterDetailsDialog.cpp:192
+#, fuzzy
+msgid "New USB device - OpenNX"
+msgstr "Neue Freigabe - OpenNX"
+
+#: UsbFilterDetailsDialog_symbols.h:22
+#, fuzzy
+msgid "USB Filter Details - OpenNX"
+msgstr "USB Filterdetails"
 
 #: UsbFilterDetailsDialog_symbols.h:23
 msgid ""
@@ -1499,6 +1511,9 @@ msgstr "Lokal"
 #: UsbFilterDetailsDialog_symbols.h:34
 msgid "Forward to remote"
 msgstr "Weiterleitung"
+
+#~ msgid "Connecting"
+#~ msgstr "Verbinden"
 
 #~ msgid "To be called from udev hotplug."
 #~ msgstr "Wird über hotplug aufgerufen."
