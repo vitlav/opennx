@@ -1,6 +1,6 @@
 %define _prefix /usr/NX
-%define version @VERSION@
-%define rel @SVNREV@
+%define version @VERSION@ 
+%define rel @SVNREV@ 
 
 %define nxversion 2.1.0
 %define nxdlurl http://www.nomachine.com/sources.php
@@ -50,11 +50,7 @@ BuildRequires: opensc-devel
 BuildRequires: libusb-devel
 %if %{is_suse}
 BuildRequires: wxGTK-devel >= 2.8.0
-%if "%{ostag}"=="SuSE11.1"
 BuildRequires: libsmbclient-devel
-%else
-BuildRequires: samba-common
-%endif
 %else
 BuildRequires: wxGTK2-devel >= 2.8.0
 BuildRequires: samba-common
@@ -62,6 +58,14 @@ BuildRequires: samba-common
 BuildRequires: xorg-x11-proto-devel
 BuildRequires: xorg-x11-xtrans-devel
 BuildRequires: wget
+BuildRequires: gcc-c++ 
+BuildRequires: zip 
+%if %{is_suse}
+BuildRequires: libpng-devel 
+BuildRequires: libjpeg-devel
+BuildRequires: zlib-devel 
+BuildRequires: openssl-devel 
+%endif
 
 %description
 opennx is an OSS replacement for Nomachine's NX client.
@@ -87,7 +91,7 @@ EOF
 )
 
 %build
-%configure --enable-static --enable-usbip
+%configure --enable-shared --disable-static --enable-debug --enable-usbip
 make
 for pkg in %{nxpkgs} ; do
 	margs=
@@ -301,6 +305,15 @@ fi
     mklnk $LINK_DIR_C $GNOME_APPLNK_SUSE "Internet"
   fi
 %endif
+%if "%{ostag}"=="SuSE11"
+  if [ -d /etc/xdg ]; then
+    mkxgd $LINK_DIR_X $XDK_LINK_DIR_X
+  else
+    mklnk $LINK_DIR_C $KDE2_APPLNK_SUSE "Internet"
+    mklnk $LINK_DIR_C $KDE3_APPLNK_SUSE "Internet"
+    mklnk $LINK_DIR_C $GNOME_APPLNK_SUSE "Internet"
+  fi
+%endif
 %endif
 
 mkxgd_MIME() {
@@ -407,5 +420,7 @@ rm -rf "/usr/lib/menu/opennx"
 /usr/bin/nxclient
 
 %changelog
+* Wed Apr 15 2009 Michael Kromer <michael.kromer@millenux.com>
+- Fixes for SuSE Plattform (openSuSE/SLES)
 * Sun Jan  7 2007 Fritz Elfert <fritz@fritz-elfert.de>
 - Initial package
