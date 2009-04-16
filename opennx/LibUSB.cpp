@@ -37,9 +37,9 @@
 #include "wx/defs.h"
 #endif
 
+#include "MyDynlib.h"
 #include "LibUSB.h"
 
-#include <wx/dynlib.h>
 #include <wx/log.h>
 #include <wx/arrimpl.cpp>
 
@@ -87,7 +87,7 @@ wxString USBDevice::toShortString() {
     return ret;
 }
 
-void USB::adddev(wxDynamicLibrary *dll, struct usb_device *dev, unsigned char dclass)
+void USB::adddev(MyDynamicLibrary *dll, struct usb_device *dev, unsigned char dclass)
 {
 #ifdef SUPPORT_USBIP
     usb_dev_handle *udev;
@@ -139,7 +139,7 @@ void USB::adddev(wxDynamicLibrary *dll, struct usb_device *dev, unsigned char dc
 #endif
 }
 
-void USB::usbscan(wxDynamicLibrary *dll)
+void USB::usbscan(MyDynamicLibrary *dll)
 {
 #ifdef SUPPORT_USBIP
     struct usb_bus *bus;
@@ -179,7 +179,7 @@ void USB::usbscan(wxDynamicLibrary *dll)
 USB::USB() {
     m_bAvailable = false;
 #ifdef SUPPORT_USBIP
-    wxDynamicLibrary dll;
+    MyDynamicLibrary dll;
     if (dll.Load(wxT("libusb"))) {
         wxDYNLIB_FUNCTION(Tusb_init, usb_init, dll);
         if (!pfnusb_init)

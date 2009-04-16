@@ -37,6 +37,7 @@
 #include "wx/defs.h"
 #endif
 
+#include "MyDynlib.h"
 #include "WinShare.h"
 #include <wx/utils.h>
 #include <wx/dynlib.h>
@@ -153,7 +154,7 @@ DllData::DllData(ClientType ct)
             ::wxLogTrace(MYTRACETAG, wxT("DllData Constructor(SmbClientUnix)"));
             {
                 wxLogNull lognull;
-                wxDynamicLibrary dll(wxT("libsmbclient"));
+                MyDynamicLibrary dll(wxT("libsmbclient"));
                 if (dll.IsLoaded()) {
                     C_init = (SMBC_init)dll.GetSymbol(wxT("smbc_init"));
                     C_opendir = (SMBC_opendir)dll.GetSymbol(wxT("smbc_opendir"));
@@ -192,7 +193,7 @@ DllData::DllData(ClientType ct)
             ::wxLogTrace(MYTRACETAG, wxT("DllData Constructor(CupsClientUnix)"));
             {
                 wxLogNull lognull;
-                wxDynamicLibrary dll(wxT("libcups"));
+                MyDynamicLibrary dll(wxT("libcups"));
                 if (dll.IsLoaded()) {
                     cupsGetDests = (FP_cupsGetDests)dll.GetSymbol(wxT("cupsGetDests"));
                     cupsServer = (FP_cupsServer)dll.GetSymbol(wxT("cupsServer"));

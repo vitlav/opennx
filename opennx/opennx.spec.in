@@ -123,10 +123,12 @@ ln -s %{_bindir}/opennx %{buildroot}/usr/bin/nxclient
 
 %post
 # Create symlinks with plain .so extension under /usr/NX/lib[64]
-ln -s `/sbin/ldconfig -p|awk '/libusb[\.-]/ {print $4}'|head -1` %{nxlib}/libusb.so
-ln -s `/sbin/ldconfig -p|awk '/libopensc[\.-]/ {print $4}'|head -1` %{nxlib}/libopensc.so
-ln -s `/sbin/ldconfig -p|awk '/libsmbclient[\.-]/ {print $4}'|head -1` %{nxlib}/libsmbclient.so
-ln -s `/sbin/ldconfig -p|awk '/libcups[\.-]/ {print $4}'|head -1` %{nxlib}/libcups.so
+for lname in usb opensc smbclient cups ; do
+    LPATH=`/sbin/ldconfig -p|awk '/lib'$lname'[\.-]/ {print $4}'|head -1`
+    if test -n "$LPATH" ; then
+        ln -s $LPATH %{nxlib}/lib$lname.so
+    fi
+done
 
 APPLNK_DIR="/usr/NX/share/applnk"
 LINK_NAME="/OpenNX client"

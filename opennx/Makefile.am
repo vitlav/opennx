@@ -10,7 +10,7 @@ EXTRA_PROGRAMS = tracelog$(EXEEXT) watchreader$(EXEEXT) watchusbip$(EXEEXT)
 opennx_SOURCES = AboutDialog.cpp AsyncProcess.cpp LibOpenSC.cpp \
 	CardWaiterDialog.cpp ConnectDialog.cpp ExtHtmlWindow.cpp ForeignFrame.cpp \
 	Icon.cpp LogDialog.cpp KeyDialog.cpp LibUSB.cpp LoginDialog.cpp md5.c MyIPC.cpp \
-	MySession.cpp MyValidator.cpp MyWizard.cpp MyXmlConfig.cpp opennxApp.cpp \
+	MyDynlib.cpp MySession.cpp MyValidator.cpp MyWizard.cpp MyXmlConfig.cpp opennxApp.cpp \
 	osdep.c PanicDialog.cpp pwcrypt.cpp QuitDialog.cpp \
 	RdpImageSettingsDialog.cpp RdpPropertyDialog.cpp \
 	ResumeDialog.cpp SessionAdmin.cpp SessionList.cpp \
@@ -24,7 +24,7 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h LibOpenSC.h 
 	ConnectDialog.h ConnectDialog_symbols.h debugleak.h \
 	ExtHtmlWindow.h ForeignFrame.h ForeignFrame_symbols.h Icon.h \
 	KeyDialog.h KeyDialog_symbols.h LibUSB.h LogDialog.h LogDialog_symbols.h \
-	LoginDialog.h LoginDialog_symbols.h md5.h memres.h MyIPC.h \
+	LoginDialog.h LoginDialog_symbols.h md5.h memres.h MyIPC.h MyDynlib.h \
 	MySession.h MyValidator.h MyWizard.h MyWizard_symbols.h MyXmlConfig.h \
 	opennxApp.h osdep.h  PanicDialog.h PanicDialog_symbols.h pwcrypt.h \
 	QuitDialog.h QuitDialog_symbols.h RdpImageSettingsDialog.h \
@@ -40,7 +40,7 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h LibOpenSC.h 
 	VncPropertyDialog_symbols.h WinShare.h X11PropertyDialog.h \
 	X11PropertyDialog_symbols.h trace.h watchReaderApp.h watchUsbIpApp.h xh_richtext.h
 
-watchreader_SOURCES = watchReaderApp.cpp LibOpenSC.cpp
+watchreader_SOURCES = watchReaderApp.cpp LibOpenSC.cpp MyDynlib.cpp
 watchreader_LDADD = $(WX_LIBS) $(X_LIBS) $(X_PRE_LIBS) $(X_EXTRA_LIBS) $(APP_LDADD)
 watchreader_CPPFLAGS = $(WX_CPPFLAGS) $(X_CFLAGS) -DAPP_WATCHREADER
 watchreader_CXXFLAGS = $(WX_CXXFLAGS)
@@ -48,7 +48,7 @@ watchreader_CFLAGS = $(WX_CFLAGS)
 
 watchusbip_SOURCES = watchUsbIpApp.cpp UsbIp.cpp Icon.cpp LibUSB.cpp md5.c MyValidator.cpp \
 					 MyXmlConfig.cpp osdep.c pwcrypt.cpp UsbFilterDetailsDialog.cpp \
-					 wxprec.cpp xh_richtext.cpp
+					 wxprec.cpp xh_richtext.cpp MyDynlib.cpp
 watchusbip_LDADD = $(WX_LIBS) $(X_LIBS) $(X_PRE_LIBS) $(X_EXTRA_LIBS) $(APP_LDADD)
 watchusbip_CPPFLAGS = $(WX_CPPFLAGS) $(X_CFLAGS) -DAPP_WATCHUSBIP
 watchusbip_CXXFLAGS = $(WX_CXXFLAGS)

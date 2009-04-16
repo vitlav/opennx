@@ -38,11 +38,11 @@
 #include "wx/wx.h"
 #endif
 
-#include "wx/dynlib.h"
 #include <wx/event.h>
 #include <wx/thread.h>
 #include <wx/process.h>
 
+#include "MyDynlib.h"
 #include "LibOpenSC.h"
 #ifdef APP_OPENNX
 # include "CardWaiterDialog.h"
@@ -121,7 +121,7 @@ CardWaitThread::~CardWaitThread()
 CardWaitThread::Entry()
 {
     sc_context *ctx;
-    wxDynamicLibrary dll;
+    MyDynamicLibrary dll;
     {
         wxLogNull ignoreErrors;
         if (!dll.Load(wxT("libopensc")))
@@ -215,7 +215,7 @@ LibOpenSC::~LibOpenSC()
 
 bool LibOpenSC::HasOpenSC() {
     wxLogNull ignoreErrors;
-    wxDynamicLibrary dll;
+    MyDynamicLibrary dll;
     if (!dll.Load(wxT("libopensc")))
         return false;
     wxDYNLIB_FUNCTION(Tsc_establish_context, sc_establish_context, dll);
@@ -242,7 +242,7 @@ int LibOpenSC::WaitForCard(CardWaiterDialog *d) {
 
 bool LibOpenSC::WatchHotRemove(int ridx, long sshpid) {
 
-    wxDynamicLibrary dll;
+    MyDynamicLibrary dll;
     {
         wxLogNull ignoreErrors;
         if (!dll.Load(wxT("libopensc")))

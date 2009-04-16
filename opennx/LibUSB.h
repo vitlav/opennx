@@ -66,7 +66,7 @@ class USBDevice : public wxObject {
 
 WX_DECLARE_OBJARRAY(USBDevice, ArrayOfUSBDevices);
 
-class wxDynamicLibrary;
+class MyDynamicLibrary;
 struct usb_device;
 
 class USB {
@@ -76,8 +76,8 @@ class USB {
         ArrayOfUSBDevices GetDevices();
 
     private:
-        void adddev(wxDynamicLibrary *, struct usb_device *, unsigned char);
-        void usbscan(wxDynamicLibrary *);
+        void adddev(MyDynamicLibrary *, struct usb_device *, unsigned char);
+        void usbscan(MyDynamicLibrary *);
 
         ArrayOfUSBDevices m_aDevices;
         bool m_bAvailable;
