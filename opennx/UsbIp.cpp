@@ -167,6 +167,7 @@ bool UsbIp::WaitForSession(int secs /* = 10 */)
             }
         }
     }
+    return true;
 }
 
 bool UsbIp::ExportDevice(const wxString &busid)
