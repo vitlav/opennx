@@ -1225,6 +1225,25 @@ MySession::startProxy()
             popts << wxT(",connect=") << m_sProxyIP;
         }
     }
+
+    // Undocumented feature of the original:
+    // If a file ~/.nx/options exists, it's content is
+    // appended to the regular options.
+    wxFileName mergeOpts(m_sUserDir, wxT("options"));
+    if (mergeOpts.FileExists()) {
+        wxLogNull dummy;
+        wxTextFile f(mergeOpts.GetFullPath());
+        if (f.Open()) {
+            wxString mopts = f.GetFirstLine().Strip(wxString::both);
+            if (!mopts.IsEmpty()) {
+                if ((!popts.IsEmpty()) && (!mopts.StartsWith(wxT(","))))
+                    popts << wxT(",");
+                popts << mopts;
+            }
+            f.Close();
+        }
+    }
+
     popts << wxT(":") << m_sSessionDisplay;
     m_sSessionDir = m_sUserDir;
     m_sSessionDir << wxFileName::GetPathSeparator()
