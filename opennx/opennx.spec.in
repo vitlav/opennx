@@ -1,6 +1,11 @@
 %define _prefix /usr/NX
-%define version @VERSION@ 
-%define rel @SVNREV@ 
+%define version @VERSION@
+%define rel @SVNREV@
+%ifarch x86_64
+%define nxlib /usr/NX/lib64
+%else
+%define nxlib /usr/NX/lib
+%endif
 
 %define nxversion 2.1.0
 %define nxdlurl http://www.nomachine.com/sources.php
@@ -58,12 +63,12 @@ BuildRequires: samba-common
 BuildRequires: xorg-x11-proto-devel
 BuildRequires: xorg-x11-xtrans-devel
 BuildRequires: wget
-BuildRequires: gcc-c++ 
-BuildRequires: zip 
-BuildRequires: libpng-devel 
+BuildRequires: gcc-c++
+BuildRequires: zip
+BuildRequires: libpng-devel
 BuildRequires: libjpeg-devel
-BuildRequires: zlib-devel 
-BuildRequires: openssl-devel 
+BuildRequires: zlib-devel
+BuildRequires: openssl-devel
 
 %description
 opennx is an OSS replacement for Nomachine's NX client.
@@ -117,6 +122,12 @@ ln -s %{_bindir}/opennx %{buildroot}/usr/bin/nxclient
 %{__rm} -rf %{buildroot}
 
 %post
+# Create symlinks with plain .so extension under /usr/NX/lib[64]
+ln -s `/sbin/ldconfig -p|awk '/libusb[\.-]/ {print $4}'|head -1` %{nxlib}/libusb.so
+ln -s `/sbin/ldconfig -p|awk '/libopensc[\.-]/ {print $4}'|head -1` %{nxlib}/libopensc.so
+ln -s `/sbin/ldconfig -p|awk '/libsmbclient[\.-]/ {print $4}'|head -1` %{nxlib}/libsmbclient.so
+ln -s `/sbin/ldconfig -p|awk '/libcups[\.-]/ {print $4}'|head -1` %{nxlib}/libcups.so
+
 APPLNK_DIR="/usr/NX/share/applnk"
 LINK_NAME="/OpenNX client"
 
@@ -352,6 +363,11 @@ mkxgd_MIME
 mkkde_MIME
 
 %postun
+rm -f %{nxlib}/libusb.so
+rm -f %{nxlib}/libopensc.so
+rm -f %{nxlib}/libsmbclient.so
+rm -f %{nxlib}/libcups.so
+
 LINK_NAME="/OpenNX client"
 
 rmlnk() {

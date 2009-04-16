@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-03-25 19:04+0100\n"
+"POT-Creation-Date: 2009-04-16 13:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: AboutDialog.cpp:116 SessionProperties.cpp:978
+#: AboutDialog.cpp:113 SessionProperties.cpp:978
 msgid "Version"
 msgstr ""
 
@@ -215,51 +215,51 @@ msgstr ""
 msgid "Error - OpenNX"
 msgstr ""
 
-#: MySession.cpp:1234
+#: MySession.cpp:1253
 #, c-format
 msgid ""
 "Could not create session directory\n"
 "%s\n"
 msgstr ""
 
-#: MySession.cpp:1254
+#: MySession.cpp:1273
 #, c-format
 msgid ""
 "Could not write session options\n"
 "%s\n"
 msgstr ""
 
-#: MySession.cpp:1570
+#: MySession.cpp:1589
 #, c-format
 msgid "Could not write %s"
 msgstr ""
 
-#: MySession.cpp:1628 MySession.cpp:1659 MySession.cpp:1667
+#: MySession.cpp:1647 MySession.cpp:1678 MySession.cpp:1686
 #, c-format
 msgid "Connecting to %s ..."
 msgstr ""
 
-#: MySession.cpp:1635
+#: MySession.cpp:1654
 msgid "Preparing multimedia service ..."
 msgstr ""
 
-#: MySession.cpp:1645
+#: MySession.cpp:1664
 msgid "Could not query multimedia support"
 msgstr ""
 
-#: MySession.cpp:1657
+#: MySession.cpp:1676
 msgid "Could not start multimedia support"
 msgstr ""
 
-#: MySession.cpp:1665
+#: MySession.cpp:1684
 msgid "Preparing CUPS service ..."
 msgstr ""
 
-#: MySession.cpp:1699
+#: MySession.cpp:1718
 msgid "Called command was: "
 msgstr ""
 
-#: MySession.cpp:1700
+#: MySession.cpp:1719
 msgid "Could not start nxssh."
 msgstr ""
 
@@ -1309,81 +1309,81 @@ msgstr ""
 msgid "Could not read link %s"
 msgstr ""
 
-#: opennxApp.cpp:668
+#: opennxApp.cpp:669
 msgid ""
 "\n"
 "\n"
 "Supported trace tags: "
 msgstr ""
 
-#: opennxApp.cpp:671
+#: opennxApp.cpp:672
 msgid "Start the session administration tool."
 msgstr ""
 
-#: opennxApp.cpp:673
+#: opennxApp.cpp:674
 msgid "Secify window title for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:675
+#: opennxApp.cpp:676
 msgid "Secify dialog style for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:677
+#: opennxApp.cpp:678
 msgid "Run in dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:679
+#: opennxApp.cpp:680
 msgid "Dialog mode proxy."
 msgstr ""
 
-#: opennxApp.cpp:681
+#: opennxApp.cpp:682
 msgid "Specify message for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:683
+#: opennxApp.cpp:684
 msgid "Specify parent PID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:685
+#: opennxApp.cpp:686
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr ""
 
-#: opennxApp.cpp:687
+#: opennxApp.cpp:688
 msgid "Specify window-ID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:689
+#: opennxApp.cpp:690
 msgid "Specify wxWidgets trace mask."
 msgstr ""
 
-#: opennxApp.cpp:691
+#: opennxApp.cpp:692
 msgid "Guide the user through the steps to configure a session."
 msgstr ""
 
-#: opennxApp.cpp:1017
+#: opennxApp.cpp:1023
 msgid "libusb is not available. No USB devices will be exported"
 msgstr ""
 
-#: opennxApp.cpp:1030 opennxApp.cpp:1032
+#: opennxApp.cpp:1036 opennxApp.cpp:1038
 #, c-format
 msgid "Unable to export USB device %s"
 msgstr ""
 
-#: opennxApp.cpp:1038
+#: opennxApp.cpp:1044
 msgid "Could not connect to usbipd2. No USB devices will be exported"
 msgstr ""
 
-#: opennxApp.cpp:1087
+#: opennxApp.cpp:1095
 msgid ""
 "OpenNX session has been suspended, because\n"
 "the authenticating smart card has been removed."
 msgstr ""
 
-#: opennxApp.cpp:1088
+#: opennxApp.cpp:1096
 msgid "Smart card removed"
 msgstr ""
 
-#: UsbFilterDetailsDialog.cpp:192
+#: UsbFilterDetailsDialog.cpp:191
 msgid "New USB device - OpenNX"
 msgstr ""
 
