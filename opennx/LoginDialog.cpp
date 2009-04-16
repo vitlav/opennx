@@ -56,7 +56,6 @@
 ////@end XPM images
 
 #include "trace.h"
-ENABLE_TRACE;
 
 /*!
  * LoginDialog type definition

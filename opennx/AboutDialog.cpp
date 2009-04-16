@@ -49,7 +49,6 @@
 ////@end XPM images
 
 #include "trace.h"
-ENABLE_TRACE;
 
 /*!
  * AboutDialog type definition

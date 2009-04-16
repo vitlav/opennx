@@ -56,7 +56,6 @@
 #endif
 
 #include "trace.h"
-ENABLE_TRACE;
 
 IMPLEMENT_DYNAMIC_CLASS(HotplugEvent, wxEvent)
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_HOTPLUG)
@@ -119,6 +118,10 @@ bool UsbIp::Wait(long sec = -1, long msec = 0)
 
 bool UsbIp::Connect(const wxString &socketPath)
 {
+#ifdef __WXMSW__
+    m_bConnected = false;
+# warning win32 implementation missing
+#else
     wxUNIXaddress addr;
     addr.Filename(socketPath);
     ::wxLogTrace(MYTRACETAG, wxT("Connecting to %s"), socketPath.c_str());
@@ -132,6 +135,7 @@ bool UsbIp::Connect(const wxString &socketPath)
         m_eState = Initializing;
     else
         m_pSocketClient->Close();
+#endif
     return m_bConnected;
 }
 

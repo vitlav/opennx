@@ -45,7 +45,6 @@
 #include <wx/arrimpl.cpp>
 
 #include "trace.h"
-ENABLE_TRACE;
 
 WX_DEFINE_OBJARRAY(ArrayOfShares);
 

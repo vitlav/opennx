@@ -57,7 +57,6 @@
 #include "osdep.h"
 
 #include "trace.h"
-ENABLE_TRACE;
 
 class SessionTraverser : public wxDirTraverser
 {

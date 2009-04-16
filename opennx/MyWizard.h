@@ -116,7 +116,7 @@ public:
 
 ////@begin MyWizard member function declarations
 
-    /// Runs the wizard.
+    /// Runs the wizard
     bool Run();
 
     /// Retrieves bitmap resources

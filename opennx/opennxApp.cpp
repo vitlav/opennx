@@ -75,7 +75,6 @@
 #include "memres.h"
 
 #include "trace.h"
-ENABLE_TRACE;
 DECLARE_TRACETAGS;
 
 // Create a new application object: this macro will allow wxWindows to create
@@ -499,6 +498,7 @@ opennxApp::setSelfPath()
     bool
 opennxApp::preInit()
 {
+    initWxTraceTags();
     setUserDir();
     if (!setSelfPath())
         return false;
@@ -560,7 +560,7 @@ opennxApp::preInit()
         wxStringTokenizer t(tmp, wxT(",:"));
         while (t.HasMoreTokens()) {
             wxString tag = t.GetNextToken();
-            if (allTraceTags->Index(tag) != wxNOT_FOUND) {
+            if (allTraceTags.Index(tag) != wxNOT_FOUND) {
                 ::wxLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
                 wxLog::AddTraceMask(tag);
             }
@@ -659,11 +659,11 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
 
     // tags will be appended to the last switch/option
     wxString tags;
-    allTraceTags->Sort();
-    for (int i = 0; i < allTraceTags->GetCount(); i++) {
+    allTraceTags.Sort();
+    for (int i = 0; i < allTraceTags.GetCount(); i++) {
         if (!tags.IsEmpty())
             tags += wxT(" ");
-        tags += allTraceTags->Item(i);
+        tags += allTraceTags.Item(i);
     }
     tags.Prepend(_("\n\nSupported trace tags: "));
 
@@ -790,7 +790,7 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
         wxStringTokenizer t(traceTags, wxT(","));
         while (t.HasMoreTokens()) {
             wxString tag = t.GetNextToken();
-            if (allTraceTags->Index(tag) == wxNOT_FOUND) {
+            if (allTraceTags.Index(tag) == wxNOT_FOUND) {
                 OnCmdLineError(parser);
                 return false;
             }
