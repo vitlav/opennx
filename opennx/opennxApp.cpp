@@ -959,6 +959,11 @@ bool opennxApp::realInit()
             break;
     }
 
+    if (!m_sSessionName.IsEmpty()) {
+        wxFileName fn(m_sSessionName);
+        if (fn.Normalize() && fn.FileExists())
+            m_sSessionName = fn.GetFullPath();
+    }
     if ((m_eMode == MODE_CLIENT) && m_sSessionName.IsEmpty()) {
         if (!wxConfigBase::Get()->Read(wxT("Config/LastSession"), &m_sSessionName))
             m_eMode = MODE_WIZARD;

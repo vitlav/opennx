@@ -76,13 +76,20 @@ else
 	WXPARAMS="$WXPARAMS --unicode=no"
 fi
 
-if test "$enable_static" = "yes" ; then
+ac_cv_enable_staticwx=YES
+AC_ARG_ENABLE([staticwx],
+	AS_HELP_STRING([--enable-staticwx],
+		[Link against static wxWidgets libs (Default: YES)]),
+	[ test "$enableval" = "no" && ac_cv_enable_staticwx=NO ]
+)
+if test "$ac_cv_enable_staticwx" = "YES" ; then
 	AC_MSG_NOTICE([will link against static wxWidgets libs])
 	WXPARAMS="$WXPARAMS --static=yes"
 else
 	AC_MSG_NOTICE([will link against shared wxWidgets libs])
 	WXPARAMS="$WXPARAMS --static=no"
 fi
+
 case $target_os in
 	mingw*)
         # On mingw, we don't use qa

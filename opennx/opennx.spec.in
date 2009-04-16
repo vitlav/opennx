@@ -60,12 +60,10 @@ BuildRequires: xorg-x11-xtrans-devel
 BuildRequires: wget
 BuildRequires: gcc-c++ 
 BuildRequires: zip 
-%if %{is_suse}
 BuildRequires: libpng-devel 
 BuildRequires: libjpeg-devel
 BuildRequires: zlib-devel 
 BuildRequires: openssl-devel 
-%endif
 
 %description
 opennx is an OSS replacement for Nomachine's NX client.
@@ -91,7 +89,7 @@ EOF
 )
 
 %build
-%configure --enable-shared --disable-static --enable-debug --enable-usbip
+%configure --disable-staticwx --enable-debug --enable-usbip
 make
 for pkg in %{nxpkgs} ; do
 	margs=
