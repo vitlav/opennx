@@ -47,6 +47,7 @@
 #include "AsyncProcess.h"
 
 #include "trace.h"
+ENABLE_TRACE;
 
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_NXSSH);
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_NXSERVICE);

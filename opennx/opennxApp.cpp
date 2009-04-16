@@ -75,6 +75,7 @@
 #include "memres.h"
 
 #include "trace.h"
+ENABLE_TRACE;
 DECLARE_TRACETAGS;
 
 // Create a new application object: this macro will allow wxWindows to create

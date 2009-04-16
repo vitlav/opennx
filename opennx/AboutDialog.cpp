@@ -48,8 +48,6 @@
 ////@begin XPM images
 ////@end XPM images
 
-#include "trace.h"
-
 /*!
  * AboutDialog type definition
  */

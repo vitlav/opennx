@@ -73,6 +73,7 @@
 #endif
 
 #include "trace.h"
+ENABLE_TRACE;
 
 static const int CUPS_PORT_OFFSET  = 2000;
 static const int SMB_PORT_OFFSET   = 3000;

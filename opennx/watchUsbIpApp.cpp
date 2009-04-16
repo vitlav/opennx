@@ -184,11 +184,11 @@ void watchUsbIpApp::OnInitCmdLine(wxCmdLineParser& parser)
 
     // tags will be appended to the last switch/option
     wxString tags;
-    allTraceTags->Sort();
-    for (int i = 0; i < allTraceTags->GetCount(); i++) {
+    allTraceTags.Sort();
+    for (int i = 0; i < allTraceTags.GetCount(); i++) {
         if (!tags.IsEmpty())
             tags += wxT(" ");
-        tags += allTraceTags->Item(i);
+        tags += allTraceTags.Item(i);
     }
     tags.Prepend(_("\n\nSupported trace tags: "));
 
@@ -218,7 +218,7 @@ bool watchUsbIpApp::OnCmdLineParsed(wxCmdLineParser& parser)
         wxStringTokenizer t(traceTags, wxT(","));
         while (t.HasMoreTokens()) {
             wxString tag = t.GetNextToken();
-            if (allTraceTags->Index(tag) == wxNOT_FOUND) {
+            if (allTraceTags.Index(tag) == wxNOT_FOUND) {
                 OnCmdLineError(parser);
                 return false;
             }
@@ -232,11 +232,12 @@ bool watchUsbIpApp::OnInit()
 {    
     wxString tmp;
 
+    initWxTraceTags();
     if (::wxGetEnv(wxT("WXTRACE"), &tmp)) {
         wxStringTokenizer t(tmp, wxT(",:"));
         while (t.HasMoreTokens()) {
             wxString tag = t.GetNextToken();
-            if (allTraceTags->Index(tag) != wxNOT_FOUND) {
+            if (allTraceTags.Index(tag) != wxNOT_FOUND) {
                 ::wxLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
                 wxLog::AddTraceMask(tag);
             }

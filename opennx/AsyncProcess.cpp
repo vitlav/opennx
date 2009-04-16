@@ -44,6 +44,7 @@
 #include "AsyncProcess.h"
 
 #include "trace.h"
+ENABLE_TRACE;
 
 #if 0
 // trying to get rid of file descriptors which are left

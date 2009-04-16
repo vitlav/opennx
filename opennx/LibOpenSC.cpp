@@ -53,6 +53,7 @@
 #endif
 
 #include "trace.h"
+ENABLE_TRACE;
 
 #include <opensc/opensc.h>
 typedef int (*Tsc_establish_context)(sc_context_t **ctx, const char *app_name);

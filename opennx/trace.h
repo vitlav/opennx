@@ -11,11 +11,11 @@
 
 extern std::vector<std::string> _allTraceTags;
 
-static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName());
-
-static void __attribute__((constructor)) _trinit() {
-    _allTraceTags.push_back(std::string(__FILE__));
-}
+#define ENABLE_TRACE \
+    static wxString MYTRACETAG(wxFileName::FileName(wxT(__FILE__)).GetName()); \
+    static void __attribute__((constructor)) _trinit() { \
+        _allTraceTags.push_back(std::string(__FILE__)); \
+    }
 
 #define DECLARE_TRACETAGS \
     std::vector<std::string> _allTraceTags; \

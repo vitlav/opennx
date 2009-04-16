@@ -72,6 +72,7 @@
 ////@end XPM images
 
 #include "trace.h"
+ENABLE_TRACE;
 
 class KbdLayout {
     public:

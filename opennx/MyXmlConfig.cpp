@@ -64,6 +64,7 @@ class wxConfigBase;
 #include "osdep.h"
 
 #include "trace.h"
+ENABLE_TRACE;
 
 #define STR_TRUE wxT("true")
 #define STR_FALSE wxT("false");

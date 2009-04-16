@@ -56,6 +56,7 @@
 #endif
 
 #include "trace.h"
+ENABLE_TRACE;
 
 IMPLEMENT_DYNAMIC_CLASS(HotplugEvent, wxEvent)
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_HOTPLUG)
