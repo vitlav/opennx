@@ -69,11 +69,24 @@ BuildRequires: libpng-devel
 BuildRequires: libjpeg-devel
 BuildRequires: zlib-devel
 BuildRequires: openssl-devel
-# Recommended runtime libs
+# The following are actually *not*
+# required but *recommended*
 %if %{is_suse}
+# SMB sharing
 Requires: libsmbclient0
+# Printer sharing
+Requires: cups-libs
+# Smartcard support
+Requires: libopensc2
+Requires: libusb-0_1-4
 %else
+# SMB sharing
 Requires: samba-common
+# Printer sharing
+Requires: cups-libs
+# Smartcard support
+Requires: opensc
+Requires: libusb
 %endif
 
 %description
