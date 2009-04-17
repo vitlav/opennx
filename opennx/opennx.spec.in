@@ -142,7 +142,7 @@ cd ..
 %{__install} -d -m 755 %{buildroot}/usr/bin
 ln -s %{_bindir}/opennx %{buildroot}/usr/bin/nxclient
 %{__install} -d -m 755 %{buildroot}%{_sysconfdir}/udev/rules.d
-%{__install} -m 644 etc/*.rule %{buildroot}%{_sysconfdir}/udev/rules.d
+%{__install} -m 644 etc/*.rules %{buildroot}%{_sysconfdir}/udev/rules.d
 
 %clean
 %{__rm} -rf %{buildroot}
