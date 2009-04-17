@@ -171,5 +171,5 @@ uninstall-local:
 dist-hook:
 	find $(distdir) -type d -name .svn | xargs $(RM) -r
 
-EXTRA_DIST = conf/config.rpath INSTALL INSTALL.generic COPYING share \
+EXTRA_DIST = conf/config.rpath INSTALL INSTALL.generic COPYING share etc/60-opennx.rules \
 			 opennx.pjd opennx.rc opennx.spec patches getnxsrcpkg $(RESDEPS)
