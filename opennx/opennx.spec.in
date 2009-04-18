@@ -499,7 +499,7 @@ rm -rf "/usr/lib/menu/opennx"
 
 %files
 %defattr(-, root, root, 0755)
-%doc COPYING INSTALL
+%doc COPYING INSTALL ChangeLog
 %_prefix
 /usr/bin/nxclient
 %{_sysconfdir}/udev/rules.d/*
