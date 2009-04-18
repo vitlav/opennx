@@ -103,7 +103,7 @@ Requires: opensc
 Requires: libusb
 %endif
 %if %{with_usbip}
-Requires: usbip-nxclient
+Requires: usbip2-nxclient
 %endif
 
 %description
