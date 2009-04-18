@@ -37,7 +37,7 @@
 %define ostag SuSE%(rpm -q --queryformat='%{VERSION}' `rpm -qf /etc/SuSE-release`)
 %endif
 
-%define release %{rel}%{ostag}
+%define release %{rel}.%{ostag}
 
 Summary: An OpenSource NX client
 Name: opennx
