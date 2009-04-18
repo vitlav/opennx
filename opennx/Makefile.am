@@ -78,6 +78,8 @@ opennx_CFLAGS = $(WX_CFLAGS)
 GETTEXTIZE = $(shell which gettextize)
 
 bootstrap:
+#   Update ChangeLog from SVN
+	svn2cl -i --break-before-msg
 # 	Convince gettextize not to modify EXTRA_DIST
 	test -f conf/config.rpath || touch conf/config.rpath
 # 	Convince gettextize not to modify AC_CONFIG_FILES
@@ -172,4 +174,4 @@ dist-hook:
 	find $(distdir) -type d -name .svn | xargs $(RM) -r
 
 EXTRA_DIST = conf/config.rpath INSTALL INSTALL.generic COPYING share etc/60-opennx.rules \
-			 opennx.pjd opennx.rc opennx.spec patches getnxsrcpkg $(RESDEPS)
+			 opennx.pjd opennx.rc opennx.spec patches getnxsrcpkg $(RESDEPS) ChangeLog

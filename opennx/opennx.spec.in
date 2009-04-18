@@ -1,6 +1,10 @@
 %define with_debug %{?_with_debug: 1} %{?!_with_debug: 0}
 %define with_usbip %{?_with_usbip: 1} %{?!_with_usbip: 0}
 %define with_staticwx %{?_with_staticwx: 1} %{?!_with_staticwx: 0}
+# Caution:
+# Using --with fetchnx triggers downloading the latest tarballs from NoMachine
+# This does *not* work in common jailed build-environments (like Suse BuildService)
+%define with_fetchnx %{?_with_fetchnx: 1} %{?!_with_fetchnx: 0}
 
 %define _prefix /usr/NX
 %define version @VERSION@
@@ -11,9 +15,7 @@
 %define nxlib /usr/NX/lib
 %endif
 
-%define nxversion 2.1.0
 %define nxdlurl http://www.nomachine.com/sources.php
-#http://web04.nomachine.com/download/%{nxversion}/sources
 %define nxpkgs nxcomp nxcompsh nxproxy nxservice nxesd
 %define nxpkgsall nxcomp nxcompsh nxproxy nxservice nxesd nxssh
 
@@ -47,6 +49,14 @@ License: LGPL/GPL
 Group: Applications/Internet
 URL: http://sourceforge.net/projects/opennx
 Source0: opennx-%{version}.tar.gz
+%if !%{with_fetchnx}
+Source100: nxcomp-3.3.0-4.tar.gz
+Source101: nxcompsh-3.3.0-1.tar.gz
+Source102: nxesd-3.3.0-1.tar.gz
+Source103: nxproxy-3.3.0-2.tar.gz
+Source104: nxservice-3.3.0-1.tar.gz
+Source105: nxssh-3.3.0-1.tar.gz
+%endif
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 Obsoletes: nxclient
@@ -100,11 +110,15 @@ Requires: usbip-nxclient
 opennx is an OSS replacement for Nomachine's NX client.
 
 %prep
+%if %{with_fetchnx}
 %setup -q
 ./getnxsrcpkg %{nxpkgsall}
 for pkg in %{nxpkgsall} ; do
     tar xzf ${pkg}-*.tar.gz
 done
+%else
+%setup -q -a 100 -a 101 -a 102 -a 103 -a 104 -a 105
+%endif
 
 # Apply openssh askPIN patch (see https://bugzilla.mindrot.org/show_bug.cgi?id=608)
 cd nxssh && patch -p1 < ../patches/openssh-scard-pin.patch
