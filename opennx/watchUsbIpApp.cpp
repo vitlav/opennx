@@ -226,6 +226,7 @@ bool watchUsbIpApp::OnCmdLineParsed(wxCmdLineParser& parser)
             wxLog::AddTraceMask(tag);
         }
     }
+    return true;
 }
 
 bool watchUsbIpApp::OnInit()

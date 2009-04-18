@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-04-16 13:43+0200\n"
+"POT-Creation-Date: 2009-04-17 19:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,7 +32,7 @@ msgstr ""
 msgid "&OK"
 msgstr ""
 
-#: LibOpenSC.cpp:345
+#: LibOpenSC.cpp:346
 msgid "Could not terminate nxssh"
 msgstr ""
 

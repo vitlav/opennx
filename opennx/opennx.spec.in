@@ -1,5 +1,7 @@
-%define debug 0
-%define usbip 0
+%define with_debug %{?_with_debug: 1} %{?!_with_debug: 0}
+%define with_usbip %{?_with_usbip: 1} %{?!_with_usbip: 0}
+%define with_staticwx %{?_with_staticwx: 1} %{?!_with_staticwx: 0}
+
 %define _prefix /usr/NX
 %define version @VERSION@
 %define rel @SVNREV@
@@ -90,7 +92,7 @@ Requires: cups-libs
 Requires: opensc
 Requires: libusb
 %endif
-%if %{usbip}
+%if %{with_usbip}
 Requires: usbip-nxclient
 %endif
 
@@ -118,7 +120,18 @@ EOF
 )
 
 %build
-%configure --disable-staticwx --enable-debug --enable-usbip
+%configure \
+%if %{with_staticwx}
+    --enable-staticwx \
+%else
+    --disable-staticwx \
+%endif
+%if %{with_debug}
+    --enable-debug \
+%endif
+%if %{with_usbip}
+    --enable-usbip
+%endif
 make
 for pkg in %{nxpkgs} ; do
 	margs=

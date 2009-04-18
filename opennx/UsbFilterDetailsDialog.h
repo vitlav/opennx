@@ -137,7 +137,7 @@ public:
         return ((NULL != m_pCtrlMode) &&
                 (m_pCtrlMode->GetSelection() == 1));
     }
-    bool SetForwarding(bool b) {
+    void SetForwarding(bool b) {
         if (NULL != m_pCtrlMode)
             m_pCtrlMode->Select(b ? 1 : 0);
     }

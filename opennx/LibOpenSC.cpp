@@ -278,7 +278,8 @@ bool LibOpenSC::WatchHotRemove(int ridx, long sshpid) {
             }
             sc_reader_t *reader = ctx->reader[ridx];
             if (reader) {
-                int r, j;
+                int r = 1;
+                int j;
                 for (j = 0; j < reader->slot_count; j++) {
                     r = pfnsc_detect_card_presence(reader, j);
                     if (r == 0) {

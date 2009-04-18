@@ -97,6 +97,7 @@ bool watchReaderApp::OnCmdLineParsed(wxCmdLineParser& parser)
         m_iReader = tmp;
     if (parser.Found(wxT("p"), &tmp))
         m_lSshPid = tmp;
+    return true;
 }
 
 bool watchReaderApp::OnInit()

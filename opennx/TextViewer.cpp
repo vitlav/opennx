@@ -234,8 +234,6 @@ TextViewer::LoadFile(const wxString &sFileName)
     bool ret = false;
     m_sFileName = sFileName;
     wxFileName fn(sFileName);
-    bool isXml = (fn.GetExt().CmpNoCase(wxT("xml")) == 0);
-
     {
         wxLogNull l;
         ret = m_pRichTextCtrl->LoadFile(m_sFileName, wxRICHTEXT_TYPE_XML);

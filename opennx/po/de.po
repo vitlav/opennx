@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-04-16 13:43+0200\n"
+"POT-Creation-Date: 2009-04-17 19:58+0200\n"
 "PO-Revision-Date: 2009-02-25 11:24+0100\n"
 "Last-Translator: Fritz Elfert <felfert@users.sf.net>\n"
 "Language-Team:  <de@li.org>\n"
@@ -33,7 +33,7 @@ msgstr "Über OpenNX"
 msgid "&OK"
 msgstr "&OK"
 
-#: LibOpenSC.cpp:345
+#: LibOpenSC.cpp:346
 #, fuzzy
 msgid "Could not terminate nxssh"
 msgstr "Konnte nxssh nicht starten."
