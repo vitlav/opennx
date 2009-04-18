@@ -76,13 +76,18 @@ BuildRequires: samba-common
 %endif
 BuildRequires: xorg-x11-proto-devel
 BuildRequires: xorg-x11-xtrans-devel
-BuildRequires: wget
 BuildRequires: gcc-c++
 BuildRequires: zip
 BuildRequires: libpng-devel
 BuildRequires: libjpeg-devel
 BuildRequires: zlib-devel
 BuildRequires: openssl-devel
+%if %{is_fc}
+BuildRequires: libXmu-devel
+%endif
+%if %{with_fetchnx}
+BuildRequires: wget
+%endif
 # The following are actually *not*
 # required but *recommended*
 %if %{is_suse}
