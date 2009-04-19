@@ -164,7 +164,21 @@ for pkg in %{nxpkgs} ; do
 	cd $pkg && ./configure --prefix=%{_prefix} && make $margs
     cd ..
 done
+%if %{is_fc} == 10
+# On FC10, opensc-config is currently broken. It returns "-I" when
+# called with the --cflags option, breaking ./configure. Therefore
+# we provide a wrapper here.
+cd nxssh
+cat<<"EOF">opensc-config
+#!/bin/sh
+/usr/bin/opensc-config "$@"|perl -pe 's/-I\s//g'
+EOF
+chmod a+x opensc-config
+export PATH=.:$PATH
+./configure --prefix=%{_prefix} --with-opensc && make
+%else
 cd nxssh && ./configure --prefix=%{_prefix} --with-opensc && make
+%endif
 cd ..
 
 %install
