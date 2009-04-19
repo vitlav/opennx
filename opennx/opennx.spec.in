@@ -195,7 +195,7 @@ for lname in usb opensc smbclient cups ; do
 done
 
 %pre
-/usr/sbingroupadd -r opennx || :
+/usr/sbin/groupadd -r opennx || :
 
 %postun
 /usr/sbin/groupdel opennx || :
