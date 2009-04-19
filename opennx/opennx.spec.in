@@ -1,3 +1,6 @@
+%define version @VERSION@
+%define svnrev @SVNREV@
+
 %define with_debug %{?_with_debug: 1} %{?!_with_debug: 0}
 %define with_usbip %{?_with_usbip: 1} %{?!_with_usbip: 0}
 %define with_staticwx %{?_with_staticwx: 1} %{?!_with_staticwx: 0}
@@ -6,45 +9,50 @@
 # This does *not* work in common jailed build-environments (like Suse BuildService)
 %define with_fetchnx %{?_with_fetchnx: 1} %{?!_with_fetchnx: 0}
 
-%define _prefix /usr/NX
-%define version @VERSION@
-%define rel @SVNREV@
-%ifarch x86_64
-%define nxlib /usr/NX/lib64
+##
+## OS detection
+##
+%define is_rh %(test -n "`echo %{?dist}|grep rh`" && echo 1 || echo 0)
+%define is_fc 0%{?fedora}%{?fedora_version}
+%define is_suse %{?suse_version:1}%{?!suse_version:0}
+%define is_sles %{?sles_version:1}%{?!sles_version:0}
+%define is_mdk %(test -e /etc/mandrake-release && echo 1 || echo 0)
+%if %{is_rh}
+%define ostag %{?dist}
+%endif
+%if %{is_mdk}
+%define ostag .mdk%(rpm -q --queryformat='%{VERSION}' mandrake-release | perl -pe 's/(.).*/$1/')
+%endif
+%if %{is_fc}
+%define ostag %{?dist}
+%endif
+%if %{is_suse}
+%define ostag .SuSE%(rpm -q --queryformat='%{VERSION}' `rpm -qf /etc/SuSE-release`)
+%endif
+
+%if %{is_suse}
+%define _prefix0 /opt/lsb
+%define _prefix /opt/lsb/%{name}
 %else
-%define nxlib /usr/NX/lib
+%define _prefix /opt/%{name}
+%endif
+
+%ifarch x86_64
+%define nxlib %{_prefix}/lib64
+%else
+%define nxlib %{_prefix}/lib
 %endif
 
 %define nxdlurl http://www.nomachine.com/sources.php
 %define nxpkgs nxcomp nxcompsh nxproxy nxservice nxesd
 %define nxpkgsall nxcomp nxcompsh nxproxy nxservice nxesd nxssh
 
-##
-## OS detection
-##
-%define is_rh %(test -e /etc/redhat-release && echo 1 || echo 0)
-%define is_fc %(test -e /etc/fedora-release && echo 1 || echo 0)
-%define is_suse %(test -e /etc/SuSE-release && echo 1 || echo 0)
-%define is_mdk %(test -e /etc/mandrake-release && echo 1 || echo 0)
-%if %{is_rh}
-%define ostag RH%(rpm -q --queryformat='%{VERSION}' redhat-release | perl -pe 's/(.).*/$1/')
-%endif
-%if %{is_mdk}
-%define ostag mdk%(rpm -q --queryformat='%{VERSION}' mandrake-release | perl -pe 's/(.).*/$1/')
-%endif
-%if %{is_fc}
-%define ostag FC%(rpm -q --queryformat='%{VERSION}' fedora-release)
-%endif
-%if %{is_suse}
-%define ostag SuSE%(rpm -q --queryformat='%{VERSION}' `rpm -qf /etc/SuSE-release`)
-%endif
-
-%define release %{rel}.%{ostag}
+%define rel %{svnrev}%{ostag}
 
 Summary: An OpenSource NX client
 Name: opennx
 Version: %{version}
-Release: %{release}
+Release: %{rel}
 License: LGPL/GPL
 Group: Applications/Internet
 URL: http://sourceforge.net/projects/opennx
@@ -67,12 +75,13 @@ BuildRequires: audiofile-devel
 BuildRequires: cups-devel
 BuildRequires: opensc-devel
 BuildRequires: libusb-devel
+BuildRequires: libsmbclient-devel
 %if %{is_suse}
 BuildRequires: wxGTK-devel >= 2.8.0
-BuildRequires: libsmbclient-devel
 %else
 BuildRequires: wxGTK2-devel >= 2.8.0
 BuildRequires: samba-common
+BuildRequires: libXmu-devel
 %endif
 BuildRequires: xorg-x11-proto-devel
 BuildRequires: xorg-x11-xtrans-devel
@@ -82,9 +91,6 @@ BuildRequires: libpng-devel
 BuildRequires: libjpeg-devel
 BuildRequires: zlib-devel
 BuildRequires: openssl-devel
-%if %{is_fc}
-BuildRequires: libXmu-devel
-%endif
 %if %{with_fetchnx}
 BuildRequires: wget
 %endif
@@ -180,7 +186,7 @@ ln -s %{_bindir}/opennx %{buildroot}/usr/bin/nxclient
 %{__rm} -rf %{buildroot}
 
 %triggerin -- opensc, libsmbclient, samba-common, libusb, libusb-0_1-4, cups-libs
-# Create symlinks with plain .so extension under /usr/NX/lib[64]
+# Create symlinks with plain .so extension under %{_prefix}/lib[64]
 for lname in usb opensc smbclient cups ; do
     LPATH=`/sbin/ldconfig -p|awk '/lib'$lname'[\.-]/ {print $4}'|head -1`
     if test -n "$LPATH" ; then
@@ -189,13 +195,16 @@ for lname in usb opensc smbclient cups ; do
 done
 
 %pre
-groupadd -r opennx >/dev/null 2>&1
+/usr/sbingroupadd -r opennx || :
 
 %postun
-groupdel opennx >/dev/null 2>&1
+/usr/sbin/groupdel opennx || :
+rm -f /usr/NX || :
 
 %post
-# Create symlinks with plain .so extension under /usr/NX/lib[64]
+# Create symlink to /usr/NX for compatibility to original
+ln -snf %{_prefix} /usr/NX
+# Create symlinks with plain .so extension under %{_prefix}/lib[64]
 for lname in usb opensc smbclient cups ; do
     LPATH=`/sbin/ldconfig -p|awk '/lib'$lname'[\.-]/ {print $4}'|head -1`
     if test -n "$LPATH" ; then
@@ -203,7 +212,7 @@ for lname in usb opensc smbclient cups ; do
     fi
 done
 
-APPLNK_DIR="/usr/NX/share/applnk"
+APPLNK_DIR="%{_prefix}/share/applnk"
 LINK_NAME="/OpenNX client"
 
 LINK_DIR_X="$APPLNK_DIR/x-opennx"
@@ -241,7 +250,7 @@ GNOME_MIME_ICON_DIR="/usr/share/icons/gnome/48x48/mimetypes"
 GNOME_MIME_ICON="$GNOME_MIME_ICON_DIR/gnome-mime-application-nx-session.png"
 GNOME_SUSE_MIME_ICON_DIR="/opt/gnome/share/icons/gnome/48x48/mimetypes"
 GNOME_SUSE_MIME_ICON="$GNOME_SUSE_MIME_ICON_DIR/gnome-mime-application-nx-session.png"
-GNOME_MIME_LINK_ICON="/usr/NX/share/icons/nx-desktop.png"
+GNOME_MIME_LINK_ICON="%{_prefix}/share/icons/nx-desktop.png"
 
 mklnk() {
   if test -d "$2"; then
@@ -325,7 +334,7 @@ else
     NUM=`cat /usr/lib/menu/menu| grep -c "OpenNX client"`
     if [ $NUM -le 0 ]; then
       echo "#
-?package(menu): needs=x11 section=\"Internet\" title=\"OpenNX client\" icon=\"/usr/NX/share/icons/nx.png\"" >> "/usr/lib/menu/menu"
+?package(menu): needs=x11 section=\"Internet\" title=\"OpenNX client\" icon=\"%{_prefix}/share/icons/nx.png\"" >> "/usr/lib/menu/menu"
     fi
   fi
 fi
@@ -505,11 +514,17 @@ rm -rf "/usr/lib/menu/opennx"
 %files
 %defattr(-, root, root, 0755)
 %doc COPYING INSTALL ChangeLog
+%if %{is_suse}
+%_prefix0
+%else
 %_prefix
+%endif
 /usr/bin/nxclient
-%{_sysconfdir}/udev/rules.d/*
+%{_sysconfdir}/udev
 
 %changelog
+* Sun Apr 19 2009 Fritz Elfert <fritz@fritz-elfert.de>
+- Set prefix to /opt/lsb/%{name} for FHS compliance
 * Wed Apr 15 2009 Michael Kromer <michael.kromer@millenux.com>
 - Fixes for SuSE Plattform (openSuSE/SLES)
 * Sun Jan  7 2007 Fritz Elfert <fritz@fritz-elfert.de>

@@ -1087,16 +1087,6 @@ bool opennxApp::OnInit()
             watchcmd << wxT(" -r ") << m_iReader << wxT(" -p ") << m_nNxSshPID;
             ::wxExecute(watchcmd);
         }
-#if 0
-        LibOpenSC opensc;
-        if ((-1 < m_iReader) && (1 < m_nNxSshPID)) {
-            if (opensc.WatchHotRemove(m_iReader, m_nNxSshPID))
-                wxMessageBox(
-                        _("OpenNX session has been suspended, because\nthe authenticating smart card has been removed."),
-                        _("Smart card removed"), wxOK|wxICON_INFORMATION);
-        }
-        SetExitOnFrameDelete(true);
-#endif
     }
     while (::wxGetApp().Pending())
         ::wxGetApp().Dispatch();

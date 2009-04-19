@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-04-17 19:58+0200\n"
+"POT-Creation-Date: 2009-04-19 16:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1371,16 +1371,6 @@ msgstr ""
 
 #: opennxApp.cpp:1044
 msgid "Could not connect to usbipd2. No USB devices will be exported"
-msgstr ""
-
-#: opennxApp.cpp:1095
-msgid ""
-"OpenNX session has been suspended, because\n"
-"the authenticating smart card has been removed."
-msgstr ""
-
-#: opennxApp.cpp:1096
-msgid "Smart card removed"
 msgstr ""
 
 #: UsbFilterDetailsDialog.cpp:191
