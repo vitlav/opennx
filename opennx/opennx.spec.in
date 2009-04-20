@@ -71,6 +71,7 @@ Source105: nxssh-3.3.0-1.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 Obsoletes: nxclient
+Provides: nxclient
 
 %if %{is_suse}
 # Workaround for https://bugzilla.novell.com/show_bug.cgi?id=436992
@@ -219,10 +220,14 @@ for lname in usb opensc smbclient cups ; do
 done
 
 %pre
-/usr/sbin/groupadd -r opennx || :
+if [ x$1 == x1 ] ; then
+    /usr/sbin/groupadd -r opennx || :
+fi
 
 %postun
-/usr/sbin/groupdel opennx || :
+if [ x$1 == x0 ] ; then
+    /usr/sbin/groupdel opennx || :
+fi
 rm -f /usr/NX || :
 
 %post
