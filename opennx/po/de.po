@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-04-20 20:20+0200\n"
+"POT-Creation-Date: 2009-04-20 21:04+0200\n"
 "PO-Revision-Date: 2009-04-20 20:28+0200\n"
 "Last-Translator: Fritz Elfert <felfert@users.sf.net>\n"
 "Language-Team:  <de@li.org>\n"
@@ -1425,12 +1425,16 @@ msgstr "Führe den Benutzer durch die Schritte zu Konfiguration einer Sitzung."
 msgid "libusb is not available. No USB devices will be exported"
 msgstr "libusb ist nicht verfügbar. USB-Geräte werden nicht exportiert"
 
-#: opennxApp.cpp:1036 opennxApp.cpp:1038
+#: opennxApp.cpp:1037
+msgid "USBIP session timeout"
+msgstr ""
+
+#: opennxApp.cpp:1039
 #, c-format
 msgid "Unable to export USB device %s"
 msgstr "Konnte USB-Gerät %s nicht exportieren"
 
-#: opennxApp.cpp:1044
+#: opennxApp.cpp:1045
 msgid "Could not connect to usbipd2. No USB devices will be exported"
 msgstr "Verbindung zu usbipd2 gescheitert. USB-Ggeräte werden nicht exportiert"
 

@@ -528,6 +528,10 @@ opennxApp::preInit()
         wxConfigBase::Get()->Write(wxT("Config/UsbipPort"), 3420);
         wxConfigBase::Get()->Flush();
     }
+    if (!wxConfigBase::Get()->Read(wxT("Config/UsbipTunnelTimeout"), &tmp)) {
+        wxConfigBase::Get()->Write(wxT("Config/UsbipTunnelTimeout"), 20);
+        wxConfigBase::Get()->Flush();
+    }
 #endif
 
     wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp);
@@ -1003,6 +1007,7 @@ bool opennxApp::OnInit()
     bool ret = realInit();
 #ifdef SUPPORT_USBIP
     if (m_bRequireStartUsbIp) {
+        long usessionTO = wxConfigBase::Get()->Read(wxT("Config/UsbipTunnelTimeout"), 20);
         wxString usock = wxConfigBase::Get()->Read(wxT("Config/UsbipdSocket"),
                 wxT("/var/run/usbipd2.socket"));
         UsbIp usbip;
@@ -1033,8 +1038,8 @@ bool opennxApp::OnInit()
                                     wxString exBusID = aid[k].GetUsbIpBusID();
                                     ::wxLogTrace(MYTRACETAG, wxT("Exporting usbup-busid %s (libusb-busid %s)"),
                                             exBusID.c_str(), ad[j].GetBusID().c_str());
-                                    if (!usbip.WaitForSession(20))
-                                        ::wxLogError(_("USBIP session timeout"));
+                                    if (!usbip.WaitForSession(usessionTO))
+                                        ::wxLogError(_("USBIP tunnel registration timeout"));
                                     if (!usbip.ExportDevice(exBusID))
                                         ::wxLogError(_("Unable to export USB device %s"), af[i].toShortString().c_str());
                                 }
