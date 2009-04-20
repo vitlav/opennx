@@ -220,12 +220,12 @@ for lname in usb opensc smbclient cups ; do
 done
 
 %pre
-if [ x$1 == x1 ] ; then
+if [ x$1 = x1 ] ; then
     /usr/sbin/groupadd -r opennx || :
 fi
 
 %postun
-if [ x$1 == x0 ] ; then
+if [ x$1 = x0 ] ; then
     /usr/sbin/groupdel opennx || :
 fi
 rm -f /usr/NX || :
