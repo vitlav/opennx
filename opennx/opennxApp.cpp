@@ -1031,9 +1031,10 @@ bool opennxApp::OnInit()
                             for (k = 0; k < aid.GetCount(); k++) {
                                 if (aid[k].GetUsbBusID().IsSameAs(ad[j].GetBusID())) {
                                     wxString exBusID = aid[k].GetUsbIpBusID();
-                                    ::wxLogTrace(MYTRACETAG, wxT("Exporting busid %s"), exBusID.c_str());
+                                    ::wxLogTrace(MYTRACETAG, wxT("Exporting usbup-busid %s (libusb-busid %s)"),
+                                            exBusID.c_str(), ad[j].GetBusID().c_str());
                                     if (!usbip.WaitForSession(20))
-                                        ::wxLogError(_("Unable to export USB device %s"), af[i].toShortString().c_str());
+                                        ::wxLogError(_("USBIP session timeout"));
                                     if (!usbip.ExportDevice(exBusID))
                                         ::wxLogError(_("Unable to export USB device %s"), af[i].toShortString().c_str());
                                 }
