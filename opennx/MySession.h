@@ -86,6 +86,7 @@ private:
         STATE_PARSE_SESSIONS,
         STATE_START_SESSION,
         STATE_RESUME_SESSION,
+        STATE_KILL_SESSION,
         STATE_FINISH,
     } tConnectState;
 
@@ -150,6 +151,7 @@ private:
     wxString m_sResumeName;
     wxString m_sResumeType;
     wxString m_sResumeId;
+    wxString m_sKillId;
     wxString m_sTempDir;
     wxWindow *m_pParent;
     SessionWatch *m_pSessionWatch;

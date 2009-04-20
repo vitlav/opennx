@@ -21,7 +21,8 @@
 
 #define ID_RESUMEDIALOG_SYMBOL_0 _("Select session - OpenNX")
 #define ID_RESUMEDIALOG_SYMBOL_1 _("There are multiple sessions available, please select one or click New to create a session.")
-#define ID_RESUMEDIALOG_SYMBOL_2 _("&Takeover")
-#define ID_RESUMEDIALOG_SYMBOL_3 _("&Resume")
-#define ID_RESUMEDIALOG_SYMBOL_4 _("&New")
-#define ID_RESUMEDIALOG_SYMBOL_5 _("&Cancel")
+#define ID_RESUMEDIALOG_SYMBOL_2 _("Teminate")
+#define ID_RESUMEDIALOG_SYMBOL_3 _("&Takeover")
+#define ID_RESUMEDIALOG_SYMBOL_4 _("&Resume")
+#define ID_RESUMEDIALOG_SYMBOL_5 _("&New")
+#define ID_RESUMEDIALOG_SYMBOL_6 _("&Cancel")

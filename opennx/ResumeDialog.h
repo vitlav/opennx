@@ -80,6 +80,7 @@ public:
         New,
         Resume,
         Takeover,
+        Terminate,
     } Mode;
     
     /// Constructors
@@ -106,6 +107,9 @@ private:
 
     /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRL_SESSIONS
     void OnListctrlSessionsSelected( wxListEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_TERMINATE
+    void OnButtonTerminateClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_TAKEOVER
     void OnButtonTakeoverClick( wxCommandEvent& event );
@@ -143,6 +147,7 @@ private:
 
 ////@begin ResumeDialog member variables
     wxListCtrl* m_pCtrlSessions;
+    wxButton* m_pCtrlTerminate;
     wxButton* m_pCtrlTakeover;
     wxButton* m_pCtrlResume;
     wxButton* m_pCtrlNew;

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-04-20 12:54+0200\n"
+"POT-Creation-Date: 2009-04-20 20:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -47,7 +47,7 @@ msgstr ""
 #: CardWaiterDialog_symbols.h:24 ConnectDialog_symbols.h:24
 #: KeyDialog_symbols.h:26 PanicDialog_symbols.h:23
 #: RdpImageSettingsDialog_symbols.h:36 RdpPropertyDialog_symbols.h:36
-#: ResumeDialog_symbols.h:27 SessionProperties_symbols.h:108
+#: ResumeDialog_symbols.h:28 SessionProperties_symbols.h:108
 #: ShareProperties_symbols.h:52 UnixImageSettingsDialog_symbols.h:35
 #: VncImageSettingsDialog_symbols.h:28 VncPropertyDialog_symbols.h:32
 #: X11PropertyDialog_symbols.h:33 UsbFilterDetailsDialog_symbols.h:36
@@ -177,89 +177,89 @@ msgstr ""
 msgid "Query server-side sessions"
 msgstr ""
 
-#: MySession.cpp:837
+#: MySession.cpp:843
 msgid "Enter PIN for Smart Card access."
 msgstr ""
 
-#: MySession.cpp:837
+#: MySession.cpp:843
 msgid "Smart Card PIN"
 msgstr ""
 
-#: MySession.cpp:842
+#: MySession.cpp:848
 msgid "Enter passphrase"
 msgstr ""
 
-#: MySession.cpp:844
+#: MySession.cpp:850
 msgid "Empty passphrase"
 msgstr ""
 
-#: MySession.cpp:850 MySession.cpp:854 MySession.cpp:858 MySession.cpp:862
-#: MySession.cpp:866 MySession.cpp:870 MySession.cpp:874 MySession.cpp:878
-#: MySession.cpp:882 MySession.cpp:886
+#: MySession.cpp:856 MySession.cpp:860 MySession.cpp:864 MySession.cpp:868
+#: MySession.cpp:872 MySession.cpp:876 MySession.cpp:880 MySession.cpp:884
+#: MySession.cpp:888 MySession.cpp:892
 msgid "Negotiating session parameter"
 msgstr ""
 
-#: MySession.cpp:891 MySession.cpp:914
+#: MySession.cpp:897 MySession.cpp:920
 msgid "Starting session"
 msgstr ""
 
-#: MySession.cpp:907
+#: MySession.cpp:913
 msgid "Unexpected termination of nxssh"
 msgstr ""
 
-#: MySession.cpp:1026
+#: MySession.cpp:1048
 msgid "You have reached your session limit. No more sessions allowed"
 msgstr ""
 
-#: MySession.cpp:1027
+#: MySession.cpp:1049
 msgid "Error - OpenNX"
 msgstr ""
 
-#: MySession.cpp:1253
+#: MySession.cpp:1275
 #, c-format
 msgid ""
 "Could not create session directory\n"
 "%s\n"
 msgstr ""
 
-#: MySession.cpp:1273
+#: MySession.cpp:1295
 #, c-format
 msgid ""
 "Could not write session options\n"
 "%s\n"
 msgstr ""
 
-#: MySession.cpp:1589
+#: MySession.cpp:1611
 #, c-format
 msgid "Could not write %s"
 msgstr ""
 
-#: MySession.cpp:1647 MySession.cpp:1678 MySession.cpp:1686
+#: MySession.cpp:1669 MySession.cpp:1700 MySession.cpp:1708
 #, c-format
 msgid "Connecting to %s ..."
 msgstr ""
 
-#: MySession.cpp:1654
+#: MySession.cpp:1676
 msgid "Preparing multimedia service ..."
 msgstr ""
 
-#: MySession.cpp:1664
+#: MySession.cpp:1686
 msgid "Could not query multimedia support"
 msgstr ""
 
-#: MySession.cpp:1676
+#: MySession.cpp:1698
 msgid "Could not start multimedia support"
 msgstr ""
 
-#: MySession.cpp:1684
+#: MySession.cpp:1706
 msgid "Preparing CUPS service ..."
 msgstr ""
 
-#: MySession.cpp:1718
+#: MySession.cpp:1740
 msgid "Called command was: "
 msgstr ""
 
-#: MySession.cpp:1719
+#: MySession.cpp:1741
 msgid "Could not start nxssh."
 msgstr ""
 
@@ -340,7 +340,7 @@ msgstr ""
 msgid "Host"
 msgstr ""
 
-#: MyWizard_symbols.h:25 ResumeDialog.cpp:150 SessionAdmin.cpp:178
+#: MyWizard_symbols.h:25 ResumeDialog.cpp:154 SessionAdmin.cpp:178
 #: SessionProperties_symbols.h:26
 msgid "Port"
 msgstr ""
@@ -552,29 +552,37 @@ msgstr ""
 msgid "Run application"
 msgstr ""
 
-#: ResumeDialog.cpp:146 SessionProperties.cpp:624
+#: ResumeDialog.cpp:150 SessionProperties.cpp:624
 msgid "Name"
 msgstr ""
 
-#: ResumeDialog.cpp:147
+#: ResumeDialog.cpp:151
 msgid "State"
 msgstr ""
 
-#: ResumeDialog.cpp:148 SessionAdmin.cpp:183
+#: ResumeDialog.cpp:152 SessionAdmin.cpp:183
 msgid "Type"
 msgstr ""
 
-#: ResumeDialog.cpp:149
+#: ResumeDialog.cpp:153
 msgid "Screen"
 msgstr ""
 
-#: ResumeDialog.cpp:151 SessionAdmin_symbols.h:34
+#: ResumeDialog.cpp:155 SessionAdmin_symbols.h:34
 #: X11PropertyDialog_symbols.h:27
 msgid "Options"
 msgstr ""
 
-#: ResumeDialog.cpp:152 SessionAdmin.cpp:179
+#: ResumeDialog.cpp:156 SessionAdmin.cpp:179
 msgid "Session ID"
+msgstr ""
+
+#: ResumeDialog.cpp:259
+msgid "Do you really want to terminate the selected session?"
+msgstr ""
+
+#: ResumeDialog.cpp:260
+msgid "Terminate session - OpenNX"
 msgstr ""
 
 #: ResumeDialog_symbols.h:22
@@ -588,14 +596,18 @@ msgid ""
 msgstr ""
 
 #: ResumeDialog_symbols.h:24
-msgid "&Takeover"
+msgid "Teminate"
 msgstr ""
 
 #: ResumeDialog_symbols.h:25
-msgid "&Resume"
+msgid "&Takeover"
 msgstr ""
 
 #: ResumeDialog_symbols.h:26
+msgid "&Resume"
+msgstr ""
+
+#: ResumeDialog_symbols.h:27
 msgid "&New"
 msgstr ""
 

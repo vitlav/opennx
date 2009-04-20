@@ -62,6 +62,8 @@ BEGIN_EVENT_TABLE( ResumeDialog, wxDialog )
 ////@begin ResumeDialog event table entries
     EVT_LIST_ITEM_SELECTED( XRCID("ID_LISTCTRL_SESSIONS"), ResumeDialog::OnListctrlSessionsSelected )
 
+    EVT_BUTTON( XRCID("ID_BUTTON_TERMINATE"), ResumeDialog::OnButtonTerminateClick )
+
     EVT_BUTTON( XRCID("ID_BUTTON_TAKEOVER"), ResumeDialog::OnButtonTakeoverClick )
 
     EVT_BUTTON( XRCID("ID_BUTTON_RESUME"), ResumeDialog::OnButtonResumeClick )
@@ -119,6 +121,7 @@ void ResumeDialog::Init()
     m_lActiveSession = -1;
     m_eMode = New;
     m_pCtrlSessions = NULL;
+    m_pCtrlTerminate = NULL;
     m_pCtrlTakeover = NULL;
     m_pCtrlResume = NULL;
     m_pCtrlNew = NULL;
@@ -134,6 +137,7 @@ void ResumeDialog::CreateControls()
     if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_RESUMEDIALOG")))
         wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
     m_pCtrlSessions = XRCCTRL(*this, "ID_LISTCTRL_SESSIONS", wxListCtrl);
+    m_pCtrlTerminate = XRCCTRL(*this, "ID_BUTTON_TERMINATE", wxButton);
     m_pCtrlTakeover = XRCCTRL(*this, "ID_BUTTON_TAKEOVER", wxButton);
     m_pCtrlResume = XRCCTRL(*this, "ID_BUTTON_RESUME", wxButton);
     m_pCtrlNew = XRCCTRL(*this, "wxID_OK", wxButton);
@@ -179,9 +183,14 @@ ResumeDialog::AddSession(const wxString& name, const wxString& state, const wxSt
         info.m_stateMask = wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED;
         m_pCtrlSessions->SetItem(info);
     }
+    if (0 == idx) {
+        m_sSelectedName = name;
+        m_sSelectedType = type;
+        m_sSelectedId = id;
+    }
 }
 
-void
+    void
 ResumeDialog::EnableNew(bool b)
 {
     m_pCtrlNew->Enable(b);
@@ -201,9 +210,11 @@ void ResumeDialog::OnListctrlSessionsSelected( wxListEvent& event )
     if (info.m_text == wxT("Suspended")) {
         m_pCtrlResume->Enable(true);
         m_pCtrlTakeover->Enable(false);
+        m_pCtrlTerminate->Enable(true);
     } else {
         m_pCtrlResume->Enable(false);
         m_pCtrlTakeover->Enable(true);
+        m_pCtrlTerminate->Enable(false);
     }
     info.m_col = 0;
     m_pCtrlSessions->GetItem(info);
@@ -216,7 +227,6 @@ void ResumeDialog::OnListctrlSessionsSelected( wxListEvent& event )
     m_sSelectedId = info.m_text;
     event.Skip();
 }
-
 
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_TAKEOVER
@@ -240,7 +250,19 @@ void ResumeDialog::OnButtonResumeClick( wxCommandEvent& event )
     event.Skip();
 }
 
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_TERMINATE
+ */
 
+void ResumeDialog::OnButtonTerminateClick( wxCommandEvent& event )
+{
+    if (wxYES != ::wxMessageBox(_("Do you really want to terminate the selected session?"),
+                _("Terminate session - OpenNX"), wxYES_NO|wxICON_QUESTION, this))
+        return;
+    m_eMode = Terminate;
+    EndModal(wxID_OK);
+    event.Skip();
+}
 
 /*!
  * Should we show tooltips?
@@ -270,3 +292,4 @@ wxIcon ResumeDialog::GetIconResource( const wxString& name )
     // Icon retrieval
     return CreateIconFromFile(name);
 }
+

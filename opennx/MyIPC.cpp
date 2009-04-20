@@ -554,6 +554,8 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
                         // session restore successful
                     case 719:
                         // SMB/CUPS running
+                    case 900:
+                        // Terminating session
                     case 1000:
                         // nxnode version
                     case 1001:

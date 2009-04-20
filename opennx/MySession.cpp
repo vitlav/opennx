@@ -828,6 +828,12 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     printSsh(scmd);
                     m_eConnectState = STATE_FINISH;
                     break;
+                case STATE_KILL_SESSION:
+                    scmd = wxT("terminate --sessionid=\"");
+                    scmd << m_sKillId << wxT("\"");
+                    printSsh(scmd);
+                    m_eConnectState = STATE_LIST_SESSIONS;
+                    break;
                 case STATE_FINISH:
                     break;
             }
@@ -973,6 +979,8 @@ MySession::parseSessions(bool moreAllowed)
     wxASSERT(re.IsValid());
     ResumeDialog d(NULL);
     bool bFound = false;
+    int iSessionCount = 0;
+    wxString sName;
     d.SetPreferredSession(m_pCfg->sGetName());
     for (size_t i = 0; i < n; i++) {
         wxString line = m_aParseBuffer[i];
@@ -984,38 +992,52 @@ MySession::parseSessions(bool moreAllowed)
             wxString sColors(re.GetMatch(line, 5));
             wxString sSize(re.GetMatch(line, 6));
             wxString sState(re.GetMatch(line, 7));
-            wxString sName(re.GetMatch(line, 8));
+            sName = re.GetMatch(line, 8);
             d.AddSession(sName, sState, sType, sSize, sColors, sPort, sOpts, sId);
             bFound = true;
+            iSessionCount++;
         }
     }
     if (bFound) {
         d.EnableNew(moreAllowed);
-        switch (d.ShowModal()) {
-            case wxID_OK:
-                switch (d.GetMode()) {
-                    case ResumeDialog::Resume:
-                        wxLogInfo(wxT("RESUME"));
-                        m_sResumeName = d.GetSelectedName();
-                        m_sResumeType = d.GetSelectedType();
-                        m_sResumeId = d.GetSelectedId();
-                        m_eConnectState = STATE_RESUME_SESSION;
-                        break;
-                    case ResumeDialog::Takeover:
-                        wxLogInfo(wxT("TAKEOVER"));
-                        m_sResumeName = d.GetSelectedName();
-                        m_sResumeType = d.GetSelectedType();
-                        m_sResumeId = d.GetSelectedId();
-                        m_eConnectState = STATE_RESUME_SESSION;
-                        break;
-                    case ResumeDialog::New:
-                        m_eConnectState = STATE_START_SESSION;
-                        break;
-                }
-                break;
-            case wxID_CANCEL:
-                printSsh(wxT("bye"));
-                break;
+        if ((iSessionCount > 1) || (!sName.IsSameAs(m_pCfg->sGetName()))) {
+            switch (d.ShowModal()) {
+                case wxID_OK:
+                    switch (d.GetMode()) {
+                        case ResumeDialog::Terminate:
+                            wxLogInfo(wxT("TERMINATE"));
+                            m_sKillId = d.GetSelectedId();
+                            m_eConnectState = STATE_KILL_SESSION;
+                            break;
+                        case ResumeDialog::Resume:
+                            wxLogInfo(wxT("RESUME"));
+                            m_sResumeName = d.GetSelectedName();
+                            m_sResumeType = d.GetSelectedType();
+                            m_sResumeId = d.GetSelectedId();
+                            m_eConnectState = STATE_RESUME_SESSION;
+                            break;
+                        case ResumeDialog::Takeover:
+                            wxLogInfo(wxT("TAKEOVER"));
+                            m_sResumeName = d.GetSelectedName();
+                            m_sResumeType = d.GetSelectedType();
+                            m_sResumeId = d.GetSelectedId();
+                            m_eConnectState = STATE_RESUME_SESSION;
+                            break;
+                        case ResumeDialog::New:
+                            m_eConnectState = STATE_START_SESSION;
+                            break;
+                    }
+                    break;
+                case wxID_CANCEL:
+                    printSsh(wxT("bye"));
+                    break;
+            }
+        } else {
+            wxLogInfo(wxT("RESUME"));
+            m_sResumeName = d.GetSelectedName();
+            m_sResumeType = d.GetSelectedType();
+            m_sResumeId = d.GetSelectedId();
+            m_eConnectState = STATE_RESUME_SESSION;
         }
     } else {
         if (moreAllowed)
@@ -1074,32 +1096,32 @@ MySession::startSharing()
             case SharedResource::SHARE_SMB_DISK:
                 shcmd = wxT("addmount");
                 shcmd
-                   << wxT(" --port=\"") << smbport << wxT("\"") 
-                   << wxT(" --username=\"")
-                   << MyXmlConfig::UrlEsc(sg[i].m_sUsername) << wxT("\"") 
-                   << wxT(" --password=\"")
-                   << MyXmlConfig::UrlEsc(sg[i].m_sPassword) << wxT("\"") 
-                   << wxT(" --share=\"") << MyXmlConfig::UrlEsc(sn) << wxT("\"") 
-                   << wxT(" --computername=\"")
-                   << MyXmlConfig::UrlEsc(::wxGetFullHostName()) << wxT("\"") 
-                   << wxT(" --session_id=\"") << m_sSessionID.Right(32) << wxT("\"") 
-                   << wxT(" --dir=\"")
-                   << MyXmlConfig::UrlEsc(sg[i].m_sAlias) << wxT("\"");
+                    << wxT(" --port=\"") << smbport << wxT("\"") 
+                    << wxT(" --username=\"")
+                    << MyXmlConfig::UrlEsc(sg[i].m_sUsername) << wxT("\"") 
+                    << wxT(" --password=\"")
+                    << MyXmlConfig::UrlEsc(sg[i].m_sPassword) << wxT("\"") 
+                    << wxT(" --share=\"") << MyXmlConfig::UrlEsc(sn) << wxT("\"") 
+                    << wxT(" --computername=\"")
+                    << MyXmlConfig::UrlEsc(::wxGetFullHostName()) << wxT("\"") 
+                    << wxT(" --session_id=\"") << m_sSessionID.Right(32) << wxT("\"") 
+                    << wxT(" --dir=\"")
+                    << MyXmlConfig::UrlEsc(sg[i].m_sAlias) << wxT("\"");
                 printSsh(shcmd);
                 break;
             case SharedResource::SHARE_SMB_PRINTER:
                 shcmd = wxT("addprinter");
                 shcmd << wxT(" --type=\"smb\"")
-                   << wxT(" --username=\"")
-                   << MyXmlConfig::UrlEsc(sg[i].m_sUsername) << wxT("\"") 
-                   << wxT(" --password=\"")
-                   << MyXmlConfig::UrlEsc(sg[i].m_sPassword) << wxT("\"") 
-                   << wxT(" --port=\"") << (int)smbport << wxT("\"") 
-                   << wxT(" --share=\"") << MyXmlConfig::UrlEsc(sn) << wxT("\"") 
-                   << wxT(" --computername=\"")
-                   << MyXmlConfig::UrlEsc(::wxGetHostName()) << wxT("\"") 
-                   << wxT(" --session_id=\"") << m_sSessionID.Right(32) << wxT("\"") 
-                   << wxT(" --model=\"") << sg[i].m_sDriver << wxT("\"");
+                    << wxT(" --username=\"")
+                    << MyXmlConfig::UrlEsc(sg[i].m_sUsername) << wxT("\"") 
+                    << wxT(" --password=\"")
+                    << MyXmlConfig::UrlEsc(sg[i].m_sPassword) << wxT("\"") 
+                    << wxT(" --port=\"") << (int)smbport << wxT("\"") 
+                    << wxT(" --share=\"") << MyXmlConfig::UrlEsc(sn) << wxT("\"") 
+                    << wxT(" --computername=\"")
+                    << MyXmlConfig::UrlEsc(::wxGetHostName()) << wxT("\"") 
+                    << wxT(" --session_id=\"") << m_sSessionID.Right(32) << wxT("\"") 
+                    << wxT(" --model=\"") << sg[i].m_sDriver << wxT("\"");
                 if (sg[i].m_bDefault)
                     shcmd << wxT(" --defaultprinter=\"1\"");
                 if (sg[i].m_bPublic)
@@ -1109,12 +1131,12 @@ MySession::startSharing()
             case SharedResource::SHARE_CUPS_PRINTER:
                 shcmd = wxT("addprinter");
                 shcmd << wxT(" --type=\"ipp\"")
-                   << wxT(" --username=\"") << MyXmlConfig::UrlEsc(sg[i].m_sUsername) << wxT("\"") 
-                   << wxT(" --port=\"") << cupsport << wxT("\"") 
-                   << wxT(" --session_id=\"") << m_sSessionID.Right(32) << wxT("\"") 
-                   << wxT(" --printer=\"") << MyXmlConfig::UrlEsc(sn) << wxT("\"") 
-                   << wxT(" --password=\"") << cupspw << wxT("\"")
-                   << wxT(" --model=\"cups%20printer\"");
+                    << wxT(" --username=\"") << MyXmlConfig::UrlEsc(sg[i].m_sUsername) << wxT("\"") 
+                    << wxT(" --port=\"") << cupsport << wxT("\"") 
+                    << wxT(" --session_id=\"") << m_sSessionID.Right(32) << wxT("\"") 
+                    << wxT(" --printer=\"") << MyXmlConfig::UrlEsc(sn) << wxT("\"") 
+                    << wxT(" --password=\"") << cupspw << wxT("\"")
+                    << wxT(" --model=\"cups%20printer\"");
                 if (sg[i].m_bDefault)
                     shcmd << wxT(" --defaultprinter=\"1\"");
                 if (sg[i].m_bPublic)
@@ -1130,7 +1152,7 @@ MySession::startXserver()
 {
 #ifdef __WXMSW__
     int display = getFirstFreePort(X_PORT_OFFSET);
-::wxLogTrace(MYTRACETAG, wxT("startXServer first free port is %d"), display);
+    ::wxLogTrace(MYTRACETAG, wxT("startXServer first free port is %d"), display);
     if (0 == display) {
 #warning error-handling
         return;
