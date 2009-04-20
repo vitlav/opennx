@@ -164,7 +164,7 @@ for pkg in %{nxpkgs} ; do
 	cd $pkg && ./configure --prefix=%{_prefix} && make $margs
     cd ..
 done
-%if %{is_fc} == 10
+%if %{is_fc}
 # On FC10, opensc-config is currently broken. It returns "-I" when
 # called with the --cflags option, breaking ./configure. Therefore
 # we provide a wrapper here.

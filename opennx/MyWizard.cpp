@@ -241,7 +241,7 @@ wxIcon MyWizard::GetIconResource( const wxString& name)
 
 wxString MyWizard::sGetConfigName()
 {
-    return m_pCfg ? m_pCfg->sGetName() : _T("");
+    return m_pCfg ? m_pCfg->sGetFileName() : _T("");
 }
 
 
@@ -1071,6 +1071,7 @@ void WizardPageDesktop::OnComboboxDtypeSelected( wxCommandEvent& event )
 {
     UpdateDialogConstraints(true);
     m_iUnixDesktopType = m_iDesktopTypeDialog;
+    ::wxLogTrace(MYTRACETAG, wxT("dtype=%d"), m_iDesktopTypeDialog);
     CheckNextEnable();
     event.Skip();
 }
@@ -1253,8 +1254,10 @@ void WizardPageDesktop::OnWizardpageDesktopPageChanging( wxWizardEvent& event )
         MyXmlConfig *cfg = wxDynamicCast(GetParent(), MyWizard)->pGetConfig();
         TransferDataFromWindow();
         cfg->eSetSessionType(wx_static_cast(MyXmlConfig::SessionType, m_iSessionType));
-        cfg->eSetDesktopType(wx_static_cast(MyXmlConfig::DesktopType, m_iDesktopType));
+        cfg->eSetDesktopType(wx_static_cast(MyXmlConfig::DesktopType, m_iUnixDesktopType));
         cfg->eSetDisplayType(wx_static_cast(MyXmlConfig::DisplayType, m_iDisplayType));
+        if (m_iUnixDesktopType == MyXmlConfig::DTYPE_CUSTOM) {
+        }
         cfg->iSetDisplayWidth(m_iDisplayWidth);
         cfg->iSetDisplayHeight(m_iDisplayHeight);
     }
