@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-04-19 16:41+0200\n"
+"POT-Creation-Date: 2009-04-20 12:54+0200\n"
 "PO-Revision-Date: 2009-02-25 11:24+0100\n"
 "Last-Translator: Fritz Elfert <felfert@users.sf.net>\n"
 "Language-Team:  <de@li.org>\n"
@@ -352,7 +352,7 @@ msgstr ""
 "Zugangsdaten werden stets verschlüsselt übertragen. Für erhöhte Sicherheit "
 "können Sie die folgende Option aktivieren."
 
-#: MyWizard.cpp:1156
+#: MyWizard.cpp:1157
 #, c-format
 msgid ""
 "Congratulations. The connection to '%s' will be saved as '%s'. You may "

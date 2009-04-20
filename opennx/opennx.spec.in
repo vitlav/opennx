@@ -1,12 +1,20 @@
 %define version @VERSION@
 %define svnrev @SVNREV@
 
+# Build-time configuration
+# use wxWidgets debug libs
 %define with_debug %{?_with_debug: 1} %{?!_with_debug: 0}
-%define with_usbip %{?_with_usbip: 1} %{?!_with_usbip: 0}
+# use wxWidgets static libs
 %define with_staticwx %{?_with_staticwx: 1} %{?!_with_staticwx: 0}
+# Enable USBIP support
+%define with_usbip %{?_with_usbip: 1} %{?!_with_usbip: 0}
+# Make recommended RPM dependencies mandatory
+%define with_forceopt %{?_with_forceopt: 1} %{?!_with_forceopt: 0}
+
 # Caution:
-# Using --with fetchnx triggers downloading the latest tarballs from NoMachine
-# This does *not* work in common jailed build-environments (like Suse BuildService)
+# Using --with fetchnx triggers downloading the latest
+# tarballs from NoMachine. This does *not* work in common
+# jailed build-environments (like Suse BuildService)
 %define with_fetchnx %{?_with_fetchnx: 1} %{?!_with_fetchnx: 0}
 
 ##
@@ -30,12 +38,7 @@
 %define ostag .SuSE%(rpm -q --queryformat='%{VERSION}' `rpm -qf /etc/SuSE-release`)
 %endif
 
-%if %{is_suse}
-%define _prefix0 /opt/lsb
-%define _prefix /opt/lsb/%{name}
-%else
 %define _prefix /opt/%{name}
-%endif
 
 %ifarch x86_64
 %define nxlib %{_prefix}/lib64
@@ -69,6 +72,10 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 Obsoletes: nxclient
 
+%if %{is_suse}
+# Workaround for https://bugzilla.novell.com/show_bug.cgi?id=436992
+BuildRequires: -post-build-checks
+%endif
 BuildRequires: libtool
 BuildRequires: automake
 BuildRequires: audiofile-devel
@@ -94,6 +101,8 @@ BuildRequires: openssl-devel
 %if %{with_fetchnx}
 BuildRequires: wget
 %endif
+
+%if %{with_forceopt}
 # The following are actually *not*
 # required but *recommended*
 %if %{is_suse}
@@ -115,6 +124,7 @@ Requires: libusb
 %endif
 %if %{with_usbip}
 Requires: usbip2-nxclient
+%endif
 %endif
 
 %description
@@ -528,11 +538,7 @@ rm -rf "/usr/lib/menu/opennx"
 %files
 %defattr(-, root, root, 0755)
 %doc COPYING INSTALL ChangeLog
-%if %{is_suse}
-%_prefix0
-%else
 %_prefix
-%endif
 /usr/bin/nxclient
 %{_sysconfdir}/udev
 
