@@ -215,7 +215,8 @@ msgstr "Unerwartetes Ende von nxssh"
 
 #: MySession.cpp:1048
 msgid "You have reached your session limit. No more sessions allowed"
-msgstr "Sie haben Ihr Sitzungs-Limit erreicht. Keine weiteren Sitzungen erlaubt"
+msgstr ""
+"Sie haben Ihr Sitzungs-Limit erreicht. Keine weiteren Sitzungen erlaubt"
 
 #: MySession.cpp:1049
 msgid "Error - OpenNX"
@@ -1508,4 +1509,3 @@ msgstr "Lokal"
 #: UsbFilterDetailsDialog_symbols.h:34
 msgid "Forward to remote"
 msgstr "Weiterleitung"
-
