@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
 "POT-Creation-Date: 2009-04-22 11:49+0200\n"
-"PO-Revision-Date: 2009-04-20 20:28+0200\n"
+"PO-Revision-Date: 2009-04-22 11:58+0200\n"
 "Last-Translator: Fritz Elfert <felfert@users.sf.net>\n"
 "Language-Team:  <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -215,8 +215,7 @@ msgstr "Unerwartetes Ende von nxssh"
 
 #: MySession.cpp:1048
 msgid "You have reached your session limit. No more sessions allowed"
-msgstr ""
-"Sie haben Ihr Sitzungs-Limit erreicht. Keine weiteren Sitzungen erlaubt"
+msgstr "Sie haben Ihr Sitzungs-Limit erreicht. Keine weiteren Sitzungen erlaubt"
 
 #: MySession.cpp:1049
 msgid "Error - OpenNX"
@@ -1427,7 +1426,7 @@ msgstr "libusb ist nicht verfügbar. USB-Geräte werden nicht exportiert"
 
 #: opennxApp.cpp:1042
 msgid "USBIP tunnel registration timeout"
-msgstr ""
+msgstr "Timeout beim Öffnen des USBIP-Kanals"
 
 #: opennxApp.cpp:1044
 #, c-format
@@ -1509,3 +1508,4 @@ msgstr "Lokal"
 #: UsbFilterDetailsDialog_symbols.h:34
 msgid "Forward to remote"
 msgstr "Weiterleitung"
+
