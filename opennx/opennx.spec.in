@@ -371,10 +371,10 @@ fi
 %endif
 
 %if %{is_fc}
-%if "%{ostag}"=="FC4"
+%if "%{ostag}"==".fc4"
   mkxgd $LINK_DIR_X $XDK_LINK_DIR_X
 %endif
-%if "%{ostag}"=="FC3"
+%if "%{ostag}"==".fc3"
   mkxgd $LINK_DIR_X $XDK_LINK_DIR_X
 %endif
   if [ -d /etc/xdg ]; then
@@ -398,19 +398,19 @@ fi
 %endif
 
 %if %{is_suse}
-%if "%{ostag}"=="SuSE9.0"
+%if "%{ostag}"==".SuSE9.0"
   mklnk $LINK_DIR_C $KDE3_APPLNK_SUSE "Internet"
   mksingle $LINK_DIR_NG $XDG_DESKTOP
 %endif
-%if "%{ostag}"=="SuSE9.1"
+%if "%{ostag}"==".SuSE9.1"
   mkxgd $LINK_DIR_X $XDK_LINK_DIR_X
   mksingle $LINK_DIR_NG $XDG_DESKTOP_NOVELL
 %endif
-%if "%{ostag}"=="SuSE10.0"
+%if "%{ostag}"==".SuSE10.0"
   mkxgd $LINK_DIR_X $XDK_LINK_DIR_X
   mksingle $LINK_DIR_NG $XDG_DESKTOP_NOVELL
 %endif
-%if "%{ostag}"=="SuSE10.1"
+%if "%{ostag}"==".SuSE10.1"
   if [ -d /etc/xdg ]; then
     mkxgd $LINK_DIR_X $XDK_LINK_DIR_X
   else
@@ -419,7 +419,7 @@ fi
     mklnk $LINK_DIR_C $GNOME_APPLNK_SUSE "Internet"
   fi
 %endif
-%if "%{ostag}"=="SuSE11.1"
+%if "%{ostag}"==".SuSE11.1"
   if [ -d /etc/xdg ]; then
     mkxgd $LINK_DIR_X $XDK_LINK_DIR_X
   else
@@ -428,7 +428,7 @@ fi
     mklnk $LINK_DIR_C $GNOME_APPLNK_SUSE "Internet"
   fi
 %endif
-%if "%{ostag}"=="SuSE11"
+%if "%{ostag}"==".SuSE11"
   if [ -d /etc/xdg ]; then
     mkxgd $LINK_DIR_X $XDK_LINK_DIR_X
   else
