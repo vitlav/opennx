@@ -41,7 +41,8 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h LibOpenSC.h 
 	X11PropertyDialog_symbols.h trace.h watchReaderApp.h watchUsbIpApp.h xh_richtext.h
 
 watchreader_SOURCES = watchReaderApp.cpp LibOpenSC.cpp MyDynlib.cpp
-watchreader_LDADD = $(WX_LIBS) $(X_LIBS) $(X_PRE_LIBS) $(X_EXTRA_LIBS) $(APP_LDADD)
+watchreader_DEPENDENCIES = $(WATCHREADER_RES)
+watchreader_LDADD = $(WATCHREADER_RES) $(WX_LIBS) $(X_LIBS) $(X_PRE_LIBS) $(X_EXTRA_LIBS) $(APP_LDADD)
 watchreader_CPPFLAGS = $(WX_CPPFLAGS) $(X_CFLAGS) -DAPP_WATCHREADER
 watchreader_CXXFLAGS = $(WX_CXXFLAGS)
 watchreader_CFLAGS = $(WX_CFLAGS)
@@ -57,7 +58,7 @@ watchusbip_CFLAGS = $(WX_CFLAGS)
 tracelog_SOURCES = tracelogApp.cpp TraceLogFrame.cpp DebugStringGrabber.cpp \
 				   wxprec.cpp Icon.cpp
 
-tracelog_LDADD = $(WX_LIBS) $(X_LIBS) $(X_PRE_LIBS) $(X_EXTRA_LIBS) $(APP_LDADD)
+tracelog_LDADD = $(TRACELOG_RES) $(WX_LIBS) $(X_LIBS) $(X_PRE_LIBS) $(X_EXTRA_LIBS) $(APP_LDADD)
 tracelog_DEPENDENCIES = $(TRACELOG_RES)
 tracelog_CPPFLAGS = $(WX_CPPFLAGS) $(X_CFLAGS) -DAPP_TRACELOG
 tracelog_CXXFLAGS = $(WX_CXXFLAGS)
@@ -67,6 +68,7 @@ EXTRA_HEADERS = res/opennx.rc
 
 EXTRA_opennx_SOURCES = opennx.rc
 EXTRA_tracelog_SOURCES = tracelog.rc
+EXTRA_watchreader_SOURCES = watchreader.rc
 
 opennx_LDADD = $(OPENNX_RES) $(WX_LIBS) $(X_LIBS) $(X_PRE_LIBS) $(X_EXTRA_LIBS) $(APP_LDADD)
 opennx_DEPENDENCIES = $(OPENNX_RES)

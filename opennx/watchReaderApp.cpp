@@ -61,6 +61,7 @@ watchReaderApp::watchReaderApp()
 #endif
     wxConfigBase::Set(cfg);
 
+#ifndef __WXMSW__
     wxLogNull dummy;
     // Try to get KDE language settings and set locale accordingly
     wxFileInputStream fis(::wxGetHomeDir() +
@@ -75,6 +76,7 @@ watchReaderApp::watchReaderApp()
         if ((!lang.IsEmpty()) && (!country.IsEmpty()))
             ::wxSetEnv(wxT("LANG"), lang + wxT("_") + country.Upper() + wxT(".UTF-8"));
     }
+#endif
 }
 
 
