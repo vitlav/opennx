@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-04-20 21:22+0200\n"
+"POT-Creation-Date: 2009-04-22 11:49+0200\n"
 "PO-Revision-Date: 2009-04-20 20:28+0200\n"
 "Last-Translator: Fritz Elfert <felfert@users.sf.net>\n"
 "Language-Team:  <de@li.org>\n"
@@ -332,7 +332,7 @@ msgstr "RDP"
 msgid "RFB"
 msgstr "RFB"
 
-#: MyWizard.cpp:864
+#: MyWizard.cpp:865
 msgid ""
 "OpenNX Client supports authentication using a variety of USB SmartCard "
 "tokens. Enable this option if you intend to use such a token."
@@ -341,7 +341,7 @@ msgstr ""
 "SmartCard Tokens. Aktivieren Sie dies, wenn sie ein solches Token verwenden "
 "wollen."
 
-#: MyWizard.cpp:865
+#: MyWizard.cpp:866
 msgid ""
 "Authorization credentials are always encrypted while establishing a "
 "connection. For increased security, you can enable the following option."
@@ -349,7 +349,7 @@ msgstr ""
 "Zugangsdaten werden stets verschlüsselt übertragen. Für erhöhte Sicherheit "
 "können Sie die folgende Option aktivieren."
 
-#: MyWizard.cpp:1157
+#: MyWizard.cpp:1158
 #, c-format
 msgid ""
 "Congratulations. The connection to '%s' will be saved as '%s'. You may "

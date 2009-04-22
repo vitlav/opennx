@@ -612,7 +612,7 @@ void opennxApp::checkLibUSB()
 void opennxApp::checkNxSmartCardSupport()
 {
     LibOpenSC l;
-    if (!l.HasOpenSC() || !m_bLibUSBAvailable) {
+    if (!l.HasOpenSC()) {
         m_bNxSmartCardSupport = false;
         wxConfigBase::Get()->Write(wxT("Config/NxSshSmartCardSupport"), m_bNxSmartCardSupport);
         wxConfigBase::Get()->Flush();
