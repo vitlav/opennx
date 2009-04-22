@@ -179,6 +179,7 @@ void USB::usbscan(MyDynamicLibrary *dll)
 USB::USB() {
     m_bAvailable = false;
 #ifdef SUPPORT_USBIP
+    ::wxLogNull noerrors;
     MyDynamicLibrary dll;
     if (dll.Load(wxT("libusb"))) {
         wxDYNLIB_FUNCTION(Tusb_init, usb_init, dll);

@@ -855,6 +855,7 @@ bool WizardPageSecurity::Create( wxWizard* parent )
     m_pText2 = NULL;
     m_pCtrlEnableSSL = NULL;
     ////@end WizardPageSecurity member initialisation
+    m_bUseSmartCard = ::wxGetApp().NxSmartCardSupport();
 
     ////@begin WizardPageSecurity creation
     SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY);
@@ -1275,7 +1276,7 @@ void WizardPageSecurity::OnWizardpageSecurityPageChanging( wxWizardEvent& event 
         MyXmlConfig *cfg = wxDynamicCast(GetParent(), MyWizard)->pGetConfig();
         TransferDataFromWindow();
         cfg->bSetEnableSSL(m_bEnableSSL);
-        cfg->bSetUseSmartCard(::wxGetApp().NxSmartCardSupport());
+        cfg->bSetUseSmartCard(m_bUseSmartCard);
     }
     event.Skip();
 }

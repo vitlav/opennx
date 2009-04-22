@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-04-20 21:04+0200\n"
+"POT-Creation-Date: 2009-04-20 21:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1321,71 +1321,71 @@ msgstr ""
 msgid "Could not read link %s"
 msgstr ""
 
-#: opennxApp.cpp:669
+#: opennxApp.cpp:673
 msgid ""
 "\n"
 "\n"
 "Supported trace tags: "
 msgstr ""
 
-#: opennxApp.cpp:672
+#: opennxApp.cpp:676
 msgid "Start the session administration tool."
 msgstr ""
 
-#: opennxApp.cpp:674
+#: opennxApp.cpp:678
 msgid "Secify window title for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:676
+#: opennxApp.cpp:680
 msgid "Secify dialog style for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:678
+#: opennxApp.cpp:682
 msgid "Run in dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:680
+#: opennxApp.cpp:684
 msgid "Dialog mode proxy."
 msgstr ""
 
-#: opennxApp.cpp:682
+#: opennxApp.cpp:686
 msgid "Specify message for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:684
+#: opennxApp.cpp:688
 msgid "Specify parent PID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:686
+#: opennxApp.cpp:690
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr ""
 
-#: opennxApp.cpp:688
+#: opennxApp.cpp:692
 msgid "Specify window-ID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:690
+#: opennxApp.cpp:694
 msgid "Specify wxWidgets trace mask."
 msgstr ""
 
-#: opennxApp.cpp:692
+#: opennxApp.cpp:696
 msgid "Guide the user through the steps to configure a session."
 msgstr ""
 
-#: opennxApp.cpp:1023
+#: opennxApp.cpp:1028
 msgid "libusb is not available. No USB devices will be exported"
 msgstr ""
 
-#: opennxApp.cpp:1037
-msgid "USBIP session timeout"
+#: opennxApp.cpp:1042
+msgid "USBIP tunnel registration timeout"
 msgstr ""
 
-#: opennxApp.cpp:1039
+#: opennxApp.cpp:1044
 #, c-format
 msgid "Unable to export USB device %s"
 msgstr ""
 
-#: opennxApp.cpp:1045
+#: opennxApp.cpp:1050
 msgid "Could not connect to usbipd2. No USB devices will be exported"
 msgstr ""
 
