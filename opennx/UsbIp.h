@@ -173,6 +173,7 @@ class UsbIp : public wxEvtHandler {
         wxString m_sLineBuffer;
         bool m_bConnected;
         bool m_bError;
+        int m_iLastError;
         tStates m_eState;
         wxArrayString m_aSessions;
         ArrayOfUsbIpDevices m_aDevices;

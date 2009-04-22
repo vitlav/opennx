@@ -190,6 +190,8 @@ bool UsbIp::ExportDevice(const wxString &busid)
     }
     if (!waitforstate(Exported)) {
         m_eState = Idle;
+        if (404 == m_iLastError)
+            ::wxLogWarning(_("USB device is already exported in another session"));
         return false;
     }
     m_eState = Idle;
@@ -456,11 +458,13 @@ void UsbIp::parse(const wxString &line)
                 case 203:
                     parsehev(line.Mid(4));
                     break;
+                case 404:
                 case 400:
                 case 401:
                 case 402:
                 case 500:
                 case 501:
+                    m_iLastError = code;
                     m_bError = true;
                     switch (m_eState) {
                         case Initializing:
