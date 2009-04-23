@@ -34,8 +34,21 @@
 %if %{is_fc}
 %define ostag %{?dist}
 %endif
+
+%if %{is_sles}
+%if %{suse_version} > 999
+%define ostag .SLE%(echo %{sles_version}|sed -e 's/\\(..\\)\\(.\\)./\\1.\\2/')
+%else
+%define ostag .SLE%(echo %{sles_version}|sed -e 's/\\(.\\)\\(.\\)./\\1.\\2/'))
+%endif
+%else
+
 %if %{is_suse}
-%define ostag .SuSE%(rpm -q --queryformat='%{VERSION}' `rpm -qf /etc/SuSE-release`)
+%if %{suse_version} > 999
+%define ostag .SuSE%(echo %{suse_version}|sed -e 's/\\(..\\)\\(.\\)./\\1.\\2/')
+%else
+%define ostag .SuSE%(echo %{suse_version}|sed -e 's/\\(.\\)\\(.\\)./\\1.\\2/'))
+%endif
 %endif
 
 %define _prefix /opt/%{name}
