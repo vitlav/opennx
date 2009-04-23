@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-04-22 11:49+0200\n"
+"POT-Creation-Date: 2009-04-23 15:46+0200\n"
 "PO-Revision-Date: 2009-04-22 11:58+0200\n"
 "Last-Translator: Fritz Elfert <felfert@users.sf.net>\n"
 "Language-Team:  <de@li.org>\n"
@@ -99,7 +99,7 @@ msgstr "Sitzungsprotokoll - OpenNX"
 msgid "Close"
 msgstr "Schließen"
 
-#: LoginDialog.cpp:323 LoginDialog.cpp:403
+#: LoginDialog.cpp:330 LoginDialog.cpp:412
 #, c-format
 msgid ""
 "Could not save session to\n"
@@ -109,7 +109,7 @@ msgstr ""
 "%s\n"
 "speichern."
 
-#: LoginDialog.cpp:324 LoginDialog.cpp:404
+#: LoginDialog.cpp:331 LoginDialog.cpp:413
 msgid "Error saving - OpenNX"
 msgstr "Fehler beim Speichern - OpenNX"
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-04-22 11:49+0200\n"
+"POT-Creation-Date: 2009-04-23 15:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -98,14 +98,14 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: LoginDialog.cpp:323 LoginDialog.cpp:403
+#: LoginDialog.cpp:330 LoginDialog.cpp:412
 #, c-format
 msgid ""
 "Could not save session to\n"
 "%s"
 msgstr ""
 
-#: LoginDialog.cpp:324 LoginDialog.cpp:404
+#: LoginDialog.cpp:331 LoginDialog.cpp:413
 msgid "Error saving - OpenNX"
 msgstr ""
 

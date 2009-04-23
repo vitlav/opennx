@@ -22,8 +22,8 @@
 ##
 %define is_rh %(test -n "`echo %{?dist}|grep rh`" && echo 1 || echo 0)
 %define is_fc 0%{?fedora}%{?fedora_version}
-%define is_suse %{?suse_version:1}%{?!suse_version:0}
-%define is_sles %{?sles_version:1}%{?!sles_version:0}
+%define is_suse 0%{?suse_version}
+%define is_sles 0%{?sles_version}
 %define is_mdk %(test -e /etc/mandrake-release && echo 1 || echo 0)
 %if %{is_rh}
 %define ostag %{?dist}
