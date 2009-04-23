@@ -41,13 +41,13 @@
 %else
 %define ostag .SLE%(echo %{sles_version}|sed -e 's/\\(.\\)\\(.\\)./\\1.\\2/')
 %endif
-%endif
-
+%else
 %if %{is_suse}
 %if %{suse_version} > 999
 %define ostag .SuSE%(echo %{suse_version}|sed -e 's/\\(..\\)\\(.\\)./\\1.\\2/')
 %else
 %define ostag .SuSE%(echo %{suse_version}|sed -e 's/\\(.\\)\\(.\\)./\\1.\\2/')
+%endif
 %endif
 %endif
 

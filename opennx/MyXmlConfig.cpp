@@ -935,7 +935,7 @@ MyXmlConfig::LoadFromURL(const wxString &filename)
     }
     ::wxLogTrace(MYTRACETAG, wxT("Fetching %s"), filename.c_str());
     wxInputStream *is = url.GetInputStream();
-    if (loadFromStream(*is, false)) {
+    if (is && loadFromStream(*is, false)) {
         m_sName = wxFileName(url.GetPath()).GetName();
         if (0 == url.GetScheme().CmpNoCase(wxT("file"))) {
             m_sFileName = wxFileName(url.GetPath()).GetFullPath();
