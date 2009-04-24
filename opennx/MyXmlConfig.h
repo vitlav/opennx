@@ -101,16 +101,18 @@ class MyXmlConfig
             STYPE_UNIX = 0,
             STYPE_WINDOWS,
             STYPE_VNC,
+            STYPE_SHADOW,
         } SessionType;
 
         typedef enum {
+            DTYPE_ANY = -3,
             DTYPE_RDP = -2,
             DTYPE_RFB = -1,
             DTYPE_KDE = 0,
             DTYPE_GNOME,
             DTYPE_CDE,
             DTYPE_XFCE,
-            DTYPE_CUSTOM
+            DTYPE_CUSTOM,
         } DesktopType;
 
         typedef enum {
@@ -119,7 +121,8 @@ class MyXmlConfig
             DPTYPE_1024x768,
             DPTYPE_AVAILABLE,
             DPTYPE_FULLSCREEN,
-            DPTYPE_CUSTOM
+            DPTYPE_CUSTOM,
+            DPTYPE_REMOTE,
         } DisplayType;
 
         typedef enum {

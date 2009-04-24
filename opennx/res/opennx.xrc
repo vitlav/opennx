@@ -2965,6 +2965,7 @@ this share.</label>
                                     <item>Unix</item>
                                     <item>Windows</item>
                                     <item>VNC</item>
+                                    <item>Shadow</item>
                                 </content>
                             </object>
                         </object>

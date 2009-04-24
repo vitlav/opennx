@@ -190,8 +190,10 @@ bool UsbIp::ExportDevice(const wxString &busid)
     }
     if (!waitforstate(Exported)) {
         m_eState = Idle;
-        if (404 == m_iLastError)
+        if (404 == m_iLastError) {
             ::wxLogWarning(_("USB device is already exported in another session"));
+            return true; // Prevent calling app from showing an error.
+        }
         return false;
     }
     m_eState = Idle;

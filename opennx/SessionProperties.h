@@ -426,6 +426,8 @@ private:
     int m_iUsbLocalPort;
     wxString m_sUsbipdSocket;
     int m_iSavedUsbLocalPort;
+    int m_iPseudoDesktopTypeIndex;
+    int m_iPseudoDisplayTypeIndex;
 ////@end SessionProperties member variables
 
     bool readKbdLayouts();

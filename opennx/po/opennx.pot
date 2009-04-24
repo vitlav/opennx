@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-04-23 15:46+0200\n"
+"POT-Creation-Date: 2009-04-24 18:01+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: AboutDialog.cpp:113 SessionProperties.cpp:978
+#: AboutDialog.cpp:113 SessionProperties.cpp:1035
 msgid "Version"
 msgstr ""
 
@@ -122,12 +122,11 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: LoginDialog_symbols.h:25 MyWizard_symbols.h:23
+#: LoginDialog_symbols.h:25
 msgid "Session"
 msgstr ""
 
-#: LoginDialog_symbols.h:26 MyWizard_symbols.h:48
-#: SessionProperties_symbols.h:29
+#: LoginDialog_symbols.h:26 SessionProperties_symbols.h:29
 msgid "Use SmartCard"
 msgstr ""
 
@@ -299,16 +298,15 @@ msgid ""
 "your service provider has made available."
 msgstr ""
 
-#: MyWizard.cpp:688 MyWizard_symbols.h:34 SessionProperties.cpp:751
-#: SessionProperties_symbols.h:35
+#: MyWizard.cpp:688 SessionProperties_symbols.h:35
 msgid "KDE"
 msgstr ""
 
-#: MyWizard.cpp:694 SessionProperties.cpp:762
+#: MyWizard.cpp:694 SessionProperties.cpp:777
 msgid "RDP"
 msgstr ""
 
-#: MyWizard.cpp:702 SessionProperties.cpp:778
+#: MyWizard.cpp:702 SessionProperties.cpp:804
 msgid "RFB"
 msgstr ""
 
@@ -333,112 +331,6 @@ msgstr ""
 
 #: MyWizard_symbols.h:22
 msgid "Connection Wizard - OpenNX"
-msgstr ""
-
-#: MyWizard_symbols.h:24 SessionProperties_symbols.h:25
-#: VncPropertyDialog_symbols.h:25
-msgid "Host"
-msgstr ""
-
-#: MyWizard_symbols.h:25 ResumeDialog.cpp:154 SessionAdmin.cpp:178
-#: SessionProperties_symbols.h:26
-msgid "Port"
-msgstr ""
-
-#: MyWizard_symbols.h:26 SessionProperties_symbols.h:41
-msgid "MODEM"
-msgstr ""
-
-#: MyWizard_symbols.h:27 SessionProperties_symbols.h:42
-msgid "ISDN"
-msgstr ""
-
-#: MyWizard_symbols.h:28 SessionProperties_symbols.h:43
-msgid "ADSL"
-msgstr ""
-
-#: MyWizard_symbols.h:29 SessionProperties_symbols.h:44
-msgid "WAN"
-msgstr ""
-
-#: MyWizard_symbols.h:30 SessionProperties_symbols.h:45
-msgid "LAN"
-msgstr ""
-
-#: MyWizard_symbols.h:31 SessionProperties_symbols.h:31
-msgid "Unix"
-msgstr ""
-
-#: MyWizard_symbols.h:32 SessionProperties_symbols.h:32
-msgid "Windows"
-msgstr ""
-
-#: MyWizard_symbols.h:33 SessionProperties_symbols.h:33
-msgid "VNC"
-msgstr ""
-
-#: MyWizard_symbols.h:35 SessionProperties_symbols.h:36
-msgid "GNOME"
-msgstr ""
-
-#: MyWizard_symbols.h:36 SessionProperties_symbols.h:37
-msgid "CDE"
-msgstr ""
-
-#: MyWizard_symbols.h:37 SessionProperties_symbols.h:38
-msgid "XFCE"
-msgstr ""
-
-#: MyWizard_symbols.h:38 SessionProperties_symbols.h:39
-msgid "Custom"
-msgstr ""
-
-#: MyWizard_symbols.h:39 SessionProperties_symbols.h:40
-msgid "Settings..."
-msgstr ""
-
-#: MyWizard_symbols.h:40
-msgid "Select the size of your remote desktop."
-msgstr ""
-
-#: MyWizard_symbols.h:41 SessionProperties_symbols.h:47
-msgid "640x480"
-msgstr ""
-
-#: MyWizard_symbols.h:42 SessionProperties_symbols.h:48
-msgid "800x600"
-msgstr ""
-
-#: MyWizard_symbols.h:43 SessionProperties_symbols.h:49
-msgid "1024x768"
-msgstr ""
-
-#: MyWizard_symbols.h:44 SessionProperties_symbols.h:50
-msgid "Available Area"
-msgstr ""
-
-#: MyWizard_symbols.h:45 SessionProperties_symbols.h:51
-msgid "Fullscreen"
-msgstr ""
-
-#: MyWizard_symbols.h:46 SessionProperties_symbols.h:52
-msgid "W"
-msgstr ""
-
-#: MyWizard_symbols.h:47 SessionProperties_symbols.h:53
-msgid "H"
-msgstr ""
-
-#: MyWizard_symbols.h:49 SessionProperties_symbols.h:61
-msgid "Enable SSL encryption of all traffic"
-msgstr ""
-
-#: MyWizard_symbols.h:50
-msgid "Create shortcut on desktop"
-msgstr ""
-
-#: MyWizard_symbols.h:51
-msgid "Show the Advanced Configuration dialog"
 msgstr ""
 
 #: PanicDialog_symbols.h:22
@@ -552,7 +444,7 @@ msgstr ""
 msgid "Run application"
 msgstr ""
 
-#: ResumeDialog.cpp:150 SessionProperties.cpp:624
+#: ResumeDialog.cpp:150 SessionProperties.cpp:626
 msgid "Name"
 msgstr ""
 
@@ -566,6 +458,10 @@ msgstr ""
 
 #: ResumeDialog.cpp:153
 msgid "Screen"
+msgstr ""
+
+#: ResumeDialog.cpp:154 SessionAdmin.cpp:178 SessionProperties_symbols.h:26
+msgid "Port"
 msgstr ""
 
 #: ResumeDialog.cpp:155 SessionAdmin_symbols.h:34
@@ -715,106 +611,114 @@ msgstr ""
 msgid "Partial session statistics - OpenNX"
 msgstr ""
 
-#: SessionProperties.cpp:517 SessionProperties_symbols.h:89
+#: SessionProperties.cpp:519 SessionProperties_symbols.h:89
 msgid "USB"
 msgstr ""
 
-#: SessionProperties.cpp:556 ShareProperties_symbols.h:24
+#: SessionProperties.cpp:558 ShareProperties_symbols.h:24
 msgid "Share"
 msgstr ""
 
-#: SessionProperties.cpp:557 ShareProperties_symbols.h:50
+#: SessionProperties.cpp:559 ShareProperties_symbols.h:50
 msgid "Mount on"
 msgstr ""
 
-#: SessionProperties.cpp:558
+#: SessionProperties.cpp:560
 msgid "Comment"
 msgstr ""
 
-#: SessionProperties.cpp:570 SessionProperties.cpp:1311
+#: SessionProperties.cpp:572 SessionProperties.cpp:1369
 msgid "Currently not available"
 msgstr ""
 
-#: SessionProperties.cpp:621
+#: SessionProperties.cpp:623
 msgid "VendorID"
 msgstr ""
 
-#: SessionProperties.cpp:622
+#: SessionProperties.cpp:624
 msgid "ProductID"
 msgstr ""
 
-#: SessionProperties.cpp:623
+#: SessionProperties.cpp:625
 msgid "Class"
 msgstr ""
 
-#: SessionProperties.cpp:625
+#: SessionProperties.cpp:627
 msgid "Serial"
 msgstr ""
 
-#: SessionProperties.cpp:1041 SessionProperties_symbols.h:102
+#: SessionProperties.cpp:831
+msgid "Any"
+msgstr ""
+
+#: SessionProperties.cpp:838
+msgid "As on server"
+msgstr ""
+
+#: SessionProperties.cpp:1098 SessionProperties_symbols.h:102
 msgid "Font"
 msgstr ""
 
-#: SessionProperties.cpp:1085
+#: SessionProperties.cpp:1142
 msgid "Error while reading keyboard table"
 msgstr ""
 
-#: SessionProperties.cpp:1114
+#: SessionProperties.cpp:1171
 #, c-format
 msgid "Invalid line='%s'"
 msgstr ""
 
-#: SessionProperties.cpp:1115
+#: SessionProperties.cpp:1172
 #, c-format
 msgid "Invalid entry in %s"
 msgstr ""
 
-#: SessionProperties.cpp:1239
+#: SessionProperties.cpp:1297
 msgid "Do you really want to delete all cache directories?"
 msgstr ""
 
-#: SessionProperties.cpp:1240
+#: SessionProperties.cpp:1298
 msgid "Clean cache - OpenNX"
 msgstr ""
 
-#: SessionProperties.cpp:1285
+#: SessionProperties.cpp:1343
 msgid "No local samba server is running."
 msgstr ""
 
-#: SessionProperties.cpp:1340
+#: SessionProperties.cpp:1398
 msgid "No sharable resources found"
 msgstr ""
 
-#: SessionProperties.cpp:1414
+#: SessionProperties.cpp:1472
 msgid "Select User NX directory"
 msgstr ""
 
-#: SessionProperties.cpp:1429
+#: SessionProperties.cpp:1487
 msgid "Select System NX directory"
 msgstr ""
 
-#: SessionProperties.cpp:1475
+#: SessionProperties.cpp:1533
 #, c-format
 msgid "Really delete Session '%s' ?"
 msgstr ""
 
-#: SessionProperties.cpp:1476
+#: SessionProperties.cpp:1534
 msgid "Delete Session"
 msgstr ""
 
-#: SessionProperties.cpp:1713
+#: SessionProperties.cpp:1771
 msgid "No cups server available."
 msgstr ""
 
-#: SessionProperties.cpp:1727
+#: SessionProperties.cpp:1785
 msgid "Select System CUPS daemon"
 msgstr ""
 
-#: SessionProperties.cpp:1928
+#: SessionProperties.cpp:1986
 msgid "No USB devices available."
 msgstr ""
 
-#: SessionProperties.cpp:2131
+#: SessionProperties.cpp:2189
 msgid "Select path of USBIPD socket"
 msgstr ""
 
@@ -826,6 +730,10 @@ msgstr ""
 msgid "General"
 msgstr ""
 
+#: SessionProperties_symbols.h:25 VncPropertyDialog_symbols.h:25
+msgid "Host"
+msgstr ""
+
 #: SessionProperties_symbols.h:28
 msgid "Key..."
 msgstr ""
@@ -834,12 +742,92 @@ msgstr ""
 msgid "Desktop"
 msgstr ""
 
+#: SessionProperties_symbols.h:31
+msgid "Unix"
+msgstr ""
+
+#: SessionProperties_symbols.h:32
+msgid "Windows"
+msgstr ""
+
+#: SessionProperties_symbols.h:33
+msgid "VNC"
+msgstr ""
+
 #: SessionProperties_symbols.h:34
 msgid "Shadow"
 msgstr ""
 
+#: SessionProperties_symbols.h:36
+msgid "GNOME"
+msgstr ""
+
+#: SessionProperties_symbols.h:37
+msgid "CDE"
+msgstr ""
+
+#: SessionProperties_symbols.h:38
+msgid "XFCE"
+msgstr ""
+
+#: SessionProperties_symbols.h:39
+msgid "Custom"
+msgstr ""
+
+#: SessionProperties_symbols.h:40
+msgid "Settings..."
+msgstr ""
+
+#: SessionProperties_symbols.h:41
+msgid "MODEM"
+msgstr ""
+
+#: SessionProperties_symbols.h:42
+msgid "ISDN"
+msgstr ""
+
+#: SessionProperties_symbols.h:43
+msgid "ADSL"
+msgstr ""
+
+#: SessionProperties_symbols.h:44
+msgid "WAN"
+msgstr ""
+
+#: SessionProperties_symbols.h:45
+msgid "LAN"
+msgstr ""
+
 #: SessionProperties_symbols.h:46
 msgid "Display"
+msgstr ""
+
+#: SessionProperties_symbols.h:47
+msgid "640x480"
+msgstr ""
+
+#: SessionProperties_symbols.h:48
+msgid "800x600"
+msgstr ""
+
+#: SessionProperties_symbols.h:49
+msgid "1024x768"
+msgstr ""
+
+#: SessionProperties_symbols.h:50
+msgid "Available Area"
+msgstr ""
+
+#: SessionProperties_symbols.h:51
+msgid "Fullscreen"
+msgstr ""
+
+#: SessionProperties_symbols.h:52
+msgid "W"
+msgstr ""
+
+#: SessionProperties_symbols.h:53
+msgid "H"
 msgstr ""
 
 #: SessionProperties_symbols.h:54
@@ -868,6 +856,10 @@ msgstr ""
 
 #: SessionProperties_symbols.h:60
 msgid "Disable ZLIB stream compression"
+msgstr ""
+
+#: SessionProperties_symbols.h:61
+msgid "Enable SSL encryption of all traffic"
 msgstr ""
 
 #: SessionProperties_symbols.h:62

@@ -386,6 +386,8 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
 {
 ////@begin SessionProperties member initialisation
     m_iUsbLocalPort = 3240;
+    m_iPseudoDesktopTypeIndex = -1;
+    m_iPseudoDisplayTypeIndex = -1;
     m_pNoteBook = NULL;
     m_pCtrlHostname = NULL;
     m_pCtrlPort = NULL;
@@ -748,10 +750,19 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
     // 'General' tab
     switch (m_iSessionType) {
         case MyXmlConfig::STYPE_UNIX:
-            m_pCtrlDesktopType->SetString(0, _("KDE"));
+            if (m_iPseudoDesktopTypeIndex != -1) {
+                m_pCtrlDesktopType->Delete(m_iPseudoDesktopTypeIndex);
+                m_iPseudoDesktopTypeIndex = -1;
+            }
             m_pCtrlDesktopType->SetSelection(m_iDesktopTypeDialog);
             m_pCtrlDesktopType->Enable(true);
             m_pCtrlDesktopSettings->Enable(m_iDesktopTypeDialog == MyXmlConfig::DTYPE_CUSTOM);
+            if (m_iPseudoDisplayTypeIndex != -1) {
+                m_pCtrlDisplayType->Delete(m_iPseudoDisplayTypeIndex);
+                if (m_iDisplayType >= m_iPseudoDisplayTypeIndex)
+                    m_pCtrlDisplayType->SetSelection(3);
+                m_iPseudoDisplayTypeIndex = -1;
+            }
             m_pCtrlCupsEnable->Enable(c.IsAvailable());
             m_pCtrlSmbEnable->Enable(s.IsAvailable());
 #ifdef SUPPORT_USBIP
@@ -759,12 +770,23 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
 #endif
             break;
         case MyXmlConfig::STYPE_WINDOWS:
-            m_pCtrlDesktopType->SetString(0, _("RDP"));
-            m_pCtrlDesktopType->SetSelection(0);
+            if (m_iPseudoDesktopTypeIndex != -1) {
+                m_pCtrlDesktopType->Delete(m_iPseudoDesktopTypeIndex);
+                m_iPseudoDesktopTypeIndex = -1;
+            }
+            m_iPseudoDesktopTypeIndex = m_pCtrlDesktopType->Append(_("RDP"), (void *)MyXmlConfig::DTYPE_RDP);
+            m_pCtrlDesktopType->SetSelection(m_iPseudoDesktopTypeIndex);
             m_iDesktopType = MyXmlConfig::DTYPE_RDP;
             m_iDesktopTypeDialog = 0;
             m_pCtrlDesktopType->Enable(false);
             m_pCtrlDesktopSettings->Enable(true);
+            if (m_iPseudoDisplayTypeIndex != -1) {
+                m_pCtrlDisplayType->Delete(m_iPseudoDisplayTypeIndex);
+                if (m_iDisplayType >= m_iPseudoDisplayTypeIndex)
+                    m_pCtrlDisplayType->SetSelection(3);
+                m_iPseudoDisplayTypeIndex = -1;
+            }
+            m_pCtrlDisplayType->SetSelection(3);
             m_pCtrlCupsEnable->Enable(false);
             m_pCtrlSmbEnable->Enable(false);
             m_bUseCups = false;
@@ -775,12 +797,47 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
 #endif
             break;
         case MyXmlConfig::STYPE_VNC:
-            m_pCtrlDesktopType->SetString(0, _("RFB"));
-            m_pCtrlDesktopType->SetSelection(0);
+            if (m_iPseudoDesktopTypeIndex != -1) {
+                m_pCtrlDesktopType->Delete(m_iPseudoDesktopTypeIndex);
+                m_iPseudoDesktopTypeIndex = -1;
+            }
+            m_iPseudoDesktopTypeIndex = m_pCtrlDesktopType->Append(_("RFB"), (void *)MyXmlConfig::DTYPE_RFB);
+            m_pCtrlDesktopType->SetSelection(m_iPseudoDesktopTypeIndex);
             m_iDesktopType = MyXmlConfig::DTYPE_RFB;
+            m_pCtrlDesktopType->Enable(true);
             m_iDesktopTypeDialog = 0;
             m_pCtrlDesktopType->Enable(false);
             m_pCtrlDesktopSettings->Enable(true);
+            if (m_iPseudoDisplayTypeIndex != -1) {
+                m_pCtrlDisplayType->Delete(m_iPseudoDisplayTypeIndex);
+                if (m_iDisplayType >= m_iPseudoDisplayTypeIndex)
+                    m_pCtrlDisplayType->SetSelection(3);
+                m_iPseudoDisplayTypeIndex = -1;
+            }
+            m_pCtrlCupsEnable->Enable(false);
+            m_pCtrlSmbEnable->Enable(false);
+            m_bUseCups = false;
+            m_bEnableSmbSharing = false;
+            m_bEnableUSBIP = false;
+#ifdef SUPPORT_USBIP
+            m_pCtrlUsbEnable->Enable(false);
+#endif
+            break;
+        case MyXmlConfig::STYPE_SHADOW:
+            if (m_iPseudoDesktopTypeIndex != -1) {
+                m_pCtrlDesktopType->Delete(m_iPseudoDesktopTypeIndex);
+                m_iPseudoDesktopTypeIndex = -1;
+            }
+            m_iPseudoDesktopTypeIndex = m_pCtrlDesktopType->Append(_("Any"), (void *)MyXmlConfig::DTYPE_ANY);
+            m_pCtrlDesktopType->SetSelection(m_iPseudoDesktopTypeIndex);
+            m_iDesktopType = MyXmlConfig::DTYPE_ANY;
+            m_iDesktopTypeDialog = 0;
+            m_pCtrlDesktopType->Enable(false);
+            m_pCtrlDesktopSettings->Enable(false);
+            if (m_iPseudoDisplayTypeIndex == -1) {
+                m_iPseudoDisplayTypeIndex = m_pCtrlDisplayType->Append(_("As on server"), (void *)MyXmlConfig::DPTYPE_REMOTE);
+                m_pCtrlDisplayType->SetSelection(m_iPseudoDisplayTypeIndex);
+            }
             m_pCtrlCupsEnable->Enable(false);
             m_pCtrlSmbEnable->Enable(false);
             m_bUseCups = false;
@@ -1201,6 +1258,7 @@ void SessionProperties::OnButtonImgCustomClick( wxCommandEvent& event )
 {
     switch (m_iSessionType) {
         case MyXmlConfig::STYPE_UNIX:
+        case MyXmlConfig::STYPE_SHADOW:
             {
                 UnixImageSettingsDialog d;
                 d.SetConfig(m_pCfg);

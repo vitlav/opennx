@@ -412,7 +412,6 @@ MyXmlConfig::sGetListParams(const long protocolVersion)
 {
     wxUnusedVar(protocolVersion);
     wxString ret = wxT(" --user=\"");
-
     if (m_bGuestMode) {
         if (m_sGuestUser.IsEmpty())
             ret << DEFAULT_GUEST_USER;
@@ -457,11 +456,16 @@ MyXmlConfig::sGetListParams(const long protocolVersion)
         case STYPE_VNC:
             ret << wxT("vnc\"");
             break;
+        case STYPE_SHADOW:
+            ret = wxT(" --type=\"shadow\"");
+            break;
     }
-    int w, h;
-    ::wxDisplaySize(&w, &h);
-    ret << wxT(" --geometry=\"") << w << wxT("x") << h << wxT("x")
-       << ::wxDisplayDepth() << (m_bDisableRender ? wxEmptyString : wxT("+render")) << wxT("\"");
+    if (m_eSessionType != STYPE_SHADOW) {
+        int w, h;
+        ::wxDisplaySize(&w, &h);
+        ret << wxT(" --geometry=\"") << w << wxT("x") << h << wxT("x")
+            << ::wxDisplayDepth() << (m_bDisableRender ? wxEmptyString : wxT("+render")) << wxT("\"");
+    }
     return ret;
 }
 
@@ -559,7 +563,7 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
                             << UrlEsc(m_bRememberPassword ? sGetSessionPassword() : clrpass)
                             << wxT("\"");
                         break;
-                    break;
+                        break;
                 }
                 if (m_bRdpRunApplication)
                     ret << wxT(" --application=\"") << UrlEsc(m_sRdpApplication) << wxT("\"");
@@ -714,15 +718,15 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
 #endif
         << wxT(" --media=\"") << (m_bEnableMultimedia ? 1 : 0) << wxT("\"")
         ;
-        if (m_bEnableMultimedia) {
-            ret << wxT(" --mediahelper=\"esd\"");
-        }
-        // FIXME: Add real settings
-        ret << wxT(" --strict=\"0\"");
+    if (m_bEnableMultimedia) {
+        ret << wxT(" --mediahelper=\"esd\"");
+    }
+    // FIXME: Add real settings
+    ret << wxT(" --strict=\"0\"");
     return ret;
 }
 
-ShareGroup &
+    ShareGroup &
 MyXmlConfig::findShare(const wxString &name)
 {
     size_t cnt = m_aShareGroups.GetCount();
@@ -1036,12 +1040,12 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                         m_bExternalProxy = getBool(opt, wxT("Enable external proxy"), m_bExternalProxy);
                         m_bEnableSSL = getBool(opt, wxT("Enable SSL encryption"), m_bEnableSSL);
                         m_bEnableUSBIP = getBool(opt, wxT("Enable USBIP"), m_bEnableUSBIP);
-// Enable response time optimizations false
+                        // Enable response time optimizations false
                         m_sProxyCommand = getString(opt, wxT("Proxy command"), m_sProxyCommand);
                         m_sProxyHost = getString(opt, wxT("HTTP proxy host"), m_sProxyHost);
                         m_iProxyPort = getLong(opt, wxT("HTTP proxy port"), m_iProxyPort);
-// Restore cache true
-// StreamCompression ""
+                        // Restore cache true
+                        // StreamCompression ""
 
                         opt = opt->GetNext();
                     }
@@ -1065,7 +1069,7 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                     wxXmlNode *opt = cfgnode->GetChildren();
                     while (opt) {
 
-// Automatic reconnect true
+                        // Automatic reconnect true
                         m_sCommandLine = getString(opt, wxT("Command line"), m_sCommandLine);
                         tmp = getString(opt,
                                 wxT("Custom Unix desktop"), wxEmptyString);
@@ -1131,6 +1135,8 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                             m_eDisplayType = DPTYPE_AVAILABLE;
                         if (tmp == wxT("fullscreen"))
                             m_eDisplayType = DPTYPE_FULLSCREEN;
+                        if (tmp == wxT("remote"))
+                            m_eDisplayType = DPTYPE_REMOTE;
 
                         m_iDisplayHeight = getLong(opt, wxT("Resolution height"),
                                 m_iDisplayHeight);
@@ -1156,6 +1162,10 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                             m_eSessionType = STYPE_VNC;
                             m_bValid = true;
                         }
+                        if (tmp.CmpNoCase(wxT("shadow")) == 0) {
+                            m_eSessionType = STYPE_SHADOW;
+                            m_bValid = true;
+                        }
                         // this is 0/1 in NX but getBool can handle that
                         m_bUseCustomImageEncoding = getBool(opt,
                                 wxT("Use default image encoding"), m_bUseCustomImageEncoding);
@@ -1166,11 +1176,11 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                                 m_bVirtualDesktop);
                         m_bDisableXagent = !getBool(opt, wxT("XAgent encoding"),
                                 !m_bDisableXagent);
-// displaySaveOnExit  = true
-// xdm broadcast port = 177
-// xdm mode = "server_decide"
-// xdm query host = "localhost"
-// xdm query port = 177
+                        // displaySaveOnExit  = true
+                        // xdm broadcast port = 177
+                        // xdm mode = "server_decide"
+                        // xdm query host = "localhost"
+                        // xdm query port = 177
 
                         opt = opt->GetNext();
                     }
@@ -1213,8 +1223,8 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                         m_bUseTightJpeg = getBool(opt, wxT("Image JPEG Encoding"),
                                 m_bUseTightJpeg);
                         m_iJpegQuality = getLong(opt, wxT("JPEG Quality"), m_iJpegQuality);
-// RDP optimization for low-bandwidth link = false
-// Reduce colors to = ""
+                        // RDP optimization for low-bandwidth link = false
+                        // Reduce colors to = ""
                         m_bImageEncodingPNG = getBool(opt, wxT("Use PNG Compression"),
                                 m_bImageEncodingPNG);
                         m_iVncImageEncoding = getLong(opt, wxT("Image Encoding Type"),
@@ -1247,7 +1257,7 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                                     m_sGuestPassword);
                             m_sGuestUser = getString(opt, wxT("Guest username"), m_sGuestUser);
                         }
-// Login method = "nx"
+                        // Login method = "nx"
                         tmp = m_sSshKey;
                         m_sSshKey = getString(opt, wxT("Public Key"), m_sSshKey);
                         if (tmp != m_sSshKey) {
@@ -1484,11 +1494,13 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
         } else if (m_pClrPassword) {
             m_sPassword = DUMMY_CLR_PASSWORD;
         }
+        if (STYPE_SHADOW == m_eSessionType)
+            m_eDesktopType = DTYPE_ANY;
     } else {
         m_sUsername = wxEmptyString;
         m_sPassword = wxEmptyString;
     }
-	return m_bValid;
+    return m_bValid;
 }
 
     wxString
@@ -1588,6 +1600,9 @@ MyXmlConfig::SaveToFile()
         optval = wxT("default");
     sAddOption(g, wxT("Custom Unix Desktop"), optval);
     switch (m_eDesktopType) {
+        case DTYPE_ANY:
+            optval = wxT("any");
+            break;
         case DTYPE_RDP:
             optval = wxT("rdp");
             break;
@@ -1652,6 +1667,9 @@ MyXmlConfig::SaveToFile()
         case DPTYPE_FULLSCREEN:
             optval = wxT("fullscreen");
             break;
+        case DPTYPE_REMOTE:
+            optval = wxT("remote");
+            break;
     }
     sAddOption(g, wxT("Resolution"), optval);
     iAddOption(g, wxT("Resolution height"), m_iDisplayHeight);
@@ -1667,6 +1685,9 @@ MyXmlConfig::SaveToFile()
             break;
         case STYPE_VNC:
             optval = wxT("vnc");
+            break;
+        case STYPE_SHADOW:
+            optval = wxT("shadow");
             break;
     }
     sAddOption(g, wxT("Session"), optval);
