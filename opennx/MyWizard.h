@@ -336,6 +336,7 @@ private:
     wxHtmlWindow* m_pText1;
     wxComboBox* m_pCtrlDesktopType;
     wxButton* m_pCtrlDesktopSettings;
+    wxComboBox* m_pCtrlDisplayType;
     wxSpinCtrl* m_pCtrlDisplayWidth;
     wxSpinCtrl* m_pCtrlDisplayHeight;
     int m_iSessionType;
@@ -343,6 +344,9 @@ private:
     int m_iDisplayType;
     int m_iDisplayWidth;
     int m_iDisplayHeight;
+private:
+    int m_iPseudoDesktopTypeIndex;
+    int m_iPseudoDisplayTypeIndex;
 ////@end WizardPageDesktop member variables
     int m_iDesktopType;
     int m_iUnixDesktopType;

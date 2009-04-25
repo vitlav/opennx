@@ -85,8 +85,10 @@ private:
         STATE_LIST_SESSIONS,
         STATE_PARSE_SESSIONS,
         STATE_START_SESSION,
+        STATE_ATTACH_SESSION,
         STATE_RESUME_SESSION,
         STATE_KILL_SESSION,
+        STATE_ABORT,
         STATE_FINISH,
     } tConnectState;
 
@@ -112,13 +114,14 @@ private:
 
     tConnectState m_eConnectState;
     bool m_bGotError;
+    bool m_bAbort;
     bool m_bSslTunneling;
     bool m_bSessionRunning;
     bool m_bEsdRunning;
     bool m_bSessionEstablished;
     bool m_bCollectSessions;
     bool m_bCollectConfig;
-    bool m_Abort;
+    bool m_bIsShadow;
     bool m_bCupsRunning;
     bool m_bRemoveKey;
     int m_iProgress;
@@ -151,6 +154,7 @@ private:
     wxString m_sResumeName;
     wxString m_sResumeType;
     wxString m_sResumeId;
+    wxString m_sResumePort;
     wxString m_sKillId;
     wxString m_sTempDir;
     wxWindow *m_pParent;

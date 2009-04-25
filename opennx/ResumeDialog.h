@@ -100,6 +100,7 @@ public:
     void SetPreferredSession(const wxString &name) { m_sPreferredSession = name; };
     void AddSession(const wxString&, const wxString&, const wxString&, const wxString&,
             const wxString&, const wxString&, const wxString&, const wxString&);
+    void SetAttachMode(bool);
 
 private:
 
@@ -134,6 +135,9 @@ public:
     wxString GetSelectedType() const { return m_sSelectedType ; }
     void SetSelectedType(wxString value) { m_sSelectedType = value ; }
 
+    wxString GetSelectedPort() const { return m_sSelectedPort ; }
+    void SetSelectedPort(wxString value) { m_sSelectedPort = value ; }
+
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
 
@@ -157,6 +161,8 @@ private:
     wxString m_sSelectedId;
     wxString m_sSelectedName;
     wxString m_sSelectedType;
+    wxString m_sSelectedPort;
+    bool m_bShadow;
 ////@end ResumeDialog member variables
 
     wxString m_sPreferredSession;

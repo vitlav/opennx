@@ -444,7 +444,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
         m_iPort = m_pCfg->iGetServerPort();
         m_iSessionType = m_pCfg->eGetSessionType();
         m_iDesktopType = m_pCfg->eGetDesktopType();
-        m_iDesktopTypeDialog = (m_iDesktopType >= 0) ? m_iDesktopType : 0;
+        m_iDesktopTypeDialog = (m_iDesktopType > 0) ? m_iDesktopType : 0;
         m_iUnixDesktopType = m_iDesktopType;
         m_iConnectionSpeed = m_pCfg->eGetConnectionSpeed();
         m_iDisplayType = m_pCfg->eGetDisplayType();
@@ -753,6 +753,7 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
             if (m_iPseudoDesktopTypeIndex != -1) {
                 m_pCtrlDesktopType->Delete(m_iPseudoDesktopTypeIndex);
                 m_iPseudoDesktopTypeIndex = -1;
+                m_iDesktopTypeDialog = 0;
             }
             m_pCtrlDesktopType->SetSelection(m_iDesktopTypeDialog);
             m_pCtrlDesktopType->Enable(true);
@@ -777,7 +778,7 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
             m_iPseudoDesktopTypeIndex = m_pCtrlDesktopType->Append(_("RDP"), (void *)MyXmlConfig::DTYPE_RDP);
             m_pCtrlDesktopType->SetSelection(m_iPseudoDesktopTypeIndex);
             m_iDesktopType = MyXmlConfig::DTYPE_RDP;
-            m_iDesktopTypeDialog = 0;
+            m_iDesktopTypeDialog = getValues ? 0 : m_iPseudoDesktopTypeIndex;
             m_pCtrlDesktopType->Enable(false);
             m_pCtrlDesktopSettings->Enable(true);
             if (m_iPseudoDisplayTypeIndex != -1) {
@@ -805,7 +806,7 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
             m_pCtrlDesktopType->SetSelection(m_iPseudoDesktopTypeIndex);
             m_iDesktopType = MyXmlConfig::DTYPE_RFB;
             m_pCtrlDesktopType->Enable(true);
-            m_iDesktopTypeDialog = 0;
+            m_iDesktopTypeDialog = getValues ? 0 : m_iPseudoDesktopTypeIndex;
             m_pCtrlDesktopType->Enable(false);
             m_pCtrlDesktopSettings->Enable(true);
             if (m_iPseudoDisplayTypeIndex != -1) {
@@ -831,7 +832,7 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
             m_iPseudoDesktopTypeIndex = m_pCtrlDesktopType->Append(_("Any"), (void *)MyXmlConfig::DTYPE_ANY);
             m_pCtrlDesktopType->SetSelection(m_iPseudoDesktopTypeIndex);
             m_iDesktopType = MyXmlConfig::DTYPE_ANY;
-            m_iDesktopTypeDialog = 0;
+            m_iDesktopTypeDialog = getValues ? 0 : m_iPseudoDesktopTypeIndex;
             m_pCtrlDesktopType->Enable(false);
             m_pCtrlDesktopSettings->Enable(false);
             if (m_iPseudoDisplayTypeIndex == -1) {

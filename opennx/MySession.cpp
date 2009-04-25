@@ -811,11 +811,26 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     m_eConnectState = STATE_PARSE_SESSIONS;
                     break;
                 case STATE_PARSE_SESSIONS:
+                    if (m_bIsShadow) {
+                        // Server has sent list of attachable sessions
+                        m_bCollectSessions = false;
+                        ::wxLogInfo(wxT("received end of attachable session list"));
+                        parseSessions(false);
+                        break;
+                    }
                     printSsh(wxEmptyString);
                     break;
                 case STATE_START_SESSION:
                     scmd = wxT("startsession ");
                     scmd << m_pCfg->sGetSessionParams(intver(NX_PROTO), true, m_sClearPassword);
+                    printSsh(scmd);
+                    m_eConnectState = STATE_FINISH;
+                    break;
+                case STATE_ATTACH_SESSION:
+                    scmd = wxT("attachsession ");
+                    scmd << m_pCfg->sGetSessionParams(intver(NX_PROTO), true, m_sClearPassword)
+                        << wxT(" --display=\"") << m_sResumePort
+                        << wxT("\" --id=\"") << m_sResumeId << wxT("\"");
                     printSsh(scmd);
                     m_eConnectState = STATE_FINISH;
                     break;
@@ -893,19 +908,23 @@ MySession::OnSshEvent(wxCommandEvent &event)
             m_sSmbPort = msg;
             break;
         case MyIPC::ActionExit:
-            if (m_eConnectState == STATE_FINISH) {
-                m_pDlg->SetStatusText(_("Starting session"));
-                msg = wxT("NX> 299 Switch connection to: ");
-                if (intver(NX_PROTO) > 0x00020000) {
-                    msg << wxT("NX mode: encrypted options: nx,options=")
-                        << formatOptFilename() << wxT(":") << m_sSessionDisplay;
+            if (m_eConnectState == STATE_ABORT)
+                m_bAbort = true;
+            else {
+                if (m_eConnectState == STATE_FINISH) {
+                    m_pDlg->SetStatusText(_("Starting session"));
+                    msg = wxT("NX> 299 Switch connection to: ");
+                    if (intver(NX_PROTO) > 0x00020000) {
+                        msg << wxT("NX mode: encrypted options: nx,options=")
+                            << formatOptFilename() << wxT(":") << m_sSessionDisplay;
+                    } else {
+                        msg << m_sProxyIP << wxT(":") << m_sProxyPort
+                            << wxT(" cookie: ") << m_sProxyCookie;
+                    }
+                    printSsh(msg);
                 } else {
-                    msg << m_sProxyIP << wxT(":") << m_sProxyPort
-                        << wxT(" cookie: ") << m_sProxyCookie;
+                    m_bSessionRunning = true;
                 }
-                printSsh(msg);
-            } else {
-                m_bSessionRunning = true;
             }
             break;
         case MyIPC::ActionTerminated:
@@ -946,7 +965,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
     }
 }
 
-long
+    long
 MySession::intver(const wxString &ver)
 {
     long ret = 0;
@@ -973,15 +992,23 @@ MySession::printSsh(const wxString &s, bool doLog /* = true */)
 MySession::parseSessions(bool moreAllowed)
 {
     size_t n = m_aParseBuffer.GetCount();
+    ::wxLogTrace(MYTRACETAG, wxT("parseSessions: Got %d lines to parse"), n);
     wxRegEx re(
             wxT("^(\\d+)\\s+([a-z-]+)\\s+([0-9A-F]{32})\\s+([A-Z-]{8})\\s+(\\d+)\\s+(\\d+x\\d+)\\s+(\\w+)\\s+(\\w+)\\s*"),
             wxRE_ADVANCED);
     wxASSERT(re.IsValid());
+    wxRegEx re2(
+            wxT("^(\\d+)\\s+([\\w-]+)\\s+([0-9A-F]{32})\\s+([A-Z-]{8})\\s+(N/A)\\s+(N/A)\\s+(\\w+)\\s+(\\w+\\s\\w+)\\s*"),
+            wxRE_ADVANCED);
+    wxASSERT(re2.IsValid());
     ResumeDialog d(NULL);
     bool bFound = false;
     int iSessionCount = 0;
     wxString sName;
-    d.SetPreferredSession(m_pCfg->sGetName());
+    if (m_pCfg->eGetSessionType() == MyXmlConfig::STYPE_SHADOW)
+        d.SetAttachMode(true);
+    else
+        d.SetPreferredSession(m_pCfg->sGetName());
     for (size_t i = 0; i < n; i++) {
         wxString line = m_aParseBuffer[i];
         if (re.Matches(line) && (re.GetMatchCount() == 9)) {
@@ -996,11 +1023,32 @@ MySession::parseSessions(bool moreAllowed)
             d.AddSession(sName, sState, sType, sSize, sColors, sPort, sOpts, sId);
             bFound = true;
             iSessionCount++;
+            ::wxLogTrace(MYTRACETAG, wxT("parseSessions: re match"));
+            continue;
         }
+        if (m_bIsShadow) {
+            ::wxLogTrace(MYTRACETAG, wxT("parseSessions: re2 probe"));
+            if (re2.Matches(line) /* && (re2.GetMatchCount() == 9)*/) {
+                ::wxLogTrace(MYTRACETAG, wxT("parseSessions: re2 match: %d"), re2.GetMatchCount());
+                wxString sPort(re2.GetMatch(line, 1));
+                wxString sType(re2.GetMatch(line, 2));
+                wxString sId(re2.GetMatch(line, 3));
+                wxString sOpts(re2.GetMatch(line, 4));
+                wxString sColors(re2.GetMatch(line, 5));
+                wxString sSize(re2.GetMatch(line, 6));
+                wxString sState(re2.GetMatch(line, 7));
+                sName = re2.GetMatch(line, 8);
+                d.AddSession(sName, sState, sType, sSize, sColors, sPort, sOpts, sId);
+                bFound = true;
+                iSessionCount++;
+                continue;
+            }
+        }
+        ::wxLogTrace(MYTRACETAG, wxT("parseSessions: NO match on '%s'"), line.c_str());
     }
     if (bFound) {
         d.EnableNew(moreAllowed);
-        if ((iSessionCount > 1) || (!sName.IsSameAs(m_pCfg->sGetName()))) {
+        if (m_bIsShadow || (iSessionCount > 1) || (!sName.IsSameAs(m_pCfg->sGetName()))) {
             switch (d.ShowModal()) {
                 case wxID_OK:
                     switch (d.GetMode()) {
@@ -1014,7 +1062,10 @@ MySession::parseSessions(bool moreAllowed)
                             m_sResumeName = d.GetSelectedName();
                             m_sResumeType = d.GetSelectedType();
                             m_sResumeId = d.GetSelectedId();
-                            m_eConnectState = STATE_RESUME_SESSION;
+                            m_sResumePort = d.GetSelectedPort();
+                            m_eConnectState = m_bIsShadow ? STATE_ATTACH_SESSION : STATE_RESUME_SESSION;
+                            if (m_bIsShadow)
+                                printSsh(wxEmptyString);
                             break;
                         case ResumeDialog::Takeover:
                             wxLogInfo(wxT("TAKEOVER"));
@@ -1030,6 +1081,8 @@ MySession::parseSessions(bool moreAllowed)
                     break;
                 case wxID_CANCEL:
                     printSsh(wxT("bye"));
+                    if (m_bIsShadow)
+                        m_eConnectState = STATE_ABORT;
                     break;
             }
         } else {
@@ -1040,15 +1093,24 @@ MySession::parseSessions(bool moreAllowed)
             m_eConnectState = STATE_RESUME_SESSION;
         }
     } else {
-        if (moreAllowed)
-            m_eConnectState = STATE_START_SESSION;
-        else {
+        if (m_bIsShadow) {
             printSsh(wxT("bye"));
             wxMessageDialog d(m_pParent,
-                    _("You have reached your session limit. No more sessions allowed"),
+                    _("There are no sessions which can be attached to."),
                     _("Error - OpenNX"), wxOK);
             d.ShowModal();
             m_bGotError = true;
+        } else {
+            if (moreAllowed)
+                m_eConnectState = STATE_START_SESSION;
+            else {
+                printSsh(wxT("bye"));
+                wxMessageDialog d(m_pParent,
+                        _("You have reached your session limit. No more sessions allowed"),
+                        _("Error - OpenNX"), wxOK);
+                d.ShowModal();
+                m_bGotError = true;
+            }
         }
     }
 }
@@ -1523,9 +1585,11 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
     m_bCupsRunning = false;
     m_bEsdRunning = false;
     m_lEsdPort = 0;
+    m_bAbort = false;
     m_bSessionEstablished = false;
     m_bCollectSessions = false;
     m_bCollectConfig = false;
+    m_bIsShadow = false;
     m_sSessionID = wxEmptyString;
     m_pParent = parent;
     MyXmlConfig cfg(cfgpar.sGetFileName());
@@ -1585,6 +1649,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
         m_pSshLog = new wxLogStream(log);
         wxLog::SetLogLevel(wxLOG_Max);
 
+        m_bIsShadow = (m_pCfg->eGetSessionType() == MyXmlConfig::STYPE_SHADOW);
         if (m_pCfg->bGetRemoveOldSessionFiles())
             cleanupOldSessions();
 
@@ -1719,12 +1784,12 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
             if (nxssh.SshProcess(nxsshcmd, fn.GetShortPath(), this)) {
                 m_bGotError = false;
                 m_eConnectState = STATE_HELLO;
-                while (!(dlg.bGetAbort() || m_bGotError ||
+                while (!(dlg.bGetAbort() || m_bGotError || m_bAbort ||
                             (m_bSessionRunning && m_bSessionEstablished))) {
                     wxLog::FlushActive();
                     ::wxGetApp().Yield(true);
                 }
-                if (dlg.bGetAbort() || m_bGotError) {
+                if (dlg.bGetAbort() || m_bGotError || m_bAbort) {
                     if (m_bRemoveKey) {
                         while (m_sOffendingKey.IsEmpty()) {
                             wxLog::FlushActive();

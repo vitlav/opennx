@@ -120,6 +120,7 @@ void ResumeDialog::Init()
 ////@begin ResumeDialog member initialisation
     m_lActiveSession = -1;
     m_eMode = New;
+    m_bShadow = false;
     m_pCtrlSessions = NULL;
     m_pCtrlTerminate = NULL;
     m_pCtrlTakeover = NULL;
@@ -166,7 +167,10 @@ ResumeDialog::AddSession(const wxString& name, const wxString& state, const wxSt
     long idx = m_pCtrlSessions->InsertItem(0, name, 0);
     m_pCtrlSessions->SetItem(idx, 1, state);
     m_pCtrlSessions->SetItem(idx, 2, type);
-    m_pCtrlSessions->SetItem(idx, 3, size + wxT("x") + colors);
+    if (size.IsSameAs(wxT("N/A")) && colors.IsSameAs(wxT("N/A")))
+        m_pCtrlSessions->SetItem(idx, 3, colors);
+    else
+        m_pCtrlSessions->SetItem(idx, 3, size + wxT("x") + colors);
     m_pCtrlSessions->SetItem(idx, 4, port);
     m_pCtrlSessions->SetItem(idx, 5, opts);
     m_pCtrlSessions->SetItem(idx, 6, id);
@@ -196,6 +200,13 @@ ResumeDialog::EnableNew(bool b)
     m_pCtrlNew->Enable(b);
 }
 
+    void
+ResumeDialog::SetAttachMode(bool b)
+{
+    m_bShadow = b;
+    m_pCtrlResume->SetLabel(b ? _("Attach") : _("Resume"));
+}
+
 /*!
  * wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRL_SESSIONS
  */
@@ -207,14 +218,26 @@ void ResumeDialog::OnListctrlSessionsSelected( wxListEvent& event )
     info.m_itemId = m_lActiveSession;
     info.m_col = 1;
     m_pCtrlSessions->GetItem(info);
-    if (info.m_text == wxT("Suspended")) {
-        m_pCtrlResume->Enable(true);
-        m_pCtrlTakeover->Enable(false);
-        m_pCtrlTerminate->Enable(true);
+    if (m_bShadow) {
+        if (info.m_text == wxT("Suspended")) {
+            m_pCtrlResume->Enable(false);
+            m_pCtrlTakeover->Enable(false);
+            m_pCtrlTerminate->Enable(true);
+        } else {
+            m_pCtrlResume->Enable(true);
+            m_pCtrlTakeover->Enable(false);
+            m_pCtrlTerminate->Enable(false);
+        }
     } else {
-        m_pCtrlResume->Enable(false);
-        m_pCtrlTakeover->Enable(true);
-        m_pCtrlTerminate->Enable(false);
+        if (info.m_text == wxT("Suspended")) {
+            m_pCtrlResume->Enable(true);
+            m_pCtrlTakeover->Enable(false);
+            m_pCtrlTerminate->Enable(true);
+        } else {
+            m_pCtrlResume->Enable(false);
+            m_pCtrlTakeover->Enable(true);
+            m_pCtrlTerminate->Enable(false);
+        }
     }
     info.m_col = 0;
     m_pCtrlSessions->GetItem(info);
@@ -222,6 +245,9 @@ void ResumeDialog::OnListctrlSessionsSelected( wxListEvent& event )
     info.m_col = 2;
     m_pCtrlSessions->GetItem(info);
     m_sSelectedType = info.m_text;
+    info.m_col = 4;
+    m_pCtrlSessions->GetItem(info);
+    m_sSelectedPort = info.m_text;
     info.m_col = 6;
     m_pCtrlSessions->GetItem(info);
     m_sSelectedId = info.m_text;

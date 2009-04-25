@@ -412,6 +412,10 @@ MyXmlConfig::sGetListParams(const long protocolVersion)
 {
     wxUnusedVar(protocolVersion);
     wxString ret = wxT(" --user=\"");
+    if (m_eSessionType == STYPE_SHADOW) {
+        ret = wxT(" --type=\"shadow\"");
+        return ret;
+    }
     if (m_bGuestMode) {
         if (m_sGuestUser.IsEmpty())
             ret << DEFAULT_GUEST_USER;
@@ -456,16 +460,11 @@ MyXmlConfig::sGetListParams(const long protocolVersion)
         case STYPE_VNC:
             ret << wxT("vnc\"");
             break;
-        case STYPE_SHADOW:
-            ret = wxT(" --type=\"shadow\"");
-            break;
     }
-    if (m_eSessionType != STYPE_SHADOW) {
-        int w, h;
-        ::wxDisplaySize(&w, &h);
-        ret << wxT(" --geometry=\"") << w << wxT("x") << h << wxT("x")
-            << ::wxDisplayDepth() << (m_bDisableRender ? wxEmptyString : wxT("+render")) << wxT("\"");
-    }
+    int w, h;
+    ::wxDisplaySize(&w, &h);
+    ret << wxT(" --geometry=\"") << w << wxT("x") << h << wxT("x")
+        << ::wxDisplayDepth() << (m_bDisableRender ? wxEmptyString : wxT("+render")) << wxT("\"");
     return ret;
 }
 
@@ -500,11 +499,16 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
     wxUnusedVar(protocolVersion);
     wxString ret = wxEmptyString;
     bool bNeedGeometry = bNew;
+    int w, h;
 
+    ::wxDisplaySize(&w, &h);
     if (bNew) {
         ret << wxString::Format(wxT(" --session=\"%s\""), m_sName.c_str());
         ret << wxT(" --type=\"");
         switch (m_eSessionType) {
+            case STYPE_SHADOW:
+                ret << wxT("shadow\"");
+                break;
             case STYPE_UNIX:
                 ret << wxT("unix-");
                 switch (m_eDesktopType) {
@@ -684,12 +688,15 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
             case DPTYPE_CUSTOM:
                 ret << wxString::Format(wxT("%dx%d\""), m_iDisplayWidth, m_iDisplayHeight);
                 break;
+            case DPTYPE_REMOTE:
+                ret << wxString::Format(wxT("%dx%d\""), w, h);
+                break;
         }
     }
-    int w, h;
-    ::wxDisplaySize(&w, &h);
-    ret << wxT(" --screeninfo=\"") << w << wxT("x") << h << wxT("x")
-        << ::wxDisplayDepth() << (m_bDisableRender ? wxEmptyString : wxT("+render")) << wxT("\"");
+    if (m_eSessionType != STYPE_SHADOW) {
+        ret << wxT(" --screeninfo=\"") << w << wxT("x") << h << wxT("x")
+            << ::wxDisplayDepth() << (m_bDisableRender ? wxEmptyString : wxT("+render")) << wxT("\"");
+    }
 
     wxString kbdLocal = wxString(wxConvLocal.cMB2WX(x11_keyboard_type)).BeforeFirst(wxT(','));
     ret << wxT(" --keyboard=\"");

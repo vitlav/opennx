@@ -554,6 +554,8 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
                         // session restore successful
                     case 719:
                         // SMB/CUPS running
+                    case 725:
+                        // Shadow: Geometry 1024x768x24
                     case 900:
                         // Terminating session
                     case 1000:
