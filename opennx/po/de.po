@@ -222,7 +222,8 @@ msgstr "Fehler - OpenNX"
 
 #: MySession.cpp:1109
 msgid "You have reached your session limit. No more sessions allowed"
-msgstr "Sie haben Ihr Sitzungs-Limit erreicht. Keine weiteren Sitzungen erlaubt"
+msgstr ""
+"Sie haben Ihr Sitzungs-Limit erreicht. Keine weiteren Sitzungen erlaubt"
 
 #: MySession.cpp:1337
 #, c-format
@@ -1508,4 +1509,3 @@ msgstr "Lokal"
 #: UsbFilterDetailsDialog_symbols.h:34
 msgid "Forward to remote"
 msgstr "Weiterleitung"
-
