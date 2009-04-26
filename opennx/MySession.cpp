@@ -850,6 +850,11 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     m_eConnectState = STATE_LIST_SESSIONS;
                     break;
                 case STATE_FINISH:
+                    if (m_bGotError) {
+                        m_eConnectState = STATE_ABORT;
+                        printSsh(wxT("bye"));
+                    } else
+                        printSsh(wxEmptyString);
                     break;
             }
             break;
