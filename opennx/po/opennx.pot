@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-04-26 03:19+0200\n"
+"POT-Creation-Date: 2009-04-26 18:35+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -176,93 +176,93 @@ msgstr ""
 msgid "Query server-side sessions"
 msgstr ""
 
-#: MySession.cpp:858
+#: MySession.cpp:863
 msgid "Enter PIN for Smart Card access."
 msgstr ""
 
-#: MySession.cpp:858
+#: MySession.cpp:863
 msgid "Smart Card PIN"
 msgstr ""
 
-#: MySession.cpp:863
+#: MySession.cpp:868
 msgid "Enter passphrase"
 msgstr ""
 
-#: MySession.cpp:865
+#: MySession.cpp:870
 msgid "Empty passphrase"
 msgstr ""
 
-#: MySession.cpp:871 MySession.cpp:875 MySession.cpp:879 MySession.cpp:883
-#: MySession.cpp:887 MySession.cpp:891 MySession.cpp:895 MySession.cpp:899
-#: MySession.cpp:903 MySession.cpp:907
+#: MySession.cpp:876 MySession.cpp:880 MySession.cpp:884 MySession.cpp:888
+#: MySession.cpp:892 MySession.cpp:896 MySession.cpp:900 MySession.cpp:904
+#: MySession.cpp:908 MySession.cpp:912
 msgid "Negotiating session parameter"
 msgstr ""
 
-#: MySession.cpp:915 MySession.cpp:939
+#: MySession.cpp:920 MySession.cpp:944
 msgid "Starting session"
 msgstr ""
 
-#: MySession.cpp:932
+#: MySession.cpp:937
 msgid "Unexpected termination of nxssh"
 msgstr ""
 
-#: MySession.cpp:1099
+#: MySession.cpp:1104
 msgid "There are no sessions which can be attached to."
 msgstr ""
 
-#: MySession.cpp:1100 MySession.cpp:1110
+#: MySession.cpp:1105 MySession.cpp:1115
 msgid "Error - OpenNX"
 msgstr ""
 
-#: MySession.cpp:1109
+#: MySession.cpp:1114
 msgid "You have reached your session limit. No more sessions allowed"
 msgstr ""
 
-#: MySession.cpp:1337
+#: MySession.cpp:1342
 #, c-format
 msgid ""
 "Could not create session directory\n"
 "%s\n"
 msgstr ""
 
-#: MySession.cpp:1357
+#: MySession.cpp:1362
 #, c-format
 msgid ""
 "Could not write session options\n"
 "%s\n"
 msgstr ""
 
-#: MySession.cpp:1676
+#: MySession.cpp:1681
 #, c-format
 msgid "Could not write %s"
 msgstr ""
 
-#: MySession.cpp:1734 MySession.cpp:1765 MySession.cpp:1773
+#: MySession.cpp:1739 MySession.cpp:1770 MySession.cpp:1778
 #, c-format
 msgid "Connecting to %s ..."
 msgstr ""
 
-#: MySession.cpp:1741
+#: MySession.cpp:1746
 msgid "Preparing multimedia service ..."
 msgstr ""
 
-#: MySession.cpp:1751
+#: MySession.cpp:1756
 msgid "Could not query multimedia support"
 msgstr ""
 
-#: MySession.cpp:1763
+#: MySession.cpp:1768
 msgid "Could not start multimedia support"
 msgstr ""
 
-#: MySession.cpp:1771
+#: MySession.cpp:1776
 msgid "Preparing CUPS service ..."
 msgstr ""
 
-#: MySession.cpp:1805
+#: MySession.cpp:1810
 msgid "Called command was: "
 msgstr ""
 
-#: MySession.cpp:1806
+#: MySession.cpp:1811
 msgid "Could not start nxssh."
 msgstr ""
 
