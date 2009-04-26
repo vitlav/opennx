@@ -204,7 +204,7 @@ ResumeDialog::EnableNew(bool b)
 ResumeDialog::SetAttachMode(bool b)
 {
     m_bShadow = b;
-    m_pCtrlResume->SetLabel(b ? _("Attach") : _("Resume"));
+    m_pCtrlResume->SetLabel(b ? _("&Attach") : _("&Resume"));
 }
 
 /*!
