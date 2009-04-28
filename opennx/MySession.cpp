@@ -999,7 +999,7 @@ MySession::parseSessions(bool moreAllowed)
     size_t n = m_aParseBuffer.GetCount();
     ::wxLogTrace(MYTRACETAG, wxT("parseSessions: Got %d lines to parse"), n);
     wxRegEx re(
-            wxT("^(\\d+)\\s+([a-z-]+)\\s+([0-9A-F]{32})\\s+([A-Z-]{8})\\s+(\\d+)\\s+(\\d+x\\d+)\\s+(\\w+)\\s+(\\w+)\\s*"),
+            wxT("^(\\d+)\\s+([\\w-]+)\\s+([0-9A-F]{32})\\s+([A-Z-]{8})\\s+(\\d+)\\s+(\\d+x\\d+)\\s+(\\w+)\\s+(\\w+)\\s*"),
             wxRE_ADVANCED);
     wxASSERT(re.IsValid());
     wxRegEx re2(

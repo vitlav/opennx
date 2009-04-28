@@ -556,6 +556,13 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
                         // SMB/CUPS running
                     case 725:
                         // Shadow: Geometry 1024x768x24
+                        break;
+                    case 726:
+                        // Asking user for authorization to attach to session
+                        upevent.SetString(msg.Mid(8));
+                        upevent.SetInt(ActionStatus);
+                        m_pEvtHandler->AddPendingEvent(upevent);
+                        break;
                     case 900:
                         // Terminating session
                     case 1000:
