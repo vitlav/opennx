@@ -53,6 +53,7 @@
 #include <wx/stdpaths.h>
 #include <wx/apptrait.h>
 #include <wx/socket.h>
+#include <wx/regex.h>
 
 #include "opennxApp.h"
 #include "SessionAdmin.h"
@@ -665,7 +666,8 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
     // tags will be appended to the last switch/option
     wxString tags;
     allTraceTags.Sort();
-    for (int i = 0; i < allTraceTags.GetCount(); i++) {
+    int i;
+    for (i = 0; i < allTraceTags.GetCount(); i++) {
         if (!tags.IsEmpty())
             tags += wxT(" ");
         tags += allTraceTags.Item(i);
@@ -694,6 +696,28 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
             _("Specify wxWidgets trace mask."));
     parser.AddSwitch(wxEmptyString, wxT("wizard"),
             _("Guide the user through the steps to configure a session.") + tags);
+    // Workaround for commandline compatibility:
+    // Despite of the doc (specifying space, colon and '='),
+    // wxCmdLineParser insists on having a '=' as separator
+    // between option and option-value. The original however
+    // *requires* the separator to be a space instead.
+    wxRegEx re(wxT("^--((caption)|(style)|(dialog)|(message)|(session)|(window)|(trace))$"));
+    wxArrayString as(argc, (const wxChar **)argv);
+    fprintf(stderr, "argc=%d\n", as.GetCount());
+    for (i = 1; i < as.GetCount(); i++) {
+        if (re.Matches(as[i])) {
+            if (i+1 < as.GetCount()) {
+                as[i].Append(wxT("=")).Append(as[i+1]);
+                as.RemoveAt(i+1);
+            }
+        }
+    }
+    wxChar **xargv = new wxChar* [as.GetCount()];
+    fprintf(stderr, "argc=%d\n", as.GetCount());
+    for (i = 0; i < as.GetCount(); i++)
+        xargv[i] = wxStrdup(as[i].c_str());
+    parser.SetCmdLine(as.GetCount(), xargv);
+
 }
 
 static const wxChar *_dlgTypes[] = {
