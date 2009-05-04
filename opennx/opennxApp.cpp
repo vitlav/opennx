@@ -703,7 +703,6 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
     // *requires* the separator to be a space instead.
     wxRegEx re(wxT("^--((caption)|(style)|(dialog)|(message)|(session)|(window)|(trace))$"));
     wxArrayString as(argc, (const wxChar **)argv);
-    fprintf(stderr, "argc=%d\n", as.GetCount());
     for (i = 1; i < as.GetCount(); i++) {
         if (re.Matches(as[i])) {
             if (i+1 < as.GetCount()) {
@@ -713,7 +712,6 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
         }
     }
     wxChar **xargv = new wxChar* [as.GetCount()];
-    fprintf(stderr, "argc=%d\n", as.GetCount());
     for (i = 0; i < as.GetCount(); i++)
         xargv[i] = wxStrdup(as[i].c_str());
     parser.SetCmdLine(as.GetCount(), xargv);
