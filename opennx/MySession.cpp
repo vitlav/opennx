@@ -821,13 +821,13 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     printSsh(wxEmptyString);
                     break;
                 case STATE_START_SESSION:
-                    scmd = wxT("startsession ");
+                    scmd = wxT("startsession");
                     scmd << m_pCfg->sGetSessionParams(intver(NX_PROTO), true, m_sClearPassword);
                     printSsh(scmd);
                     m_eConnectState = STATE_FINISH;
                     break;
                 case STATE_ATTACH_SESSION:
-                    scmd = wxT("attachsession ");
+                    scmd = wxT("attachsession");
                     scmd << m_pCfg->sGetSessionParams(intver(NX_PROTO), true, m_sClearPassword)
                         << wxT(" --display=\"") << m_sResumePort
                         << wxT("\" --id=\"") << m_sResumeId << wxT("\"");
@@ -835,7 +835,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     m_eConnectState = STATE_FINISH;
                     break;
                 case STATE_RESUME_SESSION:
-                    scmd = wxT("restoresession ");
+                    scmd = wxT("restoresession");
                     scmd << m_pCfg->sGetSessionParams(intver(NX_PROTO), false, m_sClearPassword)
                         << wxT(" --session=\"") << m_sResumeName
                         << wxT("\" --type=\"") << m_sResumeType
@@ -853,8 +853,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     if (m_bGotError) {
                         m_eConnectState = STATE_ABORT;
                         printSsh(wxT("bye"));
-                    } else
-                        printSsh(wxEmptyString);
+                    }
                     break;
             }
             break;
