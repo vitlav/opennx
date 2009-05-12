@@ -701,7 +701,7 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
     // wxCmdLineParser insists on having a '=' as separator
     // between option and option-value. The original however
     // *requires* the separator to be a space instead.
-    wxRegEx re(wxT("^--((caption)|(style)|(dialog)|(message)|(session)|(window)|(trace))$"));
+    wxRegEx re(wxT("^--((caption)|(style)|(dialog)|(message)|(parent)|(session)|(window)|(trace))$"));
     wxArrayString as(argc, (const wxChar **)argv);
     for (i = 1; i < as.GetCount(); i++) {
         if (re.Matches(as[i])) {
