@@ -100,7 +100,11 @@ BuildRequires: libsmbclient-devel
 %if %{is_suse}
 BuildRequires: wxGTK-devel >= 2.8.0
 %else
+%if %{is_fc} > 10
+BuildRequires: wxGTK-devel >= 2.8.0
+%else
 BuildRequires: wxGTK2-devel >= 2.8.0
+%endif
 BuildRequires: samba-common
 BuildRequires: libXmu-devel
 %endif
@@ -158,6 +162,7 @@ done
 # Apply openssh askPIN patch (see https://bugzilla.mindrot.org/show_bug.cgi?id=608)
 cd nxssh && patch -p1 < ../patches/openssh-scard-pin.patch
 cd ..
+patch -p0 < patches/nxcomp-gcc44.patch
 
 # Workaround for obsolete include in nxcompsh
 (

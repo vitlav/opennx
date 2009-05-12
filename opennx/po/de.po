@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-04-26 18:35+0200\n"
+"POT-Creation-Date: 2009-05-12 17:49+0200\n"
 "PO-Revision-Date: 2009-04-26 03:20+0200\n"
 "Last-Translator: Fritz Elfert <felfert@users.sf.net>\n"
 "Language-Team:  <de@li.org>\n"
@@ -182,50 +182,50 @@ msgstr "Authentisierung erfolgreich"
 msgid "Query server-side sessions"
 msgstr "Abfrage der Sitzungsliste"
 
-#: MySession.cpp:863
+#: MySession.cpp:862
 msgid "Enter PIN for Smart Card access."
 msgstr "Bitte PIN für SmartCard-Zugriff eingeben."
 
-#: MySession.cpp:863
+#: MySession.cpp:862
 msgid "Smart Card PIN"
 msgstr "Smart Card PIN"
 
-#: MySession.cpp:868
+#: MySession.cpp:867
 msgid "Enter passphrase"
 msgstr "Passphrase eingeben"
 
-#: MySession.cpp:870
+#: MySession.cpp:869
 msgid "Empty passphrase"
 msgstr "Leere Passphrase"
 
-#: MySession.cpp:876 MySession.cpp:880 MySession.cpp:884 MySession.cpp:888
-#: MySession.cpp:892 MySession.cpp:896 MySession.cpp:900 MySession.cpp:904
-#: MySession.cpp:908 MySession.cpp:912
+#: MySession.cpp:875 MySession.cpp:879 MySession.cpp:883 MySession.cpp:887
+#: MySession.cpp:891 MySession.cpp:895 MySession.cpp:899 MySession.cpp:903
+#: MySession.cpp:907 MySession.cpp:911
 msgid "Negotiating session parameter"
 msgstr "Aushandlung der Sitzungsparameter"
 
-#: MySession.cpp:920 MySession.cpp:944
+#: MySession.cpp:919 MySession.cpp:943
 msgid "Starting session"
 msgstr "Starte Sitzung"
 
-#: MySession.cpp:937
+#: MySession.cpp:936
 msgid "Unexpected termination of nxssh"
 msgstr "Unerwartetes Ende von nxssh"
 
-#: MySession.cpp:1104
+#: MySession.cpp:1103
 msgid "There are no sessions which can be attached to."
 msgstr "Keine geeigneten Sitzungen vorhanden."
 
-#: MySession.cpp:1105 MySession.cpp:1115
+#: MySession.cpp:1104 MySession.cpp:1114
 msgid "Error - OpenNX"
 msgstr "Fehler - OpenNX"
 
-#: MySession.cpp:1114
+#: MySession.cpp:1113
 msgid "You have reached your session limit. No more sessions allowed"
 msgstr ""
 "Sie haben Ihr Sitzungs-Limit erreicht. Keine weiteren Sitzungen erlaubt"
 
-#: MySession.cpp:1342
+#: MySession.cpp:1341
 #, c-format
 msgid ""
 "Could not create session directory\n"
@@ -234,7 +234,7 @@ msgstr ""
 "Konnte Sitzungsverzeichnis nicht anlegen\n"
 "%s\n"
 
-#: MySession.cpp:1362
+#: MySession.cpp:1361
 #, c-format
 msgid ""
 "Could not write session options\n"
@@ -244,37 +244,37 @@ msgstr ""
 "%s\n"
 "speichern.\n"
 
-#: MySession.cpp:1681
+#: MySession.cpp:1680
 #, c-format
 msgid "Could not write %s"
 msgstr "Konnte %s nicht schreiben"
 
-#: MySession.cpp:1739 MySession.cpp:1770 MySession.cpp:1778
+#: MySession.cpp:1738 MySession.cpp:1769 MySession.cpp:1777
 #, c-format
 msgid "Connecting to %s ..."
 msgstr "Verbinde mit %s ..."
 
-#: MySession.cpp:1746
+#: MySession.cpp:1745
 msgid "Preparing multimedia service ..."
 msgstr "Multimedia Dienst vorbereiten ..."
 
-#: MySession.cpp:1756
+#: MySession.cpp:1755
 msgid "Could not query multimedia support"
 msgstr "Konnte Multimedia Unterstützung nicht ermitteln"
 
-#: MySession.cpp:1768
+#: MySession.cpp:1767
 msgid "Could not start multimedia support"
 msgstr "Konnte Multimedia Unterstützung nicht starten"
 
-#: MySession.cpp:1776
+#: MySession.cpp:1775
 msgid "Preparing CUPS service ..."
 msgstr "CUPS Dienst vorbereiten ..."
 
-#: MySession.cpp:1810
+#: MySession.cpp:1809
 msgid "Called command was: "
 msgstr "Aufgerufenes Kommando war:"
 
-#: MySession.cpp:1811
+#: MySession.cpp:1810
 msgid "Could not start nxssh."
 msgstr "Konnte nxssh nicht starten."
 
@@ -1344,30 +1344,30 @@ msgstr "Deaktiviere X-Agent-Kodierung"
 msgid "Disable taint of X replies"
 msgstr "Deaktiviere X-Packetmodifikation"
 
-#: opennxApp.cpp:225
+#: opennxApp.cpp:226
 msgid "Launch NX Session"
 msgstr "Starte NX Sitzung"
 
-#: opennxApp.cpp:443
+#: opennxApp.cpp:444
 msgid "Could not get PATH environment"
 msgstr "Konnte PATH nicht in der Umgebung ermitteln"
 
-#: opennxApp.cpp:458
+#: opennxApp.cpp:459
 #, c-format
 msgid "Could not find %s in PATH"
 msgstr "Konnte %s nicht im PATH finden"
 
-#: opennxApp.cpp:468
+#: opennxApp.cpp:469
 #, c-format
 msgid "Could not stat %s"
 msgstr "Konnte Attribute von %s nicht ermitteln"
 
-#: opennxApp.cpp:474
+#: opennxApp.cpp:475
 #, c-format
 msgid "Could not read link %s"
 msgstr "Konnte Verknüpfung %s nicht lesen"
 
-#: opennxApp.cpp:673
+#: opennxApp.cpp:675
 msgid ""
 "\n"
 "\n"
@@ -1377,64 +1377,64 @@ msgstr ""
 "\n"
 "Unterstützte Trace-Tags:"
 
-#: opennxApp.cpp:676
+#: opennxApp.cpp:678
 msgid "Start the session administration tool."
 msgstr "Starte das Sitzungs-Administrations-Werkzeug."
 
-#: opennxApp.cpp:678
+#: opennxApp.cpp:680
 msgid "Secify window title for dialog mode."
 msgstr "Spezifiziere Fenstertitel für Dialog-Modus."
 
-#: opennxApp.cpp:680
+#: opennxApp.cpp:682
 msgid "Secify dialog style for dialog mode."
 msgstr "Spezifiziere Dialog-Stil für Dialog-Modus."
 
-#: opennxApp.cpp:682
+#: opennxApp.cpp:684
 msgid "Run in dialog mode."
 msgstr "Aktiviere Dialog-Modus."
 
-#: opennxApp.cpp:684
+#: opennxApp.cpp:686
 msgid "Dialog mode proxy."
 msgstr "Proxy des Dialog-Modus."
 
-#: opennxApp.cpp:686
+#: opennxApp.cpp:688
 msgid "Specify message for dialog mode."
 msgstr "Spezifiziere Mitteilungstext für Dialog-Modus."
 
-#: opennxApp.cpp:688
+#: opennxApp.cpp:690
 msgid "Specify parent PID for dialog mode."
 msgstr "Spezifiziere Eltern-PID für Dialog-Modus."
 
-#: opennxApp.cpp:690
+#: opennxApp.cpp:692
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr "Starte eine Sitzung mit den Einstellungen aus FILENAME."
 
-#: opennxApp.cpp:692
+#: opennxApp.cpp:694
 msgid "Specify window-ID for dialog mode."
 msgstr "Spezifiziere Window-ID für Dialog-Modus."
 
-#: opennxApp.cpp:694
+#: opennxApp.cpp:696
 msgid "Specify wxWidgets trace mask."
 msgstr "Spezifiziere wxWidgets Trace-Maske."
 
-#: opennxApp.cpp:696
+#: opennxApp.cpp:698
 msgid "Guide the user through the steps to configure a session."
 msgstr "Führe den Benutzer durch die Schritte zu Konfiguration einer Sitzung."
 
-#: opennxApp.cpp:1028
+#: opennxApp.cpp:1050
 msgid "libusb is not available. No USB devices will be exported"
 msgstr "libusb ist nicht verfügbar. USB-Geräte werden nicht exportiert"
 
-#: opennxApp.cpp:1042
+#: opennxApp.cpp:1064
 msgid "USBIP tunnel registration timeout"
 msgstr "Timeout beim Öffnen des USBIP-Kanals"
 
-#: opennxApp.cpp:1044
+#: opennxApp.cpp:1066
 #, c-format
 msgid "Unable to export USB device %s"
 msgstr "Konnte USB-Gerät %s nicht exportieren"
 
-#: opennxApp.cpp:1050
+#: opennxApp.cpp:1072
 msgid "Could not connect to usbipd2. No USB devices will be exported"
 msgstr "Verbindung zu usbipd2 gescheitert. USB-Ggeräte werden nicht exportiert"
 

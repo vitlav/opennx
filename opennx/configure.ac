@@ -76,11 +76,11 @@ else
 	WXPARAMS="$WXPARAMS --unicode=no"
 fi
 
-ac_cv_enable_staticwx=YES
+ac_cv_enable_staticwx=NO
 AC_ARG_ENABLE([staticwx],
 	AS_HELP_STRING([--enable-staticwx],
-		[Link against static wxWidgets libs (Default: YES)]),
-	[ test "$enableval" = "no" && ac_cv_enable_staticwx=NO ]
+		[Link against static wxWidgets libs (Default: NO)]),
+	[ test "$enableval" = "yes" && ac_cv_enable_staticwx=YES ]
 )
 if test "$ac_cv_enable_staticwx" = "YES" ; then
 	AC_MSG_NOTICE([will link against static wxWidgets libs])
