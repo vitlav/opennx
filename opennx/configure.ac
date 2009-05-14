@@ -181,7 +181,16 @@ AC_ARG_WITH([nxproto],
 AC_DEFINE_UNQUOTED(NX_PROTOCOL_VERSION,"${ac_cv_nxproto}",
                    [Set to the NX protocol version])
 
-AC_PATH_XTRA
+dnl Don't check for X11 on mingw, otherwise we
+dnl might get incorrect C/CPP/LD FLAGS in a cross-compile
+dnl environment
+case $target_os in
+    mingw*)
+        ;;
+    *)
+        AC_PATH_XTRA
+        ;;
+esac
 
 ac_cv_samba=
 AC_ARG_WITH([samba],
