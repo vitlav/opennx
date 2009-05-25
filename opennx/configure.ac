@@ -11,8 +11,13 @@ AC_CONFIG_HEADERS([config.h])
 
 case $build_os in
 	mingw*)
-        CPPFLAGS="$CPPFLAGS -I/usr/include"
-        LDFLAGS="$LDFLAGS -L/usr/lib"
+        if test "$build_os" = "$target_os" ; then
+            # On native mingw, the default include/lib paths
+            # are /mingw/include resp. /mingw/lib, however
+            # several contributed stuff is under /usr/...
+            CPPFLAGS="$CPPFLAGS -I/usr/include"
+            LDFLAGS="$LDFLAGS -L/usr/lib"
+        fi
         ;;
 esac
 
@@ -199,6 +204,12 @@ AC_ARG_WITH([samba],
 	[ac_cv_samba=$withval])
 test -n "$ac_cv_samba" && CPPFLAGS="$CPPFLAGS -I$ac_cv_samba/source/include"
 
+ac_cv_dllpath=
+AC_ARG_WITH([dllpath],
+            AS_HELP_STRING([--with-dllpath=PATH],
+                           [Specify path for DLLs (mingw32 crossbuild only)]),
+	[ac_cv_dllpath=$withval])
+
 FE_SVNREV([SVNREV])
 AC_DEFINE_UNQUOTED(SVNREV,"$SVNREV",[SVN revision])
 FE_RCVERSION
@@ -224,7 +235,24 @@ if test "$ac_cv_enable_usbip" = "YES" -a "$ac_cv_header_usb_h" != "yes"; then
     AC_MSG_ERROR([Need usb.h when compiling with usbip support])
 fi
 
+DLLPATH=
+case $target_os in
+	mingw*)
+        if test "$build_os" = "$target_os" ; then
+            DLLPATH="$PATH"
+        else
+            if test -z "$ac_cv_dllpath" ; then
+                AC_MSG_ERROR([Need --with-dllpath option on mingw32 crossbuild])
+            fi
+            DLLPATH="$ac_cv_dllpath"
+        fi
+        ;;
+        *)
+        ;;
+esac
+AC_SUBST(DLLPATH)
+
 dnl AC_DEFINE(wxUSE_LOG_DEBUG,1,[Set to 1 for enabling trace logging])
 
-AC_CONFIG_FILES([Makefile opennx.spec Info.plist res/opennx.rc po/Makefile.in])
+AC_CONFIG_FILES([Makefile opennx.spec Info.plist res/opennx.rc packaging/win32/Makefile packaging/win32/findrequires.pl po/Makefile.in])
 AC_OUTPUT

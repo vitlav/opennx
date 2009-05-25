@@ -1,4 +1,5 @@
 SUBDIRS = po
+DIST_SUBDIRS = po packaging/win32
 
 noinst_PROGRAMS = bin2hdr
 bin2hdr_SOURCES = bin2hdr.cpp
@@ -175,5 +176,9 @@ uninstall-local:
 dist-hook:
 	find $(distdir) -type d -name .svn | xargs $(RM) -r
 
+setup: all
+	$(MAKE) -C packaging/win32 setup
+
 EXTRA_DIST = conf/config.rpath INSTALL INSTALL.generic COPYING share etc/60-opennx.rules \
-			 opennx.pjd opennx.rc opennx.spec patches getnxsrcpkg $(RESDEPS) ChangeLog
+			 opennx.pjd opennx.rc opennx.spec patches getnxsrcpkg $(RESDEPS) ChangeLog \
+			 packaging/win32/findrequires.pl packaging/win32/opennx.iss
