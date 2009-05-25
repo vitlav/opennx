@@ -127,7 +127,9 @@ void LoginDialog::ReadConfigDirectory()
     m_pCtrlSessionName->Clear();
     ::wxLogTrace(MYTRACETAG, wxT("ReadConfigDirectory: LastSession='%s'"), m_sLastSessionFilename.c_str());
     if (m_sLastSessionFilename.StartsWith(wxT("http://")) ||
-            m_sLastSessionFilename.StartsWith(wxT("ftp://")))
+            m_sLastSessionFilename.StartsWith(wxT("ftp://")) ||
+            ((m_aConfigFiles.Index(m_sLastSessionFilename) == wxNOT_FOUND) &&
+             (wxFile::Exists(m_sLastSessionFilename))))
         m_aConfigFiles.Add(m_sLastSessionFilename);
     for (i = 0; i < m_aConfigFiles.GetCount(); i++) {
         MyXmlConfig cfg(m_aConfigFiles[i]);
