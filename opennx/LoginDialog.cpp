@@ -40,6 +40,7 @@
 
 #include <wx/config.h>
 #include <wx/dir.h>
+#include <wx/file.h>
 #include <wx/xml/xml.h>
 
 ////@begin includes
