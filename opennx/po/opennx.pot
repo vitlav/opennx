@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opennx 0.15\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-05-12 17:49+0200\n"
+"POT-Creation-Date: 2009-06-19 14:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -98,14 +98,14 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: LoginDialog.cpp:330 LoginDialog.cpp:412
+#: LoginDialog.cpp:333 LoginDialog.cpp:415
 #, c-format
 msgid ""
 "Could not save session to\n"
 "%s"
 msgstr ""
 
-#: LoginDialog.cpp:331 LoginDialog.cpp:413
+#: LoginDialog.cpp:334 LoginDialog.cpp:416
 msgid "Error saving - OpenNX"
 msgstr ""
 
@@ -718,11 +718,15 @@ msgstr ""
 msgid "Select System CUPS daemon"
 msgstr ""
 
-#: SessionProperties.cpp:1987
+#: SessionProperties.cpp:1986 opennxApp.cpp:1050
+msgid "libusb is not available. No USB devices will be exported"
+msgstr ""
+
+#: SessionProperties.cpp:1991
 msgid "No USB devices available."
 msgstr ""
 
-#: SessionProperties.cpp:2190
+#: SessionProperties.cpp:2194
 msgid "Select path of USBIPD socket"
 msgstr ""
 
@@ -1370,10 +1374,6 @@ msgstr ""
 
 #: opennxApp.cpp:698
 msgid "Guide the user through the steps to configure a session."
-msgstr ""
-
-#: opennxApp.cpp:1050
-msgid "libusb is not available. No USB devices will be exported"
 msgstr ""
 
 #: opennxApp.cpp:1064

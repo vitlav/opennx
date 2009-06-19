@@ -233,7 +233,8 @@ ln -s %{_bindir}/opennx %{buildroot}/usr/bin/nxclient
 for lname in usb-0 opensc smbclient cups ; do
     LPATH=`/sbin/ldconfig -p|awk '/lib'$lname'[\.-]/ {print $4}'|head -1`
     if test -n "$LPATH" ; then
-        ln -snf $LPATH %{nxlib}/lib$lname.so
+        blname=`echo $lname|sed -e 's/[-0-9]//g'`
+        ln -snf $LPATH %{nxlib}/lib$blname.so
     fi
 done
 
@@ -256,7 +257,8 @@ ln -snf %{_prefix} /usr/NX
 for lname in usb-0 opensc smbclient cups ; do
     LPATH=`/sbin/ldconfig -p|awk '/lib'$lname'[\.-]/ {print $4}'|head -1`
     if test -n "$LPATH" ; then
-        ln -snf $LPATH %{nxlib}/lib$lname.so
+        blname=`echo $lname|sed -e 's/[-0-9]//g'`
+        ln -snf $LPATH %{nxlib}/lib$blname.so
     fi
 done
 

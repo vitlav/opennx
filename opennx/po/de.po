@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-05-12 17:49+0200\n"
+"POT-Creation-Date: 2009-06-19 14:31+0200\n"
 "PO-Revision-Date: 2009-04-26 03:20+0200\n"
 "Last-Translator: Fritz Elfert <felfert@users.sf.net>\n"
 "Language-Team:  <de@li.org>\n"
@@ -99,7 +99,7 @@ msgstr "Sitzungsprotokoll - OpenNX"
 msgid "Close"
 msgstr "Schließen"
 
-#: LoginDialog.cpp:330 LoginDialog.cpp:412
+#: LoginDialog.cpp:333 LoginDialog.cpp:415
 #, c-format
 msgid ""
 "Could not save session to\n"
@@ -109,7 +109,7 @@ msgstr ""
 "%s\n"
 "speichern."
 
-#: LoginDialog.cpp:331 LoginDialog.cpp:413
+#: LoginDialog.cpp:334 LoginDialog.cpp:416
 msgid "Error saving - OpenNX"
 msgstr "Fehler beim Speichern - OpenNX"
 
@@ -748,11 +748,15 @@ msgstr "Kein CUPS-Server verfügbar."
 msgid "Select System CUPS daemon"
 msgstr "Wähle System CUPS-Dämon"
 
-#: SessionProperties.cpp:1987
+#: SessionProperties.cpp:1986 opennxApp.cpp:1050
+msgid "libusb is not available. No USB devices will be exported"
+msgstr "libusb ist nicht verfügbar. USB-Geräte werden nicht exportiert"
+
+#: SessionProperties.cpp:1991
 msgid "No USB devices available."
 msgstr "Keine USB-Geräte verfügbar."
 
-#: SessionProperties.cpp:2190
+#: SessionProperties.cpp:2194
 msgid "Select path of USBIPD socket"
 msgstr "Pfad des USBIPD Sockets"
 
@@ -1420,10 +1424,6 @@ msgstr "Spezifiziere wxWidgets Trace-Maske."
 #: opennxApp.cpp:698
 msgid "Guide the user through the steps to configure a session."
 msgstr "Führe den Benutzer durch die Schritte zu Konfiguration einer Sitzung."
-
-#: opennxApp.cpp:1050
-msgid "libusb is not available. No USB devices will be exported"
-msgstr "libusb ist nicht verfügbar. USB-Geräte werden nicht exportiert"
 
 #: opennxApp.cpp:1064
 msgid "USBIP tunnel registration timeout"
