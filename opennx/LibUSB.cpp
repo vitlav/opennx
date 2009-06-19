@@ -128,7 +128,6 @@ void USB::adddev(MyDynamicLibrary *dll, struct usb_device *dev, unsigned char dc
                     dev->descriptor.iSerialNumber, string, sizeof(string)))
             d.m_sSerial = wxConvUTF8.cMB2WX(string);
     }
-    //wxLogTrace(MYTRACETAG, wxT("busdir='%s'"), dev->bus->dirname);
     wxString tmp(dev->bus->dirname, wxConvUTF8);
     long lval;
     tmp.ToLong(&lval);
@@ -212,5 +211,10 @@ USB::USB() {
 
 ArrayOfUSBDevices USB::GetDevices() {
     return m_aDevices;
+}
+
+bool USB::IsAvailable() {
+    wxLogTrace(MYTRACETAG, wxT("USB::IsAvailable() = %s"), m_bAvailable ? wxT("true") : wxT("false"));
+    return m_bAvailable;
 }
 

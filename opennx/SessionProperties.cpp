@@ -1982,6 +1982,10 @@ void SessionProperties::OnButtonUsbaddClick( wxCommandEvent& event )
 {
 #ifdef SUPPORT_USBIP
     USB u;
+    if (!u.IsAvailable()) {
+        ::wxLogWarning(_("libusb is not available. No USB devices will be exported"));
+        return;
+    }
     ArrayOfUSBDevices a = u.GetDevices();
     if (a.IsEmpty()) {
         ::wxLogWarning(_("No USB devices available."));

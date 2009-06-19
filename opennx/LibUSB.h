@@ -72,7 +72,7 @@ struct usb_device;
 class USB {
     public:
         USB();
-        bool IsAvailable() { return m_bAvailable; }
+        bool IsAvailable();
         ArrayOfUSBDevices GetDevices();
 
     private:
