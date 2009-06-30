@@ -42,6 +42,7 @@ class ShareGroup : public wxObject
 
         bool operator ==(const ShareGroup &);
         bool operator !=(const ShareGroup &);
+        wxString toString();
 
         bool m_bDefault; // CUPS only
         bool m_bPublic; // CUPS only

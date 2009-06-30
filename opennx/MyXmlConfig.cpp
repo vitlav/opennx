@@ -79,6 +79,43 @@ ENABLE_TRACE;
 WX_DEFINE_OBJARRAY(ArrayOfShareGroups);
 WX_DEFINE_OBJARRAY(ArrayOfUsbForwards);
 
+wxString ShareGroup::toString()
+{
+    wxString ret = wxT("Name: '");
+    ret.Append(m_sGroupName);
+    ret.Append(wxT("', Type: "));
+    switch (m_eType) {
+        case SharedResource::SHARE_UNKNOWN:
+            ret.Append(wxT("unknown"));
+            break;
+        case SharedResource::SHARE_SMB_DISK:
+            ret.Append(wxT("SMBdisk, Share: '"));
+            ret.Append(m_sShareName);
+            ret.Append(wxT("', Alias: '"));
+            ret.Append(m_sAlias);
+            ret.Append(wxT("'"));
+            break;
+        case SharedResource::SHARE_SMB_PRINTER:
+            ret.Append(wxT("SMBprinter, Share: '"));
+            ret.Append(m_sShareName);
+            ret.Append(wxT("', Alias: '"));
+            ret.Append(m_sAlias);
+            ret.Append(wxT("'"));
+            break;
+        case SharedResource::SHARE_CUPS_PRINTER:
+            ret.Append(wxT("CUPSprinter, Share: '"));
+            ret.Append(m_sShareName);
+            ret.Append(wxT("', Driver: '"));
+            ret.Append(m_sDriver);
+            ret.Append(wxT("', Public: "));
+            ret.Append(m_bPublic ? wxT("true") : wxT("false"));
+            ret.Append(wxT(", Default: "));
+            ret.Append(m_bDefault ? wxT("true") : wxT("false"));
+            break;
+    }
+    return ret;
+}
+
 bool ShareGroup::operator ==(const ShareGroup &other)
 {
     if (m_eType != other.m_eType) return false;

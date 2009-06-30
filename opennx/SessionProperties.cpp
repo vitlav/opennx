@@ -579,19 +579,19 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
                             case SharedResource::SHARE_UNKNOWN:
                                 break;
                             case SharedResource::SHARE_SMB_DISK:
-                                ::wxLogTrace(MYTRACETAG, wxT("SMB Disk '%s'"), sg[i].m_sShareName.c_str());
+                                ::wxLogTrace(MYTRACETAG, wxT("%s"), sg[i].toString().c_str());
                                 lidx = m_pCtrlSmbShares->InsertItem(0, sg[i].m_sShareName, 1);
                                 m_pCtrlSmbShares->SetItem(lidx, 1, sg[i].m_sAlias);
                                 m_pCtrlSmbShares->SetItem(lidx, 2, comment);
                                 break;
                             case SharedResource::SHARE_SMB_PRINTER:
-                                ::wxLogTrace(MYTRACETAG, wxT("SMB Printer '%s'"), sg[i].m_sShareName.c_str());
+                                ::wxLogTrace(MYTRACETAG, wxT("%s"), sg[i].toString().c_str());
                                 lidx = m_pCtrlSmbShares->InsertItem(0, sg[i].m_sShareName, 2);
                                 m_pCtrlSmbShares->SetItem(lidx, 1, sg[i].m_sDriver);
                                 m_pCtrlSmbShares->SetItem(lidx, 2, comment);
                                 break;
                             case SharedResource::SHARE_CUPS_PRINTER:
-                                ::wxLogTrace(MYTRACETAG, wxT("CUPS Printer '%s'"), sg[i].m_sShareName.c_str());
+                                ::wxLogTrace(MYTRACETAG, wxT("%s"), sg[i].toString().c_str());
                                 lidx = m_pCtrlSmbShares->InsertItem(0, sg[i].m_sShareName, 3);
                                 m_pCtrlSmbShares->SetItem(lidx, 1, sg[i].m_sDriver);
                                 m_pCtrlSmbShares->SetItem(lidx, 2, comment);
@@ -600,7 +600,8 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
                         break;
                     }
                 }
-                if (lidx <= 0) {
+                if (0 > lidx) {
+                    ::wxLogTrace(MYTRACETAG, wxT("Broken '%s'"), sg[i].toString().c_str());
                     lidx = m_pCtrlSmbShares->InsertItem(0, sg[i].m_sShareName, 0);
                     m_pCtrlSmbShares->SetItem(lidx, 1, sg[i].m_sAlias);
                     m_pCtrlSmbShares->SetItem(lidx, 2, comment);
