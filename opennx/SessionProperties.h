@@ -104,9 +104,13 @@ private:
     /// Creates the controls and sizers
     void CreateControls();
     /**
-     * Checks for any changes and Enables/Disables the Apply-Button
+     * Checks for any changes in the dialog and Enables/Disables the Apply-Button
      */
     void CheckChanged();
+    /**
+     * Checks for any changes in the config and Enables/Disables the Apply-Button
+     */
+    void CheckCfgChanges(bool prevchanges);
     /**
      * Handler for OnChar events.
      */
@@ -331,6 +335,9 @@ public:
     int GetUsbLocalPort() const { return m_iUsbLocalPort ; }
     void SetUsbLocalPort(int value) { m_iUsbLocalPort = value ; }
 
+    wxString GetUsbipdSocket() const { return m_sUsbipdSocket ; }
+    void SetUsbipdSocket(wxString value) { m_sUsbipdSocket = value ; }
+
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
 
@@ -424,7 +431,7 @@ private:
     wxString m_sProxyCommand;
     bool m_bExternalProxy;
     int m_iUsbLocalPort;
-    wxString m_sUsbipdSocket;
+    wxString m_sUsbipdSocket; // Local control socket for usbipd2
     int m_iSavedUsbLocalPort;
     int m_iPseudoDesktopTypeIndex;
     int m_iPseudoDisplayTypeIndex;

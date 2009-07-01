@@ -57,7 +57,6 @@
 
 #include "opennxApp.h"
 #include "SessionAdmin.h"
-#include "SessionProperties.h"
 #include "LoginDialog.h"
 #include "LibOpenSC.h"
 #include "MyWizard.h"

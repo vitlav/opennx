@@ -335,6 +335,10 @@ void LoginDialog::OnButtonConfigureClick( wxCommandEvent& event )
                             wxICON_ERROR | wxOK);
                 wxConfigBase::Get()->Write(wxT("Config/UserNxDir"), d.GetsUserNxDir());
                 wxConfigBase::Get()->Write(wxT("Config/SystemNxDir"), d.GetsSystemNxDir());
+#ifdef SUPPORT_USBIP
+                wxConfigBase::Get()->Write(wxT("Config/UsbipdSocket"), d.GetUsbipdSocket());
+                wxConfigBase::Get()->Write(wxT("Config/UsbipPort"), d.GetUsbLocalPort());
+#endif
                 break;
         }
     }

@@ -303,6 +303,14 @@ SessionProperties::removePage(const wxString &title)
 }
 
     void
+SessionProperties::CheckCfgChanges(bool changed)
+{
+    if (m_pCfg)
+        changed |= m_pCfg->checkChanged();
+    m_pCtrlApplyButton->Enable(changed);
+}
+
+    void
 SessionProperties::CheckChanged()
 {
     wxASSERT_MSG(m_pCfg, _T("SessionProperties::CheckChanged: No configuration"));
@@ -364,12 +372,12 @@ SessionProperties::CheckChanged()
         m_pCfg->bSetRemoveOldSessionFiles(m_bRemoveOldSessionFiles);
         m_pCfg->sSetCupsPath(m_sCupsPath);
 
-        bool changed = m_pCfg->checkChanged();
+        bool changed = false;
         changed |= (m_sSavedUserNxDir != m_sUserNxDir);
         changed |= (m_sSavedSystemNxDir != m_sSystemNxDir);
         changed |= (m_sSavedUsbipdSocket != m_sUsbipdSocket);
         changed |= (m_iSavedUsbLocalPort != m_iUsbLocalPort);
-        m_pCtrlApplyButton->Enable(changed);
+        CheckCfgChanges(changed);
     }
 }
 
@@ -1208,7 +1216,7 @@ void SessionProperties::OnButtonDsettingsClick( wxCommandEvent& event )
                 d.SetConfig(m_pCfg);
                 d.Create(this);
                 d.ShowModal();
-                CheckChanged();
+                CheckCfgChanges(false);
             }
             break;
         case MyXmlConfig::STYPE_WINDOWS:
@@ -1217,7 +1225,7 @@ void SessionProperties::OnButtonDsettingsClick( wxCommandEvent& event )
                 d.SetConfig(m_pCfg);
                 d.Create(this);
                 d.ShowModal();
-                CheckChanged();
+                CheckCfgChanges(false);
             }
             break;
         case MyXmlConfig::STYPE_VNC:
@@ -1226,7 +1234,7 @@ void SessionProperties::OnButtonDsettingsClick( wxCommandEvent& event )
                 d.SetConfig(m_pCfg);
                 d.Create(this);
                 d.ShowModal();
-                CheckChanged();
+                CheckCfgChanges(false);
             }
             break;
     }
@@ -1549,8 +1557,10 @@ void SessionProperties::OnApplyClick( wxCommandEvent& event )
     m_pCfg->saveState();
     wxConfigBase::Get()->Write(wxT("Config/UserNxDir"), m_sUserNxDir);
     wxConfigBase::Get()->Write(wxT("Config/SystemNxDir"), m_sSystemNxDir);
+#ifdef SUPPORT_USBIP
     wxConfigBase::Get()->Write(wxT("Config/UsbipdSocket"), m_sUsbipdSocket);
     wxConfigBase::Get()->Write(wxT("Config/UsbipPort"), m_iUsbLocalPort);
+#endif
     m_iSavedUsbLocalPort = m_iUsbLocalPort;
     m_sSavedUserNxDir = m_sUserNxDir;
     m_sSavedSystemNxDir = m_sSystemNxDir;

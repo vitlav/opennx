@@ -939,6 +939,10 @@ void WizardPageSecurity::CreateControls()
     ////@begin WizardPageSecurity content initialisation
     ////@end WizardPageSecurity content initialisation
     m_pCtrlUseSmartCard->Enable(::wxGetApp().NxSmartCardSupport());
+    if (m_bUseSmartCard) {
+        m_pCtrlEnableSSL->SetValue(true);
+        m_pCtrlEnableSSL->Enable(false);
+    }
 }
 
 /*!
@@ -1284,6 +1288,7 @@ void WizardPageSession::OnWizardpageSessionPageChanging( wxWizardEvent& event )
         cfg->sSetName(m_sSessionName);
         cfg->sSetServerHost(m_sHostName);
         cfg->iSetServerPort(m_iPort);
+        cfg->eSetConnectionSpeed(wx_static_cast(MyXmlConfig::ConnectionSpeed, m_iConnectionSpeed));
         wxString cfgfn;
         wxConfigBase::Get()->Read(_T("Config/UserNxDir"), &cfgfn);
         cfgfn = cfgfn + wxFileName::GetPathSeparator() + _T("config");
@@ -1361,6 +1366,8 @@ void WizardPageFinish::OnWizardpageFinishPageChanging( wxWizardEvent& event )
             wxString fn = cfg->sGetFileName();
             d.Create(this);
             switch (d.ShowModal()) {
+                case wxID_CANCEL:
+                    break;
                 case wxID_CLEAR:
                     ::wxLogTrace(MYTRACETAG, _T("deleting '%s'"), fn.c_str());
                     ::wxRemoveFile(fn);
@@ -1369,6 +1376,17 @@ void WizardPageFinish::OnWizardpageFinishPageChanging( wxWizardEvent& event )
                     // been deleted.
                     wxDynamicCast(GetParent(), MyWizard)->SetCancelled();
                     m_bCreateShortcut = false;
+                    break;
+                case wxID_OK:
+                    if (!cfg->SaveToFile())
+                        wxMessageBox(wxString::Format(_("Could not save session to\n%s"),
+                                    fn.c_str()), _("Error saving - OpenNX"), wxICON_ERROR | wxOK);
+                    wxConfigBase::Get()->Write(wxT("Config/UserNxDir"), d.GetsUserNxDir());
+                    wxConfigBase::Get()->Write(wxT("Config/SystemNxDir"), d.GetsSystemNxDir());
+#ifdef SUPPORT_USBIP
+                    wxConfigBase::Get()->Write(wxT("Config/UsbipdSocket"), d.GetUsbipdSocket());
+                    wxConfigBase::Get()->Write(wxT("Config/UsbipPort"), d.GetUsbLocalPort());
+#endif
                     break;
             }
         }

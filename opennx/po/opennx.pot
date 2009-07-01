@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opennx 0.15\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-06-19 14:31+0200\n"
+"POT-Creation-Date: 2009-06-30 13:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: AboutDialog.cpp:113 SessionProperties.cpp:1036
+#: AboutDialog.cpp:113 SessionProperties.cpp:1037
 msgid "Version"
 msgstr ""
 
@@ -302,19 +302,19 @@ msgid ""
 "your service provider has made available."
 msgstr ""
 
-#: MyWizard.cpp:711 SessionProperties.cpp:778
+#: MyWizard.cpp:711 SessionProperties.cpp:779
 msgid "RDP"
 msgstr ""
 
-#: MyWizard.cpp:729 SessionProperties.cpp:805
+#: MyWizard.cpp:729 SessionProperties.cpp:806
 msgid "RFB"
 msgstr ""
 
-#: MyWizard.cpp:747 SessionProperties.cpp:832
+#: MyWizard.cpp:747 SessionProperties.cpp:833
 msgid "Any"
 msgstr ""
 
-#: MyWizard.cpp:754 SessionProperties.cpp:839
+#: MyWizard.cpp:754 SessionProperties.cpp:840
 msgid "As on server"
 msgstr ""
 
@@ -452,7 +452,7 @@ msgstr ""
 msgid "Run application"
 msgstr ""
 
-#: ResumeDialog.cpp:151 SessionProperties.cpp:626
+#: ResumeDialog.cpp:151 SessionProperties.cpp:627
 msgid "Name"
 msgstr ""
 
@@ -639,94 +639,94 @@ msgstr ""
 msgid "Comment"
 msgstr ""
 
-#: SessionProperties.cpp:572 SessionProperties.cpp:1370
+#: SessionProperties.cpp:572 SessionProperties.cpp:1371
 msgid "Currently not available"
 msgstr ""
 
-#: SessionProperties.cpp:623
+#: SessionProperties.cpp:624
 msgid "VendorID"
 msgstr ""
 
-#: SessionProperties.cpp:624
+#: SessionProperties.cpp:625
 msgid "ProductID"
 msgstr ""
 
-#: SessionProperties.cpp:625
+#: SessionProperties.cpp:626
 msgid "Class"
 msgstr ""
 
-#: SessionProperties.cpp:627
+#: SessionProperties.cpp:628
 msgid "Serial"
 msgstr ""
 
-#: SessionProperties.cpp:1099 SessionProperties_symbols.h:102
+#: SessionProperties.cpp:1100 SessionProperties_symbols.h:102
 msgid "Font"
 msgstr ""
 
-#: SessionProperties.cpp:1143
+#: SessionProperties.cpp:1144
 msgid "Error while reading keyboard table"
-msgstr ""
-
-#: SessionProperties.cpp:1172
-#, c-format
-msgid "Invalid line='%s'"
 msgstr ""
 
 #: SessionProperties.cpp:1173
 #, c-format
+msgid "Invalid line='%s'"
+msgstr ""
+
+#: SessionProperties.cpp:1174
+#, c-format
 msgid "Invalid entry in %s"
 msgstr ""
 
-#: SessionProperties.cpp:1298
+#: SessionProperties.cpp:1299
 msgid "Do you really want to delete all cache directories?"
 msgstr ""
 
-#: SessionProperties.cpp:1299
+#: SessionProperties.cpp:1300
 msgid "Clean cache - OpenNX"
 msgstr ""
 
-#: SessionProperties.cpp:1344
+#: SessionProperties.cpp:1345
 msgid "No local samba server is running."
 msgstr ""
 
-#: SessionProperties.cpp:1399
+#: SessionProperties.cpp:1400
 msgid "No sharable resources found"
 msgstr ""
 
-#: SessionProperties.cpp:1473
+#: SessionProperties.cpp:1474
 msgid "Select User NX directory"
 msgstr ""
 
-#: SessionProperties.cpp:1488
+#: SessionProperties.cpp:1489
 msgid "Select System NX directory"
 msgstr ""
 
-#: SessionProperties.cpp:1534
+#: SessionProperties.cpp:1535
 #, c-format
 msgid "Really delete Session '%s' ?"
 msgstr ""
 
-#: SessionProperties.cpp:1535
+#: SessionProperties.cpp:1536
 msgid "Delete Session"
 msgstr ""
 
-#: SessionProperties.cpp:1772
+#: SessionProperties.cpp:1773
 msgid "No cups server available."
 msgstr ""
 
-#: SessionProperties.cpp:1786
+#: SessionProperties.cpp:1787
 msgid "Select System CUPS daemon"
 msgstr ""
 
-#: SessionProperties.cpp:1986 opennxApp.cpp:1050
+#: SessionProperties.cpp:1987 opennxApp.cpp:1049
 msgid "libusb is not available. No USB devices will be exported"
 msgstr ""
 
-#: SessionProperties.cpp:1991
+#: SessionProperties.cpp:1992
 msgid "No USB devices available."
 msgstr ""
 
-#: SessionProperties.cpp:2194
+#: SessionProperties.cpp:2195
 msgid "Select path of USBIPD socket"
 msgstr ""
 
@@ -1302,90 +1302,90 @@ msgstr ""
 msgid "Disable taint of X replies"
 msgstr ""
 
-#: opennxApp.cpp:226
+#: opennxApp.cpp:225
 msgid "Launch NX Session"
 msgstr ""
 
-#: opennxApp.cpp:444
+#: opennxApp.cpp:443
 msgid "Could not get PATH environment"
 msgstr ""
 
-#: opennxApp.cpp:459
+#: opennxApp.cpp:458
 #, c-format
 msgid "Could not find %s in PATH"
 msgstr ""
 
-#: opennxApp.cpp:469
+#: opennxApp.cpp:468
 #, c-format
 msgid "Could not stat %s"
 msgstr ""
 
-#: opennxApp.cpp:475
+#: opennxApp.cpp:474
 #, c-format
 msgid "Could not read link %s"
 msgstr ""
 
-#: opennxApp.cpp:675
+#: opennxApp.cpp:674
 msgid ""
 "\n"
 "\n"
 "Supported trace tags: "
 msgstr ""
 
-#: opennxApp.cpp:678
+#: opennxApp.cpp:677
 msgid "Start the session administration tool."
 msgstr ""
 
-#: opennxApp.cpp:680
+#: opennxApp.cpp:679
 msgid "Secify window title for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:682
+#: opennxApp.cpp:681
 msgid "Secify dialog style for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:684
+#: opennxApp.cpp:683
 msgid "Run in dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:686
+#: opennxApp.cpp:685
 msgid "Dialog mode proxy."
 msgstr ""
 
-#: opennxApp.cpp:688
+#: opennxApp.cpp:687
 msgid "Specify message for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:690
+#: opennxApp.cpp:689
 msgid "Specify parent PID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:692
+#: opennxApp.cpp:691
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr ""
 
-#: opennxApp.cpp:694
+#: opennxApp.cpp:693
 msgid "Specify window-ID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:696
+#: opennxApp.cpp:695
 msgid "Specify wxWidgets trace mask."
 msgstr ""
 
-#: opennxApp.cpp:698
+#: opennxApp.cpp:697
 msgid "Guide the user through the steps to configure a session."
 msgstr ""
 
-#: opennxApp.cpp:1064
+#: opennxApp.cpp:1063
 msgid "USBIP tunnel registration timeout"
 msgstr ""
 
-#: opennxApp.cpp:1066
+#: opennxApp.cpp:1065
 #, c-format
 msgid "Unable to export USB device %s"
 msgstr ""
 
-#: opennxApp.cpp:1072
+#: opennxApp.cpp:1071
 msgid "Could not connect to usbipd2. No USB devices will be exported"
 msgstr ""
 
