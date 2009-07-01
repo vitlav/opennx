@@ -294,7 +294,7 @@ SessionProperties::SetConfig(MyXmlConfig *cfg)
     void
 SessionProperties::removePage(const wxString &title)
 {
-    for (int i = 0; i < m_pNoteBook->GetPageCount(); i++) {
+    for (size_t i = 0; i < m_pNoteBook->GetPageCount(); i++) {
         if (m_pNoteBook->GetPageText(i).IsSameAs(title)) {
             m_pNoteBook->DeletePage(i);
             break;
@@ -1200,6 +1200,8 @@ void SessionProperties::OnFocus( wxFocusEvent& event )
     // is then evaluated upon the next event-loop iteration.
     wxCommandEvent e(wxEVT_COMMAND_SLIDER_UPDATED, XRCID("ID_SLIDER_SPEED"));
     AddPendingEvent(e);
+#else
+    wxUnusedVar(event);
 #endif
 }
 
@@ -1209,6 +1211,7 @@ void SessionProperties::OnFocus( wxFocusEvent& event )
 
 void SessionProperties::OnButtonDsettingsClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     switch (m_iSessionType) {
         case MyXmlConfig::STYPE_UNIX:
             {
@@ -1246,6 +1249,7 @@ void SessionProperties::OnButtonDsettingsClick( wxCommandEvent& event )
 
 void SessionProperties::OnRadiobuttonImgDefaultSelected( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     UpdateDialogConstraints(true);
     CheckChanged();
 }
@@ -1256,6 +1260,7 @@ void SessionProperties::OnRadiobuttonImgDefaultSelected( wxCommandEvent& event )
 
 void SessionProperties::OnRadiobuttonImgCustomSelected( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     UpdateDialogConstraints(true);
     CheckChanged();
 }
@@ -1266,6 +1271,7 @@ void SessionProperties::OnRadiobuttonImgCustomSelected( wxCommandEvent& event )
 
 void SessionProperties::OnButtonImgCustomClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     switch (m_iSessionType) {
         case MyXmlConfig::STYPE_UNIX:
         case MyXmlConfig::STYPE_SHADOW:
@@ -1304,6 +1310,7 @@ void SessionProperties::OnButtonImgCustomClick( wxCommandEvent& event )
 
 void SessionProperties::OnButtonCachecleanClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     wxMessageDialog d(this, _("Do you really want to delete all cache directories?"),
             _("Clean cache - OpenNX"), wxYES_NO|wxNO_DEFAULT|wxICON_QUESTION);
     if (d.ShowModal() == wxID_YES) {
@@ -1325,6 +1332,7 @@ void SessionProperties::OnButtonCachecleanClick( wxCommandEvent& event )
 
 void SessionProperties::OnRadiobuttonKbdkeepSelected( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     UpdateDialogConstraints(true);
     CheckChanged();
 }
@@ -1335,6 +1343,7 @@ void SessionProperties::OnRadiobuttonKbdkeepSelected( wxCommandEvent& event )
 
 void SessionProperties::OnRadiobuttonKbdotherSelected( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     UpdateDialogConstraints(true);
     CheckChanged();
 }
@@ -1345,6 +1354,7 @@ void SessionProperties::OnRadiobuttonKbdotherSelected( wxCommandEvent& event )
 
 void SessionProperties::OnCheckboxSmbClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     SmbClient s;
     if (s.IsAvailable()) {
         UpdateDialogConstraints(true);
@@ -1365,6 +1375,7 @@ void SessionProperties::OnButtonSmbAddClick( wxCommandEvent& event )
     SmbClient sc;
     CupsClient cc;
 
+    wxUnusedVar(event);
     if ((sc.GetShares().GetCount() + cc.GetShares().GetCount()) > 0) {
         ShareProperties d;
         d.SetConfig(m_pCfg);
@@ -1415,6 +1426,7 @@ void SessionProperties::OnButtonSmbAddClick( wxCommandEvent& event )
 
 void SessionProperties::OnButtonSmbModifyClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     int idx = findSelectedShare();
     if (idx != -1) {
         ShareProperties d;
@@ -1449,6 +1461,7 @@ void SessionProperties::OnButtonSmbModifyClick( wxCommandEvent& event )
 
 void SessionProperties::OnButtonSmbDeleteClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     int idx = findSelectedShare();
     if (idx != -1) {
         int shidx = m_pCtrlSmbShares->GetItemData(idx);
@@ -1479,6 +1492,7 @@ void SessionProperties::OnButtonSmbDeleteClick( wxCommandEvent& event )
 
 void SessionProperties::OnButtonBrowseUserdirClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     const wxString& dir = wxDirSelector(_("Select User NX directory"),
             m_sUserNxDir, 0, wxDefaultPosition, this);
     if (!dir.IsEmpty()) {
@@ -1494,6 +1508,7 @@ void SessionProperties::OnButtonBrowseUserdirClick( wxCommandEvent& event )
 
 void SessionProperties::OnButtonBrowseSysdirClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     const wxString& dir = wxDirSelector(_("Select System NX directory"),
             m_sSystemNxDir, 0, wxDefaultPosition, this);
     if (!dir.IsEmpty()) {
@@ -1510,7 +1525,7 @@ void SessionProperties::OnButtonBrowseSysdirClick( wxCommandEvent& event )
 
 void SessionProperties::OnButtonFontDefaultClick( wxCommandEvent& event )
 {
-    // Insert custom code here
+    wxUnusedVar(event);
     wxFont tmp = wxGetFontFromUser(this, m_cFontDefault);
     if (tmp.Ok()) {
         setFontLabel(m_pCtrlFontDefault, tmp);
@@ -1525,7 +1540,7 @@ void SessionProperties::OnButtonFontDefaultClick( wxCommandEvent& event )
 
 void SessionProperties::OnButtonFontFixedClick( wxCommandEvent& event )
 {
-    // Insert custom code here
+    wxUnusedVar(event);
     wxFont tmp = wxGetFontFromUser(this, m_cFontFixed);
     if (tmp.Ok()) {
         setFontLabel(m_pCtrlFontFixed, tmp);
@@ -1540,6 +1555,7 @@ void SessionProperties::OnButtonFontFixedClick( wxCommandEvent& event )
 
 void SessionProperties::OnDeleteClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     if (wxMessageBox(wxString::Format(_("Really delete Session '%s' ?"),
                     m_pCfg->sGetName().c_str()), _("Delete Session"),
                 wxICON_QUESTION|wxYES_NO|wxNO_DEFAULT) == wxYES) {
@@ -1554,6 +1570,7 @@ void SessionProperties::OnDeleteClick( wxCommandEvent& event )
 
 void SessionProperties::OnApplyClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     m_pCfg->saveState();
     wxConfigBase::Get()->Write(wxT("Config/UserNxDir"), m_sUserNxDir);
     wxConfigBase::Get()->Write(wxT("Config/SystemNxDir"), m_sSystemNxDir);
@@ -1588,6 +1605,7 @@ void SessionProperties::OnComboboxDprotoSelected( wxCommandEvent& event )
 
 void SessionProperties::OnComboboxDtypeSelected( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     UpdateDialogConstraints(true);
     m_iUnixDesktopType = m_iDesktopTypeDialog;
     CheckChanged();
@@ -1599,6 +1617,7 @@ void SessionProperties::OnComboboxDtypeSelected( wxCommandEvent& event )
 
 void SessionProperties::OnComboboxDisptypeSelected( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     UpdateDialogConstraints(true);
     CheckChanged();
 }
@@ -1609,6 +1628,7 @@ void SessionProperties::OnComboboxDisptypeSelected( wxCommandEvent& event )
 
 void SessionProperties::OnCheckboxPwsaveClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     CheckChanged();
 }
 
@@ -1618,6 +1638,7 @@ void SessionProperties::OnCheckboxPwsaveClick( wxCommandEvent& event )
 
 void SessionProperties::OnCheckboxSmartcardClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     UpdateDialogConstraints(true);
     CheckChanged();
 }
@@ -1628,6 +1649,7 @@ void SessionProperties::OnCheckboxSmartcardClick( wxCommandEvent& event )
 
 void SessionProperties::OnSliderSpeedUpdated( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     CheckChanged();
 }
 
@@ -1638,6 +1660,7 @@ void SessionProperties::OnSliderSpeedUpdated( wxCommandEvent& event )
 
 void SessionProperties::OnSpinctrlWidthUpdated( wxSpinEvent& event )
 {
+    wxUnusedVar(event);
     CheckChanged();
 }
 
@@ -1647,6 +1670,7 @@ void SessionProperties::OnSpinctrlWidthUpdated( wxSpinEvent& event )
 
 void SessionProperties::OnSpinctrlHeightUpdated( wxSpinEvent& event )
 {
+    wxUnusedVar(event);
     CheckChanged();
 }
 
@@ -1656,6 +1680,7 @@ void SessionProperties::OnSpinctrlHeightUpdated( wxSpinEvent& event )
 
 void SessionProperties::OnCheckboxDisabletcpnodelClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     CheckChanged();
 }
 
@@ -1665,6 +1690,7 @@ void SessionProperties::OnCheckboxDisabletcpnodelClick( wxCommandEvent& event )
 
 void SessionProperties::OnCheckboxDisablezcompClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     CheckChanged();
 }
 
@@ -1674,6 +1700,7 @@ void SessionProperties::OnCheckboxDisablezcompClick( wxCommandEvent& event )
 
 void SessionProperties::OnCheckboxEnablesslClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     CheckChanged();
 }
 
@@ -1683,6 +1710,7 @@ void SessionProperties::OnCheckboxEnablesslClick( wxCommandEvent& event )
 
 void SessionProperties::OnComboboxCachememSelected( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     CheckChanged();
 }
 
@@ -1692,6 +1720,7 @@ void SessionProperties::OnComboboxCachememSelected( wxCommandEvent& event )
 
 void SessionProperties::OnComboboxCachediskSelected( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     CheckChanged();
 }
 
@@ -1713,6 +1742,7 @@ void SessionProperties::OnComboboxKbdlayoutSelected( wxCommandEvent& event )
 
 void SessionProperties::OnCheckboxRemoveoldsfClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     CheckChanged();
 }
 
@@ -1722,6 +1752,7 @@ void SessionProperties::OnCheckboxRemoveoldsfClick( wxCommandEvent& event )
 
 void SessionProperties::OnTextctrlHostUpdated( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlHostname))
         CheckChanged();
 }
@@ -1732,6 +1763,7 @@ void SessionProperties::OnTextctrlHostUpdated( wxCommandEvent& event )
 
 void SessionProperties::OnTextctrlUserdirUpdated( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlUserNxDir))
         CheckChanged();
 }
@@ -1742,6 +1774,7 @@ void SessionProperties::OnTextctrlUserdirUpdated( wxCommandEvent& event )
 
 void SessionProperties::OnTextctrlSysdirUpdated( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlSystemNxDir))
         CheckChanged();
 }
@@ -1754,6 +1787,7 @@ void SessionProperties::OnTextctrlSysdirUpdated( wxCommandEvent& event )
 
 void SessionProperties::OnListctrlSmbSharesSelected( wxListEvent& event )
 {
+    wxUnusedVar(event);
     m_pCtrlShareDelete->Enable(true);
     m_pCtrlShareModify->Enable(true);
 }
@@ -1764,6 +1798,7 @@ void SessionProperties::OnListctrlSmbSharesSelected( wxListEvent& event )
 
 void SessionProperties::OnListctrlSmbSharesItemActivated( wxListEvent& event )
 {
+    wxUnusedVar(event);
     wxCommandEvent e;
     OnButtonSmbModifyClick(e);
 }
@@ -1793,6 +1828,7 @@ void SessionProperties::OnCheckboxCupsenableClick( wxCommandEvent& event )
 
 void SessionProperties::OnButtonBrowseCupspathClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     wxFileName fn(m_sCupsPath);
     const wxString& file = ::wxFileSelector(_("Select System CUPS daemon"),
             fn.GetPath(), fn.GetName(), wxEmptyString, wxT("*"), wxOPEN|wxFILE_MUST_EXIST, this);
@@ -1808,6 +1844,7 @@ void SessionProperties::OnButtonBrowseCupspathClick( wxCommandEvent& event )
 
 void SessionProperties::OnButtonKeymanageClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     KeyDialog d;
     d.SetSshKey(m_pCfg->sGetSshKey());
     d.Create(this);
@@ -1824,6 +1861,7 @@ void SessionProperties::OnButtonKeymanageClick( wxCommandEvent& event )
 
 void SessionProperties::OnCheckboxMmediaClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     UpdateDialogConstraints(true);
     CheckChanged();
 }
@@ -1835,6 +1873,7 @@ void SessionProperties::OnCheckboxMmediaClick( wxCommandEvent& event )
 
 void SessionProperties::OnSpinctrlPortUpdated( wxSpinEvent& event )
 {
+    wxUnusedVar(event);
     CheckChanged();
 }
 
@@ -1845,6 +1884,7 @@ void SessionProperties::OnSpinctrlPortUpdated( wxSpinEvent& event )
 
 void SessionProperties::OnTextctrlPortUpdated( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlPort))
         m_pCtrlApplyButton->Enable(true);
 }
@@ -1856,6 +1896,7 @@ void SessionProperties::OnTextctrlPortUpdated( wxCommandEvent& event )
 
 void SessionProperties::OnSpinctrlWidthTextUpdated( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlDisplayWidth))
         m_pCtrlApplyButton->Enable(true);
 }
@@ -1866,6 +1907,7 @@ void SessionProperties::OnSpinctrlWidthTextUpdated( wxCommandEvent& event )
 
 void SessionProperties::OnSpinctrlHeightTextUpdated( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlDisplayHeight))
         m_pCtrlApplyButton->Enable(true);
 }
@@ -1877,6 +1919,7 @@ void SessionProperties::OnSpinctrlHeightTextUpdated( wxCommandEvent& event )
 
 void SessionProperties::OnTextctrlProxyhostUpdated( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlProxyHost))
         CheckChanged();
 }
@@ -1887,6 +1930,7 @@ void SessionProperties::OnTextctrlProxyhostUpdated( wxCommandEvent& event )
 
 void SessionProperties::OnSpinctrlProxyportUpdated( wxSpinEvent& event )
 {
+    wxUnusedVar(event);
     CheckChanged();
 }
 
@@ -1896,6 +1940,7 @@ void SessionProperties::OnSpinctrlProxyportUpdated( wxSpinEvent& event )
 
 void SessionProperties::OnSpinctrlProxyportTextUpdated( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlProxyPort))
         m_pCtrlApplyButton->Enable(true);
 }
@@ -1906,6 +1951,7 @@ void SessionProperties::OnSpinctrlProxyportTextUpdated( wxCommandEvent& event )
 
 void SessionProperties::OnSpinctrlCupsportUpdated( wxSpinEvent& event )
 {
+    wxUnusedVar(event);
     CheckChanged();
 }
 
@@ -1915,6 +1961,7 @@ void SessionProperties::OnSpinctrlCupsportUpdated( wxSpinEvent& event )
 
 void SessionProperties::OnSpinctrlCupsportTextUpdated( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlCupsPort))
         m_pCtrlApplyButton->Enable(true);
 }
@@ -1925,6 +1972,7 @@ void SessionProperties::OnSpinctrlCupsportTextUpdated( wxCommandEvent& event )
 
 void SessionProperties::OnTextctrlCupspathUpdated( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlCupsPath))
         CheckChanged();
 }
@@ -1936,6 +1984,7 @@ void SessionProperties::OnTextctrlCupspathUpdated( wxCommandEvent& event )
 
 void SessionProperties::OnCHECKBOXUSBENABLEClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     UpdateDialogConstraints(true);
     CheckChanged();
 }
@@ -1947,6 +1996,7 @@ void SessionProperties::OnCHECKBOXUSBENABLEClick( wxCommandEvent& event )
 
 void SessionProperties::OnRadiobuttonNoproxySelected( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     UpdateDialogConstraints(true);
     CheckChanged();
 }
@@ -1958,6 +2008,7 @@ void SessionProperties::OnRadiobuttonNoproxySelected( wxCommandEvent& event )
 
 void SessionProperties::OnRadiobuttonHttpproxySelected( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     UpdateDialogConstraints(true);
     CheckChanged();
 }
@@ -1969,6 +2020,7 @@ void SessionProperties::OnRadiobuttonHttpproxySelected( wxCommandEvent& event )
 
 void SessionProperties::OnRadiobuttonExternalproxySelected( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     UpdateDialogConstraints(true);
     CheckChanged();
 }
@@ -1980,6 +2032,7 @@ void SessionProperties::OnRadiobuttonExternalproxySelected( wxCommandEvent& even
 
 void SessionProperties::OnTextctrlProxycommandTextUpdated( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlProxyCommand))
         CheckChanged();
 }
@@ -1991,6 +2044,7 @@ void SessionProperties::OnTextctrlProxycommandTextUpdated( wxCommandEvent& event
 
 void SessionProperties::OnButtonUsbaddClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
 #ifdef SUPPORT_USBIP
     USB u;
     if (!u.IsAvailable()) {
@@ -2031,7 +2085,7 @@ void SessionProperties::OnButtonUsbaddClick( wxCommandEvent& event )
         dev.m_sSerial = d.GetSerial();
         dev.m_eMode = d.GetForwarding() ? SharedUsbDevice::MODE_REMOTE : SharedUsbDevice::MODE_LOCAL;
         bool found = false;
-        for (int i = 0; i < m_aUsbForwards.GetCount(); i++) {
+        for (size_t i = 0; i < m_aUsbForwards.GetCount(); i++) {
             if (dev.cmpNoMode(m_aUsbForwards[i])) {
                 found = true;
                 break;
@@ -2055,6 +2109,7 @@ void SessionProperties::OnButtonUsbaddClick( wxCommandEvent& event )
 
 void SessionProperties::OnButtonUsbmodifyClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
 #ifdef SUPPORT_USBIP
     int idx = findSelectedUsbDevice();
     if (idx != -1) {
@@ -2119,6 +2174,7 @@ void SessionProperties::OnButtonUsbmodifyClick( wxCommandEvent& event )
 
 void SessionProperties::OnButtonUsbdeleteClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
 #ifdef SUPPORT_USBIP
     int idx = findSelectedUsbDevice();
     if (idx != -1) {
@@ -2144,6 +2200,7 @@ void SessionProperties::OnButtonUsbdeleteClick( wxCommandEvent& event )
 
 void SessionProperties::OnListctrlUsbfilterSelected( wxListEvent& event )
 {
+    wxUnusedVar(event);
 #ifdef SUPPORT_USBIP
     m_pCtrlUsbModify->Enable(true);
     m_pCtrlUsbDelete->Enable(true);
@@ -2159,6 +2216,8 @@ void SessionProperties::OnListctrlUsbfilterItemActivated( wxListEvent& event )
 {
 #ifdef SUPPORT_USBIP
     OnButtonUsbmodifyClick(event);
+#else
+    wxUnusedVar(event);
 #endif
 }
 
@@ -2169,6 +2228,7 @@ void SessionProperties::OnListctrlUsbfilterItemActivated( wxListEvent& event )
 
 void SessionProperties::OnSpinctrlUsbLocalportUpdated( wxSpinEvent& event )
 {
+    wxUnusedVar(event);
     CheckChanged();
 }
 
@@ -2179,6 +2239,7 @@ void SessionProperties::OnSpinctrlUsbLocalportUpdated( wxSpinEvent& event )
 
 void SessionProperties::OnSpinctrlUsbLocalportTextUpdated( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlUsbLocalPort))
         m_pCtrlApplyButton->Enable(true);
 }
@@ -2190,6 +2251,7 @@ void SessionProperties::OnSpinctrlUsbLocalportTextUpdated( wxCommandEvent& event
 
 void SessionProperties::OnTextctrlUsbipdSocketTextUpdated( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlUsbIpdSocket))
         CheckChanged();
 }
@@ -2201,6 +2263,7 @@ void SessionProperties::OnTextctrlUsbipdSocketTextUpdated( wxCommandEvent& event
 
 void SessionProperties::OnButtonBrowseUsbipdSocketClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     wxFileName fn(m_sUsbipdSocket);
     const wxString& file = ::wxFileSelector(_("Select path of USBIPD socket"),
             fn.GetPath(), fn.GetName(), wxEmptyString, wxT("*"), wxOPEN|wxFILE_MUST_EXIST, this);

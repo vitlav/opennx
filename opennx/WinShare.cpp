@@ -80,6 +80,8 @@ static void
 smbc_auth_fn(const char *, const char *, char *, int,
         char *username, int unmaxlen, char *password, int pwmaxlen)
 {
+    wxUnusedVar(unmaxlen);
+    wxUnusedVar(pwmaxlen);
     *username = '\0'; *password = '\0';
 }
 

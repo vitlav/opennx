@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT([opennx],[0.15],[felfert@users.sf.net])
+AC_INIT([opennx],[0.16],[felfert@users.sf.net])
 AC_CONFIG_AUX_DIR([conf])
 AC_CONFIG_SRCDIR([opennxApp.cpp])
 AC_CANONICAL_TARGET
@@ -162,11 +162,26 @@ AC_SUBST(WATCHUSBIP)
 
 AC_ARG_ENABLE([warn],
 	AS_HELP_STRING([--enable-warn],
-		[Enable some g++ warnings (Default: NO)]),
+		[Enable additional warnings (Default: NO)]),
 	[
-		AC_MSG_NOTICE([will enable additional g++ warnings])
-		CPPFLAGS="$CPPFLAGS -Wall -Wchar-subscripts -Wcomment -Wformat -Wimplicit -Wmissing-braces -Wparentheses -Wreturn-type -Wswitch -Wuninitialized"
-		CXXFLAGS="$CXXFLAGS -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual"
+		AC_MSG_NOTICE([will enable additional warnings])
+        fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wall])
+        fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wextra])
+        fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wchar-subscripts])
+        fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wcomment])
+        fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wformat])
+        fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wformat-security])
+        fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wimplicit])
+        fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wmissing-braces])
+        fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wparentheses])
+        fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wreturn-type])
+        fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wswitch])
+        fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wuninitialized])
+        CPPFLAGS="$CPPFLAGS $ac_checked_CPPFLAGS"
+        fe_CHECK_FLAG([C++],[CXXFLAGS],[-Wctor-dtor-privacy])
+        fe_CHECK_FLAG([C++],[CXXFLAGS],[-Wnon-virtual-dtor])
+        fe_CHECK_FLAG([C++],[CXXFLAGS],[-Woverloaded-virtual])
+        CXXFLAGS="$CXXFLAGS $ac_checked_CXXFLAGS"
 	]
 )
 

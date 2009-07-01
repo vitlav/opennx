@@ -98,6 +98,11 @@ UsbFilterDetailsDialog::UsbFilterDetailsDialog( wxWindow* parent, wxWindowID id,
 
 bool UsbFilterDetailsDialog::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
+    wxUnusedVar(id);
+    wxUnusedVar(caption);
+    wxUnusedVar(pos);
+    wxUnusedVar(size);
+    wxUnusedVar(style);
     ////@begin UsbFilterDetailsDialog creation
     SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
@@ -150,7 +155,7 @@ void UsbFilterDetailsDialog::Init()
 void UsbFilterDetailsDialog::SetDeviceList(const ArrayOfUSBDevices &a)
 {
     m_aUsbForwards.Clear();
-    for (int i = 0; i < a.GetCount(); i++) {
+    for (size_t i = 0; i < a.GetCount(); i++) {
         SharedUsbDevice dev;
         dev.m_iVendorID = a[i].GetVendorID();
         dev.m_iProductID = a[i].GetProductID();
@@ -179,7 +184,7 @@ void UsbFilterDetailsDialog::SetDialogMode(eDialogMode mode)
                 m_pCtrlDevSelect->Show();
             if (m_pCtrlDevlist) {
                 m_pCtrlDevlist->Clear();
-                for (int i = 0; i < m_aUsbForwards.GetCount(); i++)
+                for (size_t i = 0; i < m_aUsbForwards.GetCount(); i++)
                     m_pCtrlDevlist->Append(m_aUsbForwards[i].toShortString());
             }
             break;
@@ -273,6 +278,7 @@ wxIcon UsbFilterDetailsDialog::GetIconResource( const wxString& name )
 
 void UsbFilterDetailsDialog::OnComboboxUsbdevsSelected( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     int i = m_pCtrlDevlist->GetSelection();
     if (i != wxNOT_FOUND) {
         SharedUsbDevice dev = m_aUsbForwards[i];

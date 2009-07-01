@@ -19,7 +19,7 @@
                             <flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
                             <border>5</border>
                             <object class="wxStaticBitmap" name="wxID_STATIC">
-                                <size>146,44d</size>
+                                <size>167,58d</size>
                                 <bitmap>memory:memrsc#zip:res/opennx.png</bitmap>
                             </object>
                         </object>
@@ -29,6 +29,7 @@
             <object class="sizeritem">
                 <flag>wxGROW|wxLEFT|wxRIGHT</flag>
                 <border>5</border>
+                <option>1</option>
                 <object class="wxFlexGridSizer">
                     <cols>2</cols>
                     <rows>5</rows>

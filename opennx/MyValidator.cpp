@@ -404,7 +404,7 @@ bool MyValidator::TransferToWindow(void)
         }
     } else
 #endif
-        ;   // to match the last 'else' above
+    { }   // to match the last 'else' above
 
   // unrecognized control, or bad pointer
   return FALSE;

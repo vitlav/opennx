@@ -104,6 +104,7 @@ bool watchReaderApp::OnCmdLineParsed(wxCmdLineParser& parser)
 
 bool watchReaderApp::OnInit()
 {    
+    initWxTraceTags();
     wxString tmp;
     wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp);
     m_cLocale.AddCatalogLookupPathPrefix(tmp + wxFileName::GetPathSeparator()

@@ -367,7 +367,8 @@ BEGIN_EVENT_TABLE(MySession, wxEvtHandler)
 END_EVENT_TABLE();
 
 MySession::MySession(wxString dir, wxString status, wxString stype, wxString host, int port, wxString md5)
-    : m_pSshLog(NULL)
+    : wxEvtHandler()
+    , m_pSshLog(NULL)
     , m_pNxSsh(NULL)
     , m_pCfg(NULL)
     , m_pDlg(NULL)
@@ -399,7 +400,8 @@ MySession::MySession(wxString dir, wxString status, wxString stype, wxString hos
 }
 
 MySession::MySession(const MySession &src)
-    : m_pSshLog(NULL)
+    : wxEvtHandler()
+    , m_pSshLog(NULL)
     , m_pNxSsh(NULL)
     , m_pCfg(NULL)
     , m_pDlg(NULL)
@@ -419,7 +421,8 @@ MySession::MySession(const MySession &src)
 }
 
 MySession::MySession()
-    : m_pSshLog(NULL)
+    : wxEvtHandler()
+    , m_pSshLog(NULL)
     , m_pNxSsh(NULL)
     , m_pCfg(NULL)
     , m_pDlg(NULL)
@@ -556,6 +559,7 @@ MySession::getFirstFreePort(int startPort)
     wxString
 MySession::getXauthCookie(int display /* = 0 */)
 {
+
 #ifdef __UNIX__
     wxString dpy;
     if (wxGetEnv(wxT("DISPLAY"), &dpy) && (!dpy.IsEmpty())) {
@@ -596,6 +600,8 @@ MySession::getXauthCookie(int display /* = 0 */)
     cmd << wxT(" MIT-MAGIC-COOKIE-1");
     cmd << wxT(" ") << cookie;
     return ::wxExecute(cmd) ? wxString() : cookie;
+#else
+    wxUnusedVar(display);
 #endif
     return wxString();
 }
@@ -695,6 +701,8 @@ MySession::OnSshEvent(wxCommandEvent &event)
 
     switch (e) {
         case MyIPC::ActionNone:
+        case MyIPC::ActionStdout:
+        case MyIPC::ActionStderr:
             break;
         case MyIPC::ActionStatus:
             m_pDlg->SetStatusText(msg);
@@ -788,6 +796,8 @@ MySession::OnSshEvent(wxCommandEvent &event)
             m_iProgress += 4;
             m_pDlg->SetProgress(m_iProgress);
             switch (m_eConnectState) {
+                case STATE_ABORT:
+                    break;
                 case STATE_HELLO:
                     m_pDlg->SetStatusText(_("Authenticating"));
                     printSsh(wxT("hello NXCLIENT - Version ") NX_PROTO);

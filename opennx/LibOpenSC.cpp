@@ -240,7 +240,7 @@ int LibOpenSC::WaitForCard(CardWaiterDialog *d) {
 }
 #endif
 
-bool LibOpenSC::WatchHotRemove(int ridx, long sshpid) {
+bool LibOpenSC::WatchHotRemove(unsigned int ridx, long sshpid) {
 
     MyDynamicLibrary dll;
     {

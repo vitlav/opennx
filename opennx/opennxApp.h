@@ -68,7 +68,6 @@ class opennxApp : public wxApp
             MODE_CLIENT,
             MODE_ADMIN,
             MODE_WIZARD,
-            MODE_HOTPLUG,
             MODE_DIALOG_OK,
             MODE_DIALOG_YESNO,
             MODE_DIALOG_ERROR,

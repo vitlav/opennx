@@ -90,6 +90,11 @@ CardWaiterDialog::CardWaiterDialog( wxWindow* parent, wxWindowID id, const wxStr
 
 bool CardWaiterDialog::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
+    wxUnusedVar(id);
+    wxUnusedVar(caption);
+    wxUnusedVar(pos);
+    wxUnusedVar(size);
+    wxUnusedVar(style);
 ////@begin CardWaiterDialog creation
     SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);

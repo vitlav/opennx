@@ -592,6 +592,8 @@ int opennxApp::FilterEvent(wxEvent& event)
                     if (msg.IsSameAs(wxT("no support for smartcards.")))
                         m_bNxSmartCardSupport = false;
                     return true;
+                default:
+                    break;
             }
             return false;
         }
@@ -665,7 +667,7 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
     // tags will be appended to the last switch/option
     wxString tags;
     allTraceTags.Sort();
-    int i;
+    size_t i;
     for (i = 0; i < allTraceTags.GetCount(); i++) {
         if (!tags.IsEmpty())
             tags += wxT(" ");
@@ -704,7 +706,7 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
     wxArrayString as(argc, (const wxChar **)argv);
     for (i = 1; i < as.GetCount(); i++) {
         if (re.Matches(as[i])) {
-            if (i+1 < as.GetCount()) {
+            if ((i + 1) < as.GetCount()) {
                 as[i].Append(wxT("=")).Append(as[i+1]);
                 as.RemoveAt(i+1);
             }
@@ -1033,7 +1035,7 @@ bool opennxApp::OnInit()
                 wxT("/var/run/usbipd2.socket"));
         UsbIp usbip;
         if (usbip.Connect(usock)) {
-            int i, j, k;
+            size_t i, j, k;
             wxLogTrace(MYTRACETAG, wxT("connected to usbipd2"));
             usbip.SetSession(m_sSessionID);
             ArrayOfUsbForwards af = m_pSessionCfg->aGetUsbForwards();

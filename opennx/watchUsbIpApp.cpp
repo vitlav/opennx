@@ -185,7 +185,7 @@ void watchUsbIpApp::OnInitCmdLine(wxCmdLineParser& parser)
     // tags will be appended to the last switch/option
     wxString tags;
     allTraceTags.Sort();
-    for (int i = 0; i < allTraceTags.GetCount(); i++) {
+    for (size_t i = 0; i < allTraceTags.GetCount(); i++) {
         if (!tags.IsEmpty())
             tags += wxT(" ");
         tags += allTraceTags.Item(i);
@@ -357,6 +357,7 @@ bool watchUsbIpApp::OnInit()
 
 void watchUsbIpApp::OnSshDied(wxCommandEvent &event)
 {
+    wxUnusedVar(event);
     ::wxLogTrace(MYTRACETAG, wxT("nxssh has terminated"));
     m_pDialog->Destroy();
 }
@@ -367,7 +368,7 @@ void watchUsbIpApp::OnHotplug(HotplugEvent &event)
     USB u;
     ArrayOfUSBDevices au = u.GetDevices();
     SharedUsbDevice *sdev = NULL;
-    int i;
+    size_t i;
     for (i = 0; i < au.GetCount(); i++) {
         if ((au[i].GetBusNum() == event.GetBusNum()) && (au[i].GetDevNum() == event.GetDevNum())) {
             sdev = new SharedUsbDevice;
@@ -444,7 +445,7 @@ void watchUsbIpApp::OnHotplug(HotplugEvent &event)
                 dev.m_sSerial = m_pDialog->GetSerial();
                 dev.m_eMode = doexport ? SharedUsbDevice::MODE_REMOTE : SharedUsbDevice::MODE_LOCAL;
                 found = false;
-                for (int i = 0; i < a.GetCount(); i++) {
+                for (size_t i = 0; i < a.GetCount(); i++) {
                     if (dev.cmpNoMode(a[i])) {
                         found = true;
                         break;

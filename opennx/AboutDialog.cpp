@@ -194,6 +194,7 @@ wxIcon AboutDialog::GetIconResource( const wxString& name )
 
 void AboutDialog::OnOKClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     EndDialog(0);
 }
 

@@ -334,9 +334,9 @@ void SessionAdmin::OnToolRefreshClick( wxCommandEvent& event )
 
 void SessionAdmin::OnABOUTClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     AboutDialog d(this);
     d.ShowModal();
-    //event.Skip();
 }
 
 /*!

@@ -463,9 +463,12 @@ MyXmlConfig::sGetListParams(const long protocolVersion)
     ret << wxT("\" --status=\"suspended,running\"")
         << wxT(" --type=\"");
     switch (m_eSessionType) {
+        case STYPE_SHADOW:
+            break;
         case STYPE_UNIX:
             ret << wxT("unix-");
             switch (m_eDesktopType) {
+                case DTYPE_ANY:
                 case DTYPE_RDP:
                 case DTYPE_RFB:
                     break;
@@ -549,6 +552,7 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
             case STYPE_UNIX:
                 ret << wxT("unix-");
                 switch (m_eDesktopType) {
+                    case DTYPE_ANY:
                     case DTYPE_RDP:
                     case DTYPE_RFB:
                         break;
@@ -984,9 +988,10 @@ MyXmlConfig::LoadFromURL(const wxString &filename)
     ::wxLogTrace(MYTRACETAG, wxT("Fetching %s"), filename.c_str());
     wxInputStream *is = url.GetInputStream();
     if (is && loadFromStream(*is, false)) {
-        m_sName = wxFileName(url.GetPath()).GetName();
-        if (0 == url.GetScheme().CmpNoCase(wxT("file"))) {
-            m_sFileName = wxFileName(url.GetPath()).GetFullPath();
+        wxURI uri(filename);
+        m_sName = wxFileName(uri.GetPath()).GetName();
+        if (0 == uri.GetScheme().CmpNoCase(wxT("file"))) {
+            m_sFileName = wxFileName(uri.GetPath()).GetFullPath();
             m_bWritable = wxFileName::IsFileWritable(m_sFileName);
         } else {
             m_sFileName = url.BuildUnescapedURI();

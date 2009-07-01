@@ -1,3 +1,5 @@
+AM_LIBTOOLFLAGS = --silent
+
 SUBDIRS = po
 DIST_SUBDIRS = po packaging/win32
 

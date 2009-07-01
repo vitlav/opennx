@@ -441,6 +441,8 @@ void UsbIp::parse(const wxString &line)
                         case Responding:
                             m_eState = Responded;
                             break;
+                        default:
+                            break;
                     }
                     break;
                 case 201:
@@ -454,6 +456,8 @@ void UsbIp::parse(const wxString &line)
                             break;
                         case ListDevices:
                             parsedevice(line.Mid(4));
+                            break;
+                        default:
                             break;
                     }
                     break;
@@ -490,6 +494,8 @@ void UsbIp::parse(const wxString &line)
                         case Responding:
                             m_eState = Responded;
                             break;
+                        default:
+                            break;
                     }
                     break;
             }
@@ -504,6 +510,8 @@ void UsbIp::OnSocketEvent(wxSocketEvent &event)
     char buf[128];
     ::wxLogTrace(MYTRACETAG, wxT("SocketEvent"));
     switch (event.GetSocketEvent()) {
+        case wxSOCKET_OUTPUT:
+            break;
         case wxSOCKET_INPUT:
             m_pSocketClient->Read(buf, sizeof(buf) - 1);
             buf[m_pSocketClient->LastCount()] = '\0';

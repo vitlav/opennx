@@ -99,7 +99,7 @@ long getppid()
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/unistd.h>
+#include <unistd.h>
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <dlfcn.h>
@@ -344,7 +344,7 @@ void reparent_pulldown(long parentID)
                 Window *childs = NULL;
                 unsigned int nchilds = 0;
                 if (XQueryTree(dpy, root, &dummy, &dummy, &childs, &nchilds)) {
-                    int c;
+                    unsigned int c;
                     for (c = 0; c < nchilds; c++) {
                         Window w = childs[c];
                         if (w != None) {
@@ -356,7 +356,7 @@ void reparent_pulldown(long parentID)
                             int res = XGetWindowProperty(dpy, w, a, 0, 32, False,
                                     XA_CARDINAL, &type, &fmt, &n, &ba, (unsigned char **)&prop);
                             if ((res == Success) && (fmt = 32) && (n == 1) && prop) {
-                                if (*prop == getpid()) {
+                                if (*prop == (unsigned long)getpid()) {
                                     int dummy;
                                     unsigned int pw, cw, udummy;
                                     Window wdummy;
@@ -395,7 +395,7 @@ void close_sid(const char *sid)
             Window *childs = NULL;
             unsigned int nchilds = 0;
             if (XQueryTree(dpy, root, &dummy, &dummy, &childs, &nchilds)) {
-                int c;
+                unsigned int c;
                 for (c = 0; c < nchilds; c++) {
                     Window w = XmuClientWindow(dpy, childs[c]);
                     if (w != None) {
