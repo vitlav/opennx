@@ -1517,7 +1517,7 @@ MySession::prepareCups()
         tos << wxT("  Deny From All") << endl;
         tos << wxT("  Require user ") << ::wxGetUserId() << endl;
         tos << wxT("  AuthType Digest") << endl;
-        tos << wxT("  Allow from 127.0.0.1") << endl;
+        tos << wxT("  Allow from 127.0.0.0/8") << endl;
         tos << wxT("</Location>") << endl;
     }
     {
