@@ -1137,9 +1137,9 @@ MySession::startSharing()
     CupsClient cc;
     SmbClient sc;
     ArrayOfShares sa;
-    if (cc.IsAvailable())
+    if (m_pCfg->bGetUseCups() && cc.IsAvailable())
         sa = cc.GetShares();
-    if (sc.IsAvailable())
+    if (m_pCfg->bGetEnableSmbSharing() && sc.IsAvailable())
         WX_APPEND_ARRAY(sa, sc.GetShares());
 
     long cupsport;
@@ -1379,6 +1379,8 @@ MySession::startProxy()
 MySession::getActiveCupsPrinters()
 {
     ArrayOfShareGroups ret;
+    if (!m_pCfg->bGetUseCups())
+        return ret;
     CupsClient cc;
     if (cc.IsAvailable()) {
         ArrayOfShares sa = cc.GetShares();
