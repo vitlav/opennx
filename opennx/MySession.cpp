@@ -1538,6 +1538,13 @@ MySession::prepareCups()
         tos << wxT("  AuthType BasicDigest") << endl;
         tos << wxT("  Allow from 127.0.0.0/8") << endl;
         tos << wxT("</Location>") << endl;
+        tos << wxT("<Location /printers>") << endl;
+        tos << wxT("  Order Deny,Allow") << endl;
+        tos << wxT("  Deny From All") << endl;
+        tos << wxT("  Require user root");
+        tos << wxT("  AuthType none") << endl;
+        tos << wxT("  Allow from 127.0.0.0/8") << endl;
+        tos << wxT("</Location>") << endl;
     }
     {
         wxFileOutputStream fos(sCupsDir + wxT("passwd.md5"));
