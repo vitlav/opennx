@@ -1429,7 +1429,7 @@ MySession::isCupsRunning()
     bool ret = false;
     if (cupsport > 0) {
         // Try connecting to cupsd
-        MyHTTP http;
+        wxHTTP http;
         wxString cupspw = decodeString(wxConfigBase::Get()->Read(wxT("Config/CupsPasswd"), wxEmptyString));
         if (!cupspw.IsEmpty()) {
             http.SetUser(::wxGetUserId());
@@ -1440,7 +1440,6 @@ MySession::isCupsRunning()
         int res = http.GetResponse();
         wxString svr = http.GetHeader(wxT("server"));
         ::wxLogTrace(MYTRACETAG, wxT("isCupsRunning RC=%d SVR=%s"), res, svr.c_str());
-        //FRITZ if (((res == 200) || (res == 401)) && svr.Contains(wxT("CUPS")))
         if ((res == 200) && svr.Contains(wxT("CUPS")))
             ret = true;
         delete is;
@@ -1475,6 +1474,7 @@ MySession::prepareCups()
     wxFileName::Mkdir(sCupsDir, 0700, wxPATH_MKDIR_FULL);
     sCupsDir << wxFileName::GetPathSeparator();
     wxFileName::Mkdir(sCupsDir + wxT("spool"), 0700, wxPATH_MKDIR_FULL);
+    wxFileName::Mkdir(sCupsDir + wxT("cache"), 0700, wxPATH_MKDIR_FULL);
     wxFileName::Mkdir(sCupsDir + wxT("certs"), 0700, wxPATH_MKDIR_FULL);
     wxFileName::Mkdir(sCupsDir + wxT("spool") +
             wxFileName::GetPathSeparator() + wxT("tmp"), 0700, wxPATH_MKDIR_FULL);
@@ -1513,13 +1513,20 @@ MySession::prepareCups()
     {
         wxFileOutputStream fos(sCupsDir + wxT("cupsd.conf"));
         wxTextOutputStream tos(fos);
+        tos << wxT("CacheDir ") << sCupsDir << wxT("cache") << endl;
         tos << wxT("TempDir ") << sCupsDir << wxT("spool")
             << wxFileName::GetPathSeparator() << wxT("tmp") << endl;
         tos << wxT("RequestRoot ") << sCupsDir << wxT("spool") << endl;
         tos << wxT("ServerRoot ") << m_sUserDir
             << wxFileName::GetPathSeparator() << wxT("cups") << endl;
         tos << wxT("ErrorLog ") << sCupsDir << wxT("error_log") << endl;
+        tos << wxT("PageLog ") << sCupsDir << wxT("page_log") << endl;
+        tos << wxT("AccessLog ") << sCupsDir << wxT("access_log") << endl;
+#ifdef __WXDEBUG__
+        tos << wxT("LogLevel debug") << endl;
+#else
         tos << wxT("LogLevel info") << endl;
+#endif
         tos << wxT("Port ") << (int)cupsport << endl;
         tos << wxT("Browsing Off") << endl;
         tos << wxT("ServerName localhost") << endl;
@@ -1528,7 +1535,7 @@ MySession::prepareCups()
         tos << wxT("  Order Deny,Allow") << endl;
         tos << wxT("  Deny From All") << endl;
         tos << wxT("  Require user ") << ::wxGetUserId() << endl;
-        tos << wxT("  AuthType Digest") << endl;
+        tos << wxT("  AuthType BasicDigest") << endl;
         tos << wxT("  Allow from 127.0.0.0/8") << endl;
         tos << wxT("</Location>") << endl;
     }
@@ -1543,13 +1550,16 @@ MySession::prepareCups()
         tos << ::wxGetUserId() << wxT(":") << sGroupId;
 #endif
         wxDateTime now = wxDateTime::Now();
-        wxString cupspw = ::wxGetUserId();
-        cupspw << wxT("NX")
-            << now.FormatISODate()
-            << wxT("T")
-            << now.FormatISOTime();
-        cupspw = md5sum(cupspw).Left(16);
-        wxConfigBase::Get()->Write(wxT("Config/CupsPasswd"), encodeString(cupspw));
+        wxString cupspw = decodeString(wxConfigBase::Get()->Read(wxT("Config/CupsPasswd"), wxEmptyString));
+        if (cupspw.IsEmpty()) {
+            cupspw << ::wxGetUserId()
+                << wxT("NX")
+                << now.FormatISODate()
+                << wxT("T")
+                << now.FormatISOTime();
+            cupspw = md5sum(cupspw).Left(16);
+            wxConfigBase::Get()->Write(wxT("Config/CupsPasswd"), encodeString(cupspw));
+        }
         tos << wxT(":") << md5sum(::wxGetUserId()+ wxT(":CUPS:") + cupspw) << endl;
     }
     wxString cmd = m_pCfg->sGetCupsPath();

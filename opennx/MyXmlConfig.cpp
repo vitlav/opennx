@@ -46,6 +46,7 @@
 #include <wx/wfstream.h>
 #include <wx/regex.h>
 #include <wx/url.h>
+#include <wx/config.h>
 
 class wxConfigBase;
 
@@ -276,7 +277,9 @@ MyXmlConfig::init()
     m_eSessionType = STYPE_UNIX;
 
     m_sCommandLine = wxEmptyString;
-    m_sCupsPath = wxT(CUPS_DEFAULT_PATH);
+    wxConfigBase::Get()->Read(wxT("Config/CupsPath"), &m_sCupsPath);
+    if (m_sCupsPath.IsEmpty())
+        m_sCupsPath = wxT(CUPS_DEFAULT_PATH);
     m_sFileName = wxEmptyString;
     m_sGuestUser = wxEmptyString;
     m_sGuestPassword = wxEmptyString;

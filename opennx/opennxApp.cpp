@@ -496,6 +496,25 @@ opennxApp::setSelfPath()
     return true;
 }
 
+wxString opennxApp::findExecutable(wxString name)
+{
+    wxString ret = wxEmptyString;
+    wxString path;
+    if (::wxGetEnv(wxT("PATH"), &path)) {
+        if (path.IsEmpty())
+            return ret;
+        wxStringTokenizer t(path, wxT(":"));
+        while (t.HasMoreTokens()) {
+            wxFileName fn(t.GetNextToken(), name);
+            if (fn.IsFileExecutable()) {
+                ret = fn.GetFullPath();
+                return ret;
+            }
+        }
+    }
+    return ret;
+}
+
     bool
 opennxApp::preInit()
 {
@@ -505,6 +524,19 @@ opennxApp::preInit()
         return false;
 
     wxString tmp;
+    if (!wxConfigBase::Get()->Read(wxT("Config/CupsPath"), &tmp)) {
+#if defined(__LINUX__) || defined(__OPENBSD__) || defined(__WXMAC__)
+        tmp = findExecutable(wxT("cupsd"));
+        if ((tmp.IsEmpty()) && wxFileName::IsFileExecutable(wxT("/sbin/cupsd")))
+            tmp = wxT("/sbin/cupsd");
+        if ((tmp.IsEmpty()) && wxFileName::IsFileExecutable(wxT("/usr/sbin/cupsd")))
+            tmp = wxT("/usr/sbin/cupsd");
+        if ((tmp.IsEmpty()) && wxFileName::IsFileExecutable(wxT("usr/local/sbin/cupsd")))
+            tmp = wxT("/usr/local/sbin/cupsd");
+#endif
+        wxConfigBase::Get()->Write(wxT("Config/CupsPath"), tmp);
+        wxConfigBase::Get()->Flush();
+    }
     if (!wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp)) {
         wxFileName fn(GetSelfPath());
         if (fn.GetDirs().Last().IsSameAs(wxT("bin")))

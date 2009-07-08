@@ -104,6 +104,7 @@ class opennxApp : public wxApp
         void setUserDir();
         void checkNxSmartCardSupport();
         void checkLibUSB();
+        wxString findExecutable(wxString name);
 };
 
 DECLARE_APP(opennxApp)
