@@ -1430,12 +1430,18 @@ MySession::isCupsRunning()
     if (cupsport > 0) {
         // Try connecting to cupsd
         MyHTTP http;
+        wxString cupspw = decodeString(wxConfigBase::Get()->Read(wxT("Config/CupsPasswd"), wxEmptyString));
+        if (!cupspw.IsEmpty()) {
+            http.SetUser(::wxGetUserId());
+            http.SetPassword(cupspw);
+        }
         http.Connect(wxT("127.0.0.1"), cupsport);
         wxInputStream *is = http.GetInputStream(wxT("/"));
         int res = http.GetResponse();
         wxString svr = http.GetHeader(wxT("server"));
         ::wxLogTrace(MYTRACETAG, wxT("isCupsRunning RC=%d SVR=%s"), res, svr.c_str());
-        if (((res == 200) || (res == 401)) && svr.Contains(wxT("CUPS")))
+        //FRITZ if (((res == 200) || (res == 401)) && svr.Contains(wxT("CUPS")))
+        if ((res == 200) && svr.Contains(wxT("CUPS")))
             ret = true;
         delete is;
     }
@@ -1455,6 +1461,12 @@ MySession::prepareCups()
     ::wxLogTrace(MYTRACETAG, wxT("Check for cupsd running at port %d"), cupsport);
     if (isCupsRunning())
         return true;
+
+    // If connecting to cupsd failed, we select the port again, because we might
+    // have connected to another user's cupsd and thus authentication might
+    // have failed. In that case, we must start our own new instance of cupsd.
+    cupsport = getFirstFreePort(20000);
+    wxConfigBase::Get()->Write(wxT("Config/CupsPort"), cupsport);
 
     wxString tmp;
     wxString sCupsDir = m_sUserDir;
