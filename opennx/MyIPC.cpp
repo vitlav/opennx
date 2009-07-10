@@ -552,8 +552,24 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
                         // terminationg session on user request
                     case 718:
                         // session restore successful
+                        break;
                     case 719:
-                        // SMB/CUPS running
+                        // SMB filesystem: running
+                        /* Workaround for newer nxnodes (since 3.2.0?):
+                         * On those, the message "NX> 709 Filesharing Port: nnn" is missing.
+                         * Therefore, we now use message 719 and hardcode the port
+                         * to SMBFS (139) if running on Windows and CIFS (445) otherwise.
+                         */
+#ifdef __WXMSW__
+                        upevent.SetString(wxT("139"));
+#else
+                        upevent.SetString(wxT("445"));
+#endif
+                        upevent.SetInt(ActionSetSmbPort);
+                        m_pEvtHandler->AddPendingEvent(upevent);
+                        break;
+                    case 720:
+                        // CUPS printer: running
                     case 725:
                         // Shadow: Geometry 1024x768x24
                         break;
