@@ -7,6 +7,9 @@ This package has been tested on Linux, OpenBSD, Mac OSX and
 Windows (with MinGW)
 
 1. Prerequisites:
+   
+    OpenNX uses wxWidgets, libsmbclient and libcups so you will need the
+    corresponding development packages on your system.
 
     For building on Windows, you need the latest MinGW/MSYS development
     system (See http://www.mingw.org). Since currently (Sep. 2008) only old
@@ -16,19 +19,15 @@ Windows (with MinGW)
     It contains a complete MinGW/MSYS environment plus a pre-built
     wxWidgets-2.8.8 framework, containing the patches mentioned below.
 
-    On all other systems, you will just need a patched wxWidgets of
-    version 2.8.6 or later. There is one mandatory patch (which is
-    in wxWidgets' SVN-HEAD, but unfortunately NOT in it's 2.8-branches).
-    You can fetch it at
-    http://downloads.sourceforge.net/opennx/wx-2.8-cmdline.patch
-    The other wxWidgets patch is optional and adds the ability to generate
-    trace logs in release-builds. (Normally, this feature is only
-    availabe in debug builds). This patch is available at
-    http://downloads.sourceforge.net/opennx/wx-2.8-debuglog.patch
+    On all other systems, you will just need wxWidgets of
+    version 2.8.9 or later.
 
     When using an SVN-checkout, in addition, you need GNU autotools,
-    GNU gettext and GNU libtool (and their dependencies, of course)
+    GNU gettext and GNU libtool, svn2cl (and their dependencies, of course)
     in order to generate the necessary support files.
+
+    You also can cross-build for windows on Fedora F11, using the latest
+    mingw32 cross environment.
 
 2. Configuring the package:
 
@@ -37,7 +36,9 @@ Windows (with MinGW)
 
         make -f Makefile.am
 
-    This step is NOT necessary when building from a source tarball.
+    This step needs svn access (because it generates the ChangeLog and
+    derives the Build-# from the SVN revision) an is *NOT* necessary when
+    building from a source tarball.
 
     Normally, you simply will run the command sequence:
 
@@ -50,10 +51,12 @@ Windows (with MinGW)
         Application features:
         --enable-unicode
             Enables a unicode build [Default: YES]
+        --enable-staticwx
+            Link against a static wxWidgets lib [Default: NO]
+        --enable-debug
+            Link against a debug wxWidgets lib [Default: NO]
         --enable-warn
             Enables some additional compiler warnings [Default: NO]
-        --enable-smartcard
-            Enables SmartCard support [Default: NO]
         --with-nxproto=x.x.x
             Can be used to tweak the NX protocol version [Default: 2.1.0]
 
@@ -80,3 +83,12 @@ Windows (with MinGW)
     is currently used for storing the client's SSH key and NOT forwarded
     thru the NX session.
 
+4. USB forwarding:
+  For those who are curious: There is a configure option named
+  --enable-usbip (Default: NO) which is intended to activate support
+  for USB forwarding. Enabling this will *NOT* work, because it depends on
+  additional software which is *currently* closed source. The additional
+  software will be released to OpenSource in approx. 1 year.
+
+Have fun
+ -Fritz
