@@ -109,8 +109,8 @@ test ${wxWidgets} = 0 && AC_MSG_ERROR(Could not find wxWidgets library)
 
 APP_LDADD=
 OPENNX_RES=
-OPENNX_RESHDR=
 TRACELOG=
+TRACELOG_RES=
 WATCHREADER=
 WATCHREADER_RES=
 WATCHUSBIP=
@@ -123,7 +123,6 @@ case $target_os in
         test "$_wx_libpath" != "/mingw/lib" && LDFLAGS="$LDFLAGS -L$_wx_libpath"
         APP_LDADD="-lstdc++ -lole32 -luuid -lversion"
 		OPENNX_RES='opennx.$(OBJEXT)'
-		OPENNX_RESHDR="res/opennx.rc"
         TRACELOG='tracelog$(EXEEXT)'
 		TRACELOG_RES='tracelog.$(OBJEXT)'
         WATCHREADER='watchreader$(EXEEXT)'
@@ -153,7 +152,6 @@ case $target_os in
 esac
 AC_SUBST(APP_LDADD)
 AC_SUBST(OPENNX_RES)
-AC_SUBST(OPENNX_RESHDR)
 AC_SUBST(TRACELOG)
 AC_SUBST(TRACELOG_RES)
 AC_SUBST(WATCHREADER)
