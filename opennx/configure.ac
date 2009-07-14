@@ -6,7 +6,7 @@ AC_INIT([opennx],[0.16],[felfert@users.sf.net])
 AC_CONFIG_AUX_DIR([conf])
 AC_CONFIG_SRCDIR([opennxApp.cpp])
 AC_CANONICAL_TARGET
-AM_INIT_AUTOMAKE([foreign no-installinfo no-installman])
+AM_INIT_AUTOMAKE([foreign no-installinfo no-installman no-dependencies])
 AC_CONFIG_HEADERS([config.h])
 
 case $build_os in
