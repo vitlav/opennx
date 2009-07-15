@@ -9,9 +9,9 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>OpenNXapp</string>
+	<string>_EXECUTABLE_</string>
 	<key>CFBundleIconFile</key>
-	<string>nx.icns</string>
+	<string>_ICON_</string>
 	<key>CFBundleName</key>
 	<string>OpenNX</string>
 	<key>CFBundlePackageType</key>

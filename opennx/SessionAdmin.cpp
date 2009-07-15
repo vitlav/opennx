@@ -366,7 +366,6 @@ void SessionAdmin::OnListctrlDeselected( wxListEvent& event )
 
 void SessionAdmin::OnMenuSessionNewClick( wxCommandEvent& event )
 {
-    // Insert custom code here
     LoginDialog d(this);
     d.ShowModal();
     event.Skip();

@@ -110,35 +110,15 @@ bootstrap:
 ACLOCAL_AMFLAGS = -I m4
 
 bundle:
-	mkdir -p OpenNX.app/Contents/{MacOS,Resources}
-	cp $(top_srcdir)/packaging/MacOSX/opennx.plist \
-	    OpenNX.app/Contents/Info.plist
-	cp $(top_srcdir)/res/nx.icns OpenNX.app/Contents/Resources
-	ln -s -f $(abs_builddir)/opennx OpenNX.app/Contents/MacOS/opennx
-	echo "APPL????" > OpenNX.app/Contents/PkgInfo
-	echo '#!/bin/sh' > OpenNX.app/Contents/MacOS/OpenNXapp
-	echo 'exec `dirname $$0`/opennx' >> OpenNX.app/Contents/MacOS/OpenNXapp
-	chmod a+x OpenNX.app/Contents/MacOS/OpenNXapp
-	mkdir -p OpenNXAdmin.app/Contents/{MacOS,Resources}
-	cp $(top_srcdir)/packaging/MacOSX/admin.plist \
-	    OpenNXAdmin.app/Contents/Info.plist
-	cp $(top_srcdir)/res/opennx-admin.icns \
-	    OpenNXAdmin.app/Contents/Resources
-	ln -s -f $(abs_builddir)/opennx OpenNXAdmin.app/Contents/MacOS/opennx
-	echo "APPL????" > OpenNXAdmin.app/Contents/PkgInfo
-	echo '#!/bin/sh' > OpenNXAdmin.app/Contents/MacOS/OpenNXAdmin
-	echo 'exec `dirname $$0`/opennx --admin' >> OpenNXAdmin.app/Contents/MacOS/OpenNXAdmin
-	chmod a+x OpenNXAdmin.app/Contents/MacOS/OpenNXAdmin
-	mkdir -p OpenNXWizard.app/Contents/{MacOS,Resources}
-	cp $(top_srcdir)/packaging/MacOSX/wizard.plist \
-	    OpenNXWizard.app/Contents/Info.plist
-	cp $(top_srcdir)/res/opennx-wizard.icns \
-	    OpenNXWizard.app/Contents/Resources
-	ln -s -f $(abs_builddir)/opennx OpenNXWizard.app/Contents/MacOS/opennx
-	echo "APPL????" > OpenNXWizard.app/Contents/PkgInfo
-	echo '#!/bin/sh' > OpenNXWizard.app/Contents/MacOS/OpenNXWizard
-	echo 'exec `dirname $$0`/opennx --wizard' >> OpenNXWizard.app/Contents/MacOS/OpenNXWizard
-	chmod a+x OpenNXWizard.app/Contents/MacOS/OpenNXWizard
+	$(top_srcdir)/packaging/MacOSX/mkbundle OpenNX.app OpenNXapp \
+	    $(top_srcdir)/res/nx.icns $(abs_builddir)/opennx \
+	    $(top_srcdir)/packaging/MacOSX/opennx.plist
+	$(top_srcdir)/packaging/MacOSX/mkbundle OpenNXAdmin.app OpenNXAdmin \
+	    $(top_srcdir)/res/opennx-admin.icns $(abs_builddir)/opennx \
+	    $(top_srcdir)/packaging/MacOSX/opennx.plist --admin
+	$(top_srcdir)/packaging/MacOSX/mkbundle OpenNXWizard.app OpenNXWizard \
+	    $(top_srcdir)/res/opennx-wizard.icns $(abs_builddir)/opennx \
+	    $(top_srcdir)/packaging/MacOSX/opennx.plist --wizard
 
 all-local: $(BUNDLE)
 

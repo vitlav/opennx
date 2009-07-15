@@ -1,0 +1,27 @@
+#!/bin/sh
+#
+# $1 - Bundle directory
+# $2 - Name of wrapper shellscript
+# $3 - Path of icon file
+# $4 - Path of binary executable
+# $5 - Path of plist template
+# $@ - Additional arguments for executable
+
+BDIR=$1
+SCRIPT=$2
+ICON=$3
+BIN=$4
+PLIST=$5
+shift 5
+
+mkdir -p $BDIR/Contents/{MacOS,Resources}
+iconshort=`basename $ICON`
+sed -e "s/_ICON_/$iconshort/" -e "s/_EXECUTABLE_/$SCRIPT/" < $PLIST > $BDIR/Contents/Info.plist
+cp $ICON $BDIR/Contents/Resources
+ln -s -f $BIN $BDIR/Contents/MacOS/opennx
+echo "APPL????" > $BDIR/Contents/PkgInfo
+cat<<EOF>$BDIR/Contents/MacOS/$SCRIPT
+#!/bin/sh
+exec \`dirname \$0\`/opennx "\$@" $@
+EOF
+chmod a+x $BDIR/Contents/MacOS/$SCRIPT

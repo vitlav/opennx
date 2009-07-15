@@ -160,7 +160,7 @@ static Display *launchX11() {
     do_save = 1;
     memset(&_spath, 0, sizeof(_spath));
     memset(&_kbd, 0, sizeof(_kbd));
-    system("XDarwinStartup :0 >/dev/null 2>&1 &");
+    system("/usr/X11R6/bin/XDarwinStartup :0 >/dev/null 2>&1 &");
     while (!ret) {
         ret = XOpenDisplay(":0");
         if (!ret)
@@ -171,6 +171,8 @@ static Display *launchX11() {
             exit(1);
         }
     }
+    putenv("DISPLAY=:0");
+    system("/usr/X11R6/bin/quartz-wm >/dev/null 2>&1 &");
     return ret;
 }
 #endif
