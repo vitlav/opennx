@@ -109,16 +109,42 @@ bootstrap:
 
 ACLOCAL_AMFLAGS = -I m4
 
-macbundle:
+bundle:
 	mkdir -p OpenNX.app/Contents/{MacOS,Resources}
-	cp $(top_srcdir)/Info.plist OpenNX.app/Contents
+	cp $(top_srcdir)/packaging/MacOSX/opennx.plist \
+	    OpenNX.app/Contents/Info.plist
 	cp $(top_srcdir)/res/nx.icns OpenNX.app/Contents/Resources
-	ln -s -f `pwd`/$(top_builddir)/opennx OpenNX.app/Contents/MacOS/opennx
+	ln -s -f $(abs_builddir)/opennx OpenNX.app/Contents/MacOS/opennx
 	echo "APPL????" > OpenNX.app/Contents/PkgInfo
+	echo '#!/bin/sh' > OpenNX.app/Contents/MacOS/OpenNXapp
+	echo 'exec `dirname $$0`/opennx' >> OpenNX.app/Contents/MacOS/OpenNXapp
+	chmod a+x OpenNX.app/Contents/MacOS/OpenNXapp
+	mkdir -p OpenNXAdmin.app/Contents/{MacOS,Resources}
+	cp $(top_srcdir)/packaging/MacOSX/admin.plist \
+	    OpenNXAdmin.app/Contents/Info.plist
+	cp $(top_srcdir)/res/opennx-admin.icns \
+	    OpenNXAdmin.app/Contents/Resources
+	ln -s -f $(abs_builddir)/opennx OpenNXAdmin.app/Contents/MacOS/opennx
+	echo "APPL????" > OpenNXAdmin.app/Contents/PkgInfo
+	echo '#!/bin/sh' > OpenNXAdmin.app/Contents/MacOS/OpenNXAdmin
+	echo 'exec `dirname $$0`/opennx --admin' >> OpenNXAdmin.app/Contents/MacOS/OpenNXAdmin
+	chmod a+x OpenNXAdmin.app/Contents/MacOS/OpenNXAdmin
+	mkdir -p OpenNXWizard.app/Contents/{MacOS,Resources}
+	cp $(top_srcdir)/packaging/MacOSX/wizard.plist \
+	    OpenNXWizard.app/Contents/Info.plist
+	cp $(top_srcdir)/res/opennx-wizard.icns \
+	    OpenNXWizard.app/Contents/Resources
+	ln -s -f $(abs_builddir)/opennx OpenNXWizard.app/Contents/MacOS/opennx
+	echo "APPL????" > OpenNXWizard.app/Contents/PkgInfo
+	echo '#!/bin/sh' > OpenNXWizard.app/Contents/MacOS/OpenNXWizard
+	echo 'exec `dirname $$0`/opennx --wizard' >> OpenNXWizard.app/Contents/MacOS/OpenNXWizard
+	chmod a+x OpenNXWizard.app/Contents/MacOS/OpenNXWizard
+
+all-local: $(BUNDLE)
 
 distclean-local:
 	rm -f po/stamp-po
-#	rm -rf OpenNX.app
+	rm -rf OpenNX.app OpenNXAdmin.app OpenNXWizard.app
 
 RESDEPS = $(wildcard $(srcdir)/res/*.xrc $(srcdir)/res/*.png \
 		  $(srcdir)/res/*.html $(srcdir)/res/*.xml)
@@ -152,7 +178,7 @@ MAINTAINERCLEANFILES = ABOUT-NLS Makefile.in configure aclocal.m4 \
 	m4/progtest.m4 po/*.sin po/*.sed po/*.header po/Rules-quot \
 	po/*.template po/Makefile*.in
 
-DISTCLEANFILES = res/*.prv.* 
+DISTCLEANFILES = res/*.prv.*
 
 data_DATA = share/keyboards
 

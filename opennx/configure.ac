@@ -114,41 +114,44 @@ TRACELOG_RES=
 WATCHREADER=
 WATCHREADER_RES=
 WATCHUSBIP=
+BUNDLE=
 case $target_os in
-	mingw*)
+    mingw*)
         # On mingw, the default lib path is /mingw/lib
         # If wxWidgets was built with a different prefix, we therefore
         # must add that prefic to the linker flags.
         [_wx_libpath="`$WX_CONFIG_WITH_ARGS --prefix`/lib"]
         test "$_wx_libpath" != "/mingw/lib" && LDFLAGS="$LDFLAGS -L$_wx_libpath"
         APP_LDADD="-lstdc++ -lole32 -luuid -lversion"
-		OPENNX_RES='opennx.$(OBJEXT)'
+        OPENNX_RES='opennx.$(OBJEXT)'
         TRACELOG='tracelog$(EXEEXT)'
-		TRACELOG_RES='tracelog.$(OBJEXT)'
+        TRACELOG_RES='tracelog.$(OBJEXT)'
         WATCHREADER='watchreader$(EXEEXT)'
-		WATCHREADER_RES='watchreader.$(OBJEXT)'
-		tagnames="RC"
-		_LT_AC_TAGCONFIG
-		;;
-	darwin8*)
-		APP_LDADD="-lX11 -lXmu"
-		# Automatically build universal binary, if wxWidgets is a universal binary
-		if test -n "`echo -- $WX_LIBS|grep -- '-arch ppc'`" ; then
-			WX_CFLAGS="$WX_CFLAGS -arch ppc"
-			WX_CXXFLAGS="$WX_CXXFLAGS -arch ppc"
-		fi
-		if test -n "`echo -- $WX_LIBS|grep -- '-arch i386'`" ; then
-			WX_CFLAGS="$WX_CFLAGS -arch i386"
-			WX_CXXFLAGS="$WX_CXXFLAGS -arch i386"
-		fi
-		;;
-	*)
-		APP_LDADD="-lstdc++ -lX11 -lXmu"
+        WATCHREADER_RES='watchreader.$(OBJEXT)'
+        tagnames="RC"
+        _LT_AC_TAGCONFIG
+        ;;
+    darwin8*)
+        WATCHREADER='watchreader$(EXEEXT)'
+        BUNDLE=bundle
+        APP_LDADD="-lX11 -lXmu"
+        # Automatically build universal binary, if wxWidgets is a universal binary
+        if test -n "`echo -- $WX_LIBS|grep -- '-arch ppc'`" ; then
+            WX_CFLAGS="$WX_CFLAGS -arch ppc"
+            WX_CXXFLAGS="$WX_CXXFLAGS -arch ppc"
+        fi
+        if test -n "`echo -- $WX_LIBS|grep -- '-arch i386'`" ; then
+            WX_CFLAGS="$WX_CFLAGS -arch i386"
+            WX_CXXFLAGS="$WX_CXXFLAGS -arch i386"
+        fi
+        ;;
+    *)
+        APP_LDADD="-lstdc++ -lX11 -lXmu"
         WATCHREADER='watchreader$(EXEEXT)'
         if test "$ac_cv_enable_usbip" = "YES" ; then
             WATCHUSBIP='watchusbip$(EXEEXT)'
         fi
-		;;
+        ;;
 esac
 AC_SUBST(APP_LDADD)
 AC_SUBST(OPENNX_RES)
@@ -157,6 +160,7 @@ AC_SUBST(TRACELOG_RES)
 AC_SUBST(WATCHREADER)
 AC_SUBST(WATCHREADER_RES)
 AC_SUBST(WATCHUSBIP)
+AC_SUBST(BUNDLE)
 
 AC_ARG_ENABLE([warn],
 	AS_HELP_STRING([--enable-warn],
@@ -229,7 +233,7 @@ FE_RCVERSION
 
 AC_CHECK_HEADERS([cups/cups.h cups.h libsmbclient.h opensc/opensc.h usb.h])
 case $target_os in
-	mingw*)
+    mingw*)
         ;;
     *)
         if test "$ac_cv_header_libsmbclient_h" != "yes" ; then
@@ -267,5 +271,5 @@ AC_SUBST(DLLPATH)
 
 dnl AC_DEFINE(wxUSE_LOG_DEBUG,1,[Set to 1 for enabling trace logging])
 
-AC_CONFIG_FILES([Makefile opennx.spec Info.plist res/opennx.rc packaging/win32/Makefile packaging/win32/findrequires.pl po/Makefile.in])
+AC_CONFIG_FILES([Makefile opennx.spec res/opennx.rc packaging/win32/Makefile packaging/win32/findrequires.pl packaging/MacOSX/opennx.plist packaging/MacOSX/admin.plist packaging/MacOSX/wizard.plist po/Makefile.in])
 AC_OUTPUT

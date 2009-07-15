@@ -5,15 +5,15 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleIdentifier</key>
-	<string>org.opennx.opennx</string>
+	<string>org.opennx..</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>opennx</string>
+	<string>OpenNXAdmin</string>
 	<key>CFBundleIconFile</key>
-	<string>nx</string>
+	<string>opennx-admin.icns</string>
 	<key>CFBundleName</key>
-	<string>OpenNX</string>
+	<string>OpenNXAdmin</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
@@ -23,11 +23,11 @@
 	<key>CFBundleShortVersionString</key>
 	<string>@VERSION@</string>
 	<key>CFBundleGetInfoString</key>
-	<string>OpenNX version @VERSION@, (C) 2007 The OpenNX Team</string>
+	<string>OpenNX version @VERSION@, (C) 2009 The OpenNX Team</string>
 	<key>CFBundleLongVersionString</key>
-	<string>@VERSION@, (C) 2007 The OpenNX Team</string>
+	<string>@VERSION@, (C) 2009 The OpenNX Team</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright 2007 The OpenNX Team</string>
+	<string>Copyright 2009 The OpenNX Team</string>
 	<key>LSRequiresCarbon</key>
 	<true/>
 	<key>CSResourcesFileMapped</key>

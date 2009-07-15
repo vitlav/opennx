@@ -153,71 +153,25 @@ int connect(int s, const struct sockaddr *name, socklen_t namelen)
 }
 
 #ifdef __WXMAC__
-# define X11_APPLE "/Applications/Utilities/X11.app"
-# define X11_DARWIN "/Applications/XDarwin.app"
-
-static Display *waitX11(const char *x11cmd) {
+/* Startup XDarwin and try connecting to :0 */
+static Display *launchX11() {
     Display *ret = NULL;
-    unsigned long x11pid = 0;
     time_t ts = time(NULL) + 30;
+    do_save = 1;
+    memset(&_spath, 0, sizeof(_spath));
+    memset(&_kbd, 0, sizeof(_kbd));
+    system("XDarwinStartup :0 >/dev/null 2>&1 &");
     while (!ret) {
-        FILE *f = popen("ps -exww -o pid,ppid,command", "r");
-        if (f) {
-            unsigned long pid, ppid;
-            char *line;
-            char buf[1024];
-            char rest[1024];
-            while (line = fgets(buf, sizeof(buf), f)) {
-                if (sscanf(line, "%lu %lu %1023[^\r\n]", &pid, &ppid, &rest) == 3) {
-                    if (x11pid) {
-                        if (ppid == x11pid) {
-                            char *e = strstr(rest, "DISPLAY=");
-                            char *p = strchr(e, ' ');
-                            if (p) {
-                                *p = '\0';
-                                putenv(e);
-                                ret = XOpenDisplay(NULL);
-                                break;
-                            }
-                        }
-                    } else {
-                        if (strncmp(rest, x11cmd, strlen(x11cmd)) == 0)
-                            x11pid = pid;
-                    }
-                }
-            }
-            pclose(f);
-        } else {
-            perror("Could not run ps");
-            exit(1);
-        }
-        sleep(1);
+        ret = XOpenDisplay(":0");
+        if (!ret)
+            sleep(1);
+        do_save = 1;
         if (time(NULL) > ts) {
             fprintf(stderr, "Timeout while waiting for X server\n");
             exit(1);
         }
     }
     return ret;
-}
-
-static Display *launchX11() {
-    struct stat st;
-    do_save = 1;
-    memset(&_spath, 0, sizeof(_spath));
-    memset(&_kbd, 0, sizeof(_kbd));
-    if (stat(X11_APPLE, &st) == 0) {
-        if (S_ISDIR(st.st_mode)) {
-            system(X11_APPLE "/Contents/MacOS/X11 >/dev/null 2>&1 &");
-            return waitX11(X11_APPLE "/Contents/MacOS/X11");
-        }
-    }
-    if (stat(X11_DARWIN, &st) == 0) {
-        if (S_ISDIR(st.st_mode)) {
-            system(X11_DARWIN "/Contents/MacOS/XDarwin >/dev/null 2>&1 &");
-            return waitX11(X11_DARWIN "/Contents/MacOS/XDarwin");
-        }
-    }
-    return NULL;
 }
 #endif
 
