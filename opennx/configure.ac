@@ -115,6 +115,7 @@ WATCHREADER=
 WATCHREADER_RES=
 WATCHUSBIP=
 BUNDLE=
+OSRESDEPS=
 case $target_os in
     mingw*)
         # On mingw, the default lib path is /mingw/lib
@@ -128,12 +129,14 @@ case $target_os in
         TRACELOG_RES='tracelog.$(OBJEXT)'
         WATCHREADER='watchreader$(EXEEXT)'
         WATCHREADER_RES='watchreader.$(OBJEXT)'
+        OSRESDEPS='$(srcdir)/res/*.ico'
         tagnames="RC"
         _LT_AC_TAGCONFIG
         ;;
     darwin8*)
         WATCHREADER='watchreader$(EXEEXT)'
         BUNDLE=bundle
+        OSRESDEPS='$(srcdir)/res/*.icns'
         APP_LDADD="-lX11 -lXmu"
         # Automatically build universal binary, if wxWidgets is a universal binary
         if test -n "`echo -- $WX_LIBS|grep -- '-arch ppc'`" ; then
@@ -161,6 +164,7 @@ AC_SUBST(WATCHREADER)
 AC_SUBST(WATCHREADER_RES)
 AC_SUBST(WATCHUSBIP)
 AC_SUBST(BUNDLE)
+AC_SUBST(OSRESDEPS)
 
 AC_ARG_ENABLE([warn],
 	AS_HELP_STRING([--enable-warn],

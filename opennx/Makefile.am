@@ -147,7 +147,7 @@ distclean-local:
 	rm -rf OpenNX.app OpenNXAdmin.app OpenNXWizard.app
 
 RESDEPS = $(wildcard $(srcdir)/res/*.xrc $(srcdir)/res/*.png \
-		  $(srcdir)/res/*.html $(srcdir)/res/*.xml)
+		  $(srcdir)/res/*.html $(srcdir)/res/*.xml $(OSRESDEPS))
 RESSRC = $(subst $(srcdir)/,,$(RESDEPS))
 
 tmpres.zip: $(RESDEPS)
@@ -219,4 +219,5 @@ EXTRA_DIST = conf/config.rpath INSTALL INSTALL.generic COPYING share \
 	opennx.spec patches getnxsrcpkg $(RESDEPS) ChangeLog \
 	packaging/win32/findrequires.pl packaging/win32/opennx.iss \
 	res/nx-desktop.ico res/nx.ico res/opennx-admin.ico \
-	res/opennx-wizard.ico
+	res/opennx-wizard.ico res/nx-desktop.icns res/nx.icns \
+	res/opennx-admin.icns res/opennx-wizard.icns
