@@ -122,9 +122,11 @@ bundle:
 
 all-local: $(BUNDLE)
 
+clean-local:
+	rm -rf OpenNX.app OpenNXAdmin.app OpenNXWizard.app
+
 distclean-local:
 	rm -f po/stamp-po
-	rm -rf OpenNX.app OpenNXAdmin.app OpenNXWizard.app
 
 RESDEPS = $(wildcard $(srcdir)/res/*.xrc $(srcdir)/res/*.png \
 		  $(srcdir)/res/*.html $(srcdir)/res/*.xml $(OSRESDEPS))
