@@ -15,13 +15,13 @@ PLIST=$5
 shift 5
 
 mkdir -p $BDIR/Contents/{MacOS,Resources}
-iconshort=`basename $ICON`
+iconshort=`basename $ICON .icns`
 sed -e "s/_ICON_/$iconshort/" -e "s/_EXECUTABLE_/$SCRIPT/" < $PLIST > $BDIR/Contents/Info.plist
 cp $ICON $BDIR/Contents/Resources
 ln -s -f $BIN $BDIR/Contents/MacOS/opennx
 echo "APPL????" > $BDIR/Contents/PkgInfo
 cat<<EOF>$BDIR/Contents/MacOS/$SCRIPT
 #!/bin/sh
-exec \`dirname \$0\`/opennx "\$@" $@
+exec \`dirname \$0\`/opennx "\$@" $@ > /tmp/$SCRIPT.log 2>&1
 EOF
 chmod a+x $BDIR/Contents/MacOS/$SCRIPT

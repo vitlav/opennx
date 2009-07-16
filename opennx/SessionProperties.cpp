@@ -1060,14 +1060,21 @@ void SessionProperties::CreateControls()
     if (!content.IsEmpty()) {
         int width, height;
         // m_pHtmlWindow->GetSize(&width, &height);
+#ifdef __WXMAC__
+        // On MacOS wxHtmlContainerCell behaves unexpected?!
+        width = 150;
+        height = 250;
+#else
         m_pCtrlPanelAbout->GetSize(&width, &height);
+#endif
         m_pHtmlWindow->GetInternalRepresentation()->Layout(width);
         height = m_pHtmlWindow->GetInternalRepresentation()->GetHeight();
         width = m_pHtmlWindow->GetInternalRepresentation()->GetWidth();
         m_pHtmlWindow->SetSize(width, height);
         m_pHtmlWindow->SetSizeHints(width, height);
-        m_pCtrlPanelAbout->SetClientSize(width - 2, height);
 #warning Check geometry on all platforms
+        //m_pCtrlPanelAbout->SetClientSize(width - 2, height);
+        m_pCtrlPanelAbout->Layout();
         //m_pHtmlWindow->GetParent()->SetClientSize(width, height);
     }
 }
