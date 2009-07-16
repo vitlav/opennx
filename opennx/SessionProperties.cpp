@@ -1059,7 +1059,8 @@ void SessionProperties::CreateControls()
     m_pHtmlWindow->SetBackgroundColour(GetBackgroundColour());
     if (!content.IsEmpty()) {
         int width, height;
-        m_pHtmlWindow->GetSize(&width, &height);
+        // m_pHtmlWindow->GetSize(&width, &height);
+        m_pCtrlPanelAbout->GetSize(&width, &height);
         m_pHtmlWindow->GetInternalRepresentation()->Layout(width);
         height = m_pHtmlWindow->GetInternalRepresentation()->GetHeight();
         width = m_pHtmlWindow->GetInternalRepresentation()->GetWidth();
