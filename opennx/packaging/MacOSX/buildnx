@@ -1,0 +1,46 @@
+#!/bin/sh
+
+set -e
+
+BUILDDIR=`pwd`
+cd `dirname $0`/../..
+TOPSRC=`pwd`
+cd $BUILDDIR
+ALLPKG="nxcomp nxcompsh nxproxy nxservice nxesd nxssh"
+$TOPSRC/getnxsrcpkg $ALLPKG
+for pkg in $ALLPKG ; do
+    tar xzf ${pkg}-*.tar.gz
+done
+
+for pkg in nxcomp nxcompsh nxproxy nxservice nxesd ; do
+    cd $pkg
+    for p in $TOPSRC/patches/${pkg}-*.patch ; do
+        echo === Applying `basename $p` in $pkg
+        patch -p1 < $p
+    done
+    autoreconf -f -i
+    ./configure --prefix=/usr/NX
+    make
+    make DESTDIR=$BUILDDIR/dist install
+    cd ..
+    echo === Build of $pkg complete
+done
+
+cd nxssh
+patch -p1 < $TOPSRC/patches/openssh-scard-pin.patch
+patch -p1 < $TOPSRC/patches/nxssh-newbuild.patch
+autoreconf -f -i
+./configure --prefix=/usr/NX \
+  --with-opensc=/Library/OpenSC \
+  --with-cflags="-arch i386 -arch ppc" \
+  --with-cppflags="-I/Library/OpenSC/include" \
+  --with-ldflags="-arch i386 -arch ppc -L/Library/OpenSC/lib"
+make
+cp nxssh $BUILDDIR/dist/usr/NX/bin/nxssh
+cd ..
+
+rm -rf $BUILDDIR/dist/usr/NX/{include,etc,share} \
+       $BUILDDIR/dist/usr/NX/lib/*.la \
+       $BUILDDIR/dist/usr/NX/lib/*.a \
+       $BUILDDIR/dist/usr/NX/lib/pkgconfig \
+       $BUILDDIR/dist/usr/NX/bin/esd*
