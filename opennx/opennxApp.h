@@ -40,6 +40,10 @@ class opennxApp : public wxApp
         const wxString &GetVersion() { return m_sVersion; }
         const wxString &GetSelfPath() { return m_sSelfPath; }
         wxString LoadFileFromResource(const wxString &loc, bool bUseLocale = true);
+#ifdef __WXMAC__
+        // Respond to Apple Event for opening a document
+        virtual void MacOpenFile(const wxString& filename);
+#endif
         bool CreateDesktopEntry(MyXmlConfig *);
         bool RemoveDesktopEntry(MyXmlConfig *);
         /**

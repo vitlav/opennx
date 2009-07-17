@@ -157,7 +157,11 @@ class ProcessWatcher : public wxThreadHelper
 #ifdef __WXMSW__
     cfg = new wxConfig(wxT("OpenNX"), wxT("InnoviData"));
 #else
+# ifdef __WXMAC__
+    cfg = new wxConfig(wxT("OpenNX"), wxT("InnoviData"), wxT("OpenNX Preferences"), wxT("OpenNX Preferences"));
+# else
     cfg = new wxConfig(wxT("OpenNX"), wxT("InnoviData"), wxT(".opennx"), wxT("opennx.conf"));
+# endif 
 #endif
     wxConfigBase::Set(cfg);
 

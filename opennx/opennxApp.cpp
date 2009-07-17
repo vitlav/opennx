@@ -102,7 +102,11 @@ IMPLEMENT_APP(opennxApp);
 #ifdef __WXMSW__
     m_pCfg = new wxConfig(wxT("OpenNX"), wxT("InnoviData"));
 #else
+# ifdef __WXMAC__
+    m_pCfg = new wxConfig(wxT("OpenNX"), wxT("InnoviData"), wxT("OpenNX Preferences"), wxT("OpenNX Preferences"));
+# else
     m_pCfg = new wxConfig(wxT("OpenNX"), wxT("InnoviData"), wxT(".opennx"), wxT("opennx.conf"));
+# endif 
 #endif
     wxConfigBase::Set(m_pCfg);
 
@@ -248,6 +252,13 @@ opennxApp::CreateDesktopEntry(MyXmlConfig *cfg)
 #endif
 #ifdef __UNIX__
 # ifdef __WXMAC__
+#if 1
+    wxFileName fn(cfg->sGetFileName());
+    fn.MakeAbsolute();
+    wxString src = fn.GetFullPath();
+    wxString dst = wxGetHomeDir() + wxT("/Desktop/") + cfg->sGetName();
+    symlink(src.fn_str(), dst.fn_str());
+#else
     wxString path = wxGetHomeDir() + wxFileName::GetPathSeparator() + wxT("Desktop") +
         wxFileName::GetPathSeparator() + wxT(".") + cfg->sGetName() +
         wxFileName::GetPathSeparator() + wxT("Contents");
@@ -338,6 +349,7 @@ opennxApp::CreateDesktopEntry(MyXmlConfig *cfg)
         ::wxRenameFile(dir.GetPath(wxPATH_GET_VOLUME), fn, false);
 
     }
+#endif
 # else
     wxString dtEntry = wxT("[Desktop Entry]\n");
     dtEntry += wxT("Encoding=UTF-8\n");
@@ -387,6 +399,10 @@ opennxApp::RemoveDesktopEntry(MyXmlConfig *cfg)
     }
 #endif
 #ifdef __UNIX__
+# ifdef __WXMAC__
+    wxString fn = wxGetHomeDir() + wxT("/Desktop/") + cfg->sGetName();
+    ::wxRemoveFile(fn);
+# else
     const wxChar **p = desktopDirs;
 
     while (*p) {
@@ -394,6 +410,7 @@ opennxApp::RemoveDesktopEntry(MyXmlConfig *cfg)
                     ::wxGetHomeDir().c_str(), *p,cfg->sGetName().c_str()));
         p++;
     }
+# endif
 #endif
     ::wxLogTrace(MYTRACETAG, wxT("Removing '%s'"), cfg->sGetFileName().c_str());
     ::wxRemoveFile(cfg->sGetFileName());
@@ -883,6 +900,10 @@ bool opennxApp::realInit()
     // Call to base class needed for initializing command line processing
     if (!wxApp::OnInit())
         return false;
+#ifdef __WXMAC__
+    wxApp::s_macAboutMenuItemId = wxID_ABOUT;
+    wxFileName::MacRegisterDefaultTypeAndCreator(wxT("nxs"), 'TEXT', 'OPNX');
+#endif
 
     wxFileSystem::AddHandler(new wxZipFSHandler);
     wxFileSystem::AddHandler(new wxMemoryFSHandler);
@@ -1176,3 +1197,12 @@ void opennxApp::SetSessionCfg(MyXmlConfig &cfg)
     *m_pSessionCfg = cfg;
     m_pSessionCfg->sSetFileName(cfg.sGetFileName());
 }
+
+#ifdef __WXMAC__
+/// Respond to Apple Event for opening a document
+void opennxApp::MacOpenFile(const wxString& filename)
+{
+    wxLogDebug(wxT("MacOpenFile: %s"), filename.c_str());
+}
+#endif
+

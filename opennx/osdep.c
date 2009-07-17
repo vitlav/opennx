@@ -97,6 +97,7 @@ long getppid()
 #include <X11/Xmu/WinUtil.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -152,32 +153,51 @@ int connect(int s, const struct sockaddr *name, socklen_t namelen)
     return real_connect(s, name, namelen);
 }
 
+static void fatal(const char *fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
 #ifdef __WXMAC__
+    /* On MacOS, we use osascript (AppleScript) for displaying a simple
+     * error message. (wxWidgets is not initialized yet).
+     */
+    FILE *p = popen("osascript", "w");
+    fprintf(p, "display dialog \"");
+    vfprintf(p, fmt, ap);
+    fprintf(p, "\" buttons {\"OK\"} default button \"OK\" with icon stop with title \"OpenNX Error\"\n");
+    pclose(p);
+#endif
+    vfprintf(stderr, fmt, ap);
+    va_end(ap);
+    exit(1);
+}
+
+# ifdef __WXMAC__
 /* Startup XDarwin and try connecting to :0 */
 static Display *launchX11() {
     Display *ret = NULL;
-    time_t ts = time(NULL) + 30;
+    time_t ts = time(NULL) + 15; /* Wait 15sec for X startup */
     do_save = 1;
     memset(&_spath, 0, sizeof(_spath));
-    memset(&_kbd, 0, sizeof(_kbd));
     system("/usr/X11R6/bin/XDarwinStartup :0 >/dev/null 2>&1 &");
     while (!ret) {
         ret = XOpenDisplay(":0");
-        if (!ret)
+        if (!ret) {
             sleep(1);
-        do_save = 1;
-        if (time(NULL) > ts) {
-            fprintf(stderr, "Timeout while waiting for X server\n");
-            exit(1);
+            do_save = 1;
+            memset(&_spath, 0, sizeof(_spath));
+            if (time(NULL) > ts)
+                fatal("Timeout while waiting for X server.");
         }
     }
     putenv("DISPLAY=:0");
+    /* If the following fails, there is usually a WM already running
+     * so we don't care ... */
     system("/usr/X11R6/bin/quartz-wm >/dev/null 2>&1 &");
     return ret;
 }
-#endif
+# endif /* __WXMAC__ */
 
-    static void __attribute__ ((constructor))
+static void __attribute__ ((constructor))
 getx11socket()
 {
     memset(&_spath, 0, sizeof(_spath));
@@ -198,18 +218,14 @@ getx11socket()
 #ifdef NotImplemented
 # error Specify libc name
 #endif
-    if (!libc) {
-        fprintf(stderr, "Can't load libc: %s\n", dlerror());
-        exit(1);
-    }
+    if (!libc)
+        fatal("Can't load libc: %s", dlerror());
     real_connect = dlsym(libc, "connect");
-    if (!real_connect) {
-        fprintf(stderr, "Can't find symbol connect in libc: %s\n", dlerror());
-        exit(1);
-    }
+    if (!real_connect)
+        fatal("Can't find symbol connect in libc: %s\n", dlerror());
     Display *dpy = XOpenDisplay(NULL);
 #ifdef __WXMAC__
-    // Start X server, if necessary
+    /* Start X server, if necessary */
     if (!dpy)
         dpy = launchX11();
 #endif
@@ -253,7 +269,7 @@ free_libc()
     if (libc)
         dlclose(libc);
 }
-#endif
+#endif /* !__WXMSW__ */
 
 /*
  * Close a foreign X11 window (just like a window-manager would do.

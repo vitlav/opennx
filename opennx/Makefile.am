@@ -109,16 +109,37 @@ bootstrap:
 
 ACLOCAL_AMFLAGS = -I m4
 
+# The following assumes a package prefix of /Library/OpenNX
+pkg: all
+	rm -rf pkg
+	mkdir -p pkg/root/{Applications,Library}
+	$(top_srcdir)/packaging/MacOSX/mkbundle pkg/root/Applications/OpenNX.app OpenNXapp \
+	    $(top_srcdir)/res/nx.icns /Library/OpenNX/bin/opennx \
+	    $(top_srcdir)/packaging/MacOSX/opennx-main.plist "OPNX"
+	cp $(top_srcdir)/res/nx-desktop.icns \
+	    pkg/root/Applications/OpenNX.app/Contents/Resources
+	$(top_srcdir)/packaging/MacOSX/mkbundle OpenNXAdmin.app OpenNXAdmin \
+	    $(top_srcdir)/res/opennx-admin.icns /Library/OpenNX/bin/opennx \
+	    $(top_srcdir)/packaging/MacOSX/opennx.plist "" --admin
+	$(top_srcdir)/packaging/MacOSX/mkbundle OpenNXWizard.app OpenNXWizard \
+	    $(top_srcdir)/res/opennx-wizard.icns /Library/OpenNX/bin/opennx \
+	    $(top_srcdir)/packaging/MacOSX/opennx.plist "" --wizard
+	$(MAKE) DESTDIR=$(abs_builddir)/pkg/root install
+	rm -rf nxbuild
+	mkdir nxbuild
+	(cd nxbuild ; DEST=$(abs_builddir)/pkg/root $(abs_srcdir)/packaging/MacOSX/buildnx)
+
 bundle:
 	$(top_srcdir)/packaging/MacOSX/mkbundle OpenNX.app OpenNXapp \
 	    $(top_srcdir)/res/nx.icns $(abs_builddir)/opennx \
-	    $(top_srcdir)/packaging/MacOSX/opennx.plist
+	    $(top_srcdir)/packaging/MacOSX/opennx-main.plist ""
+	cp $(top_srcdir)/res/nx-desktop.icns OpenNX.app/Contents/Resources
 	$(top_srcdir)/packaging/MacOSX/mkbundle OpenNXAdmin.app OpenNXAdmin \
 	    $(top_srcdir)/res/opennx-admin.icns $(abs_builddir)/opennx \
-	    $(top_srcdir)/packaging/MacOSX/opennx.plist --admin
+	    $(top_srcdir)/packaging/MacOSX/opennx.plist "" --admin
 	$(top_srcdir)/packaging/MacOSX/mkbundle OpenNXWizard.app OpenNXWizard \
 	    $(top_srcdir)/res/opennx-wizard.icns $(abs_builddir)/opennx \
-	    $(top_srcdir)/packaging/MacOSX/opennx.plist --wizard
+	    $(top_srcdir)/packaging/MacOSX/opennx.plist "" --wizard
 
 all-local: $(BUNDLE)
 

@@ -275,5 +275,5 @@ AC_SUBST(DLLPATH)
 
 dnl AC_DEFINE(wxUSE_LOG_DEBUG,1,[Set to 1 for enabling trace logging])
 
-AC_CONFIG_FILES([Makefile opennx.spec res/opennx.rc packaging/win32/Makefile packaging/win32/findrequires.pl packaging/MacOSX/opennx.plist po/Makefile.in])
+AC_CONFIG_FILES([Makefile opennx.spec res/opennx.rc packaging/win32/Makefile packaging/win32/findrequires.pl packaging/MacOSX/opennx.plist packaging/MacOSX/opennx-main.plist po/Makefile.in])
 AC_OUTPUT

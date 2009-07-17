@@ -2021,6 +2021,10 @@ MyXmlConfig::SaveToFile()
         }
         delete data;
     }
+#ifdef __WXMAC__
+    wxFileName fn(m_sFileName);
+    fn.MacSetTypeAndCreator('TEXT', 'OPNX');
+#endif
     return true;
 }
 
