@@ -17,7 +17,7 @@
         <key>CFBundlePackageType</key>
         <string>APPL</string>
         <key>CFBundleSignature</key>
-        <string>_CREATOR_<string>
+        <string>_CREATOR_</string>
         <key>CFBundleVersion</key>
         <string>@VERSION@</string>
         <key>CFBundleShortVersionString</key>
@@ -40,7 +40,7 @@
                     <string>nxs</string>
                 </array>
                 <key>CFBundleTypeIconFile</key>
-                <string>application.icns</string>
+                <string>nx-desktop</string>
                 <key>CFBundleTypeMIMETypes</key>
                 <array>
                     <string>application/nxs</string>

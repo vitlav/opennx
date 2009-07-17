@@ -54,6 +54,7 @@
 #include <wx/apptrait.h>
 #include <wx/socket.h>
 #include <wx/regex.h>
+#include <wx/dir.h>
 
 #include "opennxApp.h"
 #include "SessionAdmin.h"
@@ -96,7 +97,8 @@ IMPLEMENT_APP(opennxApp);
     ,m_bRunproc(false)
     ,m_bLibUSBAvailable(false)
     ,m_bRequireWatchReader(false)
-      ,m_bRequireStartUsbIp(false)
+    ,m_bRequireStartUsbIp(false)
+    ,m_pLoginDialog(NULL)
 {
     SetAppName(wxT("OpenNX"));
 #ifdef __WXMSW__
@@ -252,104 +254,12 @@ opennxApp::CreateDesktopEntry(MyXmlConfig *cfg)
 #endif
 #ifdef __UNIX__
 # ifdef __WXMAC__
-#if 1
     wxFileName fn(cfg->sGetFileName());
     fn.MakeAbsolute();
     wxString src = fn.GetFullPath();
     wxString dst = wxGetHomeDir() + wxT("/Desktop/") + cfg->sGetName();
-    symlink(src.fn_str(), dst.fn_str());
-#else
-    wxString path = wxGetHomeDir() + wxFileName::GetPathSeparator() + wxT("Desktop") +
-        wxFileName::GetPathSeparator() + wxT(".") + cfg->sGetName() +
-        wxFileName::GetPathSeparator() + wxT("Contents");
-    wxFileName::Mkdir(path, 0755, wxPATH_MKDIR_FULL);
-    wxFileName::Mkdir(path + wxFileName::GetPathSeparator() + wxT("Resources"), 0755, wxPATH_MKDIR_FULL);
-    wxFileName::Mkdir(path + wxFileName::GetPathSeparator() + wxT("MacOS"), 0755, wxPATH_MKDIR_FULL);
-    wxString plist = wxT("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-    plist += wxT("<!DOCTYPE plist SYSTEM \"file://localhost/System/Library/DTDs/PropertyList.dtd\">\n");
-    plist += wxT("<plist version=\"0.9\">\n");
-    plist += wxT("<dict>\n");
-    plist += wxT(" <key>CFBundleInfoDictionaryVersion</key>\n");
-    plist += wxT(" <string>6.0</string>\n");
-    plist += wxT(" <key>CFBundleIdentifier</key>\n");
-    plist += wxString::Format(wxT(" <string>org.opennx.%s.%s</string>\n"),
-            wxGetUserId().c_str(), cfg->sGetName().c_str());
-    plist += wxT(" <key>CFBundleDevelopmentRegion</key>\n");
-    plist += wxT(" <string>English</string>\n");
-    plist += wxT(" <key>CFBundleExecutable</key>\n");
-    plist += wxT(" <string>startnxsession</string>\n");
-    plist += wxT(" <key>CFBundleIconFile</key>\n");
-    plist += wxT(" <string>nxdesktop</string>\n");
-    plist += wxT(" <key>CFBundleName</key>\n");
-    plist += wxT(" <string>") + cfg->sGetName() + wxT("</string>\n");
-    plist += wxT(" <key>CFBundlePackageType</key>\n");
-    plist += wxT(" <string>APPL</string>\n");
-    plist += wxT(" <key>CFBundleSignature</key>\n");
-    plist += wxT(" <string>\?\?\?\?</string>\n");
-    plist += wxT(" <key>CFBundleVersion</key>\n");
-    plist += wxT(" <string>1.0</string>\n");
-    plist += wxT(" <key>CFBundleShortVersionString</key>\n");
-    plist += wxT(" <string>1.0</string>\n");
-    plist += wxT(" <key>CFBundleGetInfoString</key>\n");
-    plist += wxT(" <string>Starts an OpenNX session</string>\n");
-    plist += wxT(" <key>LSRequiresCarbon</key>\n");
-    plist += wxT(" <true/>\n");
-    plist += wxT(" <key>CSResourcesFileMapped</key>\n");
-    plist += wxT(" <true/>\n");
-    plist += wxT("</dict>\n");
-    plist += wxT("</plist>\n");
-    if (::wxDirExists(path)) {
-
-        wxFile f;
-        wxFileSystem fs;
-        wxString fn = path + wxFileName::GetPathSeparator() + wxT("Resources") +
-            wxFileName::GetPathSeparator() + wxT("nxdesktop.icns");
-        wxFSFile *ff = fs.OpenFile(::wxGetApp().GetResourcePrefix() + wxT("res/nx-desktop.icns"));
-
-        // Write icon file
-        ::wxLogTrace(MYTRACETAG, wxT("Creating '%s'"), fn.c_str());
-        if (ff  && f.Create(fn, true, wxS_IRUSR|wxS_IWUSR|wxS_IRGRP|wxS_IROTH)) {
-            wxInputStream *is = ff->GetStream();
-            size_t len = is->GetSize();
-            unsigned char *buf = new unsigned char[len];
-            is->Read(buf, len);
-            f.Write(buf, len);
-            f.Close();
-            delete buf;
-        }
-
-        // Write shell script
-        fn = path + wxFileName::GetPathSeparator() + wxT("MacOS") +
-            wxFileName::GetPathSeparator() + wxT("startnxsession");
-        ::wxLogTrace(MYTRACETAG, wxT("Creating '%s'"), fn.c_str());
-        if (f.Create(fn, true, wxS_IRUSR|wxS_IWUSR|wxS_IXUSR|wxS_IRGRP|wxS_IXGRP|wxS_IROTH)) {
-            wxString cmd = wxT("#!/bin/sh\nexec \"") + GetSelfPath() + wxT("\" --session=\"") + cfg->sGetFileName() + wxT("\"\n");
-            f.Write(cmd);
-            f.Close();
-        }
-
-        fn = path + wxFileName::GetPathSeparator() + wxT("Info.plist");
-        ::wxLogTrace(MYTRACETAG, wxT("Creating '%s'"), fn.c_str());
-        if (f.Create(fn, true, wxS_IRUSR|wxS_IWUSR|wxS_IRGRP|wxS_IROTH)) {
-            f.Write(plist);
-            f.Close();
-        }
-
-        fn = path + wxFileName::GetPathSeparator() + wxT("PkgInfo");
-        ::wxLogTrace(MYTRACETAG, wxT("Creating '%s'"), fn.c_str());
-        if (f.Create(fn, true, wxS_IRUSR|wxS_IWUSR|wxS_IRGRP|wxS_IROTH)) {
-            wxString pkginfo = wxT("APPL????");
-            f.Write(pkginfo);
-            f.Close();
-        }
-
-        wxFileName dir(path);
-        fn = wxGetHomeDir() + wxFileName::GetPathSeparator() + wxT("Desktop") +
-            wxFileName::GetPathSeparator() + cfg->sGetName() + wxT(".app");
-        ::wxRenameFile(dir.GetPath(wxPATH_GET_VOLUME), fn, false);
-
-    }
-#endif
+    if (symlink(src.fn_str(), dst.fn_str()))
+        wxLogSysError(_("Could not create link on Desktop."));
 # else
     wxString dtEntry = wxT("[Desktop Entry]\n");
     dtEntry += wxT("Encoding=UTF-8\n");
@@ -901,7 +811,7 @@ bool opennxApp::realInit()
     if (!wxApp::OnInit())
         return false;
 #ifdef __WXMAC__
-    wxApp::s_macAboutMenuItemId = wxID_ABOUT;
+    // wxApp::s_macAboutMenuItemId = wxID_ABOUT;
     wxFileName::MacRegisterDefaultTypeAndCreator(wxT("nxs"), 'TEXT', 'OPNX');
 #endif
 
@@ -1045,8 +955,21 @@ bool opennxApp::realInit()
             m_sSessionName = fn.GetFullPath();
     }
     if ((m_eMode == MODE_CLIENT) && m_sSessionName.IsEmpty()) {
-        if (!wxConfigBase::Get()->Read(wxT("Config/LastSession"), &m_sSessionName))
+        if (!wxConfigBase::Get()->Read(wxT("Config/LastSession"), &m_sSessionName)) {
+#ifdef __WXMAC__
+            // On MacOSX we might get called via MacOpenFile,
+            // so only run the wizard if there a no session config files.
+            wxString cfgdir;
+            wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &cfgdir);
+            cfgdir = cfgdir + wxFileName::GetPathSeparator() + wxT("config");
+            wxArrayString a;
+            wxDir::GetAllFiles(cfgdir, &a, wxT("*.nxs"), wxDIR_FILES);
+            if (0 == a.GetCount())
+                m_eMode = MODE_WIZARD;
+#else
             m_eMode = MODE_WIZARD;
+#endif
+        }
     } else {
         if (!m_sSessionName.IsEmpty()) {
             MyXmlConfig cfg(m_sSessionName);
@@ -1065,7 +988,10 @@ bool opennxApp::realInit()
     LoginDialog d;
     d.SetLastSessionFilename(m_sSessionName);
     d.Create(NULL);
-    if (d.ShowModal() == wxID_OK) {
+    m_pLoginDialog = &d;
+    int result = d.ShowModal();
+    m_pLoginDialog = NULL;
+    if (result == wxID_OK) {
         m_sSessionName = d.GetLastSessionFilename();
         if (!m_sSessionName.IsEmpty())
             wxConfigBase::Get()->Write(wxT("Config/LastSession"), m_sSessionName);
@@ -1202,7 +1128,12 @@ void opennxApp::SetSessionCfg(MyXmlConfig &cfg)
 /// Respond to Apple Event for opening a document
 void opennxApp::MacOpenFile(const wxString& filename)
 {
-    wxLogDebug(wxT("MacOpenFile: %s"), filename.c_str());
+    if (NULL != m_pLoginDialog) {
+        m_sSessionName = filename;
+        MyXmlConfig cfg(m_sSessionName);
+        if (cfg.IsValid())
+            m_pLoginDialog->SelectSession(cfg.sGetName());
+    }
 }
 #endif
 

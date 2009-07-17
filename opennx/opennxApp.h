@@ -27,6 +27,7 @@
 class wxConfigBase;
 class wxTaskBarIcon;
 class MyXmlConfig;
+class LoginDialog;
 
 // Define a new application type, each program should derive a class from wxApp
 class opennxApp : public wxApp
@@ -101,6 +102,7 @@ class opennxApp : public wxApp
         bool m_bLibUSBAvailable;
         bool m_bRequireWatchReader;
         bool m_bRequireStartUsbIp;
+        LoginDialog *m_pLoginDialog;
 
         bool preInit();
         bool realInit();

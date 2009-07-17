@@ -132,7 +132,7 @@ pkg: all
 bundle:
 	$(top_srcdir)/packaging/MacOSX/mkbundle OpenNX.app OpenNXapp \
 	    $(top_srcdir)/res/nx.icns $(abs_builddir)/opennx \
-	    $(top_srcdir)/packaging/MacOSX/opennx-main.plist ""
+	    $(top_srcdir)/packaging/MacOSX/opennx-main.plist "OPNX"
 	cp $(top_srcdir)/res/nx-desktop.icns OpenNX.app/Contents/Resources
 	$(top_srcdir)/packaging/MacOSX/mkbundle OpenNXAdmin.app OpenNXAdmin \
 	    $(top_srcdir)/res/opennx-admin.icns $(abs_builddir)/opennx \

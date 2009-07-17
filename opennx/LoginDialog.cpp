@@ -166,6 +166,15 @@ void LoginDialog::ReadConfigDirectory()
     }
 }
 
+#ifdef __WXMAC__
+void LoginDialog::SelectSession(wxString name)
+{
+    m_pCtrlSessionName->SetStringSelection(name);
+    wxCommandEvent event;
+    OnComboboxSessionSelected(event);
+}
+#endif
+
 /*!
  * LoginDialog creator
  */
