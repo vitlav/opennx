@@ -527,6 +527,9 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     removePage(_("USB"));
     m_pCtrlUsbipdDaemon->Hide();
 #endif
+#ifdef __WXMAC__
+    removePage(_("About"));
+#endif
     setFontLabel(m_pCtrlFontDefault, m_cFontDefault);
     setFontLabel(m_pCtrlFontFixed, m_cFontFixed);
 
@@ -1033,6 +1036,9 @@ void SessionProperties::CreateControls()
 
     m_pCtrlUseSmartCard->Enable(::wxGetApp().NxSmartCardSupport());
 
+#ifndef __WXMAC__
+    // On MacOS, we use a separate AboutDialog, invoked via Help->About menu
+    // (Interface Guidelines)
     int fs[7];
     wxFont fv = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
     wxFont ff = wxSystemSettings::GetFont(wxSYS_ANSI_FIXED_FONT);
@@ -1059,24 +1065,16 @@ void SessionProperties::CreateControls()
     m_pHtmlWindow->SetBackgroundColour(GetBackgroundColour());
     if (!content.IsEmpty()) {
         int width, height;
-        // m_pHtmlWindow->GetSize(&width, &height);
-#ifdef __WXMAC__
-        // On MacOS wxHtmlContainerCell behaves unexpected?!
-        width = 150;
-        height = 250;
-#else
         m_pCtrlPanelAbout->GetSize(&width, &height);
-#endif
         m_pHtmlWindow->GetInternalRepresentation()->Layout(width);
         height = m_pHtmlWindow->GetInternalRepresentation()->GetHeight();
         width = m_pHtmlWindow->GetInternalRepresentation()->GetWidth();
         m_pHtmlWindow->SetSize(width, height);
         m_pHtmlWindow->SetSizeHints(width, height);
 #warning Check geometry on all platforms
-        //m_pCtrlPanelAbout->SetClientSize(width - 2, height);
         m_pCtrlPanelAbout->Layout();
-        //m_pHtmlWindow->GetParent()->SetClientSize(width, height);
     }
+#endif
 }
 
 /*!
