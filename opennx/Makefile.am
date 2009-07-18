@@ -125,10 +125,12 @@ pkg: all
 	$(top_srcdir)/packaging/MacOSX/mkbundle pkg/root/Applications/OpenNXWizard.app OpenNXWizard \
 	    $(top_srcdir)/res/opennx-wizard.icns /Library/OpenNX/bin/opennx \
 	    $(top_srcdir)/packaging/MacOSX/opennx.plist "" --wizard
-	$(MAKE) DESTDIR=$(abs_builddir)/pkg/root install
 	rm -rf nxbuild
 	mkdir nxbuild
 	(cd nxbuild ; DEST=$(abs_builddir)/pkg/root $(abs_srcdir)/packaging/MacOSX/buildnx)
+	$(MAKE) DESTDIR=$(abs_builddir)/pkg/root install
+	$(INSTALL) -m 0755 $(top_srcdir)/packaging/MacOSX/opennx-uninstall \
+	    $(DESTDIR)$(bindir)
 	sudo chown -R root.wheel pkg
 	rm -rf OpenNX.pkg
 	/Developer/Tools/packagemaker -build -p OpenNX.pkg -f pkg/root -v \
