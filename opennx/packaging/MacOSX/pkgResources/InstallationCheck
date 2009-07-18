@@ -43,6 +43,7 @@ exit(112) unless ($opensc);
 
 # Check for installed X11
 my $x11 = 0;
+$x11 = 1 if ((-x '/usr/X11R6/bin/X') && (-x '/usr/X11R6/bin/quartz-wm'));
 exit(113) unless ($x11);
 
 # Check for any running processes

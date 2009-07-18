@@ -1,0 +1,3 @@
+"16" = "OpenSC version 0.11.8 or newer is required. You can download it at http://www.opensc-project.org/files/sca/sca-0.2.6.dmg (SCA contains OPenSC).";
+"17" = "Required X11 package could not be found. Please install Apple's X11.app, XDarwin, XQuartz or a similar X11 implementation.";
+"18" = "Please terminate all running instances of OpenNX.";
