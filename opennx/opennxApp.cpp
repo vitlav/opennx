@@ -584,6 +584,7 @@ void opennxApp::checkNxSmartCardSupport()
     LibOpenSC l;
     if (!l.HasOpenSC()) {
         m_bNxSmartCardSupport = false;
+        wxLogTrace(MYTRACETAG, wxT("No OpenSC lib found, disabling SmartCard support"));
         wxConfigBase::Get()->Write(wxT("Config/NxSshSmartCardSupport"), m_bNxSmartCardSupport);
         wxConfigBase::Get()->Flush();
         return;

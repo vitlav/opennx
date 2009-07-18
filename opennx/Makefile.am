@@ -47,7 +47,7 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	X11PropertyDialog.h X11PropertyDialog_symbols.h trace.h tracelogApp.h \
 	watchReaderApp.h watchUsbIpApp.h xh_richtext.h
 
-watchreader_SOURCES = watchReaderApp.cpp LibOpenSC.cpp MyDynlib.cpp
+watchreader_SOURCES = watchReaderApp.cpp LibOpenSC.cpp MyDynlib.cpp MacOSX.c
 watchreader_DEPENDENCIES = $(WATCHREADER_RES)
 watchreader_LDADD = $(WATCHREADER_RES) $(WX_LIBS) $(X_LIBS) \
 	$(X_PRE_LIBS) $(X_EXTRA_LIBS) $(APP_LDADD)

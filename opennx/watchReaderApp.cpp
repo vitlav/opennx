@@ -120,6 +120,41 @@ bool watchReaderApp::OnInit()
     // Win: Don't remap bitmaps to system colors
     wxSystemOptions::SetOption(wxT("msw.remap"), 0);
 
+#ifdef __WXMSW__
+    wxString ldpath;
+    if (::wxGetEnv(wxT("PATH"), &ldpath))
+        ldpath += wxT(";");
+    ldpath = tmp + wxT("\\bin");
+    if (!::wxSetEnv(wxT("PATH"), ldpath)) {
+        ::wxLogSysError(wxT("Can not set PATH"));
+        return false;
+    }
+#endif
+
+#ifdef __UNIX__
+# ifdef __MACOSX__
+#  define LD_LIBRARY_PATH wxT("DYLD_LIBRARY_PATH")
+# else
+#  define LD_LIBRARY_PATH wxT("LD_LIBRARY_PATH")
+# endif
+
+    wxString ldpath;
+    if (::wxGetEnv(LD_LIBRARY_PATH, &ldpath))
+        ldpath += wxT(":");
+# if defined(__x86_64) || defined(__IA64__)
+    ldpath += tmp + wxT("/lib64");
+# else
+    ldpath += tmp + wxT("/lib");
+# endif
+# ifdef __MACOSX__
+    ldpath += wxT(":/Library/OpenSC/lib");
+# endif
+    if (!::wxSetEnv(LD_LIBRARY_PATH, ldpath)) {
+        ::wxLogSysError(wxT("Can not set LD_LIBRARY_PATH"));
+        return false;
+    }
+#endif
+
     if (!wxApp::OnInit())
         return false;
 

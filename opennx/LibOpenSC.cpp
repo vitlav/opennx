@@ -243,12 +243,14 @@ int LibOpenSC::WaitForCard(CardWaiterDialog *d) {
 bool LibOpenSC::WatchHotRemove(unsigned int ridx, long sshpid) {
 
     MyDynamicLibrary dll;
+    ::wxLogTrace(MYTRACETAG, wxT("WatchHotRemove loading OpenSC"));
     {
         wxLogNull ignoreErrors;
         if (!dll.Load(wxT("libopensc")))
             return false;
     }
 
+    ::wxLogTrace(MYTRACETAG, wxT("WatchHotRemove checking OpenSC functions"));
     wxDYNLIB_FUNCTION(Tsc_establish_context, sc_establish_context, dll);
     if (!pfnsc_establish_context)
         return false;
