@@ -1,0 +1,3 @@
+"16" = "Required OpenSC package could not be found. Please install OpenSC first.";
+"17" = "Required X11 package could not be found. Please install XDarwin.";
+"18" = "Please terminate all running instances of OpenNX";

@@ -1,4 +1,5 @@
 AM_LIBTOOLFLAGS = --silent
+BUILDUSR = $(shell id -u):$(shell id -g)
 
 SUBDIRS = po
 DIST_SUBDIRS = po packaging/win32
@@ -21,7 +22,7 @@ opennx_SOURCES = AboutDialog.cpp AsyncProcess.cpp LibOpenSC.cpp \
 	ShareProperties.cpp TextViewer.cpp UnixImageSettingsDialog.cpp \
 	UsbFilterDetailsDialog.cpp UsbIp.cpp VncImageSettingsDialog.cpp \
 	VncPropertyDialog.cpp wxprec.cpp WinShare.cpp X11PropertyDialog.cpp \
-	xh_richtext.cpp
+	xh_richtext.cpp MacOSX.c
 
 noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	LibOpenSC.h CardWaiterDialog.h CardWaiterDialog_symbols.h \
@@ -118,16 +119,23 @@ pkg: all
 	    $(top_srcdir)/packaging/MacOSX/opennx-main.plist "OPNX"
 	cp $(top_srcdir)/res/nx-desktop.icns \
 	    pkg/root/Applications/OpenNX.app/Contents/Resources
-	$(top_srcdir)/packaging/MacOSX/mkbundle OpenNXAdmin.app OpenNXAdmin \
+	$(top_srcdir)/packaging/MacOSX/mkbundle pkg/root/Applications/OpenNXAdmin.app OpenNXAdmin \
 	    $(top_srcdir)/res/opennx-admin.icns /Library/OpenNX/bin/opennx \
 	    $(top_srcdir)/packaging/MacOSX/opennx.plist "" --admin
-	$(top_srcdir)/packaging/MacOSX/mkbundle OpenNXWizard.app OpenNXWizard \
+	$(top_srcdir)/packaging/MacOSX/mkbundle pkg/root/Applications/OpenNXWizard.app OpenNXWizard \
 	    $(top_srcdir)/res/opennx-wizard.icns /Library/OpenNX/bin/opennx \
 	    $(top_srcdir)/packaging/MacOSX/opennx.plist "" --wizard
 	$(MAKE) DESTDIR=$(abs_builddir)/pkg/root install
 	rm -rf nxbuild
 	mkdir nxbuild
 	(cd nxbuild ; DEST=$(abs_builddir)/pkg/root $(abs_srcdir)/packaging/MacOSX/buildnx)
+	sudo chown -R root.wheel pkg
+	rm -rf OpenNX.pkg
+	/Developer/Tools/packagemaker -build -p OpenNX.pkg -f pkg/root -v \
+	    -r packaging/MacOSX/pkgResources \
+	    -i packaging/MacOSX/pkg.plist \
+	    -d packaging/MacOSX/Description.plist
+	sudo chown -R $(BUILDUSR) pkg
 
 bundle:
 	$(top_srcdir)/packaging/MacOSX/mkbundle OpenNX.app OpenNXapp \

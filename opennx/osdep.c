@@ -178,7 +178,7 @@ static Display *launchX11() {
     time_t ts = time(NULL) + 15; /* Wait 15sec for X startup */
     do_save = 1;
     memset(&_spath, 0, sizeof(_spath));
-    system("/usr/X11R6/bin/XDarwinStartup :0 >/dev/null 2>&1 &");
+    system("/usr/X11R6/bin/X :0 -nolisten tcp &");
     while (!ret) {
         ret = XOpenDisplay(":0");
         if (!ret) {
@@ -192,7 +192,7 @@ static Display *launchX11() {
     putenv("DISPLAY=:0");
     /* If the following fails, there is usually a WM already running
      * so we don't care ... */
-    system("/usr/X11R6/bin/quartz-wm >/dev/null 2>&1 &");
+    system("/usr/X11R6/bin/quartz-wm &");
     return ret;
 }
 # endif /* __WXMAC__ */

@@ -506,15 +506,21 @@ opennxApp::preInit()
 #endif
 
 #ifdef __UNIX__
+# ifdef __MACOSX__
+#  define LD_LIBRARY_PATH wxT("DYLD_LIBRARY_PATH")
+# else
+#  define LD_LIBRARY_PATH wxT("LD_LIBRARY_PATH")
+# endif
+
     wxString ldpath;
-    if (::wxGetEnv(wxT("LD_LIBRARY_PATH"), &ldpath))
+    if (::wxGetEnv(LD_LIBRARY_PATH, &ldpath))
         ldpath += wxT(":");
 #if defined(__x86_64) || defined(__IA64__)
     ldpath += tmp + wxT("/lib64");
 #else
     ldpath += tmp + wxT("/lib");
 #endif
-    if (!::wxSetEnv(wxT("LD_LIBRARY_PATH"), ldpath)) {
+    if (!::wxSetEnv(LD_LIBRARY_PATH, ldpath)) {
         ::wxLogSysError(wxT("Can not set LD_LIBRARY_PATH"));
         return false;
     }
@@ -811,7 +817,6 @@ bool opennxApp::realInit()
     if (!wxApp::OnInit())
         return false;
 #ifdef __WXMAC__
-    // wxApp::s_macAboutMenuItemId = wxID_ABOUT;
     wxFileName::MacRegisterDefaultTypeAndCreator(wxT("nxs"), 'TEXT', 'OPNX');
 #endif
 
@@ -949,6 +954,12 @@ bool opennxApp::realInit()
             break;
     }
 
+#ifdef __WXMAC__
+    // If we reach this point, we definitively are in dialog mode, so
+    // on MacOSX we need set up a dummy menu
+    // wxMenuBar *macmenubar = new wxMenuBar();
+    // wxMenuBar::MacSetCommonMenuBar(macmenubar);
+#endif
     if (!m_sSessionName.IsEmpty()) {
         wxFileName fn(m_sSessionName);
         if (fn.Normalize() && fn.FileExists())

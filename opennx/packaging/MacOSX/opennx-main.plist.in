@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
 <!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
 <plist version="0.9">
     <dict>
@@ -41,16 +42,14 @@
                 </array>
                 <key>CFBundleTypeIconFile</key>
                 <string>nx-desktop</string>
-                <key>CFBundleTypeMIMETypes</key>
-                <array>
-                    <string>application/nxs</string>
-                </array>
                 <key>CFBundleTypeName</key>
                 <string>NX Client session</string>
                 <key>CFBundleTypeRole</key>
                 <string>Editor</string>
                 <key>LSIsAppleDefaultForType</key>
                 <true/>
+                <key>LSTypeIsPackage</key>
+                <false/>
             </dict>
         </array>
     </dict>
