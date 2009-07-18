@@ -112,32 +112,32 @@ ACLOCAL_AMFLAGS = -I m4
 
 # The following assumes a package prefix of /Library/OpenNX
 pkg: all
-	rm -rf pkg
-	mkdir -p pkg/root/{Applications,Library}
-	$(top_srcdir)/packaging/MacOSX/mkbundle pkg/root/Applications/OpenNX.app OpenNXapp \
+	rm -rf pkgroot
+	mkdir -p pkgroot/{Applications,Library}
+	$(top_srcdir)/packaging/MacOSX/mkbundle pkgroot/Applications/OpenNX.app OpenNXapp \
 	    $(top_srcdir)/res/nx.icns /Library/OpenNX/bin/opennx \
 	    $(top_srcdir)/packaging/MacOSX/opennx-main.plist "OPNX"
 	cp $(top_srcdir)/res/nx-desktop.icns \
-	    pkg/root/Applications/OpenNX.app/Contents/Resources
-	$(top_srcdir)/packaging/MacOSX/mkbundle pkg/root/Applications/OpenNXAdmin.app OpenNXAdmin \
+	    pkgroot/Applications/OpenNX.app/Contents/Resources
+	$(top_srcdir)/packaging/MacOSX/mkbundle pkgroot/Applications/OpenNXAdmin.app OpenNXAdmin \
 	    $(top_srcdir)/res/opennx-admin.icns /Library/OpenNX/bin/opennx \
 	    $(top_srcdir)/packaging/MacOSX/opennx.plist "" --admin
-	$(top_srcdir)/packaging/MacOSX/mkbundle pkg/root/Applications/OpenNXWizard.app OpenNXWizard \
+	$(top_srcdir)/packaging/MacOSX/mkbundle pkgroot/Applications/OpenNXWizard.app OpenNXWizard \
 	    $(top_srcdir)/res/opennx-wizard.icns /Library/OpenNX/bin/opennx \
 	    $(top_srcdir)/packaging/MacOSX/opennx.plist "" --wizard
 	rm -rf nxbuild
 	mkdir nxbuild
-	(cd nxbuild ; DEST=$(abs_builddir)/pkg/root $(abs_srcdir)/packaging/MacOSX/buildnx)
-	$(MAKE) DESTDIR=$(abs_builddir)/pkg/root install
+	(cd nxbuild ; DEST=$(abs_builddir)/pkgroot $(abs_srcdir)/packaging/MacOSX/buildnx)
+	$(MAKE) DESTDIR=$(abs_builddir)/pkgroot install
 	$(INSTALL) -m 0755 $(top_srcdir)/packaging/MacOSX/opennx-uninstall \
-	    $(DESTDIR)$(bindir)
-	sudo chown -R root.wheel pkg
+	    $(abs_builddir)/pkgroot$(bindir)
+	sudo chown -R root.wheel pkgroot
 	rm -rf OpenNX.pkg
-	/Developer/Tools/packagemaker -build -p OpenNX.pkg -f pkg/root -v \
+	/Developer/Tools/packagemaker -build -p OpenNX.pkg -f pkgroot -v \
 	    -r packaging/MacOSX/pkgResources \
 	    -i packaging/MacOSX/pkg.plist \
 	    -d packaging/MacOSX/Description.plist
-	sudo chown -R $(BUILDUSR) pkg
+	sudo chown -R $(BUILDUSR) pkgroot
 
 bundle:
 	$(top_srcdir)/packaging/MacOSX/mkbundle OpenNX.app OpenNXapp \
