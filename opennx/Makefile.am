@@ -247,4 +247,9 @@ EXTRA_DIST = conf/config.rpath INSTALL INSTALL.generic COPYING share \
 	packaging/win32/findrequires.pl packaging/win32/opennx.iss \
 	res/nx-desktop.ico res/nx.ico res/opennx-admin.ico \
 	res/opennx-wizard.ico res/nx-desktop.icns res/nx.icns \
-	res/opennx-admin.icns res/opennx-wizard.icns
+	res/opennx-admin.icns res/opennx-wizard.icns \
+	packaging/MacOSX/OpenSC.webloc packaging/MacOSX/buildnx \
+	packaging/MacOSX/fileopts packaging/MacOSX/folderbg.jpg \
+	packaging/MacOSX/mkbundle packaging/MacOSX/mkdmg \
+	packaging/MacOSX/opennx-uninstall packaging/MacOSX/pkgResources \
+	packaging/MacOSX/volicon.icns packaging/MacOSX/volicon.png
