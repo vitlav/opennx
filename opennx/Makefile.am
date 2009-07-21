@@ -110,6 +110,20 @@ bootstrap:
 
 ACLOCAL_AMFLAGS = -I m4
 
+macdist: pkg dmg
+	sudo rm -rf pkgroot dmgroot OpenNX.pkg nxbuild
+
+dmg:
+	rm -rf dmgroot
+	mkdir dmgroot
+	sudo cp -a OpenNX.pkg dmgroot
+	cp $(top_srcdir)/packaging/MacOSX/OpenSC.webloc dmgroot
+	$(top_srcdir)/packaging/MacOSX/mkdmg \
+	    -b $(top_srcdir)/packaging/MacOSX/folderbg.jpg \
+	    -f $(top_srcdir)/packaging/MacOSX/fileopts \
+	    -i $(top_srcdir)/packaging/MacOSX/volicon.icns \
+	    OpenNX.dmg dmgroot
+
 # The following assumes a package prefix of /Library/OpenNX
 pkg: all
 	rm -rf pkgroot
