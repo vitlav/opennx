@@ -132,7 +132,7 @@ bool watchReaderApp::OnInit()
 #endif
 
 #ifdef __UNIX__
-# ifdef __MACOSX__
+# ifdef __WXMAC__
 #  define LD_LIBRARY_PATH wxT("DYLD_LIBRARY_PATH")
 # else
 #  define LD_LIBRARY_PATH wxT("LD_LIBRARY_PATH")
@@ -146,7 +146,7 @@ bool watchReaderApp::OnInit()
 # else
     ldpath += tmp + wxT("/lib");
 # endif
-# ifdef __MACOSX__
+# ifdef __WXMAC__
     ldpath += wxT(":/Library/OpenSC/lib");
 # endif
     if (!::wxSetEnv(LD_LIBRARY_PATH, ldpath)) {

@@ -47,7 +47,7 @@
 #include "trace.h"
 ENABLE_TRACE;
 
-#ifdef __MACOSX__
+#ifdef __WXMAC__
 # define LD_LIBRARY_PATH wxT("DYLD_LIBRARY_PATH")
 #else
 # define LD_LIBRARY_PATH wxT("LD_LIBRARY_PATH")
@@ -64,9 +64,17 @@ bool MyDynamicLibrary::Load(const wxString& name, int flags /* = wxDL_DEFAULT */
         wxStringTokenizer t(ldpath, wxT(":"));
         while (t.HasMoreTokens()) {
             wxString abslib = t.GetNextToken() + wxFileName::GetPathSeparator() + name;
-            ::wxLogTrace(MYTRACETAG, wxT("Trying to load %s"), abslib.c_str());
-            if (wxDynamicLibrary::Load(abslib))
+            ::wxLogTrace(MYTRACETAG, wxT("Trying to load %s 0x%0x"), abslib.c_str(), flags);
+            if (wxDynamicLibrary::Load(abslib, flags))
                 return true;
+#ifdef __WXMAC__
+            if (!abslib.EndsWith(wxT(".dylib"))) {
+                abslib += wxT(".dylib");
+                ::wxLogTrace(MYTRACETAG, wxT("Trying to load(%s, 0x%0x)"), abslib.c_str(), flags);
+                if (wxDynamicLibrary::Load(abslib, flags))
+                    return true;
+            }
+#endif
         }
     }
     ::wxLogTrace(MYTRACETAG, wxT("Falling back to default load"));
