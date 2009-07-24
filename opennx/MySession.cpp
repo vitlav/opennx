@@ -1277,6 +1277,8 @@ MySession::startXserver()
     wxWinCmd << wxT(" ") << dpyStr;
     ::wxLogTrace(MYTRACETAG, wxT("startXServer executing %s"), wxWinCmd.c_str());
     ::wxExecute(wxWinCmd, wxEXEC_ASYNC);
+    ::wxSetEnv(wxT("DISPLAY"), dpyStr);
+    ::wxLogInfo(wxT("env: DISPLAY='%s'"), dpyStr.c_str());
 #endif
 }
 
