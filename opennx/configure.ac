@@ -20,6 +20,11 @@ case $build_os in
         fi
         ;;
 esac
+case $target_os in
+	darwin8*)
+        AC_PREFIX_DEFAULT([/Library/OpenNX])
+        ;;
+esac
 
 # Checks for programs.
 AC_DISABLE_SHARED
@@ -223,7 +228,32 @@ AC_ARG_WITH([samba],
             AS_HELP_STRING([--with-samba=DIR],
                            [Specify path to samba source]),
 	[ac_cv_samba=$withval])
-test -n "$ac_cv_samba" && CPPFLAGS="$CPPFLAGS -I$ac_cv_samba/source/include"
+if test -n "$ac_cv_samba" ; then
+    CPPFLAGS="$CPPFLAGS -I$ac_cv_samba/source/include"
+else
+    case $target_os in
+        darwin8*)
+            CPPFLAGS="$CPPFLAGS -I$srcdir/packaging/MacOSX"
+            ;;
+    esac
+fi
+
+ac_cv_opensc=
+AC_ARG_WITH([opensc],
+            AS_HELP_STRING([--with-opensc=DIR],
+                           [Specify path to opensc installation]),
+	[ac_cv_opensc=$withval])
+if test -n "$ac_cv_opensc" ; then
+    CPPFLAGS="$CPPFLAGS -I$ac_cv_opensc/include"
+    LDFLAGS="$LDFLAGS -L$ac_cv_opensc/lib"
+else
+    case $target_os in
+        darwin8*)
+            CPPFLAGS="$CPPFLAGS -I/Library/OpenSC/include"
+            LDFLAGS="$LDFLAGS -L/Library/OpenSC/lib"
+            ;;
+    esac
+fi
 
 ac_cv_dllpath=
 AC_ARG_WITH([dllpath],
@@ -272,8 +302,6 @@ case $target_os in
         ;;
 esac
 AC_SUBST(DLLPATH)
-
-dnl AC_DEFINE(wxUSE_LOG_DEBUG,1,[Set to 1 for enabling trace logging])
 
 AC_CONFIG_FILES([Makefile opennx.spec res/opennx.rc packaging/win32/Makefile packaging/win32/findrequires.pl packaging/MacOSX/opennx.plist packaging/MacOSX/opennx-main.plist packaging/MacOSX/pkg.plist po/Makefile.in])
 AC_OUTPUT
