@@ -1,0 +1,53 @@
+#!/bin/sh
+set -e
+#
+# Since samba links shared libs against internal static libs, we
+# build libsmbclient separately for each architecture, install
+# into temporary destinations and finally combine the .dylibs
+# with lipo
+#
+if [ $# != 1 ] ; then
+    echo "Usage: buildsmbclient <DSTDIR>" >&2
+    exit 1
+fi
+WDIR=`pwd`
+TDIR="$WDIR/libsmbclient.$$"
+cd "$1"
+IDIR="`pwd`"
+cd "$WDIR"
+
+cleanup() {
+    cd "$WDIR"
+    rm -rf "$TDIR"
+}
+trap cleanup EXIT
+mkdir -p "$TDIR"
+cd "$TDIR"
+SRC=samba-3.4.0
+TGZ=$SRC.tar.gz
+DLURL="http://us1.samba.org/samba/ftp/$TGZ"
+
+wget "$DLURL"
+tar xzf $TGZ
+cd $SRC/source3
+CFLAGS="-arch i386" LDFLAGS="-arch i386" ./configure \
+    --prefix=/Library/OpenNX \
+    --with-configdir=/etc \
+    --disable-swat \
+    --without-wbclient \
+    --without-libnetapi \
+    --with-static-libs=libtalloc,libtdb \
+    --with-shared-libs=libsmbclient
+make && mv bin bin-i386
+make clean
+sed -e s/i386/ppc/g < config.status | sh
+make
+mkdir -p "$IDIR"
+for lib in bin/libsmbclient.dylib* ; do
+    bn=`basename $lib`
+    if [ -L $lib ] ; then
+        cp -a $lib "$IDIR/$bn"
+    else
+        lipo -create bin-i386/$bn $lib -output "$IDIR/$bn"
+    fi
+done

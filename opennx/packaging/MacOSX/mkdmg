@@ -7,6 +7,7 @@ use File::Basename;
 
 my $SETFILE = '/Developer/Tools/SetFile';
 
+my $verbose = 1;
 my $rmtmp = 0;
 my $over = 0;
 my $mountpoint = '';
@@ -59,6 +60,7 @@ EOF
 
 sub runscript($) {
     my $script = shift;
+    print "Running AppleScript:\n", $script, "\n" if ($verbose);
     open(P, "|osascript") || die "Can't run osascript: $!\n";
     print P $script;
     close P;
@@ -98,8 +100,8 @@ sub readfopts() {
 sub window_bounds() {
     my $x2 = $windowpos{'x'} + $windowsize{'w'};
     my $y2 = $windowpos{'y'} + $windowsize{'h'};
-    return $windowpos{'y'} . ", " .
-        $windowpos{'x'} . ", " . $y2 . ", " .  $x2;
+    return $windowpos{'x'} . ", " .
+        $windowpos{'y'} . ", " . $x2 . ", " .  $y2;
 }
 
 sub file_positions() {

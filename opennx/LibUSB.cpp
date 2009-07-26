@@ -39,6 +39,7 @@
 
 #include "MyDynlib.h"
 #include "LibUSB.h"
+#include "LogNull.h"
 
 #include <wx/log.h>
 #include <wx/arrimpl.cpp>
@@ -178,7 +179,7 @@ void USB::usbscan(MyDynamicLibrary *dll)
 USB::USB() {
     m_bAvailable = false;
 #ifdef SUPPORT_USBIP
-    ::wxLogNull noerrors;
+    LogNull noerrors;
     MyDynamicLibrary dll;
     if (dll.Load(wxT("libusb"))) {
         wxDYNLIB_FUNCTION(Tusb_init, usb_init, dll);

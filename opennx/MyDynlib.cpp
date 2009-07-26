@@ -64,14 +64,14 @@ bool MyDynamicLibrary::Load(const wxString& name, int flags /* = wxDL_DEFAULT */
         wxStringTokenizer t(ldpath, wxT(":"));
         while (t.HasMoreTokens()) {
             wxString abslib = t.GetNextToken() + wxFileName::GetPathSeparator() + name;
-            ::wxLogTrace(MYTRACETAG, wxT("Trying to load %s 0x%0x"), abslib.c_str(), flags);
+            ::wxLogTrace(MYTRACETAG, wxT("Trying to load(%s 0x%0xi)"), abslib.c_str(), flags);
             if (wxDynamicLibrary::Load(abslib, flags))
                 return true;
 #ifdef __WXMAC__
             if (!abslib.EndsWith(wxT(".dylib"))) {
                 abslib += wxT(".dylib");
                 ::wxLogTrace(MYTRACETAG, wxT("Trying to load(%s, 0x%0x)"), abslib.c_str(), flags);
-                if (wxDynamicLibrary::Load(abslib, flags))
+                if (wxDynamicLibrary::Load(abslib, flags|wxDL_VERBATIM))
                     return true;
             }
 #endif

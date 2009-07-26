@@ -53,6 +53,7 @@ class wxConfigBase;
 #include "LibUSB.h"
 #include "MyXmlConfig.h"
 #include "WinShare.h"
+#include "LogNull.h"
 
 #ifdef APP_OPENNX
 # include "opennxApp.h"
@@ -960,7 +961,7 @@ MyXmlConfig::LoadFromString(const wxString &content, bool isPush)
 MyXmlConfig::LoadFromFile(const wxString &filename)
 {
     {
-        wxLogNull dummy; 
+        LogNull dummy; 
         wxFile *f = new wxFile(filename);
         if ((!f->IsOpened()) || f->Eof()) {
             delete f;
@@ -984,7 +985,7 @@ MyXmlConfig::LoadFromURL(const wxString &filename)
 {
     wxURL url(filename);
     {
-        wxLogNull dummy;
+        LogNull dummy;
         if (!url.IsOk())
             return false;
     }

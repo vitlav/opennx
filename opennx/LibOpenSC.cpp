@@ -44,6 +44,7 @@
 
 #include "MyDynlib.h"
 #include "LibOpenSC.h"
+#include "LogNull.h"
 #ifdef APP_OPENNX
 # include "CardWaiterDialog.h"
 # include "opennxApp.h"
@@ -123,7 +124,7 @@ CardWaitThread::Entry()
     sc_context *ctx;
     MyDynamicLibrary dll;
     {
-        wxLogNull ignoreErrors;
+        LogNull ignoreErrors;
         if (!dll.Load(wxT("libopensc")))
             return 0;
     }
@@ -214,7 +215,7 @@ LibOpenSC::~LibOpenSC()
 }
 
 bool LibOpenSC::HasOpenSC() {
-    wxLogNull ignoreErrors;
+    LogNull ignoreErrors;
     MyDynamicLibrary dll;
     if (!dll.Load(wxT("libopensc")))
         return false;
@@ -245,7 +246,7 @@ bool LibOpenSC::WatchHotRemove(unsigned int ridx, long sshpid) {
     MyDynamicLibrary dll;
     ::wxLogTrace(MYTRACETAG, wxT("WatchHotRemove loading OpenSC"));
     {
-        wxLogNull ignoreErrors;
+        LogNull ignoreErrors;
         if (!dll.Load(wxT("libopensc")))
             return false;
     }

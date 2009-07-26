@@ -48,6 +48,7 @@
 #include "opennxApp.h"
 #include "osdep.h"
 #include "pwcrypt.h"
+#include "LogNull.h"
 
 #include <wx/filename.h>
 #include <wx/regex.h>
@@ -763,7 +764,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
             {
                 // At this point key-based auth is finished and
                 // thus the key-file isn't needed anymore
-                wxLogNull logdummy;
+                LogNull logdummy;
                 wxFileName fn;
                 fn.Assign(m_sTempDir, wxT("keylog"));
                 ::wxRemoveFile(fn.GetFullPath());
@@ -1252,7 +1253,7 @@ MySession::startXserver()
     wxWinCmd << wxT(" -auth ") << getXauthPath();
 
     {
-        wxLogNull l;
+        LogNull l;
         fn.AssignDir(m_sSysDir);
         fn.AppendDir(wxT("share"));
         fn.AppendDir(wxT("fonts"));
@@ -1331,7 +1332,7 @@ MySession::startProxy()
     // appended to the regular options.
     wxFileName mergeOpts(m_sUserDir, wxT("options"));
     if (mergeOpts.FileExists()) {
-        wxLogNull dummy;
+        LogNull dummy;
         wxTextFile f(mergeOpts.GetFullPath());
         if (f.Open()) {
             wxString mopts = f.GetFirstLine().Strip(wxString::both);

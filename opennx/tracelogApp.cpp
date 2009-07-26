@@ -34,6 +34,7 @@
 #include "Icon.h"
 #include "TraceLogFrame.h"
 #include "DebugStringGrabber.h"
+#include "LogNull.h"
 
 #include "memres.h"
 
@@ -190,7 +191,7 @@ bool tracelogApp::OnInit()
     {
         // The following code eliminates a stupid error dialog which shows up
         // if some .desktop entires (in KDE or GNOME applink dirs) are dangling symlinks.
-        wxLogNull lognull;
+        LogNull lognull;
         wxTheMimeTypesManager->GetFileTypeFromExtension(wxT("zip"));
     }
 

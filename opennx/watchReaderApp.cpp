@@ -38,6 +38,7 @@
 
 #include "watchReaderApp.h"
 #include "LibOpenSC.h"
+#include "LogNull.h"
 
 #include "trace.h"
 ENABLE_TRACE;
@@ -66,7 +67,7 @@ watchReaderApp::watchReaderApp()
     wxConfigBase::Set(cfg);
 
 #ifndef __WXMSW__
-    wxLogNull dummy;
+    LogNull dummy;
     // Try to get KDE language settings and set locale accordingly
     wxFileInputStream fis(::wxGetHomeDir() +
             wxFileName::GetPathSeparator() + wxT(".kde") + 

@@ -54,6 +54,7 @@
 #include "UsbFilterDetailsDialog.h"
 #include "UsbIp.h"
 #include "LibUSB.h"
+#include "LogNull.h"
 
 #include "memres.h"
 
@@ -165,7 +166,7 @@ class ProcessWatcher : public wxThreadHelper
 #endif
     wxConfigBase::Set(cfg);
 
-    wxLogNull dummy;
+    LogNull dummy;
     // Try to get KDE language settings and set locale accordingly
     wxFileInputStream fis(::wxGetHomeDir() +
             wxFileName::GetPathSeparator() + wxT(".kde") + 
@@ -284,7 +285,7 @@ bool watchUsbIpApp::OnInit()
                     {
                         // The following code eliminates a stupid error dialog which shows up
                         // if some .desktop entires (in KDE or GNOME applink dirs) are dangling symlinks.
-                        wxLogNull lognull;
+                        LogNull lognull;
                         wxTheMimeTypesManager->GetFileTypeFromExtension(wxT("zip"));
                     }
                     resok = true;
@@ -300,7 +301,7 @@ bool watchUsbIpApp::OnInit()
             {
                 // The following code eliminates a stupid error dialog which shows up
                 // if some .desktop entires (in KDE or GNOME applink dirs) are dangling symlinks.
-                wxLogNull lognull;
+                LogNull lognull;
                 wxTheMimeTypesManager->GetFileTypeFromExtension(wxT("zip"));
             }
             free_mem_res(resptr);

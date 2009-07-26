@@ -39,6 +39,8 @@
 
 #include "MyDynlib.h"
 #include "WinShare.h"
+#include "LogNull.h"
+
 #include <wx/utils.h>
 #include <wx/dynlib.h>
 #include <wx/filename.h>
@@ -155,7 +157,7 @@ DllData::DllData(ClientType ct)
         case SmbClientUnix:
             ::wxLogTrace(MYTRACETAG, wxT("DllData Constructor(SmbClientUnix)"));
             {
-                wxLogNull lognull;
+                LogNull lognull;
                 MyDynamicLibrary dll(wxT("libsmbclient"));
                 if (dll.IsLoaded()) {
                     C_init = (SMBC_init)dll.GetSymbol(wxT("smbc_init"));
@@ -170,7 +172,7 @@ DllData::DllData(ClientType ct)
         case SmbClientWinNT:
             ::wxLogTrace(MYTRACETAG, wxT("DllData Constructor(SmbClientWinNT)"));
             {
-                wxLogNull lognull;
+                LogNull lognull;
                 wxDynamicLibrary dll(wxT("netapi32"));
                 if (dll.IsLoaded()) {
                     NT_enum = (NT_NetShareEnum)dll.GetSymbol(wxT("NetShareEnum"));
@@ -183,7 +185,7 @@ DllData::DllData(ClientType ct)
         case SmbClientWin95:
             ::wxLogTrace(MYTRACETAG, wxT("DllData Constructor(SmbClientWin95)"));
             {
-                wxLogNull lognull;
+                LogNull lognull;
                 wxDynamicLibrary dll(wxT("svrapi32"));
                 if (dll.IsLoaded()) {
                     W9X_enum = (W9X_NetShareEnum)dll.GetSymbol(wxT("NetShareEnum"));
@@ -194,7 +196,7 @@ DllData::DllData(ClientType ct)
         case CupsClientUnix:
             ::wxLogTrace(MYTRACETAG, wxT("DllData Constructor(CupsClientUnix)"));
             {
-                wxLogNull lognull;
+                LogNull lognull;
                 MyDynamicLibrary dll(wxT("libcups"));
                 if (dll.IsLoaded()) {
                     cupsGetDests = (FP_cupsGetDests)dll.GetSymbol(wxT("cupsGetDests"));

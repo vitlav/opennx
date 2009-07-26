@@ -29,7 +29,7 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	ConnectDialog.h ConnectDialog_symbols.h debugleak.h \
 	DebugStringGrabber.h ExtHtmlWindow.h ForeignFrame.h \
 	ForeignFrame_symbols.h Icon.h KeyDialog.h KeyDialog_symbols.h \
-	LibUSB.h LogDialog.h LogDialog_symbols.h LoginDialog.h \
+	LibUSB.h LogDialog.h LogDialog_symbols.h LogNull.h LoginDialog.h \
 	LoginDialog_symbols.h md5.h memres.h MyIPC.h MyDynlib.h MySession.h \
 	MyValidator.h MyWizard.h MyWizard_symbols.h MyXmlConfig.h opennxApp.h \
 	osdep.h  PanicDialog.h PanicDialog_symbols.h pwcrypt.h QuitDialog.h \
@@ -145,6 +145,8 @@ pkg: all
 	$(MAKE) DESTDIR=$(abs_builddir)/pkgroot install
 	$(INSTALL) -m 0755 $(top_srcdir)/packaging/MacOSX/opennx-uninstall \
 	    $(abs_builddir)/pkgroot$(bindir)
+	$(abs_srcdir)/packaging/MacOSX/buildsmbclient \
+	    $(abs_builddir)/pkgroot/Library/OpenNX/lib
 	sudo chown -R root.wheel pkgroot
 	rm -rf OpenNX.pkg
 	/Developer/Tools/packagemaker -build -p OpenNX.pkg -f pkgroot -v \
@@ -248,7 +250,8 @@ EXTRA_DIST = conf/config.rpath INSTALL INSTALL.generic COPYING share \
 	res/nx-desktop.ico res/nx.ico res/opennx-admin.ico \
 	res/opennx-wizard.ico res/nx-desktop.icns res/nx.icns \
 	res/opennx-admin.icns res/opennx-wizard.icns \
-	packaging/MacOSX/OpenSC.webloc packaging/MacOSX/buildnx \
+	packaging/MacOSX/Description.plist packaging/MacOSX/OpenSC.webloc \
+	packaging/MacOSX/buildnx packaging/MacOSX/buildsmbclient \
 	packaging/MacOSX/fileopts packaging/MacOSX/folderbg.jpg \
 	packaging/MacOSX/mkbundle packaging/MacOSX/mkdmg \
 	packaging/MacOSX/opennx-uninstall packaging/MacOSX/pkgResources \

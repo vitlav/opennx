@@ -72,6 +72,7 @@
 #include "osdep.h"
 #include "xh_richtext.h"
 #include "UsbIp.h"
+#include "LogNull.h"
 
 #include "memres.h"
 
@@ -147,7 +148,7 @@ IMPLEMENT_APP(opennxApp);
         m_sVersion.Append(wxT(".0"));
     m_sVersion.Append(wxT(".")).Append(wxT(SVNREV));
     {
-        wxLogNull dummy;
+        LogNull dummy;
         // Try to get KDE language settings and override locale accordingly
         wxFileInputStream fis(::wxGetHomeDir() +
                 wxFileName::GetPathSeparator() + wxT(".kde") + 
@@ -847,7 +848,7 @@ bool opennxApp::realInit()
                     {
                         // The following code eliminates a stupid error dialog which shows up
                         // if some .desktop entires (in KDE or GNOME applink dirs) are dangling symlinks.
-                        wxLogNull lognull;
+                        LogNull lognull;
                         wxTheMimeTypesManager->GetFileTypeFromExtension(wxT("zip"));
                     }
                     resok = true;
@@ -863,7 +864,7 @@ bool opennxApp::realInit()
             {
                 // The following code eliminates a stupid error dialog which shows up
                 // if some .desktop entires (in KDE or GNOME applink dirs) are dangling symlinks.
-                wxLogNull lognull;
+                LogNull lognull;
                 wxTheMimeTypesManager->GetFileTypeFromExtension(wxT("zip"));
             }
             free_mem_res(resptr);
@@ -1086,7 +1087,7 @@ bool opennxApp::OnInit()
 #endif
         ::wxLogTrace(MYTRACETAG, wxT("starting %s"), watchcmd.c_str());
         {
-            wxLogNull noerrors;
+            LogNull noerrors;
             ::wxExecute(watchcmd);
         }
         while (Pending())
@@ -1096,7 +1097,7 @@ bool opennxApp::OnInit()
     if (m_bRequireWatchReader) {
         ::wxLogTrace(MYTRACETAG, wxT("require Watchreader: m_iReader = %d, m_nNxSshPID = %ld"), m_iReader, m_nNxSshPID);
         if (-1 != m_iReader) {
-            wxLogNull noerrors;
+            LogNull noerrors;
             wxString appDir;
             wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &appDir);
             wxFileName fn(appDir, wxEmptyString);
@@ -1114,7 +1115,7 @@ bool opennxApp::OnInit()
     while (::wxGetApp().Pending())
         ::wxGetApp().Dispatch();
     if (!ret) {
-        wxLogNull lognull;
+        LogNull lognull;
         wxMemoryFSHandler::RemoveFile(wxT("memrsc"));
     }
     return ret;
@@ -1126,7 +1127,7 @@ bool opennxApp::OnInit()
 int opennxApp::OnExit()
 {
     {
-        wxLogNull lognull;
+        LogNull lognull;
         wxMemoryFSHandler::RemoveFile(wxT("memrsc"));
     }
     return wxApp::OnExit();
