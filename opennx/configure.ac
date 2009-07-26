@@ -10,7 +10,7 @@ AM_INIT_AUTOMAKE([foreign no-installinfo no-installman no-dependencies])
 AC_CONFIG_HEADERS([config.h])
 
 case $build_os in
-	mingw*)
+    mingw*)
         if test "$build_os" = "$target_os" ; then
             # On native mingw, the default include/lib paths
             # are /mingw/include resp. /mingw/lib, however
@@ -21,7 +21,7 @@ case $build_os in
         ;;
 esac
 case $target_os in
-	darwin8*)
+    darwin8*)
         AC_PREFIX_DEFAULT([/Library/OpenNX])
         ;;
 esac
@@ -65,11 +65,11 @@ AC_ARG_ENABLE([debug],
 	[ test "$enableval" = "yes" && ac_cv_enable_debug=YES ]
 )
 if test "$ac_cv_enable_debug" = "YES" ; then
-	AC_MSG_NOTICE([will build debug version])
-	WXPARAMS="--debug=yes"
+    AC_MSG_NOTICE([will build debug version])
+    WXPARAMS="--debug=yes"
 else
-	AC_MSG_NOTICE([will build release version])
-	WXPARAMS="--debug=no"
+    AC_MSG_NOTICE([will build release version])
+    WXPARAMS="--debug=no"
 fi
 
 ac_cv_enable_unicode=YES
@@ -79,11 +79,11 @@ AC_ARG_ENABLE([unicode],
 	[ test "$enableval" = "no" && ac_cv_enable_unicode=NO ]
 )
 if test "$ac_cv_enable_unicode" = "YES" ; then
-	AC_MSG_NOTICE([will enable unicode build])
-	WXPARAMS="$WXPARAMS --unicode=yes"
+    AC_MSG_NOTICE([will enable unicode build])
+    WXPARAMS="$WXPARAMS --unicode=yes"
 else
-	AC_MSG_NOTICE([will disable unicode build])
-	WXPARAMS="$WXPARAMS --unicode=no"
+    AC_MSG_NOTICE([will disable unicode build])
+    WXPARAMS="$WXPARAMS --unicode=no"
 fi
 
 ac_cv_enable_staticwx=NO
@@ -93,19 +93,19 @@ AC_ARG_ENABLE([staticwx],
 	[ test "$enableval" = "yes" && ac_cv_enable_staticwx=YES ]
 )
 if test "$ac_cv_enable_staticwx" = "YES" ; then
-	AC_MSG_NOTICE([will link against static wxWidgets libs])
-	WXPARAMS="$WXPARAMS --static=yes"
+    AC_MSG_NOTICE([will link against static wxWidgets libs])
+    WXPARAMS="$WXPARAMS --static=yes"
 else
-	AC_MSG_NOTICE([will link against shared wxWidgets libs])
-	WXPARAMS="$WXPARAMS --static=no"
+    AC_MSG_NOTICE([will link against shared wxWidgets libs])
+    WXPARAMS="$WXPARAMS --static=no"
 fi
 
 case $target_os in
-	mingw*)
+    mingw*)
         # On mingw, we don't use qa
         _wx_required=xrc,xml,richtext,html,adv,core,net
         ;;
-        *)
+    *)
         _wx_required=xrc,xml,richtext,qa,html,adv,core,net
         ;;
 esac
@@ -288,7 +288,7 @@ fi
 
 DLLPATH=
 case $target_os in
-	mingw*)
+    mingw*)
         if test "$build_os" = "$target_os" ; then
             DLLPATH="$PATH"
         else
@@ -298,10 +298,10 @@ case $target_os in
             DLLPATH="$ac_cv_dllpath"
         fi
         ;;
-        *)
-        ;;
 esac
 AC_SUBST(DLLPATH)
 
-AC_CONFIG_FILES([Makefile opennx.spec res/opennx.rc packaging/win32/Makefile packaging/win32/findrequires.pl packaging/MacOSX/opennx.plist packaging/MacOSX/opennx-main.plist packaging/MacOSX/pkg.plist po/Makefile.in])
+AC_CONFIG_FILES([Makefile opennx.spec res/opennx.rc packaging/win32/Makefile packaging/win32/findrequires.pl
+    packaging/MacOSX/Makefile packaging/MacOSX/opennx.plist packaging/MacOSX/opennx-main.plist packaging/MacOSX/pkg.plist
+    po/Makefile.in])
 AC_OUTPUT

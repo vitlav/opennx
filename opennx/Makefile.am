@@ -1,8 +1,7 @@
 AM_LIBTOOLFLAGS = --silent
-BUILDUSR = $(shell id -u):$(shell id -g)
 
-SUBDIRS = po
-DIST_SUBDIRS = po packaging/win32
+SUBDIRS = po packaging/MacOSX
+DIST_SUBDIRS = po packaging/win32 packaging/MacOSX
 
 noinst_PROGRAMS = bin2hdr
 bin2hdr_SOURCES = bin2hdr.cpp
@@ -110,62 +109,20 @@ bootstrap:
 
 ACLOCAL_AMFLAGS = -I m4
 
-macdist: pkg dmg
-	sudo rm -rf pkgroot dmgroot OpenNX.pkg nxbuild
-
 dmg:
-	rm -rf dmgroot
-	mkdir dmgroot
-	sudo cp -a OpenNX.pkg dmgroot
-	cp $(top_srcdir)/packaging/MacOSX/OpenSC.webloc dmgroot
-	$(top_srcdir)/packaging/MacOSX/mkdmg \
-	    -b $(top_srcdir)/packaging/MacOSX/folderbg.jpg \
-	    -f $(top_srcdir)/packaging/MacOSX/fileopts \
-	    -i $(top_srcdir)/packaging/MacOSX/volicon.icns \
-	    OpenNX.dmg dmgroot
-
-# The following assumes a package prefix of /Library/OpenNX
-pkg: all
-	rm -rf pkgroot
-	mkdir -p pkgroot/{Applications,Library}
-	$(top_srcdir)/packaging/MacOSX/mkbundle pkgroot/Applications/OpenNX.app OpenNXapp \
-	    $(top_srcdir)/res/nx.icns /Library/OpenNX/bin/opennx \
-	    $(top_srcdir)/packaging/MacOSX/opennx-main.plist "OPNX"
-	cp $(top_srcdir)/res/nx-desktop.icns \
-	    pkgroot/Applications/OpenNX.app/Contents/Resources
-	$(top_srcdir)/packaging/MacOSX/mkbundle pkgroot/Applications/OpenNXAdmin.app OpenNXAdmin \
-	    $(top_srcdir)/res/opennx-admin.icns /Library/OpenNX/bin/opennx \
-	    $(top_srcdir)/packaging/MacOSX/opennx.plist "" --admin
-	$(top_srcdir)/packaging/MacOSX/mkbundle pkgroot/Applications/OpenNXWizard.app OpenNXWizard \
-	    $(top_srcdir)/res/opennx-wizard.icns /Library/OpenNX/bin/opennx \
-	    $(top_srcdir)/packaging/MacOSX/opennx.plist "" --wizard
-	rm -rf nxbuild
-	mkdir nxbuild
-	(cd nxbuild ; DEST=$(abs_builddir)/pkgroot $(abs_srcdir)/packaging/MacOSX/buildnx)
-	$(MAKE) DESTDIR=$(abs_builddir)/pkgroot install
-	$(INSTALL) -m 0755 $(top_srcdir)/packaging/MacOSX/opennx-uninstall \
-	    $(abs_builddir)/pkgroot$(bindir)
-	$(abs_srcdir)/packaging/MacOSX/buildsmbclient \
-	    $(abs_builddir)/pkgroot/Library/OpenNX/lib
-	sudo chown -R root.wheel pkgroot
-	rm -rf OpenNX.pkg
-	/Developer/Tools/packagemaker -build -p OpenNX.pkg -f pkgroot -v \
-	    -r packaging/MacOSX/pkgResources \
-	    -i packaging/MacOSX/pkg.plist \
-	    -d packaging/MacOSX/Description.plist
-	sudo chown -R $(BUILDUSR) pkgroot
+	$(MAKE) -C packaging/MacOSX dmg
 
 bundle:
-	$(top_srcdir)/packaging/MacOSX/mkbundle OpenNX.app OpenNXapp \
-	    $(top_srcdir)/res/nx.icns $(abs_builddir)/opennx \
-	    $(top_srcdir)/packaging/MacOSX/opennx-main.plist "OPNX"
-	cp $(top_srcdir)/res/nx-desktop.icns OpenNX.app/Contents/Resources
-	$(top_srcdir)/packaging/MacOSX/mkbundle OpenNXAdmin.app OpenNXAdmin \
-	    $(top_srcdir)/res/opennx-admin.icns $(abs_builddir)/opennx \
-	    $(top_srcdir)/packaging/MacOSX/opennx.plist "" --admin
-	$(top_srcdir)/packaging/MacOSX/mkbundle OpenNXWizard.app OpenNXWizard \
-	    $(top_srcdir)/res/opennx-wizard.icns $(abs_builddir)/opennx \
-	    $(top_srcdir)/packaging/MacOSX/opennx.plist "" --wizard
+	$(srcdir)/packaging/MacOSX/mkbundle OpenNX.app OpenNXapp \
+	    $(srcdir)/res/nx.icns $(abs_builddir)/opennx \
+	    $(srcdir)/packaging/MacOSX/opennx-main.plist "OPNX"
+	cp $(srcdir)/res/nx-desktop.icns OpenNX.app/Contents/Resources
+	$(srcdir)/packaging/MacOSX/mkbundle OpenNXAdmin.app OpenNXAdmin \
+	    $(srcdir)/res/opennx-admin.icns $(abs_builddir)/opennx \
+	    $(srcdir)/packaging/MacOSX/opennx.plist "" --admin
+	$(srcdir)/packaging/MacOSX/mkbundle OpenNXWizard.app OpenNXWizard \
+	    $(srcdir)/res/opennx-wizard.icns $(abs_builddir)/opennx \
+	    $(srcdir)/packaging/MacOSX/opennx.plist "" --wizard
 
 all-local: $(BUNDLE)
 

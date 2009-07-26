@@ -48,18 +48,25 @@ exit(113) unless ($x11);
 
 # Check for any running processes
 my $apprunning = 0;
+my @nxesdpids;
 open (P, "ps xc|") || die "Can't run ps: $!\n";
 while (<P>) {
     chomp;
-    $apprunning = 1 if (/nxesd$/);
     $apprunning = 1 if (/nxproxy$/);
     $apprunning = 1 if (/nxservice$/);
     $apprunning = 1 if (/nxssh$/);
     $apprunning = 1 if (/opennx$/);
     $apprunning = 1 if (/watchreader$/);
+    # nxesd is special:
+    # If it is running AND none of the other
+    # programs are running, then it simply can be killed
+    if (/^(\d+)\s+.+nxesd$/) {
+        push(@nxesdpids, $1);
+    }
 }
 close P;
 exit(114) if ($apprunning);
+kill(15, @nxesdpids) if ($#nxesdpids >= 0);
 
 # Everything OK
 exit(0);

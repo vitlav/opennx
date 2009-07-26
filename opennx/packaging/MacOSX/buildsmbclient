@@ -6,13 +6,14 @@ set -e
 # into temporary destinations and finally combine the .dylibs
 # with lipo
 #
-if [ $# != 1 ] ; then
-    echo "Usage: buildsmbclient <DSTDIR>" >&2
+if [ $# != 2 ] ; then
+    echo "Usage: buildsmbclient <PREFIX> <DSTDIR>" >&2
     exit 1
 fi
+PFX="$1"
 WDIR=`pwd`
 TDIR="$WDIR/libsmbclient.$$"
-cd "$1"
+cd "$2"
 IDIR="`pwd`"
 cd "$WDIR"
 
@@ -31,7 +32,7 @@ wget "$DLURL"
 tar xzf $TGZ
 cd $SRC/source3
 CFLAGS="-arch i386" LDFLAGS="-arch i386" ./configure \
-    --prefix=/Library/OpenNX \
+    --prefix=$PFX \
     --with-configdir=/etc \
     --disable-swat \
     --without-wbclient \
