@@ -245,7 +245,7 @@ wxString MyWizard::sGetConfigName()
 }
 
 
-static void initHtml(wxHtmlWindow *w, wxString s)
+static void initHtml(wxHtmlWindow *w, wxColour wbg, wxString s)
 {
     int fs[7];
 
@@ -262,6 +262,7 @@ static void initHtml(wxHtmlWindow *w, wxString s)
                 bg.Red(), bg.Green(), bg.Blue(), fg.Red(), fg.Green(), fg.Blue()));
     s += _T("</BODY></HTML>");
     w->SetPage(s);
+    w->SetBackgroundColour(wbg);
     int width, height;
     w->GetSize(&width, &height);
     w->GetInternalRepresentation()->Layout(width);
@@ -316,7 +317,7 @@ bool WizardPageWelcome::Create( wxWizard* WXUNUSED(parent) )
     CreateControls();
     ////@end WizardPageWelcome creation
     CreateControls();
-    initHtml(m_pWelcomeText,
+    initHtml(m_pWelcomeText, GetBackgroundColour(),
             _("Welcome to the OpenNX Client Connection Wizard which will guide you through the steps needed to setup your login. Please select the 'Next' button to start."));
     return TRUE;
 }
@@ -456,9 +457,12 @@ bool WizardPageSession::Create( wxWizard* parent )
     wxDynamicCast(m_pCtrlSessionName->GetValidator(), MyValidator)->SetKeyTyped(wxDynamicCast(GetParent(), MyWizard));
     wxDynamicCast(m_pCtrlHostName->GetValidator(), MyValidator)->SetKeyTyped(wxDynamicCast(GetParent(), MyWizard));
     wxDynamicCast(m_pCtrlPort->GetValidator(), MyValidator)->SetKeyTyped(wxDynamicCast(GetParent(), MyWizard));
-    initHtml(m_pText1, _("Insert the name of the session. Your configuration settings will be saved with this name."));
-    initHtml(m_pText2, _("Insert the name and port of the server you want to connect."));
-    initHtml(m_pText3, _("Select the type of your internet connection."));
+    initHtml(m_pText1, GetBackgroundColour(),
+		    _("Insert the name of the session. Your configuration settings will be saved with this name."));
+    initHtml(m_pText2, GetBackgroundColour(),
+		    _("Insert the name and port of the server you want to connect."));
+    initHtml(m_pText3, GetBackgroundColour(),
+		    _("Select the type of your internet connection."));
     return TRUE;
 }
 
@@ -641,7 +645,8 @@ bool WizardPageDesktop::Create( wxWizard* parent )
     CreateControls();
     ////@end WizardPageDesktop creation
     CreateControls();
-    initHtml(m_pText1, _("Using OpenNX Client, you can run RDP, VNC and X desktops, depending on what your service provider has made available."));
+    initHtml(m_pText1, GetBackgroundColour(),
+		    _("Using OpenNX Client, you can run RDP, VNC and X desktops, depending on what your service provider has made available."));
     UpdateDialogConstraints(false);
     m_pCtrlDisplayWidth->SetFont(wxSystemSettings::GetFont(wxSYS_ANSI_VAR_FONT));
     m_pCtrlDisplayHeight->SetFont(wxSystemSettings::GetFont(wxSYS_ANSI_VAR_FONT));
@@ -911,8 +916,10 @@ bool WizardPageSecurity::Create( wxWizard* parent )
     CreateControls();
     ////@end WizardPageSecurity creation
     CreateControls();
-    initHtml(m_pText1, _("OpenNX Client supports authentication using a variety of USB SmartCard tokens. Enable this option if you intend to use such a token."));
-    initHtml(m_pText2, _("Authorization credentials are always encrypted while establishing a connection. For increased security, you can enable the following option."));
+    initHtml(m_pText1, GetBackgroundColour(),
+		    _("OpenNX Client supports authentication using a variety of USB SmartCard tokens. Enable this option if you intend to use such a token."));
+    initHtml(m_pText2, GetBackgroundColour(),
+		    _("Authorization credentials are always encrypted while establishing a connection. For increased security, you can enable the following option."));
     return TRUE;
 }
 
@@ -1207,7 +1214,8 @@ void WizardPageFinish::OnWizardpageFinishPageChanged( wxWizardEvent& event )
     MyXmlConfig *cfg = wxDynamicCast(GetParent(), MyWizard)->pGetConfig();
     wxString cfgName = cfg->sGetName();
     cfgName.Replace(_T(" "), _T("&nbsp;"));
-    initHtml(m_pText1, wxString::Format(
+    initHtml(m_pText1, GetBackgroundColour(),
+		    wxString::Format(
                 _("Congratulations. The connection to '%s' will be saved as '%s'. You may further configure your session by running the Advanced Configuration dialog."),
                 cfg->sGetServerHost().c_str(), cfgName.c_str()));
     Layout();
