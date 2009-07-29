@@ -26,7 +26,9 @@
 #pragma interface "LibOpenSC.cpp"
 #endif
 
+#ifdef APP_OPENNX
 DECLARE_LOCAL_EVENT_TYPE(wxEVT_CARDINSERTED, -5);
+#endif
 
 class CardWaiterDialog;
 

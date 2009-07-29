@@ -9,7 +9,7 @@ dmg: pkg
 	    -b $(srcdir)/folderbg.jpg \
 	    -f $(srcdir)/fileopts \
 	    -i $(srcdir)/volicon.icns \
-	    $(top_builddir)/OpenNX.dmg dmgroot
+	    $(top_builddir)/OpenNX-$(VERSION).dmg dmgroot
 	touch $@
 
 pkgdir:
@@ -27,6 +27,12 @@ pkgdir:
 	$(srcdir)/mkbundle pkgroot/Applications/OpenNXWizard.app OpenNXWizard \
 	    $(top_srcdir)/res/opennx-wizard.icns $(bindir)/opennx \
 	    $(srcdir)/opennx.plist "" --wizard
+	rm -rf scbuild
+	mkdir scbuild
+	(cd scbuild ; $(abs_srcdir)/buildopensc $(prefix) $(abs_builddir)/pkgroot$(libdir))
+	sed -e "s!_PREFIX_!$(abs_builddir)/scbuild/dist/$(prefix)!" \
+	    < $(srcdir)/opensc-config.tmpl > scbuild/dist$(prefix)/bin/opensc-config
+	chmod a+x scbuild/dist$(prefix)/bin/opensc-config
 	rm -rf nxbuild
 	mkdir nxbuild
 	(cd nxbuild ; DEST=$(abs_builddir)/pkgroot PFX=$(prefix) $(abs_srcdir)/buildnx)
@@ -47,8 +53,8 @@ pkg: pkgdir
 	sudo chown -R $(BUILDUSR) pkgroot
 	touch $@
 
-CLEANFILES = -rf pkg pkgdir dmg dmgroot pkgroot nxbuild OpenNX.pkg
+CLEANFILES = -rf pkg pkgdir dmg dmgroot pkgroot nxbuild OpenNX.pkg scbuild
 
-EXTRA_DIST = Description.plist OpenSC.webloc buildnx buildsmbclient \
+EXTRA_DIST = Description.plist OpenSC.webloc buildnx buildopensc buildsmbclient \
 	fileopts folderbg.jpg mkbundle mkdmg opennx-uninstall \
-	pkgResources volicon.icns volicon.png
+	opensc-config.tmpl pkgResources volicon.icns volicon.png

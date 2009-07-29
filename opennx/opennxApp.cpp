@@ -73,6 +73,7 @@
 #include "xh_richtext.h"
 #include "UsbIp.h"
 #include "LogNull.h"
+#include "CardWaiterDialog.h"
 
 #include "memres.h"
 
@@ -99,6 +100,7 @@ IMPLEMENT_APP(opennxApp);
     ,m_bLibUSBAvailable(false)
     ,m_bRequireWatchReader(false)
     ,m_bRequireStartUsbIp(false)
+    ,m_bTestCardWaiter(false)
     ,m_pLoginDialog(NULL)
 {
     SetAppName(wxT("OpenNX"));
@@ -662,6 +664,10 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
             _("Specify window-ID for dialog mode."), wxCMD_LINE_VAL_NUMBER);
     parser.AddOption(wxEmptyString, wxT("trace"),
             _("Specify wxWidgets trace mask."));
+#ifdef __WXDEBUG__
+    parser.AddSwitch(wxEmptyString, wxT("waittest"),
+            _("Test CardWaiterDialog"));
+#endif
     parser.AddSwitch(wxEmptyString, wxT("wizard"),
             _("Guide the user through the steps to configure a session.") + tags);
     // Workaround for commandline compatibility:
@@ -779,6 +785,8 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
         m_eMode = MODE_ADMIN;
     if (parser.Found(wxT("wizard")))
         m_eMode = MODE_WIZARD;
+    if (parser.Found(wxT("waittest")))
+        m_bTestCardWaiter = true;
     (void)parser.Found(wxT("session"), &m_sSessionName);
     wxString traceTags;
     if (parser.Found(wxT("trace"), &traceTags)) {
@@ -956,6 +964,11 @@ bool opennxApp::realInit()
             break;
     }
 
+    if (m_bTestCardWaiter) {
+        CardWaiterDialog cwd;
+        cwd.WaitForCard(NULL);
+        return false;
+    }
 #ifdef __WXMAC__
     // If we reach this point, we definitively are in dialog mode, so
     // on MacOSX we need set up a dummy menu
@@ -1106,6 +1119,7 @@ bool opennxApp::OnInit()
 #endif
             wxString watchcmd = fn.GetShortPath();
             watchcmd << wxT(" -r ") << m_iReader << wxT(" -p ") << m_nNxSshPID;
+            ::wxLogTrace(MYTRACETAG, wxT("executing %s"), watchcmd.c_str());
             ::wxExecute(watchcmd);
         }
     }

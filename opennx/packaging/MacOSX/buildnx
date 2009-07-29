@@ -36,10 +36,10 @@ cd nxssh
 patch -p1 < $TOPSRC/patches/openssh-scard-pin.patch
 autoreconf -f -i
 ./configure --prefix=$PFX \
-  --with-opensc=/Library/OpenSC \
+  --with-opensc=$BUILDDIR/../scbuild/dist$PFX \
+  --with-ssl-dir=/Library/OpenSC \
   --with-cflags="-arch i386 -arch ppc" \
-  --with-cppflags="-I/Library/OpenSC/include" \
-  --with-ldflags="-arch i386 -arch ppc -L/Library/OpenSC/lib -L$DEST$PFX/lib"
+  --with-ldflags="-arch i386 -arch ppc -L$DEST$PFX/lib"
 make
 cp nxssh $DEST$PFX/bin/nxssh
 cd ..

@@ -102,6 +102,7 @@ class opennxApp : public wxApp
         bool m_bLibUSBAvailable;
         bool m_bRequireWatchReader;
         bool m_bRequireStartUsbIp;
+        bool m_bTestCardWaiter;
         LoginDialog *m_pLoginDialog;
 
         bool preInit();

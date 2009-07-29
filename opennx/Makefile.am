@@ -6,9 +6,10 @@ DIST_SUBDIRS = po packaging/win32 packaging/MacOSX
 noinst_PROGRAMS = bin2hdr
 bin2hdr_SOURCES = bin2hdr.cpp
 
-bin_PROGRAMS = opennx $(TRACELOG) $(WATCHREADER) $(WATCHUSBIP)
+bin_PROGRAMS = opennx $(TRACELOG) $(WATCHREADER) $(WATCHUSBIP) $(MACFINDREADER)
 
-EXTRA_PROGRAMS = tracelog$(EXEEXT) watchreader$(EXEEXT) watchusbip$(EXEEXT)
+EXTRA_PROGRAMS = tracelog$(EXEEXT) watchreader$(EXEEXT) \
+		 watchusbip$(EXEEXT) macfindreader$(EXEEXT)
 
 opennx_SOURCES = AboutDialog.cpp AsyncProcess.cpp LibOpenSC.cpp \
 	CardWaiterDialog.cpp ConnectDialog.cpp ExtHtmlWindow.cpp \
@@ -71,6 +72,11 @@ tracelog_DEPENDENCIES = $(TRACELOG_RES)
 tracelog_CPPFLAGS = $(WX_CPPFLAGS) $(X_CFLAGS) -DAPP_TRACELOG
 tracelog_CXXFLAGS = $(WX_CXXFLAGS)
 tracelog_CFLAGS = $(WX_CFLAGS)
+
+macfindreader_SOURCES = macfindreader.c
+macfindreader_CFLAGS = $(UNIFLAGS)
+macfindreader_LDLAGS = $(UNIFLAGS)
+macfindreader_LDADD = -lopensc
 
 EXTRA_HEADERS = res/opennx.rc
 
