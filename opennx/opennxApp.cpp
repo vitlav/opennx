@@ -521,9 +521,6 @@ opennxApp::preInit()
 # else
     ldpath += tmp + wxT("/lib");
 # endif
-# ifdef __WXMAC__
-    ldpath += wxT(":/Library/OpenSC/lib");
-# endif
     if (!::wxSetEnv(LD_LIBRARY_PATH, ldpath)) {
         ::wxLogSysError(wxT("Can not set LD_LIBRARY_PATH"));
         return false;
