@@ -1353,9 +1353,8 @@ msgid "Launch NX Session"
 msgstr "Starte NX Sitzung"
 
 #: opennxApp.cpp:265
-#, fuzzy
 msgid "Could not create link on Desktop."
-msgstr "Konnte Verknüpfung %s nicht lesen"
+msgstr "Konnte Verknüpfung nicht auf der Arbeitsfäche anlegen"
 
 #: opennxApp.cpp:373
 msgid "Could not get PATH environment"
@@ -1435,15 +1434,16 @@ msgid "Guide the user through the steps to configure a session."
 msgstr "Führe den Benutzer durch die Schritte zu Konfiguration einer Sitzung."
 
 #: opennxApp.cpp:723
-#, fuzzy
 msgid "Smart card removed"
-msgstr "Smart Card PIN"
+msgstr "Smart Card entfernt"
 
 #: opennxApp.cpp:725
 msgid ""
 "OpenNX session has been suspended, because\n"
 "the authenticating smart card has been removed."
 msgstr ""
+"Die OpenNX Sitzung wurde unterbrochen, weil\n"
+"die authentisierende Smart Card entfernt wurde."
 
 #: opennxApp.cpp:1077
 msgid "USBIP tunnel registration timeout"
