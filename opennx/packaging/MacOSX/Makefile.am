@@ -60,4 +60,4 @@ CLEANFILES = -rf pkg pkgdir dmg dmgroot pkgroot nxbuild OpenNX.pkg scbuild
 
 EXTRA_DIST = Description.plist OpenSC.webloc buildnx buildopensc buildsmbclient \
 	fileopts folderbg.jpg mkbundle mkdmg opennx-uninstall \
-	opensc-config.tmpl pkgResources volicon.icns volicon.png
+	opensc-config.tmpl pkgResources libsmbclient.h volicon.icns volicon.png

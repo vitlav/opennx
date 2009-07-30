@@ -23,6 +23,7 @@ mkdir -p $BDIR/Contents/{MacOS,Resources}
 iconshort=`basename $ICON .icns`
 sed -e "s/_ICON_/$iconshort/" -e "s/_EXECUTABLE_/$SCRIPT/" -e "s/_CREATOR_/$CREATOR/" < $PLIST > $BDIR/Contents/Info.plist
 cp $ICON $BDIR/Contents/Resources
+chmod u+w $BDIR/Contents/Resources/$iconshort.icns
 echo "APPL$CREATOR" > $BDIR/Contents/PkgInfo
 cat<<EOF>$BDIR/Contents/MacOS/$SCRIPT
 #!/bin/sh

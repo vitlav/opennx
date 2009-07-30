@@ -121,23 +121,23 @@ dmg:
 bundle:
 	$(srcdir)/packaging/MacOSX/mkbundle OpenNX.app OpenNXapp \
 	    $(srcdir)/res/nx.icns $(abs_builddir)/opennx \
-	    $(srcdir)/packaging/MacOSX/opennx-main.plist "OPNX"
-	cp $(srcdir)/res/nx-desktop.icns OpenNX.app/Contents/Resources
+	    $(builddir)/packaging/MacOSX/opennx-main.plist "OPNX"
+	$(INSTALL) -m 0644 $(srcdir)/res/nx-desktop.icns OpenNX.app/Contents/Resources
 	$(srcdir)/packaging/MacOSX/mkbundle OpenNXAdmin.app OpenNXAdmin \
 	    $(srcdir)/res/opennx-admin.icns $(abs_builddir)/opennx \
-	    $(srcdir)/packaging/MacOSX/opennx.plist "" --admin
+	    $(builddir)/packaging/MacOSX/opennx.plist "" --admin
 	$(srcdir)/packaging/MacOSX/mkbundle OpenNXWizard.app OpenNXWizard \
 	    $(srcdir)/res/opennx-wizard.icns $(abs_builddir)/opennx \
-	    $(srcdir)/packaging/MacOSX/opennx.plist "" --wizard
+	    $(builddir)/packaging/MacOSX/opennx.plist "" --wizard
 	$(srcdir)/packaging/MacOSX/mkbundle Message.app OpenNXMessage \
 	    $(srcdir)/res/nx.icns $(abs_builddir)/opennx \
-	    $(srcdir)/packaging/MacOSX/opennx.plist "" \
+	    $(builddir)/packaging/MacOSX/opennx.plist "" \
 	    --dialog ok --style info --caption CARDREMOVED --message CARDREMOVED
 
 all-local: $(BUNDLE)
 
 clean-local:
-	rm -rf OpenNX.app OpenNXAdmin.app OpenNXWizard.app
+	rm -rf OpenNX.app OpenNXAdmin.app OpenNXWizard.app Message.app
 
 distclean-local:
 	rm -f po/stamp-po
@@ -217,9 +217,4 @@ EXTRA_DIST = conf/config.rpath INSTALL INSTALL.generic COPYING share \
 	res/nx-desktop.ico res/nx.ico res/opennx-admin.ico \
 	res/opennx-wizard.ico res/nx-desktop.icns res/nx.icns \
 	res/opennx-admin.icns res/opennx-wizard.icns \
-	packaging/MacOSX/Description.plist packaging/MacOSX/OpenSC.webloc \
-	packaging/MacOSX/buildnx packaging/MacOSX/buildsmbclient \
-	packaging/MacOSX/fileopts packaging/MacOSX/folderbg.jpg \
-	packaging/MacOSX/mkbundle packaging/MacOSX/mkdmg \
-	packaging/MacOSX/opennx-uninstall packaging/MacOSX/pkgResources \
-	packaging/MacOSX/volicon.icns packaging/MacOSX/volicon.png
+	debian

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opennx 0.16\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-07-26 05:39+0200\n"
+"POT-Creation-Date: 2009-07-30 14:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,7 +32,7 @@ msgstr ""
 msgid "&OK"
 msgstr ""
 
-#: LibOpenSC.cpp:349
+#: LibOpenSC.cpp:384
 msgid "Could not terminate nxssh"
 msgstr ""
 
@@ -98,14 +98,14 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: LoginDialog.cpp:342 LoginDialog.cpp:428 MyWizard.cpp:1382
+#: LoginDialog.cpp:342 LoginDialog.cpp:428 MyWizard.cpp:1390
 #, c-format
 msgid ""
 "Could not save session to\n"
 "%s"
 msgstr ""
 
-#: LoginDialog.cpp:343 LoginDialog.cpp:429 MyWizard.cpp:1383
+#: LoginDialog.cpp:343 LoginDialog.cpp:429 MyWizard.cpp:1391
 msgid "Error saving - OpenNX"
 msgstr ""
 
@@ -218,119 +218,119 @@ msgstr ""
 msgid "You have reached your session limit. No more sessions allowed"
 msgstr ""
 
-#: MySession.cpp:1352
+#: MySession.cpp:1354
 #, c-format
 msgid ""
 "Could not create session directory\n"
 "%s\n"
 msgstr ""
 
-#: MySession.cpp:1372
+#: MySession.cpp:1374
 #, c-format
 msgid ""
 "Could not write session options\n"
 "%s\n"
 msgstr ""
 
-#: MySession.cpp:1722
+#: MySession.cpp:1724
 #, c-format
 msgid "Could not write %s"
 msgstr ""
 
-#: MySession.cpp:1780 MySession.cpp:1811 MySession.cpp:1819
+#: MySession.cpp:1782 MySession.cpp:1813 MySession.cpp:1821
 #, c-format
 msgid "Connecting to %s ..."
 msgstr ""
 
-#: MySession.cpp:1787
+#: MySession.cpp:1789
 msgid "Preparing multimedia service ..."
 msgstr ""
 
-#: MySession.cpp:1797
+#: MySession.cpp:1799
 msgid "Could not query multimedia support"
 msgstr ""
 
-#: MySession.cpp:1809
+#: MySession.cpp:1811
 msgid "Could not start multimedia support"
 msgstr ""
 
-#: MySession.cpp:1817
+#: MySession.cpp:1819
 msgid "Preparing CUPS service ..."
 msgstr ""
 
-#: MySession.cpp:1851
+#: MySession.cpp:1853
 msgid "Called command was: "
 msgstr ""
 
-#: MySession.cpp:1852
+#: MySession.cpp:1854
 msgid "Could not start nxssh."
 msgstr ""
 
-#: MyWizard.cpp:320
+#: MyWizard.cpp:321
 msgid ""
 "Welcome to the OpenNX Client Connection Wizard which will guide you through "
 "the steps needed to setup your login. Please select the 'Next' button to "
 "start."
 msgstr ""
 
-#: MyWizard.cpp:442
+#: MyWizard.cpp:443
 msgid "New Session"
 msgstr ""
 
-#: MyWizard.cpp:445
+#: MyWizard.cpp:446
 #, c-format
 msgid "New Session %d"
 msgstr ""
 
-#: MyWizard.cpp:459
+#: MyWizard.cpp:461
 msgid ""
 "Insert the name of the session. Your configuration settings will be saved "
 "with this name."
 msgstr ""
 
-#: MyWizard.cpp:460
+#: MyWizard.cpp:463
 msgid "Insert the name and port of the server you want to connect."
 msgstr ""
 
-#: MyWizard.cpp:461
+#: MyWizard.cpp:465
 msgid "Select the type of your internet connection."
 msgstr ""
 
-#: MyWizard.cpp:644
+#: MyWizard.cpp:649
 msgid ""
 "Using OpenNX Client, you can run RDP, VNC and X desktops, depending on what "
 "your service provider has made available."
 msgstr ""
 
-#: MyWizard.cpp:711 SessionProperties.cpp:787
+#: MyWizard.cpp:716 SessionProperties.cpp:787
 msgid "RDP"
 msgstr ""
 
-#: MyWizard.cpp:729 SessionProperties.cpp:814
+#: MyWizard.cpp:734 SessionProperties.cpp:814
 msgid "RFB"
 msgstr ""
 
-#: MyWizard.cpp:747 SessionProperties.cpp:841
+#: MyWizard.cpp:752 SessionProperties.cpp:841
 msgid "Any"
 msgstr ""
 
-#: MyWizard.cpp:754 SessionProperties.cpp:848
+#: MyWizard.cpp:759 SessionProperties.cpp:848
 msgid "As on server"
 msgstr ""
 
-#: MyWizard.cpp:914
+#: MyWizard.cpp:920
 msgid ""
 "OpenNX Client supports authentication using a variety of USB SmartCard "
 "tokens. Enable this option if you intend to use such a token."
 msgstr ""
 
-#: MyWizard.cpp:915
+#: MyWizard.cpp:922
 msgid ""
 "Authorization credentials are always encrypted while establishing a "
 "connection. For increased security, you can enable the following option."
 msgstr ""
 
-#: MyWizard.cpp:1211
+#: MyWizard.cpp:1219
 #, c-format
 msgid ""
 "Congratulations. The connection to '%s' will be saved as '%s'. You may "
@@ -718,7 +718,7 @@ msgstr ""
 msgid "Select System CUPS daemon"
 msgstr ""
 
-#: SessionProperties.cpp:2058 opennxApp.cpp:1046
+#: SessionProperties.cpp:2058 opennxApp.cpp:1063
 msgid "libusb is not available. No USB devices will be exported"
 msgstr ""
 
@@ -1302,94 +1302,108 @@ msgstr ""
 msgid "Disable taint of X replies"
 msgstr ""
 
-#: opennxApp.cpp:232
+#: opennxApp.cpp:234
 msgid "Launch NX Session"
 msgstr ""
 
-#: opennxApp.cpp:263
+#: opennxApp.cpp:265
 msgid "Could not create link on Desktop."
 msgstr ""
 
-#: opennxApp.cpp:371
+#: opennxApp.cpp:373
 msgid "Could not get PATH environment"
 msgstr ""
 
-#: opennxApp.cpp:386
+#: opennxApp.cpp:388
 #, c-format
 msgid "Could not find %s in PATH"
 msgstr ""
 
-#: opennxApp.cpp:396
+#: opennxApp.cpp:398
 #, c-format
 msgid "Could not stat %s"
 msgstr ""
 
-#: opennxApp.cpp:402
+#: opennxApp.cpp:404
 #, c-format
 msgid "Could not read link %s"
 msgstr ""
 
-#: opennxApp.cpp:646
+#: opennxApp.cpp:645
 msgid ""
 "\n"
 "\n"
 "Supported trace tags: "
 msgstr ""
 
-#: opennxApp.cpp:649
+#: opennxApp.cpp:648
 msgid "Start the session administration tool."
 msgstr ""
 
-#: opennxApp.cpp:651
+#: opennxApp.cpp:650
 msgid "Secify window title for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:653
+#: opennxApp.cpp:652
 msgid "Secify dialog style for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:655
+#: opennxApp.cpp:654
 msgid "Run in dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:657
+#: opennxApp.cpp:656
 msgid "Dialog mode proxy."
 msgstr ""
 
-#: opennxApp.cpp:659
+#: opennxApp.cpp:658
 msgid "Specify message for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:661
+#: opennxApp.cpp:660
 msgid "Specify parent PID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:663
+#: opennxApp.cpp:662
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr ""
 
-#: opennxApp.cpp:665
+#: opennxApp.cpp:664
 msgid "Specify window-ID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:667
+#: opennxApp.cpp:666
 msgid "Specify wxWidgets trace mask."
 msgstr ""
 
 #: opennxApp.cpp:669
+msgid "Test CardWaiterDialog"
+msgstr ""
+
+#: opennxApp.cpp:672
 msgid "Guide the user through the steps to configure a session."
 msgstr ""
 
-#: opennxApp.cpp:1060
+#: opennxApp.cpp:723
+msgid "Smart card removed"
+msgstr ""
+
+#: opennxApp.cpp:725
+msgid ""
+"OpenNX session has been suspended, because\n"
+"the authenticating smart card has been removed."
+msgstr ""
+
+#: opennxApp.cpp:1077
 msgid "USBIP tunnel registration timeout"
 msgstr ""
 
-#: opennxApp.cpp:1062
+#: opennxApp.cpp:1079
 #, c-format
 msgid "Unable to export USB device %s"
 msgstr ""
 
-#: opennxApp.cpp:1068
+#: opennxApp.cpp:1085
 msgid "Could not connect to usbipd2. No USB devices will be exported"
 msgstr ""
 
