@@ -50,7 +50,6 @@ IMPLEMENT_CLASS( watchReaderApp, wxApp )
 BEGIN_EVENT_TABLE(watchReaderApp, wxApp)
 END_EVENT_TABLE()
 
-
 watchReaderApp::watchReaderApp()
 {
     SetAppName(wxT("OpenNX"));
@@ -157,10 +156,20 @@ bool watchReaderApp::OnInit()
         return false;
 
     LibOpenSC opensc;
-    if (opensc.WatchHotRemove(m_iReader, m_lSshPid))
+    if (opensc.WatchHotRemove(m_iReader, m_lSshPid)) {
+#ifdef __WXMAC__
+        // on MacOS, we use the --dialog functionality of opennx
+        wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp);
+        tmp << wxFileName::GetPathSeparator() << wxT("Message.app");
+        ::wxLogTrace(MYTRACETAG, wxT("Executing %s"), tmp.c_str());
+        ::wxExecute(tmp);
+#else
+        ::wxLogTrace(MYTRACETAG, wxT("Showing info dialog"));
         wxMessageBox(
                 _("OpenNX session has been suspended, because\nthe authenticating smart card has been removed."),
                 _("Smart card removed"), wxOK|wxICON_INFORMATION);
+#endif
+    }
     SetExitOnFrameDelete(true);
     return false;
 }

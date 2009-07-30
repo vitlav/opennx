@@ -717,6 +717,13 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
         m_iDialogStyle = wxICON_WARNING;
         (void)parser.Found(wxT("caption"), &m_sDialogCaption);
         (void)parser.Found(wxT("message"), &m_sDialogMessage);
+#ifdef __WXMAC__
+        // Special message and caption tags, when called from watchreader
+        if (m_sDialogCaption.IsSameAs(wxT("CARDREMOVED")))
+            m_sDialogCaption = _("Smart card removed");
+        if (m_sDialogMessage.IsSameAs(wxT("CARDREMOVED")))
+            m_sDialogMessage = _("OpenNX session has been suspended, because\nthe authenticating smart card has been removed.");
+#endif
         (void)parser.Found(wxT("style"), &tmp);
         m_sDialogMessage.Replace(wxT("\\r\\n"), wxT("\n"));
         m_sDialogMessage.Replace(wxT("\\r"), wxT("\n"));

@@ -27,6 +27,9 @@ pkgdir:
 	$(srcdir)/mkbundle pkgroot/Applications/OpenNXWizard.app OpenNXWizard \
 	    $(top_srcdir)/res/opennx-wizard.icns $(bindir)/opennx \
 	    $(srcdir)/opennx.plist "" --wizard
+	$(srcdir)/mkbundle pkgroot/Library/OpenNX/Message.app OpenNXMessage \
+	    $(top_srcdir)/res/nx.icns $(bindir)/opennx \
+	    $(srcdir)/opennx.plist "" --dialog ok --style info --caption CARDREMOVED --message CARDREMOVED
 	rm -rf scbuild
 	mkdir scbuild
 	(cd scbuild ; $(abs_srcdir)/buildopensc $(prefix) $(abs_builddir)/pkgroot$(libdir))

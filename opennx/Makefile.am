@@ -129,6 +129,10 @@ bundle:
 	$(srcdir)/packaging/MacOSX/mkbundle OpenNXWizard.app OpenNXWizard \
 	    $(srcdir)/res/opennx-wizard.icns $(abs_builddir)/opennx \
 	    $(srcdir)/packaging/MacOSX/opennx.plist "" --wizard
+	$(srcdir)/packaging/MacOSX/mkbundle Message.app OpenNXMessage \
+	    $(srcdir)/res/nx.icns $(abs_builddir)/opennx \
+	    $(srcdir)/packaging/MacOSX/opennx.plist "" \
+	    --dialog ok --style info --caption CARDREMOVED --message CARDREMOVED
 
 all-local: $(BUNDLE)
 

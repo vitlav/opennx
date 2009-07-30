@@ -24,7 +24,7 @@
  */
 #include <wx/platform.h>
 
-#if defined(__WXMAC__) && defined(__WXDEBUG__)
+#ifdef __WXMAC__
 /*
  * Allow app to be started from the commandline
  */
@@ -33,7 +33,12 @@ static void __attribute__ ((constructor))
     makeForegroundApp()
 {
     ProcessSerialNumber PSN;
-    GetCurrentProcess(&PSN);
-    TransformProcessType(&PSN,kProcessTransformToForegroundApplication);
+    if (noErr == GetCurrentProcess(&PSN)) {
+# ifdef APP_WATCHREADER
+        TransformProcessType(&PSN, 0);
+# else
+        TransformProcessType(&PSN, kProcessTransformToForegroundApplication);
+# endif
+    }
 }
 #endif
