@@ -40,6 +40,7 @@ pkgdir:
 	mkdir nxbuild
 	(cd nxbuild ; DEST=$(abs_builddir)/pkgroot PFX=$(prefix) $(abs_srcdir)/buildnx)
 	$(MAKE) -C $(top_builddir) DESTDIR=$(abs_builddir)/pkgroot install
+	$(MAKE) -C $(top_builddir)/po DESTDIR=$(abs_builddir)/pkgroot install-data-yes
 	$(INSTALL) -m 0755 $(srcdir)/opennx-uninstall \
 	    pkgroot$(bindir)
 	$(srcdir)/buildsmbclient $(prefix) \
