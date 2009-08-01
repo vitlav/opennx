@@ -23,6 +23,7 @@ esac
 case $target_os in
     darwin8*)
         am_dependency_tracking=no
+        enable_dependency_tracking=no
         AC_PREFIX_DEFAULT([/Library/OpenNX])
         ;;
 esac
