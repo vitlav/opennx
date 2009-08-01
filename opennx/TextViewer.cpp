@@ -52,28 +52,6 @@
 ////@begin XPM images
 ////@end XPM images
 
-#if 0
-class myRichTextXMLHandler : public wxRichTextXMLHandler {
-    DECLARE_DYNAMIC_CLASS(myRichTextXMLHandler);
-    public:
-         myRichTextXMLHandler(const wxString& name = wxT("XML"),
-                 const wxString& ext = wxT("xml"), int type = wxRICHTEXT_TYPE_XML)
-             : wxRichTextXMLHandler(name, ext, type)
-         {
-         }
-        bool LoadFile(wxRichTextBuffer *buffer, const wxString& filename)
-        {
-            wxFileSystem fs;
-            wxFSFile *f = fs.OpenFile(filename);
-            if (f) {
-                wxInputStream *is = f->GetStream();
-                DoLoadFile(buffer, *is);
-            }
-        }
-};
-IMPLEMENT_DYNAMIC_CLASS(myRichTextXMLHandler, wxRichTextXMLHandler);
-#endif
-
 class myRichTextCtrl : public wxRichTextCtrl {
 DECLARE_DYNAMIC_CLASS(myRichTextCtrl);
 
@@ -184,7 +162,7 @@ void TextViewer::CreateControls()
     ////@end TextViewer content construction
 
     m_pRichTextCtrl->GetBuffer().AddHandler(new wxRichTextXMLHandler());
-    //m_pRichTextCtrl->GetBuffer().AddHandler(new myRichTextXMLHandler());
+    m_pRichTextCtrl->SetHandlerFlags(wxRICHTEXT_HANDLER_CONVERT_FACENAMES);
  
     ////@begin TextViewer content initialisation
     ////@end TextViewer content initialisation

@@ -135,6 +135,8 @@ void LogDialog::ReadLogFile(wxString name)
         m_sFileName = name;
 
     if (!m_sFileName.IsEmpty()) {
+        wxFont f(10, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+        m_TextCtrl->SetFont(f);
         m_TextCtrl->LoadFile(m_sFileName);
         long n = m_TextCtrl->GetLastPosition();
         if (m_TextCtrl->GetRange(n - 1, n) == wxT("\004"))
