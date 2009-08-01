@@ -57,8 +57,8 @@ pkg: pkgdir
 	sudo chown -R $(BUILDUSR) pkgroot
 	touch $@
 
+MAINTAINERCLEANFILES = Makefile.in
 CLEANFILES = -rf pkg pkgdir dmg dmgroot pkgroot nxbuild OpenNX.pkg scbuild
-
-EXTRA_DIST = Description.plist OpenSC.webloc buildnx buildopensc buildsmbclient \
-	fileopts folderbg.jpg mkbundle mkdmg opennx-uninstall \
+EXTRA_DIST = Description.plist OpenSC.webloc buildnx buildopensc \
+	buildsmbclient fileopts folderbg.jpg mkbundle mkdmg opennx-uninstall \
 	opensc-config.tmpl pkgResources libsmbclient.h volicon.icns volicon.png
