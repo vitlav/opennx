@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-07-30 14:32+0200\n"
+"POT-Creation-Date: 2009-08-01 23:08+0200\n"
 "PO-Revision-Date: 2009-04-26 03:20+0200\n"
 "Last-Translator: Fritz Elfert <felfert@users.sf.net>\n"
 "Language-Team:  <de@li.org>\n"
@@ -1220,7 +1220,7 @@ msgstr ""
 "Bitte geben Sie den Namen des Einhängepunktes an\n"
 "unter dem die Freigabe auf dem entfernten Rechner verfügbar sein soll."
 
-#: TextViewer.cpp:106
+#: TextViewer.cpp:84
 msgid "File couldn't be loaded."
 msgstr "Datei konnte nicht geladen werden."
 
