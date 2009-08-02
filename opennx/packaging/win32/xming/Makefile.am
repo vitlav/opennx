@@ -1,29 +1,20 @@
 TARBALL = Xming_69031_source.tar.bz2
 DLURL = http://sourceforge.net/projects/xming/files/Xming-source/6.9.0.31/Xming_69031_source.tar.bz2/download
-TOPLEVEL = $(shell pwd)
-TMPDIST = $(TOPLEVEL)/dist
+TMPDIST = $(abs_builddir)/dist
 
-all: tmpinstall
-
-cleanbuild: tmpinstall cleansrc
+MAINTAINERCLEANFILES = Makefile.in
+CLEANFILES = -rf tmpinstall buildxc patchedsrc srcdir checktarball ccdir \
+	xc ccbin
+DISTCLEANFILES = -rf dist $(TARBALL)
+EXTRA_DIST = version.def Xming_69031_source.tar.bz2.md5sum patches
 
 buildfromscratch: distclean tmpinstall
-
-cleansrc:
-	rm -rf xc ccbin
-
-clean: cleansrc
-	rm -f tmpinstall buildxc patchedsrc srcdir checktarball ccdir
-	rm -rf dist
-
-distclean: clean
-	rm -f $(TARBALL)
 
 tmpinstall: buildxc
 	@echo installing Xming to $(TMPDIST)
 	@rm -rf $(TMPDIST)
 	@mkdir $(TMPDIST)
-	@make -C xc install CROSSCOMPILEDIR=$(TOPLEVEL)/ccbin DESTDIR=$(TMPDIST)
+	@make -C xc install CROSSCOMPILEDIR=$(abs_builddir)/ccbin DESTDIR=$(TMPDIST)
 	@touch $@
 	@echo applying post install fixes
 	@for f in $(TMPDIST)/usr/X11R6/bin/* ; do \
@@ -37,17 +28,20 @@ tmpinstall: buildxc
 
 buildxc: ccdir patchedsrc
 	@echo building Xming
-	@make -C xc World CROSSCOMPILEDIR=$(TOPLEVEL)/ccbin
+	@make -C xc World CROSSCOMPILEDIR=$(abs_builddir)/ccbin
 	@touch $@
 
-patchedsrc: srcdir
+patchedsrc: srcdir version.def
 	@echo applying build fixes
-	@for p in patches/xming-build*.patch ; do \
+	@for p in $(srcdir)/patches/xming-build*.patch ; do \
     	echo applying `basename $$p` ; \
 		patch -p0 < $$p ; \
 	done
 	@cp xc/programs/Xserver/hw/xwin/X.ico xc/programs/xkbcomp/
 	@touch $@
+
+version.def: $(srcdir)/version.def
+	@cp $(srcdir)/version.def $@
 
 srcdir: checktarball
 	@rm -rf xc
@@ -57,12 +51,12 @@ srcdir: checktarball
 
 checktarball: $(TARBALL)
 	@echo checking tarball $(TARBALL)
-	@md5sum --status -c $(TARBALL).md5sum 2>/dev/null
+	@md5sum --status -c $(srcdir)/$(TARBALL).md5sum 2>/dev/null
 	@touch $@
 
 $(TARBALL):
 	@echo downloading tarball $(TARBALL)
-	@wget -nv "$(DLURL)"
+	@wget "$(DLURL)"
 
 ccdir:
 	@echo creating CROSSCOMPILEDIR

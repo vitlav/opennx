@@ -1,4 +1,7 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
+
+use strict;
+use File::Basename;
 
 my @sysdlls = (
     'acledit', 'aclui', 'activeds', 'actxprxy', 'advapi32', 'advpack', 'amstream',
@@ -38,8 +41,10 @@ die "Usage: findrequires <syspath> binary1 binary2 ...\n" unless ($#ARGV > 0);
 my $dllpath = shift(@ARGV);
 my %required;
 
+sub finddeps($);
+
 sub finddeps($) {
-    $target = shift;
+    my $target = shift;
     foreach (sort keys %required) {
         return if ($required{$_} eq $target);
     }
@@ -51,8 +56,9 @@ sub finddeps($) {
             my $cdll = lc($dll);
             $cdll =~ s/\.dll$//;
             next if grep { $cdll eq $_ } @sysdlls;
+            next if (-f (dirname($target) ."/" . $dll));
             my $absdll = '';
-            foreach $dir (split(/:/, $dllpath)) {
+            foreach my $dir (split(/:/, $dllpath)) {
                 if (-f "$dir/$dll") {
                     $absdll = "$dir/$dll";
                     last;
@@ -70,7 +76,7 @@ sub finddeps($) {
     }
 }
 
-foreach $p (@ARGV) {
+foreach my $p (@ARGV) {
     finddeps($p);
 }
 foreach (sort keys %required) {
