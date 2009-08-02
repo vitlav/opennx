@@ -1,6 +1,7 @@
 AM_LIBTOOLFLAGS = --silent
+ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = po packaging/MacOSX
+SUBDIRS = po packaging/MacOSX packaging/win32
 DIST_SUBDIRS = po packaging/win32 packaging/MacOSX
 
 noinst_PROGRAMS = bin2hdr
@@ -113,11 +114,6 @@ bootstrap:
 	test -e conf/mkinstalldirs || touch conf/mkinstalldirs
 	AUTOMAKE_VERSION=1.8 AUTOCONF_VERSION=2.59 autoreconf -if
 
-ACLOCAL_AMFLAGS = -I m4
-
-dmg:
-	$(MAKE) -C packaging/MacOSX dmg
-
 bundle:
 	$(srcdir)/packaging/MacOSX/mkbundle OpenNX.app OpenNXapp \
 	    $(srcdir)/res/nx.icns $(abs_builddir)/opennx \
@@ -207,13 +203,29 @@ uninstall-local:
 dist-hook:
 	find $(distdir) -type d -name .svn | xargs $(RM) -r
 
+# Platform specific special targets
+deb:
+	@echo "Don't know (yet) how to build a debian .deb package"
+	@exit 1
+
+dmg:
+	$(MAKE) -C packaging/MacOSX dmg
+
+rpm: distcheck
+	$(RPMBUILD) -ta --with fetchnx $(PACKAGE)-$(VERSION).tar.gz
+
 setup: all
 	$(MAKE) -C packaging/win32 setup
+
+unknown:
+	@echo "Don't know how to build a distribution for $(target)"
+	@exit 1
+
+dist-platform: $(PLATFORMDIST)
 
 EXTRA_DIST = conf/config.rpath INSTALL INSTALL.generic COPYING share \
 	etc/60-opennx.rules opennx.pjd opennx.rc tracelog.rc watchreader.rc \
 	opennx.spec patches getnxsrcpkg $(RESDEPS) ChangeLog \
-	packaging/win32/findrequires.pl packaging/win32/opennx.iss \
 	res/nx-desktop.ico res/nx.ico res/opennx-admin.ico \
 	res/opennx-wizard.ico res/nx-desktop.icns res/nx.icns \
 	res/opennx-admin.icns res/opennx-wizard.icns \

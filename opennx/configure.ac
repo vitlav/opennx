@@ -296,7 +296,22 @@ if test "$ac_cv_enable_usbip" = "YES" -a "$ac_cv_header_usb_h" != "yes"; then
 fi
 
 DLLPATH=
+PLATFORMDIST=unknown
 case $target_os in
+    linux*)
+        AC_CHECK_TOOL([RPMBUILD], [rpmbuild], [no])
+        if test "$RPMBUILD" != "no" ; then
+            PLATFORMDIST=rpm
+        else
+            AC_CHECK_TOOL([DPKG_BUILDPACKAGE], [dpkg-buildpackage], [no])
+            if test "$DPKG_BUILDPACKAGE" != "no" ; then
+                PLATFORMDIST=deb
+            fi
+        fi
+        ;;
+    darwin8*)
+        PLATFORMDIST=dmg
+        ;;
     mingw*)
         if test "$build_os" = "$target_os" ; then
             DLLPATH="$PATH"
@@ -306,9 +321,11 @@ case $target_os in
             fi
             DLLPATH="$ac_cv_dllpath"
         fi
+        PLATFORMDIST=setup
         ;;
 esac
 AC_SUBST(DLLPATH)
+AC_SUBST(PLATFORMDIST)
 
 AC_CONFIG_FILES([Makefile opennx.spec res/opennx.rc packaging/win32/Makefile packaging/win32/findrequires.pl
     packaging/MacOSX/Makefile packaging/MacOSX/opennx.plist packaging/MacOSX/opennx-main.plist packaging/MacOSX/pkg.plist
