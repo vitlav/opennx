@@ -162,7 +162,7 @@ void TextViewer::CreateControls()
     ////@end TextViewer content construction
 
     m_pRichTextCtrl->GetBuffer().AddHandler(new wxRichTextXMLHandler());
-#if wxABI_VERSION > 20807
+#if wxCHECK_VERSION(2,8,8)
     m_pRichTextCtrl->SetHandlerFlags(wxRICHTEXT_HANDLER_CONVERT_FACENAMES);
 #endif
  
