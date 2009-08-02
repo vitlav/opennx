@@ -1,0 +1,116 @@
+diff -urwN xc-orig/lib/font/fc/fsconvert.c xc/lib/font/fc/fsconvert.c
+--- xc-orig/lib/font/fc/fsconvert.c	2009-03-18 18:13:18.000000000 +0100
++++ xc/lib/font/fc/fsconvert.c	2009-07-28 02:46:29.932495063 +0200
+@@ -30,6 +30,7 @@
+ #ifdef HAVE_CONFIG_H
+ #include <config.h>
+ #endif
++#include	<stdint.h>
+ #include        <X11/X.h>
+ #include 	<X11/Xtrans/Xtrans.h>
+ #include	<X11/Xpoll.h>
+diff -urwN xc-orig/programs/Xserver/fb/fbcompose.c xc/programs/Xserver/fb/fbcompose.c
+--- xc-orig/programs/Xserver/fb/fbcompose.c	2009-03-18 18:13:39.000000000 +0100
++++ xc/programs/Xserver/fb/fbcompose.c	2009-07-28 02:46:29.934494968 +0200
+@@ -26,6 +26,7 @@
+ #ifdef HAVE_DIX_CONFIG_H
+ #include <dix-config.h>
+ #endif
++#include <stdint.h>
+ 
+ #include "fb.h"
+ 
+diff -urwN xc-orig/programs/Xserver/hw/xwin/winmultiwindowicons.c xc/programs/Xserver/hw/xwin/winmultiwindowicons.c
+--- xc-orig/programs/Xserver/hw/xwin/winmultiwindowicons.c	2009-03-18 18:13:40.000000000 +0100
++++ xc/programs/Xserver/hw/xwin/winmultiwindowicons.c	2009-07-28 02:46:29.935495165 +0200
+@@ -31,6 +31,7 @@
+ #ifdef HAVE_XWIN_CONFIG_H
+ #include <xwin-config.h>
+ #endif
++#include <stdint.h>
+ #include "win.h"
+ #include "dixevents.h"
+ #include "winmultiwindowclass.h"
+diff -urwN xc-orig/programs/Xserver/hw/xwin/XWin.rc xc/programs/Xserver/hw/xwin/XWin.rc
+--- xc-orig/programs/Xserver/hw/xwin/XWin.rc	2009-03-18 18:13:40.000000000 +0100
++++ xc/programs/Xserver/hw/xwin/XWin.rc	2009-07-28 02:46:29.935495165 +0200
+@@ -154,5 +154,4 @@
+  */
+ 
+ IDI_XWIN		ICON	DISCARDABLE	"X.ico"
+-IDB_XWIN		BITMAP	"X.bmp"
+ CREATEPROCESS_MANIFEST_RESOURCE_ID	RT_MANIFEST "Xming.exe.manifest"
+diff -urwN xc-orig/programs/Xserver/miext/rootless/accel/rlAccel.c xc/programs/Xserver/miext/rootless/accel/rlAccel.c
+--- xc-orig/programs/Xserver/miext/rootless/accel/rlAccel.c	2009-03-18 18:13:47.000000000 +0100
++++ xc/programs/Xserver/miext/rootless/accel/rlAccel.c	2009-07-28 02:46:29.936495153 +0200
+@@ -139,7 +139,7 @@
+ 
+     s = xalloc(sizeof(rlAccelScreenRec));
+     if (!s) return FALSE;
+-    RLACCELREC(pScreen) = s;
++    memcpy(RLACCELREC(pScreen), s, sizeof(rlAccelScreenRec));
+ 
+     // Wrap the screen functions we need
+     s->CreateGC = pScreen->CreateGC;
+diff -urwN xc-orig/programs/Xserver/miext/rootless/rootlessScreen.c xc/programs/Xserver/miext/rootless/rootlessScreen.c
+--- xc-orig/programs/Xserver/miext/rootless/rootlessScreen.c	2009-03-18 18:13:47.000000000 +0100
++++ xc/programs/Xserver/miext/rootless/rootlessScreen.c	2009-07-28 02:46:29.937538792 +0200
+@@ -568,7 +568,7 @@
+ 
+     s = xalloc(sizeof(RootlessScreenRec));
+     if (! s) return FALSE;
+-    SCREENREC(pScreen) = s;
++    memcpy(SCREENREC(pScreen), s, sizeof(RootlessScreenRec));
+ 
+     s->pixmap_data = NULL;
+     s->pixmap_data_size = 0;
+diff -urwN xc-orig/programs/Xserver/miext/rootless/rootlessWindow.c xc/programs/Xserver/miext/rootless/rootlessWindow.c
+--- xc-orig/programs/Xserver/miext/rootless/rootlessWindow.c	2009-03-18 18:13:47.000000000 +0100
++++ xc/programs/Xserver/miext/rootless/rootlessWindow.c	2009-07-28 02:46:29.938494709 +0200
+@@ -66,7 +66,7 @@
+     Bool result;
+     RegionRec saveRoot;
+ 
+-    WINREC(pWin) = NULL;
++    memset(WINREC(pWin), 0, sizeof(WindowRec));
+ 
+     SCREEN_UNWRAP(pWin->drawable.pScreen, CreateWindow);
+ 
+@@ -107,7 +107,7 @@
+ #endif
+ 
+     xfree(winRec);
+-    WINREC(pWin) = NULL;
++    memset(WINREC(pWin), 0, sizeof(WindowRec));
+ }
+ 
+ 
+@@ -353,7 +353,7 @@
+     winRec->pixmap = NULL;
+     winRec->wid = NULL;
+ 
+-    WINREC(pWin) = winRec;
++    memcpy(WINREC(pWin), winRec, sizeof(RootlessWindowRec));
+ 
+ #ifdef SHAPE
+     // Set the frame's shape if the window is shaped
+@@ -370,7 +370,7 @@
+     {
+         RL_DEBUG_MSG("implementation failed to create frame!\n");
+         xfree(winRec);
+-        WINREC(pWin) = NULL;
++        memset(WINREC(pWin), 0, sizeof(WindowRec));
+         return NULL;
+     }
+ 
+@@ -1298,8 +1298,8 @@
+ 
+         /* Switch the frame record from one to the other. */
+ 
+-        WINREC(pWin) = NULL;
+-        WINREC(pTopWin) = winRec;
++        memset(WINREC(pWin), 0, sizeof(WindowRec));
++        memcpy(WINREC(pTopWin), winRec, sizeof(WindowRec));
+ 
+         RootlessInitializeFrame(pTopWin, winRec);
+         RootlessReshapeFrame(pTopWin);
