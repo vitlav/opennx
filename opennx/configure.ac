@@ -315,17 +315,20 @@ case $target_os in
     mingw*)
         if test "$build_os" = "$target_os" ; then
             DLLPATH="$PATH"
+            XMING_BTYPE=native
         else
             if test -z "$ac_cv_dllpath" ; then
                 AC_MSG_ERROR([Need --with-dllpath option on mingw32 crossbuild])
             fi
             DLLPATH="$ac_cv_dllpath"
+            XMING_BTYPE=cross
         fi
         PLATFORMDIST=setup
         ;;
 esac
 AC_SUBST(DLLPATH)
 AC_SUBST(PLATFORMDIST)
+AC_SUBST(XMING_BTYPE)
 
 AC_CONFIG_FILES([Makefile opennx.spec res/opennx.rc
     packaging/win32/Makefile packaging/win32/findrequires.pl packaging/win32/xming/Makefile

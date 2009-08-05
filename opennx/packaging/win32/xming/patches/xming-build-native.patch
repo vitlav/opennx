@@ -1,0 +1,99 @@
+diff -urw xc-orig/config/imake/imake.c xc/config/imake/imake.c
+--- xc-orig/config/imake/imake.c	2009-03-18 18:13:23 +0100
++++ xc/config/imake/imake.c	2009-08-03 23:03:20 +0200
+@@ -280,7 +280,7 @@
+ #include <sys/utsname.h>
+ #endif
+ 
+-#if !(defined(Lynx) || defined(__Lynx__) || (defined(SVR4) && !defined(sun))) && !defined (__CYGWIN__)
++#if !(defined(Lynx) || defined(__Lynx__) || (defined(SVR4) && !defined(sun))) && !(defined (__CYGWIN__) || defined(__MINGW32__))
+ #define HAS_MKSTEMP
+ #endif
+ 
+diff -urw xc-orig/config/util/lndir.c xc/config/util/lndir.c
+--- xc-orig/config/util/lndir.c	2009-03-18 18:13:23 +0100
++++ xc/config/util/lndir.c	2009-08-04 00:18:18 +0200
+@@ -62,6 +62,9 @@
+ #ifdef USG
+ #include <dirent.h>
+ #else
++#   ifdef __MINGW32__
++#    include <dirent.h>
++#   else
+ #include <sys/dir.h>
+ #ifndef dirent
+ #define dirent direct
+@@ -69,6 +72,7 @@
+ #endif
+ #endif
+ #endif
++#endif
+ #ifndef MAXPATHLEN
+ #define MAXPATHLEN 2048
+ #endif
+@@ -141,6 +145,9 @@
+     return !strcmp(lname, rname);
+ }
+ 
++#ifdef __MINGW32__
++extern __declspec(dllimport) int __stdcall CopyFileA(const char *, const char *, int);
++#endif
+ 
+ /* Recursively create symbolic links from the current directory to the "from"
+    directory.  Assumes that files described by fs and ts are directories. */
+@@ -231,18 +238,25 @@
+ 		if (!silent)
+ 		    printf ("%s:\n", buf);
+ 		if ((stat (dp->d_name, &sc) < 0) && (errno == ENOENT)) {
++#ifdef __MINGW32__
++		    if (mkdir (dp->d_name) < 0 ||
++			stat (dp->d_name, &sc) < 0) {
++#else
+ 		    if (mkdir (dp->d_name, 0777) < 0 ||
+ 			stat (dp->d_name, &sc) < 0) {
++#endif
+ 			mperror (dp->d_name);
+ 			curdir = rcurdir = ocurdir;
+ 			continue;
+ 		    }
+ 		}
++#ifndef __MINGW32__
+ 		if (readlink (dp->d_name, symbuf, sizeof(symbuf) - 1) >= 0) {
+ 		    msg ("%s: is a link instead of a directory", dp->d_name);
+ 		    curdir = rcurdir = ocurdir;
+ 		    continue;
+ 		}
++#endif
+ 		if (chdir (dp->d_name) < 0) {
+ 		    mperror (dp->d_name);
+ 		    curdir = rcurdir = ocurdir;
+@@ -256,6 +270,9 @@
+ 	    }
+ 	}
+ 
++#ifdef __MINGW32__
++    symlen = -1;
++#else
+ 	/* non-directory */
+ 	symlen = readlink (dp->d_name, symbuf, sizeof(symbuf) - 1);
+ 	if (symlen >= 0)
+@@ -270,6 +287,7 @@
+ 	    if (basesymlen >= 0)
+ 		basesym[basesymlen] = '\0';
+ 	}
++#endif
+ 
+ 	if (symlen >= 0) {
+ 	    /* Link exists in new tree.  Print message if it doesn't match. */
+@@ -324,7 +342,11 @@
+ 	    }
+ 	    else
+ 		sympath = buf;
++#ifdef __MINGW32__
++        if (CopyFileA(sympath, dp->d_name, 1) != 0)
++#else
+ 	    if (symlink (sympath, dp->d_name) < 0)
++#endif
+ 		mperror (dp->d_name);
+ 	}
+     }

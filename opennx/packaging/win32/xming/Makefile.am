@@ -10,12 +10,18 @@ EXTRA_DIST = version.def Xming_69031_source.tar.bz2.md5sum patches
 
 buildfromscratch: distclean tmpinstall
 
-tmpinstall: buildxc
+install-cross: build-cross
+	@make -C xc install CROSSCOMPILEDIR=$(abs_builddir)/ccbin DESTDIR=$(TMPDIST)
+
+install-native: build-native
+	@make -C xc install DESTDIR=$(TMPDIST)
+
+xming-distdir:
 	@echo installing Xming to $(TMPDIST)
 	@rm -rf $(TMPDIST)
 	@mkdir $(TMPDIST)
-	@make -C xc install CROSSCOMPILEDIR=$(abs_builddir)/ccbin DESTDIR=$(TMPDIST)
-	@touch $@
+
+tmpinstall: xming-distdir install-$(XMING_BTYPE)
 	@echo applying post install fixes
 	@for f in $(TMPDIST)/usr/X11R6/bin/* ; do \
 		FT="`file $$f`" ; \
@@ -26,9 +32,14 @@ tmpinstall: buildxc
 	done
 	@touch $@
 
-buildxc: ccdir patchedsrc
+build-cross: ccdir patchedsrc
 	@echo building Xming
 	@make -C xc World CROSSCOMPILEDIR=$(abs_builddir)/ccbin
+	@touch $@
+
+build-native: patchedsrc
+	@echo building Xming
+	@make -C xc World BOOTSTRAPCFLAGS="-DCROSSCOMPILE_CPP"
 	@touch $@
 
 patchedsrc: srcdir version.def
