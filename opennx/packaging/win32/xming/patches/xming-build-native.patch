@@ -97,3 +97,42 @@ diff -urw xc-orig/config/util/lndir.c xc/config/util/lndir.c
  		mperror (dp->d_name);
  	}
      }
+diff -urw xc-orig/config/cf/mingw.cf xc/config/cf/mingw.cf
+--- xc-orig/config/cf/mingw.cf	2009-03-18 18:13:23 +0100
++++ xc/config/cf/mingw.cf	2009-08-07 04:17:49 +0200
+@@ -145,7 +145,8 @@
+ #define HasShm			NO
+ 
+ /* snprintf from windows runtime does return -1 if the buffer is to small */
+-#define HasSnprintf		NO
++/* FE: However, latest MinGW provides the correct ones ... */
++#define HasSnprintf		YES
+ 
+ #define HasFfs			NO
+                                   
+Only in xc: exports
+diff -urw xc-orig/extras/rman/rman.c xc/extras/rman/rman.c
+--- xc-orig/extras/rman/rman.c	2009-03-18 18:13:28 +0100
++++ xc/extras/rman/rman.c	2009-08-07 04:21:06 +0200
+@@ -268,21 +268,6 @@
+ /* case insensitive versions of strcmp and strncmp */
+ 
+ static int
+-stricmp(const char *s1, const char *s2)
+-{
+-	assert(s1!=NULL && s2!=NULL);
+-	/*strincmp(s1, s2, strlen(s1)+1);*/
+-
+-	while (tolower(*s1)==tolower(*s2)) {
+-		if (*s1=='\0' /*&& *s2=='\0'*/) return 0;
+-		s1++; s2++;
+-	}
+-
+-	if (tolower(*s1)<tolower(*s2)) return -1;
+-	else return 1;
+-}
+-
+-static int
+ lcexceptionscmp(const void *a, const void *b)
+ {
+ 	return stricmp(*(char **)a, *(char **)b);

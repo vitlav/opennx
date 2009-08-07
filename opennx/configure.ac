@@ -5,9 +5,9 @@ AC_PREREQ(2.61)
 AC_INIT([opennx],[0.16],[felfert@users.sf.net])
 AC_CONFIG_AUX_DIR([conf])
 AC_CONFIG_SRCDIR([opennxApp.cpp])
+AC_CONFIG_HEADERS([config.h])
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE([foreign no-installinfo no-installman])
-AC_CONFIG_HEADERS([config.h])
 
 case $build_os in
     mingw*)
@@ -36,6 +36,25 @@ AC_PROG_CC
 AC_PROG_LN_S
 dnl AM_GNU_GETTEXT_VERSION(0.14.5)
 AM_GNU_GETTEXT([external])
+dnl We use objdump on the MinGW target for the
+dnl findrequires.pl script
+AC_CHECK_TARGET_TOOL([OBJDUMP],[objdump],[
+    case $target_os in
+        mingw*)
+            AC_MSG_ERROR([Could not find required tool 'objdump'])
+            ;;
+    esac
+])
+AC_SUBST(OBJDUMP)
+dnl For the same reason (and for building Xming), we require perl
+AC_CHECK_TOOL([PERL],[perl],[
+    case $target_os in
+        mingw*)
+            AC_MSG_ERROR([Could not find required tool 'perl'])
+            ;;
+    esac
+])
+AC_SUBST(PERL)
 
 # Checks for libraries.
 
@@ -132,7 +151,8 @@ case $target_os in
         # must add that prefic to the linker flags.
         [_wx_libpath="`$WX_CONFIG_WITH_ARGS --prefix`/lib"]
         test "$_wx_libpath" != "/mingw/lib" && LDFLAGS="$LDFLAGS -L$_wx_libpath"
-        APP_LDADD="-lstdc++ -lole32 -luuid -lversion"
+        APP_LDADD="-lole32 -luuid -lversion"
+        #CPPFLAGS="-D_GLIBCXX_DLL $CPPFLAGS"
         OPENNX_RES='opennx.$(OBJEXT)'
         TRACELOG='tracelog$(EXEEXT)'
         TRACELOG_RES='tracelog.$(OBJEXT)'
@@ -330,7 +350,7 @@ AC_SUBST(DLLPATH)
 AC_SUBST(PLATFORMDIST)
 AC_SUBST(XMING_BTYPE)
 
-AC_CONFIG_FILES([Makefile opennx.spec res/opennx.rc
+AC_CONFIG_FILES([Makefile opennx.spec res/opennx.rc m4/Makefile
     packaging/win32/Makefile packaging/win32/findrequires.pl packaging/win32/xming/Makefile
     packaging/MacOSX/Makefile packaging/MacOSX/opennx.plist packaging/MacOSX/opennx-main.plist packaging/MacOSX/pkg.plist
     po/Makefile.in])

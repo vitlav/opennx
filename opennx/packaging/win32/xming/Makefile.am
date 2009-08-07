@@ -3,7 +3,7 @@ DLURL = http://sourceforge.net/projects/xming/files/Xming-source/6.9.0.31/Xming_
 TMPDIST = $(abs_builddir)/dist
 
 MAINTAINERCLEANFILES = Makefile.in
-CLEANFILES = -rf tmpinstall buildxc patchedsrc srcdir checktarball ccdir \
+CLEANFILES = -rf tmpinstall build-$(XMING_BTYPE) patchedsrc srcdir checktarball ccdir \
 	xc ccbin
 DISTCLEANFILES = -rf dist $(TARBALL)
 EXTRA_DIST = version.def Xming_69031_source.tar.bz2.md5sum patches
@@ -11,10 +11,10 @@ EXTRA_DIST = version.def Xming_69031_source.tar.bz2.md5sum patches
 buildfromscratch: distclean tmpinstall
 
 install-cross: build-cross
-	@make -C xc install CROSSCOMPILEDIR=$(abs_builddir)/ccbin DESTDIR=$(TMPDIST)
-
+	@$(MAKE) -C xc install DESTDIR=$(TMPDIST) \
+		CROSSCOMPILEDIR=$(abs_builddir)/ccbin 
 install-native: build-native
-	@make -C xc install DESTDIR=$(TMPDIST)
+	@$(MAKE) -C xc install DESTDIR=$(TMPDIST)
 
 xming-distdir:
 	@echo installing Xming to $(TMPDIST)
@@ -34,12 +34,14 @@ tmpinstall: xming-distdir install-$(XMING_BTYPE)
 
 build-cross: ccdir patchedsrc
 	@echo building Xming
-	@make -C xc World CROSSCOMPILEDIR=$(abs_builddir)/ccbin
+	@$(MAKE) -C xc World CC=gcc PREPROCESS_CMD="gcc -E" \
+		CROSSCOMPILEDIR=$(abs_builddir)/ccbin
 	@touch $@
 
 build-native: patchedsrc
 	@echo building Xming
-	@make -C xc World BOOTSTRAPCFLAGS="-DCROSSCOMPILE_CPP"
+	@$(MAKE) -C xc World CC=$(CC) PREPROCESS_CMD="$(CC) -E" \
+		BOOTSTRAPCFLAGS="-DCROSSCOMPILE_CPP"
 	@touch $@
 
 patchedsrc: srcdir version.def
@@ -73,10 +75,9 @@ ccdir:
 	@echo creating CROSSCOMPILEDIR
 	@rm -rf ccbin
 	@mkdir ccbin
-	@for f in /usr/bin/i686-pc-mingw32-* ; do \
-		bn=`basename $$f|sed -e 's/i686-pc-mingw32-//'` ; \
+	@for f in /usr/bin/$(target_alias)-* ; do \
+		bn=`basename $$f|sed -e 's/$(target_alias)-//'` ; \
 		ln -s $$f ccbin/$$bn ; \
 	done
-	@ln -s gcc ccbin/cc
 	@touch $@
 

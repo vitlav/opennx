@@ -112,7 +112,7 @@ bootstrap:
 	test -f gettextize.local && sh gettextize.local -f --no-changelog
 	rm -f gettextize.local
 	test -e conf/mkinstalldirs || touch conf/mkinstalldirs
-	AUTOMAKE_VERSION=1.8 AUTOCONF_VERSION=2.59 autoreconf -if
+	autoreconf -if
 
 bundle:
 	$(srcdir)/packaging/MacOSX/mkbundle OpenNX.app OpenNXapp \
