@@ -19,6 +19,9 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 /*
  * Defines canonicalized platform names (e.g. __LINUX__)
  */
@@ -29,14 +32,13 @@
 char *x11_socket_path = "";
 char *x11_keyboard_type = "";
 
-#define WIN32_LEAN_AND_MEAN
+//#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <tlhelp32.h>
 #include <stdlib.h>
 
 static char _spath[_MAX_PATH+1];
 static char _kbd[_MAX_PATH+1];
-
 
 long getppid()
 {
@@ -88,6 +90,62 @@ long getppid()
     }	
 	FreeLibrary(hKernel32);
     return ppid;
+}
+
+/**
+ * Xming can handle multiple monitors only, if
+ * *all* monitors have the same geometry and color depth.
+ * This function checks for that constraint.
+ *
+ * Returns number of monitors or 0, if constraits not met.
+ */
+int checkMultiMonitors() {
+    DWORD didx;
+    int mnum = 0;
+    DISPLAY_DEVICE dd;
+    int w, h, bpp;
+
+	while (EnumDisplayDevices(0, didx, &dd, 0)) {
+        if (dd.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP) {
+            if (!(dd.StateFlags & DISPLAY_DEVICE_MIRRORING_DRIVER)) {
+                /* get information about the monitor attached to this display adapter.
+                 * Dualhead cards and laptop video cards can have multiple monitors attached.
+                 */
+                DISPLAY_DEVICE ddMon;
+                memset(&ddMon, 0, sizeof(ddMon));
+                ddMon.cb = sizeof(ddMon);
+                DWORD midx = 0;
+
+                /* This enumeration may not return the correct monitor if multiple monitors are attached.
+                 * This is because not all display drivers return the ACTIVE flag for the monitor
+                 * that is actually active.
+                 */
+                while (EnumDisplayDevices(dd.DeviceName, midx, &ddMon, 0)) {
+                    DEVMODE dm;
+                    memset(&dm, 0, sizeof(dm));
+                    dm.dmSize = sizeof(dm);
+                    if (EnumDisplaySettingsEx(ddMon.DeviceName, ENUM_CURRENT_SETTINGS, &dm, 0)) {
+                        if (0 == mnum) {
+                            w = dm.dmPelsWidth;
+                            h = dm.dmPelsHeight;
+                            bpp = dm.dmBitsPerPel;
+                        } else {
+                            if (w != dm.dmPelsWidth)
+                                return 0;
+                            if (h != dm.dmPelsHeight)
+                                return 0;
+                            if (bpp != dm.dmBitsPerPel)
+                                return 0;
+                        }
+                        mnum++;
+                    }
+                    midx++;
+                }
+            }
+        }
+        didx++;
+    }
+    return mnum;
 }
 
 #else /* ! __WXMSW__ */

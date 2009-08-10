@@ -12,11 +12,17 @@ AM_INIT_AUTOMAKE([foreign no-installinfo no-installman])
 case $build_os in
     mingw*)
         if test "$build_os" = "$target_os" ; then
-            # On native mingw, the default include/lib paths
+            # On native MinGW, the default include/lib paths
             # are /mingw/include resp. /mingw/lib, however
             # several contributed stuff is under /usr/...
             CPPFLAGS="$CPPFLAGS -I/usr/include"
             LDFLAGS="$LDFLAGS -L/usr/lib"
+            # On native MinGW, we also want a prefix of /,
+            # because we want to install directly in our
+            # setupdir's bin (see packaging/win32/Makefile.am)
+            if test "x$prefix" = xNONE; then
+                prefix=/
+            fi
         fi
         ;;
 esac
@@ -24,7 +30,9 @@ case $target_os in
     darwin8*)
         am_dependency_tracking=no
         enable_dependency_tracking=no
-        AC_PREFIX_DEFAULT([/Library/OpenNX])
+        if test "x$prefix" = xNONE; then
+            prefix=/Library/Program
+        fi
         ;;
 esac
 
@@ -152,7 +160,6 @@ case $target_os in
         [_wx_libpath="`$WX_CONFIG_WITH_ARGS --prefix`/lib"]
         test "$_wx_libpath" != "/mingw/lib" && LDFLAGS="$LDFLAGS -L$_wx_libpath"
         APP_LDADD="-lole32 -luuid -lversion"
-        #CPPFLAGS="-D_GLIBCXX_DLL $CPPFLAGS"
         OPENNX_RES='opennx.$(OBJEXT)'
         TRACELOG='tracelog$(EXEEXT)'
         TRACELOG_RES='tracelog.$(OBJEXT)'
@@ -236,7 +243,7 @@ AC_DEFINE_UNQUOTED(CUPS_DEFAULT_PATH,"$CUPS_DEFAULT_PATH",
 ac_cv_nxproto="3.2.0"
 AC_ARG_WITH([nxproto],
             AS_HELP_STRING([--with-nxproto],
-                           [Specify NX protocol version (Default: 2.1.0)]),
+                           [Specify NX protocol version (Default: 3.2.0)]),
             [ac_cv_nxproto=${withval}])
 AC_DEFINE_UNQUOTED(NX_PROTOCOL_VERSION,"${ac_cv_nxproto}",
                    [Set to the NX protocol version])
@@ -333,6 +340,8 @@ case $target_os in
         PLATFORMDIST=dmg
         ;;
     mingw*)
+        AC_DEFINE_UNQUOTED(_WIN32_WINNT,0x500,
+                   [Minimum required windows version])
         if test "$build_os" = "$target_os" ; then
             DLLPATH="$PATH"
             XMING_BTYPE=native

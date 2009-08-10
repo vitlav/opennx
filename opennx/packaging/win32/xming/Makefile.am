@@ -77,7 +77,7 @@ ccdir:
 	@mkdir ccbin
 	@for f in /usr/bin/$(target_alias)-* ; do \
 		bn=`basename $$f|sed -e 's/$(target_alias)-//'` ; \
-		ln -s $$f ccbin/$$bn ; \
+		$(LN_S) $$f ccbin/$$bn ; \
 	done
 	@touch $@
 

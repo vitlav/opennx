@@ -1,8 +1,7 @@
 AM_LIBTOOLFLAGS = --silent
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = po packaging/MacOSX packaging/win32
-DIST_SUBDIRS = po packaging/win32 packaging/MacOSX
+SUBDIRS = m4 po packaging/MacOSX packaging/win32
 
 noinst_PROGRAMS = bin2hdr
 bin2hdr_SOURCES = bin2hdr.cpp

@@ -338,7 +338,7 @@ opennxApp::setUserDir()
         tmp = ::wxGetHomeDir() + wxFileName::GetPathSeparator() + wxT(".nx");
     wxFileName::Mkdir(tmp, 0750, wxPATH_MKDIR_FULL);
     wxFileName fn(tmp);
-    wxConfigBase::Get()->Write(wxT("Config/UserNxDir"), fn.GetShortPath());
+    wxConfigBase::Get()->Write(wxT("Config/UserNxDir"), fn.GetFullPath());
     wxFileName::Mkdir(tmp +  wxFileName::GetPathSeparator() + wxT("config"), 0750,
             wxPATH_MKDIR_FULL);
 }
@@ -472,7 +472,6 @@ opennxApp::preInit()
         if (fn.GetDirs().Last().IsSameAs(wxT("bin")))
             fn.RemoveLastDir();
         fn.SetFullName(wxEmptyString);
-        tmp = fn.GetShortPath();
         wxString rest;
         wxString sep = wxFileName::GetPathSeparator();
         if (tmp.EndsWith(sep, &rest))
