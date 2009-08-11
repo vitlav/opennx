@@ -1,0 +1,21 @@
+diff -urw xc-orig/config/cf/mingw.cf xc/config/cf/mingw.cf
+--- xc-orig/config/cf/mingw.cf	2009-03-18 18:13:23.000000000 +0100
++++ xc/config/cf/mingw.cf	2009-08-10 16:54:59.594459842 +0200
+@@ -158,7 +158,7 @@
+ 
+ #define HasSockets		NO
+ #define GzipFontCompression	YES
+-#define HasZlib			NO
++#define HasZlib			YES
+ #define HasFreetype2	NO
+ 
+ /* We don't need -lm */
+@@ -256,7 +256,7 @@
+ #endif
+ #ifndef ExtraIncDir
+ # ifdef CrossCompileDir
+-#  define ExtraIncDir		CrossCompileDir/../../include
++#  define ExtraIncDir		CrossCompileDir/../include
+ # else
+ #  define ExtraIncDir		/usr/include/w32api
+ # endif
