@@ -1,7 +1,7 @@
 AM_LIBTOOLFLAGS = --silent
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = m4 po packaging/MacOSX packaging/win32
+SUBDIRS = po packaging/MacOSX packaging/win32
 
 noinst_PROGRAMS = bin2hdr
 bin2hdr_SOURCES = bin2hdr.cpp
@@ -228,4 +228,5 @@ EXTRA_DIST = conf/config.rpath INSTALL INSTALL.generic COPYING share \
 	res/nx-desktop.ico res/nx.ico res/opennx-admin.ico \
 	res/opennx-wizard.ico res/nx-desktop.icns res/nx.icns \
 	res/opennx-admin.icns res/opennx-wizard.icns \
-	debian
+	debian \
+	$(wildcard m4/*.m4)

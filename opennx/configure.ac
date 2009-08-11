@@ -359,7 +359,7 @@ AC_SUBST(DLLPATH)
 AC_SUBST(PLATFORMDIST)
 AC_SUBST(XMING_BTYPE)
 
-AC_CONFIG_FILES([Makefile opennx.spec res/opennx.rc m4/Makefile
+AC_CONFIG_FILES([Makefile opennx.spec res/opennx.rc
     packaging/win32/Makefile packaging/win32/findrequires.pl packaging/win32/xming/Makefile
     packaging/MacOSX/Makefile packaging/MacOSX/opennx.plist packaging/MacOSX/opennx-main.plist packaging/MacOSX/pkg.plist
     po/Makefile.in])

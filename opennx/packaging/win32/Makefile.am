@@ -12,7 +12,7 @@ setup: findrequires.pl
 	cp xming/dist/usr/X11R6/lib/X11/xserver/SecurityPolicy setupdir/bin
 	perl findrequires.pl "$(DLLPATH)" setupdir/bin/*.exe|xargs cp -t setupdir/bin
 
-EXTRA_DIST = opennx.iss patches
+EXTRA_DIST = opennx.iss
 MAINATINERCLEANFILES = Makefile.in
 
 #WINEPREFIX="~/.wine" wine "C:/Program Files/InnoSetup 5/iscc.exe"
