@@ -47,7 +47,7 @@ build-native: patchedsrc
 
 patchedsrc: srcdir version.def
 	@echo applying build fixes
-	@for p in $(XMING_GENERIC_PATCHES) $(XMING_PLATFROM_PATCHES) ; do \
+	@for p in $(XMING_GENERIC_PATCHES) $(XMING_PLATFORM_PATCHES) ; do \
 		if test -f $(srcdir)/patches/$$p ; then \
     		echo applying $$p ; \
 			patch -p0 < $(srcdir)/patches/$$p ; \
