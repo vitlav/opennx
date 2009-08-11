@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opennx 0.16\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-08-01 23:08+0200\n"
+"POT-Creation-Date: 2009-08-11 21:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -718,7 +718,7 @@ msgstr ""
 msgid "Select System CUPS daemon"
 msgstr ""
 
-#: SessionProperties.cpp:2058 opennxApp.cpp:1063
+#: SessionProperties.cpp:2058 opennxApp.cpp:1062
 msgid "libusb is not available. No USB devices will be exported"
 msgstr ""
 
@@ -1042,15 +1042,15 @@ msgstr ""
 msgid "&Apply"
 msgstr ""
 
-#: ShareProperties.cpp:260
+#: ShareProperties.cpp:264
 msgid "Modify shared resource - OpenNX"
 msgstr ""
 
-#: ShareProperties.cpp:371
+#: ShareProperties.cpp:375
 msgid "No shares found"
 msgstr ""
 
-#: ShareProperties.cpp:456
+#: ShareProperties.cpp:460
 #, c-format
 msgid ""
 "Do you want to make\n"
@@ -1058,15 +1058,15 @@ msgid ""
 "the default printer?"
 msgstr ""
 
-#: ShareProperties.cpp:457
+#: ShareProperties.cpp:461
 msgid "Default printer"
 msgstr ""
 
-#: ShareProperties.cpp:486
+#: ShareProperties.cpp:490
 msgid "Mountpoint is already used. Please chose another mountpoint"
 msgstr ""
 
-#: ShareProperties.cpp:487
+#: ShareProperties.cpp:491
 msgid "Invalid mountpoint"
 msgstr ""
 
@@ -1329,81 +1329,81 @@ msgstr ""
 msgid "Could not read link %s"
 msgstr ""
 
-#: opennxApp.cpp:645
+#: opennxApp.cpp:644
 msgid ""
 "\n"
 "\n"
 "Supported trace tags: "
 msgstr ""
 
-#: opennxApp.cpp:648
+#: opennxApp.cpp:647
 msgid "Start the session administration tool."
 msgstr ""
 
-#: opennxApp.cpp:650
+#: opennxApp.cpp:649
 msgid "Secify window title for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:652
+#: opennxApp.cpp:651
 msgid "Secify dialog style for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:654
+#: opennxApp.cpp:653
 msgid "Run in dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:656
+#: opennxApp.cpp:655
 msgid "Dialog mode proxy."
 msgstr ""
 
-#: opennxApp.cpp:658
+#: opennxApp.cpp:657
 msgid "Specify message for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:660
+#: opennxApp.cpp:659
 msgid "Specify parent PID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:662
+#: opennxApp.cpp:661
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr ""
 
-#: opennxApp.cpp:664
+#: opennxApp.cpp:663
 msgid "Specify window-ID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:666
+#: opennxApp.cpp:665
 msgid "Specify wxWidgets trace mask."
 msgstr ""
 
-#: opennxApp.cpp:669
+#: opennxApp.cpp:668
 msgid "Test CardWaiterDialog"
 msgstr ""
 
-#: opennxApp.cpp:672
+#: opennxApp.cpp:671
 msgid "Guide the user through the steps to configure a session."
 msgstr ""
 
-#: opennxApp.cpp:723
+#: opennxApp.cpp:722
 msgid "Smart card removed"
 msgstr ""
 
-#: opennxApp.cpp:725
+#: opennxApp.cpp:724
 msgid ""
 "OpenNX session has been suspended, because\n"
 "the authenticating smart card has been removed."
 msgstr ""
 
-#: opennxApp.cpp:1077
+#: opennxApp.cpp:1076
 msgid "USBIP tunnel registration timeout"
 msgstr ""
 
-#: opennxApp.cpp:1079
+#: opennxApp.cpp:1078
 #, c-format
 msgid "Unable to export USB device %s"
 msgstr ""
 
-#: opennxApp.cpp:1085
+#: opennxApp.cpp:1084
 msgid "Could not connect to usbipd2. No USB devices will be exported"
 msgstr ""
 

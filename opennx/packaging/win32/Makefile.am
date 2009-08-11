@@ -3,7 +3,8 @@ SUBDIRS = xming
 setup: findrequires.pl
 	$(RM) -rf setupdir
 	mkdir setupdir
-	$(MAKE) -C $(top_builddir) DESTDIR=$(abs_builddir)/setupdir install
+	$(MAKE) -C $(top_builddir) DESTDIR=$(abs_builddir)/setupdir \
+		transform= prefix=/ bindir=/bin datadir=/share install
 	$(MAKE) -C xming tmpinstall
 	cp xming/dist/usr/X11R6/bin/*.exe setupdir/bin
 	cp xming/dist/usr/X11R6/bin/*.dll setupdir/bin
