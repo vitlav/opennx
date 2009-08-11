@@ -558,7 +558,7 @@ MySession::getFirstFreePort(int startPort)
 }
 
     wxString
-MySession::getXauthCookie(int display /* = 0 */)
+MySession::getXauthCookie(int display /* = 0 */, wxString proto)
 {
 
 #ifdef __UNIX__
@@ -587,8 +587,8 @@ MySession::getXauthCookie(int display /* = 0 */)
 #ifdef __WXMSW__
     // On windows we *create* the cookie instead
     wxString cookie = md5sum(::wxGetUserId() + wxDateTime::Now().Format());
-    wxString domain = wxString::Format(wxT("%s:%d"),
-            ::wxGetFullHostName().c_str(), display);
+    wxString domain = wxString::Format(wxT("%s%s:%d"),
+            ::wxGetFullHostName().c_str(), proto.c_str(), display);
     wxFileName fn(m_sSysDir, wxEmptyString);
     fn.AppendDir(wxT("bin"));
     fn.SetName(wxT("nxauth.exe"));
@@ -1237,20 +1237,46 @@ MySession::startXserver()
     display -= X_PORT_OFFSET;
     wxString dpyStr = wxT(":");
     dpyStr << display;
-    m_sXauthCookie = getXauthCookie(display);
+    int xserver = 0;
 
+    wxString wxWinCmd;
     wxFileName fn(m_sSysDir, wxT("nxwin.exe"));
     fn.AppendDir(wxT("bin"));
-
-    wxString wxWinCmd = fn.GetShortPath();
-    wxWinCmd << wxT(" -nowinkill");
-    wxWinCmd << wxT(" -clipboard");
-    wxWinCmd << wxT(" -noloadxkb");
-    wxWinCmd << wxT(" -agent");
-    wxWinCmd << wxT(" -hide");
-    wxWinCmd << wxT(" -noreset");
-    wxWinCmd << wxT(" -nolisten tcp");
-    wxWinCmd << wxT(" -auth ") << getXauthPath();
+    if (fn.IsFileExecutable()) {
+        m_sXauthCookie = getXauthCookie(display, wxT("/unix"));
+        xserver = 1;
+        wxWinCmd = fn.GetShortPath();
+        wxWinCmd << wxT(" -nowinkill");
+        wxWinCmd << wxT(" -clipboard");
+        wxWinCmd << wxT(" -noloadxkb");
+        wxWinCmd << wxT(" -agent");
+        wxWinCmd << wxT(" -hide");
+        wxWinCmd << wxT(" -noreset");
+        wxWinCmd << wxT(" -nolisten tcp");
+        wxWinCmd << wxT(" -auth ") << getXauthPath();
+    } else {
+        // Try Xming
+        wxFileName fn(m_sSysDir, wxT("Xming.exe"));
+        fn.AppendDir(wxT("bin"));
+        if (fn.IsFileExecutable()) {
+            xserver = 2;
+            m_sXauthCookie = getXauthCookie(display, wxEmptyString);
+            wxWinCmd = fn.GetShortPath();
+            wxWinCmd << wxT(" -nowinkill");
+            wxWinCmd << wxT(" -clipboard");
+            wxWinCmd << wxT(" -noreset");
+            wxWinCmd << wxT(" -lesspointer");
+            wxWinCmd << wxT(" -notrayicon");
+            wxWinCmd << wxT(" -silent-dup-error");
+//            wxWinCmd << wxT(" -engine 1");
+            wxWinCmd << wxT(" -multimonitors");
+            wxWinCmd << wxT(" -multiwindow");
+            wxWinCmd << wxT(" -auth ") << getXauthPath();
+        } else {
+            ::wxLogError(_("No X server found."));
+            return;
+        }
+    }
 
     {
         LogNull l;
@@ -1262,7 +1288,6 @@ MySession::startXserver()
         d.Traverse(t);
         wxWinCmd << wxT(" -fp ") << t.GetFontPath();
     }
-
     wxWinCmd << wxT(" -screen 0 800x600");
 
     wxString user;
@@ -1272,7 +1297,8 @@ MySession::startXserver()
             user << wxT("guest");
     } else
         user = m_pCfg->sGetUsername();
-    wxWinCmd << wxT(" -name ") << user << wxT("@") << m_pCfg->sGetServerHost() << wxT(":");
+    if (xserver == 1)
+        wxWinCmd << wxT(" -name ") << user << wxT("@") << m_pCfg->sGetServerHost() << wxT(":");
     // wxWinCmd << wxT(" -nokeyhook");
 
     wxWinCmd << wxT(" ") << dpyStr;

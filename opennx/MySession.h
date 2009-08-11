@@ -93,7 +93,7 @@ private:
     } tConnectState;
 
     wxArrayString m_aParseBuffer;
-    wxString getXauthCookie(int display = 0);
+    wxString getXauthCookie(int display = 0, wxString = wxT("/unix"));
     wxString getXauthPath();
     wxString formatOptFilename();
     int getFirstFreePort(int);

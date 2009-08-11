@@ -4,9 +4,11 @@ TMPDIST = $(abs_builddir)/dist
 
 MAINTAINERCLEANFILES = Makefile.in
 CLEANFILES = -rf tmpinstall build-$(XMING_BTYPE) patchedsrc srcdir checktarball ccdir \
-	xc ccbin
+	xc ccbin include
 DISTCLEANFILES = -rf dist $(TARBALL)
 EXTRA_DIST = version.def Xming_69031_source.tar.bz2.md5sum patches
+XMING_GENERIC_PATCHES = xming-build.patch xming-build-subsys.patch \
+	xming-build-xauth.patch xming-build-xset.patch
 
 buildfromscratch: distclean tmpinstall
 
@@ -34,8 +36,7 @@ tmpinstall: xming-distdir install-$(XMING_BTYPE)
 
 build-cross: ccdir patchedsrc
 	@echo building Xming
-	@$(MAKE) -C xc World CC=gcc PREPROCESS_CMD="gcc -E" \
-		CROSSCOMPILEDIR=$(abs_builddir)/ccbin
+	@$(MAKE) -C xc World CROSSCOMPILEDIR=$(abs_builddir)/ccbin
 	@touch $@
 
 build-native: patchedsrc
@@ -46,9 +47,11 @@ build-native: patchedsrc
 
 patchedsrc: srcdir version.def
 	@echo applying build fixes
-	@for p in $(srcdir)/patches/xming-build*.patch ; do \
-    	echo applying `basename $$p` ; \
-		patch -p0 < $$p ; \
+	@for p in $(XMING_GENERIC_PATCHES) $(XMING_PLATFROM_PATCHES) ; do \
+		if test -f $(srcdir)/patches/$$p ; then \
+    		echo applying $$p ; \
+			patch -p0 < $(srcdir)/patches/$$p ; \
+		fi \
 	done
 	@cp xc/programs/Xserver/hw/xwin/X.ico xc/programs/xkbcomp/
 	@touch $@
@@ -73,11 +76,13 @@ $(TARBALL):
 
 ccdir:
 	@echo creating CROSSCOMPILEDIR
-	@rm -rf ccbin
+	@rm -rf ccbin include
 	@mkdir ccbin
 	@for f in /usr/bin/$(target_alias)-* ; do \
 		bn=`basename $$f|sed -e 's/$(target_alias)-//'` ; \
 		$(LN_S) $$f ccbin/$$bn ; \
 	done
+	$(LN_S) gcc ccbin/cc
+	$(LN_S) $(includedir) include
 	@touch $@
 

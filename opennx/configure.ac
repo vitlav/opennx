@@ -324,6 +324,8 @@ fi
 
 DLLPATH=
 PLATFORMDIST=unknown
+XMING_BTYPE=unknown
+XMING_PLATFORM_PATCHES=
 case $target_os in
     linux*)
         AC_CHECK_TOOL([RPMBUILD], [rpmbuild], [no])
@@ -340,24 +342,27 @@ case $target_os in
         PLATFORMDIST=dmg
         ;;
     mingw*)
-        AC_DEFINE_UNQUOTED(_WIN32_WINNT,0x500,
+        PLATFORMDIST=setup
+        AC_DEFINE_UNQUOTED(_WIN32_WINNT,0x0500,
                    [Minimum required windows version])
         if test "$build_os" = "$target_os" ; then
             DLLPATH="$PATH"
             XMING_BTYPE=native
+            XMING_PLATFORM_PATCHES=xming-build-native.patch
         else
             if test -z "$ac_cv_dllpath" ; then
                 AC_MSG_ERROR([Need --with-dllpath option on mingw32 crossbuild])
             fi
             DLLPATH="$ac_cv_dllpath"
             XMING_BTYPE=cross
+            XMING_PLATFORM_PATCHES=xming-build-cross.patch
         fi
-        PLATFORMDIST=setup
         ;;
 esac
 AC_SUBST(DLLPATH)
 AC_SUBST(PLATFORMDIST)
 AC_SUBST(XMING_BTYPE)
+AC_SUBST(XMING_PLATFORM_PATCHES)
 
 AC_CONFIG_FILES([Makefile opennx.spec res/opennx.rc
     packaging/win32/Makefile packaging/win32/findrequires.pl packaging/win32/xming/Makefile
