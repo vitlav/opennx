@@ -204,8 +204,7 @@ dist-hook:
 
 # Platform specific special targets
 deb:
-	@echo "Don't know (yet) how to build a debian .deb package"
-	@exit 1
+	dpkg-buildpackage -I
 
 dmg:
 	$(MAKE) -C packaging/MacOSX dmg

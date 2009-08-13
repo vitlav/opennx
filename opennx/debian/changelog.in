@@ -1,4 +1,4 @@
-opennx (0.16.347) unstable; urgency=low
+opennx (@VERSION@.@SVNREV@) unstable; urgency=low
 
   * Initial Release.
 
