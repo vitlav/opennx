@@ -204,6 +204,8 @@ dist-hook:
 
 # Platform specific special targets
 deb:
+	[ -x configure ] || $(MAKE) -f Makefile.am
+	[ -f debian/changelog ] || ./configure
 	dpkg-buildpackage -I
 
 dmg:

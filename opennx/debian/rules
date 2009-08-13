@@ -23,7 +23,6 @@ endif
 
 export CFLAGS = -Os
 export CXXFLAGS = -Os
-export LDFLAGS=-Wl,-z,defs
 prefix = /usr/lib/opennx
 
 config.status: configure
@@ -70,7 +69,9 @@ clean:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp
+	mv debian/changelog debian/changelog.bak
 	[ ! -f Makefile ] || $(MAKE) distclean
+	mv debian/changelog.bak debian/changelog
 	rm -f config.sub config.guess
 	$(RM) -r nxcomp* nxcompsh* nxesd* nxproxy* nxservice* nxssh*
 	dh_clean
