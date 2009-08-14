@@ -33,7 +33,7 @@ endif
 ifneq "$(wildcard /usr/share/misc/config.guess)" ""
 	cp -f /usr/share/misc/config.guess config.guess
 endif
-	./configure --prefix=$(prefix) --datarootdir=/usr/share/opennx
+	./configure $(CROSS) --prefix=$(prefix) --datarootdir=/usr/share/opennx
 	./getnxsrcpkg nxcomp nxcompsh nxesd nxproxy nxservice nxssh
 	tar xzf nxcomp-*.tar.gz
 	patch -p0 < patches/nxcomp-gcc44.patch
@@ -52,6 +52,7 @@ endif
 	cd nxssh && patch -p1 < ../patches/openssh-scard-pin.patch
 	cd nxssh && ./configure --prefix=$(prefix) --with-opensc
 
+
 build: build-stamp
 
 build-stamp: config.status
@@ -69,11 +70,8 @@ clean:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp
-	mv debian/changelog debian/changelog.bak
 	[ ! -f Makefile ] || $(MAKE) distclean
-	mv debian/changelog.bak debian/changelog
 	rm -f config.sub config.guess
-	$(RM) -r nxcomp* nxcompsh* nxesd* nxproxy* nxservice* nxssh*
 	dh_clean
 
 install: build
@@ -93,6 +91,7 @@ install: build
 	cp -a nxservice/nxservice debian/opennx/usr/lib/opennx/bin
 	cp -a nxssh/nxssh debian/opennx/usr/lib/opennx/bin
 	cp -a etc/*.rules debian/opennx/etc/udev/rules.d
+
 
 # Build architecture-independent files here.
 binary-indep: install

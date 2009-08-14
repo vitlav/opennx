@@ -203,10 +203,11 @@ dist-hook:
 	find $(distdir) -type d -name .svn | xargs $(RM) -r
 
 # Platform specific special targets
-deb:
-	[ -x configure ] || $(MAKE) -f Makefile.am
-	[ -f debian/changelog ] || ./configure
-	dpkg-buildpackage -I
+deb: distcheck
+	tar xfz $(PACKAGE)-$(VERSION).tar.gz
+	cd $(PACKAGE)-$(VERSION) && dpkg-buildpackage
+	lintian -i (PACKAGE)_$(VERSION)*.changes
+	$(RM) -r $(PACKAGE)-$(VERSION)
 
 dmg:
 	$(MAKE) -C packaging/MacOSX dmg

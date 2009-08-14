@@ -364,7 +364,7 @@ AC_SUBST(PLATFORMDIST)
 AC_SUBST(XMING_BTYPE)
 AC_SUBST(XMING_PLATFORM_PATCHES)
 
-AC_CONFIG_FILES([Makefile debian/changelog opennx.spec res/opennx.rc
+AC_CONFIG_FILES([Makefile opennx.spec res/opennx.rc
     packaging/win32/Makefile packaging/win32/findrequires.pl packaging/win32/xming/Makefile
     packaging/MacOSX/Makefile packaging/MacOSX/opennx.plist packaging/MacOSX/opennx-main.plist packaging/MacOSX/pkg.plist
     po/Makefile.in])
