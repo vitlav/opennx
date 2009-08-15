@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opennx 0.16\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-08-11 21:22+0200\n"
+"POT-Creation-Date: 2009-08-15 19:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -218,51 +218,55 @@ msgstr ""
 msgid "You have reached your session limit. No more sessions allowed"
 msgstr ""
 
-#: MySession.cpp:1354
+#: MySession.cpp:1276
+msgid "No X server found."
+msgstr ""
+
+#: MySession.cpp:1380
 #, c-format
 msgid ""
 "Could not create session directory\n"
 "%s\n"
 msgstr ""
 
-#: MySession.cpp:1374
+#: MySession.cpp:1400
 #, c-format
 msgid ""
 "Could not write session options\n"
 "%s\n"
 msgstr ""
 
-#: MySession.cpp:1724
+#: MySession.cpp:1750
 #, c-format
 msgid "Could not write %s"
 msgstr ""
 
-#: MySession.cpp:1782 MySession.cpp:1813 MySession.cpp:1821
+#: MySession.cpp:1808 MySession.cpp:1839 MySession.cpp:1847
 #, c-format
 msgid "Connecting to %s ..."
 msgstr ""
 
-#: MySession.cpp:1789
+#: MySession.cpp:1815
 msgid "Preparing multimedia service ..."
 msgstr ""
 
-#: MySession.cpp:1799
+#: MySession.cpp:1825
 msgid "Could not query multimedia support"
 msgstr ""
 
-#: MySession.cpp:1811
+#: MySession.cpp:1837
 msgid "Could not start multimedia support"
 msgstr ""
 
-#: MySession.cpp:1819
+#: MySession.cpp:1845
 msgid "Preparing CUPS service ..."
 msgstr ""
 
-#: MySession.cpp:1853
+#: MySession.cpp:1879
 msgid "Called command was: "
 msgstr ""
 
-#: MySession.cpp:1854
+#: MySession.cpp:1880
 msgid "Could not start nxssh."
 msgstr ""
 
