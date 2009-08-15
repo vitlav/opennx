@@ -1,7 +1,7 @@
 EXTRA_DIST = urls.txt patches $(LIBOIL).md5sum $(LIBSNDFILE).md5sum \
 	$(LIBSAMPLERATE).md5sum $(LIBATOMICOPS).md5sum $(PULSEAUDIO).md5sum
 
-CLEANFILES = -r $(TMPDIST) \
+CLEANFILES = -r $(TMPDIST) pkg-config \
 	$(LIBOIL) $(LIBOIL)-$(LIBOIL_VERSION) $(LIBOIL)-build-$(PULSE_BTYPE) \
 	$(LIBOIL)-srcdir $(LIBOIL)-checkarchive \
 	$(LIBSAMPLERATE) $(LIBSAMPLERATE)-$(LIBSAMPLERATE_VERSION) $(LIBSAMPLERATE)-build-$(PULSE_BTYPE) \
@@ -54,13 +54,16 @@ ENV_libatomicops =
 ENV_pulseaudio = env LIBSNDFILE_CFLAGS="-I$(TMPDIST)/include" LIBSNDFILE_LIBS="-L$(TMPDIST)/lib -lsndfile" \
 	LIBSAMPLERATE_CFLAGS="-I$(TMPDIST)/include" LIBSAMPLERATE_LIBS="-L$(TMPDIST)/lib -lsamplerate" \
 	LIBOIL_CFLAGS="-I$(TMPDIST)/include/liboil-0.3" LIBOIL_LIBS="-L$(TMPDIST)/lib -loil-0.3" \
-	CPPFLAGS="-I$(TMPDIST)/include"
+	CPPFLAGS="-I$(TMPDIST)/include" PATH="$(abs_builddir):$(PATH)"
 
 tmpinstall:
 	$(MAKE) subtarget=$(LIBOIL) subsrc=$(LIBOIL)-$(LIBOIL_VERSION) build-$(PULSE_BTYPE)
 	$(MAKE) subtarget=$(LIBSNDFILE) subsrc=$(LIBSNDFILE)-$(LIBSNDFILE_VERSION) build-$(PULSE_BTYPE)
 	$(MAKE) subtarget=$(LIBSAMPLERATE) subsrc=$(LIBSAMPLERATE)-$(LIBSAMPLERATE_VERSION) build-$(PULSE_BTYPE)
 	$(MAKE) subtarget=$(LIBATOMICOPS) subsrc=$(LIBATOMICOPS)-$(LIBATOMICOPS_VERSION) build-$(PULSE_BTYPE)
+	@echo "#!/bin/sh" > pkg-config; \
+		echo "case \$$* in *--exists*) exit 1 ;; *) exit 0 ;; esac" >> pkg-config; \
+		chmod a+x pkg-config || true
 	$(MAKE) subtarget=$(PULSEAUDIO) subsrc=$(PULSEAUDIO)-$(PULSEAUDIO_VERSION) build-$(PULSE_BTYPE)
 	find $(TMPDIST)/lib -name "*.dll" -exec mv {} $(TMPDIST)/bin \;
 	find $(TMPDIST)/etc -type f -exec mv {} $(TMPDIST)/bin \;
