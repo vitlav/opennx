@@ -12,6 +12,7 @@ setup: findrequires.pl
 	cp xming/dist/usr/X11R6/lib/X11/XKeysymDB setupdir/bin
 	cp xming/dist/usr/X11R6/lib/X11/xserver/SecurityPolicy setupdir/bin
 	$(MAKE) -C pulse tmpinstall
+	cp pulse/dist/bin/* setupdir/bin
 	perl findrequires.pl "$(DLLPATH)" setupdir/bin/*.exe|xargs cp -t setupdir/bin
 
 EXTRA_DIST = opennx.iss

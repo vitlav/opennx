@@ -62,6 +62,9 @@ tmpinstall:
 	$(MAKE) subtarget=$(LIBSAMPLERATE) subsrc=$(LIBSAMPLERATE)-$(LIBSAMPLERATE_VERSION) build-$(PULSE_BTYPE)
 	$(MAKE) subtarget=$(LIBATOMICOPS) subsrc=$(LIBATOMICOPS)-$(LIBATOMICOPS_VERSION) build-$(PULSE_BTYPE)
 	$(MAKE) subtarget=$(PULSEAUDIO) subsrc=$(PULSEAUDIO)-$(PULSEAUDIO_VERSION) build-$(PULSE_BTYPE)
+	find $(TMPDIST)/lib -name "*.dll" -exec mv {} $(TMPDIST)/bin \;
+	find $(TMPDIST)/etc -type f -exec mv {} $(TMPDIST)/bin \;
+	rm -f $(TMPDIST)/bin/*-sndfile-*.exe $(TMPDIST)/bin/oil-bugreport.exe
 
 build-cross: $(subtarget)-build-cross
 
