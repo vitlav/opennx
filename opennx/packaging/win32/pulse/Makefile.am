@@ -1,4 +1,5 @@
-EXTRA_DIST = urls.txt *.md5sum patches
+EXTRA_DIST = urls.txt patches $(LIBOIL).md5sum $(LIBSNDFILE).md5sum \
+	$(LIBSAMPLERATE).md5sum $(LIBATOMICOPS).md5sum $(PULSEAUDIO).md5sum
 
 CLEANFILES = -r $(TMPDIST) \
 	$(LIBOIL) $(LIBOIL)-$(LIBOIL_VERSION) $(LIBOIL)-build-$(PULSE_BTYPE) \
@@ -15,8 +16,6 @@ CLEANFILES = -r $(TMPDIST) \
 MAINTAINERCLEANFILES = Makefile.in $(LIBOIL)-$(LIBOIL_VERSION).tar.gz \
 	$(LIBSNDFILE)-$(LIBSNDFILE_VERSION).tar.gz $(LIBSAMPLERATE)-$(LIBSAMPLERATE_VERSION).tar.gz \
 	$(LIBATOMICOPS)-$(LIBATOMICOPS_VERSION).tar.gz $(PULSEAUDIO)-$(PULSEAUDIO_VERSION).tar.gz
-
-PULSE_BTYPE = cross
 
 LIBOIL                = liboil
 LIBOIL_VERSION        = 0.3.16
@@ -86,7 +85,7 @@ $(subtarget)-srcdir: $(subtarget)-checkarchive
 	@$(RM) -rf $(subsrc)
 	@echo Unpacking $(subsrc).tar.gz
 	@tar xzf $(subsrc).tar.gz
-	@shopt -s nullglob; for p in patches/$(subtarget)-*.patch ; do \
+	@shopt -s nullglob; for p in $(srcdir)/patches/$(subtarget)-*.patch ; do \
 		echo Applying `basename $$p`; \
 		patch -p0 < $$p ; \
 	done
@@ -97,7 +96,7 @@ $(subtarget)-checkarchive: $(subsrc).tar.gz
 	@md5sum --status -c $(srcdir)/$(subtarget).md5sum
 	@touch $@
 
-$(subsrc).tar.gz: urls.txt
+$(subsrc).tar.gz: $(srcdir)/urls.txt
 	@echo Downloading $@
-	@wget $(shell grep $(subsrc).tar.gz urls.txt)
+	@wget $(shell grep $(subsrc).tar.gz $(srcdir)/urls.txt)
 	@touch $@

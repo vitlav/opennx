@@ -324,6 +324,7 @@ fi
 
 DLLPATH=
 PLATFORMDIST=unknown
+PULSE_BTYPE=unknown
 XMING_BTYPE=unknown
 XMING_PLATFORM_PATCHES=
 case $target_os in
@@ -347,6 +348,7 @@ case $target_os in
                    [Minimum required windows version])
         if test "$build_os" = "$target_os" ; then
             DLLPATH="$PATH"
+            PULSE_BTYPE=native
             XMING_BTYPE=native
             XMING_PLATFORM_PATCHES=xming-build-native.patch
         else
@@ -354,6 +356,7 @@ case $target_os in
                 AC_MSG_ERROR([Need --with-dllpath option on mingw32 crossbuild])
             fi
             DLLPATH="$ac_cv_dllpath"
+            PULSE_BTYPE=cross
             XMING_BTYPE=cross
             XMING_PLATFORM_PATCHES=xming-build-cross.patch
         fi
@@ -361,6 +364,7 @@ case $target_os in
 esac
 AC_SUBST(DLLPATH)
 AC_SUBST(PLATFORMDIST)
+AC_SUBST(PULSE_BTYPE)
 AC_SUBST(XMING_BTYPE)
 AC_SUBST(XMING_PLATFORM_PATCHES)
 
