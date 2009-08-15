@@ -1,4 +1,4 @@
-SUBDIRS = xming
+SUBDIRS = xming pulse
 
 setup: findrequires.pl
 	$(RM) -rf setupdir
@@ -11,6 +11,7 @@ setup: findrequires.pl
 	cp xming/dist/usr/X11R6/lib/X11/XErrorDB setupdir/bin
 	cp xming/dist/usr/X11R6/lib/X11/XKeysymDB setupdir/bin
 	cp xming/dist/usr/X11R6/lib/X11/xserver/SecurityPolicy setupdir/bin
+	$(MAKE) -C pulse tmpinstall
 	perl findrequires.pl "$(DLLPATH)" setupdir/bin/*.exe|xargs cp -t setupdir/bin
 
 EXTRA_DIST = opennx.iss

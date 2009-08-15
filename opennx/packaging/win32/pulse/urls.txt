@@ -1,0 +1,5 @@
+http://liboil.freedesktop.org/download/liboil-0.3.16.tar.gz
+http://www.mega-nerd.com/libsndfile/libsndfile-1.0.20.tar.gz
+http://www.mega-nerd.com/SRC/libsamplerate-0.1.7.tar.gz
+http://www.hpl.hp.com/research/linux/atomic_ops/download/libatomic_ops-1.2.tar.gz
+http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-0.9.6.tar.gz
