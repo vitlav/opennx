@@ -9,7 +9,7 @@ Homepage: http://sourceforge.net/projects/opennx
 Package: opennx
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Recommends: libsmbclient, libcups2, libopensc2
+Recommends: libsmbclient
 Conflicts: nxclient
 Provides: nxclient
 Description: Open Source NX client
