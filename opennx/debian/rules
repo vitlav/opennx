@@ -70,7 +70,7 @@ clean:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp
-	[ ! -f Makefile ] || $(MAKE) distclean
+	test ! -f Makefile || $(MAKE) distclean
 	rm -f config.sub config.guess
 	dh_clean
 
@@ -86,13 +86,17 @@ install: build
 	cd debian/opennx/usr/lib/opennx/lib && ln -s libXcomp.so.3.*.* libXcomp.so.3
 	cp -a nxcompsh/libXcompsh.so.3.*.* debian/opennx/usr/lib/opennx/lib
 	cd debian/opennx/usr/lib/opennx/lib && ln -s libXcompsh.so.3.*.* libXcompsh.so.3
-	cd debian/opennx/usr/lib/opennx/lib && ln -s /usr/lib/libcups.so.2 libcups.so
-	cd debian/opennx/usr/lib/opennx/lib && ln -s /usr/lib/libopensc.so.2 libopensc.so
 	cp -a nxesd/nxesd debian/opennx/usr/lib/opennx/bin
 	cp -a nxproxy/nxproxy debian/opennx/usr/lib/opennx/bin
 	cp -a nxservice/nxservice debian/opennx/usr/lib/opennx/bin
 	cp -a nxssh/nxssh debian/opennx/usr/lib/opennx/bin
 	cp -a etc/*.rules debian/opennx/etc/udev/rules.d
+	cd debian/opennx/usr/lib/opennx/lib && ln -s /usr/lib/libcups.so.2 libcups.so
+	cd debian/opennx/usr/lib/opennx/lib && ln -s /usr/lib/libopensc.so.2 libopensc.so
+	cd debian/opennx/usr && ln -s lib/opennx NX
+	cd debian/opennx/usr/share && mv opennx/applnk/network applications
+	$(RM) debian/opennx/usr/share/applications/.directory
+	$(RM) -r debian/opennx/usr/share/opennx/applnk
 
 
 # Build architecture-independent files here.
