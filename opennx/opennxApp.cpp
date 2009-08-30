@@ -472,6 +472,7 @@ opennxApp::preInit()
         if (fn.GetDirs().Last().IsSameAs(wxT("bin")))
             fn.RemoveLastDir();
         fn.SetFullName(wxEmptyString);
+        tmp = fn.GetFullPath();
         wxString rest;
         wxString sep = wxFileName::GetPathSeparator();
         if (tmp.EndsWith(sep, &rest))
