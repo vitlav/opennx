@@ -1,9 +1,7 @@
-#!/bin/sh
+#!/bin/sh -e
 # postinst script for opennx
 #
 # see: dh_installdeb(1)
-
-set -e
 
 # summary of how this script can be called:
 #        * <postinst> `configure' <most-recently-configured-version>
@@ -20,6 +18,9 @@ set -e
 
 case "$1" in
     configure|triggered)
+        if ! getent group opennx >/dev/null ; then
+            addgroup --quiet --system opennx
+        fi
         file=/usr/lib/opennx/lib/libsmbclient.so
         test ! -h $file || rm $file
         target=`ls /usr/lib/libsmbclient.so.* 2> /dev/null | head -1`

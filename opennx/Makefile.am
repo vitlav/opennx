@@ -206,7 +206,7 @@ dist-hook:
 deb: distcheck
 	tar xfz $(PACKAGE)-$(VERSION).tar.gz
 	cd $(PACKAGE)-$(VERSION) && dpkg-buildpackage
-	lintian -i $(PACKAGE)_$(VERSION).*.changes
+	lintian -i $(PACKAGE)_$(VERSION)*.changes
 	$(RM) -r $(PACKAGE)-$(VERSION)
 
 dmg:

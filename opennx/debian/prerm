@@ -21,6 +21,7 @@ case "$1" in
     remove|upgrade|deconfigure)
         file=/usr/lib/opennx/lib/libsmbclient.so
         test ! -h $file || rm $file
+        delgroup --quiet opennx
     ;;
 
     failed-upgrade)

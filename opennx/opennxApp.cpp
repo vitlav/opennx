@@ -261,8 +261,7 @@ opennxApp::CreateDesktopEntry(MyXmlConfig *cfg)
     fn.MakeAbsolute();
     wxString src = fn.GetFullPath();
     wxString dst = wxGetHomeDir() + wxT("/Desktop/") + cfg->sGetName();
-    if (symlink(src.fn_str(), dst.fn_str()))
-        wxLogSysError(_("Could not create link on Desktop."));
+    ret = (0 == (symlink(src.fn_str(), dst.fn_str())));
 # else
     wxString dtEntry = wxT("[Desktop Entry]\n");
     dtEntry += wxT("Encoding=UTF-8\n");
@@ -287,7 +286,8 @@ opennxApp::CreateDesktopEntry(MyXmlConfig *cfg)
             wxFile f;
             wxString fn = path + wxT("/") + cfg->sGetName() + wxT(".desktop");
             ::wxLogTrace(MYTRACETAG, wxT("Creating '%s'"), fn.c_str());
-            if (f.Create(fn, true, wxS_IRUSR|wxS_IWUSR|wxS_IRGRP|wxS_IROTH)) {
+            if (f.Create(fn, true,
+                         wxS_IRUSR|wxS_IWUSR|wxS_IXUSR|wxS_IRGRP|wxS_IROTH)) {
                 f.Write(dtEntry);
                 f.Close();
                 ret = true;
@@ -297,6 +297,8 @@ opennxApp::CreateDesktopEntry(MyXmlConfig *cfg)
     }
 # endif // !__WXMAC__
 #endif // __UNIX__
+    if (!ret)
+        wxLogError(_("Could not create link on Desktop."));
     return ret;
 }
 
