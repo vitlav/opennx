@@ -39,6 +39,7 @@
 #endif
 
 ////@begin includes
+#include "wx/imaglist.h"
 ////@end includes
 #include <wx/config.h>
 #include <wx/fontdlg.h>
@@ -796,7 +797,6 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
                     m_pCtrlDisplayType->SetSelection(3);
                 m_iPseudoDisplayTypeIndex = -1;
             }
-            m_pCtrlDisplayType->SetSelection(3);
             m_pCtrlCupsEnable->Enable(false);
             m_pCtrlSmbEnable->Enable(false);
             m_bUseCups = false;
