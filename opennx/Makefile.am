@@ -205,7 +205,7 @@ dist-hook:
 # Platform specific special targets
 deb: distcheck
 	tar xfz $(PACKAGE)-$(VERSION).tar.gz
-	cd $(PACKAGE)-$(VERSION) && dpkg-buildpackage
+	cd $(PACKAGE)-$(VERSION) && dpkg-buildpackage -us -uc
 	lintian -i $(PACKAGE)_$(VERSION)*.changes
 	$(RM) -r $(PACKAGE)-$(VERSION)
 
