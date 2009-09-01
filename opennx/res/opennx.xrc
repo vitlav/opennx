@@ -405,6 +405,7 @@
                                                         <object class="sizeritem">
                                                             <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                             <border>5</border>
+                                                            <option>2</option>
                                                             <object class="wxComboBox" name="ID_COMBOBOX_DISPTYPE">
                                                                 <size>50,-1d</size>
                                                                 <style>wxCB_READONLY</style>
@@ -421,7 +422,6 @@
                                                         <object class="sizeritem">
                                                             <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                             <border>5</border>
-                                                            <option>1</option>
                                                             <object class="wxStaticText" name="wxID_STATIC">
                                                                 <style>wxALIGN_RIGHT</style>
                                                                 <label>W</label>
@@ -2757,6 +2757,7 @@ this share.</label>
     </object>
     <object class="wxWizard" name="ID_WIZARD" subclass="MyWizard">
         <style>wxDEFAULT_DIALOG_STYLE|wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
+        <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
         <title>Connection Wizard - OpenNX</title>
         <bitmap>memory:memrsc#zip:res/wizard.png</bitmap>
         <icon>memory:memrsc#zip:res/opennx-wizard.png</icon>

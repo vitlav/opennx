@@ -7,7 +7,7 @@
     <string name="author">""</string>
     <string name="description">""</string>
     <string name="xrc_filename">"res/opennx.xrc"</string>
-    <bool name="convert_images_to_xpm">0</bool>
+    <long name="image_mode">0</long>
     <bool name="inline_images">0</bool>
     <bool name="generate_cpp_for_xrc">1</bool>
     <long name="working_mode">2</long>
@@ -21,6 +21,7 @@
     <bool name="use_two_step_construction">0</bool>
     <bool name="use_enums">0</bool>
     <bool name="generate_for_xrced">0</bool>
+    <bool name="generate_virtual_eventhandlers">0</bool>
     <string name="current_platform">"&lt;All platforms&gt;"</string>
     <string name="target_wx_version">"2.8.5"</string>
     <string name="cpp_header_comment">"// $Id$
@@ -176,10 +177,13 @@
         <string name="Modularity">"Modular"</string>
         <string name="GUI mode">"GUI"</string>
         <string name="Toolkit">"wxGTK+2"</string>
+        <string name="Processor type">"32-bit"</string>
         <string name="Runtime linking">"Dynamic"</string>
         <string name="Use exceptions">"Yes"</string>
         <string name="Use ODBC">"No"</string>
         <string name="Use OpenGL">"No"</string>
+        <string name="Use wxMediaCtrl">"No"</string>
+        <string name="Use wxRichTextCtrl">"Yes"</string>
         <string name="wxWidgets version">"%WXVERSION%"</string>
         <string name="Executable name">"%EXECUTABLE%"</string>
         <string name="Program arguments">""</string>
@@ -234,10 +238,13 @@
           <string name="Modularity">"Modular"</string>
           <string name="GUI mode">"GUI"</string>
           <string name="Toolkit">"wxGTK+2"</string>
+          <string name="Processor type">"32-bit"</string>
           <string name="Runtime linking">"Dynamic"</string>
           <string name="Use exceptions">"Yes"</string>
           <string name="Use ODBC">"No"</string>
           <string name="Use OpenGL">"No"</string>
+          <string name="Use wxMediaCtrl">"No"</string>
+          <string name="Use wxRichTextCtrl">"Yes"</string>
           <string name="Use wx-config">"Yes"</string>
           <string name="Use installed wxWidgets">"No"</string>
           <string name="Enable universal binaries">"No"</string>
@@ -277,6 +284,7 @@
           <bool name="Enable makefile generation">1</bool>
           <string name="CFG">""</string>
           <string name="Command for wx-config">"%AUTO%"</string>
+          <string name="Libiconv path">"%AUTO%"</string>
           <string name="SDK path">"%AUTO%"</string>
           <string name="Minimum OS version">"%AUTO%"</string>
           <string name="Info.plist location">"%AUTO%"</string>
@@ -402,6 +410,14 @@
             <string name="proxy-type">"wbBoxSizerProxy"</string>
             <string name="proxy-Orientation">"Vertical"</string>
             <string name="proxy-Member variable name">""</string>
+            <string name="proxy-AlignH">"Centre"</string>
+            <string name="proxy-AlignV">"Centre"</string>
+            <long name="proxy-Stretch factor">0</long>
+            <long name="proxy-Border">5</long>
+            <bool name="proxy-wxLEFT">1</bool>
+            <bool name="proxy-wxRIGHT">1</bool>
+            <bool name="proxy-wxTOP">1</bool>
+            <bool name="proxy-wxBOTTOM">1</bool>
             <bool name="proxy-wxSHAPED">0</bool>
             <bool name="proxy-wxADJUST_MINSIZE">0</bool>
             <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -1648,14 +1664,6 @@
             <string name="proxy-type">"wbBoxSizerProxy"</string>
             <string name="proxy-Orientation">"Vertical"</string>
             <string name="proxy-Member variable name">""</string>
-            <string name="proxy-AlignH">"Centre"</string>
-            <string name="proxy-AlignV">"Centre"</string>
-            <long name="proxy-Stretch factor">0</long>
-            <long name="proxy-Border">5</long>
-            <bool name="proxy-wxLEFT">1</bool>
-            <bool name="proxy-wxRIGHT">1</bool>
-            <bool name="proxy-wxTOP">1</bool>
-            <bool name="proxy-wxBOTTOM">1</bool>
             <bool name="proxy-wxSHAPED">0</bool>
             <bool name="proxy-wxADJUST_MINSIZE">0</bool>
             <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -1778,6 +1786,8 @@
                   <string name="proxy-Implementation filename">""</string>
                   <string name="proxy-Header filename">""</string>
                   <string name="proxy-Member variable name">""</string>
+                  <string name="proxy-Tab label">"General"</string>
+                  <string name="proxy-Tab icon">""</string>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
                   <string name="proxy-Background colour">""</string>
@@ -1830,8 +1840,6 @@
                   <string name="proxy-Custom ctor arguments">""</string>
                   <string name="proxy-Event sources">""</string>
                   <bool name="proxy-AUI manager">0</bool>
-                  <string name="proxy-Tab label">"General"</string>
-                  <string name="proxy-Tab icon">""</string>
                   <document>
                     <string name="title">"wxFlexGridSizer"</string>
                     <string name="type">"dialog-control-document"</string>
@@ -3346,7 +3354,7 @@
                           <long name="proxy-Height">-1</long>
                           <string name="proxy-AlignH">"Centre"</string>
                           <string name="proxy-AlignV">"Centre"</string>
-                          <long name="proxy-Stretch factor">0</long>
+                          <long name="proxy-Stretch factor">2</long>
                           <long name="proxy-Border">5</long>
                           <bool name="proxy-wxLEFT">1</bool>
                           <bool name="proxy-wxRIGHT">1</bool>
@@ -3415,7 +3423,7 @@
                           <long name="proxy-Height">-1</long>
                           <string name="proxy-AlignH">"Centre"</string>
                           <string name="proxy-AlignV">"Centre"</string>
-                          <long name="proxy-Stretch factor">1</long>
+                          <long name="proxy-Stretch factor">0</long>
                           <long name="proxy-Border">5</long>
                           <bool name="proxy-wxLEFT">1</bool>
                           <bool name="proxy-wxRIGHT">1</bool>
@@ -3900,6 +3908,8 @@
                   <string name="proxy-Implementation filename">""</string>
                   <string name="proxy-Header filename">""</string>
                   <string name="proxy-Member variable name">""</string>
+                  <string name="proxy-Tab label">"Advanced"</string>
+                  <string name="proxy-Tab icon">""</string>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
                   <string name="proxy-Background colour">""</string>
@@ -3952,8 +3962,6 @@
                   <string name="proxy-Custom ctor arguments">""</string>
                   <string name="proxy-Event sources">""</string>
                   <bool name="proxy-AUI manager">0</bool>
-                  <string name="proxy-Tab label">"Advanced"</string>
-                  <string name="proxy-Tab icon">""</string>
                   <document>
                     <string name="title">"wxFlexGridSizer"</string>
                     <string name="type">"dialog-control-document"</string>
@@ -5638,6 +5646,8 @@
                   <string name="proxy-Implementation filename">""</string>
                   <string name="proxy-Header filename">""</string>
                   <string name="proxy-Member variable name">""</string>
+                  <string name="proxy-Tab label">"Services"</string>
+                  <string name="proxy-Tab icon">""</string>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
                   <string name="proxy-Background colour">""</string>
@@ -5690,8 +5700,6 @@
                   <string name="proxy-Custom ctor arguments">""</string>
                   <string name="proxy-Event sources">""</string>
                   <bool name="proxy-AUI manager">0</bool>
-                  <string name="proxy-Tab label">"Services"</string>
-                  <string name="proxy-Tab icon">""</string>
                   <document>
                     <string name="title">"wxFlexGridSizer"</string>
                     <string name="type">"dialog-control-document"</string>
@@ -6653,6 +6661,8 @@
                   <string name="proxy-Implementation filename">""</string>
                   <string name="proxy-Header filename">""</string>
                   <string name="proxy-Member variable name">""</string>
+                  <string name="proxy-Tab label">"USB"</string>
+                  <string name="proxy-Tab icon">""</string>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
                   <string name="proxy-Background colour">""</string>
@@ -6705,8 +6715,6 @@
                   <string name="proxy-Custom ctor arguments">""</string>
                   <string name="proxy-Event sources">""</string>
                   <bool name="proxy-AUI manager">0</bool>
-                  <string name="proxy-Tab label">"USB"</string>
-                  <string name="proxy-Tab icon">""</string>
                   <document>
                     <string name="title">"wxFlexGridSizer"</string>
                     <string name="type">"dialog-control-document"</string>
@@ -7223,6 +7231,8 @@
                   <string name="proxy-Implementation filename">""</string>
                   <string name="proxy-Header filename">""</string>
                   <string name="proxy-Member variable name">""</string>
+                  <string name="proxy-Tab label">"Environment"</string>
+                  <string name="proxy-Tab icon">""</string>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
                   <string name="proxy-Background colour">""</string>
@@ -7275,8 +7285,6 @@
                   <string name="proxy-Custom ctor arguments">""</string>
                   <string name="proxy-Event sources">""</string>
                   <bool name="proxy-AUI manager">0</bool>
-                  <string name="proxy-Tab label">"Environment"</string>
-                  <string name="proxy-Tab icon">""</string>
                   <document>
                     <string name="title">"wxFlexGridSizer"</string>
                     <string name="type">"dialog-control-document"</string>
@@ -8857,6 +8865,8 @@
                   <string name="proxy-Implementation filename">""</string>
                   <string name="proxy-Header filename">""</string>
                   <string name="proxy-Member variable name">"m_pCtrlPanelAbout"</string>
+                  <string name="proxy-Tab label">"About"</string>
+                  <string name="proxy-Tab icon">""</string>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
                   <string name="proxy-Background colour">""</string>
@@ -8909,8 +8919,6 @@
                   <string name="proxy-Custom ctor arguments">""</string>
                   <string name="proxy-Event sources">""</string>
                   <bool name="proxy-AUI manager">0</bool>
-                  <string name="proxy-Tab label">"About"</string>
-                  <string name="proxy-Tab icon">""</string>
                   <document>
                     <string name="title">"wxFlexGridSizer"</string>
                     <string name="type">"dialog-control-document"</string>
@@ -13287,7 +13295,6 @@ remote VNC server"</string>
             <bool name="proxy-wxFIXED_MINSIZE">0</bool>
             <string name="proxy-Custom arguments">""</string>
             <string name="proxy-Custom ctor arguments">""</string>
-            <bool name="proxy-wxBU_EXACTFIT">1</bool>
           </document>
           <document>
             <string name="title">"wxBoxSizer V"</string>
@@ -20160,7 +20167,7 @@ this share."</string>
           <long name="use-xrc">0</long>
           <long name="working-mode">0</long>
           <string name="proxy-Id name">"ID_WIZARD"</string>
-          <long name="proxy-Id value">10126</long>
+          <long name="proxy-Id value">10076</long>
           <string name="proxy-Class">"MyWizard"</string>
           <string name="proxy-Base class">"wxWizard"</string>
           <string name="proxy-Implementation filename">"MyWizard.cpp"</string>
@@ -20204,6 +20211,7 @@ this share."</string>
           <bool name="proxy-wxFULL_REPAINT_ON_RESIZE">0</bool>
           <bool name="proxy-wxCLIP_CHILDREN">0</bool>
           <bool name="proxy-wxWS_EX_VALIDATE_RECURSIVELY">0</bool>
+          <bool name="proxy-wxWS_EX_BLOCK_EVENTS">1</bool>
           <bool name="proxy-wxWS_EX_TRANSIENT">0</bool>
           <string name="proxy-Custom styles">""</string>
           <bool name="proxy-wxDIALOG_EX_CONTEXTHELP">0</bool>
@@ -20221,7 +20229,7 @@ this share."</string>
             <string name="proxy-type">"wbWizardPageProxy"</string>
             <string name="event-handler-0">"wxEVT_WIZARD_PAGE_CHANGED|OnWizardpageWelcomePageChanged"</string>
             <string name="proxy-Id name">"ID_WIZARDPAGE_WELCOME"</string>
-            <long name="proxy-Id value">10127</long>
+            <long name="proxy-Id value">10077</long>
             <string name="proxy-Class">"WizardPageWelcome"</string>
             <string name="proxy-Base class">"wxWizardPageSimple"</string>
             <string name="proxy-Window kind">"wxWizardPageSimple"</string>
@@ -20305,7 +20313,7 @@ this share."</string>
                 <string name="created">"9/7/2004"</string>
                 <string name="proxy-type">"wbHtmlWindowProxy"</string>
                 <string name="proxy-Id name">"ID_HTMLWINDOW_WELCOME"</string>
-                <long name="proxy-Id value">10076</long>
+                <long name="proxy-Id value">10083</long>
                 <string name="proxy-Name">""</string>
                 <string name="proxy-Class">"wxHtmlWindow"</string>
                 <string name="proxy-Base class">"wxHtmlWindow"</string>
@@ -20388,7 +20396,7 @@ this share."</string>
             <string name="event-handler-0">"wxEVT_WIZARD_PAGE_CHANGED|OnWizardpageSessionPageChanged"</string>
             <string name="event-handler-1">"wxEVT_WIZARD_PAGE_CHANGING|OnWizardpageSessionPageChanging"</string>
             <string name="proxy-Id name">"ID_WIZARDPAGE_SESSION"</string>
-            <long name="proxy-Id value">10128</long>
+            <long name="proxy-Id value">10084</long>
             <string name="proxy-Class">"WizardPageSession"</string>
             <string name="proxy-Base class">"wxWizardPageSimple"</string>
             <string name="proxy-Window kind">"wxWizardPageSimple"</string>
@@ -20472,7 +20480,7 @@ this share."</string>
                 <string name="created">"9/7/2004"</string>
                 <string name="proxy-type">"wbHtmlWindowProxy"</string>
                 <string name="proxy-Id name">"ID_HTMLWINDOW_TEXT1"</string>
-                <long name="proxy-Id value">10077</long>
+                <long name="proxy-Id value">10126</long>
                 <string name="proxy-Name">""</string>
                 <string name="proxy-Class">"wxHtmlWindow"</string>
                 <string name="proxy-Base class">"wxHtmlWindow"</string>
@@ -20643,7 +20651,7 @@ this share."</string>
                   <string name="proxy-type">"wbTextCtrlProxy"</string>
                   <string name="event-handler-0">"wxEVT_COMMAND_TEXT_UPDATED|OnTextctrlSessionNameUpdated"</string>
                   <string name="proxy-Id name">"ID_TEXTCTRL_SESSION_NAME"</string>
-                  <long name="proxy-Id value">10129</long>
+                  <long name="proxy-Id value">10127</long>
                   <string name="proxy-Name">""</string>
                   <string name="proxy-Class">"wxTextCtrl"</string>
                   <string name="proxy-Base class">"wxTextCtrl"</string>
@@ -20712,7 +20720,6 @@ this share."</string>
                   <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                   <string name="proxy-Custom arguments">""</string>
                   <string name="proxy-Custom ctor arguments">""</string>
-                  <bool name="proxy-wxTE_LINEWRAP">0</bool>
                 </document>
               </document>
               <document>
@@ -20727,7 +20734,7 @@ this share."</string>
                 <string name="created">"9/7/2004"</string>
                 <string name="proxy-type">"wbHtmlWindowProxy"</string>
                 <string name="proxy-Id name">"ID_HTMLWINDOW_TEXT2"</string>
-                <long name="proxy-Id value">10083</long>
+                <long name="proxy-Id value">10128</long>
                 <string name="proxy-Name">""</string>
                 <string name="proxy-Class">"wxHtmlWindow"</string>
                 <string name="proxy-Base class">"wxHtmlWindow"</string>
@@ -20899,7 +20906,7 @@ this share."</string>
                   <string name="proxy-type">"wbTextCtrlProxy"</string>
                   <string name="event-handler-0">"wxEVT_COMMAND_TEXT_UPDATED|OnTextctrlSvrnameUpdated"</string>
                   <string name="proxy-Id name">"ID_TEXTCTRL_SVRNAME"</string>
-                  <long name="proxy-Id value">10130</long>
+                  <long name="proxy-Id value">10129</long>
                   <string name="proxy-Name">""</string>
                   <string name="proxy-Class">"wxTextCtrl"</string>
                   <string name="proxy-Base class">"wxTextCtrl"</string>
@@ -20968,7 +20975,6 @@ this share."</string>
                   <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                   <string name="proxy-Custom arguments">""</string>
                   <string name="proxy-Custom ctor arguments">""</string>
-                  <bool name="proxy-wxTE_LINEWRAP">0</bool>
                 </document>
                 <document>
                   <string name="title">"wxStaticText: wxID_STATIC"</string>
@@ -21053,7 +21059,7 @@ this share."</string>
                   <string name="proxy-type">"wbTextCtrlProxy"</string>
                   <string name="event-handler-0">"wxEVT_COMMAND_TEXT_UPDATED|OnTextctrlSvrportUpdated"</string>
                   <string name="proxy-Id name">"ID_TEXTCTRL_SVRPORT"</string>
-                  <long name="proxy-Id value">10131</long>
+                  <long name="proxy-Id value">10130</long>
                   <string name="proxy-Name">""</string>
                   <string name="proxy-Class">"wxTextCtrl"</string>
                   <string name="proxy-Base class">"wxTextCtrl"</string>
@@ -21122,7 +21128,6 @@ this share."</string>
                   <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                   <string name="proxy-Custom arguments">""</string>
                   <string name="proxy-Custom ctor arguments">""</string>
-                  <bool name="proxy-wxTE_LINEWRAP">0</bool>
                 </document>
               </document>
               <document>
@@ -21137,7 +21142,7 @@ this share."</string>
                 <string name="created">"9/7/2004"</string>
                 <string name="proxy-type">"wbHtmlWindowProxy"</string>
                 <string name="proxy-Id name">"ID_HTMLWINDOW_TEXT3"</string>
-                <long name="proxy-Id value">10084</long>
+                <long name="proxy-Id value">10131</long>
                 <string name="proxy-Name">""</string>
                 <string name="proxy-Class">"wxHtmlWindow"</string>
                 <string name="proxy-Base class">"wxHtmlWindow"</string>
@@ -21787,7 +21792,7 @@ this share."</string>
                 <string name="created">"9/7/2004"</string>
                 <string name="proxy-type">"wbHtmlWindowProxy"</string>
                 <string name="proxy-Id name">"ID_HTMLWINDOW_TEXT1"</string>
-                <long name="proxy-Id value">10077</long>
+                <long name="proxy-Id value">10134</long>
                 <string name="proxy-Name">""</string>
                 <string name="proxy-Class">"wxHtmlWindow"</string>
                 <string name="proxy-Base class">"wxHtmlWindow"</string>
@@ -21886,7 +21891,7 @@ this share."</string>
                   <string name="proxy-type">"wbComboBoxProxy"</string>
                   <string name="event-handler-0">"wxEVT_COMMAND_COMBOBOX_SELECTED|OnComboboxDprotoSelected|||WizardPageDesktop"</string>
                   <string name="proxy-Id name">"ID_COMBOBOX_DPROTO"</string>
-                  <long name="proxy-Id value">10134</long>
+                  <long name="proxy-Id value">10135</long>
                   <string name="proxy-Name">""</string>
                   <string name="proxy-Class">"wxComboBox"</string>
                   <string name="proxy-Base class">"wxComboBox"</string>
@@ -21950,7 +21955,7 @@ this share."</string>
                   <string name="proxy-type">"wbComboBoxProxy"</string>
                   <string name="event-handler-0">"wxEVT_COMMAND_COMBOBOX_SELECTED|OnComboboxDtypeSelected"</string>
                   <string name="proxy-Id name">"ID_COMBOBOX_DTYPE"</string>
-                  <long name="proxy-Id value">10135</long>
+                  <long name="proxy-Id value">10136</long>
                   <string name="proxy-Name">""</string>
                   <string name="proxy-Class">"wxComboBox"</string>
                   <string name="proxy-Base class">"wxComboBox"</string>
@@ -22040,7 +22045,7 @@ this share."</string>
                   <string name="proxy-type">"wbButtonProxy"</string>
                   <string name="event-handler-0">"wxEVT_COMMAND_BUTTON_CLICKED|OnButtonDsettingsClick"</string>
                   <string name="proxy-Id name">"ID_BUTTON_DSETTINGS"</string>
-                  <long name="proxy-Id value">10136</long>
+                  <long name="proxy-Id value">10137</long>
                   <string name="proxy-Name">""</string>
                   <string name="proxy-Class">"wxButton"</string>
                   <string name="proxy-Base class">"wxButton"</string>
@@ -22200,7 +22205,7 @@ this share."</string>
                   <string name="proxy-type">"wbComboBoxProxy"</string>
                   <string name="event-handler-0">"wxEVT_COMMAND_COMBOBOX_SELECTED|OnComboboxDisptypeSelected"</string>
                   <string name="proxy-Id name">"ID_COMBOBOX_DISPTYPE"</string>
-                  <long name="proxy-Id value">10137</long>
+                  <long name="proxy-Id value">10138</long>
                   <string name="proxy-Name">""</string>
                   <string name="proxy-Class">"wxComboBox"</string>
                   <string name="proxy-Base class">"wxComboBox"</string>
@@ -22332,7 +22337,7 @@ this share."</string>
                   <long name="locked">0</long>
                   <string name="proxy-type">"wbSpinCtrlProxy"</string>
                   <string name="proxy-Id name">"ID_SPINCTRL_WIDTH"</string>
-                  <long name="proxy-Id value">10138</long>
+                  <long name="proxy-Id value">10139</long>
                   <string name="proxy-Name">""</string>
                   <string name="proxy-Class">"wxSpinCtrl"</string>
                   <string name="proxy-Base class">"wxSpinCtrl"</string>
@@ -22469,7 +22474,7 @@ this share."</string>
                   <long name="locked">0</long>
                   <string name="proxy-type">"wbSpinCtrlProxy"</string>
                   <string name="proxy-Id name">"ID_SPINCTRL_HEIGHT"</string>
-                  <long name="proxy-Id value">10139</long>
+                  <long name="proxy-Id value">10140</long>
                   <string name="proxy-Name">""</string>
                   <string name="proxy-Class">"wxSpinCtrl"</string>
                   <string name="proxy-Base class">"wxSpinCtrl"</string>
@@ -22569,7 +22574,7 @@ this share."</string>
             <string name="event-handler-0">"wxEVT_WIZARD_PAGE_CHANGED|OnWizardpageSecurityPageChanged"</string>
             <string name="event-handler-1">"wxEVT_WIZARD_PAGE_CHANGING|OnWizardpageSecurityPageChanging"</string>
             <string name="proxy-Id name">"ID_WIZARDPAGE_SECURITY"</string>
-            <long name="proxy-Id value">10020</long>
+            <long name="proxy-Id value">10141</long>
             <string name="proxy-Class">"WizardPageSecurity"</string>
             <string name="proxy-Base class">"wxWizardPageSimple"</string>
             <string name="proxy-Window kind">"wxWizardPageSimple"</string>
@@ -22653,7 +22658,7 @@ this share."</string>
                 <string name="created">"9/7/2004"</string>
                 <string name="proxy-type">"wbHtmlWindowProxy"</string>
                 <string name="proxy-Id name">"ID_HTMLWINDOW_TEXT1"</string>
-                <long name="proxy-Id value">10077</long>
+                <long name="proxy-Id value">10142</long>
                 <string name="proxy-Name">""</string>
                 <string name="proxy-Class">"wxHtmlWindow"</string>
                 <string name="proxy-Base class">"wxHtmlWindow"</string>
@@ -22715,7 +22720,6 @@ this share."</string>
                 <string name="proxy-Custom arguments">""</string>
                 <string name="proxy-Custom ctor arguments">""</string>
                 <string name="proxy-Event sources">""</string>
-                <bool name="proxy-wxCLIP_CHILDREN ">0</bool>
               </document>
               <document>
                 <string name="title">"wxBoxSizer H"</string>
@@ -22755,7 +22759,7 @@ this share."</string>
                   <string name="proxy-type">"wbCheckBoxProxy"</string>
                   <string name="event-handler-0">"wxEVT_COMMAND_CHECKBOX_CLICKED|OnCheckboxScardClick"</string>
                   <string name="proxy-Id name">"ID_CHECKBOX_SCARD"</string>
-                  <long name="proxy-Id value">10140</long>
+                  <long name="proxy-Id value">10143</long>
                   <string name="proxy-Name">""</string>
                   <string name="proxy-Class">"wxCheckBox"</string>
                   <string name="proxy-Base class">"wxCheckBox"</string>
@@ -22820,7 +22824,7 @@ this share."</string>
                 <string name="created">"9/7/2004"</string>
                 <string name="proxy-type">"wbHtmlWindowProxy"</string>
                 <string name="proxy-Id name">"ID_HTMLWINDOW_TEXT2"</string>
-                <long name="proxy-Id value">10083</long>
+                <long name="proxy-Id value">10144</long>
                 <string name="proxy-Name">""</string>
                 <string name="proxy-Class">"wxHtmlWindow"</string>
                 <string name="proxy-Base class">"wxHtmlWindow"</string>
@@ -22921,7 +22925,7 @@ this share."</string>
                   <string name="created">"9/7/2004"</string>
                   <string name="proxy-type">"wbCheckBoxProxy"</string>
                   <string name="proxy-Id name">"ID_CHECKBOX_SSLENABLE"</string>
-                  <long name="proxy-Id value">10141</long>
+                  <long name="proxy-Id value">10178</long>
                   <string name="proxy-Name">""</string>
                   <string name="proxy-Class">"wxCheckBox"</string>
                   <string name="proxy-Base class">"wxCheckBox"</string>
@@ -23017,7 +23021,7 @@ this share."</string>
             <string name="event-handler-0">"wxEVT_WIZARD_PAGE_CHANGED|OnWizardpageFinishPageChanged"</string>
             <string name="event-handler-1">"wxEVT_WIZARD_PAGE_CHANGING|OnWizardpageFinishPageChanging"</string>
             <string name="proxy-Id name">"ID_WIZARDPAGE_FINISH"</string>
-            <long name="proxy-Id value">10142</long>
+            <long name="proxy-Id value">10179</long>
             <string name="proxy-Class">"WizardPageFinish"</string>
             <string name="proxy-Base class">"wxWizardPageSimple"</string>
             <string name="proxy-Window kind">"wxWizardPageSimple"</string>
@@ -23101,7 +23105,7 @@ this share."</string>
                 <string name="created">"9/7/2004"</string>
                 <string name="proxy-type">"wbHtmlWindowProxy"</string>
                 <string name="proxy-Id name">"ID_HTMLWINDOW_TEXT1"</string>
-                <long name="proxy-Id value">10077</long>
+                <long name="proxy-Id value">10180</long>
                 <string name="proxy-Name">""</string>
                 <string name="proxy-Class">"wxHtmlWindow"</string>
                 <string name="proxy-Base class">"wxHtmlWindow"</string>
@@ -23202,7 +23206,7 @@ this share."</string>
                   <string name="created">"9/7/2004"</string>
                   <string name="proxy-type">"wbCheckBoxProxy"</string>
                   <string name="proxy-Id name">"ID_CHECKBOX_SHORTCUT"</string>
-                  <long name="proxy-Id value">10143</long>
+                  <long name="proxy-Id value">10181</long>
                   <string name="proxy-Name">""</string>
                   <string name="proxy-Class">"wxCheckBox"</string>
                   <string name="proxy-Base class">"wxCheckBox"</string>
@@ -23292,7 +23296,7 @@ this share."</string>
                   <string name="created">"9/7/2004"</string>
                   <string name="proxy-type">"wbCheckBoxProxy"</string>
                   <string name="proxy-Id name">"ID_CHECKBOX_ADVANCED"</string>
-                  <long name="proxy-Id value">10144</long>
+                  <long name="proxy-Id value">10182</long>
                   <string name="proxy-Name">""</string>
                   <string name="proxy-Class">"wxCheckBox"</string>
                   <string name="proxy-Base class">"wxCheckBox"</string>

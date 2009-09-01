@@ -125,7 +125,7 @@ bool VncImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), 
     }
 
 ////@begin VncImageSettingsDialog creation
-    SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
+    SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));
