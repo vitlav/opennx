@@ -24,6 +24,7 @@
     <bool name="generate_virtual_eventhandlers">0</bool>
     <string name="current_platform">"&lt;All platforms&gt;"</string>
     <string name="target_wx_version">"2.8.5"</string>
+    <string name="app_kind">"Standard"</string>
     <string name="cpp_header_comment">"// $Id$
 //
 // %COPYRIGHT%
@@ -329,6 +330,7 @@
           <string name="id-prefix">""</string>
           <bool name="use-id-suffix">0</bool>
           <string name="id-suffix">""</string>
+          <string name="app-kind">"Standard"</string>
           <long name="use-xrc">0</long>
           <long name="working-mode">0</long>
           <string name="variable-0">"m_sUsername|wxString|||2|0|"</string>
@@ -1551,6 +1553,7 @@
           <string name="id-prefix">""</string>
           <bool name="use-id-suffix">0</bool>
           <string name="id-suffix">""</string>
+          <string name="app-kind">"Standard"</string>
           <long name="use-xrc">0</long>
           <long name="working-mode">0</long>
           <string name="variable-0">"m_iPort|int|||2|0|"</string>
@@ -1664,6 +1667,14 @@
             <string name="proxy-type">"wbBoxSizerProxy"</string>
             <string name="proxy-Orientation">"Vertical"</string>
             <string name="proxy-Member variable name">""</string>
+            <string name="proxy-AlignH">"Centre"</string>
+            <string name="proxy-AlignV">"Centre"</string>
+            <long name="proxy-Stretch factor">0</long>
+            <long name="proxy-Border">5</long>
+            <bool name="proxy-wxLEFT">1</bool>
+            <bool name="proxy-wxRIGHT">1</bool>
+            <bool name="proxy-wxTOP">1</bool>
+            <bool name="proxy-wxBOTTOM">1</bool>
             <bool name="proxy-wxSHAPED">0</bool>
             <bool name="proxy-wxADJUST_MINSIZE">0</bool>
             <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -9333,6 +9344,7 @@
           <string name="id-prefix">""</string>
           <bool name="use-id-suffix">0</bool>
           <string name="id-suffix">""</string>
+          <string name="app-kind">"Standard"</string>
           <long name="use-xrc">0</long>
           <long name="working-mode">0</long>
           <string name="variable-0">"m_sPassword|wxString||"</string>
@@ -10456,6 +10468,7 @@ remote VNC server"</string>
           <string name="id-prefix">""</string>
           <bool name="use-id-suffix">0</bool>
           <string name="id-suffix">""</string>
+          <string name="app-kind">"Standard"</string>
           <long name="use-xrc">0</long>
           <long name="working-mode">0</long>
           <string name="variable-0">"m_sHostname|wxString|||2"</string>
@@ -12048,6 +12061,7 @@ remote VNC server"</string>
           <string name="id-prefix">""</string>
           <bool name="use-id-suffix">0</bool>
           <string name="id-suffix">""</string>
+          <string name="app-kind">"Standard"</string>
           <long name="use-xrc">0</long>
           <long name="working-mode">0</long>
           <string name="variable-0">"m_bRunConsole|bool|||2"</string>
@@ -13160,6 +13174,7 @@ remote VNC server"</string>
           <string name="id-prefix">""</string>
           <bool name="use-id-suffix">0</bool>
           <string name="id-suffix">""</string>
+          <string name="app-kind">"Standard"</string>
           <long name="use-xrc">0</long>
           <long name="working-mode">0</long>
           <string name="variable-0">"m_bUseHextile|bool||"</string>
@@ -13873,6 +13888,7 @@ remote VNC server"</string>
           <string name="id-prefix">""</string>
           <bool name="use-id-suffix">0</bool>
           <string name="id-suffix">""</string>
+          <string name="app-kind">"Standard"</string>
           <long name="use-xrc">0</long>
           <long name="working-mode">0</long>
           <string name="variable-0">"m_bRdpPlainX|bool|||2"</string>
@@ -15083,6 +15099,7 @@ remote VNC server"</string>
           <string name="id-prefix">""</string>
           <bool name="use-id-suffix">0</bool>
           <string name="id-suffix">""</string>
+          <string name="app-kind">"Standard"</string>
           <long name="use-xrc">0</long>
           <long name="working-mode">0</long>
           <string name="variable-0">"m_bImageEncodingPNG|bool|||2"</string>
@@ -16230,6 +16247,7 @@ remote VNC server"</string>
           <string name="id-prefix">""</string>
           <bool name="use-id-suffix">0</bool>
           <string name="id-suffix">""</string>
+          <string name="app-kind">"Standard"</string>
           <long name="use-xrc">0</long>
           <long name="working-mode">0</long>
           <string name="variable-0">"m_sMountPoint|wxString|||2"</string>
@@ -19330,6 +19348,7 @@ this share."</string>
           <string name="id-prefix">""</string>
           <bool name="use-id-suffix">0</bool>
           <string name="id-suffix">""</string>
+          <string name="app-kind">"Standard"</string>
           <long name="use-xrc">0</long>
           <long name="working-mode">0</long>
           <string name="variable-0">"m_NxDirectory|wxString|NxDirectory|"</string>
@@ -20164,6 +20183,7 @@ this share."</string>
           <string name="id-prefix">""</string>
           <bool name="use-id-suffix">0</bool>
           <string name="id-suffix">""</string>
+          <string name="app-kind">"Standard"</string>
           <long name="use-xrc">0</long>
           <long name="working-mode">0</long>
           <string name="proxy-Id name">"ID_WIZARD"</string>
@@ -22245,7 +22265,7 @@ this share."</string>
                   <long name="proxy-Height">-1</long>
                   <string name="proxy-AlignH">"Centre"</string>
                   <string name="proxy-AlignV">"Centre"</string>
-                  <long name="proxy-Stretch factor">0</long>
+                  <long name="proxy-Stretch factor">1</long>
                   <long name="proxy-Border">5</long>
                   <bool name="proxy-wxLEFT">1</bool>
                   <bool name="proxy-wxRIGHT">1</bool>
@@ -22314,7 +22334,7 @@ this share."</string>
                   <long name="proxy-Height">-1</long>
                   <string name="proxy-AlignH">"Centre"</string>
                   <string name="proxy-AlignV">"Centre"</string>
-                  <long name="proxy-Stretch factor">1</long>
+                  <long name="proxy-Stretch factor">0</long>
                   <long name="proxy-Border">5</long>
                   <bool name="proxy-wxLEFT">1</bool>
                   <bool name="proxy-wxRIGHT">1</bool>
@@ -23394,6 +23414,7 @@ this share."</string>
           <string name="id-prefix">""</string>
           <bool name="use-id-suffix">0</bool>
           <string name="id-suffix">""</string>
+          <string name="app-kind">"Standard"</string>
           <long name="use-xrc">0</long>
           <long name="working-mode">0</long>
           <string name="proxy-Id name">"ID_DIALOG_LOG"</string>
@@ -23645,6 +23666,7 @@ this share."</string>
           <string name="id-prefix">""</string>
           <bool name="use-id-suffix">0</bool>
           <string name="id-suffix">""</string>
+          <string name="app-kind">"Standard"</string>
           <long name="use-xrc">0</long>
           <long name="working-mode">0</long>
           <string name="proxy-Id name">"ID_DIALOG_ABOUT"</string>
@@ -23917,6 +23939,7 @@ this share."</string>
           <string name="id-prefix">""</string>
           <bool name="use-id-suffix">0</bool>
           <string name="id-suffix">""</string>
+          <string name="app-kind">"Standard"</string>
           <long name="use-xrc">0</long>
           <long name="working-mode">0</long>
           <string name="variable-0">"m_bAbort|bool||false"</string>
@@ -24319,6 +24342,7 @@ this share."</string>
           <string name="id-prefix">""</string>
           <bool name="use-id-suffix">0</bool>
           <string name="id-suffix">""</string>
+          <string name="app-kind">"Standard"</string>
           <long name="use-xrc">0</long>
           <long name="working-mode">0</long>
           <string name="variable-0">"m_sFileName|wxString||wxT(&quot;&quot;)"</string>
@@ -24641,6 +24665,7 @@ this share."</string>
           <string name="id-prefix">""</string>
           <bool name="use-id-suffix">0</bool>
           <string name="id-suffix">""</string>
+          <string name="app-kind">"Standard"</string>
           <long name="use-xrc">0</long>
           <long name="working-mode">0</long>
           <string name="variable-0">"m_sSshKey|wxString|SshKey|wxT(&quot;&quot;)|2"</string>
@@ -25178,6 +25203,7 @@ this share."</string>
           <string name="id-prefix">""</string>
           <bool name="use-id-suffix">0</bool>
           <string name="id-suffix">""</string>
+          <string name="app-kind">"Standard"</string>
           <long name="use-xrc">0</long>
           <long name="working-mode">0</long>
           <string name="variable-0">"m_lActiveSession|long||-1|2|0|"</string>
@@ -25856,6 +25882,7 @@ this share."</string>
           <string name="id-prefix">""</string>
           <bool name="use-id-suffix">0</bool>
           <string name="id-suffix">""</string>
+          <string name="app-kind">"Standard"</string>
           <long name="use-xrc">0</long>
           <long name="working-mode">0</long>
           <string name="variable-0">"m_iDialogClass|int|DialogClass|wxICON_WARNING|2"</string>
@@ -26281,6 +26308,7 @@ this share."</string>
           <string name="id-prefix">""</string>
           <bool name="use-id-suffix">0</bool>
           <string name="id-suffix">""</string>
+          <string name="app-kind">"Standard"</string>
           <long name="use-xrc">0</long>
           <long name="working-mode">0</long>
           <string name="variable-0">"m_iDialogClass|int|DialogClass|wxICON_WARNING|2"</string>
@@ -26641,6 +26669,7 @@ this share."</string>
           <string name="id-prefix">""</string>
           <bool name="use-id-suffix">0</bool>
           <string name="id-suffix">""</string>
+          <string name="app-kind">"Standard"</string>
           <long name="use-xrc">0</long>
           <long name="working-mode">0</long>
           <string name="variable-0">"m_nForeignWindowID|long|ForeignWindowID||2"</string>
@@ -26873,6 +26902,7 @@ this share."</string>
           <string name="id-prefix">""</string>
           <bool name="use-id-suffix">0</bool>
           <string name="id-suffix">""</string>
+          <string name="app-kind">"Standard"</string>
           <long name="use-xrc">0</long>
           <long name="working-mode">0</long>
           <string name="proxy-Id name">"ID_CARDWAITERDIALOG"</string>
@@ -27231,6 +27261,7 @@ this share."</string>
           <string name="id-prefix">""</string>
           <bool name="use-id-suffix">0</bool>
           <string name="id-suffix">""</string>
+          <string name="app-kind">"Standard"</string>
           <long name="use-xrc">0</long>
           <long name="working-mode">0</long>
           <string name="variable-0">"m_sVendorID|wxString|VendorID||2|0|"</string>
