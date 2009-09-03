@@ -47,6 +47,7 @@
 #include <wx/regex.h>
 #include <wx/url.h>
 #include <wx/config.h>
+#include <wx/display.h>
 
 class wxConfigBase;
 
@@ -508,7 +509,9 @@ MyXmlConfig::sGetListParams(const long protocolVersion)
     int w, h;
     ::wxDisplaySize(&w, &h);
     ret << wxT(" --geometry=\"") << w << wxT("x") << h << wxT("x")
-        << ::wxDisplayDepth() << (m_bDisableRender ? wxEmptyString : wxT("+render")) << wxT("\"");
+        << ::wxDisplayDepth() << (m_bDisableRender ? wxEmptyString : wxT("+render"))
+        << ((m_eDisplayType == DPTYPE_FULLSCREEN) ? wxT("+fullscreen") : wxEmptyString)
+        << wxT("\"");
     return ret;
 }
 
@@ -543,9 +546,20 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
     wxUnusedVar(protocolVersion);
     wxString ret = wxEmptyString;
     bool bNeedGeometry = bNew;
-    int w, h;
+    int dspw, dsph, clientw, clienth;
 
-    ::wxDisplaySize(&w, &h);
+    {
+        // Fetch the size of the display where we are shown.
+        int dspidx = wxDisplay::GetFromWindow(::wxGetApp().GetTopWindow());
+        wxDisplay dsp(dspidx);
+        wxRect r = dsp.GetGeometry();
+        dspw = r.GetWidth();
+        dsph = r.GetHeight();
+        r = dsp.GetClientArea();
+        clientw = r.GetWidth();
+        clienth = r.GetHeight();
+    }
+
     if (bNew) {
         ret << wxString::Format(wxT(" --session=\"%s\""), m_sName.c_str());
         ret << wxT(" --type=\"");
@@ -725,22 +739,25 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
                 ret << wxT("1024x768\"");
                 break;
             case DPTYPE_AVAILABLE:
-                ret << wxT("available\"");
+                ret << wxString::Format(wxT("%dx%d\""), clientw, clienth);
                 break;
             case DPTYPE_FULLSCREEN:
-                ret << wxT("fullscreen\"");
+                ret << wxString::Format(wxT("%dx%d\""), dspw, dsph)
+                    << wxT(" --fullscreen=\"1\"");
                 break;
             case DPTYPE_CUSTOM:
                 ret << wxString::Format(wxT("%dx%d\""), m_iDisplayWidth, m_iDisplayHeight);
                 break;
             case DPTYPE_REMOTE:
-                ret << wxString::Format(wxT("%dx%d\""), w, h);
+                ret << wxString::Format(wxT("%dx%d\""), dspw, dsph);
                 break;
         }
     }
     if (m_eSessionType != STYPE_SHADOW) {
-        ret << wxT(" --screeninfo=\"") << w << wxT("x") << h << wxT("x")
-            << ::wxDisplayDepth() << (m_bDisableRender ? wxEmptyString : wxT("+render")) << wxT("\"");
+        ret << wxT(" --screeninfo=\"") << dspw << wxT("x") << dsph << wxT("x")
+            << ::wxDisplayDepth() << (m_bDisableRender ? wxEmptyString : wxT("+render"))
+            << ((m_eDisplayType == DPTYPE_FULLSCREEN) ? wxT("+fullscreen") : wxEmptyString)
+            << wxT("\"");
     }
 
     wxString kbdLocal = wxString(wxConvLocal.cMB2WX(x11_keyboard_type)).BeforeFirst(wxT(','));
