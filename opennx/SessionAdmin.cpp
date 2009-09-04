@@ -188,18 +188,18 @@ void SessionAdmin::CreateControls()
 
 void SessionAdmin::SessionToolsEnable(bool enable, bool running /* = false */)
 {
-    GetToolBar()->EnableTool(XRCID("ID_TOOL_SESSION_TERMINATE"), running);
-    GetToolBar()->EnableTool(XRCID("ID_TOOL_SESSION_PSTATS"), running);
-    GetToolBar()->EnableTool(XRCID("ID_TOOL_SESSION_FSTATS"), running);
+    GetToolBar()->EnableTool(XRCID("ID_TOOL_SESSION_TERMINATE"), enable && running);
+    GetToolBar()->EnableTool(XRCID("ID_TOOL_SESSION_PSTATS"), enable && running);
+    GetToolBar()->EnableTool(XRCID("ID_TOOL_SESSION_FSTATS"), enable && running);
     GetToolBar()->EnableTool(XRCID("ID_TOOL_SESSION_LOG"), enable);
-    GetToolBar()->EnableTool(XRCID("ID_TOOL_SESSION_REMOVE"), !running);
-    GetToolBar()->EnableTool(XRCID("ID_TOOL_SESSION_KILL"), running);
-    GetMenuBar()->FindItem(XRCID("ID_MENU_SESSION_TERMINATE"))->Enable(running);
-    GetMenuBar()->FindItem(XRCID("ID_MENU_SESSION_PSTATS"))->Enable(running);
-    GetMenuBar()->FindItem(XRCID("ID_MENU_SESSION_FSTATS"))->Enable(running);
+    GetToolBar()->EnableTool(XRCID("ID_TOOL_SESSION_REMOVE"), enable && !running);
+    GetToolBar()->EnableTool(XRCID("ID_TOOL_SESSION_KILL"), enable && running);
+    GetMenuBar()->FindItem(XRCID("ID_MENU_SESSION_TERMINATE"))->Enable(enable && running);
+    GetMenuBar()->FindItem(XRCID("ID_MENU_SESSION_PSTATS"))->Enable(enable && running);
+    GetMenuBar()->FindItem(XRCID("ID_MENU_SESSION_FSTATS"))->Enable(enable && running);
     GetMenuBar()->FindItem(XRCID("ID_MENU_SESSION_LOG"))->Enable(enable);
-    GetMenuBar()->FindItem(XRCID("ID_MENU_SESSION_REMOVE"))->Enable(!running);
-    GetMenuBar()->FindItem(XRCID("ID_MENU_SESSION_KILL"))->Enable(running);
+    GetMenuBar()->FindItem(XRCID("ID_MENU_SESSION_REMOVE"))->Enable(enable && !running);
+    GetMenuBar()->FindItem(XRCID("ID_MENU_SESSION_KILL"))->Enable(enable && running);
 }
 
 /*!
