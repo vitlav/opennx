@@ -24,8 +24,12 @@ case "$1" in
         file=/usr/lib/opennx/lib/libsmbclient.so
         test ! -h $file || rm $file
         target=`ls /usr/lib/libsmbclient.so.* 2> /dev/null | head -1`
-	test -z "$target" || ln -s $target $file
-    ;;
+        test -z "$target" || ln -s $target $file
+        file=/usr/lib/opennx/lib/libopensc.so
+        test ! -h $file || rm $file
+        target=`ls /usr/lib/libopensc.so.* 2> /dev/null | head -1`
+        test -z "$target" || ln -s $target $file
+        ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
     ;;

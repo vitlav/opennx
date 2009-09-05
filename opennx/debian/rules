@@ -50,7 +50,8 @@ endif
 	cd nxservice && ./configure --prefix=$(prefix)
 	tar xzf nxssh-*.tar.gz
 	cd nxssh && patch -p1 < ../patches/openssh-scard-pin.patch
-	cd nxssh && ./configure --prefix=$(prefix) --with-opensc
+	cd nxssh && patch -p1 < ../patches/nxssh-dynopensc.patch
+	cd nxssh && ./configure --prefix=$(prefix) --with-opensc --enable-opensc-dynamic
 
 
 build: build-stamp
