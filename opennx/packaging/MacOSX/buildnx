@@ -39,6 +39,7 @@ LDFLAGS="-L$DEST$PFX/lib -L/Library/OpenSC/lib" \
 CPPFLAGS="-I/Library/OpenSC/include" \
 ./configure --prefix=$PFX \
   --with-opensc=$BUILDDIR/../scbuild/dist$PFX \
+  --enable-opensc-dynamic \
   --with-cflags="-arch i386 -arch ppc" \
   --with-ldflags="-arch i386 -arch ppc"
 make

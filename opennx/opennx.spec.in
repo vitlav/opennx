@@ -163,6 +163,8 @@ done
 cd nxssh && patch -p1 < ../patches/openssh-scard-pin.patch
 cd ..
 patch -p0 < patches/nxcomp-gcc44.patch
+# Make nxssh load libopensc dynamically
+patch -p0 < patches/nxssh-dynopensc.patch
 
 # Workaround for obsolete include in nxcompsh
 (
@@ -204,9 +206,9 @@ cat<<"EOF">opensc-config
 EOF
 chmod a+x opensc-config
 export PATH=.:$PATH
-./configure --prefix=%{_prefix} --with-opensc && make
+./configure --prefix=%{_prefix} --with-opensc --enable-opensc-dynamic && make
 %else
-cd nxssh && ./configure --prefix=%{_prefix} --with-opensc && make
+cd nxssh && ./configure --prefix=%{_prefix} --with-opensc --enable-opensc-dynamic && make
 %endif
 cd ..
 

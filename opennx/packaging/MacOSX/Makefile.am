@@ -17,18 +17,18 @@ pkgdir:
 	mkdir -p pkgroot/Applications
 	mkdir -p pkgroot$(prefix)
 	$(srcdir)/mkbundle pkgroot/Applications/OpenNX.app OpenNXapp \
-	    $(top_srcdir)/res/nx.icns $(bindir)/opennx \
+	    $(top_srcdir)/extres/nx.icns $(bindir)/opennx \
 	    $(srcdir)/opennx-main.plist "OPNX"
-	cp $(top_srcdir)/res/nx-desktop.icns \
+	cp $(top_srcdir)/extres/nx-desktop.icns \
 	    pkgroot/Applications/OpenNX.app/Contents/Resources
 	$(srcdir)/mkbundle pkgroot/Applications/OpenNXAdmin.app OpenNXAdmin \
-	    $(top_srcdir)/res/opennx-admin.icns $(bindir)/opennx \
+	    $(top_srcdir)/extres/opennx-admin.icns $(bindir)/opennx \
 	    $(srcdir)/opennx.plist "" --admin
 	$(srcdir)/mkbundle pkgroot/Applications/OpenNXWizard.app OpenNXWizard \
-	    $(top_srcdir)/res/opennx-wizard.icns $(bindir)/opennx \
+	    $(top_srcdir)/extres/opennx-wizard.icns $(bindir)/opennx \
 	    $(srcdir)/opennx.plist "" --wizard
 	$(srcdir)/mkbundle pkgroot/Library/OpenNX/Message.app OpenNXMessage \
-	    $(top_srcdir)/res/nx.icns $(bindir)/opennx \
+	    $(top_srcdir)/extres/nx.icns $(bindir)/opennx \
 	    $(srcdir)/opennx.plist "" --dialog ok --style info --caption CARDREMOVED --message CARDREMOVED
 	rm -rf scbuild
 	mkdir scbuild

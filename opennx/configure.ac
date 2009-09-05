@@ -165,7 +165,7 @@ case $target_os in
         TRACELOG_RES='tracelog.$(OBJEXT)'
         WATCHREADER='watchreader$(EXEEXT)'
         WATCHREADER_RES='watchreader.$(OBJEXT)'
-        OSRESDEPS='$(srcdir)/res/*.ico'
+        OSRESDEPS='$(top_srcdir)/extres/*.ico'
         tagnames="RC"
         _LT_AC_TAGCONFIG
         ;;
@@ -173,7 +173,7 @@ case $target_os in
         MACFINDREADER='macfindreader$(EXEEXT)'
         WATCHREADER='watchreader$(EXEEXT)'
         BUNDLE=bundle
-        OSRESDEPS='$(srcdir)/res/*.icns'
+        OSRESDEPS='$(top_srcdir)/extres/*.icns'
         APP_LDADD="-lX11 -lXmu"
         # Automatically build universal binary, if wxWidgets is a universal binary
         if test -n "`echo -- $WX_LIBS|grep -- '-arch ppc'`" ; then

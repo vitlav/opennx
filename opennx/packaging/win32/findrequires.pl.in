@@ -40,14 +40,23 @@ my @sysdlls = (
 die "Usage: findrequires <syspath> binary1 binary2 ...\n" unless ($#ARGV > 0);
 my $dllpath = shift(@ARGV);
 my %required;
+my $dstdir;
 
-sub finddeps($);
+sub finddeps($$);
 
-sub finddeps($) {
+sub finddeps($$) {
     my $target = shift;
+    my $lvl = shift;
+    my %lreq;
     foreach (sort keys %required) {
         return if ($required{$_} eq $target);
     }
+    if ($lvl) {
+        $required{basename($target)} = $target;
+    } else {
+        $dstdir = dirname($target) if (!$lvl);
+    }
+    $lvl++;
     open (P, "@OBJDUMP@ -p $target|") || die "Can't run @OBJDUMP@ -p $target: $!\n";
     while (<P>) {
         chomp;
@@ -56,7 +65,7 @@ sub finddeps($) {
             my $cdll = lc($dll);
             $cdll =~ s/\.dll$//;
             next if grep { $cdll eq $_ } @sysdlls;
-            next if (-f (dirname($target) ."/" . $dll));
+            next if (-f ($dstdir ."/" . $dll));
             my $absdll = '';
             foreach my $dir (split(/:/, $dllpath)) {
                 if (-f "$dir/$dll") {
@@ -65,19 +74,19 @@ sub finddeps($) {
                 }
             }
             if ($absdll ne '') {
-                $required{$cdll} = $absdll;
+                $lreq{$cdll} = $absdll;
             } else {
                 die "Can't find required DLL $dll\n";
             }
         }
     }
-    foreach (sort keys %required) {
-        finddeps($required{$_});
+    foreach (sort keys %lreq) {
+        finddeps($lreq{$_}, $lvl);
     }
 }
 
 foreach my $p (@ARGV) {
-    finddeps($p);
+    finddeps($p, 0);
 }
 foreach (sort keys %required) {
     print $required{$_}, "\n";

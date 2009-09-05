@@ -138,7 +138,7 @@ distclean-local:
 	rm -f po/stamp-po
 
 RESDEPS = $(wildcard $(srcdir)/res/*.xrc $(srcdir)/res/*.png \
-		  $(srcdir)/res/*.html $(srcdir)/res/*.xml $(OSRESDEPS))
+		  $(srcdir)/res/*.html $(srcdir)/res/*.xml)
 RESSRC = $(subst $(srcdir)/,,$(RESDEPS))
 
 tmpres.zip: $(RESDEPS)
@@ -157,7 +157,7 @@ watchUsbIpApp.cpp: memres.h
 
 SUFFIXES = .rc
 
-.rc.o:
+.rc.o: $(OSRESDEPS)
 	$(WX_RESCOMP) -I$(top_builddir) -o $@ $<
 
 CLEANFILES = memres.h tmpres.zip *~ po/*~ *.bak *~ \#.* .\#* OpenNX.app
@@ -226,9 +226,5 @@ dist-platform: $(PLATFORMDIST)
 
 EXTRA_DIST = conf/config.rpath INSTALL INSTALL.generic COPYING share \
 	etc/60-opennx.rules opennx.pjd opennx.rc tracelog.rc watchreader.rc \
-	opennx.spec patches getnxsrcpkg $(RESDEPS) ChangeLog \
-	res/nx-desktop.ico res/nx.ico res/opennx-admin.ico \
-	res/opennx-wizard.ico res/nx-desktop.icns res/nx.icns \
-	res/opennx-admin.icns res/opennx-wizard.icns \
-	debian \
+	opennx.spec patches getnxsrcpkg $(RESDEPS) ChangeLog extres debian \
 	$(wildcard m4/*.m4)
