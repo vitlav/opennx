@@ -31,7 +31,7 @@ case $target_os in
         am_dependency_tracking=no
         enable_dependency_tracking=no
         if test "x$prefix" = xNONE; then
-            prefix=/Library/Program
+            prefix=/Library/OpenNX
         fi
         ;;
 esac

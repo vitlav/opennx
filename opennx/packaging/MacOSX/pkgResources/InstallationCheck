@@ -37,9 +37,9 @@ sub vcmp($$) {
 }
 
 # Check for installed OpenSC
-my $opensc = 0;
-$opensc = 1 if (vcmp(getPkgInfo('OpenSC','CFBundleShortVersionString'), '0.11.8') >= 0);
-exit(112) unless ($opensc);
+#my $opensc = 0;
+#$opensc = 1 if (vcmp(getPkgInfo('OpenSC','CFBundleShortVersionString'), '0.11.8') >= 0);
+#exit(112) unless ($opensc);
 
 # Check for installed X11
 my $x11 = 0;

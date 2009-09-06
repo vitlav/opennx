@@ -1,8 +1,6 @@
 #!/bin/sh
 if test -e /Library/Receipts/OpenNX.pkg ; then
-    rm -rf /Applications/OpenNX.app
-    rm -rf /Applications/OpenNXAdmin.app
-    rm -rf /Applications/OpenNXWizard.app
+    rm -rf /Applications/OpenNX
     rm -rf /Library/OpenNX
     rm -rf /Library/Receipts/OpenNX.pkg
 fi

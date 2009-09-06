@@ -14,17 +14,17 @@ dmg: pkg
 
 pkgdir:
 	rm -rf pkgroot
-	mkdir -p pkgroot/Applications
+	mkdir -p pkgroot/Applications/OpenNX
 	mkdir -p pkgroot$(prefix)
-	$(srcdir)/mkbundle pkgroot/Applications/OpenNX.app OpenNXapp \
+	$(srcdir)/mkbundle pkgroot/Applications/OpenNX/OpenNX.app OpenNXapp \
 	    $(top_srcdir)/extres/nx.icns $(bindir)/opennx \
 	    $(srcdir)/opennx-main.plist "OPNX"
 	cp $(top_srcdir)/extres/nx-desktop.icns \
-	    pkgroot/Applications/OpenNX.app/Contents/Resources
-	$(srcdir)/mkbundle pkgroot/Applications/OpenNXAdmin.app OpenNXAdmin \
+	    pkgroot/Applications/OpenNX/OpenNX.app/Contents/Resources
+	$(srcdir)/mkbundle "pkgroot/Applications/OpenNX/Session Administrator.app" OpenNXAdmin \
 	    $(top_srcdir)/extres/opennx-admin.icns $(bindir)/opennx \
 	    $(srcdir)/opennx.plist "" --admin
-	$(srcdir)/mkbundle pkgroot/Applications/OpenNXWizard.app OpenNXWizard \
+	$(srcdir)/mkbundle "pkgroot/Applications/OpenNX/Connection Wizard.app" OpenNXWizard \
 	    $(top_srcdir)/extres/opennx-wizard.icns $(bindir)/opennx \
 	    $(srcdir)/opennx.plist "" --wizard
 	$(srcdir)/mkbundle pkgroot/Library/OpenNX/Message.app OpenNXMessage \

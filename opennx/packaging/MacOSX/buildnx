@@ -34,9 +34,9 @@ done
 
 cd nxssh
 patch -p1 < $TOPSRC/patches/openssh-scard-pin.patch
+patch -p1 < $TOPSRC/patches/nxssh-dynopensc.patch
 autoreconf -f -i
-LDFLAGS="-L$DEST$PFX/lib -L/Library/OpenSC/lib" \
-CPPFLAGS="-I/Library/OpenSC/include" \
+LDFLAGS="-L$DEST$PFX/lib" \
 ./configure --prefix=$PFX \
   --with-opensc=$BUILDDIR/../scbuild/dist$PFX \
   --enable-opensc-dynamic \

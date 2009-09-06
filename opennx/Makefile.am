@@ -115,17 +115,17 @@ bootstrap:
 
 bundle:
 	$(srcdir)/packaging/MacOSX/mkbundle OpenNX.app OpenNXapp \
-	    $(srcdir)/res/nx.icns $(abs_builddir)/opennx \
+	    $(srcdir)/extres/nx.icns $(abs_builddir)/opennx \
 	    $(builddir)/packaging/MacOSX/opennx-main.plist "OPNX"
-	$(INSTALL) -m 0644 $(srcdir)/res/nx-desktop.icns OpenNX.app/Contents/Resources
+	$(INSTALL) -m 0644 $(srcdir)/extres/nx-desktop.icns OpenNX.app/Contents/Resources
 	$(srcdir)/packaging/MacOSX/mkbundle OpenNXAdmin.app OpenNXAdmin \
-	    $(srcdir)/res/opennx-admin.icns $(abs_builddir)/opennx \
+	    $(srcdir)/extres/opennx-admin.icns $(abs_builddir)/opennx \
 	    $(builddir)/packaging/MacOSX/opennx.plist "" --admin
 	$(srcdir)/packaging/MacOSX/mkbundle OpenNXWizard.app OpenNXWizard \
-	    $(srcdir)/res/opennx-wizard.icns $(abs_builddir)/opennx \
+	    $(srcdir)/extres/opennx-wizard.icns $(abs_builddir)/opennx \
 	    $(builddir)/packaging/MacOSX/opennx.plist "" --wizard
 	$(srcdir)/packaging/MacOSX/mkbundle Message.app OpenNXMessage \
-	    $(srcdir)/res/nx.icns $(abs_builddir)/opennx \
+	    $(srcdir)/extres/nx.icns $(abs_builddir)/opennx \
 	    $(builddir)/packaging/MacOSX/opennx.plist "" \
 	    --dialog ok --style info --caption CARDREMOVED --message CARDREMOVED
 
