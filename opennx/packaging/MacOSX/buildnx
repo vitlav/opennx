@@ -18,6 +18,15 @@ for pkg in $ALLPKG ; do
     tar xzf ${pkg}-*.tar.gz
 done
 
+test -f audiofile-0.2.6.tar.gz || wget http://www.68k.org/~michael/audiofile/audiofile-0.2.6.tar.gz
+tar xzf audiofile-0.2.6.tar.gz
+cd audiofile-0.2.6
+autoreconf -f -i
+CFLAGS="-arch i386 -arch ppc" LDFLAGS="-arch i386 -arch ppc" ./configure \
+        --prefix=$PFX --disable-static --disable-dependency-tracking
+make DESTDIR=$DEST install
+cd ..
+
 for pkg in nxcomp nxcompsh nxproxy nxservice nxesd ; do
     cd $pkg
     for p in $TOPSRC/patches/${pkg}-*.patch ; do
@@ -25,9 +34,18 @@ for pkg in nxcomp nxcompsh nxproxy nxservice nxesd ; do
         patch -p1 < $p
     done
     autoreconf -f -i
-    ./configure --prefix=$PFX
-    make
-    make DESTDIR=$DEST install
+    cargs=
+    margs=
+    case $pkg in
+        nxesd)
+            cargs="--disable-audiofiletest --with-audiofile=yes"
+            margs="AUDIOFILE_CFLAGS=\"-I$DEST$PFX/include\" LDFLAGS=\"-L$DEST$PFX/lib\" LIBS=-laudiofile"
+            ;;
+    esac
+    ./configure --prefix=$PFX $cargs
+    echo make $margs
+    make $margs
+    make DESTDIR=$DEST $margs install
     cd ..
     echo === Build of $pkg complete
 done
