@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Type=Application
+Exec=/usr/NX/bin/opennx
+Icon=nx
+Comment=Connect to a remote NX server
+Comment[de]=Mit einem NX-Server verbinden
+Name=OpenNX client
+Name[de]=OpenNX client
+GenericName=NX client
+GenericName[de]=NX client
+Categories=Network;RemoteAccess;

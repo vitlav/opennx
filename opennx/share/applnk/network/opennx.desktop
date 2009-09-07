@@ -1,9 +1,0 @@
-[Desktop Entry]
-Encoding=UTF-8
-Comment=Connect to a remote NX server
-Exec=/usr/NX/bin/opennx
-Icon=/usr/NX/share/icons/nx.png
-Name=OpenNX client
-Type=Application
-MimeType=application/nx-session
-Categories=Application;Network

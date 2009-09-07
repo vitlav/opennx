@@ -161,8 +161,16 @@ IMPLEMENT_APP(opennxApp);
             wxFileConfig cfg(fis);
             wxString country = cfg.Read(wxT("Locale/Country"), wxEmptyString);
             wxString lang = cfg.Read(wxT("Locale/Language"), wxEmptyString);
-            if ((!lang.IsEmpty()) && (!country.IsEmpty()))
-                ::wxSetEnv(wxT("LANG"), lang + wxT("_") + country.Upper() + wxT(".UTF-8"));
+            if ((!lang.IsEmpty()) && (!country.IsEmpty())) {
+                if (lang.Contains(wxT(":")))
+                    lang = lang.BeforeFirst(wxT(':'));
+                if (lang.Length() < 3)
+                    lang << wxT("_") << country.Upper();
+                lang << wxT(".UTF-8");
+                // At this point logging is not yet setup.
+                fprintf(stderr, "Overriding LANG from KDE environment to: '%s'\n", (const char *)lang.mb_str());
+                ::wxSetEnv(wxT("LANG"), lang);
+            }
         }
     }
 #endif
@@ -273,11 +281,11 @@ opennxApp::CreateDesktopEntry(MyXmlConfig *cfg)
     dtEntry += wxT("Comment=Launch NX Session\n");
     dtEntry += wxT("Comment[de]=Starte NX Sitzung\n");
     dtEntry += wxT("Name=") + cfg->sGetName() + wxT("\n");
-    dtEntry += wxT("GenericName=OpenNX Client\n");
-    dtEntry += wxT("GenericName[de]=OpenNX Client\n");
+    dtEntry += wxT("GenericName=NX Client\n");
+    dtEntry += wxT("GenericName[de]=NX Client\n");
     dtEntry += wxT("Exec=\"") + GetSelfPath() + wxT("\" --session=\"")
         + cfg->sGetFileName() + wxT("\"\n");
-    dtEntry += wxT("Icon=") + appDir + wxT("/share/icons/nx-desktop.png\n");
+    dtEntry += wxT("Icon=nx-desktop\n");
 
     const wxChar **p = desktopDirs;
     while (*p) {

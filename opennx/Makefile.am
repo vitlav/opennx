@@ -179,25 +179,48 @@ key_DATA = $(top_srcdir)/share/keys/*
 cupsdir = $(datadir)/cups
 cups_DATA = $(top_srcdir)/share/cups/*
 
-icondir = $(datadir)/icons
-icon_DATA = $(top_srcdir)/res/nx.png $(top_srcdir)/res/nx-desktop.png \
-	$(top_srcdir)/res/opennx-admin.png $(top_srcdir)/res/opennx-wizard.png
-
 install-data-local:
-	$(INSTALL) -d $(DESTDIR)$(datadir)/applnk
-	cd $(top_srcdir)/share/applnk && \
+	$(INSTALL) -d $(DESTDIR)$(datadir)/icons
+	cd $(top_srcdir)/extres && \
+		for d in 16x16 32x32 48x48 128x128 256x256 512x512 scalable ; do \
+			$(INSTALL) -d $(DESTDIR)$(datadir)/icons/$$d ; \
+			( \
+				cd $$d && \
+				for subd in * ; do \
+					$(INSTALL) -d $(DESTDIR)$(datadir)/icons/$$d/$$subd ; \
+					for f in $$subd/* ; do \
+						$(INSTALL_DATA) $$f $(DESTDIR)$(datadir)/icons/$$d/$$subd ; \
+					done \
+				done \
+			) \
+		done
+	$(INSTALL) -d $(DESTDIR)$(datadir)/applnk/xdg
+	cd $(top_srcdir)/extres/xdg && \
 	for d in * ; do \
-		$(INSTALL) -d $(DESTDIR)$(datadir)/applnk/$$d ; \
-		$(INSTALL_DATA) $$d/* $(DESTDIR)$(datadir)/applnk/$$d ; \
-		if test -f $$d/.directory ; then $(INSTALL_DATA) $$d/.directory $(DESTDIR)$(datadir)/applnk/$$d ; fi ; \
+		$(INSTALL_DATA) $$d $(DESTDIR)$(datadir)/applnk/xdg ; \
 	done
 
 uninstall-local:
-	cd $(top_srcdir)/share/applnk && \
+	cd $(top_srcdir)/extres/xdg && \
 	for d in * ; do \
-		$(RM) -r $(DESTDIR)$(datadir)/applnk/$$d ; \
+		$(RM) -r $(DESTDIR)$(datadir)/applnk/xdg/$$d ; \
 	done
-	-$(RMDIR) $(DESTDIR)$(datadir)/applnk
+	-rmdir $(DESTDIR)$(datadir)/applnk/xdg
+	-rmdir $(DESTDIR)$(datadir)/applnk
+	cd $(top_srcdir)/extres && \
+		for d in 16x16 32x32 48x48 128x128 256x256 512x512 scalable ; do \
+			( \
+				cd $$d && \
+				for subd in * ; do \
+					for f in $$subd/* ; do \
+						$(RM) $(DESTDIR)$(datadir)/icons/$$d/$$f ; \
+					done ; \
+					rmdir $(DESTDIR)$(datadir)/icons/$$d/$$subd || true ; \
+				done \
+			) ; \
+			rmdir $(DESTDIR)$(datadir)/icons/$$d || true ; \
+		done
+	-rmdir $(DESTDIR)$(datadir)/icons
 
 dist-hook:
 	find $(distdir) -type d -name .svn | xargs $(RM) -r

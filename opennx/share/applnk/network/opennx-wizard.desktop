@@ -1,8 +1,0 @@
-[Desktop Entry]
-Encoding=UTF-8
-Comment=Launch connection wizard
-Exec=/usr/NX/bin/opennx --wizard
-Icon=/usr/NX/share/icons/opennx-wizard.png
-Name=OpenNX Connection Wizard
-Type=Application
-Categories=Application;Network

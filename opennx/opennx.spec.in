@@ -120,6 +120,8 @@ BuildRequires: openssl-devel
 BuildRequires: wget
 %endif
 
+Requires(post): xdg-utils
+Requires(preun): xdg-utils
 %if %{with_forceopt}
 # The following are actually *not*
 # required but *recommended*
@@ -270,239 +272,34 @@ for lname in usb-0 opensc smbclient cups ; do
     fi
 done
 
-APPLNK_DIR="%{_prefix}/share/applnk"
-LINK_NAME="/OpenNX client"
-
-LINK_DIR_X="$APPLNK_DIR/x-opennx"
-LINK_DIR_XK="$APPLNK_DIR/x-opennx-kde"
-LINK_DIR_N="$APPLNK_DIR/network"
-LINK_DIR_NRH8="$APPLNK_DIR/network-rh8"
-LINK_DIR_NG="$APPLNK_DIR/network-gnome"
-LINK_DIR_C="$APPLNK_DIR/clean"
-LINK_DIR_MDK="$APPLNK_DIR/mdk"
-
-XDK_LINK_DIR_X="$APPLNK_DIR/xdg-x"
-XDG_MENU="/etc/xdg/menus/applications-merged"
-XDG_DIRECTORY="/usr/share/desktop-directories"
-XDG_DESKTOP="/usr/share/applications"
-XDG_DESKTOP_NOVELL="/opt/gnome/share/applications"
-
-KDE_APPLNK="/usr/share/applnk/"
-KDE_APPLNK_RH="/usr/share/applnk-redhat/"
-KDE2_APPLNK_SUSE="/opt/kde2/share/applnk/"
-KDE3_APPLNK_SUSE="/opt/kde3/share/applnk/"
-
-GNOME_APPLNK="/usr/share/gnome/apps/"
-GNOME_APPLNK_SUSE="/opt/gnome/share/gnome/apps/"
-GNOME_APPLNK_MDK="/var/lib/gnome/Mandrake/"
-ALL_APPLNK_MDK="/usr/share/applnk-mdk/"
-
-XDG_MIME_DIR="/usr/share/mime/packages"
-XDK_MIME_LINK_DIR="$APPLNK_DIR/mime-xdg"
-
-KDE_MIME_DIR="/usr/share/mimelnk/application"
-KDE_SUSE_MIME_DIR="/opt/kde3/share/mimelnk/application"
-KDE_MIME_LINK_DIR="$APPLNK_DIR/mime-kde"
-
-GNOME_MIME_ICON_DIR="/usr/share/icons/gnome/48x48/mimetypes"
-GNOME_MIME_ICON="$GNOME_MIME_ICON_DIR/gnome-mime-application-nx-session.png"
-GNOME_SUSE_MIME_ICON_DIR="/opt/gnome/share/icons/gnome/48x48/mimetypes"
-GNOME_SUSE_MIME_ICON="$GNOME_SUSE_MIME_ICON_DIR/gnome-mime-application-nx-session.png"
-GNOME_MIME_LINK_ICON="%{_prefix}/share/icons/nx-desktop.png"
-
-mklnk() {
-  if test -d "$2"; then
-    if test -e "$2$LINK_NAME"; then
-      rm -rf "$2$LINK_NAME"
-    fi
-    if test -d "$2/$3";  then
-      if test -e "$2/$3/$LINK_NAME"; then
-        rm -rf "$2/$3/$LINK_NAME"
-      fi
-    fi
-    if test -d "$2/$3"; then
-      ln -sf "$1" "$2$3$LINK_NAME"
-    elif test -d "$2"; then  
-      ln -sf "$1" "$2$LINK_NAME"
-    fi
-  fi
-}
-
-mksingle() {
-  if test -f "$1/opennx-gnome.desktop"; then
-    POST="-gnome"
-  elif test -f "$1/opennx-kde.desktop"; then
-    POST="-kde"
-  else
-    POST=""
-  fi
-  if test -d "$2"; then
-    if test -e "$2/opennx$POST.desktop"; then
-      rm -f "$2/opennx$POST.desktop"
-    fi
-    ln -sf "$1/opennx$POST.desktop" $2/.
-
-    if test -e "$2/opennx-wizard$POST.desktop"; then
-      rm -f "$2/opennx-wizard$POST.desktop"
-    fi
-    ln -sf "$1/opennx-wizard$POST.desktop" $2/.
-
-    if test -e "$2/opennx-help$POST.desktop"; then
-      rm -f "$2/opennx-help$POST.desktop"
-    fi
-    ln -sf "$1/opennx-help$POST.desktop" $2/.
-
-    if test -e "$2/opennx-admin$POST.desktop"; then
-      rm -f "$2/opennx-admin$POST.desktop"
-    fi
-    ln -sf "$1/opennx-admin$POST.desktop" $2/.
-  fi 
-}
-
-mkxgd() {
-  if test -d "/etc/xdg"; then
-    if [ ! -d "$XDG_MENU" ]; then
-      mkdir -p "$XDG_MENU"
-    fi
-    if test -e "$XDG_MENU/opennx.menu"; then
-      rm -f "$XDG_MENU/opennx.menu"
-    fi
-    ln -sf "$2/opennx.menu" $XDG_MENU/.
-  fi
-
-  if test -d "$XDG_DIRECTORY"; then
-    if test -e "$XDG_DIRECTORY/opennx.directory"; then
-      rm -f "$XDG_DIRECTORY/opennx.directory"
-    fi
-    ln -sf "$2/opennx.directory" $XDG_DIRECTORY/.
-  fi
-  mksingle $1 $XDG_DESKTOP
-}
-
-%if %{is_mdk}
-if [ -d "$ALL_APPLNK_MDK/Networking" ]; then 
-  mklnk $LINK_DIR_C $ALL_APPLNK_MDK "Networking"
-  mklnk $LINK_DIR_C $GNOME_APPLNK_MDK "Networking"
-else
-  if test -d "/usr/lib/menu"; then
-    if test -e "/usr/lib/menu/opennx"; then
-      rm -f "/usr/lib/menu/opennx"
-    fi
-    ln -sf "$LINK_DIR_MDK/opennx" "/usr/lib/menu/opennx"
-    NUM=`cat /usr/lib/menu/menu| grep -c "OpenNX client"`
-    if [ $NUM -le 0 ]; then
-      echo "#
-?package(menu): needs=x11 section=\"Internet\" title=\"OpenNX client\" icon=\"%{_prefix}/share/icons/nx.png\"" >> "/usr/lib/menu/menu"
-    fi
-  fi
-fi
-%endif
-
-%if %{is_fc}
-%if "%{ostag}"==".fc4"
-  mkxgd $LINK_DIR_X $XDK_LINK_DIR_X
-%endif
-%if "%{ostag}"==".fc3"
-  mkxgd $LINK_DIR_X $XDK_LINK_DIR_X
-%endif
-  if [ -d /etc/xdg ]; then
-    mkxgd $LINK_DIR_X $XDK_LINK_DIR_X
-  else
-    if [ -d $KDE_APPLNK ]; then
-      mklnk $LINK_DIR_C $KDE_APPLNK "Internet"
-    else
-      mklnk $LINK_DIR_C $KDE_APPLNK_RH "Internet"
-    fi
-    if [ -d $GNOME_APPLNK ]; then
-      mklnk $LINK_DIR_C $GNOME_APPLNK "Internet"
-    else
-      mksingle $LINK_DIR_N $XDG_DESKTOP
-    fi
-  fi
-%else
-%if %{is_rh}
-  mksingle $LINK_DIR_NRH8 $XDG_DESKTOP
-%endif
-%endif
-
-%if %{is_suse}
-%if "%{ostag}"==".SuSE9.0"
-  mklnk $LINK_DIR_C $KDE3_APPLNK_SUSE "Internet"
-  mksingle $LINK_DIR_NG $XDG_DESKTOP
-%endif
-%if "%{ostag}"==".SuSE9.1"
-  mkxgd $LINK_DIR_X $XDK_LINK_DIR_X
-  mksingle $LINK_DIR_NG $XDG_DESKTOP_NOVELL
-%endif
-%if "%{ostag}"==".SuSE10.0"
-  mkxgd $LINK_DIR_X $XDK_LINK_DIR_X
-  mksingle $LINK_DIR_NG $XDG_DESKTOP_NOVELL
-%endif
-%if "%{ostag}"==".SuSE10.1"
-  if [ -d /etc/xdg ]; then
-    mkxgd $LINK_DIR_X $XDK_LINK_DIR_X
-  else
-    mklnk $LINK_DIR_C $KDE2_APPLNK_SUSE "Internet"
-    mklnk $LINK_DIR_C $KDE3_APPLNK_SUSE "Internet"
-    mklnk $LINK_DIR_C $GNOME_APPLNK_SUSE "Internet"
-  fi
-%endif
-%if "%{ostag}"==".SuSE11.1"
-  if [ -d /etc/xdg ]; then
-    mkxgd $LINK_DIR_X $XDK_LINK_DIR_X
-  else
-    mklnk $LINK_DIR_C $KDE2_APPLNK_SUSE "Internet"
-    mklnk $LINK_DIR_C $KDE3_APPLNK_SUSE "Internet"
-    mklnk $LINK_DIR_C $GNOME_APPLNK_SUSE "Internet"
-  fi
-%endif
-%if "%{ostag}"==".SuSE11"
-  if [ -d /etc/xdg ]; then
-    mkxgd $LINK_DIR_X $XDK_LINK_DIR_X
-  else
-    mklnk $LINK_DIR_C $KDE2_APPLNK_SUSE "Internet"
-    mklnk $LINK_DIR_C $KDE3_APPLNK_SUSE "Internet"
-    mklnk $LINK_DIR_C $GNOME_APPLNK_SUSE "Internet"
-  fi
-%endif
-%endif
-
-mkxgd_MIME() {
-  if test -d "$XDG_MIME_DIR"; then
-    if test -e "$XDG_MIME_DIR/nomachine.xml"; then
-      rm -f "$XDG_MIME_DIR/nomachine.xml"
-    fi
-    ln -sf "$XDK_MIME_LINK_DIR/nomachine.xml" $XDG_MIME_DIR/.
-  fi
-  if test -d "$GNOME_MIME_ICON_DIR"; then
-    if test -e "$GNOME_MIME_ICON"; then
-      rm -f "$GNOME_MIME_ICON"
-    fi
-    ln -sf "$GNOME_MIME_LINK_ICON" $GNOME_MIME_ICON
-  elif test -d "$GNOME_SUSE_MIME_ICON_DIR"; then
-    if test -e "$GNOME_SUSE_MIME_ICON"; then
-      rm -f "$GNOME_SUSE_MIME_ICON"
-    fi
-    ln -sf "$GNOME_MIME_LINK_ICON" $GNOME_SUSE_MIME_ICON
-  fi
-}
-
-mkkde_MIME() {
-  if test -d "$KDE_MIME_DIR"; then
-    if test -e "$KDE_MIME_DIR/nx-session.desktop"; then
-      rm -f "$XDG_MIME_DIR/nx-session.desktop"
-    fi
-    ln -sf "$KDE_MIME_LINK_DIR/nx-session.desktop" $KDE_MIME_DIR/.
-  elif test -d "$KDE_SUSE_MIME_DIR"; then
-    if test -e "$KDE_SUSE_MIME_DIR/nx-session.desktop"; then
-      rm -f "$XDG_SUSE_MIME_DIR/nx-session.desktop"
-    fi
-    ln -sf "$KDE_MIME_LINK_DIR/nx-session.desktop" $KDE_SUSE_MIME_DIR/.
-  fi
-}
-
-mkxgd_MIME
-mkkde_MIME
+# Install icons
+cd %{_datadir}/icons
+SIZES="16 32 48 128 256"
+ICINSTALL="xdg-icon-resource install --noupdate --novendor --mode system"
+for sz in $SIZES ; do
+    case $sz in
+        scalable)
+            subdir=$sz
+            ext=svg
+            ;;
+        [0-9]*)
+            subdir=${sz}x${sz}
+            ext=png
+            ;;
+    esac
+    for ctx in apps mimetypes ; do
+        (
+            cd $subdir/$ctx
+            for f in *.$ext ; do
+                $ICINSTALL --context $ctx --size $sz $f
+            done
+        )
+    done
+done
+xdg-icon-resource forceupdate
+# Install menu entries
+cd %{_datadir}/applnk/xdg
+xdg-desktop-menu install --mode system *.directory *.desktop
 
 %preun
 if [ $1 -gt 0 ] ; then
@@ -514,64 +311,34 @@ rm -f %{nxlib}/libopensc.so
 rm -f %{nxlib}/libsmbclient.so
 rm -f %{nxlib}/libcups.so
 
-LINK_NAME="/OpenNX client"
-
-rmlnk() {
-  rm -rf "$1$LINK_NAME"
-  rm -rf "$1/Internet/$LINK_NAME"
-  rm -rf "$1/Networking/$LINK_NAME"
-}
-
-rmsingle() {
-  rm -f "$1/opennx.desktop"
-  rm -f "$1/opennx-*.desktop"
-}
-
-rmxdg() {
-  XDG_MENU="/etc/xdg/menus/applications-merged"
-  XDG_DIRECTORY="/usr/share/desktop-directories"
-  XDG_DESKTOP="/usr/share/applications"
-  XDG_DESKTOP_NOVELL="/opt/gnome/share/applications"
-  rm -rf "$XDG_MENU/opennx.menu"
-  rm -rf "$XDG_DIRECTORY/opennx.directory"
-  rmsingle $XDG_DESKTOP
-  rmsingle $XDG_DESKTOP_NOVELL
-}
-
-rmmime() {
-  XDG_MIME_DIR="/usr/share/mime/packages"
-  GNOME_MIME_ICON="/usr/share/icons/gnome/48x48/mimetypes/gnome-mime-application-nx-session.png"
-  GNOME_SUSE_MIME_ICON="/opt/gnome/share/icons/gnome/48x48/mimetypes/gnome-mime-application-nx-session.png"
-  KDE_MIME_DIR="/usr/share/mimelnk/application"
-  KDE_SUSE_MIME_DIR="/opt/kde3/share/mimelnk/application"
-  rm -f "$XDG_MIME_DIR/opennx.xml"
-  rm -f "$GNOME_MIME_ICON"
-  rm -f "$GNOME_SUSE_MIME_ICON"
-  rm -f "$KDE_MIME_DIR/nx-session.desktop"
-  rm -f "$KDE_SUSE_MIME_DIR/nx-session.desktop"
-}
-
-KDE_APPLNK="/usr/share/applnk/"
-KDE_APPLNK_RH="/usr/share/applnk-redhat/"
-KDE2_APPLNK_SUSE="/opt/kde2/share/applnk/"
-KDE3_APPLNK_SUSE="/opt/kde3/share/applnk/"
-GNOME_APPLNK="/usr/share/gnome/apps/"
-GNOME_APPLNK_SUSE="/opt/gnome/share/gnome/apps/"
-GNOME_APPLNK_MDK="/var/lib/gnome/Mandrake/"
-ALL_APPLNK_MDK="/usr/share/applnk-mdk/"
-
-rmlnk "$KDE_APPLNK"
-rmlnk "$KDE_APPLNK_RH"
-rmlnk "$KDE2_APPLNK_SUSE"
-rmlnk "$KDE3_APPLNK_SUSE"
-rmlnk "$GNOME_APPLNK"
-rmlnk "$GNOME_APPLNK_SUSE"
-rmlnk "$GNOME_APPLNK_MDK"
-rmlnk "$ALL_APPLNK_MDK"
-
-rmxdg
-rmmime
-rm -rf "/usr/lib/menu/opennx"
+# Uninstall menu entries
+cd %{_datadir}/applnk/xdg
+xdg-desktop-menu uninstall --mode system *.directory *.desktop
+# Install icons
+cd %{_datadir}/icons
+SIZES="16 32 48 128 256"
+ICREMOVE="xdg-icon-resource uninstall --noupdate --novendor --mode system"
+for sz in $SIZES ; do
+    case $sz in
+        scalable)
+            subdir=$sz
+            ext=svg
+            ;;
+        [0-9]*)
+            subdir=${sz}x${sz}
+            ext=png
+            ;;
+    esac
+    for ctx in apps mimetypes ; do
+        (
+            cd $subdir/$ctx
+            for f in *.$ext ; do
+                $ICREMOVE --context $ctx --size $sz `basename $f .$ext`
+            done
+        )
+    done
+done
+xdg-icon-resource forceupdate
 
 %files
 %defattr(-, root, root, 0755)

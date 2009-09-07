@@ -91,7 +91,7 @@ install: build
 	cp -a nxproxy/nxproxy debian/opennx/usr/lib/opennx/bin
 	cp -a nxservice/nxservice debian/opennx/usr/lib/opennx/bin
 	cp -a nxssh/nxssh debian/opennx/usr/lib/opennx/bin
-	cp -a etc/*.rules debian/opennx/etc/udev/rules.d
+	# USBIP only: cp -a etc/*.rules debian/opennx/etc/udev/rules.d
 	cd debian/opennx/usr/lib/opennx/lib && ln -s /usr/lib/libcups.so.2 libcups.so
 	cd debian/opennx/usr/lib/opennx/lib && ln -s /usr/lib/libopensc.so.2 libopensc.so
 	cd debian/opennx/usr && ln -s lib/opennx NX

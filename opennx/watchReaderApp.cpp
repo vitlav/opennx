@@ -81,8 +81,16 @@ watchReaderApp::watchReaderApp()
         wxFileConfig cfg(fis);
         wxString country = cfg.Read(wxT("Locale/Country"), wxEmptyString);
         wxString lang = cfg.Read(wxT("Locale/Language"), wxEmptyString);
-        if ((!lang.IsEmpty()) && (!country.IsEmpty()))
-            ::wxSetEnv(wxT("LANG"), lang + wxT("_") + country.Upper() + wxT(".UTF-8"));
+        if ((!lang.IsEmpty()) && (!country.IsEmpty())) {
+            if (lang.Contains(wxT(":")))
+                lang = lang.BeforeFirst(wxT(':'));
+            if (lang.Length() < 3)
+                lang << wxT("_") << country.Upper();
+            lang << wxT(".UTF-8");
+            // At this point logging is not yet setup.
+            fprintf(stderr, "Overriding LANG from KDE environment to: '%s'\n", (const char *)lang.mb_str());
+                ::wxSetEnv(wxT("LANG"), lang);
+        }
     }
 #endif
 }

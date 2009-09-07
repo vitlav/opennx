@@ -1,7 +1,0 @@
-[Desktop Entry]
-Comment=OpenNX session
-Hidden=false
-Icon=/usr/NX/share/icons/nx-desktop.png
-MimeType=application/nx-session
-Patterns=*.nxs
-Type=MimeType
