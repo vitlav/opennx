@@ -446,6 +446,8 @@ private:
 #endif
     void updateListCtrlColumnWidth(wxListCtrl *);
     void removePage(const wxString &);
+    void initFontSettings();
+    void saveFontSettings();
 
     wxFont m_cFontDefault;
     wxFont m_cFontFixed;

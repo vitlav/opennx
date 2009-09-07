@@ -271,8 +271,7 @@ SessionProperties::SessionProperties( )
     : m_bKeyTyped(false)
     , m_pCfg(NULL)
 {
-    m_cFontDefault = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
-    m_cFontFixed = wxSystemSettings::GetFont(wxSYS_ANSI_FIXED_FONT);
+    initFontSettings();
     readKbdLayouts();
 }
 
@@ -280,10 +279,44 @@ SessionProperties::SessionProperties( wxWindow* parent, wxWindowID id, const wxS
     : m_bKeyTyped(false)
     , m_pCfg(NULL)
 {
-    m_cFontDefault = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
-    m_cFontFixed = wxSystemSettings::GetFont(wxSYS_ANSI_FIXED_FONT);
+    initFontSettings();
     readKbdLayouts();
     Create(parent, id, caption, pos, size, style);
+}
+
+    void
+SessionProperties::initFontSettings()
+{
+    wxString font = wxEmptyString;
+    wxConfigBase::Get()->Read(wxT("Config/DialogFont"), &font);
+    if (font.IsEmpty()) {
+        m_cFontDefault = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
+        font = m_cFontDefault.GetNativeFontInfoDesc();
+        wxConfigBase::Get()->Write(wxT("Config/DialogFont"), font);
+    } else
+        m_cFontDefault.SetNativeFontInfo(font);
+    font = wxEmptyString;
+    wxConfigBase::Get()->Read(wxT("Config/FixedFont"), &font);
+    if (font.IsEmpty()) {
+#ifdef __WXMSW__
+        m_cFontFixed = wxSystemSettings::GetFont(wxSYS_ANSI_FIXED_FONT);
+#else
+        m_cFontFixed = wxFont(m_cFontDefault.GetPointSize(),
+                wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+#endif
+        font = m_cFontFixed.GetNativeFontInfoDesc();
+        wxConfigBase::Get()->Write(wxT("Config/FixedFont"), font);
+    } else
+        m_cFontFixed.SetNativeFontInfo(font);
+}
+
+    void
+SessionProperties::saveFontSettings()
+{
+    wxString font = m_cFontDefault.GetNativeFontInfoDesc();
+    wxConfigBase::Get()->Write(wxT("Config/DialogFont"), font);
+    font = m_cFontFixed.GetNativeFontInfoDesc();
+    wxConfigBase::Get()->Write(wxT("Config/FixedFont"), font);
 }
 
     void
@@ -393,7 +426,7 @@ SessionProperties::KeyTyped() {
 
 bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxString& WXUNUSED(caption), const wxPoint& WXUNUSED(pos), const wxSize& WXUNUSED(size), long WXUNUSED(style) )
 {
-////@begin SessionProperties member initialisation
+    ////@begin SessionProperties member initialisation
     m_iUsbLocalPort = 3240;
     m_iPseudoDesktopTypeIndex = -1;
     m_iPseudoDisplayTypeIndex = -1;
@@ -442,7 +475,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlPanelAbout = NULL;
     m_pHtmlWindow = NULL;
     m_pCtrlApplyButton = NULL;
-////@end SessionProperties member initialisation
+    ////@end SessionProperties member initialisation
 
     wxASSERT_MSG(m_pCfg, _T("SessionProperties::Create: No configuration"));
     if (m_pCfg) {
@@ -474,7 +507,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
         m_iProxyPort = m_pCfg->iGetProxyPort();
         m_sProxyHost = m_pCfg->sGetProxyHost();
         m_sProxyCommand = m_pCfg->sGetProxyCommand();
-        
+
         // variables on 'Services' tab
         m_bEnableSmbSharing = m_pCfg->bGetEnableSmbSharing();
         m_bEnableMultimedia = m_pCfg->bGetEnableMultimedia();
@@ -512,7 +545,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     if (!m_bStorePasswords)
         m_bRememberPassword = false;
 
-////@begin SessionProperties creation
+    ////@begin SessionProperties creation
     SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
@@ -522,7 +555,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
         GetSizer()->SetSizeHints(this);
     }
     Centre();
-////@end SessionProperties creation
+    ////@end SessionProperties creation
 
 #ifndef SUPPORT_USBIP
     removePage(_("USB"));
@@ -1536,8 +1569,12 @@ void SessionProperties::OnButtonFontDefaultClick( wxCommandEvent& event )
     wxFont tmp = wxGetFontFromUser(this, m_cFontDefault);
     if (tmp.Ok()) {
         setFontLabel(m_pCtrlFontDefault, tmp);
-        m_cFontDefault = tmp;
-        CheckChanged();
+        if (tmp != m_cFontDefault) {
+            m_cFontDefault = tmp;
+            SetFont(tmp);
+            Refresh();
+            CheckCfgChanges(true);
+        }
     }
 }
 
@@ -1551,8 +1588,10 @@ void SessionProperties::OnButtonFontFixedClick( wxCommandEvent& event )
     wxFont tmp = wxGetFontFromUser(this, m_cFontFixed);
     if (tmp.Ok()) {
         setFontLabel(m_pCtrlFontFixed, tmp);
-        m_cFontFixed = tmp;
-        CheckChanged();
+        if (tmp != m_cFontFixed) {
+            m_cFontFixed = tmp;
+            CheckCfgChanges(true);
+        }
     }
 }
 
@@ -1585,6 +1624,7 @@ void SessionProperties::OnApplyClick( wxCommandEvent& event )
     wxConfigBase::Get()->Write(wxT("Config/UsbipdSocket"), m_sUsbipdSocket);
     wxConfigBase::Get()->Write(wxT("Config/UsbipPort"), m_iUsbLocalPort);
 #endif
+    saveFontSettings();
     m_iSavedUsbLocalPort = m_iUsbLocalPort;
     m_sSavedUserNxDir = m_sUserNxDir;
     m_sSavedSystemNxDir = m_sSystemNxDir;
