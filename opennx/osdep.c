@@ -161,55 +161,14 @@ int checkMultiMonitors() {
 #include <unistd.h>
 #include <sys/socket.h>
 #include <sys/un.h>
-#include <dlfcn.h>
 #include <limits.h>
 #include <string.h>
-
-typedef int (*PFconnect)(int s, const struct sockaddr *name, socklen_t namelen);
-static PFconnect real_connect = NULL;
-static void *libc = NULL;
-static int do_save = 1;
 
 static char _spath[PATH_MAX+1];
 static char _kbd[PATH_MAX+1];
 
 char *x11_socket_path = _spath;
 char *x11_keyboard_type = _kbd;
-
-/**
- * A horrific hack for retrieving the path of the X11 local server socket.
- *
- * This path is needed for setting the NX_TEMP environment variable before
- * starting nxssh. As NoMachine's code in libXcomp silently asumes, that
- * the socket is always in TEMP if NX_TEMP is not set. On my machine, TEMP is
- * set to /dev/shm for speed reasons, but the X11 socket still resides in
- * /tmp/.X11-unix/. With that setting, the original client fails immediately
- * upon connect.
- * Normally, there's no way to retrieve the socket path via some X11 function.
- * So here is how it works:
- *
- *  1. We implement our own connect() function
- *  2. In getx11socket [called automatically during app-startup because of the
- *     __attribute__((constructor))], we load libc dynamically and set the
- *     function-pointer "real_connect" to the original function. Since our
- *     binary already contains a symbol connect(), the symbol connect() from
- *     libc is not used in normal relocation. Inside our connect, we simply
- *     call the original (now named "real_connect").
- *  3. Just call XOpenDisplay(). The Xlib function will do it's normal work and
- *     connect to the X server. In our connect() function, we save the path
- *     argument from this call in a global var.
- */ 
-int connect(int s, const struct sockaddr *name, socklen_t namelen)
-{
-    if (do_save) {
-        struct sockaddr_un *a = (struct sockaddr_un *)name;
-        if (a->sun_family == AF_UNIX) {
-            strncpy(_spath, a->sun_path, sizeof(_spath));
-            do_save = 0;
-        }
-    }
-    return real_connect(s, name, namelen);
-}
 
 static void fatal(const char *fmt, ...) {
     va_list ap;
@@ -234,15 +193,11 @@ static void fatal(const char *fmt, ...) {
 static Display *launchX11() {
     Display *ret = NULL;
     time_t ts = time(NULL) + 15; /* Wait 15sec for X startup */
-    do_save = 1;
-    memset(&_spath, 0, sizeof(_spath));
     system("/usr/X11R6/bin/X :0 -nolisten tcp &");
     while (!ret) {
         ret = XOpenDisplay(":0");
         if (!ret) {
             sleep(1);
-            do_save = 1;
-            memset(&_spath, 0, sizeof(_spath));
             if (time(NULL) > ts)
                 fatal("Timeout while waiting for X server.");
         }
@@ -268,27 +223,6 @@ getx11socket()
 {
     memset(&_spath, 0, sizeof(_spath));
     memset(&_kbd, 0, sizeof(_kbd));
-#define NotImplemented
-#ifdef __LINUX__
-    libc = dlopen("libc.so.6", RTLD_NOW);
-# undef NotImplemented
-#endif
-#ifdef __OPENBSD__
-    libc = dlopen("libc.so", RTLD_NOW);
-# undef NotImplemented
-#endif
-#ifdef __WXMAC__
-    libc = dlopen("libc.dylib", RTLD_NOW);
-# undef NotImplemented
-#endif
-#ifdef NotImplemented
-# error Specify libc name
-#endif
-    if (!libc)
-        fatal("Can't load libc: %s", dlerror());
-    real_connect = dlsym(libc, "connect");
-    if (!real_connect)
-        fatal("Can't find symbol connect in libc: %s\n", dlerror());
     Display *dpy = XOpenDisplay(NULL);
 #ifdef __WXMAC__
     /* Start X server, if necessary */
@@ -296,6 +230,20 @@ getx11socket()
         dpy = launchX11();
 #endif
     if (dpy) {
+        /* Find out X11 socket path */
+        struct sockaddr_un una;
+        socklen_t sl = sizeof(una);
+        if (getpeername(ConnectionNumber(dpy), (struct sockaddr *)&una, &sl)) {
+            perror("getpeername");
+            exit(-1);
+        } else {
+            if (una.sun_family == AF_UNIX) {
+                sl -= ((char *)&una.sun_path - (char *)&una);
+                sl = (sl > sizeof(_spath)) ? sizeof(_spath) : sl;
+                strncpy(_spath, una.sun_path, sl);
+            }
+        }
+
         Atom a = XInternAtom(dpy, "_XKB_RULES_NAMES", True);
         if (a != None) {
             Atom type;
@@ -327,13 +275,6 @@ getx11socket()
         }
         XCloseDisplay(dpy);
     }
-}
-
-    static void __attribute__ ((destructor))
-free_libc()
-{
-    if (libc)
-        dlclose(libc);
 }
 #endif /* !__WXMSW__ */
 
