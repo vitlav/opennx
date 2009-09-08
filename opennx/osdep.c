@@ -250,11 +250,11 @@ static Display *launchX11() {
     putenv("DISPLAY=:0");
     /* If the following fails, there is usually a WM already running
      * so we don't care ... */
-    if (access("/usr/X11R6/bin/quartz-wm", X_OK)) {
+    if (0 == access("/usr/X11R6/bin/quartz-wm", X_OK)) {
         system("/usr/X11R6/bin/quartz-wm &");
         return ret;
     }
-    if (access("/usr/bin/quartz-wm", X_OK)) {
+    if (0 == access("/usr/bin/quartz-wm", X_OK)) {
         system("/usr/bin/quartz-wm &");
         return ret;
     }

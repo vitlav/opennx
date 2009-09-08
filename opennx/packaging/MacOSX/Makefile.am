@@ -45,6 +45,8 @@ pkgdir:
 	    pkgroot$(bindir)
 	$(srcdir)/buildsmbclient $(prefix) \
 	    $(abs_builddir)/pkgroot$(libdir)
+	osacompile -x -o "pkgroot/Applications/OpenNX/Uninstall OpenNX.app" rootwrapper.script
+	cp uninst.icns "pkgroot/Applications/OpenNX/Uninstall OpenNX.app/Contents/Resources/applet.icns"
 	touch $@
 
 pkg: pkgdir
