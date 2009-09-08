@@ -1,0 +1,21 @@
+﻿-- $Id$
+--
+-- Ask user, if he really wants to uninstall. If yes,
+-- run uninstall-script with admin rights.
+--
+set userCancel to false
+try
+        set dlgRes to display dialog ¬
+                "Do you really want to uninstall OpenNX?
+This can not be undone!" buttons {"Cancel", "OK"} ¬
+        default button "Cancel" cancel button "Cancel" ¬
+        with icon caution
+        on error number -128
+                set userCancel to true
+end try
+
+if ((not userCancel) and (button returned of dlgRes is "OK")) then
+        do shell script ¬
+                "/bin/sh /Library/OpenNX/bin/opennx-uninstall" ¬
+                with administrator privileges
+end if
