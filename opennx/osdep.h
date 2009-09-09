@@ -31,5 +31,8 @@ extern void close_sid(const char *);
 #ifdef __WXMSW__
 extern long getppid();
 #endif
+#ifdef __WXMAC__
+extern unsigned short macFirstFreePort(unsigned short startPort);
+#endif
 };
 #endif

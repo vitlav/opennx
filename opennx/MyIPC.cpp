@@ -155,26 +155,6 @@ MyIPC::SshProcess(const wxString &cmd, const wxString &dir, wxEvtHandler *h)
     return ret;
 }
 
-    bool
-MyIPC::ServiceProcess(const wxString &cmd, wxEvtHandler *h)
-{
-    m_eType = TypeService;
-    bool ret = false;
-    m_iOutCollect = 0;
-    m_iErrCollect = 0;
-    m_sOutMessage.Empty();
-    m_sErrMessage.Empty();
-    m_pEvtHandler = h;
-    m_pProcess = new AsyncProcess(cmd, wxEmptyString, this);
-    m_pProcess->CloseOutput();
-    ret = m_pProcess->Start();
-    if (!ret) {
-        delete m_pProcess;
-        m_pProcess = NULL;
-    }
-    return ret;
-}
-
     int
 MyIPC::parseCode(const wxString &buf)
 {
@@ -214,14 +194,6 @@ MyIPC::OnTerminate(wxCommandEvent &event)
                 m_pEvtHandler->AddPendingEvent(upevent);
             }
             break;
-        case TypeService:
-            ::wxLogTrace(MYTRACETAG, wxT("nxservice terminated"));
-            if (m_pEvtHandler) {
-                wxCommandEvent upevent(wxEVT_NXSERVICE, wxID_ANY);
-                upevent.SetInt(ServiceTerminated);
-                m_pEvtHandler->AddPendingEvent(upevent);
-            }
-            break;
     }
     event.Skip();
 }
@@ -241,9 +213,6 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
                 upevent.SetString(event.GetString());
                 m_pEvtHandler->AddPendingEvent(upevent);
             }
-            break;
-        case TypeService:
-            ::wxLogTrace(MYTRACETAG, wxT("service O: '%s'"), msg.c_str());
             break;
         case TypeSsh:
             msg = event.GetString();
@@ -627,34 +596,6 @@ MyIPC::OnErrReceived(wxCommandEvent &event)
                 upevent.SetInt(ActionStderr);
                 upevent.SetString(event.GetString());
                 m_pEvtHandler->AddPendingEvent(upevent);
-            }
-            break;
-        case TypeService:
-            ::wxLogTrace(MYTRACETAG, wxT("service E: '%s'"), msg.c_str());
-            if (msg.StartsWith(wxT("Info: Using port:"))) {
-                if (m_pEvtHandler) {
-                    wxCommandEvent upevent(wxEVT_NXSERVICE, wxID_ANY);
-                    upevent.SetInt(ServiceEsdPort);
-                    upevent.SetString(msg);
-                    m_pEvtHandler->AddPendingEvent(upevent);
-                    ::wxLogTrace(MYTRACETAG, wxT("ESD PORT"));
-                }
-            }
-            if (msg.Contains(wxT("'audio' successfully starts after waiting for"))) {
-                if (m_pEvtHandler) {
-                    wxCommandEvent upevent(wxEVT_NXSERVICE, wxID_ANY);
-                    upevent.SetInt(ServiceEsdStarted);
-                    m_pEvtHandler->AddPendingEvent(upevent);
-                    ::wxLogTrace(MYTRACETAG, wxT("ESD STARTED"));
-                }
-            }
-            if (msg.Contains(wxT(" is running"))) {
-                if (m_pEvtHandler) {
-                    wxCommandEvent upevent(wxEVT_NXSERVICE, wxID_ANY);
-                    upevent.SetInt(ServiceEsdRunning);
-                    upevent.SetString(msg);
-                    m_pEvtHandler->AddPendingEvent(upevent);
-                }
             }
             break;
         case TypeSsh:

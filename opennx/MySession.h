@@ -96,7 +96,7 @@ private:
     wxString getXauthCookie(int display = 0, wxString = wxT("/unix"));
     wxString getXauthPath();
     wxString formatOptFilename();
-    int getFirstFreePort(int);
+    unsigned short getFirstFreePort(unsigned short);
     void startProxy();
     void startXserver();
     void startSharing();
@@ -110,7 +110,6 @@ private:
     ArrayOfShareGroups getActiveCupsPrinters();
     virtual void OnSshEvent(wxCommandEvent &);
     virtual void OnSessionEvent(wxCommandEvent &);
-    virtual void OnServiceEvent(wxCommandEvent &);
 
     tConnectState m_eConnectState;
     bool m_bGotError;

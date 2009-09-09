@@ -161,6 +161,8 @@ int checkMultiMonitors() {
 #include <unistd.h>
 #include <sys/socket.h>
 #include <sys/un.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 #include <limits.h>
 #include <string.h>
 
@@ -189,6 +191,33 @@ static void fatal(const char *fmt, ...) {
 }
 
 # ifdef __WXMAC__
+
+/* get first free TCP port */
+unsigned short
+macFirstFreePort(unsigned short startPort) {
+    int on = 1;
+    unsigned short port = startPort;
+    struct sockaddr_in sa;
+    memset(&sa, 0, sizeof(sa));
+    sa.sin_family = AF_INET;
+    inet_aton("127.0.0.1", &sa.sin_addr);
+    while (port < 65535) {
+        int sock = socket(AF_INET, SOCK_STREAM, 6);
+        if (sock >= 0) {
+            if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) == 0) {
+                sa.sin_port = htons(port);
+                if (bind(sock, (struct sockaddr *)&sa, sizeof(sa)) == 0) {
+                    close(sock);
+                    return port;
+                }
+            }
+            close(sock);
+        }
+        port++;
+    }
+    return 0;
+}
+
 /* Startup XDarwin and try connecting to :0 */
 static Display *launchX11() {
     Display *ret = NULL;

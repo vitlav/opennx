@@ -854,7 +854,7 @@ bool opennxApp::realInit()
     wxXmlResource::Get()->InitAllHandlers();
     wxXmlResource::Get()->AddHandler(new wxRichTextCtrlXmlHandler());
 
-    // This enable socket-I/O from other threads.
+    // This enables socket-I/O from other threads.
     wxSocketBase::Initialize();
 
     bool resok = false;

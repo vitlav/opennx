@@ -29,8 +29,7 @@
 #include <wx/event.h>
 
 DECLARE_LOCAL_EVENT_TYPE(wxEVT_NXSSH, -1);
-DECLARE_LOCAL_EVENT_TYPE(wxEVT_NXSERVICE, -2);
-DECLARE_LOCAL_EVENT_TYPE(wxEVT_GENERIC, -3);
+DECLARE_LOCAL_EVENT_TYPE(wxEVT_GENERIC, -2);
 
 class AsyncProcess;
 class wxRegEx;
@@ -41,13 +40,6 @@ class MyIPC : public wxEvtHandler
     DECLARE_EVENT_TABLE();
 
 public:
-    typedef enum {
-        ServiceTerminated,
-        ServiceEsdRunning,
-        ServiceEsdStarted,
-        ServiceEsdPort,
-    } tServiceEvents;
-
     typedef enum {
         ActionNone,
         ActionStatus,
@@ -89,7 +81,6 @@ public:
     virtual ~MyIPC();
     bool GenericProcess(const wxString&, const wxString&, wxEvtHandler *);
     bool SshProcess(const wxString&, const wxString&, wxEvtHandler *);
-    bool ServiceProcess(const wxString&, wxEvtHandler *);
     bool IsRunning();
     bool Kill();
     void Print(const wxString &s, bool doLog = true);
@@ -101,7 +92,6 @@ private:
     typedef enum {
         TypeNone,
         TypeSsh,
-        TypeService,
     } ProcessType;
 
     int parseCode(const wxString &);

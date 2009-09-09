@@ -364,7 +364,6 @@ IMPLEMENT_CLASS(MySession, wxEvtHandler);
 BEGIN_EVENT_TABLE(MySession, wxEvtHandler)
     EVT_COMMAND(wxID_ANY, wxEVT_NXSSH, MySession::OnSshEvent)
     EVT_COMMAND(wxID_ANY, wxEVT_SESSION, MySession::OnSessionEvent)
-    EVT_COMMAND(wxID_ANY, wxEVT_NXSERVICE, MySession::OnServiceEvent)
 END_EVENT_TABLE();
 
 MySession::MySession(wxString dir, wxString status, wxString stype, wxString host, int port, wxString md5)
@@ -540,10 +539,15 @@ MySession::CheckState()
     }
 }
 
-    int
-MySession::getFirstFreePort(int startPort)
+    unsigned short
+MySession::getFirstFreePort(unsigned short startPort)
 {
-    int port = startPort;
+#ifdef __WXMAC__
+    // wxSocketServer appears to be broken on wxMac,
+    // so we use plain unix code, implemented in osdep.c ...
+    return macFirstFreePort(startPort);
+#else
+    unsigned short port = startPort;
     wxIPV4address a;
 
     a.LocalHost();
@@ -554,6 +558,7 @@ MySession::getFirstFreePort(int startPort)
             return port;
         port++;
     }
+#endif
     return 0;
 }
 
@@ -652,45 +657,6 @@ MySession::OnSessionEvent(wxCommandEvent &event)
         m_bSessionEstablished = true;
     else
         m_bGotError = true;
-}
-
-    void
-MySession::OnServiceEvent(wxCommandEvent &event)
-{
-    MyIPC::tServiceEvents e = wx_static_cast(MyIPC::tServiceEvents, event.GetInt());
-    switch (e) {
-        case MyIPC::ServiceTerminated:
-            break;
-        case MyIPC::ServiceEsdPort:
-            event.GetString().AfterLast(wxT(' ')).ToLong(&m_lEsdPort);
-            ::wxLogTrace(MYTRACETAG, wxT("esdport=%d"), m_lEsdPort);
-            break;
-        case MyIPC::ServiceEsdStarted:
-            m_bEsdRunning = true;
-            ::wxLogTrace(MYTRACETAG, wxT("esd started"));
-            break;
-        case MyIPC::ServiceEsdRunning:
-            {
-                wxString s = event.GetString();
-                wxRegEx re(wxT("^\\d+\\s+audio\\s+(\\S+)\\s+is running"), wxRE_ADVANCED);
-                wxASSERT(re.IsValid());
-                if (re.Matches(s)) {
-                    wxString portfile = m_sUserDir;
-                    portfile << wxFileName::GetPathSeparator()
-                        << re.GetMatch(s, 1)
-                        << wxFileName::GetPathSeparator()
-                        << wxT("port");
-                    wxTextFile tf(portfile);
-                    if (tf.Open()) {
-                        tf.GetFirstLine().ToLong(&m_lEsdPort);
-                        tf.Close();
-                        ::wxLogTrace(MYTRACETAG, wxT("esdport=%d"), m_lEsdPort);
-                    }
-                }
-            }
-            m_bEsdRunning = true;
-            break;
-    }
 }
 
     void
@@ -1068,12 +1034,12 @@ MySession::parseSessions(bool moreAllowed)
                 case wxID_OK:
                     switch (d.GetMode()) {
                         case ResumeDialog::Terminate:
-                            wxLogInfo(wxT("TERMINATE"));
+                            ::wxLogInfo(wxT("TERMINATE"));
                             m_sKillId = d.GetSelectedId();
                             m_eConnectState = STATE_KILL_SESSION;
                             break;
                         case ResumeDialog::Resume:
-                            wxLogInfo(wxT("RESUME"));
+                            ::wxLogInfo(wxT("RESUME"));
                             m_sResumeName = d.GetSelectedName();
                             m_sResumeType = d.GetSelectedType();
                             m_sResumeId = d.GetSelectedId();
@@ -1083,7 +1049,7 @@ MySession::parseSessions(bool moreAllowed)
                                 printSsh(wxEmptyString);
                             break;
                         case ResumeDialog::Takeover:
-                            wxLogInfo(wxT("TAKEOVER"));
+                            ::wxLogInfo(wxT("TAKEOVER"));
                             m_sResumeName = d.GetSelectedName();
                             m_sResumeType = d.GetSelectedType();
                             m_sResumeId = d.GetSelectedId();
@@ -1101,7 +1067,7 @@ MySession::parseSessions(bool moreAllowed)
                     break;
             }
         } else {
-            wxLogInfo(wxT("RESUME"));
+            ::wxLogInfo(wxT("RESUME"));
             m_sResumeName = d.GetSelectedName();
             m_sResumeType = d.GetSelectedType();
             m_sResumeId = d.GetSelectedId();
@@ -1332,7 +1298,7 @@ MySession::startProxy()
     if (m_pCfg->bGetEnableUSBIP())
         popts << wxT(",http=") << wxConfigBase::Get()->Read(wxT("Config/UsbipPort"), 3420);
 #endif
-    if (m_lEsdPort != 0)
+    if (m_bEsdRunning && (0 < m_lEsdPort))
         popts << wxT(",media=") << m_lEsdPort;
     popts
         << wxT(",encryption=") << (m_bSslTunneling ? 1 : 0)
@@ -1486,6 +1452,10 @@ MySession::prepareCups()
     long cupsport = wxConfigBase::Get()->Read(wxT("Config/CupsPort"), -1);
     if (cupsport == -1) {
         cupsport = getFirstFreePort(20000);
+        if (0 == cupsport) {
+            ::wxLogWarning(_("Could not assign a free port for CUPS printing"));
+            return false;
+        }
         wxConfigBase::Get()->Write(wxT("Config/CupsPort"), cupsport);
     }
     ::wxLogTrace(MYTRACETAG, wxT("Check for cupsd running at port %d"), cupsport);
@@ -1496,6 +1466,10 @@ MySession::prepareCups()
     // have connected to another user's cupsd and thus authentication might
     // have failed. In that case, we must start our own new instance of cupsd.
     cupsport = getFirstFreePort(20000);
+    if (0 == cupsport) {
+        ::wxLogWarning(_("Could not assign a free port for CUPS printing"));
+        return false;
+    }
     wxConfigBase::Get()->Write(wxT("Config/CupsPort"), cupsport);
 
     wxString tmp;
@@ -1807,43 +1781,58 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
         dlg.Show(true);
         dlg.SetStatusText(wxString::Format(_("Connecting to %s ..."),
                     m_pCfg->sGetServerHost().c_str()));
-
         if (m_pCfg->bGetEnableMultimedia()) {
-            wxFileName fn(m_sSysDir, wxEmptyString);
-            fn.AppendDir(wxT("bin"));
-            fn.SetName(wxT("nxservice"));
-            dlg.SetStatusText(_("Preparing multimedia service ..."));
-            MyIPC ipc;
-            if (ipc.ServiceProcess(fn.GetFullPath() + wxT(" --list audio"), this)) {
-                while (ipc.IsRunning() && (!dlg.bGetAbort())) {
-                    ::wxGetApp().Yield(true);
-                    wxLog::FlushActive();
-                }
-                if (dlg.bGetAbort())
-                    ipc.Kill();
-            } else
-                ::wxLogWarning(_("Could not query multimedia support"));
+            long esdpid = wxConfigBase::Get()->Read(wxT("State/nxesdPID"), -1);
+            m_lEsdPort = wxConfigBase::Get()->Read(wxT("State/nxesdPort"), -1);
+            if ((-1 != esdpid) && (0 < m_lEsdPort))
+                m_bEsdRunning = wxProcess::Exists(esdpid);
             if ((!dlg.bGetAbort()) && (!m_bEsdRunning)) {
-                ::wxLogTrace(MYTRACETAG, wxT("Starting nxesd"));
-                if (ipc.ServiceProcess(fn.GetFullPath() + wxT(" --start audio"), this)) {
-                    while (ipc.IsRunning() && (!dlg.bGetAbort()) && (!m_bEsdRunning)) {
-                        ::wxGetApp().Yield(true);
-                        wxLog::FlushActive();
+                dlg.SetStatusText(_("Preparing multimedia service ..."));
+                wxFileName fn(m_sSysDir, wxEmptyString);
+                fn.AppendDir(wxT("bin"));
+                fn.SetName(wxT("nxesd"));
+                wxString esdcmd = fn.GetFullPath();
+                m_lEsdPort = getFirstFreePort(6000);
+                if (0 < m_lEsdPort) {
+                    esdcmd << wxT(" -tcp -nobeeps -bind 127.0.0.1 -spawnfd 1 -port ") << m_lEsdPort;
+                    wxProcess *nxesd = wxProcess::Open(esdcmd,
+                            wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
+                    if (nxesd) {
+                        nxesd->CloseOutput();
+                        wxStopWatch sw;
+                        while (!(dlg.bGetAbort() || nxesd->IsInputAvailable())) {
+                            ::wxGetApp().Yield(true);
+                            wxLog::FlushActive();
+                            // Timeout after 10 sec
+                            if (sw.Time() > 10000)
+                                break;
+                        }
+                        char msg = '\0';
+                        if (nxesd->IsInputAvailable())
+                                nxesd->GetInputStream()->Read(&msg, 1);
+                        long esdpid = nxesd->GetPid();
+                        nxesd->Detach();
+                        if (msg) {
+                            m_bEsdRunning = true;
+                            wxConfigBase::Get()->Write(wxT("State/nxesdPID"), esdpid);
+                            wxConfigBase::Get()->Write(wxT("State/nxesdPort"), m_lEsdPort);
+                        }
                     }
-                }
-                if (dlg.bGetAbort())
-                    ipc.Kill();
-                if (!m_bEsdRunning)
-                    ::wxLogWarning(_("Could not start multimedia support"));
+                    if (!m_bEsdRunning)
+                        ::wxLogWarning(_("Could not start multimedia support"));
+                } else
+                    ::wxLogWarning(_("Could not assign a free port for multimedia support"));
             }
             dlg.SetStatusText(wxString::Format(_("Connecting to %s ..."),
                         m_pCfg->sGetServerHost().c_str()));
         }
+
         if (dlg.bGetAbort())
             return false;
         if (getActiveCupsPrinters().GetCount() > 0) {
             dlg.SetStatusText(_("Preparing CUPS service ..."));
-            prepareCups();
+            if (prepareCups())
+                ::wxLogWarning(_("Could not start CUPS printing"));
             dlg.SetStatusText(wxString::Format(_("Connecting to %s ..."),
                         m_pCfg->sGetServerHost().c_str()));
         }
