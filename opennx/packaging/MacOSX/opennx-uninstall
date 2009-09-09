@@ -1,6 +1,10 @@
 #!/bin/sh
 if test -e /Library/Receipts/OpenNX.pkg ; then
-    rm -rf /Applications/OpenNX
-    rm -rf /Library/OpenNX
-    rm -rf /Library/Receipts/OpenNX.pkg
+    (
+        # let applescript terminate gracefully
+        sleep 5
+        rm -rf /Library/OpenNX
+        rm -rf /Applications/OpenNX
+        rm -rf /Library/Receipts/OpenNX.pkg
+    ) &
 fi
