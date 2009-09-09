@@ -43,12 +43,24 @@
 
 #include <wx/filename.h>
 #include <wx/config.h>
+#include <wx/process.h>
 
+#include "LogDialog.h"
+#include "opennxApp.h"
+#include "pwcrypt.h"
+#include "MySession.h"
 #include "SessionAdmin.h"
 #include "SessionList.h"
 #include "LoginDialog.h"
 #include "AboutDialog.h"
 #include "Icon.h"
+
+#ifdef __UNIX__
+#include <sys/types.h>
+#include <signal.h>
+#endif
+
+#include "osdep.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -109,6 +121,8 @@ BEGIN_EVENT_TABLE( SessionAdmin, wxFrame )
 
 ////@end SessionAdmin event table entries
 
+    EVT_COMMAND(wxID_ANY, wxEVT_SESSIONLIST_ACTION, SessionAdmin::OnSessionList )
+
 END_EVENT_TABLE()
 
 /*!
@@ -152,7 +166,7 @@ bool SessionAdmin::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxSt
     Centre();
 ////@end SessionAdmin creation
 
-    m_sessions = new SessionList(m_NxDirectory, m_SessionListCtrl);
+    m_sessions = new SessionList(m_NxDirectory, this);
     return TRUE;
 }
 
@@ -231,6 +245,108 @@ wxIcon SessionAdmin::GetIconResource( const wxString& name )
     return CreateIconFromFile(name);
 }
 
+void SessionAdmin::ShowSessionStats(long item, bool full)
+{
+    MySession *s =
+        wxDynamicCast((void *)m_SessionListCtrl->GetItemData(item), MySession);
+    if (s) {
+        wxFileName fn(s->sGetDir(), wxT("stats"));
+        long spid = s->lGetPID();
+        wxString md5stats1 = Md5OfFile(fn.GetFullPath());
+        wxString md5stats2 = md5stats1;
+        bool ok = false;
+#ifdef __UNIX__
+        ok = (kill((pid_t)spid, full ? SIGUSR1 : SIGUSR2) == 0);
+#endif
+        if (ok) {
+            // Wait until file starts changing
+            ::wxLogTrace(MYTRACETAG, wxT("wait for change of stats"));
+            while (ok) {
+                md5stats2 = Md5OfFile(fn.GetFullPath());
+                if (md5stats1 != md5stats2)
+                    break;
+                ::wxGetApp().Yield(true);
+                wxThread::Sleep(100);
+            }
+            // Wait until file stopped changing
+            wxThread::Sleep(100);
+            ::wxLogTrace(MYTRACETAG, wxT("wait for settling stats"));
+            while (ok) {
+                md5stats1 = Md5OfFile(fn.GetFullPath());
+                if (md5stats1 == md5stats2)
+                    break;
+                md5stats2 = md5stats1;
+                ::wxGetApp().Yield(true);
+                wxThread::Sleep(100);
+            }
+            if (ok) {
+                LogDialog d(NULL);
+                d.SetTitle(full ?
+                        _("Full session statistics - OpenNX") :
+                        _("Partial session statistics - OpenNX"));
+                d.ReadLogFile(s->sGetDir() + wxFileName::GetPathSeparator() + wxT("stats"));
+                d.ShowModal();
+            }
+        }
+    }
+}
+
+/*!
+ * Handle events from SessionList
+ */
+void SessionAdmin::OnSessionList(wxCommandEvent& event)
+{
+    long idx;
+    MySession *s;
+    switch (event.GetInt()) {
+        case SessionList::SessionAdded:
+            s = wxDynamicCast((void *)event.GetClientData(), MySession);
+            // Hostname
+            idx = m_SessionListCtrl->InsertItem(0, s->sGetHost(), 0);
+            m_SessionListCtrl->SetItemData(idx, (long)s);
+            // Port
+            m_SessionListCtrl->SetItem(idx, 1, s->sGetPort());
+            // Session ID
+            m_SessionListCtrl->SetItem(idx, 2, s->sGetMd5());
+            // Creation Time
+            m_SessionListCtrl->SetItem(idx, 3, s->sGetCreationTime());
+            // PID
+            m_SessionListCtrl->SetItem(idx, 4, s->sGetPID());
+            // Status
+            m_SessionListCtrl->SetItem(idx, 5, s->sGetSessionStatus());
+            // Type
+            m_SessionListCtrl->SetItem(idx, 6, s->sGetSessionType());
+            break;
+        case SessionList::SessionChanged:
+            s = wxDynamicCast((void *)event.GetClientData(), MySession);
+            idx = m_SessionListCtrl->FindItem(-1, (long)s);
+            ::wxLogTrace(MYTRACETAG, wxT("state changed: %d"), idx);
+            if (idx != -1) {
+                m_SessionListCtrl->SetItem(idx, 3, s->sGetCreationTime());
+                m_SessionListCtrl->SetItem(idx, 4, s->sGetPID());
+                m_SessionListCtrl->SetItem(idx, 5, s->sGetSessionStatus());
+            }
+            break;
+        case SessionList::SessionRemoved:
+            s = wxDynamicCast((void *)event.GetClientData(), MySession);
+            idx = m_SessionListCtrl->FindItem(-1, (long)s);
+            if (idx != -1) {
+                m_sessions->RemoveFromList(s->sGetMd5());
+                m_SessionListCtrl->DeleteItem(idx);
+            }
+            break;
+        case SessionList::UpdateList:
+            {
+                int width = m_SessionListCtrl->GetItemCount() ?
+                    wxLIST_AUTOSIZE : wxLIST_AUTOSIZE_USEHEADER;
+                for (int i = 0; i < m_SessionListCtrl->GetColumnCount(); i++) 
+                    m_SessionListCtrl->SetColumnWidth(i, width);
+            }
+            m_SessionListCtrl->Update();
+            break;
+    }
+}
+
 /*!
  * wxEVT_COMMAND_MENU_SELECTED event handler for ID_TOOL_SESSION_NEW
  */
@@ -246,7 +362,7 @@ void SessionAdmin::OnToolSessionNewClick( wxCommandEvent& event )
 void SessionAdmin::OnPREFERENCESClick( wxCommandEvent& event )
 {
     const wxString& dir = wxDirSelector(_("Choose new NX session directory."),
-        m_NxDirectory, wxDD_DEFAULT_STYLE, wxDefaultPosition, this);
+            m_NxDirectory, wxDD_DEFAULT_STYLE, wxDefaultPosition, this);
     if (!dir.IsEmpty()) {
         m_NxDirectory = dir;
         m_sessions->SetDir(dir);
@@ -260,7 +376,6 @@ void SessionAdmin::OnPREFERENCESClick( wxCommandEvent& event )
 
 void SessionAdmin::OnEXITClick( wxCommandEvent& event )
 {
-    // Insert custom code here
     Close();
     event.Skip();
 }
@@ -345,7 +460,10 @@ void SessionAdmin::OnABOUTClick( wxCommandEvent& event )
 
 void SessionAdmin::OnListctrlSelected( wxListEvent& event )
 {
-    SessionToolsEnable(true, m_sessions->IsRunning(event.GetIndex()));
+    MySession *s =
+        wxDynamicCast((void *)m_SessionListCtrl->GetItemData(event.GetIndex()), MySession);
+    bool running = ((NULL != s) && (s->eGetSessionStatus() == MySession::Running));
+    SessionToolsEnable(true, running);
     event.Skip();
 }
 
@@ -378,8 +496,12 @@ void SessionAdmin::OnMenuSessionNewClick( wxCommandEvent& event )
 void SessionAdmin::OnMenuSessionTerminateClick( wxCommandEvent& event )
 {
     long item = m_SessionListCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
-    if (item != -1)
-        m_sessions->TerminateSession(item);
+    if (item != -1) {
+        MySession *s =
+            wxDynamicCast((void *)m_SessionListCtrl->GetItemData(item), MySession);
+        if (s)
+            close_sid(s->sGetMd5().mb_str());
+    }
     event.Skip();
 }
 
@@ -391,7 +513,7 @@ void SessionAdmin::OnMenuSessionPstatsClick( wxCommandEvent& event )
 {
     long item = m_SessionListCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
     if (item != -1)
-        m_sessions->ShowSessionStats(item, false);
+        ShowSessionStats(item, false);
     event.Skip();
 }
 
@@ -403,7 +525,7 @@ void SessionAdmin::OnMenuSessionFstatsClick( wxCommandEvent& event )
 {
     long item = m_SessionListCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
     if (item != -1)
-        m_sessions->ShowSessionStats(item, true);
+        ShowSessionStats(item, true);
     event.Skip();
 }
 
@@ -414,8 +536,15 @@ void SessionAdmin::OnMenuSessionFstatsClick( wxCommandEvent& event )
 void SessionAdmin::OnMenuSessionLogClick( wxCommandEvent& event )
 {
     long item = m_SessionListCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
-    if (item != -1)
-        m_sessions->ShowSessionLog(item);
+    if (item != -1) {
+        MySession *s =
+            wxDynamicCast((void *)m_SessionListCtrl->GetItemData(item), MySession);
+        if (s) {
+            LogDialog d(NULL);
+            d.ReadLogFile(s->sGetDir() + wxFileName::GetPathSeparator() + wxT("session"));
+            d.ShowModal();
+        }
+    }
     event.Skip();
 }
 
@@ -426,8 +555,14 @@ void SessionAdmin::OnMenuSessionLogClick( wxCommandEvent& event )
 void SessionAdmin::OnMenuSessionRemoveClick( wxCommandEvent& event )
 {
     long item = m_SessionListCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
-    if (item != -1)
-        m_sessions->CleanupDir(item);
+    if (item != -1) {
+        MySession *s =
+            wxDynamicCast((void *)m_SessionListCtrl->GetItemData(item), MySession);
+        if (s) {
+            wxString dir = s->sGetDir();
+            m_sessions->CleanupDir(dir);
+        }
+    }
     event.Skip();
 }
 
@@ -438,8 +573,11 @@ void SessionAdmin::OnMenuSessionRemoveClick( wxCommandEvent& event )
 void SessionAdmin::OnMenuSessionKillClick( wxCommandEvent& event )
 {
     long item = m_SessionListCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
-    if (item != -1)
-        m_sessions->KillSession(item);
+    if (item != -1) {
+        MySession *s =
+            wxDynamicCast((void *)m_SessionListCtrl->GetItemData(item), MySession);
+        wxProcess::Kill(s->lGetPID());
+    }
     event.Skip();
 }
 

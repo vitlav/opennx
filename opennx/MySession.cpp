@@ -479,12 +479,43 @@ MySession::sGetCreationTime()
     return ctime.Format();
 }
 
+    wxString
+MySession::sGetSessionStatus()
+{
+    switch (m_eSessionStatus) {
+        case Terminated:
+            return _("terminated");
+            break;
+        case Failed:
+            return _("failed");
+            break;
+        case Running:
+            return _("running");
+            break;
+    }
+    return _("unknown");
+}
+
+    wxString
+MySession::sGetSessionType()
+{
+    switch (m_eSessionType) {
+        case Server:
+            return _("Server");
+            break;
+        case Client:
+            return _("Client");
+            break;
+    }
+    return _("Unknown");
+}
+
     bool
 MySession::bGetPidFromFile()
 {
     m_lPid = 0;
     if (!m_bValid)
-       return false;
+        return false;
     wxFileInputStream input(m_sDir + wxFileName::GetPathSeparator() + wxT("session"));
     wxTextInputStream text(input);
     int cnt = 0;
@@ -640,7 +671,7 @@ MySession::getXauthPath()
     return wxString();
 }
 
-wxString
+    wxString
 MySession::formatOptFilename()
 {
 #ifdef __WXMSW__
@@ -1234,7 +1265,7 @@ MySession::startXserver()
             wxWinCmd << wxT(" -lesspointer");
             wxWinCmd << wxT(" -notrayicon");
             wxWinCmd << wxT(" -silent-dup-error");
-//            wxWinCmd << wxT(" -engine 1");
+            //            wxWinCmd << wxT(" -engine 1");
             wxWinCmd << wxT(" -multimonitors");
             wxWinCmd << wxT(" -multiwindow");
             wxWinCmd << wxT(" -auth ") << getXauthPath();
@@ -1809,7 +1840,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
                         }
                         char msg = '\0';
                         if (nxesd->IsInputAvailable())
-                                nxesd->GetInputStream()->Read(&msg, 1);
+                            nxesd->GetInputStream()->Read(&msg, 1);
                         long esdpid = nxesd->GetPid();
                         nxesd->Detach();
                         if (msg) {

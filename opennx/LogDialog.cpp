@@ -41,6 +41,7 @@
 ////@begin includes
 ////@end includes
 #include <wx/textfile.h>
+#include <wx/config.h>
 
 #include "LogDialog.h"
 #include "Icon.h"
@@ -122,6 +123,14 @@ void LogDialog::CreateControls()
 
 ////@begin LogDialog content initialisation
 ////@end LogDialog content initialisation
+
+    wxString font = wxEmptyString;
+    wxConfigBase::Get()->Read(wxT("Config/FixedFont"), &font);
+    if (!font.IsEmpty()) {
+        wxFont f;
+        f.SetNativeFontInfo(font);
+        m_TextCtrl->SetFont(f);
+    }
 }
 
 void LogDialog::SetFileName(wxString fn)

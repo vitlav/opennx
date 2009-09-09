@@ -64,6 +64,8 @@ public:
     const wxString& sGetDir() { return m_sDir; }
     tSessionStatus eGetSessionStatus() { return m_eSessionStatus; }
     tSessionType eGetSessionType() { return m_eSessionType; }
+    wxString sGetSessionStatus();
+    wxString sGetSessionType();
     void bSetTouched(bool b) { m_bTouched = b; }
     bool bGetTouched() { return m_bTouched; }
     long lGetPID() { return m_lPid; }

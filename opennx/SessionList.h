@@ -30,32 +30,36 @@
 
 class wxDir;
 class wxRegEx;
-class wxListCtrl;
 class SessionHash;
+
+DECLARE_LOCAL_EVENT_TYPE(wxEVT_SESSIONLIST_ACTION, -1)
 
 class SessionList : public wxThreadHelper
 {
 public:
-    SessionList(wxString dir = _T(""), wxListCtrl *ctrl = NULL);
+    enum {
+        SessionAdded,
+        SessionChanged,
+        SessionRemoved,
+        UpdateList
+    };
+
+    SessionList(wxString dir = _T(""), wxEvtHandler *h = NULL);
     virtual ~SessionList();
 
     virtual wxThread::ExitCode Entry();
     
     void SetDir(wxString dir);
-    //wxString GetDir() { return m_dirName; }
+    void SetAdminHandler(wxEvtHandler *h) { m_pAdminHandler = h; }
 
     void ScanDir();
-    void ShowSessionLog(int);
-    void ShowSessionStats(int, bool);
-    void CleanupDir(int);
-    void TerminateSession(int);
-    void KillSession(int);
-    bool IsRunning(int);
+    void CleanupDir(wxString &);
+    void RemoveFromList(wxString md5);
 
 private:
     wxCriticalSection m_csDir;
     wxString m_dirName;
-    wxListCtrl *m_listctrl;
+    wxEvtHandler *m_pAdminHandler;
     SessionHash *m_sessions;
     wxDir *m_dir;
     wxRegEx *m_re;

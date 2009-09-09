@@ -90,6 +90,9 @@ public:
     /// Creates the controls and sizers
     void CreateControls();
 
+    // Event handler for events from SessionList
+    void OnSessionList(wxCommandEvent& event);
+
 ////@begin SessionAdmin event handler declarations
 
     /// wxEVT_COMMAND_MENU_SELECTED event handler for ID_MENU_SESSION_NEW
@@ -173,6 +176,8 @@ public:
     static bool ShowToolTips();
 
 private:
+    void ShowSessionStats(long, bool);
+
 
 ////@begin SessionAdmin member variables
     wxListCtrl* m_SessionListCtrl;

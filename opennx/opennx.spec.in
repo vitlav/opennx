@@ -60,8 +60,8 @@
 %endif
 
 %define nxdlurl http://www.nomachine.com/sources.php
-%define nxpkgs nxcomp nxcompsh nxproxy nxservice nxesd
-%define nxpkgsall nxcomp nxcompsh nxproxy nxservice nxesd nxssh
+%define nxpkgs nxcomp nxproxy nxesd
+%define nxpkgsall nxcomp nxproxy nxesd nxssh
 
 %define rel %{svnrev}%{ostag}
 
@@ -75,11 +75,9 @@ URL: http://sourceforge.net/projects/opennx
 Source0: opennx-%{version}.tar.gz
 %if !%{with_fetchnx}
 Source100: nxcomp-3.3.0-4.tar.gz
-Source101: nxcompsh-3.3.0-1.tar.gz
-Source102: nxesd-3.3.0-1.tar.gz
-Source103: nxproxy-3.3.0-2.tar.gz
-Source104: nxservice-3.3.0-1.tar.gz
-Source105: nxssh-3.3.0-1.tar.gz
+Source101: nxesd-3.3.0-1.tar.gz
+Source102: nxproxy-3.3.0-2.tar.gz
+Source103: nxssh-3.3.0-1.tar.gz
 %endif
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
@@ -158,7 +156,7 @@ for pkg in %{nxpkgsall} ; do
     tar xzf ${pkg}-*.tar.gz
 done
 %else
-%setup -q -a 100 -a 101 -a 102 -a 103 -a 104 -a 105
+%setup -q -a 100 -a 101 -a 102 -a 103
 %endif
 
 # Apply openssh askPIN patch (see https://bugzilla.mindrot.org/show_bug.cgi?id=608)
@@ -167,15 +165,6 @@ cd ..
 patch -p0 < patches/nxcomp-gcc44.patch
 # Make nxssh load libopensc dynamically
 patch -p0 < patches/nxssh-dynopensc.patch
-
-# Workaround for obsolete include in nxcompsh
-(
-cd nxcompsh
-cat>iostream.h<<EOF
-#include <iostream>
-using namespace std;
-EOF
-)
 
 %build
 %configure \
@@ -192,9 +181,7 @@ EOF
 %endif
 make
 for pkg in %{nxpkgs} ; do
-	margs=
-	test $pkg = nxcompsh && margs="CXXINCLUDES=-I."
-	cd $pkg && ./configure --prefix=%{_prefix} && make $margs
+	cd $pkg && ./configure --prefix=%{_prefix} && make
     cd ..
 done
 %if %{is_fc}
@@ -218,10 +205,8 @@ cd ..
 %makeinstall
 %{__install} -d -m 755 %{buildroot}%{_libdir}
 %{__install} -m 755 nxcomp/libXcomp.so.*.*.* %{buildroot}%{_libdir}
-%{__install} -m 755 nxcompsh/libXcompsh.so.*.*.* %{buildroot}%{_libdir}
 %{__install} -m 755 nxesd/nxesd %{buildroot}%{_bindir}
 %{__install} -m 755 nxproxy/nxproxy %{buildroot}%{_bindir}
-%{__install} -m 755 nxservice/nxservice %{buildroot}%{_bindir}
 %{__install} -m 755 nxssh/nxssh %{buildroot}%{_bindir}
 /sbin/ldconfig -n %{buildroot}%{_libdir}
 %{__install} -d -m 755 %{buildroot}/usr/bin
