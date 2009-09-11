@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opennx 0.16\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2009-09-09 21:29+0200\n"
+"POT-Creation-Date: 2009-09-12 00:42+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,23 +20,19 @@ msgstr ""
 msgid "Version"
 msgstr ""
 
-#: AboutDialog_symbols.h:22
+#: AboutDialog.h:54 AboutDialog_symbols.h:22
 msgid "About OpenNX"
 msgstr ""
 
 #: AboutDialog_symbols.h:23 RdpImageSettingsDialog_symbols.h:35
 #: RdpPropertyDialog_symbols.h:35 SessionProperties_symbols.h:107
 #: ShareProperties_symbols.h:51 UnixImageSettingsDialog_symbols.h:34
-#: VncImageSettingsDialog_symbols.h:27 VncPropertyDialog_symbols.h:31
-#: X11PropertyDialog_symbols.h:32 UsbFilterDetailsDialog_symbols.h:35
+#: UsbFilterDetailsDialog_symbols.h:35 VncImageSettingsDialog_symbols.h:27
+#: VncPropertyDialog_symbols.h:31 X11PropertyDialog_symbols.h:32
 msgid "&OK"
 msgstr ""
 
-#: LibOpenSC.cpp:384
-msgid "Could not terminate nxssh"
-msgstr ""
-
-#: CardWaiterDialog_symbols.h:22
+#: CardWaiterDialog.h:52 CardWaiterDialog_symbols.h:22
 msgid "Insert card - OpenNX"
 msgstr ""
 
@@ -49,12 +45,12 @@ msgstr ""
 #: RdpImageSettingsDialog_symbols.h:36 RdpPropertyDialog_symbols.h:36
 #: ResumeDialog_symbols.h:28 SessionProperties_symbols.h:108
 #: ShareProperties_symbols.h:52 UnixImageSettingsDialog_symbols.h:35
-#: VncImageSettingsDialog_symbols.h:28 VncPropertyDialog_symbols.h:32
-#: X11PropertyDialog_symbols.h:33 UsbFilterDetailsDialog_symbols.h:36
+#: UsbFilterDetailsDialog_symbols.h:36 VncImageSettingsDialog_symbols.h:28
+#: VncPropertyDialog_symbols.h:32 X11PropertyDialog_symbols.h:33
 msgid "&Cancel"
 msgstr ""
 
-#: ConnectDialog_symbols.h:22
+#: ConnectDialog.h:52 ConnectDialog_symbols.h:22
 msgid "Connecting - OpenNX"
 msgstr ""
 
@@ -62,7 +58,7 @@ msgstr ""
 msgid " "
 msgstr ""
 
-#: ForeignFrame_symbols.h:22
+#: ForeignFrame.h:54 ForeignFrame_symbols.h:22
 msgid "OPENNX-PULLDOWN"
 msgstr ""
 
@@ -74,7 +70,7 @@ msgstr ""
 msgid "SSh key files (*.key;*.pub)|*.key;*.pub"
 msgstr ""
 
-#: KeyDialog_symbols.h:22
+#: KeyDialog.h:54 KeyDialog_symbols.h:22
 msgid "Key Management - OpenNX"
 msgstr ""
 
@@ -90,11 +86,15 @@ msgstr ""
 msgid "&Save"
 msgstr ""
 
-#: LogDialog_symbols.h:22
+#: LibOpenSC.cpp:384
+msgid "Could not terminate nxssh"
+msgstr ""
+
+#: LogDialog.h:52 LogDialog_symbols.h:22
 msgid "Session Log - OpenNX"
 msgstr ""
 
-#: LogDialog_symbols.h:23
+#: LogDialog_symbols.h:23 TraceLogFrame_symbols.h:25
 msgid "Close"
 msgstr ""
 
@@ -109,7 +109,7 @@ msgstr ""
 msgid "Error saving - OpenNX"
 msgstr ""
 
-#: LoginDialog_symbols.h:22
+#: LoginDialog.h:56 LoginDialog_symbols.h:22
 msgid "Login - OpenNX"
 msgstr ""
 
@@ -141,6 +141,32 @@ msgstr ""
 
 #: LoginDialog_symbols.h:29
 msgid "Cancel"
+msgstr ""
+
+#: MacUninstallApp.cpp:102
+msgid "Uninstall without asking the user (needs admin rights)."
+msgstr ""
+
+#: MacUninstallApp.cpp:144
+msgid "Batch uninstall nedds to be started as root."
+msgstr ""
+
+#: MacUninstallApp.cpp:145 MacUninstallApp.cpp:152 MacUninstallApp.cpp:174
+msgid "Uninstall OpenNX"
+msgstr ""
+
+#: MacUninstallApp.cpp:151
+msgid ""
+"This operation can not be undone!\n"
+"Do you really want to uninstall OpenNX?"
+msgstr ""
+
+#: MacUninstallApp.cpp:155
+msgid "In order to uninstall OpenNX, administrative rights are required.\n"
+msgstr ""
+
+#: MacUninstallApp.cpp:174
+msgid "Uninstalling as root"
 msgstr ""
 
 #: MyIPC.cpp:350
@@ -501,7 +527,7 @@ msgstr ""
 msgid "&Quit"
 msgstr ""
 
-#: RdpImageSettingsDialog_symbols.h:22
+#: RdpImageSettingsDialog.h:55 RdpImageSettingsDialog_symbols.h:22
 msgid "RDP Image Settings - OpenNX"
 msgstr ""
 
@@ -554,7 +580,7 @@ msgstr ""
 msgid "Enable RDP image cache"
 msgstr ""
 
-#: RdpPropertyDialog_symbols.h:22
+#: RdpPropertyDialog.h:57 RdpPropertyDialog_symbols.h:22
 msgid "RDP Session Settings - OpenNX"
 msgstr ""
 
@@ -640,7 +666,7 @@ msgstr ""
 msgid "Terminate session - OpenNX"
 msgstr ""
 
-#: ResumeDialog_symbols.h:22
+#: ResumeDialog.h:55 ResumeDialog_symbols.h:22
 msgid "Select session - OpenNX"
 msgstr ""
 
@@ -666,7 +692,7 @@ msgstr ""
 msgid "Creation Date"
 msgstr ""
 
-#: SessionAdmin.cpp:195
+#: SessionAdmin.cpp:195 TraceLogFrame.cpp:150
 msgid "PID"
 msgstr ""
 
@@ -686,11 +712,11 @@ msgstr ""
 msgid "Choose new NX session directory."
 msgstr ""
 
-#: SessionAdmin_symbols.h:22
+#: SessionAdmin.h:57 SessionAdmin_symbols.h:22
 msgid "Session Administrator - OpenNX"
 msgstr ""
 
-#: SessionAdmin_symbols.h:23
+#: SessionAdmin_symbols.h:23 TraceLogFrame_symbols.h:24
 msgid "&File"
 msgstr ""
 
@@ -857,7 +883,7 @@ msgstr ""
 msgid "Select path of USBIPD socket"
 msgstr ""
 
-#: SessionProperties_symbols.h:22
+#: SessionProperties.h:66 SessionProperties_symbols.h:22
 msgid "Session properties - OpenNX"
 msgstr ""
 
@@ -1101,7 +1127,7 @@ msgstr ""
 msgid "Invalid mountpoint"
 msgstr ""
 
-#: ShareProperties_symbols.h:22
+#: ShareProperties.h:61 ShareProperties_symbols.h:22
 msgid "New shared resource - OpenNX"
 msgstr ""
 
@@ -1213,7 +1239,7 @@ msgstr ""
 msgid "File couldn't be loaded."
 msgstr ""
 
-#: TextViewer_symbols.h:22
+#: TextViewer.h:55 TextViewer_symbols.h:22
 msgid "Text Viewer - OpenNX"
 msgstr ""
 
@@ -1221,7 +1247,39 @@ msgstr ""
 msgid "&Close"
 msgstr ""
 
-#: UnixImageSettingsDialog_symbols.h:22
+#: TraceLogFrame.cpp:149
+msgid "Time"
+msgstr ""
+
+#: TraceLogFrame.cpp:151
+msgid "Text"
+msgstr ""
+
+#: TraceLogFrame.cpp:247
+msgid "Save logfile"
+msgstr ""
+
+#: TraceLogFrame.cpp:248
+msgid "Log files (*.log)"
+msgstr ""
+
+#: TraceLogFrame.h:52 TraceLogFrame_symbols.h:23
+msgid "Trace Log"
+msgstr ""
+
+#: TraceLogFrame_symbols.h:26
+msgid "Save as ..."
+msgstr ""
+
+#: TraceLogFrame_symbols.h:27
+msgid "Clear"
+msgstr ""
+
+#: TraceLogFrame_symbols.h:28
+msgid "&Exit"
+msgstr ""
+
+#: UnixImageSettingsDialog.h:55 UnixImageSettingsDialog_symbols.h:22
 msgid "Unix Image Settings - OpenNX"
 msgstr ""
 
@@ -1261,7 +1319,84 @@ msgstr ""
 msgid "Disable shared pixmap emulation"
 msgstr ""
 
-#: VncImageSettingsDialog_symbols.h:22
+#: UsbFilterDetailsDialog.cpp:196
+msgid "New USB device - OpenNX"
+msgstr ""
+
+#: UsbFilterDetailsDialog.h:58 UsbFilterDetailsDialog_symbols.h:22
+msgid "USB Filter Details - OpenNX"
+msgstr ""
+
+#: UsbFilterDetailsDialog_symbols.h:23
+msgid ""
+"A new USB device has been detected. The\n"
+"parameters for this device have been filled\n"
+"into the form below. Please decide, if you\n"
+"want to use this device locally, or if you want\n"
+"to use it on the remote machine."
+msgstr ""
+
+#: UsbFilterDetailsDialog_symbols.h:24
+msgid "Remember this decision"
+msgstr ""
+
+#: UsbFilterDetailsDialog_symbols.h:25
+msgid ""
+"Select from existing devices below or\n"
+"enter the filter specification directly."
+msgstr ""
+
+#: UsbFilterDetailsDialog_symbols.h:26
+msgid "Vendor ID"
+msgstr ""
+
+#: UsbFilterDetailsDialog_symbols.h:27
+msgid "Product ID"
+msgstr ""
+
+#: UsbFilterDetailsDialog_symbols.h:28
+msgid "Device Class"
+msgstr ""
+
+#: UsbFilterDetailsDialog_symbols.h:29
+msgid "Vendor"
+msgstr ""
+
+#: UsbFilterDetailsDialog_symbols.h:30
+msgid "Product"
+msgstr ""
+
+#: UsbFilterDetailsDialog_symbols.h:31
+msgid "Serial Nr."
+msgstr ""
+
+#: UsbFilterDetailsDialog_symbols.h:32
+msgid "Mode"
+msgstr ""
+
+#: UsbFilterDetailsDialog_symbols.h:33
+msgid "Use locally"
+msgstr ""
+
+#: UsbFilterDetailsDialog_symbols.h:34
+msgid "Forward to remote"
+msgstr ""
+
+#: UsbIp.cpp:194
+msgid "USB device is already exported in another session"
+msgstr ""
+
+#: UsbIp.cpp:339
+#, c-format
+msgid "Invalid regular expression in %s %d"
+msgstr ""
+
+#: UsbIp.cpp:371
+#, c-format
+msgid "Invalid regular expression %s %d"
+msgstr ""
+
+#: VncImageSettingsDialog.h:55 VncImageSettingsDialog_symbols.h:22
 msgid "VNC Image Settings - OpenNX"
 msgstr ""
 
@@ -1277,7 +1412,7 @@ msgstr ""
 msgid "Enable JPEG encoding"
 msgstr ""
 
-#: VncPropertyDialog_symbols.h:22
+#: VncPropertyDialog.h:56 VncPropertyDialog_symbols.h:22
 msgid "VNC Session Settings - OpenNX"
 msgstr ""
 
@@ -1297,7 +1432,7 @@ msgid ""
 "remote VNC server"
 msgstr ""
 
-#: X11PropertyDialog_symbols.h:22
+#: X11PropertyDialog.h:55 X11PropertyDialog_symbols.h:22
 msgid "X11 Session Settings - OpenNX"
 msgstr ""
 
@@ -1360,7 +1495,7 @@ msgstr ""
 msgid "Could not read link %s"
 msgstr ""
 
-#: opennxApp.cpp:655
+#: opennxApp.cpp:655 watchUsbIpApp.cpp:198
 msgid ""
 "\n"
 "\n"
@@ -1403,7 +1538,7 @@ msgstr ""
 msgid "Specify window-ID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:676
+#: opennxApp.cpp:676 watchUsbIpApp.cpp:207
 msgid "Specify wxWidgets trace mask."
 msgstr ""
 
@@ -1415,11 +1550,11 @@ msgstr ""
 msgid "Guide the user through the steps to configure a session."
 msgstr ""
 
-#: opennxApp.cpp:733
+#: opennxApp.cpp:733 watchReaderApp.cpp:182
 msgid "Smart card removed"
 msgstr ""
 
-#: opennxApp.cpp:735
+#: opennxApp.cpp:735 watchReaderApp.cpp:181
 msgid ""
 "OpenNX session has been suspended, because\n"
 "the authenticating smart card has been removed."
@@ -1438,65 +1573,62 @@ msgstr ""
 msgid "Could not connect to usbipd2. No USB devices will be exported"
 msgstr ""
 
-#: UsbFilterDetailsDialog.cpp:196
-msgid "New USB device - OpenNX"
+#: tracelogApp.cpp:76
+msgid "Show Trace Log"
 msgstr ""
 
-#: UsbFilterDetailsDialog_symbols.h:22
-msgid "USB Filter Details - OpenNX"
+#: tracelogApp.cpp:77
+msgid "E&xit"
 msgstr ""
 
-#: UsbFilterDetailsDialog_symbols.h:23
-msgid ""
-"A new USB device has been detected. The\n"
-"parameters for this device have been filled\n"
-"into the form below. Please decide, if you\n"
-"want to use this device locally, or if you want\n"
-"to use it on the remote machine."
+#: tracelogApp.cpp:225
+msgid "OpenNX"
 msgstr ""
 
-#: UsbFilterDetailsDialog_symbols.h:24
-msgid "Remember this decision"
+#: watchReaderApp.cpp:103
+msgid "Number of smart card reader to watch for."
 msgstr ""
 
-#: UsbFilterDetailsDialog_symbols.h:25
-msgid ""
-"Select from existing devices below or\n"
-"enter the filter specification directly."
+#: watchReaderApp.cpp:105 watchUsbIpApp.cpp:204
+msgid "Process ID of the nxssh process."
 msgstr ""
 
-#: UsbFilterDetailsDialog_symbols.h:26
-msgid "Vendor ID"
+#: watchUsbIpApp.cpp:200
+msgid "NX SessionID to watch for."
 msgstr ""
 
-#: UsbFilterDetailsDialog_symbols.h:27
-msgid "Product ID"
+#: watchUsbIpApp.cpp:202
+msgid "Path of session config file."
 msgstr ""
 
-#: UsbFilterDetailsDialog_symbols.h:28
-msgid "Device Class"
+#: watchUsbIpApp.cpp:324
+msgid "An empty session ID is not allowed"
 msgstr ""
 
-#: UsbFilterDetailsDialog_symbols.h:29
-msgid "Vendor"
+#: watchUsbIpApp.cpp:329
+msgid "Could not load session config file"
 msgstr ""
 
-#: UsbFilterDetailsDialog_symbols.h:30
-msgid "Product"
+#: watchUsbIpApp.cpp:347
+msgid "Could not register at usbipd2! No hotplugging functionality."
 msgstr ""
 
-#: UsbFilterDetailsDialog_symbols.h:31
-msgid "Serial Nr."
+#: watchUsbIpApp.cpp:354
+msgid "Could not connect to usbipd2! No hotplugging functionality."
 msgstr ""
 
-#: UsbFilterDetailsDialog_symbols.h:32
-msgid "Mode"
+#: watchUsbIpApp.cpp:391
+msgid "Got hotplug event, but device is not available in libusb"
 msgstr ""
 
-#: UsbFilterDetailsDialog_symbols.h:33
-msgid "Use locally"
+#: watchUsbIpApp.cpp:408
+msgid "Could not send hotplug response"
 msgstr ""
 
-#: UsbFilterDetailsDialog_symbols.h:34
-msgid "Forward to remote"
+#: watchUsbIpApp.cpp:464
+msgid "Could not save session config"
+msgstr ""
+
+#: watchUsbIpApp.cpp:472
+msgid "Could not export USB device"
 msgstr ""

@@ -6,10 +6,11 @@ SUBDIRS = po packaging/MacOSX packaging/win32
 noinst_PROGRAMS = bin2hdr
 bin2hdr_SOURCES = bin2hdr.cpp
 
-bin_PROGRAMS = opennx $(TRACELOG) $(WATCHREADER) $(WATCHUSBIP) $(MACFINDREADER)
+bin_PROGRAMS = opennx $(TRACELOG) $(WATCHREADER) $(WATCHUSBIP) \
+	       $(MACFINDREADER) $(MACUNINSTALL)
 
 EXTRA_PROGRAMS = tracelog$(EXEEXT) watchreader$(EXEEXT) \
-		 watchusbip$(EXEEXT) macfindreader$(EXEEXT)
+		 watchusbip$(EXEEXT) macfindreader$(EXEEXT) macuninstall$(EXEEXT)
 
 opennx_SOURCES = AboutDialog.cpp AsyncProcess.cpp LibOpenSC.cpp \
 	CardWaiterDialog.cpp ConnectDialog.cpp ExtHtmlWindow.cpp \
@@ -45,7 +46,7 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	VncImageSettingsDialog.h VncImageSettingsDialog_symbols.h \
 	VncPropertyDialog.h VncPropertyDialog_symbols.h WinShare.h \
 	X11PropertyDialog.h X11PropertyDialog_symbols.h trace.h tracelogApp.h \
-	watchReaderApp.h watchUsbIpApp.h xh_richtext.h
+	watchReaderApp.h watchUsbIpApp.h xh_richtext.h MacUninstallApp.h
 
 watchreader_SOURCES = watchReaderApp.cpp LibOpenSC.cpp MyDynlib.cpp MacOSX.c
 watchreader_DEPENDENCIES = $(WATCHREADER_RES)
@@ -66,10 +67,9 @@ watchusbip_CFLAGS = $(WX_CFLAGS)
 
 tracelog_SOURCES = tracelogApp.cpp TraceLogFrame.cpp \
 	DebugStringGrabber.cpp wxprec.cpp Icon.cpp
-tracelog_LDADD = $(TRACELOG_RES) $(WX_LIBS) $(X_LIBS) $(X_PRE_LIBS) \
-	$(X_EXTRA_LIBS) $(APP_LDADD)
+tracelog_LDADD = $(TRACELOG_RES) $(WX_LIBS)
 tracelog_DEPENDENCIES = $(TRACELOG_RES)
-tracelog_CPPFLAGS = $(WX_CPPFLAGS) $(X_CFLAGS) -DAPP_TRACELOG
+tracelog_CPPFLAGS = $(WX_CPPFLAGS) -DAPP_TRACELOG
 tracelog_CXXFLAGS = $(WX_CXXFLAGS)
 tracelog_CFLAGS = $(WX_CFLAGS)
 
@@ -77,6 +77,13 @@ macfindreader_SOURCES = macfindreader.c
 macfindreader_CFLAGS = $(UNIFLAGS)
 macfindreader_LDLAGS = $(UNIFLAGS)
 macfindreader_LDADD = -lopensc
+
+macuninstall_SOURCES = MacUninstallApp.cpp MacOSX.c
+macuninstall_LDADD = $(WX_LIBS)
+macuninstall_LDFLAGS = -framework Security
+macuninstall_CPPFLAGS = $(WX_CPPFLAGS) -DAPP_MACUNINSTALL
+macuninstall_CXXFLAGS = $(WX_CXXFLAGS)
+macuninstall_CFLAGS = $(WX_CFLAGS)
 
 EXTRA_HEADERS = res/opennx.rc
 
@@ -124,6 +131,9 @@ bundle:
 	$(srcdir)/packaging/MacOSX/mkbundle OpenNXWizard.app OpenNXWizard \
 	    $(srcdir)/extres/opennx-wizard.icns $(abs_builddir)/opennx \
 	    $(builddir)/packaging/MacOSX/opennx.plist "" --wizard
+	$(srcdir)/packaging/MacOSX/mkbundle "Uninstall OpenNX.app" "" \
+	    $(srcdir)/extres/opennx-uninstall.icns $(abs_builddir)/macuninstall \
+	    $(builddir)/packaging/MacOSX/opennx.plist ""
 	$(srcdir)/packaging/MacOSX/mkbundle Message.app OpenNXMessage \
 	    $(srcdir)/extres/nx.icns $(abs_builddir)/opennx \
 	    $(builddir)/packaging/MacOSX/opennx.plist "" \

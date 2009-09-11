@@ -8,6 +8,7 @@
 # $6 - Creator
 # $@ - Additional arguments for executable
 
+set -e
 BDIR=$1
 SCRIPT=$2
 ICON=$3
@@ -16,18 +17,28 @@ PLIST=$5
 CREATOR="$6"
 shift 6
 
+BB=`basename $BIN`
 if test -z "$CREATOR" ; then
     CREATOR="????"
 fi
 mkdir -p "$BDIR/Contents/MacOS"
 mkdir -p "$BDIR/Contents/Resources"
 iconshort=`basename $ICON .icns`
-sed -e "s/_ICON_/$iconshort/" -e "s/_EXECUTABLE_/$SCRIPT/" -e "s/_CREATOR_/$CREATOR/" < $PLIST > "$BDIR/Contents/Info.plist"
+if [ -n "$SCRIPT" ] ; then
+    sed -e "s/_ICON_/$iconshort/" -e "s/_EXECUTABLE_/$SCRIPT/" -e "s/_CREATOR_/$CREATOR/" < $PLIST > "$BDIR/Contents/Info.plist"
+else
+    sed -e "s/_ICON_/$iconshort/" -e "s/_EXECUTABLE_/$BB/" -e "s/_CREATOR_/$CREATOR/" < $PLIST > "$BDIR/Contents/Info.plist"
+fi
 cp $ICON "$BDIR/Contents/Resources"
 chmod u+w "$BDIR/Contents/Resources/$iconshort.icns"
 echo "APPL$CREATOR" > "$BDIR/Contents/PkgInfo"
-cat<<EOF>"$BDIR/Contents/MacOS/$SCRIPT"
+if [ -n "$SCRIPT" ] ; then
+    cat<<EOF>"$BDIR/Contents/MacOS/$SCRIPT"
 #!/bin/sh
 exec $BIN "\$@" $@
 EOF
-chmod a+x "$BDIR/Contents/MacOS/$SCRIPT"
+    chmod a+x "$BDIR/Contents/MacOS/$SCRIPT"
+else
+    rm -f "$BDIR/Contents/MacOS/$BB"
+    ln -s "$BIN" "$BDIR/Contents/MacOS/$BB"
+fi
