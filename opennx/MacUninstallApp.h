@@ -40,6 +40,8 @@
  * MacUninstallApp class declaration
  */
 
+class wxArrayString;
+
 class MacUninstallApp: public wxApp
 {    
     DECLARE_CLASS( MacUninstallApp )
@@ -67,8 +69,11 @@ class MacUninstallApp: public wxApp
         ////@end MacUninstallApp member function declarations
 
     private:
-        void ElevatedUninstall(const wxString &);
-        void doUninstall();
+        void ElevatedUninstall(const wxString &, const wxString &);
+        void DoUninstall(const wxString &);
+        bool TestReceipt(const wxString &);
+        bool FetchBOM(bool, const wxString &, wxArrayString &, wxArrayString &);
+        wxString GetInstalledPath(bool, const wxString &);
 
         ////@begin MacUninstallApp member variables
         ////@end MacUninstallApp member variables

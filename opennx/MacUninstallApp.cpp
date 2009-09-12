@@ -29,6 +29,10 @@
 #include <wx/apptrait.h>
 #include <wx/filename.h>
 #include <wx/cmdline.h>
+#include <wx/xml/xml.h>
+#include <wx/arrstr.h>
+//#include <wx/wfstream.h>
+//#include <wx/txtstrm.h>
 #include <Security/Authorization.h>
 #include <Security/AuthorizationTags.h>
 #include <unistd.h>
@@ -141,18 +145,24 @@ bool MacUninstallApp::OnInit()
 
     if (m_bBatchMode) {
         if (0 != geteuid()) {
-            ::wxMessageBox(_("Batch uninstall nedds to be started as root."),
+            ::wxMessageBox(_("Batch uninstall needs to be started as root."),
                     _("Uninstall OpenNX"), wxOK|wxICON_ERROR);
             return false;
         }
-        doUninstall();
+        DoUninstall(wxT("OpenNX"));
     } else {
         int r = ::wxMessageBox(
                 _("This operation can not be undone!\nDo you really want to uninstall OpenNX?"),
-                _("Uninstall OpenNX"), wxYES_NO|wxICON_EXCLAMATION);
-        if (wxYES == r)
-            ElevatedUninstall(
+                _("Uninstall OpenNX"), wxYES_NO|wxNO_DEFAULT|wxICON_EXCLAMATION);
+        if (wxYES == r) {
+            if (!TestReceipt(wxT("OpenNX"))) {
+                while (Pending())
+                    Dispatch();
+                return false;
+            }
+            ElevatedUninstall(wxT("OpenNX"),
                     _("In order to uninstall OpenNX, administrative rights are required.\n"));
+        }
     }
     return false;
 }
@@ -169,15 +179,170 @@ int MacUninstallApp::OnExit()
     ////@end MacUninstallApp cleanup
 }
 
-void MacUninstallApp::doUninstall()
+wxString MacUninstallApp::GetInstalledPath(bool reportErrors,
+        const wxString &rcptName)
 {
-    ::wxMessageBox(_("Uninstalling as root"), _("Uninstall OpenNX"));
+    wxXmlDocument rcpt(wxT("/Library/Receipts/OpenNX.pkg/Contents/Info.plist"));
+    if (rcpt.IsOk()) {
+        if (rcpt.GetRoot()->GetName() != wxT("plist")) {
+            if (reportErrors)
+                ::wxLogError(_("Invalid plist format"));
+            return wxEmptyString;
+        }
+        wxXmlNode *child = rcpt.GetRoot()->GetChildren();
+        if (child->GetName() != wxT("dict")) {
+            if (reportErrors)
+                ::wxLogError(_("Invalid plist format"));
+            return wxEmptyString;
+        }
+        child = child->GetChildren();
+        bool needkey = true;
+        bool found = false;
+        while (child) {
+            if (needkey) {
+                if (child->GetName() != wxT("key")) {
+                    if (reportErrors)
+                        ::wxLogError(_("Invalid plist format"));
+                    return wxEmptyString;
+                }
+                if (child->GetNodeContent() == wxT("IFPkgRelocatedPath"))
+                    found = true;
+            } else {
+                if (found) {
+                    if (child->GetName() != wxT("string")) {
+                        if (reportErrors)
+                            ::wxLogError(_("Invalid plist format"));
+                        return wxEmptyString;
+                    }
+                    return child->GetNodeContent();
+                }
+            }
+            needkey = (!needkey);
+            child = child->GetNext();
+        }
+    } else
+        if (reportErrors)
+            ::wxLogError(_("Could not read package receipt"));
+    return wxEmptyString;
 }
 
-void MacUninstallApp::ElevatedUninstall(const wxString &msg)
+bool MacUninstallApp::FetchBOM(bool reportErrors, const wxString &bom,
+        wxArrayString &dirs, wxArrayString &files)
+{
+    if (!wxFileName::FileExists(bom)) {
+        if (reportErrors)
+            ::wxLogError(
+                    _("Missing BOM (Bill Of Materials). Already unistalled?"));
+        return false;
+    }
+    wxString cmd(wxT("lsbom -fbcl -p f "));
+    cmd << bom;
+    wxArrayString err;
+    if (0 != ::wxExecute(cmd, files, err)) {
+        if (reportErrors)
+            ::wxLogError(
+                    _("Could not list BOM (Bill Of Materials). Already unistalled?"));
+        return false;
+    }
+    if (0 != err.GetCount() != 0) {
+        if (reportErrors)
+            ::wxLogError(
+                    _("Invalid BOM (Bill Of Materials). Already unistalled?"));
+        return false;
+    }
+    cmd = wxT("lsbom -d -p f ");
+    cmd << bom;
+    err.Empty();
+    if (0 != ::wxExecute(cmd, dirs, err)) {
+        if (reportErrors)
+            ::wxLogError(
+                    _("Could not list BOM (Bill Of Materials). Already unistalled?"));
+        return false;
+    }
+    if (0 != err.GetCount() != 0) {
+        if (reportErrors)
+            ::wxLogError(
+                    _("Invalid BOM (Bill Of Materials). Already unistalled?"));
+        return false;
+    }
+    return true;
+}
+
+bool MacUninstallApp::TestReceipt(const wxString &pkg)
+{
+    wxString rpath = wxT("/Library/Receipts/");
+    rpath.Append(pkg).Append(wxT(".pkg"));
+    if (!wxFileName::DirExists(rpath)) {
+        ::wxLogWarning(
+                _("The package receipt does not exist. Already unistalled?"));
+        return false;
+    }
+    wxString proot = GetInstalledPath(true,
+            rpath + wxT("/Contents/Info.plist"));
+    if (proot.IsEmpty())
+        return false;
+    if (!wxFileName::DirExists(proot)) {
+        ::wxLogWarning(
+                _("The package install path does not exist. Already unistalled?"));
+        return false;
+    }
+    wxArrayString d;
+    wxArrayString f;
+    if (!FetchBOM(true, rpath + wxT("/Contents/Archive.bom"), d, f))
+        return false;
+    return true;
+}
+
+void MacUninstallApp::DoUninstall(const wxString &pkg)
+{
+    wxString rpath = wxT("/Library/Receipts/");
+    rpath.Append(pkg).Append(wxT(".pkg"));
+    wxString proot = GetInstalledPath(false,
+            rpath + wxT("/Contents/Info.plist"));
+    if (proot.IsEmpty())
+        return;
+    wxArrayString d;
+    wxArrayString f;
+    if (!FetchBOM(false, rpath + wxT("/Contents/Archive.bom"), d, f))
+        return;
+    size_t i;
+    for (i = 0; i < f.GetCount(); i++) {
+        wxFileName fn(proot + f[i]);
+        if (fn.Normalize(wxPATH_NORM_DOTS|wxPATH_NORM_ABSOLUTE)) {
+#if 0
+            if (0 == unlink((const char *)fn.GetFullPath().mb_str()))
+                f.RemoveAt(i);
+#else
+            fprintf(stderr, "rm %s\n",
+                    (const char *)fn.GetFullPath().mb_str());
+            fflush(stderr);
+#endif
+        }
+    }
+    size_t lcd;
+    do {
+        lcd = d.GetCount();
+        for (i = 0; i < d.GetCount(); i++) {
+            wxFileName fn(proot + d[i]);
+            if (fn.Normalize(wxPATH_NORM_DOTS|wxPATH_NORM_ABSOLUTE)) {
+#if 0
+                if (0 == rmdir(fn.GetFullPath().mb_str()))
+                    d.RemoveAt(i--);
+#else
+                fprintf(stderr, "rmdir %s\n",
+                        (const char *)fn.GetFullPath().mb_str());
+                fflush(stderr);
+#endif
+            }
+        }
+    } while (lcd != d.GetCount());
+}
+
+void MacUninstallApp::ElevatedUninstall(const wxString &pkg,
+        const wxString &msg)
 {
     if (geteuid() == 0) {
-        doUninstall();
+        DoUninstall(pkg);
         return;
     }
     char *prompt = strdup(msg.utf8_str());
