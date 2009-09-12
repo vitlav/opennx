@@ -21,6 +21,7 @@
 #include "wx/image.h"
 ////@end includes
 #include <wx/intl.h>
+#include <wx/hashset.h>
 
 /*!
  * Forward declarations
@@ -28,6 +29,8 @@
 
 ////@begin forward declarations
 ////@end forward declarations
+class wxArrayString;
+class wxTextOutputStream;
 
 /*!
  * Control identifiers
@@ -40,7 +43,7 @@
  * MacUninstallApp class declaration
  */
 
-class wxArrayString;
+WX_DECLARE_HASH_SET(wxString, wxStringHash, wxStringEqual, StringSet);
 
 class MacUninstallApp: public wxApp
 {    
@@ -68,6 +71,8 @@ class MacUninstallApp: public wxApp
         ////@begin MacUninstallApp member function declarations
         ////@end MacUninstallApp member function declarations
 
+        wxTextOutputStream *GetLog() { return m_log; }
+
     private:
         void ElevatedUninstall(const wxString &, const wxString &);
         void DoUninstall(const wxString &);
@@ -80,6 +85,8 @@ class MacUninstallApp: public wxApp
         bool m_bBatchMode;
         wxLocale m_cLocale;
         wxString m_sSelfPath;
+        wxTextOutputStream *m_log;
+        StringSet m_nodelete;
 };
 
 /*!

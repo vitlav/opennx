@@ -31,8 +31,9 @@
 #include <wx/cmdline.h>
 #include <wx/xml/xml.h>
 #include <wx/arrstr.h>
-//#include <wx/wfstream.h>
-//#include <wx/txtstrm.h>
+#include <wx/wfstream.h>
+#include <wx/txtstrm.h>
+#include <wx/dir.h>
 #include <Security/Authorization.h>
 #include <Security/AuthorizationTags.h>
 #include <unistd.h>
@@ -45,6 +46,49 @@
 
 ////@end XPM images
 
+class RmRfTraverser : public wxDirTraverser
+{
+    public:
+        RmRfTraverser() { }
+
+        ~RmRfTraverser()
+        {
+            int n = m_aFiles.GetCount() - 1;
+            wxString fn;
+            wxTextOutputStream *s = wxGetApp().GetLog();
+            while (n >= 0) {
+                fn = m_aFiles[n--];
+                if (::wxRemoveFile(fn)) {
+                    if (s)
+                        *s << wxT("rm ") << fn << endl;
+                }
+            }
+            n = m_aDirs.GetCount() - 1;
+            while (n >= 0) {
+                fn = m_aDirs[n--];
+                if (::wxRmdir(fn)) {
+                    if (s)
+                        *s << wxT("rmdir ") << fn << endl;
+                }
+            }
+        }
+
+        virtual wxDirTraverseResult OnFile(const wxString& filename)
+        {
+            m_aFiles.Add(filename);
+            return wxDIR_CONTINUE;
+        }
+
+        virtual wxDirTraverseResult OnDir(const wxString& dirpath)
+        {
+            m_aDirs.Add(dirpath);
+            return wxDIR_CONTINUE;
+        }
+
+    private:
+        wxArrayString m_aDirs;
+        wxArrayString m_aFiles;
+};
 
 /*
  * Application instance implementation
@@ -92,9 +136,13 @@ void MacUninstallApp::Init()
 {
 ////@begin MacUninstallApp member initialisation
 ////@end MacUninstallApp member initialisation
+    m_log = NULL;
     m_bBatchMode = false;
     m_sSelfPath = wxFileName(
             GetTraits()->GetStandardPaths().GetExecutablePath()).GetFullPath();
+    m_nodelete.insert(wxT("."));
+    m_nodelete.insert(wxT("./Applications"));
+    m_nodelete.insert(wxT("./Library"));
 }
 
 void MacUninstallApp::OnInitCmdLine(wxCmdLineParser& parser)
@@ -144,12 +192,19 @@ bool MacUninstallApp::OnInit()
 #endif
 
     if (m_bBatchMode) {
+        wxLogNull ignoreErrors;
         if (0 != geteuid()) {
             ::wxMessageBox(_("Batch uninstall needs to be started as root."),
                     _("Uninstall OpenNX"), wxOK|wxICON_ERROR);
             return false;
         }
         DoUninstall(wxT("OpenNX"));
+        if (m_log) {
+            *m_log << wxT("Uninstall finished at ")
+                << wxDateTime::Now().Format() << endl;
+            delete m_log;
+            m_log = NULL;
+        }
     } else {
         int r = ::wxMessageBox(
                 _("This operation can not be undone!\nDo you really want to uninstall OpenNX?"),
@@ -161,7 +216,7 @@ bool MacUninstallApp::OnInit()
                 return false;
             }
             ElevatedUninstall(wxT("OpenNX"),
-                    _("In order to uninstall OpenNX, administrative rights are required.\n"));
+                    _("In order to uninstall OpenNX, administrative rights are required.\n\n"));
         }
     }
     return false;
@@ -173,7 +228,8 @@ bool MacUninstallApp::OnInit()
  */
 
 int MacUninstallApp::OnExit()
-{    
+{
+    wxLogNull ignoreErrors;
     ////@begin MacUninstallApp cleanup
     return wxApp::OnExit();
     ////@end MacUninstallApp cleanup
@@ -295,96 +351,118 @@ bool MacUninstallApp::TestReceipt(const wxString &pkg)
 
 void MacUninstallApp::DoUninstall(const wxString &pkg)
 {
+    wxString logname = wxT("/tmp/uninstall-") + pkg;
+    logname << wxT(".log");
+    wxFileOutputStream *fo = new wxFileOutputStream(logname);
+    m_log = new wxTextOutputStream(*fo);
+    *m_log << wxT("Uninstall started at ")
+        << wxDateTime::Now().Format() << endl;
     wxString rpath = wxT("/Library/Receipts/");
     rpath.Append(pkg).Append(wxT(".pkg"));
     wxString proot = GetInstalledPath(false,
             rpath + wxT("/Contents/Info.plist"));
-    if (proot.IsEmpty())
+    if (proot.IsEmpty()) {
+        *m_log << wxT("No packageroot found") << endl;
         return;
+    }
     wxArrayString d;
     wxArrayString f;
-    if (!FetchBOM(false, rpath + wxT("/Contents/Archive.bom"), d, f))
+    if (!FetchBOM(false, rpath + wxT("/Contents/Archive.bom"), d, f)) {
+        *m_log << wxT("Could not read BOM") << endl;
         return;
+    }
     size_t i;
+    *m_log << wxT("Deleting files:") << endl;
     for (i = 0; i < f.GetCount(); i++) {
+        if (m_nodelete.find(f[i]) != m_nodelete.end()) {
+            f.RemoveAt(i--);
+            continue;
+        }
         wxFileName fn(proot + f[i]);
         if (fn.Normalize(wxPATH_NORM_DOTS|wxPATH_NORM_ABSOLUTE)) {
-#if 0
-            if (0 == unlink((const char *)fn.GetFullPath().mb_str()))
-                f.RemoveAt(i);
-#else
-            fprintf(stderr, "rm %s\n",
-                    (const char *)fn.GetFullPath().mb_str());
-            fflush(stderr);
-#endif
+            if (::wxRemoveFile(fn.GetFullPath())) {
+                f.RemoveAt(i--);
+                *m_log << wxT("rm ") << fn.GetFullPath() << endl;
+            }
         }
     }
     size_t lcd;
+    *m_log << wxT("Deleting directories:") << endl;
     do {
         lcd = d.GetCount();
         for (i = 0; i < d.GetCount(); i++) {
+            if (m_nodelete.find(d[i]) != m_nodelete.end()) {
+                d.RemoveAt(i--);
+                continue;
+            }
             wxFileName fn(proot + d[i]);
             if (fn.Normalize(wxPATH_NORM_DOTS|wxPATH_NORM_ABSOLUTE)) {
-#if 0
-                if (0 == rmdir(fn.GetFullPath().mb_str()))
+                if (::wxRmdir(fn.GetFullPath())) {
                     d.RemoveAt(i--);
-#else
-                fprintf(stderr, "rmdir %s\n",
-                        (const char *)fn.GetFullPath().mb_str());
-                fflush(stderr);
-#endif
+                    *m_log << wxT("rmdir ") << fn.GetFullPath() << endl;
+                }
             }
         }
     } while (lcd != d.GetCount());
+    if (0 < f.GetCount()) {
+        *m_log << wxT("=========================") << endl;
+        *m_log << wxT("Files that could not be deleted:") << endl;
+        for (i = 0; i < f.GetCount(); i++)
+            *m_log << wxT(" ") << f[i] << endl;
+    }
+    if (0 < d.GetCount()) {
+        *m_log << wxT("=========================") << endl;
+        *m_log << wxT("Directories that could not be deleted:") << endl;
+        for (i = 0; i < d.GetCount(); i++)
+            *m_log << wxT(" ") << d[i] << endl;
+    }
+    if (0 == (d.GetCount() + f.GetCount())) {
+        // Finally delete the receipe itself
+        *m_log << wxT("Deleting receipt:") << endl;
+        {
+            wxDir d(rpath);
+            RmRfTraverser t;
+            d.Traverse(t);
+        }
+        if (::wxRmdir(rpath))
+            *m_log << wxT("rmdir ") << rpath << endl;
+    }
 }
 
 void MacUninstallApp::ElevatedUninstall(const wxString &pkg,
         const wxString &msg)
 {
+    wxLogNull ignoreErrors;
     if (geteuid() == 0) {
         DoUninstall(pkg);
         return;
     }
     char *prompt = strdup(msg.utf8_str());
 
-    OSStatus myStatus;
-    AuthorizationFlags myFlags = kAuthorizationFlagDefaults;
-    AuthorizationRef myAuthorizationRef;
+    OSStatus st;
+    AuthorizationFlags aFlags = kAuthorizationFlagDefaults;
+    AuthorizationRef aRef;
     AuthorizationItem promptItem = {
         kAuthorizationEnvironmentPrompt, strlen(prompt), prompt, 0
     };
     AuthorizationEnvironment aEnv = { 1, &promptItem };
 
-    myStatus = AuthorizationCreate(NULL, kAuthorizationEmptyEnvironment,
-            myFlags, &myAuthorizationRef);
-    if (errAuthorizationSuccess != myStatus)
+    st = AuthorizationCreate(NULL, kAuthorizationEmptyEnvironment,
+            kAuthorizationFlagDefaults, &aRef);
+    if (errAuthorizationSuccess != st)
         return;
-    AuthorizationItem myItems = { kAuthorizationRightExecute, 0, NULL, 0 };
-    AuthorizationRights myRights = { 1, &myItems };
-    myFlags = kAuthorizationFlagDefaults |
+    AuthorizationItem aItems = { kAuthorizationRightExecute, 0, NULL, 0 };
+    AuthorizationRights aRights = { 1, &aItems };
+    aFlags = kAuthorizationFlagDefaults |
         kAuthorizationFlagInteractionAllowed |
         kAuthorizationFlagPreAuthorize |
         kAuthorizationFlagExtendRights;
-    myStatus = AuthorizationCopyRights(myAuthorizationRef, &myRights, &aEnv, myFlags, NULL );
-    if (errAuthorizationSuccess == myStatus) {
-        char *myToolPath = strdup(m_sSelfPath.utf8_str());
-        char *myArguments[] = { "--batch", NULL };
-        FILE *myCommunicationsPipe = NULL;
-        char myReadBuffer[128];
-
-        myFlags = kAuthorizationFlagDefaults;
-        myStatus = AuthorizationExecuteWithPrivileges(myAuthorizationRef,
-                myToolPath, myFlags, myArguments, &myCommunicationsPipe);
-        if (errAuthorizationSuccess == myStatus) {
-            for(;;) {
-                int bytesRead = read(fileno(myCommunicationsPipe),
-                        myReadBuffer, sizeof(myReadBuffer));
-                if (bytesRead < 1)
-                    break;
-            }
-        }
+    st = AuthorizationCopyRights(aRef, &aRights, &aEnv, aFlags, NULL );
+    if (errAuthorizationSuccess == st) {
+        char *executable = strdup(m_sSelfPath.utf8_str());
+        char *args[] = { "--batch", NULL };
+        st = AuthorizationExecuteWithPrivileges(aRef,
+                executable, kAuthorizationFlagDefaults, args, NULL);
     }
-    AuthorizationFree(myAuthorizationRef, kAuthorizationFlagDefaults);
-    if (myStatus)
-        printf("Status: %ld\n", myStatus);
+    AuthorizationFree(aRef, kAuthorizationFlagDefaults);
 }

@@ -27,6 +27,9 @@ pkgdir:
 	$(srcdir)/mkbundle "pkgroot/Applications/OpenNX/Connection Wizard.app" OpenNXWizard \
 	    $(top_srcdir)/extres/opennx-wizard.icns $(bindir)/opennx \
 	    $(srcdir)/opennx.plist "" --wizard
+	$(srcdir)/mkbundle "pkgroot/Applications/OpenNX/Uninstall OpenNX.app" "" \
+	    $(top_srcdir)/extres/opennx-uninstall.icns $(bindir)/macuninstall \
+	    $(srcdir)/opennx.plist ""
 	$(srcdir)/mkbundle pkgroot/Library/OpenNX/Message.app OpenNXMessage \
 	    $(top_srcdir)/extres/nx.icns $(bindir)/opennx \
 	    $(srcdir)/opennx.plist "" --dialog ok --style info --caption CARDREMOVED --message CARDREMOVED

@@ -142,7 +142,8 @@ bundle:
 all-local: $(BUNDLE)
 
 clean-local:
-	rm -rf OpenNX.app OpenNXAdmin.app OpenNXWizard.app Message.app
+	rm -rf OpenNX.app OpenNXAdmin.app OpenNXWizard.app Message.app \
+	    "Uninstall OpenNX.app"
 
 distclean-local:
 	rm -f po/stamp-po
