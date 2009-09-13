@@ -9,7 +9,7 @@ dmg: pkg
 	    -b $(srcdir)/folderbg.jpg \
 	    -f $(srcdir)/fileopts \
 	    -i $(srcdir)/volicon.icns \
-	    $(top_builddir)/OpenNX-$(VERSION).dmg dmgroot
+	    $(top_builddir)/OpenNX-$(FULLVERSION).dmg dmgroot
 	touch $@
 
 pkgdir:
