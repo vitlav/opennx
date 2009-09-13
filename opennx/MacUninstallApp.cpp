@@ -23,28 +23,24 @@
 #include "wx/wx.h"
 #endif
 
-////@begin includes
-////@end includes
 #include <wx/stdpaths.h>
 #include <wx/apptrait.h>
 #include <wx/filename.h>
 #include <wx/cmdline.h>
 #include <wx/xml/xml.h>
 #include <wx/arrstr.h>
-#include <wx/wfstream.h>
-#include <wx/txtstrm.h>
 #include <wx/dir.h>
 #include <Security/Authorization.h>
 #include <Security/AuthorizationTags.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
+#include <fstream>
 
 #include "macuninstallapp.h"
 
-////@begin XPM images
-
-////@end XPM images
+static unsigned long failed_files;
+static unsigned long failed_dirs;
 
 class RmRfTraverser : public wxDirTraverser
 {
@@ -55,20 +51,23 @@ class RmRfTraverser : public wxDirTraverser
         {
             int n = m_aFiles.GetCount() - 1;
             wxString fn;
-            wxTextOutputStream *s = wxGetApp().GetLog();
             while (n >= 0) {
                 fn = m_aFiles[n--];
-                if (::wxRemoveFile(fn)) {
-                    if (s)
-                        *s << wxT("rm ") << fn << endl;
+                if (::wxRemoveFile(fn))
+                    ::wxLogMessage(_("Deleted file: %s"), fn.c_str());
+                else {
+                    failed_files++;
+                    ::wxLogWarning(_("Could not delete file %s"), fn.c_str());
                 }
             }
             n = m_aDirs.GetCount() - 1;
             while (n >= 0) {
                 fn = m_aDirs[n--];
-                if (::wxRmdir(fn)) {
-                    if (s)
-                        *s << wxT("rmdir ") << fn << endl;
+                if (::wxRmdir(fn))
+                    ::wxLogMessage(_("Deleted diretory %s"), fn.c_str());
+                else {
+                    failed_dirs++;
+                    ::wxLogWarning(_("Could not delete directory %s"), fn.c_str());
                 }
             }
         }
@@ -90,54 +89,17 @@ class RmRfTraverser : public wxDirTraverser
         wxArrayString m_aFiles;
 };
 
-/*
- * Application instance implementation
- */
+IMPLEMENT_APP(MacUninstallApp)
+IMPLEMENT_CLASS(MacUninstallApp, wxApp)
 
-////@begin implement app
-IMPLEMENT_APP( MacUninstallApp )
-////@end implement app
-
-
-/*
- * MacUninstallApp type definition
- */
-
-IMPLEMENT_CLASS( MacUninstallApp, wxApp )
-
-
-/*
- * MacUninstallApp event table definition
- */
-
-BEGIN_EVENT_TABLE( MacUninstallApp, wxApp )
-
-////@begin MacUninstallApp event table entries
-////@end MacUninstallApp event table entries
-
+BEGIN_EVENT_TABLE(MacUninstallApp, wxApp)
 END_EVENT_TABLE()
-
-
-/*
- * Constructor for MacUninstallApp
- */
 
 MacUninstallApp::MacUninstallApp()
 {
-    Init();
-}
-
-
-/*
- * Member initialisation
- */
-
-void MacUninstallApp::Init()
-{
-////@begin MacUninstallApp member initialisation
-////@end MacUninstallApp member initialisation
-    m_log = NULL;
+    failed_files = failed_dirs = 0;
     m_bBatchMode = false;
+    m_bCancelled = false;
     m_sSelfPath = wxFileName(
             GetTraits()->GetStandardPaths().GetExecutablePath()).GetFullPath();
     m_nodelete.insert(wxT("."));
@@ -149,7 +111,6 @@ void MacUninstallApp::OnInitCmdLine(wxCmdLineParser& parser)
 {
     // Init standard options (--help, --verbose);
     wxApp::OnInitCmdLine(parser);
-
     parser.AddSwitch(wxEmptyString, wxT("batch"),
             _("Uninstall without asking the user (needs admin rights)."));
 }
@@ -178,33 +139,20 @@ bool MacUninstallApp::OnInit()
     if (!wxApp::OnInit())
         return false;
 
-#if wxUSE_XPM
-    wxImage::AddHandler(new wxXPMHandler);
-#endif
-#if wxUSE_LIBPNG
-    wxImage::AddHandler(new wxPNGHandler);
-#endif
-#if wxUSE_LIBJPEG
-    wxImage::AddHandler(new wxJPEGHandler);
-#endif
-#if wxUSE_GIF
-    wxImage::AddHandler(new wxGIFHandler);
-#endif
-
+    wxInitAllImageHandlers();
+    wxBitmap::InitStandardHandlers();
+    m_sLogName << wxT("/tmp/uninstall-") << wxT("OpenNX") << wxT(".log");
     if (m_bBatchMode) {
-        wxLogNull ignoreErrors;
         if (0 != geteuid()) {
             ::wxMessageBox(_("Batch uninstall needs to be started as root."),
                     _("Uninstall OpenNX"), wxOK|wxICON_ERROR);
+            while (Pending())
+                Dispatch();
             return false;
         }
-        DoUninstall(wxT("OpenNX"));
-        if (m_log) {
-            *m_log << wxT("Uninstall finished at ")
-                << wxDateTime::Now().Format() << endl;
-            delete m_log;
-            m_log = NULL;
-        }
+        bool ok = DoUninstall(wxT("OpenNX"));
+        ::wxLogMessage(_("Uninstall finished at %s"), wxDateTime::Now().Format().c_str());
+        printf("%d %lu %lu\n", ok ? 0 : 1, failed_files, failed_dirs);
     } else {
         int r = ::wxMessageBox(
                 _("This operation can not be undone!\nDo you really want to uninstall OpenNX?"),
@@ -215,40 +163,50 @@ bool MacUninstallApp::OnInit()
                     Dispatch();
                 return false;
             }
-            ElevatedUninstall(wxT("OpenNX"),
-                    _("In order to uninstall OpenNX, administrative rights are required.\n\n"));
+            if (ElevatedUninstall(wxT("OpenNX"))) {
+                if (!m_bCancelled) {
+                    if (0 == (failed_files + failed_dirs)) {
+                        ::wxMessageBox(_("OpenNX has been removed successfully."),
+                                _("Uninstallation complete"), wxOK|wxICON_INFORMATION);
+                    } else {
+                        ::wxMessageBox(
+                                wxString::Format(
+                                    _("OpenNX could not be removed completely.\nSome files or directories could not be deleted.\nPlease investigate the log file\n%s\n for more information."),
+                                    m_sLogName.c_str()),
+                                _("Uninstallation incomplete"), wxOK|wxICON_EXCLAMATION);
+                    }
+                }
+            } else
+                ::wxMessageBox(
+                        wxString::Format(
+                            _("Uninstallation has failed.\nThe reason should have been logged in the file\n%s"),
+                            m_sLogName.c_str()),
+                        _("Uninstallation failed"), wxOK|wxICON_ERROR);
         }
     }
+    while (Pending())
+        Dispatch();
     return false;
 }
 
-
-/*
- * Cleanup for MacUninstallApp
- */
-
 int MacUninstallApp::OnExit()
 {
-    wxLogNull ignoreErrors;
-    ////@begin MacUninstallApp cleanup
     return wxApp::OnExit();
-    ////@end MacUninstallApp cleanup
 }
 
-wxString MacUninstallApp::GetInstalledPath(bool reportErrors,
-        const wxString &rcptName)
+wxString MacUninstallApp::GetInstalledPath(const wxString &rcpt)
 {
-    wxXmlDocument rcpt(wxT("/Library/Receipts/OpenNX.pkg/Contents/Info.plist"));
-    if (rcpt.IsOk()) {
-        if (rcpt.GetRoot()->GetName() != wxT("plist")) {
-            if (reportErrors)
-                ::wxLogError(_("Invalid plist format"));
+    wxXmlDocument doc(rcpt);
+    if (doc.IsOk()) {
+        if (doc.GetRoot()->GetName() != wxT("plist")) {
+            ::wxLogError(_("Not an XML plist: %s"), rcpt.c_str());
             return wxEmptyString;
         }
-        wxXmlNode *child = rcpt.GetRoot()->GetChildren();
+        wxXmlNode *child = doc.GetRoot()->GetChildren();
         if (child->GetName() != wxT("dict")) {
-            if (reportErrors)
-                ::wxLogError(_("Invalid plist format"));
+            ::wxLogError(
+                    _("Invalid plist (missing toplevel <dict> in %s"),
+                    rcpt.c_str());
             return wxEmptyString;
         }
         child = child->GetChildren();
@@ -257,8 +215,9 @@ wxString MacUninstallApp::GetInstalledPath(bool reportErrors,
         while (child) {
             if (needkey) {
                 if (child->GetName() != wxT("key")) {
-                    if (reportErrors)
-                        ::wxLogError(_("Invalid plist format"));
+                    ::wxLogError(
+                            _("Invalid plist (expected a key) in %s"),
+                            rcpt.c_str());
                     return wxEmptyString;
                 }
                 if (child->GetNodeContent() == wxT("IFPkgRelocatedPath"))
@@ -266,8 +225,9 @@ wxString MacUninstallApp::GetInstalledPath(bool reportErrors,
             } else {
                 if (found) {
                     if (child->GetName() != wxT("string")) {
-                        if (reportErrors)
-                            ::wxLogError(_("Invalid plist format"));
+                        ::wxLogError(
+                                _("Invalid plist (expected a string value) in %s"),
+                                rcpt.c_str());
                         return wxEmptyString;
                     }
                     return child->GetNodeContent();
@@ -277,48 +237,42 @@ wxString MacUninstallApp::GetInstalledPath(bool reportErrors,
             child = child->GetNext();
         }
     } else
-        if (reportErrors)
-            ::wxLogError(_("Could not read package receipt"));
+        ::wxLogError(_("Could not read package receipt %s"), rcpt.c_str());
     return wxEmptyString;
 }
 
-bool MacUninstallApp::FetchBOM(bool reportErrors, const wxString &bom,
+bool MacUninstallApp::FetchBOM(const wxString &bom,
         wxArrayString &dirs, wxArrayString &files)
 {
     if (!wxFileName::FileExists(bom)) {
-        if (reportErrors)
-            ::wxLogError(
-                    _("Missing BOM (Bill Of Materials). Already unistalled?"));
+        ::wxLogError(
+                _("Missing BOM (Bill Of Materials) '%s'. Already unistalled?"), bom.c_str());
         return false;
     }
     wxString cmd(wxT("lsbom -fbcl -p f "));
     cmd << bom;
     wxArrayString err;
     if (0 != ::wxExecute(cmd, files, err)) {
-        if (reportErrors)
-            ::wxLogError(
-                    _("Could not list BOM (Bill Of Materials). Already unistalled?"));
+        ::wxLogError(
+                _("Could not list BOM (Bill Of Materials) '%s'. Already unistalled?"), bom.c_str());
         return false;
     }
     if (0 != err.GetCount() != 0) {
-        if (reportErrors)
-            ::wxLogError(
-                    _("Invalid BOM (Bill Of Materials). Already unistalled?"));
+        ::wxLogError(
+                _("Invalid BOM (Bill Of Materials) '%s'. Already unistalled?"), bom.c_str());
         return false;
     }
     cmd = wxT("lsbom -d -p f ");
     cmd << bom;
     err.Empty();
     if (0 != ::wxExecute(cmd, dirs, err)) {
-        if (reportErrors)
-            ::wxLogError(
-                    _("Could not list BOM (Bill Of Materials). Already unistalled?"));
+        ::wxLogError(
+                _("Could not list BOM (Bill Of Materials) '%s'. Already unistalled?"), bom.c_str());
         return false;
     }
     if (0 != err.GetCount() != 0) {
-        if (reportErrors)
-            ::wxLogError(
-                    _("Invalid BOM (Bill Of Materials). Already unistalled?"));
+        ::wxLogError(
+                _("Invalid BOM (Bill Of Materials) '%s'. Already unistalled?"), bom.c_str());
         return false;
     }
     return true;
@@ -333,8 +287,7 @@ bool MacUninstallApp::TestReceipt(const wxString &pkg)
                 _("The package receipt does not exist. Already unistalled?"));
         return false;
     }
-    wxString proot = GetInstalledPath(true,
-            rpath + wxT("/Contents/Info.plist"));
+    wxString proot = GetInstalledPath(rpath + wxT("/Contents/Info.plist"));
     if (proot.IsEmpty())
         return false;
     if (!wxFileName::DirExists(proot)) {
@@ -344,35 +297,28 @@ bool MacUninstallApp::TestReceipt(const wxString &pkg)
     }
     wxArrayString d;
     wxArrayString f;
-    if (!FetchBOM(true, rpath + wxT("/Contents/Archive.bom"), d, f))
+    if (!FetchBOM(rpath + wxT("/Contents/Archive.bom"), d, f))
         return false;
     return true;
 }
 
-void MacUninstallApp::DoUninstall(const wxString &pkg)
+bool MacUninstallApp::DoUninstall(const wxString &pkg)
 {
-    wxString logname = wxT("/tmp/uninstall-") + pkg;
-    logname << wxT(".log");
-    wxFileOutputStream *fo = new wxFileOutputStream(logname);
-    m_log = new wxTextOutputStream(*fo);
-    *m_log << wxT("Uninstall started at ")
-        << wxDateTime::Now().Format() << endl;
+    std::ofstream *log = new std::ofstream();
+    log->open(m_sLogName.mb_str());
+    delete wxLog::SetActiveTarget(new wxLogStream(log));
+    ::wxLogMessage(wxT("Uninstall started at %s"), wxDateTime::Now().Format().c_str());
     wxString rpath = wxT("/Library/Receipts/");
     rpath.Append(pkg).Append(wxT(".pkg"));
-    wxString proot = GetInstalledPath(false,
-            rpath + wxT("/Contents/Info.plist"));
-    if (proot.IsEmpty()) {
-        *m_log << wxT("No packageroot found") << endl;
-        return;
-    }
+    wxString proot = GetInstalledPath(rpath + wxT("/Contents/Info.plist"));
+    if (proot.IsEmpty())
+        return false;
     wxArrayString d;
     wxArrayString f;
-    if (!FetchBOM(false, rpath + wxT("/Contents/Archive.bom"), d, f)) {
-        *m_log << wxT("Could not read BOM") << endl;
-        return;
-    }
+    if (!FetchBOM(rpath + wxT("/Contents/Archive.bom"), d, f))
+        return false;
     size_t i;
-    *m_log << wxT("Deleting files:") << endl;
+    ::wxLogMessage(wxT("Deleting package content"));
     for (i = 0; i < f.GetCount(); i++) {
         if (m_nodelete.find(f[i]) != m_nodelete.end()) {
             f.RemoveAt(i--);
@@ -380,14 +326,17 @@ void MacUninstallApp::DoUninstall(const wxString &pkg)
         }
         wxFileName fn(proot + f[i]);
         if (fn.Normalize(wxPATH_NORM_DOTS|wxPATH_NORM_ABSOLUTE)) {
-            if (::wxRemoveFile(fn.GetFullPath())) {
+            wxString name = fn.GetFullPath();
+            if (::wxRemoveFile(name) || (!fn.FileExists())) {
                 f.RemoveAt(i--);
-                *m_log << wxT("rm ") << fn.GetFullPath() << endl;
+                ::wxLogMessage(_("Deleted file: %s"), name.c_str());
+            } else {
+                failed_files++;
+                ::wxLogWarning(_("Could not delete file %s"), name.c_str());
             }
         }
     }
     size_t lcd;
-    *m_log << wxT("Deleting directories:") << endl;
     do {
         lcd = d.GetCount();
         for (i = 0; i < d.GetCount(); i++) {
@@ -397,46 +346,50 @@ void MacUninstallApp::DoUninstall(const wxString &pkg)
             }
             wxFileName fn(proot + d[i]);
             if (fn.Normalize(wxPATH_NORM_DOTS|wxPATH_NORM_ABSOLUTE)) {
-                if (::wxRmdir(fn.GetFullPath())) {
+                wxString name = fn.GetFullPath();
+                if (::wxRmdir(name) || (!fn.DirExists())) {
                     d.RemoveAt(i--);
-                    *m_log << wxT("rmdir ") << fn.GetFullPath() << endl;
+                    ::wxLogMessage(_("Deleted directory: %s"), name.c_str());
                 }
             }
         }
     } while (lcd != d.GetCount());
-    if (0 < f.GetCount()) {
-        *m_log << wxT("=========================") << endl;
-        *m_log << wxT("Files that could not be deleted:") << endl;
-        for (i = 0; i < f.GetCount(); i++)
-            *m_log << wxT(" ") << f[i] << endl;
-    }
     if (0 < d.GetCount()) {
-        *m_log << wxT("=========================") << endl;
-        *m_log << wxT("Directories that could not be deleted:") << endl;
-        for (i = 0; i < d.GetCount(); i++)
-            *m_log << wxT(" ") << d[i] << endl;
+        for (i = 0; i < d.GetCount(); i++) {
+            failed_dirs++;
+            ::wxLogWarning(_("Could not delete directory %s"), d[i].c_str());
+        }
     }
     if (0 == (d.GetCount() + f.GetCount())) {
         // Finally delete the receipe itself
-        *m_log << wxT("Deleting receipt:") << endl;
+        ::wxLogMessage(wxT("Deleting receipt"));
         {
             wxDir d(rpath);
             RmRfTraverser t;
             d.Traverse(t);
         }
         if (::wxRmdir(rpath))
-            *m_log << wxT("rmdir ") << rpath << endl;
-    }
+            ::wxLogMessage(_("Deleted directory: %s"), rpath.c_str());
+        else {
+            failed_dirs++;
+            ::wxLogWarning(_("Could not delete directory %s"), rpath.c_str());
+        }
+    } else
+        ::wxLogMessage(_("Receipt NOT deleted, because package files have been left."));
+    return true;
 }
 
-void MacUninstallApp::ElevatedUninstall(const wxString &pkg,
-        const wxString &msg)
+/**
+ * Execute with administrative rights.
+ */
+bool MacUninstallApp::ElevatedUninstall(const wxString &pkg)
 {
-    wxLogNull ignoreErrors;
-    if (geteuid() == 0) {
-        DoUninstall(pkg);
-        return;
-    }
+    if (geteuid() == 0)
+        return DoUninstall(pkg);
+
+    wxString msg = wxString::Format(
+            _("In order to uninstall %s, administrative rights are required.\n\n"),
+            pkg.c_str());
     char *prompt = strdup(msg.utf8_str());
 
     OSStatus st;
@@ -449,8 +402,10 @@ void MacUninstallApp::ElevatedUninstall(const wxString &pkg,
 
     st = AuthorizationCreate(NULL, kAuthorizationEmptyEnvironment,
             kAuthorizationFlagDefaults, &aRef);
-    if (errAuthorizationSuccess != st)
-        return;
+    if (errAuthorizationSuccess != st) {
+        ::wxLogError(_("Authorization could not be created: %s"), MacAuthError(st).c_str());
+        return true;
+    }
     AuthorizationItem aItems = { kAuthorizationRightExecute, 0, NULL, 0 };
     AuthorizationRights aRights = { 1, &aItems };
     aFlags = kAuthorizationFlagDefaults |
@@ -458,11 +413,62 @@ void MacUninstallApp::ElevatedUninstall(const wxString &pkg,
         kAuthorizationFlagPreAuthorize |
         kAuthorizationFlagExtendRights;
     st = AuthorizationCopyRights(aRef, &aRights, &aEnv, aFlags, NULL );
+    bool ret = true;
     if (errAuthorizationSuccess == st) {
         char *executable = strdup(m_sSelfPath.utf8_str());
         char *args[] = { "--batch", NULL };
+        FILE *pout = NULL;
         st = AuthorizationExecuteWithPrivileges(aRef,
-                executable, kAuthorizationFlagDefaults, args, NULL);
+                executable, kAuthorizationFlagDefaults, args, &pout);
+        if (errAuthorizationSuccess == st) {
+            int status;
+            fscanf(pout, "%d %lu %lu", &status, &failed_files, &failed_dirs);
+            ret = (0 == status);
+        } else
+            ::wxLogError(_("Could not execute with administrative rights:\n%s"), MacAuthError(st).c_str());
+    } else {
+        if (st) {
+            m_bCancelled = (errAuthorizationCanceled == st);
+            if (!m_bCancelled)
+                ::wxLogError(_("Authorization failed: %s"), MacAuthError(st).c_str());
+        }
     }
     AuthorizationFree(aRef, kAuthorizationFlagDefaults);
+    return ret;
+}
+
+wxString MacUninstallApp::MacAuthError(long code)
+{
+    wxString ret;
+    switch (code) {
+        case errAuthorizationSuccess:
+            return wxT("The operation completed successfully.");
+        case errAuthorizationInvalidSet:
+            return wxT("The set parameter is invalid.");
+        case errAuthorizationInvalidRef:
+            return wxT("The authorization parameter is invalid.");
+        case errAuthorizationInvalidTag:
+            return wxT("The tag parameter is invalid.");
+        case errAuthorizationInvalidPointer:
+            return wxT("The authorizedRights parameter is invalid.");
+        case errAuthorizationDenied:
+            return wxT("The Security Server denied authorization for one or more requested rights.");
+        case errAuthorizationCanceled:
+            return wxT("The user canceled the operation.");
+        case errAuthorizationInteractionNotAllowed:
+            return wxT("The Security Server denied authorization because no user interaction is allowed.");
+        case errAuthorizationInternal:
+            return wxT("An unrecognized internal error occurred.");
+        case errAuthorizationExternalizeNotAllowed:
+            return wxT("The Security Server denied externalization of the authorization reference.");
+        case errAuthorizationInternalizeNotAllowed:
+            return wxT("The Security Server denied internalization of the authorization reference.");
+        case errAuthorizationInvalidFlags:
+            return wxT("The flags parameter is invalid.");
+        case errAuthorizationToolExecuteFailure:
+            return wxT("The tool failed to execute.");
+        case errAuthorizationToolEnvironmentError:
+            return wxT("The attempt to execute the tool failed to return a success or an error code.");
+    }
+    return ret;
 }
