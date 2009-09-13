@@ -12,7 +12,7 @@ fi
 if test -z "$PFX" ; then
     PFX=/Library/OpenNX
 fi
-ALLPKG="nxcomp nxproxy nxesd nxssh"
+ALLPKG="nxcomp nxesd nxssh"
 $TOPSRC/getnxsrcpkg $ALLPKG
 for pkg in $ALLPKG ; do
     tar xzf ${pkg}-*.tar.gz
@@ -27,7 +27,7 @@ CFLAGS="-arch i386 -arch ppc" LDFLAGS="-arch i386 -arch ppc" ./configure \
 make DESTDIR=$DEST install
 cd ..
 
-for pkg in nxcomp nxproxy nxesd ; do
+for pkg in nxcomp nxesd ; do
     cd $pkg
     for p in $TOPSRC/patches/${pkg}-*.patch ; do
         echo === Applying `basename $p` in $pkg
