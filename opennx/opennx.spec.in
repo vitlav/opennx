@@ -60,8 +60,8 @@
 %endif
 
 %define nxdlurl http://www.nomachine.com/sources.php
-%define nxpkgs nxcomp nxproxy nxesd
-%define nxpkgsall nxcomp nxproxy nxesd nxssh
+%define nxpkgs nxcomp nxesd
+%define nxpkgsall nxcomp nxesd nxssh
 
 %define rel %{svnrev}%{ostag}
 
@@ -76,8 +76,7 @@ Source0: opennx-%{version}.tar.gz
 %if !%{with_fetchnx}
 Source100: nxcomp-3.3.0-4.tar.gz
 Source101: nxesd-3.3.0-1.tar.gz
-Source102: nxproxy-3.3.0-2.tar.gz
-Source103: nxssh-3.3.0-1.tar.gz
+Source102: nxssh-3.3.0-1.tar.gz
 %endif
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
@@ -156,7 +155,7 @@ for pkg in %{nxpkgsall} ; do
     tar xzf ${pkg}-*.tar.gz
 done
 %else
-%setup -q -a 100 -a 101 -a 102 -a 103
+%setup -q -a 100 -a 101 -a 102
 %endif
 
 # Apply openssh askPIN patch (see https://bugzilla.mindrot.org/show_bug.cgi?id=608)
@@ -206,7 +205,6 @@ cd ..
 %{__install} -d -m 755 %{buildroot}%{_libdir}
 %{__install} -m 755 nxcomp/libXcomp.so.*.*.* %{buildroot}%{_libdir}
 %{__install} -m 755 nxesd/nxesd %{buildroot}%{_bindir}
-%{__install} -m 755 nxproxy/nxproxy %{buildroot}%{_bindir}
 %{__install} -m 755 nxssh/nxssh %{buildroot}%{_bindir}
 /sbin/ldconfig -n %{buildroot}%{_libdir}
 %{__install} -d -m 755 %{buildroot}/usr/bin
