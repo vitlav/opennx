@@ -18,17 +18,45 @@
 
 case "$1" in
     configure|triggered)
-        if ! getent group opennx >/dev/null ; then
-            addgroup --quiet --system opennx
-        fi
-        file=/usr/lib/opennx/lib/libsmbclient.so
-        test ! -h $file || rm $file
-        target=`ls /usr/lib/libsmbclient.so.* 2> /dev/null | head -1`
-        test -z "$target" || ln -s $target $file
-        file=/usr/lib/opennx/lib/libopensc.so
-        test ! -h $file || rm $file
-        target=`ls /usr/lib/libopensc.so.* 2> /dev/null | head -1`
-        test -z "$target" || ln -s $target $file
+        # USBIP only
+        #if ! getent group opennx >/dev/null ; then
+        #    addgroup --quiet --system opennx
+        #fi
+        for l in smbclient cups opensc  ; do
+            lp=`/sbin/ldconfig -p|awk '/lib'$l'[\.-]/ {print $4}'|head -1`
+            if test -n "$lp" ; then
+                bn=`echo $l|sed -e 's/[-0-9]//g'`
+                ln -snf $lp /usr/lib/opennx/lib$l.so
+            fi
+        done
+        # Install icons
+        cd /usr/share/opennx/icons
+        SIZES="16 32 48 128 256"
+        ICINST="xdg-icon-resource install --noupdate --novendor --mode system"
+        for sz in $SIZES ; do
+            case $sz in
+                scalable)
+                    subdir=$sz
+                    ext=svg
+                    ;;
+                [0-9]*)
+                    subdir=${sz}x${sz}
+                    ext=png
+                    ;;
+            esac
+            for ctx in apps mimetypes ; do
+                (
+                    cd $subdir/$ctx
+                    for f in *.$ext ; do
+                        $ICINST --context $ctx --size $sz $f
+                    done
+                )
+            done
+        done
+        xdg-icon-resource forceupdate
+        # Install menu entries
+        cd /usr/share/opennx/applnk/xdg
+        xdg-desktop-menu install --mode system *.directory *.desktop
         ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

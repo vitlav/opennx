@@ -8,7 +8,7 @@ Homepage: http://sourceforge.net/projects/opennx
 
 Package: opennx
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, xdg-utils
 Recommends: libopensc2, libsmbclient, cups, wx2.8-i18n
 Conflicts: nxclient
 Provides: nxclient

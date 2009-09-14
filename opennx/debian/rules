@@ -34,20 +34,12 @@ ifneq "$(wildcard /usr/share/misc/config.guess)" ""
 	cp -f /usr/share/misc/config.guess config.guess
 endif
 	./configure $(CROSS) --prefix=$(prefix) --datarootdir=/usr/share/opennx
-	./getnxsrcpkg nxcomp nxcompsh nxesd nxproxy nxservice nxssh
+	./getnxsrcpkg nxcomp nxesd nxssh
 	tar xzf nxcomp-*.tar.gz
 	patch -p0 < patches/nxcomp-gcc44.patch
 	cd nxcomp && ./configure --prefix=$(prefix)
-	tar xzf nxcompsh-*.tar.gz
-	cd nxcompsh && echo \#include \<iostream\> > iostream.h
-	cd nxcompsh && echo using namespace std\; >> iostream.h
-	cd nxcompsh && ./configure --prefix=$(prefix)
 	tar xzf nxesd-*.tar.gz
 	cd nxesd && ./configure --prefix=$(prefix)
-	tar xzf nxproxy-*.tar.gz
-	cd nxproxy && ./configure --prefix=$(prefix)
-	tar xzf nxservice-*.tar.gz
-	cd nxservice && ./configure --prefix=$(prefix)
 	tar xzf nxssh-*.tar.gz
 	cd nxssh && patch -p1 < ../patches/openssh-scard-pin.patch
 	cd nxssh && patch -p1 < ../patches/nxssh-dynopensc.patch
@@ -60,10 +52,7 @@ build-stamp: config.status
 	dh_testdir
 	$(MAKE)
 	$(MAKE) -C nxcomp
-	$(MAKE) -C nxcompsh CXXINCLUDES=-I.
 	$(MAKE) -C nxesd
-	$(MAKE) -C nxproxy
-	$(MAKE) -C nxservice
 	$(MAKE) -C nxssh
 	touch $@
 
@@ -85,19 +74,13 @@ install: build
 	cd debian/opennx/usr/lib/opennx && ln -s ../../share/opennx share
 	cp -a nxcomp/libXcomp.so.3.*.* debian/opennx/usr/lib/opennx/lib
 	cd debian/opennx/usr/lib/opennx/lib && ln -s libXcomp.so.3.*.* libXcomp.so.3
-	cp -a nxcompsh/libXcompsh.so.3.*.* debian/opennx/usr/lib/opennx/lib
-	cd debian/opennx/usr/lib/opennx/lib && ln -s libXcompsh.so.3.*.* libXcompsh.so.3
 	cp -a nxesd/nxesd debian/opennx/usr/lib/opennx/bin
-	cp -a nxproxy/nxproxy debian/opennx/usr/lib/opennx/bin
-	cp -a nxservice/nxservice debian/opennx/usr/lib/opennx/bin
 	cp -a nxssh/nxssh debian/opennx/usr/lib/opennx/bin
 	# USBIP only: cp -a etc/*.rules debian/opennx/etc/udev/rules.d
-	cd debian/opennx/usr/lib/opennx/lib && ln -s /usr/lib/libcups.so.2 libcups.so
-	cd debian/opennx/usr/lib/opennx/lib && ln -s /usr/lib/libopensc.so.2 libopensc.so
 	cd debian/opennx/usr && ln -s lib/opennx NX
-	cd debian/opennx/usr/share && mv opennx/applnk/network applications
-	$(RM) debian/opennx/usr/share/applications/.directory
-	$(RM) -r debian/opennx/usr/share/opennx/applnk
+	# cd debian/opennx/usr/share && mv opennx/applnk/network applications
+	# $(RM) debian/opennx/usr/share/applications/.directory
+	# $(RM) -r debian/opennx/usr/share/opennx/applnk
 
 
 # Build architecture-independent files here.

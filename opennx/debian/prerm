@@ -19,9 +19,38 @@ set -e
 
 case "$1" in
     remove|upgrade|deconfigure)
-        file=/usr/lib/opennx/lib/libsmbclient.so
-        test ! -h $file || rm $file
-        delgroup --quiet opennx
+        # Uninstall menu entries
+        cd /usr/share/opennx/applnk/xdg
+        xdg-desktop-menu uninstall --mode system *.directory *.desktop
+        # Uninstall icons
+        cd /usr/share/opennx/icons
+        SIZES="16 32 48 128 256"
+        ICRM="xdg-icon-resource uninstall --noupdate --novendor --mode system"
+        for sz in $SIZES ; do
+            case $sz in
+                scalable)
+                    subdir=$sz
+                    ext=svg
+                    ;;
+                [0-9]*)
+                    subdir=${sz}x${sz}
+                    ext=png
+                    ;;
+            esac
+            for ctx in apps mimetypes ; do
+                (
+                    cd $subdir/$ctx
+                    for f in *.$ext ; do
+                        $ICRM --context $ctx --size $sz `basename $f .$ext`
+                    done
+                )
+            done
+        done
+        xdg-icon-resource forceupdate
+        for l in smbclient cups opensc  ; do
+            rm -f /usr/lib/opennx/lib$l.so
+        done
+        # USBIP delgroup --quiet opennx
     ;;
 
     failed-upgrade)
