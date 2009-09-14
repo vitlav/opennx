@@ -26,7 +26,7 @@ case "$1" in
             lp=`/sbin/ldconfig -p|awk '/lib'$l'[\.-]/ {print $4}'|head -1`
             if test -n "$lp" ; then
                 bn=`echo $l|sed -e 's/[-0-9]//g'`
-                ln -snf $lp /usr/lib/opennx/lib$l.so
+                ln -snf $lp /usr/lib/opennx/lib/lib$l.so
             fi
         done
         # Install icons

@@ -48,7 +48,7 @@ case "$1" in
         done
         xdg-icon-resource forceupdate
         for l in smbclient cups opensc  ; do
-            rm -f /usr/lib/opennx/lib$l.so
+            rm -f /usr/lib/opennx/lib/lib$l.so
         done
         # USBIP delgroup --quiet opennx
     ;;
