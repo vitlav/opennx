@@ -19,6 +19,7 @@
                             <flag>wxALIGN_CENTER_HORIZONTAL|wxALL|wxFIXED_MINSIZE</flag>
                             <border>5</border>
                             <object class="wxStaticBitmap" name="wxID_STATIC">
+                                <size>167,58d</size>
                                 <bitmap>memory:memrsc#zip:res/opennx.png</bitmap>
                             </object>
                         </object>
@@ -3284,7 +3285,6 @@ this share.</label>
                         <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                         <border>5</border>
                         <object class="wxStaticBitmap" name="wxID_STATIC">
-                            <size>146,44d</size>
                             <bitmap>memory:memrsc#zip:res/opennx.png</bitmap>
                         </object>
                     </object>
