@@ -7,7 +7,8 @@ AC_CONFIG_AUX_DIR([conf])
 AC_CONFIG_SRCDIR([opennxApp.cpp])
 AC_CONFIG_HEADERS([config.h])
 AC_CANONICAL_TARGET
-AM_INIT_AUTOMAKE([foreign no-installinfo no-installman])
+AM_INIT_AUTOMAKE([foreign silent-rules no-installinfo no-installman])
+AM_SILENT_RULES([yes])
 
 case $build_os in
     mingw*)
@@ -79,7 +80,6 @@ AC_TYPE_PID_T
 # Checks for library functions.
 AC_CHECK_FUNCS([memchr memset putenv socket strchr strdup strrchr strstr])
 AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK
-AC_FUNC_MALLOC
 
 WXPARAMS=
 AM_OPTIONS_WXCONFIG
