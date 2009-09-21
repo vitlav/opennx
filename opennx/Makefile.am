@@ -6,7 +6,7 @@ SUBDIRS = po packaging/MacOSX packaging/win32
 noinst_PROGRAMS = bin2hdr
 bin2hdr_SOURCES = bin2hdr.cpp
 
-bin_PROGRAMS = opennx $(TRACELOG) $(WATCHREADER) $(WATCHUSBIP) \
+bin_PROGRAMS = opennx pconnect $(TRACELOG) $(WATCHREADER) $(WATCHUSBIP) \
 	       $(MACFINDREADER) $(MACUNINSTALL)
 
 EXTRA_PROGRAMS = tracelog$(EXEEXT) watchreader$(EXEEXT) \
@@ -47,6 +47,9 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	VncPropertyDialog.h VncPropertyDialog_symbols.h WinShare.h \
 	X11PropertyDialog.h X11PropertyDialog_symbols.h trace.h tracelogApp.h \
 	watchReaderApp.h watchUsbIpApp.h xh_richtext.h MacUninstallApp.h
+
+pconnect_SOURCES = pconnect.c
+pconnect_LDADD = $(WS2LIB)
 
 watchreader_SOURCES = watchReaderApp.cpp LibOpenSC.cpp MyDynlib.cpp MacOSX.c
 watchreader_DEPENDENCIES = $(WATCHREADER_RES)

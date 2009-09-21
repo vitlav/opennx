@@ -66,6 +66,15 @@ AC_CHECK_TOOL([PERL],[perl],[
 AC_SUBST(PERL)
 
 # Checks for libraries.
+WS2LIB=
+AC_CHECK_LIB(ws2_32,main,[WS2LIB=-lws2_32],[
+    case $target_os in
+        mingw*)
+            AC_MSG_ERROR([Could not find required library ws2_32])
+            ;;
+    esac
+])
+AC_SUBST(WS2LIB)
 
 # Checks for header files.
 AC_CHECK_HEADERS([arpa/inet.h limits.h netinet/in.h sys/socket.h])
@@ -336,6 +345,7 @@ DLLPATH=
 PLATFORMDIST=unknown
 PULSE_BTYPE=unknown
 XMING_BTYPE=unknown
+NX_BTYPE=unknown
 XMING_PLATFORM_PATCHES=
 case $target_os in
     linux*)
@@ -360,6 +370,7 @@ case $target_os in
             DLLPATH="$PATH"
             PULSE_BTYPE=native
             XMING_BTYPE=native
+            NX_BTYPE=native
             XMING_PLATFORM_PATCHES=xming-build-native.patch
         else
             if test -z "$ac_cv_dllpath" ; then
@@ -368,6 +379,7 @@ case $target_os in
             DLLPATH="$ac_cv_dllpath"
             PULSE_BTYPE=cross
             XMING_BTYPE=cross
+            NX_BTYPE=cross
             XMING_PLATFORM_PATCHES=xming-build-cross.patch
         fi
         ;;
@@ -375,11 +387,15 @@ esac
 AC_SUBST(DLLPATH)
 AC_SUBST(PLATFORMDIST)
 AC_SUBST(PULSE_BTYPE)
+AC_SUBST(NX_BTYPE)
 AC_SUBST(XMING_BTYPE)
 AC_SUBST(XMING_PLATFORM_PATCHES)
 
 AC_CONFIG_FILES([Makefile opennx.spec res/opennx.rc
-    packaging/win32/Makefile packaging/win32/findrequires.pl packaging/win32/xming/Makefile packaging/win32/pulse/Makefile
-    packaging/MacOSX/Makefile packaging/MacOSX/opennx.plist packaging/MacOSX/opennx-main.plist packaging/MacOSX/pkg.plist
+    packaging/win32/Makefile packaging/win32/findrequires.pl
+    packaging/win32/xming/Makefile packaging/win32/nx/Makefile
+    packaging/win32/pulse/Makefile
+    packaging/MacOSX/Makefile packaging/MacOSX/opennx.plist
+    packaging/MacOSX/opennx-main.plist packaging/MacOSX/pkg.plist
     po/Makefile.in])
 AC_OUTPUT
