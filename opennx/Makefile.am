@@ -49,7 +49,7 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	watchReaderApp.h watchUsbIpApp.h xh_richtext.h MacUninstallApp.h
 
 pconnect_SOURCES = pconnect.c
-pconnect_LDADD = $(WS2LIB)
+pconnect_LDADD = $(WS2LIB) $(RESLIB)
 
 watchreader_SOURCES = watchReaderApp.cpp LibOpenSC.cpp MyDynlib.cpp MacOSX.c
 watchreader_DEPENDENCIES = $(WATCHREADER_RES)

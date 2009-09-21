@@ -7,8 +7,10 @@ AC_CONFIG_AUX_DIR([conf])
 AC_CONFIG_SRCDIR([opennxApp.cpp])
 AC_CONFIG_HEADERS([config.h])
 AC_CANONICAL_TARGET
-AM_INIT_AUTOMAKE([foreign silent-rules no-installinfo no-installman])
-AM_SILENT_RULES([yes])
+AM_INIT_AUTOMAKE([foreign no-installinfo no-installman])
+dnl Unfortunately, silent-rules don't work on MacOSX
+dnl AM_INIT_AUTOMAKE([foreign silent-rules no-installinfo no-installman])
+dnl AM_SILENT_RULES([yes])
 
 case $build_os in
     mingw*)
@@ -75,6 +77,16 @@ AC_CHECK_LIB(ws2_32,main,[WS2LIB=-lws2_32],[
     esac
 ])
 AC_SUBST(WS2LIB)
+
+RESLIB=
+AC_CHECK_LIB(resolv,res_init,[RESLIB=-lresolv],[
+    case $target_os in
+        darwin8*)
+            AC_MSG_ERROR([Could not find required library resolv])
+            ;;
+    esac
+])
+AC_SUBST(RESLIB)
 
 # Checks for header files.
 AC_CHECK_HEADERS([arpa/inet.h limits.h netinet/in.h sys/socket.h])
