@@ -1,4 +1,4 @@
-SUBDIRS = xming nx
+SUBDIRS = xming nx pulse
 
 setup: findrequires.pl
 	$(RM) -rf setupdir

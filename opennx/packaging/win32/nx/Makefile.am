@@ -20,7 +20,7 @@ ENV_audiofile =
 ENV_nxesd = env $(ENV_GENERIC) LIBS=-laudiofile
 
 EXTRA_DIST = urls.txt patches $(AUDIOFILE).md5sum $(NXESD).md5sum \
-	$(NXCOMP).md5sum $(NXSSH).md5sum
+	$(NXCOMP).md5sum
 
 CLEANFILES = -r $(TMPDIST) \
 	$(AUDIOFILE)-$(AUDIOFILE_VERSION) $(AUDIOFILE)-build-$(NX_BTYPE) \
