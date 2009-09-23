@@ -242,6 +242,13 @@ dist-hook:
 # Platform specific special targets
 deb: distcheck
 	tar xfz $(PACKAGE)-$(VERSION).tar.gz
+	cd $(PACKAGE)-$(VERSION) && ./getnxsrcpkg nxesd nxcomp nxssh
+	cd $(PACKAGE)-$(VERSION) && tar xzf nxesd-*.tar.gz
+	cd $(PACKAGE)-$(VERSION) && tar xzf nxcomp-*.tar.gz
+	cd $(PACKAGE)-$(VERSION) && tar xzf nxssh-*.tar.gz
+	cd $(PACKAGE)-$(VERSION) && rm -f *.tar.gz
+	cd $(PACKAGE)-$(VERSION) && perl debian/mkchangelog.pl $(VERSION) \
+		< ChangeLog > debian/changelog
 	cd $(PACKAGE)-$(VERSION) && dpkg-buildpackage -us -uc
 	lintian -i $(PACKAGE)_$(VERSION)*.changes
 	$(RM) -r $(PACKAGE)-$(VERSION)

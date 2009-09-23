@@ -34,13 +34,9 @@ ifneq "$(wildcard /usr/share/misc/config.guess)" ""
 	cp -f /usr/share/misc/config.guess config.guess
 endif
 	./configure $(CROSS) --prefix=$(prefix) --datarootdir=/usr/share/opennx
-	./getnxsrcpkg nxcomp nxesd nxssh
-	tar xzf nxcomp-*.tar.gz
 	patch -p0 < patches/nxcomp-gcc44.patch
 	cd nxcomp && ./configure --prefix=$(prefix)
-	tar xzf nxesd-*.tar.gz
 	cd nxesd && ./configure --prefix=$(prefix)
-	tar xzf nxssh-*.tar.gz
 	cd nxssh && patch -p1 < ../patches/openssh-scard-pin.patch
 	cd nxssh && patch -p1 < ../patches/nxssh-dynopensc.patch
 	cd nxssh && ./configure --prefix=$(prefix) --with-opensc --enable-opensc-dynamic
@@ -78,10 +74,6 @@ install: build
 	cp -a nxssh/nxssh debian/opennx/usr/lib/opennx/bin
 	# USBIP only: cp -a etc/*.rules debian/opennx/etc/udev/rules.d
 	cd debian/opennx/usr && ln -s lib/opennx NX
-	# cd debian/opennx/usr/share && mv opennx/applnk/network applications
-	# $(RM) debian/opennx/usr/share/applications/.directory
-	# $(RM) -r debian/opennx/usr/share/opennx/applnk
-
 
 # Build architecture-independent files here.
 binary-indep: install
