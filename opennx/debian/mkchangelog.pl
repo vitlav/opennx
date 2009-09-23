@@ -9,6 +9,11 @@ my $stamp = '';
 my $name = '';
 my $msg = '';
 
+my %names = (
+    'felfert' => 'Fritz Elfert <felfert@users.sf.net>',
+    'aderigs' => 'Achim Derigs <aderigs@users.sf.net>'
+);
+
 while (<>) {
     chomp;
     if (/^\s*$/) {
@@ -17,7 +22,7 @@ while (<>) {
 	    next if ($msg eq '');
             print 'opennx (' . $version . '.' . $rev . ') unstable; urgency=low' . "\n";
             print $msg;
-            print ' -- Fritz Elfert <felfert@users.sf.net>  ' . $stamp . "\n\n";
+            print ' -- ' . $names{$name} . '  ' . $stamp . "\n\n";
             if ($msg =~ /Bumped up version/) {
                 my @vt = split(/\./, $version);
                 $vt[$#vt]--;
@@ -54,7 +59,7 @@ while (<>) {
         my $line = $_;
         $line =~ s/^\s+//;
         $line =~ s/\s+$//;
-        $line =~ s/^-/  */;
+        $line =~ s/^[\-\*]/  */;
         $line = "    ".$line unless ($line =~ /^\s\s\*/);
         $msg .= $line . "\n";
     }
