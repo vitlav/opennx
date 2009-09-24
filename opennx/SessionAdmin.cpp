@@ -62,6 +62,9 @@
 
 #include "osdep.h"
 
+#include "trace.h"
+ENABLE_TRACE;
+
 ////@begin XPM images
 ////@end XPM images
 
