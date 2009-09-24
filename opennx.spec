@@ -4,7 +4,7 @@
 Summary: An OpenSource NX client
 Name: opennx
 Version: 0.16
-Release: alt1.svn418
+Release: alt2.svn427
 License: LGPL/GPL
 Group: Networking/Remote access
 Url: http://sourceforge.net/projects/opennx
@@ -18,8 +18,8 @@ Requires: usbip2-nxclient
 
 # Automatically added by buildreq on Sat Sep 19 2009
 BuildRequires: gcc-c++ imake libSM-devel libXmu-devel nx ImageMagick-tools
-BuildRequires: libopensc-devel libsmbclient-devel libsubversion-auth-gnome-keyring
-BuildRequires: libsubversion-auth-kwallet subversion wxGTK-devel xorg-cf-files zip
+BuildRequires: libopensc-devel libsmbclient-devel
+BuildRequires: wxGTK-devel xorg-cf-files zip
 
 %description
 opennx is an OSS replacement for Nomachine's NX client.
@@ -53,7 +53,7 @@ test -e conf/mkinstalldirs || touch conf/mkinstalldirs
 %if %with_usbip
     --enable-usbip \
 %endif
-    --with-nxproto=3.2.0
+    --with-nxproto=3.3.0
 
 %make_build
 
@@ -73,11 +73,10 @@ rm -rf %buildroot%_datadir/%name/applnk
 rm -rf %buildroot%_datadir/%name/icons
 subst "s|/usr/NX/bin|%_bindir|g" %buildroot%_desktopdir/*
 
-install -d %buildroot{%_niconsdir,%_miconsdir,%_liconsdir,%_iconsdir}
+install -d %buildroot{%_niconsdir,%_miconsdir,%_liconsdir}
 for f in nx opennx-admin opennx-wizard ; do
     convert -size 16x16 ./extres/scalable/apps/$f.svg %buildroot%_miconsdir/$f.png
     convert -size 32x32 ./extres/scalable/apps/$f.svg %buildroot%_niconsdir/$f.png
-    convert -size 32x32 ./extres/scalable/apps/$f.svg %buildroot%_iconsdir/$f.png
     convert -size 48x48 ./extres/scalable/apps/$f.svg %buildroot%_liconsdir/$f.png
 done
 
@@ -99,7 +98,6 @@ install -m 644 etc/*.rules %buildroot%_sysconfdir/udev/rules.d
 %_libdir/%name
 %_datadir/%name
 %_desktopdir/*.desktop
-%_iconsdir/*.png
 %_liconsdir/*.png
 %_niconsdir/*.png
 %_miconsdir/*.png
@@ -108,6 +106,10 @@ install -m 644 etc/*.rules %buildroot%_sysconfdir/udev/rules.d
 %endif
 
 %changelog
+* Thu Sep 24 2009 Boris Savelev <boris@altlinux.org> 0.16-alt2.svn427
+- update buildreq
+- fix repocop warning
+
 * Sat Sep 19 2009 Boris Savelev <boris@altlinux.org> 0.16-alt1.svn418
 - intial build for Sisyphus
 
