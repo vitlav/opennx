@@ -250,7 +250,7 @@ deb: distcheck
 	cd $(PACKAGE)-$(VERSION) && perl debian/mkchangelog.pl $(VERSION) \
 		< ChangeLog > debian/changelog
 	cd $(PACKAGE)-$(VERSION) && dpkg-buildpackage -us -uc
-	lintian -i $(PACKAGE)_$(VERSION).$(SVNREV).changes
+	lintian -i $(PACKAGE)_$(VERSION).$(SVNREV)_*.changes
 	$(RM) -r $(PACKAGE)-$(VERSION)
 
 dmg:
