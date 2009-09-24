@@ -11,7 +11,8 @@ my $msg = '';
 
 my %names = (
     'felfert' => 'Fritz Elfert <felfert@users.sf.net>',
-    'aderigs' => 'Achim Derigs <aderigs@users.sf.net>'
+    'aderigs' => 'Achim Derigs <aderigs@users.sf.net>',
+    'medozas' => 'Michael Kromer <medozas@users.sf.net>',
 );
 
 while (<>) {
