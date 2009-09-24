@@ -19,7 +19,6 @@
                             <flag>wxALIGN_CENTER_HORIZONTAL|wxALL|wxFIXED_MINSIZE</flag>
                             <border>5</border>
                             <object class="wxStaticBitmap" name="wxID_STATIC">
-                                <size>167,58d</size>
                                 <bitmap>memory:memrsc#zip:res/opennx.png</bitmap>
                             </object>
                         </object>
@@ -797,7 +796,6 @@
                                                     <flag>wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                        <size>18,19d</size>
                                                         <bitmap>memory:memrsc#zip:res/smbsharing.png</bitmap>
                                                     </object>
                                                 </object>
@@ -820,7 +818,6 @@
                                                     <flag>wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                        <size>18,19d</size>
                                                         <bitmap>memory:memrsc#zip:res/cupssharing.png</bitmap>
                                                     </object>
                                                 </object>
@@ -902,7 +899,6 @@
                                                     <flag>wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                        <size>18,19d</size>
                                                         <bitmap>memory:memrsc#zip:res/multimedia.png</bitmap>
                                                     </object>
                                                 </object>
@@ -943,7 +939,6 @@
                                                     <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticBitmap" name="wxID_STATIC">
-                                                        <size>18,19d</size>
                                                         <bitmap>memory:memrsc#zip:res/usb.png</bitmap>
                                                     </object>
                                                 </object>
@@ -3629,7 +3624,6 @@ this share.</label>
                         <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                         <border>5</border>
                         <object class="wxStaticBitmap" name="wxID_STATIC">
-                            <size>16,15d</size>
                             <bitmap>memory:memrsc#zip:res/usbstick.png</bitmap>
                         </object>
                     </object>

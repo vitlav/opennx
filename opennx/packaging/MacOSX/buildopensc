@@ -32,4 +32,3 @@ rm -rf $D/dist
 mkdir $D/dist
 make DESTDIR=$D/dist install
 mkdir -p $LIBDEST
-cp -av $D/dist$PFX/lib/* $LIBDEST
