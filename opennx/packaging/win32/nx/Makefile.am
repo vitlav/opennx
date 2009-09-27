@@ -8,7 +8,7 @@ CFG_GENERIC = \
 	--prefix=/ --libdir=/lib --bindir=/bin --mandir=/share/man \
 	--includedir=/include --datadir=/share --exec-prefix=/libexec \
 	--libexecdir=/libexec --sysconfdir=/etc
-CFG_audiofile = $(CFG_GENERIC)
+CFG_audiofile = $(CFG_GENERIC) --disable-shared --enable-static
 CFG_nxesd = $(CFG_GENERIC) --disable-audiofiletest --with-audiofile=yes --program-transform-name='s/i686-pc-mingw32-//'
 CFG_nxcomp = $(CFG_GENERIC) \
 			 --x-includes=$(abs_top_builddir)/packaging/win32/xming/xc/exports/include \
