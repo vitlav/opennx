@@ -353,6 +353,10 @@ if test "$ac_cv_enable_usbip" = "YES" -a "$ac_cv_header_usb_h" != "yes"; then
     AC_MSG_ERROR([Need usb.h when compiling with usbip support])
 fi
 
+# ISCC env variable
+AC_ARG_VAR([ISCC],[Full path of InnoSetup compiler iscc.exe.])dnl
+
+SETUP=
 DLLPATH=
 PLATFORMDIST=unknown
 PULSE_BTYPE=unknown
@@ -384,11 +388,36 @@ case $target_os in
             XMING_BTYPE=native
             NX_BTYPE=native
             XMING_PLATFORM_PATCHES=xming-build-native.patch
+            AC_ARG_WITH([iscc],
+                        AS_HELP_STRING([--with-iscc=PATH],[Override ISCC path. (native mingw only)]),
+                        [ISCC="$withval"])
+            AC_PATH_PROG([ISCC],[iscc],[""],[$PATH])
+            if test -z "$ISCC" ; then
+                AC_MSG_WARN([InnoSetup compiler is missing, therefore no Setup will be built!])
+                SETUP=
+            else
+                SETUP=nativesetup
+            fi
         else
             if test -z "$ac_cv_dllpath" ; then
                 AC_MSG_ERROR([Need --with-dllpath option on mingw32 crossbuild])
             fi
             DLLPATH="$ac_cv_dllpath"
+            AC_ARG_WITH([wine-iscc],
+                        AS_HELP_STRING([--with-wine-iscc=PATH],[Path of ISCC to be run under wine. (mingw32 crossbuild only)]),
+                        [ISCC="$withval"])
+            if test -z "$ISCC" ; then
+                AC_MSG_WARN([InnoSetup compiler is missing, therefore no Setup will be built!])
+                SETUP=
+            else
+                AC_PATH_PROG([WINE],[wine],[""],[$PATH])
+                if test -z "$WINE" ; then
+                    AC_MSG_WARN([wine is not available, therefore no Setup will be built!])
+                    SETUP=
+                else
+                    SETUP=crosssetup
+                fi
+            fi
             PULSE_BTYPE=cross
             XMING_BTYPE=cross
             NX_BTYPE=cross
@@ -396,6 +425,7 @@ case $target_os in
         fi
         ;;
 esac
+AC_SUBST(SETUP)
 AC_SUBST(DLLPATH)
 AC_SUBST(PLATFORMDIST)
 AC_SUBST(PULSE_BTYPE)
