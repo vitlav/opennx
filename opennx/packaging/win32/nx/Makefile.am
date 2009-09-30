@@ -39,8 +39,8 @@ CLEANFILES = -r $(TMPDIST) \
 	$(AUDIOFILE)-srcdir $(AUDIOFILE)-checkarchive \
 	$(NXESD) $(NXESD)-build-$(NX_BTYPE) $(NXESD)-srcdir $(NXESD)-checkarchive \
 	$(NXCOMP) $(NXCOMP)-build-$(NX_BTYPE) $(NXCOMP)-srcdir $(NXCOMP)-checkarchive \
-	$(LIBPNG) $(LIBPNG)-build-$(NX_BTYPE) $(LIBPNG)-srcdir $(LIBPNG)-checkarchive \
-	$(LIBJPEG) $(LIBJPEG)-build-$(NX_BTYPE) $(LIBJPEG)-srcdir $(LIBJPEG)-checkarchive
+	$(LIBPNG)-$(LIBPNG_VERSION) $(LIBPNG)-build-$(NX_BTYPE) $(LIBPNG)-srcdir $(LIBPNG)-checkarchive \
+	$(LIBJPEG)-$(LIBJPEG_VERSION) $(LIBJPEG)-build-$(NX_BTYPE) $(LIBJPEG)-srcdir $(LIBJPEG)-checkarchive
 
 DISTCLEANFILES = -r $(CLEANFILES) \
 	$(LIBJPEG)-$(LIBJPEG_VERSION).tar.gz \
