@@ -1,6 +1,6 @@
 SUBDIRS = xming nx pulse
 
-setup: findrequires.pl
+.setupdir: findrequires.pl
 	$(RM) -rf setupdir
 	mkdir setupdir
 	$(MAKE) -C $(top_builddir) DESTDIR=$(abs_builddir)/setupdir \
@@ -13,10 +13,21 @@ setup: findrequires.pl
 	cp xming/dist/usr/X11R6/lib/X11/xserver/SecurityPolicy setupdir/bin
 	$(MAKE) -C nx tmpinstall
 	cp nx/dist/bin/*.exe setupdir/bin
+	cp nx/dist/bin/*.dll setupdir/bin
 	cp nx/dist/lib/*.dll setupdir/bin
 	perl findrequires.pl "$(DLLPATH)" setupdir/bin/*.exe|xargs cp -t setupdir/bin
+	rm -rf setupdir/share/icons setupdir/share/applnk
+	touch $@
+
+nativesetup: .setupdir
+	"$(ISCC)" "$(srcdir)/opennx.iss"
+
+crosssetup: .setupdir
+	$(WINE) "$(ISCC)" "$(srcdir)/opennx.iss"
+
+setup: .setupdir  $(SETUP)
 
 EXTRA_DIST = opennx.iss
-MAINATINERCLEANFILES = Makefile.in
+MAINTAINERCLEANFILES = Makefile.in
 
 #WINEPREFIX="~/.wine" wine "C:/Program Files/InnoSetup 5/iscc.exe"

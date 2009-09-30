@@ -2,6 +2,10 @@ NXESD             = nxesd
 NXCOMP            = nxcomp
 AUDIOFILE         = audiofile
 AUDIOFILE_VERSION = 0.2.6
+LIBPNG            = libpng
+LIBPNG_VERSION    = 1.2.40
+LIBJPEG           = jpeg
+LIBJPEG_VERSION   = 6b
 TMPDIST           = $(abs_builddir)/dist
 
 CFG_GENERIC = \
@@ -14,21 +18,33 @@ CFG_nxcomp = $(CFG_GENERIC) \
 			 --x-includes=$(abs_top_builddir)/packaging/win32/xming/xc/exports/include \
 			 --x-libraries=$(abs_top_builddir)/packaging/win32/xming/dist/usr/X11R6/lib
 CFG_nxssh = $(CFG_GENERIC)
+CFG_libpng = $(CFG_GENERIC) --disable-static --enable-shared
+CFG_jpeg =  --prefix=$(TMPDIST) --libdir=$(TMPDIST)/lib --bindir=$(TMPDIST)/bin \
+	--mandir=$(TMPDIST)/share/man --includedir=$(TMPDIST)/include \
+	--datadir=$(TMPDIST)/share --exec-prefix=$(TMPDIST) \
+	--libexecdir=$(TMPDIST)/libexec --sysconfdir=$(TMPDIST)/etc --enable-shared --disable-static
 
 ENV_GENERIC = CPPFLAGS="-I$(TMPDIST)/include" LDFLAGS="-L$(TMPDIST)/lib"
 ENV_audiofile =
+ENV_libpng =
+ENV_jpeg =
+ENV_nxcomp = env $(ENV_GENERIC)
 ENV_nxesd = env $(ENV_GENERIC) LIBS=-laudiofile
 
 EXTRA_DIST = urls.txt patches $(AUDIOFILE).md5sum $(NXESD).md5sum \
-	$(NXCOMP).md5sum
+	$(NXCOMP).md5sum $(LIBPNG).md5sum
 
 CLEANFILES = -r $(TMPDIST) \
 	$(AUDIOFILE)-$(AUDIOFILE_VERSION) $(AUDIOFILE)-build-$(NX_BTYPE) \
 	$(AUDIOFILE)-srcdir $(AUDIOFILE)-checkarchive \
 	$(NXESD) $(NXESD)-build-$(NX_BTYPE) $(NXESD)-srcdir $(NXESD)-checkarchive \
-	$(NXCOMP) $(NXCOMP)-build-$(NX_BTYPE) $(NXCOMP)-srcdir $(NXCOMP)-checkarchive
+	$(NXCOMP) $(NXCOMP)-build-$(NX_BTYPE) $(NXCOMP)-srcdir $(NXCOMP)-checkarchive \
+	$(LIBPNG) $(LIBPNG)-build-$(NX_BTYPE) $(LIBPNG)-srcdir $(LIBPNG)-checkarchive \
+	$(LIBJPEG) $(LIBJPEG)-build-$(NX_BTYPE) $(LIBJPEG)-srcdir $(LIBJPEG)-checkarchive
 
 DISTCLEANFILES = -r $(CLEANFILES) \
+	$(LIBJPEG)-$(LIBJPEG_VERSION).tar.gz \
+	$(LIBPNG)-$(LIBPNG_VERSION).tar.gz \
 	$(AUDIOFILE)-$(AUDIOFILE_VERSION).tar.gz \
 	$(NXESD)*.tar.gz \
 	$(NXCOMP)*.tar.gz
@@ -36,6 +52,9 @@ DISTCLEANFILES = -r $(CLEANFILES) \
 MAINTAINERCLEANFILES = Makefile.in
 
 tmpinstall:
+	mkdir -p $(TMPDIST)/man/man1
+	$(MAKE) subtarget=$(LIBPNG) subsrc=$(LIBPNG)-$(LIBPNG_VERSION) build-$(NX_BTYPE)
+	$(MAKE) subtarget=$(LIBJPEG) subsrc=$(LIBJPEG)-$(LIBJPEG_VERSION) build-$(NX_BTYPE)
 	$(MAKE) subtarget=$(AUDIOFILE) subsrc=$(AUDIOFILE)-$(AUDIOFILE_VERSION) build-$(NX_BTYPE)
 	$(MAKE) subtarget=$(NXESD) subsrc=$(NXESD) build-$(NX_BTYPE)
 	$(MAKE) subtarget=$(NXCOMP) subsrc=$(NXCOMP) build-$(NX_BTYPE)
@@ -62,7 +81,7 @@ $(subtarget)-srcdir: $(subtarget)-checkarchive
 	@tar xzf $(subsrc).tar.gz
 	@shopt -s nullglob; for p in $(srcdir)/patches/$(subtarget)-*.patch ; do \
 		echo Applying `basename $$p`; \
-		patch -p0 < $$p ; \
+		(cd $(subsrc) && patch -p1 < ../$$p) ; \
 	done
 	@touch $@
 
@@ -74,8 +93,8 @@ $(subtarget)-checkarchive: $(subsrc).tar.gz
 $(subsrc).tar.gz: $(srcdir)/urls.txt
 	@echo Downloading $@
 	@rm -f $@
-	@if grep -q $(subsrc) $(srcdir)/urls.txt ; then \
-		wget -O $@ $(shell grep $(subsrc) $(srcdir)/urls.txt) ; \
+	@if grep -q $(subtarget) $(srcdir)/urls.txt ; then \
+		wget -O $@ $(shell grep $(subtarget) $(srcdir)/urls.txt) ; \
 	else \
 		$(top_srcdir)/getnxsrcpkg $(subsrc) && $(LN_S) $(subsrc)-*.tar.gz $(subsrc).tar.gz ; \
 	fi

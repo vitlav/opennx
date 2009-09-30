@@ -6,8 +6,7 @@
 #define APPNAME "OpenNX"
 ; Automatically get version from executable resp. dll
 #define APPEXE "setupdir\bin\opennx.exe"
-#include <instutils.iss>
-#include <gpl.iss>
+#include <version.iss>
 
 #define MSWU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
 #define APPIDSTR "{56D797D7-543C-408F-BBEB-B56787873D2F}"
@@ -38,9 +37,9 @@ Compression=lzma/ultra64
 SolidCompression=yes
 WizardImageFile=compiler:wizmodernimage-IS.bmp
 WizardSmallImageFile=compiler:wizmodernsmallimage-IS.bmp
-SetupIconFile=compiler:Examples\Setup.ico
+;SetupIconFile=compiler:Examples\Setup.ico
 UninstallDisplayIcon={app}\opennx.exe
-LicenseFile={#=LGPLRTF}
+LicenseFile=lgpl.rtf
 
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl"
@@ -69,8 +68,8 @@ Source: setupdir\*; DestDir: {app}; Flags: recursesubdirs
 
 [Icons]
 Name: "{group}\OpenNX"; Filename: "{app}\bin\opennx.exe";
-Name: "{group}\{cm:cwizard}"; Filename: "{app}\bin\opennx.exe"; Parameters: "--wizard"; IconFilename: "{app}\opennx.exe"; IconIndex: 2;
-Name: "{group}\{cm:sadmin}"; Filename: "{app}\bin\opennx.exe"; Parameters: "--admin"; IconFilename: "{app}\opennx.exe"; IconIndex: 3
+Name: "{group}\{cm:cwizard}"; Filename: "{app}\bin\opennx.exe"; Parameters: "--wizard"; IconFilename: "{app}\bin\opennx.exe"; IconIndex: 2;
+Name: "{group}\{cm:sadmin}"; Filename: "{app}\bin\opennx.exe"; Parameters: "--admin"; IconFilename: "{app}\bin\opennx.exe"; IconIndex: 3
 Name: "{group}\{cm:uninst_opennx}"; Filename: "{uninstallexe}";
 Name: "{commondesktop}\OpenNX"; Filename: "{app}\bin\opennx.exe"; Tasks: "desktopicon";
 
