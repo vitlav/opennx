@@ -94,7 +94,7 @@ $(subsrc).tar.gz: $(srcdir)/urls.txt
 	@echo Downloading $@
 	@rm -f $@
 	@if grep -q $(subtarget) $(srcdir)/urls.txt ; then \
-		wget -O $@ $(shell grep $(subtarget) $(srcdir)/urls.txt) ; \
+		wget -O $@ $(shell grep $(subtarget) $(srcdir)/urls.txt | grep -v '#') ; \
 	else \
 		$(top_srcdir)/getnxsrcpkg $(subsrc) && $(LN_S) $(subsrc)-*.tar.gz $(subsrc).tar.gz ; \
 	fi
