@@ -1,5 +1,6 @@
 NXESD             = nxesd
 NXCOMP            = nxcomp
+NXPROXY           = nxproxy
 AUDIOFILE         = audiofile
 AUDIOFILE_VERSION = 0.2.6
 LIBPNG            = libpng
@@ -17,6 +18,7 @@ CFG_nxesd = $(CFG_GENERIC) --disable-audiofiletest --with-audiofile=yes --progra
 CFG_nxcomp = $(CFG_GENERIC) \
 			 --x-includes=$(abs_top_builddir)/packaging/win32/xming/xc/exports/include \
 			 --x-libraries=$(abs_top_builddir)/packaging/win32/xming/dist/usr/X11R6/lib
+CFG_nxproxy = $(CFG_GENERIC) --program-transform-name='s/i686-pc-mingw32-//'
 CFG_nxssh = $(CFG_GENERIC)
 CFG_libpng = $(CFG_GENERIC) --disable-static --enable-shared
 CFG_jpeg =  --prefix=$(TMPDIST) --libdir=$(TMPDIST)/lib --bindir=$(TMPDIST)/bin \
@@ -28,6 +30,7 @@ ENV_GENERIC = CPPFLAGS="-I$(TMPDIST)/include" LDFLAGS="-L$(TMPDIST)/lib"
 ENV_audiofile =
 ENV_libpng =
 ENV_jpeg =
+ENV_nxproxy = env $(ENV_GENERIC)
 ENV_nxcomp = env $(ENV_GENERIC)
 ENV_nxesd = env $(ENV_GENERIC) LIBS=-laudiofile
 
@@ -39,6 +42,7 @@ CLEANFILES = -r $(TMPDIST) \
 	$(AUDIOFILE)-srcdir $(AUDIOFILE)-checkarchive \
 	$(NXESD) $(NXESD)-build-$(NX_BTYPE) $(NXESD)-srcdir $(NXESD)-checkarchive \
 	$(NXCOMP) $(NXCOMP)-build-$(NX_BTYPE) $(NXCOMP)-srcdir $(NXCOMP)-checkarchive \
+	$(NXPROXY) $(NXPROXY)-build-$(NX_BTYPE) $(NXPROXY)-srcdir $(NXPROXY)-checkarchive \
 	$(LIBPNG)-$(LIBPNG_VERSION) $(LIBPNG)-build-$(NX_BTYPE) $(LIBPNG)-srcdir $(LIBPNG)-checkarchive \
 	$(LIBJPEG)-$(LIBJPEG_VERSION) $(LIBJPEG)-build-$(NX_BTYPE) $(LIBJPEG)-srcdir $(LIBJPEG)-checkarchive
 
@@ -47,7 +51,8 @@ DISTCLEANFILES = -r $(CLEANFILES) \
 	$(LIBPNG)-$(LIBPNG_VERSION).tar.gz \
 	$(AUDIOFILE)-$(AUDIOFILE_VERSION).tar.gz \
 	$(NXESD)*.tar.gz \
-	$(NXCOMP)*.tar.gz
+	$(NXCOMP)*.tar.gz \
+	$(NXPROXY)*.tar.gz
 
 MAINTAINERCLEANFILES = Makefile.in
 
@@ -58,6 +63,7 @@ tmpinstall:
 	$(MAKE) subtarget=$(AUDIOFILE) subsrc=$(AUDIOFILE)-$(AUDIOFILE_VERSION) build-$(NX_BTYPE)
 	$(MAKE) subtarget=$(NXESD) subsrc=$(NXESD) build-$(NX_BTYPE)
 	$(MAKE) subtarget=$(NXCOMP) subsrc=$(NXCOMP) build-$(NX_BTYPE)
+	$(MAKE) subtarget=$(NXPROXY) subsrc=$(NXPROXY) build-$(NX_BTYPE)
 
 build-cross: $(subtarget)-build-cross
 

@@ -29,5 +29,4 @@ setup: .setupdir  $(SETUP)
 
 EXTRA_DIST = opennx.iss
 MAINTAINERCLEANFILES = Makefile.in
-
-#WINEPREFIX="~/.wine" wine "C:/Program Files/InnoSetup 5/iscc.exe"
+CLEANFILES = -r .setupdir setupdir
