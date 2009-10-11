@@ -1558,6 +1558,7 @@ MySession::prepareCups()
         tos << wxT("ErrorLog ") << sCupsDir << wxT("error_log") << endl;
         tos << wxT("PageLog ") << sCupsDir << wxT("page_log") << endl;
         tos << wxT("AccessLog ") << sCupsDir << wxT("access_log") << endl;
+        tos << wxT("PidFile ") << sCupsDir << wxT("cupsd.pid") << endl;
 #ifdef __WXDEBUG__
         tos << wxT("LogLevel debug") << endl;
 #else
@@ -1611,6 +1612,7 @@ MySession::prepareCups()
     if (::wxExecute(cmd, wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER) <= 0)
         return false;
     wxThread::Sleep(500);
+    isCupsRunning();
     return isCupsRunning();
 }
 
@@ -1862,7 +1864,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
             return false;
         if (getActiveCupsPrinters().GetCount() > 0) {
             dlg.SetStatusText(_("Preparing CUPS service ..."));
-            if (prepareCups())
+            if (!prepareCups())
                 ::wxLogWarning(_("Could not start CUPS printing"));
             dlg.SetStatusText(wxString::Format(_("Connecting to %s ..."),
                         m_pCfg->sGetServerHost().c_str()));
