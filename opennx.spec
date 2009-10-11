@@ -4,7 +4,7 @@
 Summary: An OpenSource NX client
 Name: opennx
 Version: 0.16
-Release: alt2.svn427
+Release: alt3.svn442
 License: LGPL/GPL
 Group: Networking/Remote access
 Url: http://sourceforge.net/projects/opennx
@@ -64,8 +64,14 @@ mkdir -p %buildroot{%_bindir,%_desktopdir}
 
 ln -s ../..%_libdir/%name/bin/%name %buildroot%_bindir/%name
 ln -s ../../share/%name %buildroot%_libdir/%name/share
-for f in esd ssh service ; do
-    ln -s  ../../../bin/nx$f %buildroot%_libdir/%name/bin/nx$f
+for f in nxesd nxssh nxservice ; do
+    ln -s  ../../../bin/$f %buildroot%_libdir/%name/bin/$f
+done
+
+mkdir -p %buildroot%_libdir/%name/lib
+
+for lib in libsmbclient.so libcups.so ; do
+    ln -s %_libdir/`readlink %_libdir/$lib` %buildroot%_libdir/%name/lib/$lib
 done
 
 cp %buildroot%_datadir/%name/applnk/xdg/*.desktop %buildroot%_desktopdir
@@ -106,6 +112,10 @@ install -m 644 etc/*.rules %buildroot%_sysconfdir/udev/rules.d
 %endif
 
 %changelog
+* Sun Oct 11 2009 Boris Savelev <boris@altlinux.org> 0.16-alt3.svn442
+- update from trunk
+- add symlinks for cups and samba
+
 * Thu Sep 24 2009 Boris Savelev <boris@altlinux.org> 0.16-alt2.svn427
 - update buildreq
 - fix repocop warning
