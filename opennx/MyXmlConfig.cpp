@@ -1660,7 +1660,8 @@ MyXmlConfig::SaveToFile()
     r->AddProperty(new wxXmlProperty(wxT("version"), wxT("1.3"), NULL));
     cfg.SetRoot(r);
 
-    g = AddGroup(r, wxT("General")); // SessionProperties, Tab "General"
+    // SessionProperties, Tab "General"
+    g = AddGroup(r, wxT("General"));
     bAddOption(g, wxT("Automatic reconnect"), true); // Not (yet?) configurable
     sAddOption(g, wxT("Command line"), m_sCommandLine);
     optval = wxT("application");
@@ -1905,6 +1906,7 @@ MyXmlConfig::SaveToFile()
     sAddOption(g, wxT("Custom keyboard layout"), m_sKbdLayoutLanguage);
     bAddOption(g, wxT("Disable TCP no-delay"), m_bDisableTcpNoDelay);
     bAddOption(g, wxT("Disable ZLIB stream compression"), m_bDisableZlibCompression);
+    bAddOption(g, wxT("Enable SSL encryption"), m_bEnableSSL);
     bAddOption(g, wxT("Enable HTTP proxy"), m_bUseProxy);
     bAddOption(g, wxT("Enable external proxy"), m_bExternalProxy);
     bAddOption(g, wxT("Enable USBIP"), m_bEnableUSBIP);
