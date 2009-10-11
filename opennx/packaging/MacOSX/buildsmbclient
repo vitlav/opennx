@@ -24,7 +24,7 @@ cleanup() {
 trap cleanup EXIT
 mkdir -p "$TDIR"
 cd "$TDIR"
-SRC=samba-3.4.1
+SRC=samba-3.4.2
 TGZ=$SRC.tar.gz
 DLURL="http://us1.samba.org/samba/ftp/$TGZ"
 

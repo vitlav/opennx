@@ -37,6 +37,7 @@ endif
 	patch -p0 < patches/nxcomp-gcc44.patch
 	cd nxcomp && ./configure --prefix=$(prefix)
 	cd nxesd && ./configure --prefix=$(prefix)
+	cd nxproxy && ./configure --prefix=$(prefix)
 	cd nxssh && patch -p1 < ../patches/openssh-scard-pin.patch
 	cd nxssh && patch -p1 < ../patches/nxssh-dynopensc.patch
 	cd nxssh && ./configure --prefix=$(prefix) --with-opensc --enable-opensc-dynamic
@@ -49,6 +50,7 @@ build-stamp: config.status
 	$(MAKE)
 	$(MAKE) -C nxcomp
 	$(MAKE) -C nxesd
+	$(MAKE) -C nxproxy
 	$(MAKE) -C nxssh
 	touch $@
 
@@ -72,6 +74,7 @@ install: build
 	cd debian/opennx/usr/lib/opennx/lib && ln -s libXcomp.so.3.*.* libXcomp.so.3
 	cp -a nxesd/nxesd debian/opennx/usr/lib/opennx/bin
 	cp -a nxssh/nxssh debian/opennx/usr/lib/opennx/bin
+	cp -a nxproxy/nxproxy debian/opennx/usr/lib/opennx/bin
 	# USBIP only: cp -a etc/*.rules debian/opennx/etc/udev/rules.d
 	cd debian/opennx/usr && ln -s lib/opennx NX
 
