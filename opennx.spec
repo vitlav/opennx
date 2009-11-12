@@ -64,7 +64,7 @@ mkdir -p %buildroot{%_bindir,%_desktopdir}
 
 ln -s ../..%_libdir/%name/bin/%name %buildroot%_bindir/%name
 ln -s ../../share/%name %buildroot%_libdir/%name/share
-for f in nxesd nxssh nxservice ; do
+for f in nxesd nxssh nxservice nxproxy ; do
     ln -s  ../../../bin/$f %buildroot%_libdir/%name/bin/$f
 done
 
