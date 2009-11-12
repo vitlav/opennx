@@ -4,7 +4,7 @@
 Summary: An OpenSource NX client
 Name: opennx
 Version: 0.16
-Release: alt3.svn442
+Release: alt4.svn444
 License: LGPL/GPL
 Group: Networking/Remote access
 Url: http://sourceforge.net/projects/opennx
@@ -112,6 +112,10 @@ install -m 644 etc/*.rules %buildroot%_sysconfdir/udev/rules.d
 %endif
 
 %changelog
+* Thu Nov 12 2009 Boris Savelev <boris@altlinux.org> 0.16-alt4.svn444
+- update from trunk
+- add symlink for nxproxy
+
 * Sun Oct 11 2009 Boris Savelev <boris@altlinux.org> 0.16-alt3.svn442
 - update from trunk
 - add symlinks for cups and samba
