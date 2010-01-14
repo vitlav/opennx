@@ -370,21 +370,28 @@ void watchUsbIpApp::OnSshDied(wxCommandEvent &event)
 void watchUsbIpApp::OnHotplug(HotplugEvent &event)
 {
     ArrayOfUsbForwards af = m_pSessionCfg->aGetUsbForwards();
-    USB u;
-    ArrayOfUSBDevices au = u.GetDevices();
     SharedUsbDevice *sdev = NULL;
+    int retry = 0;
     size_t i;
-    for (i = 0; i < au.GetCount(); i++) {
-        if ((au[i].GetBusNum() == event.GetBusNum()) && (au[i].GetDevNum() == event.GetDevNum())) {
-            sdev = new SharedUsbDevice;
-            sdev->m_iVendorID = au[i].GetVendorID();
-            sdev->m_iProductID = au[i].GetProductID();
-            sdev->m_iClass = au[i].GetDeviceClass();
-            sdev->m_sVendor = au[i].GetVendor();
-            sdev->m_sProduct = au[i].GetProduct();
-            sdev->m_sSerial = au[i].GetSerial();
-            break;
+
+
+    while ((NULL == sdev) && (retry++ < 3)) {
+        USB u;
+        ArrayOfUSBDevices au = u.GetDevices();
+        for (i = 0; i < au.GetCount(); i++) {
+            if ((au[i].GetBusNum() == event.GetBusNum()) && (au[i].GetDevNum() == event.GetDevNum())) {
+                sdev = new SharedUsbDevice;
+                sdev->m_iVendorID = au[i].GetVendorID();
+                sdev->m_iProductID = au[i].GetProductID();
+                sdev->m_iClass = au[i].GetDeviceClass();
+                sdev->m_sVendor = au[i].GetVendor();
+                sdev->m_sProduct = au[i].GetProduct();
+                sdev->m_sSerial = au[i].GetSerial();
+                break;
+            }
         }
+        if (NULL == sdev)
+            wxThread::Sleep(500);
     }
     if (NULL == sdev) {
         m_pUsbIp->SendHotplugResponse(event.GetCookie());
