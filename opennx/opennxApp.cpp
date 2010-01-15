@@ -1061,7 +1061,7 @@ bool opennxApp::OnInit()
         UsbIp usbip;
         if (usbip.Connect(usock)) {
             size_t i, j, k;
-            wxLogTrace(MYTRACETAG, wxT("connected to usbipd2"));
+            ::wxLogTrace(MYTRACETAG, wxT("connected to usbipd2"));
             usbip.SetSession(m_sSessionID);
             ArrayOfUsbForwards af = m_pSessionCfg->aGetUsbForwards();
             ArrayOfUsbIpDevices aid = usbip.GetDevices();
