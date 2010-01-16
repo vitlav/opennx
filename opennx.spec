@@ -4,7 +4,7 @@
 Summary: An OpenSource NX client
 Name: opennx
 Version: 0.16
-Release: alt4.svn444
+Release: alt5.svn446
 License: LGPL/GPL
 Group: Networking/Remote access
 Url: http://sourceforge.net/projects/opennx
@@ -19,7 +19,7 @@ Requires: usbip2-nxclient
 # Automatically added by buildreq on Sat Sep 19 2009
 BuildRequires: gcc-c++ imake libSM-devel libXmu-devel nx ImageMagick-tools
 BuildRequires: libopensc-devel libsmbclient-devel
-BuildRequires: wxGTK-devel xorg-cf-files zip
+BuildRequires: libwxGTK-devel xorg-cf-files zip
 
 %description
 opennx is an OSS replacement for Nomachine's NX client.
@@ -112,6 +112,10 @@ install -m 644 etc/*.rules %buildroot%_sysconfdir/udev/rules.d
 %endif
 
 %changelog
+* Sat Jan 16 2010 Boris Savelev <boris@altlinux.org> 0.16-alt5.svn446
+- update from trunk
+- add russian localization
+
 * Thu Nov 12 2009 Boris Savelev <boris@altlinux.org> 0.16-alt4.svn444
 - update from trunk
 - add symlink for nxproxy
