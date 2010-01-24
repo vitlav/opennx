@@ -23,6 +23,9 @@ MySession.cpp
 MyWizard.cpp
 MyWizard_symbols.h
 PanicDialog_symbols.h
+ProxyPasswordDialog.cpp
+ProxyPasswordDialog.h
+ProxyPasswordDialog_symbols.h
 QuitDialog_symbols.h
 RdpImageSettingsDialog.h
 RdpImageSettingsDialog_symbols.h

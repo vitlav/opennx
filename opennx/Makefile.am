@@ -34,8 +34,8 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	LoginDialog_symbols.h md5.h memres.h MyIPC.h MyDynlib.h MySession.h \
 	MyValidator.h MyWizard.h MyWizard_symbols.h MyXmlConfig.h opennxApp.h \
 	osdep.h  PanicDialog.h PanicDialog_symbols.h pwcrypt.h QuitDialog.h \
-	QuitDialog_symbols.h ProxyPasswordDialog.h RdpImageSettingsDialog.h \
-	RdpImageSettingsDialog_symbols.h RdpPropertyDialog.h \
+	QuitDialog_symbols.h ProxyPasswordDialog.h ProxyPasswordDialog_symbols.h \
+	RdpImageSettingsDialog.h RdpImageSettingsDialog_symbols.h RdpPropertyDialog.h \
 	RdpPropertyDialog_symbols.h ResumeDialog.h ResumeDialog_symbols.h \
 	SessionAdmin.h SessionAdmin_symbols.h SessionList.h \
 	SessionProperties.h SessionProperties_symbols.h ShareProperties.h \

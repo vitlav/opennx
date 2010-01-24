@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-01-24 15:27+0100\n"
-"PO-Revision-Date: 2009-10-05 11:51+0100\n"
+"POT-Creation-Date: 2010-01-24 23:43+0100\n"
+"PO-Revision-Date: 2010-01-24 23:45+0100\n"
 "Last-Translator: Fritz Elfert <fritz@fritz-elfert.de>\n"
 "Language-Team:  <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Poedit-Language: German\n"
 "X-Poedit-Country: GERMANY\n"
 
-#: AboutDialog.cpp:113 SessionProperties.cpp:1078
+#: AboutDialog.cpp:113 SessionProperties.cpp:1106
 msgid "Version"
 msgstr "Version"
 
@@ -26,7 +26,7 @@ msgid "About OpenNX"
 msgstr "Über OpenNX"
 
 #: AboutDialog_symbols.h:23 RdpImageSettingsDialog_symbols.h:35
-#: RdpPropertyDialog_symbols.h:35 SessionProperties_symbols.h:107
+#: RdpPropertyDialog_symbols.h:35 SessionProperties_symbols.h:110
 #: ShareProperties_symbols.h:51 UnixImageSettingsDialog_symbols.h:34
 #: UsbFilterDetailsDialog_symbols.h:35 VncImageSettingsDialog_symbols.h:27
 #: VncPropertyDialog_symbols.h:31 X11PropertyDialog_symbols.h:32
@@ -44,7 +44,7 @@ msgstr "Bitte stecken Sie Ihre SmartCard ein"
 #: CardWaiterDialog_symbols.h:24 ConnectDialog_symbols.h:24
 #: KeyDialog_symbols.h:26 PanicDialog_symbols.h:23
 #: RdpImageSettingsDialog_symbols.h:36 RdpPropertyDialog_symbols.h:36
-#: ResumeDialog_symbols.h:28 SessionProperties_symbols.h:108
+#: ResumeDialog_symbols.h:28 SessionProperties_symbols.h:111
 #: ShareProperties_symbols.h:52 UnixImageSettingsDialog_symbols.h:35
 #: UsbFilterDetailsDialog_symbols.h:36 VncImageSettingsDialog_symbols.h:28
 #: VncPropertyDialog_symbols.h:32 X11PropertyDialog_symbols.h:33
@@ -121,7 +121,8 @@ msgstr "Anmeldung - OpenNX"
 msgid "Login"
 msgstr "Login"
 
-#: LoginDialog_symbols.h:24 RdpPropertyDialog_symbols.h:30
+#: LoginDialog_symbols.h:24 ProxyPasswordDialog_symbols.h:24
+#: RdpPropertyDialog_symbols.h:30 SessionProperties_symbols.h:68
 #: ShareProperties_symbols.h:44 VncPropertyDialog_symbols.h:29
 msgid "Password"
 msgstr "Passwort"
@@ -143,7 +144,7 @@ msgstr "Als Gast anmelden"
 msgid "Configure..."
 msgstr "Einstellungen..."
 
-#: LoginDialog_symbols.h:29
+#: LoginDialog_symbols.h:29 ProxyPasswordDialog_symbols.h:26
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -327,40 +328,44 @@ msgstr "Autorisierung fehlgeschlagen: %s"
 msgid "Authentication failed"
 msgstr "Authentisierung fehlgeshlagen"
 
-#: MySession.cpp:475 MySession.cpp:496
+#: MySession.cpp:120
+msgid "Invalid X11 server platform"
+msgstr "Ungülige X11 Server-Plattform"
+
+#: MySession.cpp:496 MySession.cpp:517
 msgid "unknown"
 msgstr "unbekannt"
 
-#: MySession.cpp:487
+#: MySession.cpp:508
 msgid "terminated"
 msgstr "beendet"
 
-#: MySession.cpp:490
+#: MySession.cpp:511
 msgid "failed"
 msgstr "gescheitert"
 
-#: MySession.cpp:493
+#: MySession.cpp:514
 msgid "running"
 msgstr "laufend"
 
-#: MySession.cpp:504 RdpPropertyDialog_symbols.h:23 SessionAdmin.cpp:194
+#: MySession.cpp:525 RdpPropertyDialog_symbols.h:23 SessionAdmin.cpp:194
 #: SessionProperties_symbols.h:24 VncPropertyDialog_symbols.h:23
 msgid "Server"
 msgstr "Server"
 
-#: MySession.cpp:507
+#: MySession.cpp:528
 msgid "Client"
 msgstr "Client"
 
-#: MySession.cpp:510
+#: MySession.cpp:531
 msgid "Unknown"
 msgstr "Unbekannt"
 
-#: MySession.cpp:738 MySession.cpp:751
+#: MySession.cpp:759 MySession.cpp:772
 msgid "Warning - OpenNX"
 msgstr "Warnung - OpenNX"
 
-#: MySession.cpp:749
+#: MySession.cpp:770
 msgid ""
 "\n"
 "Do you want to delete the key and retry ?"
@@ -368,70 +373,70 @@ msgstr ""
 "\n"
 "Wollen Sie den Schlüssel löschen und es erneut versuchen? "
 
-#: MySession.cpp:769
+#: MySession.cpp:790
 msgid "Sending username"
 msgstr "Sende Benutzername"
 
-#: MySession.cpp:773 MySession.cpp:800
+#: MySession.cpp:794 MySession.cpp:821
 msgid "Authenticating"
 msgstr "Authentisierung"
 
-#: MySession.cpp:780
+#: MySession.cpp:801
 msgid "Authentication successful"
 msgstr "Authentisierung erfolgreich"
 
-#: MySession.cpp:816
+#: MySession.cpp:837
 msgid "Query server-side sessions"
 msgstr "Abfrage der Sitzungsliste"
 
-#: MySession.cpp:870
+#: MySession.cpp:891
 msgid "Enter PIN for Smart Card access."
 msgstr "Bitte PIN für SmartCard-Zugriff eingeben."
 
-#: MySession.cpp:870
+#: MySession.cpp:891
 msgid "Smart Card PIN"
 msgstr "Smart Card PIN"
 
-#: MySession.cpp:875
+#: MySession.cpp:896
 msgid "Enter passphrase"
 msgstr "Passphrase eingeben"
 
-#: MySession.cpp:877
+#: MySession.cpp:898
 msgid "Empty passphrase"
 msgstr "Leere Passphrase"
 
-#: MySession.cpp:883 MySession.cpp:887 MySession.cpp:891 MySession.cpp:895
-#: MySession.cpp:899 MySession.cpp:903 MySession.cpp:907 MySession.cpp:911
-#: MySession.cpp:915 MySession.cpp:919
+#: MySession.cpp:904 MySession.cpp:908 MySession.cpp:912 MySession.cpp:916
+#: MySession.cpp:920 MySession.cpp:924 MySession.cpp:928 MySession.cpp:932
+#: MySession.cpp:936 MySession.cpp:940
 msgid "Negotiating session parameter"
 msgstr "Aushandlung der Sitzungsparameter"
 
-#: MySession.cpp:927 MySession.cpp:951
+#: MySession.cpp:948 MySession.cpp:977
 msgid "Starting session"
 msgstr "Starte Sitzung"
 
-#: MySession.cpp:944
+#: MySession.cpp:970
 msgid "Unexpected termination of nxssh"
 msgstr "Unerwartetes Ende von nxssh"
 
-#: MySession.cpp:1111
+#: MySession.cpp:1137
 msgid "There are no sessions which can be attached to."
 msgstr "Keine geeigneten Sitzungen vorhanden."
 
-#: MySession.cpp:1112 MySession.cpp:1122
+#: MySession.cpp:1138 MySession.cpp:1148
 msgid "Error - OpenNX"
 msgstr "Fehler - OpenNX"
 
-#: MySession.cpp:1121
+#: MySession.cpp:1147
 msgid "You have reached your session limit. No more sessions allowed"
 msgstr ""
 "Sie haben Ihr Sitzungs-Limit erreicht. Keine weiteren Sitzungen erlaubt"
 
-#: MySession.cpp:1273
+#: MySession.cpp:1299
 msgid "No X server found."
 msgstr "Kein X Server gefunden"
 
-#: MySession.cpp:1377
+#: MySession.cpp:1402
 #, c-format
 msgid ""
 "Could not create session directory\n"
@@ -440,7 +445,7 @@ msgstr ""
 "Konnte Sitzungsverzeichnis nicht anlegen\n"
 "%s\n"
 
-#: MySession.cpp:1397
+#: MySession.cpp:1423
 #, c-format
 msgid ""
 "Could not write session options\n"
@@ -450,45 +455,45 @@ msgstr ""
 "%s\n"
 "speichern.\n"
 
-#: MySession.cpp:1487 MySession.cpp:1501
+#: MySession.cpp:1513 MySession.cpp:1527
 msgid "Could not assign a free port for CUPS printing"
 msgstr "Konnte keinen Port für CUPS zuweisen"
 
-#: MySession.cpp:1756
+#: MySession.cpp:1782
 #, c-format
 msgid "Could not write %s"
 msgstr "Konnte %s nicht schreiben"
 
-#: MySession.cpp:1814 MySession.cpp:1858 MySession.cpp:1868
+#: MySession.cpp:1856 MySession.cpp:1900 MySession.cpp:1910
 #, c-format
 msgid "Connecting to %s ..."
 msgstr "Verbinde mit %s ..."
 
-#: MySession.cpp:1822
+#: MySession.cpp:1864
 msgid "Preparing multimedia service ..."
 msgstr "Multimedia Dienst vorbereiten ..."
 
-#: MySession.cpp:1854
+#: MySession.cpp:1896
 msgid "Could not start multimedia support"
 msgstr "Konnte Multimedia Unterstützung nicht starten"
 
-#: MySession.cpp:1856
+#: MySession.cpp:1898
 msgid "Could not assign a free port for multimedia support"
 msgstr "Konnte keinen Port für Multimedia Unterstützung zuweisen"
 
-#: MySession.cpp:1865
+#: MySession.cpp:1907
 msgid "Preparing CUPS service ..."
 msgstr "CUPS Dienst vorbereiten ..."
 
-#: MySession.cpp:1867
+#: MySession.cpp:1909
 msgid "Could not start CUPS printing"
 msgstr "Konnte CUPS Druckdienst nicht starten"
 
-#: MySession.cpp:1900
+#: MySession.cpp:1947
 msgid "Called command was: "
 msgstr "Aufgerufenes Kommando war:"
 
-#: MySession.cpp:1901
+#: MySession.cpp:1948
 msgid "Could not start nxssh."
 msgstr "Konnte nxssh nicht starten."
 
@@ -536,19 +541,19 @@ msgstr ""
 "zugreifen. Dies ist von der Verfügbarkeit dieser Dienste bei Ihrem Service-"
 "Provider abhängig."
 
-#: MyWizard.cpp:717 SessionProperties.cpp:821
+#: MyWizard.cpp:717 SessionProperties.cpp:837
 msgid "RDP"
 msgstr "RDP"
 
-#: MyWizard.cpp:735 SessionProperties.cpp:847
+#: MyWizard.cpp:735 SessionProperties.cpp:863
 msgid "RFB"
 msgstr "RFB"
 
-#: MyWizard.cpp:753 SessionProperties.cpp:874
+#: MyWizard.cpp:753 SessionProperties.cpp:890
 msgid "Any"
 msgstr "Beliebig"
 
-#: MyWizard.cpp:760 SessionProperties.cpp:881
+#: MyWizard.cpp:760 SessionProperties.cpp:897
 msgid "As on server"
 msgstr "Wie auf server"
 
@@ -685,7 +690,7 @@ msgstr "B"
 msgid "H"
 msgstr "H"
 
-#: MyWizard_symbols.h:50 SessionProperties_symbols.h:61
+#: MyWizard_symbols.h:50 SessionProperties_symbols.h:64
 msgid "Enable SSL encryption of all traffic"
 msgstr "Aktiviere SSL Verschlüsselung der Verbindung"
 
@@ -700,6 +705,18 @@ msgstr "Erweiterte Einstellungen anzeigen"
 #: PanicDialog_symbols.h:22
 msgid "&Terminate"
 msgstr "&Beenden"
+
+#: ProxyPasswordDialog.h:53 ProxyPasswordDialog_symbols.h:22
+msgid "HTTP proxy password - OpenNX"
+msgstr "HTTP Proxy-Passwort - OpenNX"
+
+#: ProxyPasswordDialog_symbols.h:23
+msgid "Please enter your HTTP proxy password"
+msgstr "Bitte geben Sie Ihr HTTP Proxy-Passwort ein"
+
+#: ProxyPasswordDialog_symbols.h:25
+msgid "OK"
+msgstr "OK"
 
 #: QuitDialog_symbols.h:22
 msgid "&Quit"
@@ -750,7 +767,7 @@ msgstr "Verwende RGB Bildkodierung"
 msgid "Use plain X bitmaps"
 msgstr "Verwende blanke X Bitmaps"
 
-#: RdpImageSettingsDialog_symbols.h:33 SessionProperties_symbols.h:66
+#: RdpImageSettingsDialog_symbols.h:33 SessionProperties_symbols.h:72
 msgid "Cache"
 msgstr "Cache"
 
@@ -803,7 +820,7 @@ msgstr "Starte Arbeitsplatz"
 msgid "Run application"
 msgstr "Starte Anwendung"
 
-#: ResumeDialog.cpp:151 SessionProperties.cpp:669
+#: ResumeDialog.cpp:151 SessionProperties.cpp:685
 msgid "Name"
 msgstr "Name"
 
@@ -956,110 +973,110 @@ msgstr "Über OpenNX..."
 msgid "New NX session"
 msgstr "Neue NX Sitzung"
 
-#: SessionProperties.cpp:561 SessionProperties_symbols.h:89
+#: SessionProperties.cpp:577 SessionProperties_symbols.h:92
 msgid "USB"
 msgstr "USB"
 
-#: SessionProperties.cpp:600 ShareProperties_symbols.h:24
+#: SessionProperties.cpp:616 ShareProperties_symbols.h:24
 msgid "Share"
 msgstr "Freigabe"
 
-#: SessionProperties.cpp:601 ShareProperties_symbols.h:50
+#: SessionProperties.cpp:617 ShareProperties_symbols.h:50
 msgid "Mount on"
 msgstr "Eingehängt unter"
 
-#: SessionProperties.cpp:602
+#: SessionProperties.cpp:618
 msgid "Comment"
 msgstr "Kommentar"
 
-#: SessionProperties.cpp:614 SessionProperties.cpp:1430
+#: SessionProperties.cpp:630 SessionProperties.cpp:1458
 msgid "Currently not available"
 msgstr "Nicht verfügbar"
 
-#: SessionProperties.cpp:666
+#: SessionProperties.cpp:682
 msgid "VendorID"
 msgstr "HerstellerID"
 
-#: SessionProperties.cpp:667
+#: SessionProperties.cpp:683
 msgid "ProductID"
 msgstr "ProduktID"
 
-#: SessionProperties.cpp:668
+#: SessionProperties.cpp:684
 msgid "Class"
 msgstr "Klasse"
 
-#: SessionProperties.cpp:670
+#: SessionProperties.cpp:686
 msgid "Serial"
 msgstr "Seriennr."
 
-#: SessionProperties.cpp:1148 SessionProperties_symbols.h:102
+#: SessionProperties.cpp:1176 SessionProperties_symbols.h:105
 msgid "Font"
 msgstr "Font"
 
-#: SessionProperties.cpp:1192
+#: SessionProperties.cpp:1220
 msgid "Error while reading keyboard table"
 msgstr "Fehler beim Lesen der Tastatur-Tabelle"
 
-#: SessionProperties.cpp:1221
+#: SessionProperties.cpp:1249
 #, c-format
 msgid "Invalid line='%s'"
 msgstr "Ungültige Zeile='%s'"
 
-#: SessionProperties.cpp:1222
+#: SessionProperties.cpp:1250
 #, c-format
 msgid "Invalid entry in %s"
 msgstr "Ungültiger Eintrag in %s"
 
-#: SessionProperties.cpp:1354
+#: SessionProperties.cpp:1382
 msgid "Do you really want to delete all cache directories?"
 msgstr "Wollen Sie wirklich sämliche Cache-Verzeichnissse löschen?"
 
-#: SessionProperties.cpp:1355
+#: SessionProperties.cpp:1383
 msgid "Clean cache - OpenNX"
 msgstr "Cache bereinigen - OpenNX"
 
-#: SessionProperties.cpp:1403
+#: SessionProperties.cpp:1431
 msgid "No local samba server is running."
 msgstr "Es läuft kein lokaler Samba-Server."
 
-#: SessionProperties.cpp:1459
+#: SessionProperties.cpp:1487
 msgid "No sharable resources found"
 msgstr "Keine verteilten Ressourcen gefunden"
 
-#: SessionProperties.cpp:1536
+#: SessionProperties.cpp:1564
 msgid "Select User NX directory"
 msgstr "Wähle persönliches NX Verzeichnis"
 
-#: SessionProperties.cpp:1552
+#: SessionProperties.cpp:1580
 msgid "Select System NX directory"
 msgstr "Wähle System NX Verzeichnis"
 
-#: SessionProperties.cpp:1605
+#: SessionProperties.cpp:1633
 #, c-format
 msgid "Really delete Session '%s' ?"
 msgstr "Die Sitzung '%s' wirklich löschen ?"
 
-#: SessionProperties.cpp:1606
+#: SessionProperties.cpp:1634
 msgid "Delete Session"
 msgstr "Lösche Sitzung"
 
-#: SessionProperties.cpp:1865
+#: SessionProperties.cpp:1893
 msgid "No cups server available."
 msgstr "Kein CUPS-Server verfügbar."
 
-#: SessionProperties.cpp:1880
+#: SessionProperties.cpp:1908
 msgid "Select System CUPS daemon"
 msgstr "Wähle System CUPS-Dämon"
 
-#: SessionProperties.cpp:2098 opennxApp.cpp:1086
+#: SessionProperties.cpp:2126 opennxApp.cpp:1105
 msgid "libusb is not available. No USB devices will be exported"
 msgstr "libusb ist nicht verfügbar. USB-Geräte werden nicht exportiert"
 
-#: SessionProperties.cpp:2103
+#: SessionProperties.cpp:2131
 msgid "No USB devices available."
 msgstr "Keine USB-Geräte verfügbar."
 
-#: SessionProperties.cpp:2315
+#: SessionProperties.cpp:2343
 msgid "Select path of USBIPD socket"
 msgstr "Pfad des USBIPD Sockets"
 
@@ -1096,186 +1113,194 @@ msgid "Modify..."
 msgstr "Ändern..."
 
 #: SessionProperties_symbols.h:57
-msgid "Advanced"
-msgstr "Erweitert"
-
-#: SessionProperties_symbols.h:58
-msgid "Network"
-msgstr "Netzwerk"
-
-#: SessionProperties_symbols.h:59
-msgid "Disable no-delay on TCP connection"
-msgstr "Deaktiviere TCP no-delay"
-
-#: SessionProperties_symbols.h:60
-msgid "Disable ZLIB stream compression"
-msgstr "Deaktiviere ZLIB Kompression"
-
-#: SessionProperties_symbols.h:62
-msgid "Use direct connection"
-msgstr "Direkt verbinden"
-
-#: SessionProperties_symbols.h:63
-msgid "Connect through internal (NoMachine) HTTP proxy"
-msgstr "Verbinde über internen (NoMachine) HTTP Proxy"
-
-#: SessionProperties_symbols.h:64
-msgid "Connect through external proxy"
-msgstr "Verbinde über externen Proxy"
-
-#: SessionProperties_symbols.h:65
-msgid "Command"
-msgstr "Kommando"
-
-#: SessionProperties_symbols.h:67
-msgid "In memory"
-msgstr "Im Speicher"
-
-#: SessionProperties_symbols.h:68
-msgid "0 Mb"
-msgstr "0 MB"
-
-#: SessionProperties_symbols.h:69
-msgid "1 Mb"
-msgstr "1 MB"
-
-#: SessionProperties_symbols.h:70
-msgid "2 Mb"
-msgstr "2 MB"
-
-#: SessionProperties_symbols.h:71
-msgid "4 Mb"
-msgstr "4 MB"
-
-#: SessionProperties_symbols.h:72
-msgid "8 Mb"
-msgstr "8 MB"
-
-#: SessionProperties_symbols.h:73
-msgid "16 Mb"
-msgstr "16 MB"
-
-#: SessionProperties_symbols.h:74
-msgid "32 Mb"
-msgstr "32 MB"
-
-#: SessionProperties_symbols.h:75
-msgid "On disk"
-msgstr "Auf Platte"
-
-#: SessionProperties_symbols.h:76
-msgid "64 Mb"
-msgstr "64 MB"
-
-#: SessionProperties_symbols.h:77
-msgid "128 Mb"
-msgstr "128 MB"
-
-#: SessionProperties_symbols.h:78
-msgid "Clean all cache files"
-msgstr "Bereinige alle Cache-Dateien"
-
-#: SessionProperties_symbols.h:79
 msgid "Keyboard"
 msgstr "Tastatur"
 
-#: SessionProperties_symbols.h:80
+#: SessionProperties_symbols.h:58
 msgid "Keep current keyboard settings"
 msgstr "Behalte aktuelle Einstellungen"
 
-#: SessionProperties_symbols.h:81
+#: SessionProperties_symbols.h:59
 msgid "Use other layout"
 msgstr "Verwende anderes Layout"
 
+#: SessionProperties_symbols.h:60
+msgid "Advanced"
+msgstr "Erweitert"
+
+#: SessionProperties_symbols.h:61
+msgid "Network"
+msgstr "Netzwerk"
+
+#: SessionProperties_symbols.h:62
+msgid "Disable no-delay on TCP connection"
+msgstr "Deaktiviere TCP no-delay"
+
+#: SessionProperties_symbols.h:63
+msgid "Disable ZLIB stream compression"
+msgstr "Deaktiviere ZLIB Kompression"
+
+#: SessionProperties_symbols.h:65
+msgid "Use direct connection"
+msgstr "Direkt verbinden"
+
+#: SessionProperties_symbols.h:66
+msgid "Connect through internal (NoMachine) HTTP proxy"
+msgstr "Verbinde über internen (NoMachine) HTTP Proxy"
+
+#: SessionProperties_symbols.h:67
+msgid "User"
+msgstr "User"
+
+#: SessionProperties_symbols.h:69
+msgid "Remember proxy password"
+msgstr "Proxy-Passwort speichern"
+
+#: SessionProperties_symbols.h:70
+msgid "Connect through external proxy"
+msgstr "Verbinde über externen Proxy"
+
+#: SessionProperties_symbols.h:71
+msgid "Command"
+msgstr "Kommando"
+
+#: SessionProperties_symbols.h:73
+msgid "In memory"
+msgstr "Im Speicher"
+
+#: SessionProperties_symbols.h:74
+msgid "0 Mb"
+msgstr "0 MB"
+
+#: SessionProperties_symbols.h:75
+msgid "1 Mb"
+msgstr "1 MB"
+
+#: SessionProperties_symbols.h:76
+msgid "2 Mb"
+msgstr "2 MB"
+
+#: SessionProperties_symbols.h:77
+msgid "4 Mb"
+msgstr "4 MB"
+
+#: SessionProperties_symbols.h:78
+msgid "8 Mb"
+msgstr "8 MB"
+
+#: SessionProperties_symbols.h:79
+msgid "16 Mb"
+msgstr "16 MB"
+
+#: SessionProperties_symbols.h:80
+msgid "32 Mb"
+msgstr "32 MB"
+
+#: SessionProperties_symbols.h:81
+msgid "On disk"
+msgstr "Auf Platte"
+
 #: SessionProperties_symbols.h:82
+msgid "64 Mb"
+msgstr "64 MB"
+
+#: SessionProperties_symbols.h:83
+msgid "128 Mb"
+msgstr "128 MB"
+
+#: SessionProperties_symbols.h:84
+msgid "Clean all cache files"
+msgstr "Bereinige alle Cache-Dateien"
+
+#: SessionProperties_symbols.h:85
 msgid "Services"
 msgstr "Dienste"
 
-#: SessionProperties_symbols.h:83
+#: SessionProperties_symbols.h:86
 msgid "Enable SMB printer and file sharing"
 msgstr "Aktiviere Druck- und Dateifreigabe"
 
-#: SessionProperties_symbols.h:84
+#: SessionProperties_symbols.h:87
 msgid "Enable CUPS printing"
 msgstr "Aktiviere CUPS Druckfreigabe"
 
-#: SessionProperties_symbols.h:85
+#: SessionProperties_symbols.h:88
 msgid "Add"
 msgstr "Hinzufügen"
 
-#: SessionProperties_symbols.h:86
+#: SessionProperties_symbols.h:89
 msgid "Modify"
 msgstr "Ändern"
 
-#: SessionProperties_symbols.h:87
+#: SessionProperties_symbols.h:90
 msgid "Delete"
 msgstr "Löschen"
 
-#: SessionProperties_symbols.h:88
+#: SessionProperties_symbols.h:91
 msgid "Enable multimedia support"
 msgstr "Aktiviere Multimedia Unterstützung"
 
-#: SessionProperties_symbols.h:90
+#: SessionProperties_symbols.h:93
 msgid "Enable USB forwarding"
 msgstr "Aktiviere USB Weiterleitung"
 
-#: SessionProperties_symbols.h:91
+#: SessionProperties_symbols.h:94
 msgid "Environment"
 msgstr "Umgebung"
 
-#: SessionProperties_symbols.h:92
+#: SessionProperties_symbols.h:95
 msgid "User NX directory"
 msgstr "Persönliches NX Verzeichnis"
 
-#: SessionProperties_symbols.h:93
+#: SessionProperties_symbols.h:96
 msgid "..."
 msgstr "..."
 
-#: SessionProperties_symbols.h:94
+#: SessionProperties_symbols.h:97
 msgid "Remove old session files"
 msgstr "Entferne alte Sitzungs-Dateien"
 
-#: SessionProperties_symbols.h:95
+#: SessionProperties_symbols.h:98
 msgid "System NX directory"
 msgstr "System NX Verzeichnis"
 
-#: SessionProperties_symbols.h:96
+#: SessionProperties_symbols.h:99
 msgid "System CUPS daemon"
 msgstr "System CUPS-Dämon"
 
-#: SessionProperties_symbols.h:97
+#: SessionProperties_symbols.h:100
 msgid "System USBIP daemon"
 msgstr "System USBIP Dämon"
 
-#: SessionProperties_symbols.h:98
+#: SessionProperties_symbols.h:101
 msgid "Local command socket path"
 msgstr "Pfad des lokalen Kommando-Sockets"
 
-#: SessionProperties_symbols.h:99
+#: SessionProperties_symbols.h:102
 msgid "Local port"
 msgstr "Lokaler port"
 
-#: SessionProperties_symbols.h:100
+#: SessionProperties_symbols.h:103
 msgid "Select NX fonts"
 msgstr "Wähle NX Fonts"
 
-#: SessionProperties_symbols.h:101
+#: SessionProperties_symbols.h:104
 msgid "Default"
 msgstr "Vorgabe"
 
-#: SessionProperties_symbols.h:103
+#: SessionProperties_symbols.h:106
 msgid "Fixed"
 msgstr "Feste Breite"
 
-#: SessionProperties_symbols.h:104
+#: SessionProperties_symbols.h:107
 msgid "About"
 msgstr "Info"
 
-#: SessionProperties_symbols.h:105
+#: SessionProperties_symbols.h:108
 msgid "&Delete"
 msgstr "&Löschen"
 
-#: SessionProperties_symbols.h:106
+#: SessionProperties_symbols.h:109
 msgid "&Apply"
 msgstr "&Anwenden"
 
@@ -1700,7 +1725,26 @@ msgstr "Konnte Attribute von %s nicht ermitteln"
 msgid "Could not read link %s"
 msgstr "Konnte Verknüpfung %s nicht lesen"
 
-#: opennxApp.cpp:668 watchUsbIpApp.cpp:218
+#: opennxApp.cpp:496
+#, c-format
+msgid ""
+"Found a CUPS daemon binary in %s, however it is not executable.\n"
+"In order to use CUPS printing, you need to fix its permissions."
+msgstr ""
+"Ein CUPS-Daemon wurde in %s gefunden, jedoch ist diese Datei nicht "
+"ausführbar.\n"
+"Um CUPS mit OpenNX zu verwenden müssen Sie die Rechte des CUPS-Daemons "
+"anpassen."
+
+#: opennxApp.cpp:501
+msgid ""
+"Could not find any CUPS daemon binary.\n"
+"In order to use CUPS printing, you need to install cups."
+msgstr ""
+"Konnte keinen CUPS-Daemon finden. Um CUPS mit\n"
+"OpenNX zu verwenden, müssen Sie CUPS installieren."
+
+#: opennxApp.cpp:687 watchUsbIpApp.cpp:218
 msgid ""
 "\n"
 "\n"
@@ -1710,59 +1754,59 @@ msgstr ""
 "\n"
 "Unterstützte Trace-Tags:"
 
-#: opennxApp.cpp:671
+#: opennxApp.cpp:690
 msgid "Start the session administration tool."
 msgstr "Starte das Sitzungs-Administrations-Werkzeug."
 
-#: opennxApp.cpp:673
+#: opennxApp.cpp:692
 msgid "Secify window title for dialog mode."
 msgstr "Spezifiziere Fenstertitel für Dialog-Modus."
 
-#: opennxApp.cpp:675
+#: opennxApp.cpp:694
 msgid "Secify dialog style for dialog mode."
 msgstr "Spezifiziere Dialog-Stil für Dialog-Modus."
 
-#: opennxApp.cpp:677
+#: opennxApp.cpp:696
 msgid "Run in dialog mode."
 msgstr "Aktiviere Dialog-Modus."
 
-#: opennxApp.cpp:679
+#: opennxApp.cpp:698
 msgid "Dialog mode proxy."
 msgstr "Proxy des Dialog-Modus."
 
-#: opennxApp.cpp:681
+#: opennxApp.cpp:700
 msgid "Specify message for dialog mode."
 msgstr "Spezifiziere Mitteilungstext für Dialog-Modus."
 
-#: opennxApp.cpp:683
+#: opennxApp.cpp:702
 msgid "Specify parent PID for dialog mode."
 msgstr "Spezifiziere Eltern-PID für Dialog-Modus."
 
-#: opennxApp.cpp:685
+#: opennxApp.cpp:704
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr "Starte eine Sitzung mit den Einstellungen aus FILENAME."
 
-#: opennxApp.cpp:687
+#: opennxApp.cpp:706
 msgid "Specify window-ID for dialog mode."
 msgstr "Spezifiziere Window-ID für Dialog-Modus."
 
-#: opennxApp.cpp:689 watchUsbIpApp.cpp:227
+#: opennxApp.cpp:708 watchUsbIpApp.cpp:227
 msgid "Specify wxWidgets trace mask."
 msgstr "Spezifiziere wxWidgets Trace-Maske."
 
-#: opennxApp.cpp:692
+#: opennxApp.cpp:711
 msgid "Test CardWaiterDialog"
 msgstr "Teste CardWaiterDialog"
 
-#: opennxApp.cpp:695
+#: opennxApp.cpp:714
 msgid "Guide the user through the steps to configure a session."
 msgstr "Führe den Benutzer durch die Schritte zu Konfiguration einer Sitzung."
 
-#: opennxApp.cpp:746 watchReaderApp.cpp:197
+#: opennxApp.cpp:765 watchReaderApp.cpp:197
 msgid "Smart card removed"
 msgstr "Smart Card entfernt"
 
-#: opennxApp.cpp:748 watchReaderApp.cpp:196
+#: opennxApp.cpp:767 watchReaderApp.cpp:196
 msgid ""
 "OpenNX session has been suspended, because\n"
 "the authenticating smart card has been removed."
@@ -1770,16 +1814,16 @@ msgstr ""
 "Die OpenNX Sitzung wurde unterbrochen, weil\n"
 "die authentisierende Smart Card entfernt wurde."
 
-#: opennxApp.cpp:1100
+#: opennxApp.cpp:1119
 msgid "USBIP tunnel registration timeout"
 msgstr "Timeout beim Öffnen des USBIP-Kanals"
 
-#: opennxApp.cpp:1102
+#: opennxApp.cpp:1121
 #, c-format
 msgid "Unable to export USB device %s"
 msgstr "Konnte USB-Gerät %s nicht exportieren"
 
-#: opennxApp.cpp:1108
+#: opennxApp.cpp:1127
 msgid "Could not connect to usbipd2. No USB devices will be exported"
 msgstr "Verbindung zu usbipd2 gescheitert. USB-Ggeräte werden nicht exportiert"
 
@@ -1845,9 +1889,6 @@ msgstr "Konnte Sitzungs-Konfiguration nicht speichern."
 #: watchUsbIpApp.cpp:499
 msgid "Could not export USB device"
 msgstr "Konnte USB-Gerät nicht exportieren"
-
-#~ msgid "Invalid X11 server platform"
-#~ msgstr "Ungülige X11 Server-Plattform"
 
 #~ msgid "Could not query multimedia support"
 #~ msgstr "Konnte Multimedia Unterstützung nicht ermitteln"
