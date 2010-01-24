@@ -149,27 +149,37 @@ IMPLEMENT_APP(opennxApp);
     while (m_sVersion.Freq(wxT('.')) < 2)
         m_sVersion.Append(wxT(".0"));
     m_sVersion.Append(wxT(".")).Append(wxT(SVNREV));
-    {
+
+    // Language overrides from KDE - only applied if running inside a KDE session. 
+    if (inKdeSession != 0) {
         LogNull dummy;
-        // Try to get KDE language settings and override locale accordingly
-        wxFileInputStream fis(::wxGetHomeDir() +
-                wxFileName::GetPathSeparator() + wxT(".kde") + 
-                wxFileName::GetPathSeparator() + wxT("share") + 
-                wxFileName::GetPathSeparator() + wxT("config") + 
-                wxFileName::GetPathSeparator() + wxT("kdeglobals"));
-        if (fis.IsOk()) {
-            wxFileConfig cfg(fis);
-            wxString country = cfg.Read(wxT("Locale/Country"), wxEmptyString);
-            wxString lang = cfg.Read(wxT("Locale/Language"), wxEmptyString);
-            if ((!lang.IsEmpty()) && (!country.IsEmpty())) {
-                if (lang.Contains(wxT(":")))
-                    lang = lang.BeforeFirst(wxT(':'));
-                if (lang.Length() < 3)
-                    lang << wxT("_") << country.Upper();
-                lang << wxT(".UTF-8");
-                // At this point logging is not yet setup.
-                fprintf(stderr, "Overriding LANG from KDE environment to: '%s'\n", (const char *)lang.mb_str());
-                ::wxSetEnv(wxT("LANG"), lang);
+
+        // If KDE_LANG is set, then it has precedence over kdeglobals.
+        wxString lang;
+        if (::wxGetEnv(wxT("KDE_LANG"), &lang)) {
+            fprintf(stderr, "Overriding LANG from KDE_LANG environment to: '%s'\n", (const char *)lang.mb_str());
+            ::wxSetEnv(wxT("LANG"), lang);
+        } else {
+            // Try to get KDE language settings and override locale accordingly
+            wxFileInputStream fis(::wxGetHomeDir() +
+                    wxFileName::GetPathSeparator() + wxT(".kde") + 
+                    wxFileName::GetPathSeparator() + wxT("share") + 
+                    wxFileName::GetPathSeparator() + wxT("config") + 
+                    wxFileName::GetPathSeparator() + wxT("kdeglobals"));
+            if (fis.IsOk()) {
+                wxFileConfig cfg(fis);
+                wxString country = cfg.Read(wxT("Locale/Country"), wxEmptyString);
+                wxString lang = cfg.Read(wxT("Locale/Language"), wxEmptyString);
+                if ((!lang.IsEmpty()) && (!country.IsEmpty())) {
+                    if (lang.Contains(wxT(":")))
+                        lang = lang.BeforeFirst(wxT(':'));
+                    if (lang.Length() < 3)
+                        lang << wxT("_") << country.Upper();
+                    lang << wxT(".UTF-8");
+                    // At this point logging is not yet setup.
+                    fprintf(stderr, "Overriding LANG from kdeglobals to: '%s'\n", (const char *)lang.mb_str());
+                    ::wxSetEnv(wxT("LANG"), lang);
+                }
             }
         }
     }
@@ -295,7 +305,7 @@ opennxApp::CreateDesktopEntry(MyXmlConfig *cfg)
             wxString fn = path + wxT("/") + cfg->sGetName() + wxT(".desktop");
             ::wxLogTrace(MYTRACETAG, wxT("Creating '%s'"), fn.c_str());
             if (f.Create(fn, true,
-                         wxS_IRUSR|wxS_IWUSR|wxS_IXUSR|wxS_IRGRP|wxS_IROTH)) {
+                        wxS_IRUSR|wxS_IWUSR|wxS_IXUSR|wxS_IRGRP|wxS_IROTH)) {
                 f.Write(dtEntry);
                 f.Close();
                 ret = true;
