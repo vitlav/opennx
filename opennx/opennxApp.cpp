@@ -477,12 +477,31 @@ opennxApp::preInit()
     if (!wxConfigBase::Get()->Read(wxT("Config/CupsPath"), &tmp)) {
 #if defined(__LINUX__) || defined(__OPENBSD__) || defined(__WXMAC__)
         tmp = findExecutable(wxT("cupsd"));
-        if ((tmp.IsEmpty()) && wxFileName::IsFileExecutable(wxT("/sbin/cupsd")))
-            tmp = wxT("/sbin/cupsd");
-        if ((tmp.IsEmpty()) && wxFileName::IsFileExecutable(wxT("/usr/sbin/cupsd")))
-            tmp = wxT("/usr/sbin/cupsd");
-        if ((tmp.IsEmpty()) && wxFileName::IsFileExecutable(wxT("usr/local/sbin/cupsd")))
-            tmp = wxT("/usr/local/sbin/cupsd");
+        if (tmp.IsEmpty()) {
+            const wxChar* candidates[] = {
+                wxT("/sbin/cupsd"), wxT("/usr/sbin/cupsd"), wxT("usr/local/sbin/cupsd"),
+                NULL
+            };
+            int i;
+            for (i = 0; candidates[i]; i++) {
+                if (wxFileName::IsFileExecutable(candidates[i])) {
+                    tmp = candidates[i];
+                    break;
+                }
+            }
+            if (tmp.IsEmpty()) {
+                for (i = 0; candidates[i]; i++) {
+                    if (wxFileName::FileExists(candidates[i])) {
+                        tmp = candidates[i];
+                        ::wxLogWarning(_("Found a CUPS daemon binary in %s, however it is not executable.\nIn order to use CUPS printing, you need to fix its permissions."), tmp.c_str());
+                        break;
+                    }
+                }
+                if (tmp.IsEmpty())
+                    ::wxLogWarning(_("Could not find any CUPS daemon binary.\nIn order to use CUPS printing, you need to install cups."));
+                tmp = wxEmptyString;
+            }
+        }
 #endif
         wxConfigBase::Get()->Write(wxT("Config/CupsPath"), tmp);
         wxConfigBase::Get()->Flush();

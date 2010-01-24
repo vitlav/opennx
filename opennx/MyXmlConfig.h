@@ -185,6 +185,7 @@ class MyXmlConfig
         bool bGetExternalProxy() { return m_bExternalProxy; }
         bool bGetGuestMode() { return m_bGuestMode; }
         bool bGetKbdLayoutOther() { return m_bKbdLayoutOther; }
+        bool bGetProxyPassRemember() { return m_bProxyPassRemember; }
         bool bGetRdpCache() { return m_bRdpCache; }
         bool bGetRdpRememberPassword() { return m_bRdpRememberPassword; }
         bool bGetRdpRunApplication() { return m_bRdpRunApplication; }
@@ -236,6 +237,8 @@ class MyXmlConfig
         wxString sGetPassword() { return m_sPassword; }
         wxString sGetProxyCommand() { return m_sProxyCommand; }
         wxString sGetProxyHost() { return m_sProxyHost; }
+        wxString sGetProxyPass() { return m_sProxyPass; }
+        wxString sGetProxyUser() { return m_sProxyUser; }
         wxString sGetRdpApplication() { return m_sRdpApplication; }
         wxString sGetRdpDomain() { return m_sRdpDomain; }
         wxString sGetRdpHostName() { return m_sRdpHostName; }
@@ -273,6 +276,7 @@ class MyXmlConfig
         void bSetExternalProxy(bool b) { m_bExternalProxy = b; }
         void bSetGuestMode(bool b) { m_bGuestMode = b; }
         void bSetKbdLayoutOther(bool b) { m_bKbdLayoutOther = b; }
+        void bSetProxyPassRemember(bool b) { m_bProxyPassRemember = b; }
         void bSetRdpCache(bool b) { m_bRdpCache = b; }
         void bSetRdpRememberPassword(bool b) { m_bRdpRememberPassword = b; }
         void bSetRdpRunApplication(bool b) { m_bRdpRunApplication = b; }
@@ -324,6 +328,8 @@ class MyXmlConfig
         void sSetPassword(const wxString &s) { m_sPassword = s; }
         void sSetProxyCommand(const wxString &s) { m_sProxyCommand = s; }
         void sSetProxyHost(const wxString &s) { m_sProxyHost = s; }
+        void sSetProxyPass(const wxString &s) { m_sProxyPass = s; }
+        void sSetProxyUser(const wxString &s) { m_sProxyUser = s; }
         void sSetRdpApplication(const wxString &s) { m_sRdpApplication = s; }
         void sSetRdpDomain(const wxString &s) { m_sRdpDomain = s; }
         void sSetRdpHostName(const wxString &s) { m_sRdpHostName = s; }
@@ -385,6 +391,7 @@ class MyXmlConfig
         bool m_bImageEncodingPlainX;
         bool m_bImageEncodingPNG;
         bool m_bKbdLayoutOther;
+        bool m_bProxyPassRemember;
         bool m_bRdpCache;
         bool m_bRdpRememberPassword;
         bool m_bRdpRunApplication;
@@ -427,6 +434,8 @@ class MyXmlConfig
         wxString m_sPassword;
         wxString m_sProxyCommand;
         wxString m_sProxyHost;
+        wxString m_sProxyPass;
+        wxString m_sProxyUser;
         wxString m_sRdpApplication;
         wxString m_sRdpDomain;
         wxString m_sRdpHostName;

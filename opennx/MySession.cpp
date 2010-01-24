@@ -49,6 +49,7 @@
 #include "osdep.h"
 #include "pwcrypt.h"
 #include "LogNull.h"
+#include "ProxyPasswordDialog.h"
 
 #include <wx/filename.h>
 #include <wx/regex.h>
@@ -86,6 +87,9 @@ static const int HTTP_PORT_OFFSET  = 9000;
 static const int USBIP_PORT_OFFSET = 40000;
 
 #define NX_PROTO wxT(NX_PROTOCOL_VERSION)
+#define X11ARCH_NONE   0
+#define X11ARCH_CYGWIN 1
+#define X11ARCH_MINGW  2
 
 #ifdef __WXMSW__
 wxString cygPath(const wxString &dir, const wxString &file = wxEmptyString)
@@ -103,7 +107,20 @@ wxString cygPath(const wxString &dir, const wxString &file = wxEmptyString)
 class FontpathTraverser : public wxDirTraverser
 {
     public:
-        wxString GetFontPath() { return m_sFontPath; }
+        wxString GetFontPath(int x11arch)
+        {
+            switch (x11arch) {
+                case X11ARCH_CYGWIN:
+                    return m_sFontPathCygwin;
+                    break;
+                case X11ARCH_MINGW:
+                    return m_sFontPath;
+                    break;
+                default:
+                    ::wxLogError(_("Invalid X11 server platform"));
+                    break;
+            }
+        }
 
         virtual wxDirTraverseResult OnFile(const wxString& WXUNUSED(filename))
         {
@@ -114,12 +131,16 @@ class FontpathTraverser : public wxDirTraverser
         {
             if (!m_sFontPath.IsEmpty())
                 m_sFontPath += wxT(",");
-            m_sFontPath += cygPath(dirname);
+            m_sFontPath += dirname;
+            if (!m_sFontPathCygwin.IsEmpty())
+                m_sFontPathCygwin += wxT(",");
+            m_sFontPathCygwin += cygPath(dirname);
             return wxDIR_IGNORE;
         }
 
     private:
         wxString m_sFontPath;
+        wxString m_sFontPathCygwin;
 
 };
 #endif
@@ -926,12 +947,17 @@ MySession::OnSshEvent(wxCommandEvent &event)
                 if (m_eConnectState == STATE_FINISH) {
                     m_pDlg->SetStatusText(_("Starting session"));
                     msg = wxT("NX> 299 Switch connection to: ");
-                    if (intver(NX_PROTO) > 0x00020000) {
+                    if ((intver(NX_PROTO) > 0x00020000) && m_bSslTunneling) {
                         msg << wxT("NX mode: encrypted options: nx,options=")
                             << formatOptFilename() << wxT(":") << m_sSessionDisplay;
                     } else {
                         msg << m_sProxyIP << wxT(":") << m_sProxyPort
                             << wxT(" cookie: ") << m_sProxyCookie;
+                        m_bSessionRunning = true;
+                        wxString slog = m_sSessionDir;
+                        slog << wxFileName::GetPathSeparator() << wxT("session");
+                        m_pSessionWatch = new SessionWatch(this, slog,
+                                wxT("Session: Session started at"));
                     }
                     printSsh(msg);
                 } else {
@@ -1234,14 +1260,14 @@ MySession::startXserver()
     display -= X_PORT_OFFSET;
     wxString dpyStr = wxT(":");
     dpyStr << display;
-    int xserver = 0;
+    int xserver = X11ARCH_NONE;
 
     wxString wxWinCmd;
     wxFileName fn(m_sSysDir, wxT("nxwin.exe"));
     fn.AppendDir(wxT("bin"));
     if (fn.IsFileExecutable()) {
         m_sXauthCookie = getXauthCookie(display, wxT("/unix"));
-        xserver = 1;
+        xserver = X11ARCH_CYGWIN;
         wxWinCmd = fn.GetShortPath();
         wxWinCmd << wxT(" -nowinkill");
         wxWinCmd << wxT(" -clipboard");
@@ -1256,7 +1282,7 @@ MySession::startXserver()
         wxFileName fn(m_sSysDir, wxT("Xming.exe"));
         fn.AppendDir(wxT("bin"));
         if (fn.IsFileExecutable()) {
-            xserver = 2;
+            xserver = X11ARCH_MINGW;
             m_sXauthCookie = getXauthCookie(display, wxEmptyString);
             wxWinCmd = fn.GetShortPath();
             wxWinCmd << wxT(" -nowinkill");
@@ -1283,7 +1309,7 @@ MySession::startXserver()
         wxDir d(fn.GetShortPath());
         FontpathTraverser t;
         d.Traverse(t);
-        wxWinCmd << wxT(" -fp ") << t.GetFontPath();
+        wxWinCmd << wxT(" -fp ") << t.GetFontPath(xserver);
     }
     wxWinCmd << wxT(" -screen 0 800x600");
 
@@ -1294,7 +1320,7 @@ MySession::startXserver()
             user << wxT("guest");
     } else
         user = m_pCfg->sGetUsername();
-    if (xserver == 1)
+    if (xserver == X11ARCH_CYGWIN)
         wxWinCmd << wxT(" -name ") << user << wxT("@") << m_pCfg->sGetServerHost() << wxT(":");
     // wxWinCmd << wxT(" -nokeyhook");
 
@@ -1340,15 +1366,14 @@ MySession::startProxy()
         << wxT(",client=winnt")
 #endif
         << wxT(",id=") << m_sSessionID;
-    if (inxproto <= 0x00020000) {
-        if (m_bSslTunneling) {
+    if (m_bSslTunneling) {
+        if (inxproto <= 0x00020000) {
             m_sProxyIP = wxT("127.0.0.1");
             m_sProxyPort = wxString::Format(wxT("%d"), getFirstFreePort(PROXY_PORT_OFFSET));
             popts << wxT(",listen=") << m_sProxyPort;
-        } else {
-            popts << wxT(",connect=") << m_sProxyIP;
         }
-    }
+    } else
+        popts << wxT(",connect=") << m_sHost;
 
     // Undocumented feature of the original:
     // If a file ~/.nx/options exists, it's content is
@@ -1391,8 +1416,9 @@ MySession::startProxy()
                 << wxFileName::GetPathSeparator() << wxT("nxproxy -S nx,options=")
                 << m_sOptFilename << wxT(":") << m_sSessionDisplay;
             printSsh(wxT("bye"));
-            if (intver(NX_PROTO) <= 0x00020000)
-                ::wxExecute(pcmd);
+            if ((intver(NX_PROTO) <= 0x00020000) || (!m_bSslTunneling)) {
+                ::wxExecute(pcmd, wxEXEC_ASYNC);
+            }
         } else {
             ::wxLogSysError(_("Could not write session options\n%s\n"),
                     m_sOptFilename.c_str());
@@ -1760,8 +1786,23 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
             nxsshcmd << wxT(" -i ") << fn.GetShortPath();
         }
 
-        if (m_pCfg->bGetUseProxy() && (!m_pCfg->sGetProxyHost().IsEmpty()))
-            nxsshcmd << wxT(" -P ") << m_pCfg->sGetProxyHost() << wxT(":") << m_pCfg->iGetProxyPort();
+        if (m_pCfg->bGetUseProxy() && (!m_pCfg->sGetProxyHost().IsEmpty())) {
+            // Internal (NoMachine) proxy
+            if (m_pCfg->sGetProxyUser().IsEmpty())
+                nxsshcmd << wxT(" -P ") << m_pCfg->sGetProxyHost() << wxT(":") << m_pCfg->iGetProxyPort();
+            else {
+                wxString proxyPass = m_pCfg->sGetProxyPass();
+                if (!m_pCfg->bGetProxyPassRemember()) {
+                    ProxyPasswordDialog dlg(m_pParent);
+                    if (dlg.ShowModal() == wxID_OK)
+                        proxyPass = dlg.GetPassword();
+                    else
+                        return false;
+                }
+                nxsshcmd << wxT(" -P ") << m_pCfg->sGetProxyUser() << wxT(":") << proxyPass << wxT("@")
+                    << m_pCfg->sGetProxyHost() << wxT(":") << m_pCfg->iGetProxyPort();
+            }
+        }
 
         if (m_pCfg->bGetExternalProxy() && (!m_pCfg->sGetProxyCommand().IsEmpty()))
             nxsshcmd << wxT(" -o 'ProxyCommand ") << m_pCfg->sGetProxyCommand() << wxT("'");
@@ -1769,6 +1810,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
         if (m_pCfg->bGetEnableSSL())
             nxsshcmd << wxT(" -B");
         nxsshcmd << wxT(" -E") << wxT(" nx@") << m_pCfg->sGetServerHost();
+        m_sHost = m_pCfg->sGetServerHost();
 
         fn.Assign(wxFileName::GetHomeDir());
         ::wxSetEnv(wxT("NX_HOME"), fn.GetShortPath());
@@ -1893,6 +1935,11 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
                     } else {
                         nxssh.Kill();
                         return false;
+                    }
+                } else {
+                    if (m_bSessionEstablished && (!m_bSslTunneling)) {
+                        // Unecrypted session (handled by nxproxy), get rid of nxssh
+                        nxssh.Kill();
                     }
                 }
                 wxThread::Sleep(500);

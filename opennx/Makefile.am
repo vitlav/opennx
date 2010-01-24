@@ -17,7 +17,7 @@ opennx_SOURCES = AboutDialog.cpp AsyncProcess.cpp LibOpenSC.cpp \
 	ForeignFrame.cpp Icon.cpp LogDialog.cpp KeyDialog.cpp LibUSB.cpp \
 	LoginDialog.cpp md5.c MyIPC.cpp MyDynlib.cpp MySession.cpp \
 	MyValidator.cpp MyWizard.cpp MyXmlConfig.cpp opennxApp.cpp \
-	osdep.c PanicDialog.cpp pwcrypt.cpp QuitDialog.cpp \
+	osdep.c PanicDialog.cpp pwcrypt.cpp ProxyPasswordDialog.cpp QuitDialog.cpp \
 	RdpImageSettingsDialog.cpp RdpPropertyDialog.cpp ResumeDialog.cpp \
 	SessionAdmin.cpp SessionList.cpp SessionProperties.cpp \
 	ShareProperties.cpp TextViewer.cpp UnixImageSettingsDialog.cpp \
@@ -34,7 +34,7 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	LoginDialog_symbols.h md5.h memres.h MyIPC.h MyDynlib.h MySession.h \
 	MyValidator.h MyWizard.h MyWizard_symbols.h MyXmlConfig.h opennxApp.h \
 	osdep.h  PanicDialog.h PanicDialog_symbols.h pwcrypt.h QuitDialog.h \
-	QuitDialog_symbols.h RdpImageSettingsDialog.h \
+	QuitDialog_symbols.h ProxyPasswordDialog.h RdpImageSettingsDialog.h \
 	RdpImageSettingsDialog_symbols.h RdpPropertyDialog.h \
 	RdpPropertyDialog_symbols.h ResumeDialog.h ResumeDialog_symbols.h \
 	SessionAdmin.h SessionAdmin_symbols.h SessionList.h \
