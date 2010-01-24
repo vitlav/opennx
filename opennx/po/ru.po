@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-01-14 14:23+0100\n"
+"POT-Creation-Date: 2010-01-24 15:27+0100\n"
 "PO-Revision-Date: 2009-09-13 11:50+0100\n"
 "Last-Translator: Boris Savelev <boris.savelev@gmail.com>\n"
 "Language-Team:  <de@li.org>\n"
@@ -1045,7 +1045,7 @@ msgstr "Нет доступного сервера CUPS."
 msgid "Select System CUPS daemon"
 msgstr "Выберите сервер CUPS"
 
-#: SessionProperties.cpp:2098 opennxApp.cpp:1076
+#: SessionProperties.cpp:2098 opennxApp.cpp:1086
 msgid "libusb is not available. No USB devices will be exported"
 msgstr "libusb не доступна. USB устройства не смогут быть проброшены."
 
@@ -1665,34 +1665,34 @@ msgstr "Disable X agent encoding"
 msgid "Disable taint of X replies"
 msgstr "Disable taint of X replies"
 
-#: opennxApp.cpp:242
+#: opennxApp.cpp:252
 msgid "Launch NX Session"
 msgstr "Запустить сессию NX"
 
-#: opennxApp.cpp:309
+#: opennxApp.cpp:319
 msgid "Could not create link on Desktop."
 msgstr "Не удалось создать ярлык на рабочем столе."
 
-#: opennxApp.cpp:383
+#: opennxApp.cpp:393
 msgid "Could not get PATH environment"
 msgstr "Не удалось определить PATH"
 
-#: opennxApp.cpp:398
+#: opennxApp.cpp:408
 #, c-format
 msgid "Could not find %s in PATH"
 msgstr "%s не найдена в PATH"
 
-#: opennxApp.cpp:408
+#: opennxApp.cpp:418
 #, c-format
 msgid "Could not stat %s"
 msgstr "Could not stat %s"
 
-#: opennxApp.cpp:414
+#: opennxApp.cpp:424
 #, c-format
 msgid "Could not read link %s"
 msgstr "Could not read link %s"
 
-#: opennxApp.cpp:658 watchUsbIpApp.cpp:198
+#: opennxApp.cpp:668 watchUsbIpApp.cpp:218
 msgid ""
 "\n"
 "\n"
@@ -1702,59 +1702,59 @@ msgstr ""
 "\n"
 "Supported trace tags: "
 
-#: opennxApp.cpp:661
+#: opennxApp.cpp:671
 msgid "Start the session administration tool."
 msgstr "Запустить утилиту администрирования сессий."
 
-#: opennxApp.cpp:663
+#: opennxApp.cpp:673
 msgid "Secify window title for dialog mode."
 msgstr "Заголовок окна в dialog режиме."
 
-#: opennxApp.cpp:665
+#: opennxApp.cpp:675
 msgid "Secify dialog style for dialog mode."
 msgstr "Стиль диалога в dialog режиме."
 
-#: opennxApp.cpp:667
+#: opennxApp.cpp:677
 msgid "Run in dialog mode."
 msgstr "Запустить в режиме dialog."
 
-#: opennxApp.cpp:669
+#: opennxApp.cpp:679
 msgid "Dialog mode proxy."
 msgstr "Dialog mode proxy."
 
-#: opennxApp.cpp:671
+#: opennxApp.cpp:681
 msgid "Specify message for dialog mode."
 msgstr "Сообщение для dialog режима."
 
-#: opennxApp.cpp:673
+#: opennxApp.cpp:683
 msgid "Specify parent PID for dialog mode."
 msgstr "PID родительского процесса для dialog режима."
 
-#: opennxApp.cpp:675
+#: opennxApp.cpp:685
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr "Запустить сессию <str>."
 
-#: opennxApp.cpp:677
+#: opennxApp.cpp:687
 msgid "Specify window-ID for dialog mode."
 msgstr "Window-ID для запуска в dialog режиме."
 
-#: opennxApp.cpp:679 watchUsbIpApp.cpp:207
+#: opennxApp.cpp:689 watchUsbIpApp.cpp:227
 msgid "Specify wxWidgets trace mask."
 msgstr "Specify wxWidgets trace mask."
 
-#: opennxApp.cpp:682
+#: opennxApp.cpp:692
 msgid "Test CardWaiterDialog"
 msgstr "Test CardWaiterDialog"
 
-#: opennxApp.cpp:685
+#: opennxApp.cpp:695
 msgid "Guide the user through the steps to configure a session."
 msgstr "Guide the user through the steps to configure a session."
 
-#: opennxApp.cpp:736 watchReaderApp.cpp:185
+#: opennxApp.cpp:746 watchReaderApp.cpp:197
 msgid "Smart card removed"
 msgstr "Смарт-карта удалена"
 
-#: opennxApp.cpp:738 watchReaderApp.cpp:184
+#: opennxApp.cpp:748 watchReaderApp.cpp:196
 msgid ""
 "OpenNX session has been suspended, because\n"
 "the authenticating smart card has been removed."
@@ -1762,16 +1762,16 @@ msgstr ""
 "Сессия OpenNX была приостановлена,\n"
 "потому что была вытащена смарт-карта."
 
-#: opennxApp.cpp:1090
+#: opennxApp.cpp:1100
 msgid "USBIP tunnel registration timeout"
 msgstr "USBIP tunnel registration timeout"
 
-#: opennxApp.cpp:1092
+#: opennxApp.cpp:1102
 #, c-format
 msgid "Unable to export USB device %s"
 msgstr "Не удалось экспортировать USB устройство '%s'"
 
-#: opennxApp.cpp:1098
+#: opennxApp.cpp:1108
 msgid "Could not connect to usbipd2. No USB devices will be exported"
 msgstr ""
 "Не удалось подключиться к usbipd2. USB устройства не будут экспортированы"
@@ -1788,51 +1788,51 @@ msgstr "&Выход"
 msgid "OpenNX"
 msgstr "OpenNX"
 
-#: watchReaderApp.cpp:103
+#: watchReaderApp.cpp:115
 msgid "Number of smart card reader to watch for."
 msgstr "Number of smart card reader to watch for."
 
-#: watchReaderApp.cpp:105 watchUsbIpApp.cpp:204
+#: watchReaderApp.cpp:117 watchUsbIpApp.cpp:224
 msgid "Process ID of the nxssh process."
 msgstr "PID процесса nxssh."
 
-#: watchUsbIpApp.cpp:200
+#: watchUsbIpApp.cpp:220
 msgid "NX SessionID to watch for."
 msgstr "NX SessionID to watch for."
 
-#: watchUsbIpApp.cpp:202
+#: watchUsbIpApp.cpp:222
 msgid "Path of session config file."
 msgstr "Path of session config file."
 
-#: watchUsbIpApp.cpp:324
+#: watchUsbIpApp.cpp:344
 msgid "An empty session ID is not allowed"
 msgstr "An empty session ID is not allowed"
 
-#: watchUsbIpApp.cpp:329
+#: watchUsbIpApp.cpp:349
 msgid "Could not load session config file"
 msgstr "Could not load session config file"
 
-#: watchUsbIpApp.cpp:347
+#: watchUsbIpApp.cpp:367
 msgid "Could not register at usbipd2! No hotplugging functionality."
 msgstr "Could not register at usbipd2! No hotplugging functionality."
 
-#: watchUsbIpApp.cpp:354
+#: watchUsbIpApp.cpp:374
 msgid "Could not connect to usbipd2! No hotplugging functionality."
 msgstr "Could not connect to usbipd2! No hotplugging functionality."
 
-#: watchUsbIpApp.cpp:398
+#: watchUsbIpApp.cpp:418
 msgid "Got hotplug event, but device is not available in libusb"
 msgstr "Got hotplug event, but device is not available in libusb"
 
-#: watchUsbIpApp.cpp:415
+#: watchUsbIpApp.cpp:435
 msgid "Could not send hotplug response"
 msgstr "Could not send hotplug response"
 
-#: watchUsbIpApp.cpp:471
+#: watchUsbIpApp.cpp:491
 msgid "Could not save session config"
 msgstr "Could not save session config"
 
-#: watchUsbIpApp.cpp:479
+#: watchUsbIpApp.cpp:499
 msgid "Could not export USB device"
 msgstr "Could not export USB device"
 

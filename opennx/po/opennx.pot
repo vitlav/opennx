@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opennx 0.16\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-01-14 14:23+0100\n"
+"POT-Creation-Date: 2010-01-24 15:27+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1003,7 +1003,7 @@ msgstr ""
 msgid "Select System CUPS daemon"
 msgstr ""
 
-#: SessionProperties.cpp:2098 opennxApp.cpp:1076
+#: SessionProperties.cpp:2098 opennxApp.cpp:1086
 msgid "libusb is not available. No USB devices will be exported"
 msgstr ""
 
@@ -1600,108 +1600,108 @@ msgstr ""
 msgid "Disable taint of X replies"
 msgstr ""
 
-#: opennxApp.cpp:242
+#: opennxApp.cpp:252
 msgid "Launch NX Session"
 msgstr ""
 
-#: opennxApp.cpp:309
+#: opennxApp.cpp:319
 msgid "Could not create link on Desktop."
 msgstr ""
 
-#: opennxApp.cpp:383
+#: opennxApp.cpp:393
 msgid "Could not get PATH environment"
-msgstr ""
-
-#: opennxApp.cpp:398
-#, c-format
-msgid "Could not find %s in PATH"
 msgstr ""
 
 #: opennxApp.cpp:408
 #, c-format
+msgid "Could not find %s in PATH"
+msgstr ""
+
+#: opennxApp.cpp:418
+#, c-format
 msgid "Could not stat %s"
 msgstr ""
 
-#: opennxApp.cpp:414
+#: opennxApp.cpp:424
 #, c-format
 msgid "Could not read link %s"
 msgstr ""
 
-#: opennxApp.cpp:658 watchUsbIpApp.cpp:198
+#: opennxApp.cpp:668 watchUsbIpApp.cpp:218
 msgid ""
 "\n"
 "\n"
 "Supported trace tags: "
 msgstr ""
 
-#: opennxApp.cpp:661
+#: opennxApp.cpp:671
 msgid "Start the session administration tool."
 msgstr ""
 
-#: opennxApp.cpp:663
+#: opennxApp.cpp:673
 msgid "Secify window title for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:665
+#: opennxApp.cpp:675
 msgid "Secify dialog style for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:667
+#: opennxApp.cpp:677
 msgid "Run in dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:669
+#: opennxApp.cpp:679
 msgid "Dialog mode proxy."
 msgstr ""
 
-#: opennxApp.cpp:671
+#: opennxApp.cpp:681
 msgid "Specify message for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:673
+#: opennxApp.cpp:683
 msgid "Specify parent PID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:675
+#: opennxApp.cpp:685
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr ""
 
-#: opennxApp.cpp:677
+#: opennxApp.cpp:687
 msgid "Specify window-ID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:679 watchUsbIpApp.cpp:207
+#: opennxApp.cpp:689 watchUsbIpApp.cpp:227
 msgid "Specify wxWidgets trace mask."
 msgstr ""
 
-#: opennxApp.cpp:682
+#: opennxApp.cpp:692
 msgid "Test CardWaiterDialog"
 msgstr ""
 
-#: opennxApp.cpp:685
+#: opennxApp.cpp:695
 msgid "Guide the user through the steps to configure a session."
 msgstr ""
 
-#: opennxApp.cpp:736 watchReaderApp.cpp:185
+#: opennxApp.cpp:746 watchReaderApp.cpp:197
 msgid "Smart card removed"
 msgstr ""
 
-#: opennxApp.cpp:738 watchReaderApp.cpp:184
+#: opennxApp.cpp:748 watchReaderApp.cpp:196
 msgid ""
 "OpenNX session has been suspended, because\n"
 "the authenticating smart card has been removed."
 msgstr ""
 
-#: opennxApp.cpp:1090
+#: opennxApp.cpp:1100
 msgid "USBIP tunnel registration timeout"
 msgstr ""
 
-#: opennxApp.cpp:1092
+#: opennxApp.cpp:1102
 #, c-format
 msgid "Unable to export USB device %s"
 msgstr ""
 
-#: opennxApp.cpp:1098
+#: opennxApp.cpp:1108
 msgid "Could not connect to usbipd2. No USB devices will be exported"
 msgstr ""
 
@@ -1717,50 +1717,50 @@ msgstr ""
 msgid "OpenNX"
 msgstr ""
 
-#: watchReaderApp.cpp:103
+#: watchReaderApp.cpp:115
 msgid "Number of smart card reader to watch for."
 msgstr ""
 
-#: watchReaderApp.cpp:105 watchUsbIpApp.cpp:204
+#: watchReaderApp.cpp:117 watchUsbIpApp.cpp:224
 msgid "Process ID of the nxssh process."
 msgstr ""
 
-#: watchUsbIpApp.cpp:200
+#: watchUsbIpApp.cpp:220
 msgid "NX SessionID to watch for."
 msgstr ""
 
-#: watchUsbIpApp.cpp:202
+#: watchUsbIpApp.cpp:222
 msgid "Path of session config file."
 msgstr ""
 
-#: watchUsbIpApp.cpp:324
+#: watchUsbIpApp.cpp:344
 msgid "An empty session ID is not allowed"
 msgstr ""
 
-#: watchUsbIpApp.cpp:329
+#: watchUsbIpApp.cpp:349
 msgid "Could not load session config file"
 msgstr ""
 
-#: watchUsbIpApp.cpp:347
+#: watchUsbIpApp.cpp:367
 msgid "Could not register at usbipd2! No hotplugging functionality."
 msgstr ""
 
-#: watchUsbIpApp.cpp:354
+#: watchUsbIpApp.cpp:374
 msgid "Could not connect to usbipd2! No hotplugging functionality."
 msgstr ""
 
-#: watchUsbIpApp.cpp:398
+#: watchUsbIpApp.cpp:418
 msgid "Got hotplug event, but device is not available in libusb"
 msgstr ""
 
-#: watchUsbIpApp.cpp:415
+#: watchUsbIpApp.cpp:435
 msgid "Could not send hotplug response"
 msgstr ""
 
-#: watchUsbIpApp.cpp:471
+#: watchUsbIpApp.cpp:491
 msgid "Could not save session config"
 msgstr ""
 
-#: watchUsbIpApp.cpp:479
+#: watchUsbIpApp.cpp:499
 msgid "Could not export USB device"
 msgstr ""
