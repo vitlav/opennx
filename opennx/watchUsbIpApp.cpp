@@ -39,7 +39,7 @@
 #include <wx/msgdlg.h>
 #include <wx/config.h>
 #include <wx/fs_zip.h>
-#include "wx/fs_mem.h"
+#include <wx/fs_mem.h>
 #include <wx/wfstream.h>
 #include <wx/mimetype.h>
 #include <wx/sysopt.h>
@@ -55,6 +55,7 @@
 #include "UsbIp.h"
 #include "LibUSB.h"
 #include "LogNull.h"
+#include "osdep.h"
 
 #include "memres.h"
 
@@ -166,19 +167,38 @@ class ProcessWatcher : public wxThreadHelper
 #endif
     wxConfigBase::Set(cfg);
 
-    LogNull dummy;
-    // Try to get KDE language settings and set locale accordingly
-    wxFileInputStream fis(::wxGetHomeDir() +
-            wxFileName::GetPathSeparator() + wxT(".kde") + 
-            wxFileName::GetPathSeparator() + wxT("share") + 
-            wxFileName::GetPathSeparator() + wxT("config") + 
-            wxFileName::GetPathSeparator() + wxT("kdeglobals"));
-    if (fis.IsOk()) {
-        wxFileConfig cfg(fis);
-        wxString country = cfg.Read(wxT("Locale/Country"), wxEmptyString);
-        wxString lang = cfg.Read(wxT("Locale/Language"), wxEmptyString);
-        if ((!lang.IsEmpty()) && (!country.IsEmpty()))
-            ::wxSetEnv(wxT("LANG"), lang + wxT("_") + country.Upper() + wxT(".UTF-8"));
+    // Language overrides from KDE - only applied if running inside a KDE session. 
+    if (inKdeSession != 0) {
+        LogNull dummy;
+
+        // If KDE_LANG is set, then it has precedence over kdeglobals.
+        wxString lang;
+        if (::wxGetEnv(wxT("KDE_LANG"), &lang)) {
+            fprintf(stderr, "Overriding LANG from KDE_LANG environment to: '%s'\n", (const char *)lang.mb_str());
+            ::wxSetEnv(wxT("LANG"), lang);
+        } else {
+            // Try to get KDE language settings and override locale accordingly
+            wxFileInputStream fis(::wxGetHomeDir() +
+                    wxFileName::GetPathSeparator() + wxT(".kde") + 
+                    wxFileName::GetPathSeparator() + wxT("share") + 
+                    wxFileName::GetPathSeparator() + wxT("config") + 
+                    wxFileName::GetPathSeparator() + wxT("kdeglobals"));
+            if (fis.IsOk()) {
+                wxFileConfig cfg(fis);
+                wxString country = cfg.Read(wxT("Locale/Country"), wxEmptyString);
+                wxString lang = cfg.Read(wxT("Locale/Language"), wxEmptyString);
+                if ((!lang.IsEmpty()) && (!country.IsEmpty())) {
+                    if (lang.Contains(wxT(":")))
+                        lang = lang.BeforeFirst(wxT(':'));
+                    if (lang.Length() < 3)
+                        lang << wxT("_") << country.Upper();
+                    lang << wxT(".UTF-8");
+                    // At this point logging is not yet setup.
+                    fprintf(stderr, "Overriding LANG from kdeglobals to: '%s'\n", (const char *)lang.mb_str());
+                    ::wxSetEnv(wxT("LANG"), lang);
+                }
+            }
+        }
     }
 }
 

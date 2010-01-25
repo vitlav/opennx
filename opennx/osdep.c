@@ -27,6 +27,8 @@
  */
 #include <wx/platform.h>
 
+int inKdeSession = 0;
+
 #ifdef __WXMSW__
 /* dummies for now */
 char *x11_socket_path = "";
@@ -273,7 +275,12 @@ getx11socket()
             }
         }
 
-        Atom a = XInternAtom(dpy, "_XKB_RULES_NAMES", True);
+        Atom a = XInternAtom(dpy, "_KDE_RUNNING", True);
+        /* Check, if we are running inside a KDE session */
+        inKdeSession = (a != None);
+
+        a = XInternAtom(dpy, "_XKB_RULES_NAMES", True);
+        /* Get XKB rules (current keyboard layout language) */
         if (a != None) {
             Atom type;
             int fmt;

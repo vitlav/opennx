@@ -181,6 +181,15 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_IMG_CUSTOM
     void OnButtonImgCustomClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_KBDKEEP
+    void OnRadiobuttonKbdkeepSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_KBDOTHER
+    void OnRadiobuttonKbdotherSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_KBDLAYOUT
+    void OnComboboxKbdlayoutSelected( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_DISABLETCPNODEL
     void OnCheckboxDisabletcpnodelClick( wxCommandEvent& event );
 
@@ -205,6 +214,15 @@ public:
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_PROXYPORT
     void OnSpinctrlProxyportTextUpdated( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_PROXYUSER
+    void OnTextctrlProxyuserUpdated( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_PROXYPASS
+    void OnTextctrlProxypassUpdated( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_PROXYPASS_REMEMBER
+    void OnCheckboxProxypassRememberClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_EXTERNALPROXY
     void OnRadiobuttonExternalproxySelected( wxCommandEvent& event );
 
@@ -219,15 +237,6 @@ public:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_CACHECLEAN
     void OnButtonCachecleanClick( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_KBDKEEP
-    void OnRadiobuttonKbdkeepSelected( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_KBDOTHER
-    void OnRadiobuttonKbdotherSelected( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_KBDLAYOUT
-    void OnComboboxKbdlayoutSelected( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_SMB
     void OnCheckboxSmbClick( wxCommandEvent& event );
@@ -363,13 +372,16 @@ private:
     wxRadioButton* m_pCtrlImageEncDefault;
     wxRadioButton* m_pCtrlImageEncCustom;
     wxButton* m_pCtrlImageSettings;
-    wxCheckBox* m_pCtrlEnableSSL;
-    wxTextCtrl* m_pCtrlProxyHost;
-    wxSpinCtrl* m_pCtrlProxyPort;
-    wxTextCtrl* m_pCtrlProxyCommand;
     wxRadioButton* m_pCtrlKeyboardCurrent;
     wxRadioButton* m_pCtrlKeyboardOther;
     wxComboBox* m_pCtrlKeyboardLayout;
+    wxCheckBox* m_pCtrlEnableSSL;
+    wxTextCtrl* m_pCtrlProxyHost;
+    wxSpinCtrl* m_pCtrlProxyPort;
+    wxTextCtrl* m_pCtrlProxyUser;
+    wxTextCtrl* m_pCtrlProxyPass;
+    wxCheckBox* m_pCtrlProxyPassRemember;
+    wxTextCtrl* m_pCtrlProxyCommand;
     wxCheckBox* m_pCtrlSmbEnable;
     wxCheckBox* m_pCtrlCupsEnable;
     wxSpinCtrl* m_pCtrlCupsPort;
@@ -435,6 +447,9 @@ private:
     int m_iSavedUsbLocalPort;
     int m_iPseudoDesktopTypeIndex;
     int m_iPseudoDisplayTypeIndex;
+    wxString m_sProxyUser;
+    wxString m_sProxyPass;
+    bool m_bProxyPassRemember;
 ////@end SessionProperties member variables
 
     bool readKbdLayouts();

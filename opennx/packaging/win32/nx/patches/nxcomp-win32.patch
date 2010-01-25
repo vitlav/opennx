@@ -1,6 +1,6 @@
 diff -urwN nxcomp-orig/aclocal.m4 nxcomp/aclocal.m4
 --- nxcomp-orig/aclocal.m4	1970-01-01 01:00:00.000000000 +0100
-+++ nxcomp/aclocal.m4	2009-10-07 03:50:11.653658136 +0200
++++ nxcomp/aclocal.m4	2009-10-11 15:56:44.041831274 +0200
 @@ -0,0 +1,1024 @@
 +# generated automatically by aclocal 1.11 -*- Autoconf -*-
 +
@@ -1028,7 +1028,7 @@ diff -urwN nxcomp-orig/aclocal.m4 nxcomp/aclocal.m4
 +m4_include([m4/lt~obsolete.m4])
 diff -urwN nxcomp-orig/Agent.cpp nxcomp/Agent.cpp
 --- nxcomp-orig/Agent.cpp	2007-06-04 15:02:20.000000000 +0200
-+++ nxcomp/Agent.cpp	2009-10-07 03:49:23.702409456 +0200
++++ nxcomp/Agent.cpp	2009-10-11 15:56:44.041831274 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -1042,7 +1042,7 @@ diff -urwN nxcomp-orig/Agent.cpp nxcomp/Agent.cpp
  #include "Proxy.h"
 diff -urwN nxcomp-orig/Agent.h nxcomp/Agent.h
 --- nxcomp-orig/Agent.h	2007-06-05 12:31:44.000000000 +0200
-+++ nxcomp/Agent.h	2009-10-07 03:49:23.703644809 +0200
++++ nxcomp/Agent.h	2009-10-11 15:56:44.042832100 +0200
 @@ -18,11 +18,19 @@
  #ifndef Agent_H
  #define Agent_H
@@ -1065,7 +1065,7 @@ diff -urwN nxcomp-orig/Agent.h nxcomp/Agent.h
  #include "Transport.h"
 diff -urwN nxcomp-orig/Alpha.cpp nxcomp/Alpha.cpp
 --- nxcomp-orig/Alpha.cpp	2007-06-04 15:02:20.000000000 +0200
-+++ nxcomp/Alpha.cpp	2009-10-07 03:49:23.703644809 +0200
++++ nxcomp/Alpha.cpp	2009-10-11 15:56:44.042832100 +0200
 @@ -15,8 +15,13 @@
  /*                                                                        */
  /**************************************************************************/
@@ -1082,7 +1082,7 @@ diff -urwN nxcomp-orig/Alpha.cpp nxcomp/Alpha.cpp
  #define WARNING
 diff -urwN nxcomp-orig/Auth.cpp nxcomp/Auth.cpp
 --- nxcomp-orig/Auth.cpp	2008-03-20 13:43:47.000000000 +0100
-+++ nxcomp/Auth.cpp	2009-10-07 03:49:23.704643748 +0200
++++ nxcomp/Auth.cpp	2009-10-11 15:56:44.043831669 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -1105,7 +1105,7 @@ diff -urwN nxcomp-orig/Auth.cpp nxcomp/Auth.cpp
    int matchedProtoSize;
 diff -urwN nxcomp-orig/Bitmap.cpp nxcomp/Bitmap.cpp
 --- nxcomp-orig/Bitmap.cpp	2007-06-04 15:02:20.000000000 +0200
-+++ nxcomp/Bitmap.cpp	2009-10-07 03:49:23.704643748 +0200
++++ nxcomp/Bitmap.cpp	2009-10-11 15:56:44.044831656 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -1119,7 +1119,7 @@ diff -urwN nxcomp-orig/Bitmap.cpp nxcomp/Bitmap.cpp
  
 diff -urwN nxcomp-orig/BlockCache.cpp nxcomp/BlockCache.cpp
 --- nxcomp-orig/BlockCache.cpp	2007-06-04 15:02:20.000000000 +0200
-+++ nxcomp/BlockCache.cpp	2009-10-07 03:49:23.705643597 +0200
++++ nxcomp/BlockCache.cpp	2009-10-11 15:56:44.044831656 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -1133,7 +1133,7 @@ diff -urwN nxcomp-orig/BlockCache.cpp nxcomp/BlockCache.cpp
  
 diff -urwN nxcomp-orig/BlockCacheSet.cpp nxcomp/BlockCacheSet.cpp
 --- nxcomp-orig/BlockCacheSet.cpp	2008-04-14 15:56:18.000000000 +0200
-+++ nxcomp/BlockCacheSet.cpp	2009-10-07 03:49:23.705643597 +0200
++++ nxcomp/BlockCacheSet.cpp	2009-10-11 15:56:44.045831644 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -1147,7 +1147,7 @@ diff -urwN nxcomp-orig/BlockCacheSet.cpp nxcomp/BlockCacheSet.cpp
  
 diff -urwN nxcomp-orig/ChangeGCCompat.cpp nxcomp/ChangeGCCompat.cpp
 --- nxcomp-orig/ChangeGCCompat.cpp	2007-06-04 15:02:20.000000000 +0200
-+++ nxcomp/ChangeGCCompat.cpp	2009-10-07 03:49:23.705643597 +0200
++++ nxcomp/ChangeGCCompat.cpp	2009-10-11 15:56:44.046831911 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -1161,7 +1161,7 @@ diff -urwN nxcomp-orig/ChangeGCCompat.cpp nxcomp/ChangeGCCompat.cpp
  #include "ClientCache.h"
 diff -urwN nxcomp-orig/ChangeGC.cpp nxcomp/ChangeGC.cpp
 --- nxcomp-orig/ChangeGC.cpp	2007-06-04 15:02:22.000000000 +0200
-+++ nxcomp/ChangeGC.cpp	2009-10-07 03:49:23.706643375 +0200
++++ nxcomp/ChangeGC.cpp	2009-10-11 15:56:44.047831829 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -1175,7 +1175,7 @@ diff -urwN nxcomp-orig/ChangeGC.cpp nxcomp/ChangeGC.cpp
  #include "ClientCache.h"
 diff -urwN nxcomp-orig/ChangeProperty.cpp nxcomp/ChangeProperty.cpp
 --- nxcomp-orig/ChangeProperty.cpp	2007-06-04 15:02:22.000000000 +0200
-+++ nxcomp/ChangeProperty.cpp	2009-10-07 03:49:23.706643375 +0200
++++ nxcomp/ChangeProperty.cpp	2009-10-11 15:56:44.047831829 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -1189,7 +1189,7 @@ diff -urwN nxcomp-orig/ChangeProperty.cpp nxcomp/ChangeProperty.cpp
  #include "ClientCache.h"
 diff -urwN nxcomp-orig/ChannelCache.cpp nxcomp/ChannelCache.cpp
 --- nxcomp-orig/ChannelCache.cpp	2007-06-04 15:02:22.000000000 +0200
-+++ nxcomp/ChannelCache.cpp	2009-10-07 03:49:23.707643712 +0200
++++ nxcomp/ChannelCache.cpp	2009-10-11 15:56:44.048831887 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -1203,7 +1203,7 @@ diff -urwN nxcomp-orig/ChannelCache.cpp nxcomp/ChannelCache.cpp
  const unsigned int CONFIGUREWINDOW_FIELD_WIDTH[7] =
 diff -urwN nxcomp-orig/Channel.cpp nxcomp/Channel.cpp
 --- nxcomp-orig/Channel.cpp	2007-06-13 10:58:44.000000000 +0200
-+++ nxcomp/Channel.cpp	2009-10-07 03:49:23.709705985 +0200
++++ nxcomp/Channel.cpp	2009-10-11 15:56:44.050831723 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -1230,7 +1230,7 @@ diff -urwN nxcomp-orig/Channel.cpp nxcomp/Channel.cpp
    {
 diff -urwN nxcomp-orig/Channel.h nxcomp/Channel.h
 --- nxcomp-orig/Channel.h	2007-06-09 03:15:44.000000000 +0200
-+++ nxcomp/Channel.h	2009-10-07 03:49:23.710643885 +0200
++++ nxcomp/Channel.h	2009-10-11 15:56:44.051831711 +0200
 @@ -498,9 +498,9 @@
  
    int canCleanStore(MessageStore *store)
@@ -1245,7 +1245,7 @@ diff -urwN nxcomp-orig/Channel.h nxcomp/Channel.h
    }
 diff -urwN nxcomp-orig/CharCache.cpp nxcomp/CharCache.cpp
 --- nxcomp-orig/CharCache.cpp	2007-06-04 15:02:22.000000000 +0200
-+++ nxcomp/CharCache.cpp	2009-10-07 03:49:23.711643593 +0200
++++ nxcomp/CharCache.cpp	2009-10-11 15:56:44.052831768 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -1259,7 +1259,7 @@ diff -urwN nxcomp-orig/CharCache.cpp nxcomp/CharCache.cpp
  int CharCache::lookup(unsigned char value, unsigned int &index)
 diff -urwN nxcomp-orig/Children.cpp nxcomp/Children.cpp
 --- nxcomp-orig/Children.cpp	2008-03-20 17:25:47.000000000 +0100
-+++ nxcomp/Children.cpp	2009-10-07 03:49:23.712643860 +0200
++++ nxcomp/Children.cpp	2009-10-11 15:56:55.599850569 +0200
 @@ -15,10 +15,33 @@
  /*                                                                        */
  /**************************************************************************/
@@ -1326,26 +1326,15 @@ diff -urwN nxcomp-orig/Children.cpp nxcomp/Children.cpp
  
  //
  // Start a nxclient process in dialog mode.
-@@ -103,6 +126,10 @@
-                       const char *window, const char *type, int local,
-                          const char* display)
- {
-+#ifdef __MINGW32__
-+    SHELLEXECUTEINFO si;
-+#endif
-+
-   //
-   // Be sure log file is valid.
-   //
-@@ -112,6 +139,7 @@
-     logofs = &cerr;
+@@ -113,6 +136,7 @@
    }
  
-+#ifndef __MINGW32__
    int pid;
++#ifndef __MINGW32__
  
    #ifdef TEST
-@@ -154,6 +182,7 @@
+   *logofs << "NXTransDialog: Going to fork with NX pid '"
+@@ -154,6 +178,7 @@
    #endif
  
    SystemCleanup("NXTransDialog");
@@ -1353,15 +1342,106 @@ diff -urwN nxcomp-orig/Children.cpp nxcomp/Children.cpp
  
    //
    // Copy the client command before
-@@ -323,6 +352,7 @@
-     logofs = &cerr;
+@@ -205,33 +230,61 @@
+     {
+       if (pulldown)
+       {
++#ifdef __MINGW32__
++        pid = _spawnlp(_P_NOWAIT, command, command, "--dialog", type, "--caption", caption,
++                   "--window", window, "--local", "--parent", parent,
++                       "--display", display, NULL);
++#else
+         execlp(command, command, "--dialog", type, "--caption", caption,
+                    "--window", window, "--local", "--parent", parent,
+                        "--display", display, NULL);
++#endif
+       }
+       else
+       {
++#ifdef __MINGW32__
++        pid = _spawnlp(_P_NOWAIT, command, command, "--dialog", type, "--caption", caption,
++                   "--message", message, "--local", "--parent", parent,
++                       "--display", display, NULL);
++#else
+         execlp(command, command, "--dialog", type, "--caption", caption,
+                    "--message", message, "--local", "--parent", parent,
+                        "--display", display, NULL);
++#endif
+       }
+     }
+     else
+     {
+       if (pulldown)
+       {
++#ifdef __MINGW32__
++        pid = _spawnlp(_P_NOWAIT, command, command, "--dialog", type, "--caption", caption,
++                   "--window", window, "--parent", parent,
++                       "--display", display, NULL);
++#else
+         execlp(command, command, "--dialog", type, "--caption", caption,
+                    "--window", window, "--parent", parent,
+                        "--display", display, NULL);
++#endif
+       }
+       else
+       {
++#ifdef __MINGW32__
++        pid = _spawnlp(_P_NOWAIT, command, command, "--dialog", type, "--caption", caption,
++                   "--message", message, "--parent", parent,
++                       "--display", display, NULL);
++#else
+         execlp(command, command, "--dialog", type, "--caption", caption,
+                    "--message", message, "--parent", parent,
+                        "--display", display, NULL);
++#endif
+       }
+     }
+ 
++#ifdef __MINGW32__
++    if (pid)
++        return pid;
++#endif
+     #ifdef WARNING
+     *logofs << "NXTransDialog: WARNING! Couldn't start '"
+             << command << "'. " << "Error is " << EGET()
+@@ -247,6 +300,9 @@
+     // in the default NX path.
+     //
+ 
++#ifdef __MINGW32__
++    return pid;
++#else
+     strcpy(command, "nxclient");
+ 
+     char newPath[DEFAULT_STRING_LIMIT];
+@@ -299,13 +355,18 @@
+     setenv("PATH", newPath, 1);
+ 
+     #endif
++#endif
    }
  
-+#ifndef __MINGW32__
++#ifdef __MINGW32__
++  return pid;
++#else
+   //
+   // Hopefully useless.
+   //
+ 
+   exit(0);
++#endif
+ }
+ 
+ //
+@@ -324,6 +385,7 @@
+   }
+ 
    int pid;
++#ifndef __MINGW32__
  
    #ifdef TEST
-@@ -364,6 +394,8 @@
+   *logofs << "NXTransClient: Going to fork with NX pid '"
+@@ -364,6 +426,8 @@
            << "'.\n" << logofs_flush;
    #endif
  
@@ -1370,7 +1450,51 @@ diff -urwN nxcomp-orig/Children.cpp nxcomp/Children.cpp
    SystemCleanup("NXTransClient");
  
    //
-@@ -511,6 +543,7 @@
+@@ -425,7 +489,13 @@
+ 
+   for (int i = 0; i < 2; i++)
+   {
++#ifdef __MINGW32__
++    pid = _spawnlp(_P_NOWAIT, command, command, NULL);
++    if (pid)
++        return pid;
++#else
+     execlp(command, command, NULL);
++#endif
+ 
+     #ifdef WARNING
+     *logofs << "NXTransClient: WARNING! Couldn't start '"
+@@ -437,6 +507,10 @@
+          << "'. Error is " << EGET() << " '" << ESTR()
+          << "'.\n";
+ 
++#ifdef __MINGW32__
++    return pid;
++#else
++
+     //
+     // Retry by looking for the default name
+     // in the default NX path.
+@@ -494,13 +568,18 @@
+     setenv("PATH", newPath, 1);
+ 
+     #endif
++#endif
+   }
+ 
++#ifdef __MINGW32__
++  return pid;
++#else
+   //
+   // Hopefully useless.
+   //
+ 
+   exit(0);
++#endif
+ }
+ 
+ //
+@@ -511,6 +590,7 @@
  
  int NXTransWatchdog(int timeout)
  {
@@ -1378,7 +1502,7 @@ diff -urwN nxcomp-orig/Children.cpp nxcomp/Children.cpp
    //
    // Be sure log file is valid.
    //
-@@ -554,6 +587,7 @@
+@@ -554,6 +634,7 @@
      return pid;
    }
  
@@ -1386,39 +1510,20 @@ diff -urwN nxcomp-orig/Children.cpp nxcomp/Children.cpp
    int parent = getppid();
  
    #ifdef TEST
-@@ -586,6 +620,7 @@
-     // Complain if the parent is dead.
-     //
- 
-+#ifndef __MINGW32__
-     if (CheckParent("NXTransWatchdog", "watchdog", parent) == 0)
-     {
-       #ifdef TEST
-@@ -595,6 +630,7 @@
- 
-       HandleCleanup();
-     }
-+#endif
- 
-     if (timeout > 0)
-     {
-@@ -633,8 +669,11 @@
+@@ -633,7 +714,6 @@
        *logofs << "NXTransWatchdog: Waiting for a signal.\n"
                << logofs_flush;
        #endif
 -
-+#ifdef __MINGW32__
-+      Sleep(10000);
-+#else
        sleep(10);
-+#endif
      }
    }
- 
-@@ -643,9 +682,10 @@
+@@ -643,9 +723,12 @@
    //
  
    exit(0);
++#else
++  return 0;
 +#endif
  }
  
@@ -1427,7 +1532,7 @@ diff -urwN nxcomp-orig/Children.cpp nxcomp/Children.cpp
  {
    if (keeper != NULL)
    {
-@@ -653,7 +693,9 @@
+@@ -653,7 +736,9 @@
      {
        case SIGTERM:
        case SIGINT:
@@ -1437,7 +1542,7 @@ diff -urwN nxcomp-orig/Children.cpp nxcomp/Children.cpp
        {
          #ifdef TEST
          *logofs << "NXTransKeeperHandler: Requesting giveup "
-@@ -672,8 +714,9 @@
+@@ -672,8 +757,9 @@
    return 1;
  }
  
@@ -1448,7 +1553,7 @@ diff -urwN nxcomp-orig/Children.cpp nxcomp/Children.cpp
    if (CheckParent("NXTransKeeper", "keeper",
            keeper -> getParent()) == 0 || keeper -> getSignal() != 0)
    {
-@@ -684,6 +727,7 @@
+@@ -684,6 +770,7 @@
  
      HandleCleanup();
    }
@@ -1456,7 +1561,7 @@ diff -urwN nxcomp-orig/Children.cpp nxcomp/Children.cpp
  }
  
  int NXTransKeeper(int caches, int images, const char *root)
-@@ -707,6 +751,7 @@
+@@ -707,6 +794,7 @@
      return 0;
    }
  
@@ -1464,7 +1569,7 @@ diff -urwN nxcomp-orig/Children.cpp nxcomp/Children.cpp
    int pid;
  
    #ifdef TEST
-@@ -741,6 +786,7 @@
+@@ -741,6 +829,7 @@
  
      return pid;
    }
@@ -1472,7 +1577,7 @@ diff -urwN nxcomp-orig/Children.cpp nxcomp/Children.cpp
  
    int parent = getppid();
  
-@@ -788,6 +834,7 @@
+@@ -788,6 +877,7 @@
    
    MemoryCleanup("NXTransKeeper");
  
@@ -1480,7 +1585,7 @@ diff -urwN nxcomp-orig/Children.cpp nxcomp/Children.cpp
    //
    // Decrease the priority of this process.
    //
-@@ -823,6 +870,7 @@
+@@ -823,6 +913,7 @@
    *logofs << "NXTransKeeper: Going to sleep for "
            << timeout / 20 << " Ms.\n" << logofs_flush;
    #endif
@@ -1488,7 +1593,7 @@ diff -urwN nxcomp-orig/Children.cpp nxcomp/Children.cpp
  
    usleep(timeout / 20 * 1000);
  
-@@ -926,7 +974,7 @@
+@@ -926,7 +1017,7 @@
    exit(0);
  }
  
@@ -1497,7 +1602,7 @@ diff -urwN nxcomp-orig/Children.cpp nxcomp/Children.cpp
  {
    #ifdef TEST
    *logofs << name << ": Performing system cleanup in process "
-@@ -942,7 +990,7 @@
+@@ -942,7 +1033,7 @@
    InstallSignals();
  }
  
@@ -1506,7 +1611,7 @@ diff -urwN nxcomp-orig/Children.cpp nxcomp/Children.cpp
  {
    #ifdef TEST
    *logofs << name << ": Performing memory cleanup in process "
-@@ -977,7 +1025,7 @@
+@@ -977,7 +1068,7 @@
    EnableSignals();
  }
  
@@ -1517,7 +1622,7 @@ diff -urwN nxcomp-orig/Children.cpp nxcomp/Children.cpp
  
 diff -urwN nxcomp-orig/ClearArea.cpp nxcomp/ClearArea.cpp
 --- nxcomp-orig/ClearArea.cpp	2007-06-04 15:02:22.000000000 +0200
-+++ nxcomp/ClearArea.cpp	2009-10-07 03:49:23.713643987 +0200
++++ nxcomp/ClearArea.cpp	2009-10-11 15:56:44.054831743 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -1531,7 +1636,7 @@ diff -urwN nxcomp-orig/ClearArea.cpp nxcomp/ClearArea.cpp
  #include "ClientCache.h"
 diff -urwN nxcomp-orig/ClientCache.cpp nxcomp/ClientCache.cpp
 --- nxcomp-orig/ClientCache.cpp	2007-06-09 19:42:42.000000000 +0200
-+++ nxcomp/ClientCache.cpp	2009-10-07 03:49:23.713643987 +0200
++++ nxcomp/ClientCache.cpp	2009-10-11 15:56:44.055831592 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -1545,7 +1650,7 @@ diff -urwN nxcomp-orig/ClientCache.cpp nxcomp/ClientCache.cpp
  ClientCache::ClientCache() :
 diff -urwN nxcomp-orig/ClientChannel.cpp nxcomp/ClientChannel.cpp
 --- nxcomp-orig/ClientChannel.cpp	2009-03-19 19:57:17.000000000 +0100
-+++ nxcomp/ClientChannel.cpp	2009-10-07 03:49:23.718642320 +0200
++++ nxcomp/ClientChannel.cpp	2009-10-11 15:56:44.061831309 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -1570,7 +1675,7 @@ diff -urwN nxcomp-orig/ClientChannel.cpp nxcomp/ClientChannel.cpp
  
 diff -urwN nxcomp-orig/ClientProxy.cpp nxcomp/ClientProxy.cpp
 --- nxcomp-orig/ClientProxy.cpp	2007-06-10 19:46:50.000000000 +0200
-+++ nxcomp/ClientProxy.cpp	2009-10-07 03:49:23.719642307 +0200
++++ nxcomp/ClientProxy.cpp	2009-10-11 15:56:44.063831564 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -1584,7 +1689,7 @@ diff -urwN nxcomp-orig/ClientProxy.cpp nxcomp/ClientProxy.cpp
  
 diff -urwN nxcomp-orig/ClientReadBuffer.cpp nxcomp/ClientReadBuffer.cpp
 --- nxcomp-orig/ClientReadBuffer.cpp	2007-06-04 15:02:22.000000000 +0200
-+++ nxcomp/ClientReadBuffer.cpp	2009-10-07 03:49:23.719642307 +0200
++++ nxcomp/ClientReadBuffer.cpp	2009-10-11 15:56:44.064831621 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -1598,7 +1703,7 @@ diff -urwN nxcomp-orig/ClientReadBuffer.cpp nxcomp/ClientReadBuffer.cpp
  #include "ClientChannel.h"
 diff -urwN nxcomp-orig/ClientStore.cpp nxcomp/ClientStore.cpp
 --- nxcomp-orig/ClientStore.cpp	2007-06-04 15:02:22.000000000 +0200
-+++ nxcomp/ClientStore.cpp	2009-10-07 03:49:23.720642505 +0200
++++ nxcomp/ClientStore.cpp	2009-10-11 15:56:44.064831621 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -1612,7 +1717,7 @@ diff -urwN nxcomp-orig/ClientStore.cpp nxcomp/ClientStore.cpp
  //
 diff -urwN nxcomp-orig/Colormap.cpp nxcomp/Colormap.cpp
 --- nxcomp-orig/Colormap.cpp	2007-06-04 15:02:22.000000000 +0200
-+++ nxcomp/Colormap.cpp	2009-10-07 03:49:23.720642505 +0200
++++ nxcomp/Colormap.cpp	2009-10-11 15:56:44.065831190 +0200
 @@ -15,8 +15,13 @@
  /*                                                                        */
  /**************************************************************************/
@@ -1629,7 +1734,7 @@ diff -urwN nxcomp-orig/Colormap.cpp nxcomp/Colormap.cpp
  #define WARNING
 diff -urwN nxcomp-orig/conf/config.guess nxcomp/conf/config.guess
 --- nxcomp-orig/conf/config.guess	1970-01-01 01:00:00.000000000 +0100
-+++ nxcomp/conf/config.guess	2009-10-07 03:50:18.967657330 +0200
++++ nxcomp/conf/config.guess	2009-10-11 15:56:44.067840525 +0200
 @@ -0,0 +1,1561 @@
 +#! /bin/sh
 +# Attempt to guess a canonical system name.
@@ -3194,7 +3299,7 @@ diff -urwN nxcomp-orig/conf/config.guess nxcomp/conf/config.guess
 +# End:
 diff -urwN nxcomp-orig/conf/config.h.in nxcomp/conf/config.h.in
 --- nxcomp-orig/conf/config.h.in	1970-01-01 01:00:00.000000000 +0100
-+++ nxcomp/conf/config.h.in	2009-10-07 03:50:16.555658010 +0200
++++ nxcomp/conf/config.h.in	2009-10-11 15:56:44.068830106 +0200
 @@ -0,0 +1,249 @@
 +/* conf/config.h.in.  Generated from configure.ac by autoheader.  */
 +
@@ -3447,7 +3552,7 @@ diff -urwN nxcomp-orig/conf/config.h.in nxcomp/conf/config.h.in
 +#undef vfork
 diff -urwN nxcomp-orig/conf/config.h.in~ nxcomp/conf/config.h.in~
 --- nxcomp-orig/conf/config.h.in~	1970-01-01 01:00:00.000000000 +0100
-+++ nxcomp/conf/config.h.in~	2009-10-07 03:49:23.722642341 +0200
++++ nxcomp/conf/config.h.in~	2009-10-11 15:56:44.069830303 +0200
 @@ -0,0 +1,249 @@
 +/* conf/config.h.in.  Generated from configure.ac by autoheader.  */
 +
@@ -3700,7 +3805,7 @@ diff -urwN nxcomp-orig/conf/config.h.in~ nxcomp/conf/config.h.in~
 +#undef vfork
 diff -urwN nxcomp-orig/conf/config.sub nxcomp/conf/config.sub
 --- nxcomp-orig/conf/config.sub	1970-01-01 01:00:00.000000000 +0100
-+++ nxcomp/conf/config.sub	2009-10-07 03:50:18.975642634 +0200
++++ nxcomp/conf/config.sub	2009-10-11 15:56:44.070830500 +0200
 @@ -0,0 +1,1686 @@
 +#! /bin/sh
 +# Configuration validation subroutine script.
@@ -5390,7 +5495,7 @@ diff -urwN nxcomp-orig/conf/config.sub nxcomp/conf/config.sub
 +# End:
 diff -urwN nxcomp-orig/conf/depcomp nxcomp/conf/depcomp
 --- nxcomp-orig/conf/depcomp	1970-01-01 01:00:00.000000000 +0100
-+++ nxcomp/conf/depcomp	2009-10-07 03:50:19.068408910 +0200
++++ nxcomp/conf/depcomp	2009-10-11 15:56:44.071830279 +0200
 @@ -0,0 +1,630 @@
 +#! /bin/sh
 +# depcomp - compile a program generating dependencies as side-effects
@@ -6024,7 +6129,7 @@ diff -urwN nxcomp-orig/conf/depcomp nxcomp/conf/depcomp
 +# End:
 diff -urwN nxcomp-orig/conf/install-sh nxcomp/conf/install-sh
 --- nxcomp-orig/conf/install-sh	1970-01-01 01:00:00.000000000 +0100
-+++ nxcomp/conf/install-sh	2009-10-07 03:50:18.978658520 +0200
++++ nxcomp/conf/install-sh	2009-10-11 15:56:44.080830588 +0200
 @@ -0,0 +1,520 @@
 +#!/bin/sh
 +# install - install a program, script, or datafile
@@ -6548,7 +6653,7 @@ diff -urwN nxcomp-orig/conf/install-sh nxcomp/conf/install-sh
 +# End:
 diff -urwN nxcomp-orig/conf/ltmain.sh nxcomp/conf/ltmain.sh
 --- nxcomp-orig/conf/ltmain.sh	1970-01-01 01:00:00.000000000 +0100
-+++ nxcomp/conf/ltmain.sh	2009-10-07 03:50:06.607642609 +0200
++++ nxcomp/conf/ltmain.sh	2009-10-11 15:56:44.098830927 +0200
 @@ -0,0 +1,8406 @@
 +# Generated from ltmain.m4sh.
 +
@@ -14958,7 +15063,7 @@ diff -urwN nxcomp-orig/conf/ltmain.sh nxcomp/conf/ltmain.sh
 +
 diff -urwN nxcomp-orig/conf/missing nxcomp/conf/missing
 --- nxcomp-orig/conf/missing	1970-01-01 01:00:00.000000000 +0100
-+++ nxcomp/conf/missing	2009-10-07 03:50:18.985683926 +0200
++++ nxcomp/conf/missing	2009-10-11 15:56:44.099830286 +0200
 @@ -0,0 +1,376 @@
 +#! /bin/sh
 +# Common stub for a few missing GNU programs while installing.
@@ -15338,7 +15443,7 @@ diff -urwN nxcomp-orig/conf/missing nxcomp/conf/missing
 +# End:
 diff -urwN nxcomp-orig/configure nxcomp/configure
 --- nxcomp-orig/configure	2006-12-29 16:13:34.000000000 +0100
-+++ nxcomp/configure	2009-10-07 03:50:14.463392307 +0200
++++ nxcomp/configure	2009-10-11 15:56:44.169830615 +0200
 @@ -1,25 +1,84 @@
  #! /bin/sh
  # Guess values for system-dependent variables and create Makefiles.
@@ -43630,7 +43735,7 @@ diff -urwN nxcomp-orig/configure nxcomp/configure
  
 diff -urwN nxcomp-orig/configure.ac nxcomp/configure.ac
 --- nxcomp-orig/configure.ac	1970-01-01 01:00:00.000000000 +0100
-+++ nxcomp/configure.ac	2009-10-07 03:49:23.790642905 +0200
++++ nxcomp/configure.ac	2009-10-11 15:56:44.171830730 +0200
 @@ -0,0 +1,77 @@
 +#                                               -*- Autoconf -*-
 +# Process this file with autoconf to produce a configure script.
@@ -44108,7 +44213,7 @@ diff -urwN nxcomp-orig/configure.in nxcomp/configure.in
 -AC_OUTPUT(Makefile)
 diff -urwN nxcomp-orig/ConfigureWindow.cpp nxcomp/ConfigureWindow.cpp
 --- nxcomp-orig/ConfigureWindow.cpp	2007-06-04 15:02:22.000000000 +0200
-+++ nxcomp/ConfigureWindow.cpp	2009-10-07 03:49:23.791642543 +0200
++++ nxcomp/ConfigureWindow.cpp	2009-10-11 15:56:44.173830985 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -44122,7 +44227,7 @@ diff -urwN nxcomp-orig/ConfigureWindow.cpp nxcomp/ConfigureWindow.cpp
  #include "ClientCache.h"
 diff -urwN nxcomp-orig/Control.cpp nxcomp/Control.cpp
 --- nxcomp-orig/Control.cpp	2008-01-30 09:59:16.000000000 +0100
-+++ nxcomp/Control.cpp	2009-10-07 03:49:23.791642543 +0200
++++ nxcomp/Control.cpp	2009-10-11 15:56:44.173830985 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -44136,7 +44241,7 @@ diff -urwN nxcomp-orig/Control.cpp nxcomp/Control.cpp
  #include "Control.h"
 diff -urwN nxcomp-orig/CopyArea.cpp nxcomp/CopyArea.cpp
 --- nxcomp-orig/CopyArea.cpp	2007-06-04 15:02:22.000000000 +0200
-+++ nxcomp/CopyArea.cpp	2009-10-07 03:49:23.792642881 +0200
++++ nxcomp/CopyArea.cpp	2009-10-11 15:56:44.173830985 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -44150,7 +44255,7 @@ diff -urwN nxcomp-orig/CopyArea.cpp nxcomp/CopyArea.cpp
  #include "ClientCache.h"
 diff -urwN nxcomp-orig/CreateGC.cpp nxcomp/CreateGC.cpp
 --- nxcomp-orig/CreateGC.cpp	2007-06-04 15:02:22.000000000 +0200
-+++ nxcomp/CreateGC.cpp	2009-10-07 03:49:23.792642881 +0200
++++ nxcomp/CreateGC.cpp	2009-10-11 15:56:44.174830484 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -44164,7 +44269,7 @@ diff -urwN nxcomp-orig/CreateGC.cpp nxcomp/CreateGC.cpp
  #include "ClientCache.h"
 diff -urwN nxcomp-orig/CreatePixmapCompat.cpp nxcomp/CreatePixmapCompat.cpp
 --- nxcomp-orig/CreatePixmapCompat.cpp	2007-06-04 15:02:22.000000000 +0200
-+++ nxcomp/CreatePixmapCompat.cpp	2009-10-07 03:49:23.792642881 +0200
++++ nxcomp/CreatePixmapCompat.cpp	2009-10-11 15:56:44.174830484 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -44178,7 +44283,7 @@ diff -urwN nxcomp-orig/CreatePixmapCompat.cpp nxcomp/CreatePixmapCompat.cpp
  #include "ClientCache.h"
 diff -urwN nxcomp-orig/CreatePixmap.cpp nxcomp/CreatePixmap.cpp
 --- nxcomp-orig/CreatePixmap.cpp	2007-06-04 15:02:22.000000000 +0200
-+++ nxcomp/CreatePixmap.cpp	2009-10-07 03:49:23.793642520 +0200
++++ nxcomp/CreatePixmap.cpp	2009-10-11 15:56:44.175830332 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -44192,7 +44297,7 @@ diff -urwN nxcomp-orig/CreatePixmap.cpp nxcomp/CreatePixmap.cpp
  #include "ClientCache.h"
 diff -urwN nxcomp-orig/DecodeBuffer.cpp nxcomp/DecodeBuffer.cpp
 --- nxcomp-orig/DecodeBuffer.cpp	2007-06-04 15:02:22.000000000 +0200
-+++ nxcomp/DecodeBuffer.cpp	2009-10-07 03:49:23.793642520 +0200
++++ nxcomp/DecodeBuffer.cpp	2009-10-11 15:56:44.175830332 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -44206,7 +44311,7 @@ diff -urwN nxcomp-orig/DecodeBuffer.cpp nxcomp/DecodeBuffer.cpp
  
 diff -urwN nxcomp-orig/EncodeBuffer.cpp nxcomp/EncodeBuffer.cpp
 --- nxcomp-orig/EncodeBuffer.cpp	2007-06-04 15:02:22.000000000 +0200
-+++ nxcomp/EncodeBuffer.cpp	2009-10-07 03:49:23.794642507 +0200
++++ nxcomp/EncodeBuffer.cpp	2009-10-11 15:56:44.176830600 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -44220,7 +44325,7 @@ diff -urwN nxcomp-orig/EncodeBuffer.cpp nxcomp/EncodeBuffer.cpp
  
 diff -urwN nxcomp-orig/FillPoly.cpp nxcomp/FillPoly.cpp
 --- nxcomp-orig/FillPoly.cpp	2007-06-04 15:02:22.000000000 +0200
-+++ nxcomp/FillPoly.cpp	2009-10-07 03:49:23.794642507 +0200
++++ nxcomp/FillPoly.cpp	2009-10-11 15:56:44.176830600 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -44234,7 +44339,7 @@ diff -urwN nxcomp-orig/FillPoly.cpp nxcomp/FillPoly.cpp
  #include "ClientCache.h"
 diff -urwN nxcomp-orig/Fork.cpp nxcomp/Fork.cpp
 --- nxcomp-orig/Fork.cpp	2007-09-18 23:43:06.000000000 +0200
-+++ nxcomp/Fork.cpp	2009-10-07 03:49:23.795642356 +0200
++++ nxcomp/Fork.cpp	2009-10-11 15:56:44.176830600 +0200
 @@ -15,10 +15,19 @@
  /*                                                                        */
  /**************************************************************************/
@@ -44263,7 +44368,7 @@ diff -urwN nxcomp-orig/Fork.cpp nxcomp/Fork.cpp
 +#endif
 diff -urwN nxcomp-orig/Fork.h nxcomp/Fork.h
 --- nxcomp-orig/Fork.h	2007-09-12 14:09:25.000000000 +0200
-+++ nxcomp/Fork.h	2009-10-07 03:49:23.795642356 +0200
++++ nxcomp/Fork.h	2009-10-11 15:56:44.177830657 +0200
 @@ -20,4 +20,6 @@
  // often on Cygwin.
  //
@@ -44273,7 +44378,7 @@ diff -urwN nxcomp-orig/Fork.h nxcomp/Fork.h
 +#endif
 diff -urwN nxcomp-orig/GenericChannel.cpp nxcomp/GenericChannel.cpp
 --- nxcomp-orig/GenericChannel.cpp	2007-09-14 02:18:57.000000000 +0200
-+++ nxcomp/GenericChannel.cpp	2009-10-07 03:49:23.795642356 +0200
++++ nxcomp/GenericChannel.cpp	2009-10-11 15:56:44.177830657 +0200
 @@ -15,8 +15,14 @@
  /*                                                                        */
  /**************************************************************************/
@@ -44291,7 +44396,7 @@ diff -urwN nxcomp-orig/GenericChannel.cpp nxcomp/GenericChannel.cpp
  
 diff -urwN nxcomp-orig/GenericReadBuffer.cpp nxcomp/GenericReadBuffer.cpp
 --- nxcomp-orig/GenericReadBuffer.cpp	2007-06-04 15:02:22.000000000 +0200
-+++ nxcomp/GenericReadBuffer.cpp	2009-10-07 03:49:23.796641924 +0200
++++ nxcomp/GenericReadBuffer.cpp	2009-10-11 15:56:44.178830505 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -44305,7 +44410,7 @@ diff -urwN nxcomp-orig/GenericReadBuffer.cpp nxcomp/GenericReadBuffer.cpp
  #include "GenericChannel.h"
 diff -urwN nxcomp-orig/Jpeg.cpp nxcomp/Jpeg.cpp
 --- nxcomp-orig/Jpeg.cpp	2007-06-04 15:02:22.000000000 +0200
-+++ nxcomp/Jpeg.cpp	2009-10-07 03:49:23.796641924 +0200
++++ nxcomp/Jpeg.cpp	2009-10-11 15:56:44.178830505 +0200
 @@ -36,6 +36,7 @@
  
  #endif
@@ -44356,7 +44461,7 @@ diff -urwN nxcomp-orig/Jpeg.cpp nxcomp/Jpeg.cpp
      *logofs << "UnpackJpeg: WARNING! Skipping unpack of dummy data.\n"
 diff -urwN nxcomp-orig/Keeper.cpp nxcomp/Keeper.cpp
 --- nxcomp-orig/Keeper.cpp	2007-06-17 22:54:50.000000000 +0200
-+++ nxcomp/Keeper.cpp	2009-10-07 03:49:23.797642680 +0200
++++ nxcomp/Keeper.cpp	2009-10-11 15:56:44.179830842 +0200
 @@ -15,12 +15,26 @@
  /*                                                                        */
  /**************************************************************************/
@@ -44386,7 +44491,7 @@ diff -urwN nxcomp-orig/Keeper.cpp nxcomp/Keeper.cpp
  //
 diff -urwN nxcomp-orig/Loop.cpp nxcomp/Loop.cpp
 --- nxcomp-orig/Loop.cpp	2008-04-14 15:39:06.000000000 +0200
-+++ nxcomp/Loop.cpp	2009-10-07 03:49:23.802641920 +0200
++++ nxcomp/Loop.cpp	2009-10-11 15:56:51.073850128 +0200
 @@ -15,9 +15,31 @@
  /*                                                                        */
  /**************************************************************************/
@@ -44997,7 +45102,7 @@ diff -urwN nxcomp-orig/Loop.cpp nxcomp/Loop.cpp
      {
 diff -urwN nxcomp-orig/m4/ax_cflags_gcc_option.m4 nxcomp/m4/ax_cflags_gcc_option.m4
 --- nxcomp-orig/m4/ax_cflags_gcc_option.m4	1970-01-01 01:00:00.000000000 +0100
-+++ nxcomp/m4/ax_cflags_gcc_option.m4	2009-10-07 03:49:23.804642175 +0200
++++ nxcomp/m4/ax_cflags_gcc_option.m4	2009-10-11 15:56:44.186830617 +0200
 @@ -0,0 +1,219 @@
 +# ===========================================================================
 +#      http://www.nongnu.org/autoconf-archive/ax_cflags_gcc_option.html
@@ -45220,7 +45325,7 @@ diff -urwN nxcomp-orig/m4/ax_cflags_gcc_option.m4 nxcomp/m4/ax_cflags_gcc_option
 +[AX_CXXFLAGS_GCC_OPTION_NEW($@)],[AX_CXXFLAGS_GCC_OPTION_OLD($@)])])
 diff -urwN nxcomp-orig/m4/libtool.m4 nxcomp/m4/libtool.m4
 --- nxcomp-orig/m4/libtool.m4	1970-01-01 01:00:00.000000000 +0100
-+++ nxcomp/m4/libtool.m4	2009-10-07 03:50:06.668643116 +0200
++++ nxcomp/m4/libtool.m4	2009-10-11 15:56:44.236831821 +0200
 @@ -0,0 +1,7360 @@
 +# libtool.m4 - Configure libtool for the host system. -*-Autoconf-*-
 +#
@@ -52584,7 +52689,7 @@ diff -urwN nxcomp-orig/m4/libtool.m4 nxcomp/m4/libtool.m4
 +])
 diff -urwN nxcomp-orig/m4/lt~obsolete.m4 nxcomp/m4/lt~obsolete.m4
 --- nxcomp-orig/m4/lt~obsolete.m4	1970-01-01 01:00:00.000000000 +0100
-+++ nxcomp/m4/lt~obsolete.m4	2009-10-07 03:50:06.848408537 +0200
++++ nxcomp/m4/lt~obsolete.m4	2009-10-11 15:56:44.237831600 +0200
 @@ -0,0 +1,92 @@
 +# lt~obsolete.m4 -- aclocal satisfying obsolete definitions.    -*-Autoconf-*-
 +#
@@ -52680,7 +52785,7 @@ diff -urwN nxcomp-orig/m4/lt~obsolete.m4 nxcomp/m4/lt~obsolete.m4
 +m4_ifndef([_LT_AC_FILE_LTDLL_C],	[AC_DEFUN([_LT_AC_FILE_LTDLL_C])])
 diff -urwN nxcomp-orig/m4/ltoptions.m4 nxcomp/m4/ltoptions.m4
 --- nxcomp-orig/m4/ltoptions.m4	1970-01-01 01:00:00.000000000 +0100
-+++ nxcomp/m4/ltoptions.m4	2009-10-07 03:50:06.712658288 +0200
++++ nxcomp/m4/ltoptions.m4	2009-10-11 15:56:44.239831575 +0200
 @@ -0,0 +1,368 @@
 +# Helper functions for option handling.                    -*- Autoconf -*-
 +#
@@ -53052,7 +53157,7 @@ diff -urwN nxcomp-orig/m4/ltoptions.m4 nxcomp/m4/ltoptions.m4
 +		 [m4_define([_LTDL_TYPE], [convenience])])
 diff -urwN nxcomp-orig/m4/ltsugar.m4 nxcomp/m4/ltsugar.m4
 --- nxcomp-orig/m4/ltsugar.m4	1970-01-01 01:00:00.000000000 +0100
-+++ nxcomp/m4/ltsugar.m4	2009-10-07 03:50:06.755392641 +0200
++++ nxcomp/m4/ltsugar.m4	2009-10-11 15:56:44.239831575 +0200
 @@ -0,0 +1,123 @@
 +# ltsugar.m4 -- libtool m4 base layer.                         -*-Autoconf-*-
 +#
@@ -53179,7 +53284,7 @@ diff -urwN nxcomp-orig/m4/ltsugar.m4 nxcomp/m4/ltsugar.m4
 +])
 diff -urwN nxcomp-orig/m4/ltversion.m4 nxcomp/m4/ltversion.m4
 --- nxcomp-orig/m4/ltversion.m4	1970-01-01 01:00:00.000000000 +0100
-+++ nxcomp/m4/ltversion.m4	2009-10-07 03:50:06.803392958 +0200
++++ nxcomp/m4/ltversion.m4	2009-10-11 15:56:44.240831633 +0200
 @@ -0,0 +1,23 @@
 +# ltversion.m4 -- version numbers			-*- Autoconf -*-
 +#
@@ -53206,7 +53311,7 @@ diff -urwN nxcomp-orig/m4/ltversion.m4 nxcomp/m4/ltversion.m4
 +])
 diff -urwN nxcomp-orig/Makefile.am nxcomp/Makefile.am
 --- nxcomp-orig/Makefile.am	1970-01-01 01:00:00.000000000 +0100
-+++ nxcomp/Makefile.am	2009-10-07 03:49:23.822642653 +0200
++++ nxcomp/Makefile.am	2009-10-11 15:56:44.241831481 +0200
 @@ -0,0 +1,68 @@
 +ACLOCAL_AMFLAGS = -I m4
 +
@@ -53278,7 +53383,7 @@ diff -urwN nxcomp-orig/Makefile.am nxcomp/Makefile.am
 +	autoreconf -if
 diff -urwN nxcomp-orig/Makefile.in nxcomp/Makefile.in
 --- nxcomp-orig/Makefile.in	2007-09-12 14:22:48.000000000 +0200
-+++ nxcomp/Makefile.in	2009-10-07 03:50:19.981392633 +0200
++++ nxcomp/Makefile.in	2009-10-11 15:56:44.250830323 +0200
 @@ -1,279 +1,2001 @@
 -############################################################################
 -#                                                                          #
@@ -55541,7 +55646,7 @@ diff -urwN nxcomp-orig/Makefile.in nxcomp/Makefile.in
 +.NOEXPORT:
 diff -urwN nxcomp-orig/Makefile.in.orig nxcomp/Makefile.in.orig
 --- nxcomp-orig/Makefile.in.orig	1970-01-01 01:00:00.000000000 +0100
-+++ nxcomp/Makefile.in.orig	2007-09-12 14:22:48.000000000 +0200
++++ nxcomp/Makefile.in.orig	2009-10-11 15:56:44.251830591 +0200
 @@ -0,0 +1,279 @@
 +############################################################################
 +#                                                                          #
@@ -55824,7 +55929,7 @@ diff -urwN nxcomp-orig/Makefile.in.orig nxcomp/Makefile.in.orig
 +		config.cache depend.status Makefile tags
 diff -urwN nxcomp-orig/mingw.cpp nxcomp/mingw.cpp
 --- nxcomp-orig/mingw.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ nxcomp/mingw.cpp	2009-10-07 03:49:23.836642342 +0200
++++ nxcomp/mingw.cpp	2009-10-11 15:56:44.251830591 +0200
 @@ -0,0 +1,68 @@
 +#ifdef __MINGW32__
 +# include "mingw.h"
@@ -55896,7 +56001,7 @@ diff -urwN nxcomp-orig/mingw.cpp nxcomp/mingw.cpp
 +#endif
 diff -urwN nxcomp-orig/mingw.h nxcomp/mingw.h
 --- nxcomp-orig/mingw.h	1970-01-01 01:00:00.000000000 +0100
-+++ nxcomp/mingw.h	2009-10-07 03:49:23.836642342 +0200
++++ nxcomp/mingw.h	2009-10-11 15:56:44.251830591 +0200
 @@ -0,0 +1,34 @@
 +#ifdef HAVE_CONFIG_H
 +# include "config.h"
@@ -55934,7 +56039,7 @@ diff -urwN nxcomp-orig/mingw.h nxcomp/mingw.h
 +#endif
 diff -urwN nxcomp-orig/Misc.cpp nxcomp/Misc.cpp
 --- nxcomp-orig/Misc.cpp	2008-04-14 15:38:07.000000000 +0200
-+++ nxcomp/Misc.cpp	2009-10-07 03:49:23.837642540 +0200
++++ nxcomp/Misc.cpp	2009-10-11 15:56:44.252830857 +0200
 @@ -15,14 +15,24 @@
  /*                                                                        */
  /**************************************************************************/
@@ -56032,7 +56137,7 @@ diff -urwN nxcomp-orig/mkinstalldirs nxcomp/mkinstalldirs
 -exit $errstatus
 diff -urwN nxcomp-orig/NX.h nxcomp/NX.h
 --- nxcomp-orig/NX.h	2007-06-09 03:13:00.000000000 +0200
-+++ nxcomp/NX.h	2009-10-07 03:49:23.838642597 +0200
++++ nxcomp/NX.h	2009-10-11 15:56:44.253830845 +0200
 @@ -22,12 +22,20 @@
  extern "C" {
  #endif
@@ -56067,7 +56172,7 @@ diff -urwN nxcomp-orig/NX.h nxcomp/NX.h
  
 diff -urwN nxcomp-orig/Pgn.cpp nxcomp/Pgn.cpp
 --- nxcomp-orig/Pgn.cpp	2007-06-04 15:02:24.000000000 +0200
-+++ nxcomp/Pgn.cpp	2009-10-07 03:49:23.839642376 +0200
++++ nxcomp/Pgn.cpp	2009-10-11 15:56:44.254830763 +0200
 @@ -21,9 +21,18 @@
  // avoid name clashes on Windows.
  //
@@ -56120,7 +56225,7 @@ diff -urwN nxcomp-orig/Pgn.cpp nxcomp/Pgn.cpp
      *logofs << "UnpackPng: WARNING! Skipping unpack of dummy data.\n"
 diff -urwN nxcomp-orig/Pipe.cpp nxcomp/Pipe.cpp
 --- nxcomp-orig/Pipe.cpp	2007-09-12 14:24:50.000000000 +0200
-+++ nxcomp/Pipe.cpp	2009-10-07 03:49:23.839642376 +0200
++++ nxcomp/Pipe.cpp	2009-10-11 15:56:44.254830763 +0200
 @@ -15,15 +15,30 @@
  /*                                                                        */
  /**************************************************************************/
@@ -56204,7 +56309,7 @@ diff -urwN nxcomp-orig/Pipe.cpp nxcomp/Pipe.cpp
  }
 diff -urwN nxcomp-orig/Pipe.h nxcomp/Pipe.h
 --- nxcomp-orig/Pipe.h	2007-06-04 15:01:46.000000000 +0200
-+++ nxcomp/Pipe.h	2009-10-07 03:49:23.840642503 +0200
++++ nxcomp/Pipe.h	2009-10-11 15:56:44.254830763 +0200
 @@ -21,7 +21,7 @@
  // that they can also work on Windows.
  //
@@ -56216,7 +56321,7 @@ diff -urwN nxcomp-orig/Pipe.h nxcomp/Pipe.h
  int Pclose(FILE *file);
 diff -urwN nxcomp-orig/Proxy.cpp nxcomp/Proxy.cpp
 --- nxcomp-orig/Proxy.cpp	2009-03-19 19:53:18.000000000 +0100
-+++ nxcomp/Proxy.cpp	2009-10-07 03:49:23.842642618 +0200
++++ nxcomp/Proxy.cpp	2009-10-11 15:56:44.257833451 +0200
 @@ -15,11 +15,23 @@
  /*                                                                        */
  /**************************************************************************/
@@ -56297,7 +56402,7 @@ diff -urwN nxcomp-orig/Proxy.cpp nxcomp/Proxy.cpp
  int Proxy::handleNewSlaveConnectionFromProxy(int channelId)
 diff -urwN nxcomp-orig/Proxy.h nxcomp/Proxy.h
 --- nxcomp-orig/Proxy.h	2007-08-26 11:33:22.000000000 +0200
-+++ nxcomp/Proxy.h	2009-10-07 03:49:23.843642955 +0200
++++ nxcomp/Proxy.h	2009-10-11 15:56:44.257833451 +0200
 @@ -18,7 +18,9 @@
  #ifndef Proxy_H
  #define Proxy_H
@@ -56310,7 +56415,7 @@ diff -urwN nxcomp-orig/Proxy.h nxcomp/Proxy.h
  #include <sys/select.h>
 diff -urwN nxcomp-orig/ProxyReadBuffer.cpp nxcomp/ProxyReadBuffer.cpp
 --- nxcomp-orig/ProxyReadBuffer.cpp	2007-09-30 13:23:16.000000000 +0200
-+++ nxcomp/ProxyReadBuffer.cpp	2009-10-07 03:49:23.843642955 +0200
++++ nxcomp/ProxyReadBuffer.cpp	2009-10-11 15:56:44.258830644 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -56324,7 +56429,7 @@ diff -urwN nxcomp-orig/ProxyReadBuffer.cpp nxcomp/ProxyReadBuffer.cpp
  #include "Transport.h"
 diff -urwN nxcomp-orig/ReadBuffer.cpp nxcomp/ReadBuffer.cpp
 --- nxcomp-orig/ReadBuffer.cpp	2007-06-18 00:58:48.000000000 +0200
-+++ nxcomp/ReadBuffer.cpp	2009-10-07 03:49:23.844642174 +0200
++++ nxcomp/ReadBuffer.cpp	2009-10-11 15:56:44.258830644 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -56338,7 +56443,7 @@ diff -urwN nxcomp-orig/ReadBuffer.cpp nxcomp/ReadBuffer.cpp
  #include "Transport.h"
 diff -urwN nxcomp-orig/ServerChannel.cpp nxcomp/ServerChannel.cpp
 --- nxcomp-orig/ServerChannel.cpp	2008-01-30 12:10:11.000000000 +0100
-+++ nxcomp/ServerChannel.cpp	2009-10-07 03:49:23.847643046 +0200
++++ nxcomp/ServerChannel.cpp	2009-10-11 15:56:44.261830678 +0200
 @@ -15,10 +15,22 @@
  /*                                                                        */
  /**************************************************************************/
@@ -56430,7 +56535,7 @@ diff -urwN nxcomp-orig/ServerChannel.cpp nxcomp/ServerChannel.cpp
  
 diff -urwN nxcomp-orig/ServerProxy.cpp nxcomp/ServerProxy.cpp
 --- nxcomp-orig/ServerProxy.cpp	2008-01-06 02:26:26.000000000 +0100
-+++ nxcomp/ServerProxy.cpp	2009-10-07 03:49:23.848642964 +0200
++++ nxcomp/ServerProxy.cpp	2009-10-11 15:56:44.262830176 +0200
 @@ -15,7 +15,13 @@
  /*                                                                        */
  /**************************************************************************/
@@ -56467,7 +56572,7 @@ diff -urwN nxcomp-orig/ServerProxy.cpp nxcomp/ServerProxy.cpp
      else
 diff -urwN nxcomp-orig/ServerProxy.h nxcomp/ServerProxy.h
 --- nxcomp-orig/ServerProxy.h	2007-06-04 15:01:48.000000000 +0200
-+++ nxcomp/ServerProxy.h	2009-10-07 03:49:23.848642964 +0200
++++ nxcomp/ServerProxy.h	2009-10-11 15:56:44.263830444 +0200
 @@ -18,8 +18,12 @@
  #ifndef ServerProxy_H
  #define ServerProxy_H
@@ -56483,7 +56588,7 @@ diff -urwN nxcomp-orig/ServerProxy.h nxcomp/ServerProxy.h
  
 diff -urwN nxcomp-orig/ServerReadBuffer.cpp nxcomp/ServerReadBuffer.cpp
 --- nxcomp-orig/ServerReadBuffer.cpp	2007-09-30 13:23:16.000000000 +0200
-+++ nxcomp/ServerReadBuffer.cpp	2009-10-07 03:49:23.848642964 +0200
++++ nxcomp/ServerReadBuffer.cpp	2009-10-11 15:56:44.263830444 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -56497,7 +56602,7 @@ diff -urwN nxcomp-orig/ServerReadBuffer.cpp nxcomp/ServerReadBuffer.cpp
  
 diff -urwN nxcomp-orig/Socket.cpp nxcomp/Socket.cpp
 --- nxcomp-orig/Socket.cpp	2007-06-04 15:02:26.000000000 +0200
-+++ nxcomp/Socket.cpp	2009-10-07 03:49:23.849642533 +0200
++++ nxcomp/Socket.cpp	2009-10-11 15:56:44.264831619 +0200
 @@ -15,8 +15,16 @@
  /*                                                                        */
  /**************************************************************************/
@@ -56747,7 +56852,7 @@ diff -urwN nxcomp-orig/Socket.cpp nxcomp/Socket.cpp
      {
 diff -urwN nxcomp-orig/Socket.h nxcomp/Socket.h
 --- nxcomp-orig/Socket.h	2007-06-04 15:01:48.000000000 +0200
-+++ nxcomp/Socket.h	2009-10-07 03:49:23.850643079 +0200
++++ nxcomp/Socket.h	2009-10-11 15:56:44.264831619 +0200
 @@ -19,8 +19,21 @@
  #define Socket_H
  
@@ -56787,7 +56892,7 @@ diff -urwN nxcomp-orig/Socket.h nxcomp/Socket.h
    *logofs << "Socket: Bytes readable from FD#"
 diff -urwN nxcomp-orig/Statistics.cpp nxcomp/Statistics.cpp
 --- nxcomp-orig/Statistics.cpp	2008-02-18 18:21:15.000000000 +0100
-+++ nxcomp/Statistics.cpp	2009-10-07 03:49:23.851642648 +0200
++++ nxcomp/Statistics.cpp	2009-10-11 15:56:44.265830838 +0200
 @@ -15,6 +15,10 @@
  /*                                                                        */
  /**************************************************************************/
@@ -56801,7 +56906,7 @@ diff -urwN nxcomp-orig/Statistics.cpp nxcomp/Statistics.cpp
  #include "Statistics.h"
 diff -urwN nxcomp-orig/Transport.cpp nxcomp/Transport.cpp
 --- nxcomp-orig/Transport.cpp	2007-06-18 00:07:26.000000000 +0200
-+++ nxcomp/Transport.cpp	2009-10-07 03:49:23.852642286 +0200
++++ nxcomp/Transport.cpp	2009-10-11 15:56:44.266831245 +0200
 @@ -15,11 +15,23 @@
  /*                                                                        */
  /**************************************************************************/
@@ -56828,7 +56933,7 @@ diff -urwN nxcomp-orig/Transport.cpp nxcomp/Transport.cpp
  
 diff -urwN nxcomp-orig/Transport.h nxcomp/Transport.h
 --- nxcomp-orig/Transport.h	2007-06-18 00:11:46.000000000 +0200
-+++ nxcomp/Transport.h	2009-10-07 03:49:23.852642286 +0200
++++ nxcomp/Transport.h	2009-10-11 15:56:44.267833887 +0200
 @@ -21,9 +21,13 @@
  #include <zlib.h>
  #include <errno.h>
@@ -56845,7 +56950,7 @@ diff -urwN nxcomp-orig/Transport.h nxcomp/Transport.h
  #include "Control.h"
 diff -urwN nxcomp-orig/Unpack.cpp nxcomp/Unpack.cpp
 --- nxcomp-orig/Unpack.cpp	2007-06-17 01:58:18.000000000 +0200
-+++ nxcomp/Unpack.cpp	2009-10-07 03:49:23.853642623 +0200
++++ nxcomp/Unpack.cpp	2009-10-11 15:56:44.268830522 +0200
 @@ -115,7 +115,7 @@
    }
  }
@@ -57033,7 +57138,7 @@ diff -urwN nxcomp-orig/Unpack.cpp nxcomp/Unpack.cpp
    *logofs << "Unpack24To32: Unpacking " << end - out
 diff -urwN nxcomp-orig/Unpack.h nxcomp/Unpack.h
 --- nxcomp-orig/Unpack.h	2007-06-17 01:29:18.000000000 +0200
-+++ nxcomp/Unpack.h	2009-10-07 03:49:23.854642681 +0200
++++ nxcomp/Unpack.h	2009-10-11 15:56:44.269830440 +0200
 @@ -110,32 +110,40 @@
  // bitmap.
  //
@@ -57084,7 +57189,7 @@ diff -urwN nxcomp-orig/Unpack.h nxcomp/Unpack.h
  #endif /* Unpack_H */
 diff -urwN nxcomp-orig/Utils.cpp nxcomp/Utils.cpp
 --- nxcomp-orig/Utils.cpp	2007-06-04 15:02:26.000000000 +0200
-+++ nxcomp/Utils.cpp	2009-10-07 03:49:23.854642681 +0200
++++ nxcomp/Utils.cpp	2009-10-11 15:56:44.269830440 +0200
 @@ -15,6 +15,14 @@
  /*                                                                        */
  /**************************************************************************/
@@ -57111,7 +57216,7 @@ diff -urwN nxcomp-orig/Utils.cpp nxcomp/Utils.cpp
    return -1;
 diff -urwN nxcomp-orig/Z.h nxcomp/Z.h
 --- nxcomp-orig/Z.h	2007-06-04 15:01:48.000000000 +0200
-+++ nxcomp/Z.h	2009-10-07 03:49:23.855642319 +0200
++++ nxcomp/Z.h	2009-10-11 15:56:44.269830440 +0200
 @@ -18,6 +18,13 @@
  #ifndef Z_H
  #define Z_H

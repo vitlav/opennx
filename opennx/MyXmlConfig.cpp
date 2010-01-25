@@ -239,6 +239,7 @@ MyXmlConfig::init()
     m_bImageEncodingPlainX = false;
     m_bImageEncodingPNG = false;
     m_bKbdLayoutOther = false;
+    m_bProxyPassRemember = false;
     m_bRdpCache = true;
     m_bRdpRememberPassword = false;
     m_bRdpRunApplication = false;
@@ -290,6 +291,8 @@ MyXmlConfig::init()
     m_sPassword = wxEmptyString;
     m_sProxyCommand = wxEmptyString;
     m_sProxyHost = wxEmptyString;
+    m_sProxyPass = wxEmptyString;
+    m_sProxyUser = wxEmptyString;
     m_sRdpApplication = wxEmptyString;
     m_sRdpDomain = wxEmptyString;
     m_sRdpHostName = wxEmptyString;
@@ -358,6 +361,7 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
     m_bImageEncodingPlainX = other.m_bImageEncodingPlainX;
     m_bImageEncodingPNG = other.m_bImageEncodingPNG;
     m_bKbdLayoutOther = other.m_bKbdLayoutOther;
+    m_bProxyPassRemember = other.m_bProxyPassRemember;
     m_bRdpCache = other.m_bRdpCache;
     m_bRdpRememberPassword = other.m_bRdpRememberPassword;
     m_bRdpRunApplication = other.m_bRdpRunApplication;
@@ -406,6 +410,8 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
     m_sPassword = other.m_sPassword;
     m_sProxyCommand = other.m_sProxyCommand;
     m_sProxyHost = other.m_sProxyHost;
+    m_sProxyPass = other.m_sProxyPass;
+    m_sProxyUser = other.m_sProxyUser;
     m_sRdpApplication = other.m_sRdpApplication;
     m_sRdpDomain = other.m_sRdpDomain;
     m_sRdpHostName = other.m_sRdpHostName;
@@ -900,6 +906,7 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
     if (m_bImageEncodingPlainX != other.m_bImageEncodingPlainX) return false;
     if (m_bImageEncodingPNG != other.m_bImageEncodingPNG) return false;
     if (m_bKbdLayoutOther != other.m_bKbdLayoutOther) return false;
+    if (m_bProxyPassRemember != other.m_bProxyPassRemember) return false;
     if (m_bRdpCache != other.m_bRdpCache) return false;
     if (m_bRdpRememberPassword != other.m_bRdpRememberPassword) return false;
     if (m_bRdpRunApplication != other.m_bRdpRunApplication) return false;
@@ -947,6 +954,8 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
     if (m_sPassword != other.m_sPassword) return false;
     if (m_sProxyCommand != other.m_sProxyCommand) return false;
     if (m_sProxyHost != other.m_sProxyHost) return false;
+    if (m_sProxyPass != other.m_sProxyPass) return false;
+    if (m_sProxyUser != other.m_sProxyUser) return false;
     if (m_sRdpApplication != other.m_sRdpApplication) return false;
     if (m_sRdpDomain != other.m_sRdpDomain) return false;
     if (m_sRdpHostName != other.m_sRdpHostName) return false;
@@ -1114,6 +1123,12 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                         m_sProxyCommand = getString(opt, wxT("Proxy command"), m_sProxyCommand);
                         m_sProxyHost = getString(opt, wxT("HTTP proxy host"), m_sProxyHost);
                         m_iProxyPort = getLong(opt, wxT("HTTP proxy port"), m_iProxyPort);
+                        m_sProxyUser = getString(opt, wxT("HTTP proxy username"), m_sProxyUser);
+                        m_bProxyPassRemember = getBool(opt, wxT("Remember HTTP proxy password"), m_bProxyPassRemember);
+                        if (m_bProxyPassRemember)
+                            m_sProxyPass = getPassword(opt, wxT("HTTP proxy password"), m_sProxyPass);
+                        else
+                            m_sProxyPass = wxEmptyString;
                         // Restore cache true
                         // StreamCompression ""
 
@@ -1913,7 +1928,11 @@ MyXmlConfig::SaveToFile()
     bAddOption(g, wxT("Enable response time optimisations"), false); // ???
     sAddOption(g, wxT("Proxy command"), m_sProxyCommand);
     sAddOption(g, wxT("HTTP proxy host"), m_sProxyHost);
+    optval = m_bProxyPassRemember ? encodeString(m_sProxyPass) : wxT("");
+    sAddOption(g, wxT("HTTP proxy password"), optval);
     iAddOption(g, wxT("HTTP proxy port"), m_iProxyPort);
+    sAddOption(g, wxT("HTTP proxy username"), m_sProxyUser);
+    bAddOption(g, wxT("Remember HTTP proxy password"), m_bProxyPassRemember);
     bAddOption(g, wxT("Restore cache"), true); // ???
     sAddOption(g, wxT("StreamCompression"), wxEmptyString); // ???
 
