@@ -27,7 +27,6 @@
 #include <wx/textfile.h>
 #include "pwcrypt.h"
 #include "md5.h"
-#include "LogNull.h"
 
 static const wxString dummyString = wxT("{{{{");
 static const wxString validChars =
@@ -177,7 +176,7 @@ md5sum(const wxString &s)
 wxString
 Md5OfFile(const wxString &name)
 {
-    LogNull dummy;
+    wxLogNull dummy;
     wxTextFile tf(name);
     md5_state_t state;
     md5_byte_t digest[16];

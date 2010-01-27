@@ -29,6 +29,7 @@
 #include <vector>
 #include <string>
 #include <wx/filename.h>
+#include "mylog.h"
 
 extern std::vector<std::string> *_allTraceTags;
 

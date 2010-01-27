@@ -45,7 +45,6 @@
 
 #include "MyDynlib.h"
 #include "LibOpenSC.h"
-#include "LogNull.h"
 #ifdef APP_OPENNX
 # include "opennxApp.h"
 # include "CardWaiterDialog.h"
@@ -110,11 +109,11 @@ CardWaitThread::CardWaitThread(wxEvtHandler *handler)
         GetThread()->Run();
         while ((!m_bFirstLoopDone) && GetThread()->IsRunning())
             wxThread::Sleep(100);
-        ::wxLogTrace(MYTRACETAG, wxT("opensc API is %savailable"), m_bOk ? wxT("") : wxT("un"));
+        ::myLogTrace(MYTRACETAG, wxT("opensc API is %savailable"), m_bOk ? wxT("") : wxT("un"));
         if (m_bOk)
-            ::wxLogTrace(MYTRACETAG, wxT("reader-ID: %d"), m_iFoundID);
+            ::myLogTrace(MYTRACETAG, wxT("reader-ID: %d"), m_iFoundID);
     } else
-        ::wxLogTrace(MYTRACETAG, wxT("could not create waiter thread"));
+        ::myLogTrace(MYTRACETAG, wxT("could not create waiter thread"));
 }
 
 CardWaitThread::~CardWaitThread()
@@ -157,7 +156,7 @@ CardWaitThread::Entry()
     sc_context *ctx;
     MyDynamicLibrary dll;
     {
-        LogNull ignoreErrors;
+        wxLogNull ignoreErrors;
         if (!dll.Load(wxT("libopensc")))
             return 0;
     }
@@ -191,7 +190,7 @@ CardWaitThread::Entry()
                 sc_reader_t *reader = ctx->reader[i];
                 if (!reader)
                     continue;
-                ::wxLogTrace(MYTRACETAG, wxT("Trying reader %d"), i);
+                ::myLogTrace(MYTRACETAG, wxT("Trying reader %d"), i);
                 for (j = 0; j < reader->slot_count; j++) {
                     r = pfnsc_detect_card_presence(reader, j);
                     if (r > 0) {
@@ -200,24 +199,24 @@ CardWaitThread::Entry()
                     }
                     if (r < 0) {
                         errc++;
-                        ::wxLogTrace(MYTRACETAG, wxT("error %d during sc_detect_card_presence"), r);
+                        ::myLogTrace(MYTRACETAG, wxT("error %d during sc_detect_card_presence"), r);
                     }
                 }
                 if (found_id != -1)
                     break;
             }
             if (errc >= rc) {
-                ::wxLogTrace(MYTRACETAG, wxT("All readers returned an error"));
+                ::myLogTrace(MYTRACETAG, wxT("All readers returned an error"));
                 pfnsc_release_context(ctx);
                 m_bOk = false;
                 return 0;
             }
         } else
-            ::wxLogTrace(MYTRACETAG, wxT("no readers found"));
+            ::myLogTrace(MYTRACETAG, wxT("no readers found"));
         if (found_id == -1)
-            ::wxLogTrace(MYTRACETAG, wxT("no cards found"));
+            ::myLogTrace(MYTRACETAG, wxT("no cards found"));
         else {
-            ::wxLogTrace(MYTRACETAG, wxT("found card in reader %d"), found_id);
+            ::myLogTrace(MYTRACETAG, wxT("found card in reader %d"), found_id);
             if (found_id != m_iFoundID) {
                 m_iFoundID = found_id;
                 if (m_pEvtHandler) {
@@ -234,23 +233,23 @@ CardWaitThread::Entry()
     pfnsc_release_context(ctx);
 #endif
     m_bOk = false;
-    ::wxLogTrace(MYTRACETAG, wxT("terminating waiter thread"));
+    ::myLogTrace(MYTRACETAG, wxT("terminating waiter thread"));
     return 0;
 }
 #endif // APP_OPENNX
 
 LibOpenSC::LibOpenSC()
 {
-    ::wxLogTrace(MYTRACETAG, wxT("LibOpenSC()"));
+    ::myLogTrace(MYTRACETAG, wxT("LibOpenSC()"));
 }
 
 LibOpenSC::~LibOpenSC()
 {
-    ::wxLogTrace(MYTRACETAG, wxT("~LibOpenSC()"));
+    ::myLogTrace(MYTRACETAG, wxT("~LibOpenSC()"));
 }
 
 bool LibOpenSC::HasOpenSC() {
-    LogNull ignoreErrors;
+    wxLogNull ignoreErrors;
     MyDynamicLibrary dll;
     if (!dll.Load(wxT("libopensc")))
         return false;
@@ -279,14 +278,14 @@ int LibOpenSC::WaitForCard(CardWaiterDialog *d) {
 bool LibOpenSC::WatchHotRemove(unsigned int ridx, long sshpid) {
 
     MyDynamicLibrary dll;
-    ::wxLogTrace(MYTRACETAG, wxT("WatchHotRemove loading OpenSC"));
+    ::myLogTrace(MYTRACETAG, wxT("WatchHotRemove loading OpenSC"));
     {
-        LogNull ignoreErrors;
+        wxLogNull ignoreErrors;
         if (!dll.Load(wxT("libopensc")))
             return false;
     }
 
-    ::wxLogTrace(MYTRACETAG, wxT("WatchHotRemove checking OpenSC functions"));
+    ::myLogTrace(MYTRACETAG, wxT("WatchHotRemove checking OpenSC functions"));
     wxDYNLIB_FUNCTION(Tsc_establish_context, sc_establish_context, dll);
     if (!pfnsc_establish_context)
         return false;
@@ -298,20 +297,20 @@ bool LibOpenSC::WatchHotRemove(unsigned int ridx, long sshpid) {
         return false;
 
     sc_context *ctx = NULL;
-    ::wxLogTrace(MYTRACETAG, wxT("WatchHotRemove waiting for card removal"));
-    ::wxLogTrace(MYTRACETAG, wxT("WatchHotRemove trying to establish context"));
+    ::myLogTrace(MYTRACETAG, wxT("WatchHotRemove waiting for card removal"));
+    ::myLogTrace(MYTRACETAG, wxT("WatchHotRemove trying to establish context"));
     if (SC_SUCCESS == pfnsc_establish_context(&ctx, OPENSC_CTXNAME)) {
         while (true) {
             if (sshpid != 0) {
                 if (!wxProcess::Exists(sshpid)) {
-                    ::wxLogTrace(MYTRACETAG, wxT("nxssh pid %d has terminated"), sshpid);
+                    ::myLogTrace(MYTRACETAG, wxT("nxssh pid %d has terminated"), sshpid);
                     return false;
                 }
             }
             unsigned int rc = ctx->reader_count;
             if (rc <= ridx) {
                 // reader is gone
-                ::wxLogTrace(MYTRACETAG, wxT("reader is gone"));
+                ::myLogTrace(MYTRACETAG, wxT("reader is gone"));
                 break;
             }
             sc_reader_t *reader = ctx->reader[ridx];
@@ -319,22 +318,22 @@ bool LibOpenSC::WatchHotRemove(unsigned int ridx, long sshpid) {
                 int r = 1;
                 int j;
                 for (j = 0; j < reader->slot_count; j++) {
-                    ::wxLogTrace(MYTRACETAG, wxT("WatchHotRemove checking for card in reader %d, slot %d"), ridx, j);
+                    ::myLogTrace(MYTRACETAG, wxT("WatchHotRemove checking for card in reader %d, slot %d"), ridx, j);
                     r = pfnsc_detect_card_presence(reader, j);
                     if (r == 0) {
                         // card is gone
-                        ::wxLogTrace(MYTRACETAG, wxT("card is gone"));
+                        ::myLogTrace(MYTRACETAG, wxT("card is gone"));
                         break;
                     }
                     if (r < 0) {
-                        ::wxLogTrace(MYTRACETAG, wxT("error %d during sc_detect_card_presence"), r);
+                        ::myLogTrace(MYTRACETAG, wxT("error %d during sc_detect_card_presence"), r);
                         break;
                     }
                 }
                 if (r <= 0)
                     break;
             } else {
-                ::wxLogTrace(MYTRACETAG, wxT("no readers found"));
+                ::myLogTrace(MYTRACETAG, wxT("no readers found"));
                 break;
             }
             while (wxGetApp().Pending())
@@ -342,11 +341,11 @@ bool LibOpenSC::WatchHotRemove(unsigned int ridx, long sshpid) {
             wxThread::Sleep(1000);
         }
     } else
-        ::wxLogTrace(MYTRACETAG, wxT("could not establish context"));
+        ::myLogTrace(MYTRACETAG, wxT("could not establish context"));
     if (ctx)
         pfnsc_release_context(ctx);
     if (sshpid != 0) {
-        ::wxLogTrace(MYTRACETAG, wxT("Sending HUP to nxssh pid %d"), sshpid);
+        ::myLogTrace(MYTRACETAG, wxT("Sending HUP to nxssh pid %d"), sshpid);
         int trycount = 10;
         while (wxProcess::Exists(sshpid) && (0 < trycount)) {
             wxProcess::Kill(sshpid, wxSIGHUP);
@@ -358,7 +357,7 @@ bool LibOpenSC::WatchHotRemove(unsigned int ridx, long sshpid) {
         if (!wxProcess::Exists(sshpid))
             return true;
         // Again, this time SIGTERM
-        ::wxLogTrace(MYTRACETAG, wxT("Sending TERM to nxssh pid %d"), sshpid);
+        ::myLogTrace(MYTRACETAG, wxT("Sending TERM to nxssh pid %d"), sshpid);
         trycount = 10;
         while (wxProcess::Exists(sshpid) && (0 < trycount)) {
             wxProcess::Kill(sshpid, wxSIGTERM);
@@ -370,7 +369,7 @@ bool LibOpenSC::WatchHotRemove(unsigned int ridx, long sshpid) {
         if (!wxProcess::Exists(sshpid))
             return true;
         // Finally, use brute force
-        ::wxLogTrace(MYTRACETAG, wxT("Sending KILL to nxssh pid %d"), sshpid);
+        ::myLogTrace(MYTRACETAG, wxT("Sending KILL to nxssh pid %d"), sshpid);
         trycount = 10;
         while (wxProcess::Exists(sshpid) && (0 < trycount)) {
             wxProcess::Kill(sshpid, wxSIGKILL);

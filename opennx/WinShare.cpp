@@ -39,7 +39,6 @@
 
 #include "MyDynlib.h"
 #include "WinShare.h"
-#include "LogNull.h"
 
 #include <wx/utils.h>
 #include <wx/dynlib.h>
@@ -155,9 +154,9 @@ DllData::DllData(ClientType ct)
     handle = NULL;
     switch (ct) {
         case SmbClientUnix:
-            ::wxLogTrace(MYTRACETAG, wxT("DllData Constructor(SmbClientUnix)"));
+            ::myLogTrace(MYTRACETAG, wxT("DllData Constructor(SmbClientUnix)"));
             {
-                LogNull lognull;
+                wxLogNull lognull;
                 MyDynamicLibrary dll(wxT("libsmbclient"));
                 if (dll.IsLoaded()) {
                     C_init = (SMBC_init)dll.GetSymbol(wxT("smbc_init"));
@@ -170,9 +169,9 @@ DllData::DllData(ClientType ct)
             }
             break;
         case SmbClientWinNT:
-            ::wxLogTrace(MYTRACETAG, wxT("DllData Constructor(SmbClientWinNT)"));
+            ::myLogTrace(MYTRACETAG, wxT("DllData Constructor(SmbClientWinNT)"));
             {
-                LogNull lognull;
+                wxLogNull lognull;
                 wxDynamicLibrary dll(wxT("netapi32"));
                 if (dll.IsLoaded()) {
                     NT_enum = (NT_NetShareEnum)dll.GetSymbol(wxT("NetShareEnum"));
@@ -183,9 +182,9 @@ DllData::DllData(ClientType ct)
             }
             break;
         case SmbClientWin95:
-            ::wxLogTrace(MYTRACETAG, wxT("DllData Constructor(SmbClientWin95)"));
+            ::myLogTrace(MYTRACETAG, wxT("DllData Constructor(SmbClientWin95)"));
             {
-                LogNull lognull;
+                wxLogNull lognull;
                 wxDynamicLibrary dll(wxT("svrapi32"));
                 if (dll.IsLoaded()) {
                     W9X_enum = (W9X_NetShareEnum)dll.GetSymbol(wxT("NetShareEnum"));
@@ -194,9 +193,9 @@ DllData::DllData(ClientType ct)
             }
             break;
         case CupsClientUnix:
-            ::wxLogTrace(MYTRACETAG, wxT("DllData Constructor(CupsClientUnix)"));
+            ::myLogTrace(MYTRACETAG, wxT("DllData Constructor(CupsClientUnix)"));
             {
-                LogNull lognull;
+                wxLogNull lognull;
                 MyDynamicLibrary dll(wxT("libcups"));
                 if (dll.IsLoaded()) {
                     cupsGetDests = (FP_cupsGetDests)dll.GetSymbol(wxT("cupsGetDests"));
@@ -206,7 +205,7 @@ DllData::DllData(ClientType ct)
             }
             break;
     }
-    ::wxLogTrace(MYTRACETAG, wxT("DllData Constructor handle=%08x"), handle);
+    ::myLogTrace(MYTRACETAG, wxT("DllData Constructor handle=%08x"), handle);
 }
 
 DllData::~DllData()
@@ -247,7 +246,7 @@ ArrayOfShares DllData::GetShares()
         }
     } else {
         // Unix, use libcups
-        ::wxLogTrace(MYTRACETAG, wxT("Retrieving CUPS destinations"));
+        ::myLogTrace(MYTRACETAG, wxT("Retrieving CUPS destinations"));
         cups_dest_t *dests = NULL;
         int ndests = cupsGetDests(&dests);
         for (int i = 0; i < ndests; i++) {
@@ -337,20 +336,20 @@ ArrayOfShares DllData::GetShares()
 bool DllData::IsAvailable()
 {
     bool ret = false;
-    ::wxLogTrace(MYTRACETAG, wxT("DllData(SMB) IsAvailable called"));
+    ::myLogTrace(MYTRACETAG, wxT("DllData(SMB) IsAvailable called"));
 #ifdef __UNIX__
     if (handle) {
         if (isSMBC) {
             // Probe Samba
             if (C_init(smbc_auth_fn, 0) == 0) {
-                ::wxLogTrace(MYTRACETAG, wxT("C_init success"));
+                ::myLogTrace(MYTRACETAG, wxT("C_init success"));
                 int d = C_opendir("smb://127.0.0.1/");
                 if (d >= 0) {
                     ret = true;
                     C_closedir(d);
                 }
             } else
-                ::wxLogTrace(MYTRACETAG, wxT("C_init returned error"));
+                ::myLogTrace(MYTRACETAG, wxT("C_init returned error"));
         } else {
             // Probe Cups
             return (cupsServer() != NULL);
@@ -391,7 +390,7 @@ SmbClient::GetShares()
 {
     if (dllPrivate)
         m_shares = dllPrivate->GetShares();
-    ::wxLogTrace(MYTRACETAG, wxT("# of SMB shares: %d"), m_shares.GetCount());
+    ::myLogTrace(MYTRACETAG, wxT("# of SMB shares: %d"), m_shares.GetCount());
     return m_shares;
 }
 
@@ -426,7 +425,7 @@ CupsClient::GetShares()
     if (dllPrivate)
         m_shares = dllPrivate->GetShares();
 #endif
-    ::wxLogTrace(MYTRACETAG, wxT("# of CUPS shares: %d"), m_shares.GetCount());
+    ::myLogTrace(MYTRACETAG, wxT("# of CUPS shares: %d"), m_shares.GetCount());
     return m_shares;
 }
 

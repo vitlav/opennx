@@ -1103,7 +1103,7 @@ wxIcon WizardPageFinish::GetIconResource( const wxString& name )
 
 void WizardPageDesktop::OnComboboxDprotoSelected( wxCommandEvent& event )
 {
-    wxLogTrace(MYTRACETAG, _T("WizardPageDesktop::OnComboboxDprotoSelected"));
+    myLogTrace(MYTRACETAG, _T("WizardPageDesktop::OnComboboxDprotoSelected"));
     if (event.GetInt() == 0) {
         m_iDesktopTypeDialog = m_iUnixDesktopType;
         m_pCtrlDesktopType->SetSelection(m_iDesktopTypeDialog);
@@ -1133,7 +1133,7 @@ void WizardPageDesktop::OnComboboxDtypeSelected( wxCommandEvent& event )
 {
     UpdateDialogConstraints(true);
     m_iUnixDesktopType = m_iDesktopTypeDialog;
-    ::wxLogTrace(MYTRACETAG, wxT("dtype=%d"), m_iDesktopTypeDialog);
+    ::myLogTrace(MYTRACETAG, wxT("dtype=%d"), m_iDesktopTypeDialog);
     CheckNextEnable();
     event.Skip();
 }
@@ -1366,7 +1366,7 @@ void WizardPageFinish::OnWizardpageFinishPageChanging( wxWizardEvent& event )
 {
     if (event.GetDirection()) {
         MyXmlConfig *cfg = wxDynamicCast(GetParent(), MyWizard)->pGetConfig();
-        wxLogTrace(MYTRACETAG, _T("MyWizard: creating new config %s"), cfg->sGetFileName().c_str());
+        ::myLogTrace(MYTRACETAG, _T("MyWizard: creating new config %s"), cfg->sGetFileName().c_str());
         cfg->SaveToFile();
         TransferDataFromWindow();
         if (m_bShowAdvancedConfig) {
@@ -1378,7 +1378,7 @@ void WizardPageFinish::OnWizardpageFinishPageChanging( wxWizardEvent& event )
                 case wxID_CANCEL:
                     break;
                 case wxID_CLEAR:
-                    ::wxLogTrace(MYTRACETAG, _T("deleting '%s'"), fn.c_str());
+                    ::myLogTrace(MYTRACETAG, _T("deleting '%s'"), fn.c_str());
                     ::wxRemoveFile(fn);
                     // actually we were not cancelled but we want to behave
                     // as if we were, because the just created session has

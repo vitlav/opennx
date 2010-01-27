@@ -47,7 +47,6 @@
 #include "TextViewer.h"
 #include "opennxApp.h"
 #include "Icon.h"
-#include "LogNull.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -216,7 +215,7 @@ TextViewer::LoadFile(const wxString &sFileName)
     m_sFileName = sFileName;
     wxFileName fn(sFileName);
     {
-        LogNull l;
+        wxLogNull l;
         ret = m_pRichTextCtrl->LoadFile(m_sFileName, wxRICHTEXT_TYPE_XML);
     }
     if (ret)

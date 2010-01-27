@@ -54,7 +54,6 @@ class wxConfigBase;
 #include "LibUSB.h"
 #include "MyXmlConfig.h"
 #include "WinShare.h"
-#include "LogNull.h"
 
 #ifdef APP_OPENNX
 # include "opennxApp.h"
@@ -987,7 +986,7 @@ MyXmlConfig::LoadFromString(const wxString &content, bool isPush)
 MyXmlConfig::LoadFromFile(const wxString &filename)
 {
     {
-        LogNull dummy; 
+        wxLogNull dummy; 
         wxFile *f = new wxFile(filename);
         if ((!f->IsOpened()) || f->Eof()) {
             delete f;
@@ -995,7 +994,7 @@ MyXmlConfig::LoadFromFile(const wxString &filename)
         }
         delete f;
     }
-    ::wxLogTrace(MYTRACETAG, wxT("Reading %s"), filename.c_str());
+    ::myLogTrace(MYTRACETAG, wxT("Reading %s"), filename.c_str());
     wxFileInputStream fis(filename);
     if (loadFromStream(fis, false)) {
         m_sName = wxFileName(filename).GetName();
@@ -1011,11 +1010,11 @@ MyXmlConfig::LoadFromURL(const wxString &filename)
 {
     wxURL url(filename);
     {
-        LogNull dummy;
+        wxLogNull dummy;
         if (!url.IsOk())
             return false;
     }
-    ::wxLogTrace(MYTRACETAG, wxT("Fetching %s"), filename.c_str());
+    ::myLogTrace(MYTRACETAG, wxT("Fetching %s"), filename.c_str());
     wxInputStream *is = url.GetInputStream();
     if (is && loadFromStream(*is, false)) {
         wxURI uri(filename);
@@ -2031,7 +2030,7 @@ MyXmlConfig::SaveToFile()
         if (secondline++) {
             // Replace 1st line with non-standard NXclient doctype
             len -= (secondline - data);
-            ::wxLogTrace(MYTRACETAG, wxT("Writing '%s'"), m_sFileName.c_str());
+            ::myLogTrace(MYTRACETAG, wxT("Writing '%s'"), m_sFileName.c_str());
             wxFile f;
             if (!f.Create(m_sFileName, true, wxS_IRUSR|wxS_IWUSR)) {
                 delete data;

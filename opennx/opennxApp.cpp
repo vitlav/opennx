@@ -72,7 +72,6 @@
 #include "osdep.h"
 #include "xh_richtext.h"
 #include "UsbIp.h"
-#include "LogNull.h"
 #include "CardWaiterDialog.h"
 
 #include "memres.h"
@@ -152,12 +151,12 @@ IMPLEMENT_APP(opennxApp);
 
     // Language overrides from KDE - only applied if running inside a KDE session. 
     if (inKdeSession != 0) {
-        LogNull dummy;
+        wxLogNull dummy;
 
         // If KDE_LANG is set, then it has precedence over kdeglobals.
         wxString lang;
         if (::wxGetEnv(wxT("KDE_LANG"), &lang)) {
-            fprintf(stderr, "Overriding LANG from KDE_LANG environment to: '%s'\n", (const char *)lang.mb_str());
+            myLogDebug(wxT("Overriding LANG from KDE_LANG environment to: '%s'"), lang.c_str());
             ::wxSetEnv(wxT("LANG"), lang);
         } else {
             // Try to get KDE language settings and override locale accordingly
@@ -176,8 +175,7 @@ IMPLEMENT_APP(opennxApp);
                     if (lang.Length() < 3)
                         lang << wxT("_") << country.Upper();
                     lang << wxT(".UTF-8");
-                    // At this point logging is not yet setup.
-                    fprintf(stderr, "Overriding LANG from kdeglobals to: '%s'\n", (const char *)lang.mb_str());
+                    myLogDebug(wxT("Overriding LANG from kdeglobals to: '%s'"), lang.c_str());
                     ::wxSetEnv(wxT("LANG"), lang);
                 }
             }
@@ -303,7 +301,7 @@ opennxApp::CreateDesktopEntry(MyXmlConfig *cfg)
         if (::wxDirExists(path)) {
             wxFile f;
             wxString fn = path + wxT("/") + cfg->sGetName() + wxT(".desktop");
-            ::wxLogTrace(MYTRACETAG, wxT("Creating '%s'"), fn.c_str());
+            ::myLogTrace(MYTRACETAG, wxT("Creating '%s'"), fn.c_str());
             if (f.Create(fn, true,
                         wxS_IRUSR|wxS_IWUSR|wxS_IXUSR|wxS_IRGRP|wxS_IROTH)) {
                 f.Write(dtEntry);
@@ -327,7 +325,7 @@ opennxApp::RemoveDesktopEntry(MyXmlConfig *cfg)
     TCHAR dtPath[MAX_PATH];
     if (SHGetSpecialFolderPath(NULL, dtPath, CSIDL_DESKTOPDIRECTORY, FALSE)) {
         wxString lpath = wxString::Format(_T("%s\\%s.lnk"), dtPath, wx_static_cast(const char *,cfg->sGetName().mb_str()));
-        ::wxLogTrace(MYTRACETAG, wxT("Removing '%s'"), lpath.c_str());
+        ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), lpath.c_str());
         ::wxRemoveFile(lpath);
     }
 #endif
@@ -345,7 +343,7 @@ opennxApp::RemoveDesktopEntry(MyXmlConfig *cfg)
     }
 # endif
 #endif
-    ::wxLogTrace(MYTRACETAG, wxT("Removing '%s'"), cfg->sGetFileName().c_str());
+    ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), cfg->sGetFileName().c_str());
     ::wxRemoveFile(cfg->sGetFileName());
     return true;
 }
@@ -576,7 +574,7 @@ opennxApp::preInit()
         while (t.HasMoreTokens()) {
             wxString tag = t.GetNextToken();
             if (allTraceTags.Index(tag) != wxNOT_FOUND) {
-                ::wxLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
+                ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
                 wxLog::AddTraceMask(tag);
             }
         }
@@ -626,7 +624,7 @@ void opennxApp::checkNxSmartCardSupport()
     LibOpenSC l;
     if (!l.HasOpenSC()) {
         m_bNxSmartCardSupport = false;
-        wxLogTrace(MYTRACETAG, wxT("No OpenSC lib found, disabling SmartCard support"));
+        myLogTrace(MYTRACETAG, wxT("No OpenSC lib found, disabling SmartCard support"));
         wxConfigBase::Get()->Write(wxT("Config/NxSshSmartCardSupport"), m_bNxSmartCardSupport);
         wxConfigBase::Get()->Flush();
         return;
@@ -846,7 +844,7 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
                 OnCmdLineError(parser);
                 return false;
             }
-            ::wxLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
+            ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
             wxLog::AddTraceMask(tag);
         }
     }
@@ -902,7 +900,7 @@ bool opennxApp::realInit()
                     {
                         // The following code eliminates a stupid error dialog which shows up
                         // if some .desktop entires (in KDE or GNOME applink dirs) are dangling symlinks.
-                        LogNull lognull;
+                        wxLogNull lognull;
                         wxTheMimeTypesManager->GetFileTypeFromExtension(wxT("zip"));
                     }
                     resok = true;
@@ -918,7 +916,7 @@ bool opennxApp::realInit()
             {
                 // The following code eliminates a stupid error dialog which shows up
                 // if some .desktop entires (in KDE or GNOME applink dirs) are dangling symlinks.
-                LogNull lognull;
+                wxLogNull lognull;
                 wxTheMimeTypesManager->GetFileTypeFromExtension(wxT("zip"));
             }
             free_mem_res(resptr);
@@ -1090,7 +1088,7 @@ bool opennxApp::OnInit()
         UsbIp usbip;
         if (usbip.Connect(usock)) {
             size_t i, j, k;
-            ::wxLogTrace(MYTRACETAG, wxT("connected to usbipd2"));
+            ::myLogTrace(MYTRACETAG, wxT("connected to usbipd2"));
             usbip.SetSession(m_sSessionID);
             ArrayOfUsbForwards af = m_pSessionCfg->aGetUsbForwards();
             ArrayOfUsbIpDevices aid = usbip.GetDevices();
@@ -1105,15 +1103,15 @@ bool opennxApp::OnInit()
                         ::wxLogError(_("libusb is not available. No USB devices will be exported"));
                         break;
                     }
-                    ::wxLogTrace(MYTRACETAG, wxT("possibly exported USB device: %04x/%04x %s"),
+                    ::myLogTrace(MYTRACETAG, wxT("possibly exported USB device: %04x/%04x %s"),
                             af[i].m_iVendorID, af[i].m_iProductID, af[i].toShortString().c_str());
                     for (j = 0; j < ad.GetCount(); j++)
                         if (af[i].MatchHotplug(ad[j])) {
-                            ::wxLogTrace(MYTRACETAG, wxT("Match on USB dev %s"), ad[j].toString().c_str());
+                            ::myLogTrace(MYTRACETAG, wxT("Match on USB dev %s"), ad[j].toString().c_str());
                             for (k = 0; k < aid.GetCount(); k++) {
                                 if (aid[k].GetUsbBusID().IsSameAs(ad[j].GetBusID())) {
                                     wxString exBusID = aid[k].GetUsbIpBusID();
-                                    ::wxLogTrace(MYTRACETAG, wxT("Exporting usbup-busid %s (libusb-busid %s)"),
+                                    ::myLogTrace(MYTRACETAG, wxT("Exporting usbup-busid %s (libusb-busid %s)"),
                                             exBusID.c_str(), ad[j].GetBusID().c_str());
                                     if (!usbip.WaitForSession(usessionTO))
                                         ::wxLogError(_("USBIP tunnel registration timeout"));
@@ -1138,15 +1136,15 @@ bool opennxApp::OnInit()
         fn.SetName(wxT("watchusbip"));
 #endif
         wxString watchcmd = fn.GetShortPath();
-        ::wxLogTrace(MYTRACETAG, wxT("cfgfile='%s'"), m_pSessionCfg->sGetFileName().c_str());
+        ::myLogTrace(MYTRACETAG, wxT("cfgfile='%s'"), m_pSessionCfg->sGetFileName().c_str());
         watchcmd << wxT(" -s ") << m_sSessionID << wxT(" -p ")
             << m_nNxSshPID << wxT(" -c \"") << m_pSessionCfg->sGetFileName() << wxT("\"");
 #ifdef __WXDEBUG__
         watchcmd << wxT(" --trace=UsbIp,watchUsbIpApp");
 #endif
-        ::wxLogTrace(MYTRACETAG, wxT("starting %s"), watchcmd.c_str());
+        ::myLogTrace(MYTRACETAG, wxT("starting %s"), watchcmd.c_str());
         {
-            LogNull noerrors;
+            wxLogNull noerrors;
             ::wxExecute(watchcmd);
         }
         while (Pending())
@@ -1154,9 +1152,9 @@ bool opennxApp::OnInit()
     }
 #endif
     if (m_bRequireWatchReader) {
-        ::wxLogTrace(MYTRACETAG, wxT("require Watchreader: m_iReader = %d, m_nNxSshPID = %ld"), m_iReader, m_nNxSshPID);
+        ::myLogTrace(MYTRACETAG, wxT("require Watchreader: m_iReader = %d, m_nNxSshPID = %ld"), m_iReader, m_nNxSshPID);
         if (-1 != m_iReader) {
-            LogNull noerrors;
+            wxLogNull noerrors;
             wxString appDir;
             wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &appDir);
             wxFileName fn(appDir, wxEmptyString);
@@ -1168,14 +1166,14 @@ bool opennxApp::OnInit()
 #endif
             wxString watchcmd = fn.GetShortPath();
             watchcmd << wxT(" -r ") << m_iReader << wxT(" -p ") << m_nNxSshPID;
-            ::wxLogTrace(MYTRACETAG, wxT("executing %s"), watchcmd.c_str());
+            ::myLogTrace(MYTRACETAG, wxT("executing %s"), watchcmd.c_str());
             ::wxExecute(watchcmd);
         }
     }
     while (::wxGetApp().Pending())
         ::wxGetApp().Dispatch();
     if (!ret) {
-        LogNull lognull;
+        wxLogNull lognull;
         wxMemoryFSHandler::RemoveFile(wxT("memrsc"));
     }
     return ret;
@@ -1187,7 +1185,7 @@ bool opennxApp::OnInit()
 int opennxApp::OnExit()
 {
     {
-        LogNull lognull;
+        wxLogNull lognull;
         wxMemoryFSHandler::RemoveFile(wxT("memrsc"));
     }
     return wxApp::OnExit();

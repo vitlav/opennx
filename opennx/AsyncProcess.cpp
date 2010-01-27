@@ -93,21 +93,21 @@ AsyncProcess::AsyncProcess(const wxString& cmd, wxEvtHandler *h /* = NULL */)
 
 AsyncProcess::~AsyncProcess()
 {
-    ::wxLogTrace(MYTRACETAG, wxT("~AsyncProcess"));
+    ::myLogTrace(MYTRACETAG, wxT("~AsyncProcess"));
     if (m_thread && m_thread->IsRunning()) {
         m_thread->Delete();
         while (m_thread->IsRunning())
             wxThread::Sleep(100);
         m_thread = NULL;
     }
-    ::wxLogTrace(MYTRACETAG, wxT("~AsyncProcess exit"));
+    ::myLogTrace(MYTRACETAG, wxT("~AsyncProcess exit"));
     m_pEvtHandler = NULL;
 }
 
     wxThread::ExitCode
 AsyncProcess::Entry()
 {
-    ::wxLogTrace(MYTRACETAG, wxT("IoThread starting"));
+    ::myLogTrace(MYTRACETAG, wxT("IoThread starting"));
     while (!m_thread->TestDestroy()) {
         while (IsInputAvailable()) {
             char c = GetInputStream()->GetC();
@@ -135,7 +135,7 @@ AsyncProcess::Entry()
         if (m_pEvtHandler) {
             // If no LF received within a second, send buffer anyway
             if ((m_cOutWatch.Time() > 1000) && (!m_sOutBuf.IsEmpty())) {
-                ::wxLogTrace(MYTRACETAG, wxT("IoThread outwatch timed out"));
+                ::myLogTrace(MYTRACETAG, wxT("IoThread outwatch timed out"));
                 wxCommandEvent event(wxEVT_PROCESS_STDOUT, wxID_ANY);
                 event.SetString(m_sOutBuf);
                 event.SetClientData(this);
@@ -169,7 +169,7 @@ AsyncProcess::Entry()
         if (m_pEvtHandler) {
             // If no LF received within a second, send buffer anyway
             if ((m_cErrWatch.Time() > 1000) && (!m_sErrBuf.IsEmpty())) {
-                ::wxLogTrace(MYTRACETAG, wxT("IoThread errwatch timed out"));
+                ::myLogTrace(MYTRACETAG, wxT("IoThread errwatch timed out"));
                 wxCommandEvent event(wxEVT_PROCESS_STDERR, wxID_ANY);
                 event.SetString(m_sErrBuf);
                 event.SetClientData(this);
@@ -179,7 +179,7 @@ AsyncProcess::Entry()
         }
         wxThread::Sleep(10);
     }
-    ::wxLogTrace(MYTRACETAG, wxT("IoThread exiting"));
+    ::myLogTrace(MYTRACETAG, wxT("IoThread exiting"));
     return 0;
 }
 
@@ -195,9 +195,9 @@ AsyncProcess::Print(const wxString &s, bool doLog)
     wxOutputStream *os = GetOutputStream();
     if (os) {
         if (doLog)
-            ::wxLogTrace(MYTRACETAG, wxT("Sending: '%s'"), s.c_str());
+            ::myLogTrace(MYTRACETAG, wxT("Sending: '%s'"), s.c_str());
         else
-            ::wxLogTrace(MYTRACETAG, wxT("Sending (hidden): '************'"));
+            ::myLogTrace(MYTRACETAG, wxT("Sending (hidden): '************'"));
         wxString sbuf = s + wxT("\n");
         const wxWX2MBbuf buf = wxConvCurrent->cWX2MB(sbuf);
         os->Write(buf, strlen(buf));
@@ -209,7 +209,7 @@ AsyncProcess::Print(const wxString &s, bool doLog)
     void
 AsyncProcess::OnTerminate(int pid, int status)
 {
-    ::wxLogTrace(MYTRACETAG, wxT("Process %u terminated with exit code %d."), pid, status);
+    ::myLogTrace(MYTRACETAG, wxT("Process %u terminated with exit code %d."), pid, status);
     wxLog::FlushActive();
     m_iStatus = status;
     if (m_thread && m_thread->IsRunning()) {
@@ -218,7 +218,7 @@ AsyncProcess::OnTerminate(int pid, int status)
         m_thread->Delete();
         while (m_thread->IsRunning())
             wxThread::Sleep(100);
-        ::wxLogTrace(MYTRACETAG, wxT("OnTerminate(): IoThread has ended."));
+        ::myLogTrace(MYTRACETAG, wxT("OnTerminate(): IoThread has ended."));
         m_thread = NULL;
     }
     if (m_pEvtHandler) {
@@ -236,24 +236,24 @@ AsyncProcess::Start()
 
     if (!m_sCmd.IsEmpty()) {
         wxString cwd = ::wxGetCwd();
-        ::wxLogTrace(MYTRACETAG, wxT("Starting '%s'"), m_sCmd.c_str());
+        ::myLogTrace(MYTRACETAG, wxT("Starting '%s'"), m_sCmd.c_str());
         if (!m_sDir.IsEmpty())
             wxFileName::SetCwd(m_sDir);
         m_sOutBuf.Empty();
         m_sErrBuf.Empty();
         m_pid = ::wxExecute(m_sCmd, wxEXEC_ASYNC, this);
-        ::wxLogTrace(MYTRACETAG, wxT("wxExecute returned %d"), m_pid);
+        ::myLogTrace(MYTRACETAG, wxT("wxExecute returned %d"), m_pid);
         ret = (m_pid > 0);
         if (!m_sDir.IsEmpty())
             wxFileName::SetCwd(cwd);
         if (ret) {
-            ::wxLogTrace(MYTRACETAG, wxT(">Create()"));
+            ::myLogTrace(MYTRACETAG, wxT(">Create()"));
             if (IsRunning())
                 Create();
-            ::wxLogTrace(MYTRACETAG, wxT("<Create()"));
+            ::myLogTrace(MYTRACETAG, wxT("<Create()"));
             if (IsRunning())
                 m_thread->Run();
-            ::wxLogTrace(MYTRACETAG, wxT("Run()"));
+            ::myLogTrace(MYTRACETAG, wxT("Run()"));
         }
     }
     return ret;
@@ -262,21 +262,21 @@ AsyncProcess::Start()
     void
 AsyncProcess::Detach()
 {
-    ::wxLogTrace(MYTRACETAG, wxT("Detach() called"));
+    ::myLogTrace(MYTRACETAG, wxT("Detach() called"));
     m_pEvtHandler = NULL;
 #if 0
     int out_fd = reinterpret_cast<wxFileOutputStream*>(m_outputStream)->m_file->m_fd;
     int err_fd = reinterpret_cast<wxFileInputStream*>(m_errorStream)->m_file->m_fd;
     int inp_fd = reinterpret_cast<wxFileInputStream*>(m_inputStream)->m_file->m_fd;
-    ::wxLogTrace(MYTRACETAG, wxT("inp=%d out=%d err=%d"), inp_fd, out_fd, err_fd);
+    ::myLogTrace(MYTRACETAG, wxT("inp=%d out=%d err=%d"), inp_fd, out_fd, err_fd);
 #endif
     wxProcess::Detach();
     if (m_thread && m_thread->IsRunning()) {
         m_thread->Delete();
-        ::wxLogTrace(MYTRACETAG, wxT("Detatch(): waiting for IoThread"));
+        ::myLogTrace(MYTRACETAG, wxT("Detatch(): waiting for IoThread"));
         while (m_thread->IsRunning())
             wxThread::Sleep(100);
-        ::wxLogTrace(MYTRACETAG, wxT("Detatch(): IoThread has ended"));
+        ::myLogTrace(MYTRACETAG, wxT("Detatch(): IoThread has ended"));
         m_thread = NULL;
     }
 #if 0
@@ -289,10 +289,10 @@ AsyncProcess::Detach()
     bool
 AsyncProcess::Kill()
 {
-    ::wxLogTrace(MYTRACETAG, wxT("Kill() called"));
+    ::myLogTrace(MYTRACETAG, wxT("Kill() called"));
     bool ret = false;
     if (IsRunning()) {
-        ::wxLogTrace(MYTRACETAG, wxT("Kill(): actually send sig"));
+        ::myLogTrace(MYTRACETAG, wxT("Kill(): actually send sig"));
         switch (wxProcess::Kill(GetPid(), wxSIGKILL)) {
             case wxKILL_OK:
                 Detach();
