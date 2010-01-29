@@ -512,6 +512,9 @@ MySession::sGetSessionStatus()
         case Running:
             return _("running");
             break;
+        case Unknown:
+            return _("unknown");
+            break;
     }
     return _("unknown");
 }
@@ -525,6 +528,9 @@ MySession::sGetSessionType()
             break;
         case Client:
             return _("Client");
+            break;
+        case None:
+            return _("Unknown");
             break;
     }
     return _("Unknown");

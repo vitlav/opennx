@@ -367,7 +367,7 @@ opennxApp::setSelfPath()
     wxString tmp;
     wxFileName fn;
 #define NotImplemented
-#if defined(__WXMSW__) || defined(__WXMAC__) || defined(__LINUX__)
+#if defined(__WXMSW__) || defined(__WXMAC__) || defined(__LINUX__) || defined(__FREEBSD__)
     // On these platforms, wxAppTraits::GetExecutablePath() returns
     // the *actual* path of the running executable, regardless of
     // where it is installed.
