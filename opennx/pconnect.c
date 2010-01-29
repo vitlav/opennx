@@ -155,6 +155,10 @@
  *
  ***********************************************************************/
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -196,35 +200,38 @@
 #endif /* !_WIN32 */
 
 #ifndef LINT
-static char *vcid = "$Id$";
+ static char *vcid = "$Id$";
 #endif
 
+#ifndef HAVE_SOCKLEN_T
+  typedef unsigned int socklen_t;
+#endif
 
-/* available authentication types */
+ /* available authentication types */
 #define SOCKS_ALLOW_NO_AUTH
 #define SOCKS_ALLOW_USERPASS_AUTH
 
-/* consider Borland C */
+ /* consider Borland C */
 #ifdef __BORLANDC__
 #define _kbhit kbhit
 #endif
 
-/* help message */
-static char *usage =
-"usage: %s [-dnhs45] [-R resolve] \n"
-"          [-H proxy-server[:port]] [-S [user@]socks-server[:port]] \n"
-"          host port\n";
+ /* help message */
+ static char *usage =
+ "usage: %s [-dnhs45] [-R resolve] \n"
+ "          [-H proxy-server[:port]] [-S [user@]socks-server[:port]] \n"
+ "          host port\n";
 
-/* name of this program */
-char *progname = NULL;
+ /* name of this program */
+ char *progname = NULL;
 
-/* options */
-int f_debug = 0;
+ /* options */
+ int f_debug = 0;
 
-/* local input type */
+ /* local input type */
 #define LOCAL_STDIO	0
 #define LOCAL_SOCKET	1
-char *local_type_names[] = { "stdio", "socket" };
+ char *local_type_names[] = { "stdio", "socket" };
 int   local_type = LOCAL_STDIO;
 u_short local_port = 0;
 
@@ -341,31 +348,31 @@ int proxy_auth_type = PROXY_AUTH_NONE;
 #define PUT_BYTE(ptr,data) (*(unsigned char*)ptr = data)
 
 /* debug message output */
-void
+    void
 debug( const char *fmt, ... )
 {
     va_list args;
     if ( f_debug ) {
-	va_start( args, fmt );
-	fprintf(stderr, "DEBUG: ");
-	vfprintf( stderr, fmt, args );
-	va_end( args );
+        va_start( args, fmt );
+        fprintf(stderr, "DEBUG: ");
+        vfprintf( stderr, fmt, args );
+        va_end( args );
     }
 }
 
-void
+    void
 debug_( const char *fmt, ... )			/* without prefix */
 {
     va_list args;
     if ( f_debug ) {
-	va_start( args, fmt );
-	vfprintf( stderr, fmt, args );
-	va_end( args );
+        va_start( args, fmt );
+        vfprintf( stderr, fmt, args );
+        va_end( args );
     }
 }
 
 /* error message output */
-void
+    void
 error( const char *fmt, ... )
 {
     va_list args;
@@ -375,7 +382,7 @@ error( const char *fmt, ... )
     va_end( args );
 }
 
-void
+    void
 fatal( const char *fmt, ... )
 {
     va_list args;
@@ -386,16 +393,17 @@ fatal( const char *fmt, ... )
     exit (EXIT_FAILURE);
 }
 
+    void
 downcase( char *buf )
 {
     while ( *buf ) {
-	if ( isupper(*buf) )
-	    *buf += 'a'-'A';
-	buf++;
+        if ( isupper(*buf) )
+            *buf += 'a'-'A';
+        buf++;
     }
 }
 
-int
+    int
 lookup_resolve( const char *str )
 {
     char *buf = strdup( str );
@@ -403,25 +411,25 @@ lookup_resolve( const char *str )
 
     downcase( buf );
     if ( strcmp( buf, "both" ) == 0 )
-	ret = RESOLVE_BOTH;
+        ret = RESOLVE_BOTH;
     else if ( strcmp( buf, "remote" ) == 0 )
-	ret = RESOLVE_REMOTE;
+        ret = RESOLVE_REMOTE;
     else if ( strcmp( buf, "local" ) == 0 )
-	ret = RESOLVE_LOCAL;
+        ret = RESOLVE_LOCAL;
     else if ( strspn(buf, "0123456789.") == strlen(buf) ) {
 #if defined(_WIN32) || defined(__CYGWIN32__)
-	fatal("Sorry, you can't specify name resolve host with -R option on Win32 environment.");
+        fatal("Sorry, you can't specify name resolve host with -R option on Win32 environment.");
 #endif /* _WIN32 || __CYGWIN32__ */
-	ret = RESOLVE_LOCAL;			/* this case is also 'local' */
-	socks_ns.s_addr = inet_addr(buf);
+        ret = RESOLVE_LOCAL;			/* this case is also 'local' */
+        socks_ns.s_addr = inet_addr(buf);
     }
     else
-	ret = RESOLVE_UNKNOWN;
+        ret = RESOLVE_UNKNOWN;
     free(buf);
     return ret;
 }
 
-char *
+    char *
 getusername(void)
 {
 #ifdef _WIN32
@@ -433,7 +441,7 @@ getusername(void)
 #else  /* not _WIN32 */
     struct passwd *pw = getpwuid(getuid());
     if ( pw == NULL )
-	fatal("getpwuid() failed for uid: %d\n", getuid());
+        fatal("getpwuid() failed for uid: %d\n", getuid());
     return pw->pw_name;
 #endif /* not _WIN32 */
 }
@@ -444,13 +452,13 @@ getusername(void)
 int intr_flag = 0;
 
 #ifndef _WIN32
-void
+    void
 intr_handler(int sig)
 {
     intr_flag = 1;
 }
 
-void
+    void
 tty_change_echo(int fd, int enable)
 {
     static struct termios ntio, otio;		/* new/old termios */
@@ -459,83 +467,84 @@ tty_change_echo(int fd, int enable)
     static int disabled = 0;
 
     if ( disabled && enable ) {
-	/* enable echo */
-	tcsetattr(fd, TCSANOW, &otio);
-	disabled = 0;
-	/* resotore sigaction */
-	sigprocmask(SIG_SETMASK, &oset, NULL);
-	sigaction(SIGINT, &osa, NULL);
-	if ( intr_flag != 0 ) {
-	    /* re-generate signal  */
-	    kill(getpid(), SIGINT);
-	    sigemptyset(&nset);
-	    sigsuspend(&nset);
-	    intr_flag = 0;
-	}
+        /* enable echo */
+        tcsetattr(fd, TCSANOW, &otio);
+        disabled = 0;
+        /* resotore sigaction */
+        sigprocmask(SIG_SETMASK, &oset, NULL);
+        sigaction(SIGINT, &osa, NULL);
+        if ( intr_flag != 0 ) {
+            /* re-generate signal  */
+            kill(getpid(), SIGINT);
+            sigemptyset(&nset);
+            sigsuspend(&nset);
+            intr_flag = 0;
+        }
     } else if (!disabled && !enable) {
-	/* set SIGINTR handler and break syscall on singal */
-	sigemptyset(&nset);
-	sigaddset(&nset, SIGTSTP);
-	sigprocmask(SIG_BLOCK, &nset, &oset);
-	intr_flag = 0;
-	memset(&nsa, 0, sizeof(nsa));
-	nsa.sa_handler = intr_handler;
-	sigaction(SIGINT, &nsa, &osa);
-	/* disable echo */
-	if (tcgetattr(fd, &otio) == 0 && (otio.c_lflag & ECHO)) {
-	    disabled = 1;
-	    ntio = otio;
-	    ntio.c_lflag &= ~(ECHO | ECHOE | ECHOK | ECHONL);
-	    (void) tcsetattr(fd, TCSANOW, &ntio);
-	}
+        /* set SIGINTR handler and break syscall on singal */
+        sigemptyset(&nset);
+        sigaddset(&nset, SIGTSTP);
+        sigprocmask(SIG_BLOCK, &nset, &oset);
+        intr_flag = 0;
+        memset(&nsa, 0, sizeof(nsa));
+        nsa.sa_handler = intr_handler;
+        sigaction(SIGINT, &nsa, &osa);
+        /* disable echo */
+        if (tcgetattr(fd, &otio) == 0 && (otio.c_lflag & ECHO)) {
+            disabled = 1;
+            ntio = otio;
+            ntio.c_lflag &= ~(ECHO | ECHOE | ECHOK | ECHONL);
+            (void) tcsetattr(fd, TCSANOW, &ntio);
+        }
     }
-	
+
     return;
 }
 
 #define TTY_NAME "/dev/tty"
-int
+    int
 tty_readpass( const char *prompt, char *buf, size_t size )
 {
-    int n, tty, ret, i = 0;
-    char ch = 0;
+    int tty, ret;
 
     tty = open(TTY_NAME, O_RDWR);
     if ( tty < 0 ) {
-	error("Unable to open %s\n", TTY_NAME);
-	return -1;				/* can't open tty */
+        error("Unable to open %s\n", TTY_NAME);
+        return -1;				/* can't open tty */
     }
     if ( size <= 0 )
-	return -1;				/* no room */
-    write(tty, prompt, strlen(prompt));
+        return -1;				/* no room */
+    if (write(tty, prompt, strlen(prompt)) != strlen(prompt))
+        return -1;
     buf[0] = '\0';
     tty_change_echo(tty, 0);			/* disable echo */
     ret = read(tty,buf, size-1);
     tty_change_echo(tty, 1);			/* restore */
-    write(tty, "\n", 1);			/* new line */
+    if (write(tty, "\n", 1) != 1)			/* new line */
+        return -1;
     close(tty);
     if ( strchr(buf,'\n') == NULL  )
-	return -1;
+        return -1;
     if ( 0 < ret )
-	buf[ret] = '\0';
+        buf[ret] = '\0';
     return ret;
 }
 
 #else  /* _WIN32 */
 
-BOOL __stdcall
+    BOOL __stdcall
 w32_intr_handler(DWORD dwCtrlType)
 {
     if ( dwCtrlType == CTRL_C_EVENT ) {
-	intr_flag = 1;
-	return TRUE;
+        intr_flag = 1;
+        return TRUE;
     } else {
-	return FALSE;
+        return FALSE;
     }
 }
 
 #define tty_readpass w32_tty_readpass
-int
+    int
 w32_tty_readpass( const char *prompt, char *buf, size_t size )
 {
     HANDLE in  = GetStdHandle(STD_INPUT_HANDLE);
@@ -551,12 +560,28 @@ w32_tty_readpass( const char *prompt, char *buf, size_t size )
     SetConsoleMode(in, mode);			/* enable echo */
     SetConsoleCtrlHandler( w32_intr_handler, FALSE ); /* remove handler */
     if ( intr_flag )
-	GenerateConsoleCtrlEvent(CTRL_C_EVENT, 0); /* re-signal */
+        GenerateConsoleCtrlEvent(CTRL_C_EVENT, 0); /* re-signal */
     puts("");
     return ret;
 }
 
 #endif /* _WIN32 */
+
+/* expect
+   check STR is begin with substr with case-ignored comparison.
+   Return 1 if matched, otherwise 0.
+   */
+    int
+expect( char *str, char *substr)
+{
+    int len = strlen(substr);
+    while ( 0 < len-- ) {
+        if ( toupper(*str) != toupper(*substr) )
+            return 0;				/* not matched */
+        str++, substr++;
+    }
+    return 1;			/* good, matched */
+}
 
 /*** network operations ***/
 
@@ -570,325 +595,323 @@ w32_tty_readpass( const char *prompt, char *buf, size_t size )
    use 1080 for METHOD_SOCKS method.
    Username is also able to given by 3rd. format.
    2nd argument SPEC can be NULL. if NULL, use environment variable.
- */
-int
+   */
+    int
 set_relay( int method, char *spec )
 {
     char *buf, *sep, *resolve;
-    
+
     relay_method = method;
 
     switch ( method ) {
-    case METHOD_DIRECT:
-	return -1;				/* nothing to do */
-	
-    case METHOD_SOCKS:
-	if ( spec == NULL ) {
-	    switch ( socks_version ) {
-	    case 5:
-		spec = getenv(ENV_SOCKS5_SERVER);
-		break;
-	    case 4:
-		spec = getenv(ENV_SOCKS4_SERVER);
-		break;
-	    }
-	}
-	if ( spec == NULL )
-	    spec = getenv(ENV_SOCKS_SERVER);
-	
-	if ( spec == NULL )
-	    fatal("Failed to determine SOCKS server.\n");
-	relay_port = 1080;			/* set default first */
+        case METHOD_DIRECT:
+            return -1;				/* nothing to do */
 
-	/* determine resolve method */
-	if ( socks_resolve == RESOLVE_UNKNOWN ) {
-	    if ( ((socks_version == 5) &&
-		  ((resolve = getenv(ENV_SOCKS5_RESOLVE)) != NULL)) ||
-		 ((socks_version == 4) &&
-		  ((resolve = getenv(ENV_SOCKS4_RESOLVE)) != NULL)) ||
-		 ((resolve = getenv(ENV_SOCKS_RESOLVE)) != NULL) ) {
-		socks_resolve = lookup_resolve( resolve );
-		if ( socks_resolve == RESOLVE_UNKNOWN )
-		    fatal("Invalid resolve method: %s\n", resolve);
-	    } else {
-		/* default */
-		if ( socks_version == 5 )
-		    socks_resolve = RESOLVE_REMOTE;
-		else
-		    socks_resolve = RESOLVE_LOCAL;
-	    }
-	}
-	break;
-	
-    case METHOD_HTTP:
-	if ( spec == NULL )
-	    spec = getenv(ENV_HTTP_PROXY);
-	if ( spec == NULL )
-	    fatal("You must specify http proxy server\n");
-	relay_port = 80;			/* set default first */
-	break;
+        case METHOD_SOCKS:
+            if ( spec == NULL ) {
+                switch ( socks_version ) {
+                    case 5:
+                        spec = getenv(ENV_SOCKS5_SERVER);
+                        break;
+                    case 4:
+                        spec = getenv(ENV_SOCKS4_SERVER);
+                        break;
+                }
+            }
+            if ( spec == NULL )
+                spec = getenv(ENV_SOCKS_SERVER);
+
+            if ( spec == NULL )
+                fatal("Failed to determine SOCKS server.\n");
+            relay_port = 1080;			/* set default first */
+
+            /* determine resolve method */
+            if ( socks_resolve == RESOLVE_UNKNOWN ) {
+                if ( ((socks_version == 5) &&
+                            ((resolve = getenv(ENV_SOCKS5_RESOLVE)) != NULL)) ||
+                        ((socks_version == 4) &&
+                         ((resolve = getenv(ENV_SOCKS4_RESOLVE)) != NULL)) ||
+                        ((resolve = getenv(ENV_SOCKS_RESOLVE)) != NULL) ) {
+                    socks_resolve = lookup_resolve( resolve );
+                    if ( socks_resolve == RESOLVE_UNKNOWN )
+                        fatal("Invalid resolve method: %s\n", resolve);
+                } else {
+                    /* default */
+                    if ( socks_version == 5 )
+                        socks_resolve = RESOLVE_REMOTE;
+                    else
+                        socks_resolve = RESOLVE_LOCAL;
+                }
+            }
+            break;
+
+        case METHOD_HTTP:
+            if ( spec == NULL )
+                spec = getenv(ENV_HTTP_PROXY);
+            if ( spec == NULL )
+                fatal("You must specify http proxy server\n");
+            relay_port = 80;			/* set default first */
+            break;
     }
-    
+
     if (expect( spec, HTTP_PROXY_PREFIX)) {
-	/* URL format like: "http://server:port/" */
-	/* extract server:port part */
-	int len;
-	buf = strdup( spec + strlen(HTTP_PROXY_PREFIX));
-	buf[strcspn(buf, "/")] = '\0';
+        /* URL format like: "http://server:port/" */
+        /* extract server:port part */
+        buf = strdup( spec + strlen(HTTP_PROXY_PREFIX));
+        buf[strcspn(buf, "/")] = '\0';
     } else {
-	/* assume spec is aready "server:port" format */
-	buf = strdup( spec );
+        /* assume spec is aready "server:port" format */
+        buf = strdup( spec );
     }
     spec = buf;
-    
+
     /* check username in spec */ 
     sep = strchr( spec, '@' );
     if ( sep != NULL ) {
-	*sep = '\0';
-	relay_user = strdup( spec );
-	spec = sep +1;
+        *sep = '\0';
+        relay_user = strdup( spec );
+        spec = sep +1;
     }
     if ( (relay_user == NULL) &&
-	 ((relay_user = getenv("LOGNAME")) == NULL) &&
-	 ((relay_user = getenv("USER")) == NULL) &&
-	 ((relay_user = getusername()) == NULL)) {
-	/* get username from system */
-	debug("Cannot determine your username.");
+            ((relay_user = getenv("LOGNAME")) == NULL) &&
+            ((relay_user = getenv("USER")) == NULL) &&
+            ((relay_user = getusername()) == NULL)) {
+        /* get username from system */
+        debug("Cannot determine your username.");
     }
-    
+
     /* split out hostname and port number from spec */
     sep = strchr(spec,':');
     if ( sep == NULL ) {
-	/* hostname only, port is already set as default */
-	relay_host = strdup( spec );
+        /* hostname only, port is already set as default */
+        relay_host = strdup( spec );
     } else {
-	/* hostname and port */
-	relay_port = atoi(sep+1);
-	*sep = '\0';
-	relay_host = strdup( spec );
+        /* hostname and port */
+        relay_port = atoi(sep+1);
+        *sep = '\0';
+        relay_host = strdup( spec );
     }
     free(buf);
     return 0;
 }
 
 
-u_short
+    u_short
 resolve_port( const char *service )
 {
     int port;
     if ( service[strspn (service, "0123456789")] == '\0'  ) {
-	/* all digits, port number */
-	port = atoi(service);
+        /* all digits, port number */
+        port = atoi(service);
     } else {
-	/* treat as service name */
-	struct servent *ent;
-	ent = getservbyname( service, NULL );
-	if ( ent == NULL ) {
-	    debug("Unknown service, '%s'\n", service);
-	    port = 0;
-	} else {
-	    port = ntohs(ent->s_port);
-	    debug("service: %s => %d\n", service, port);
-	}
+        /* treat as service name */
+        struct servent *ent;
+        ent = getservbyname( service, NULL );
+        if ( ent == NULL ) {
+            debug("Unknown service, '%s'\n", service);
+            port = 0;
+        } else {
+            port = ntohs(ent->s_port);
+            debug("service: %s => %d\n", service, port);
+        }
     }
     return (u_short)port;
 }
 
-int
+    int
 getarg( int argc, char **argv )
 {
     int err = 0;
     char *ptr, *server = (char*)NULL;
-    int port, method = METHOD_DIRECT;
-    
+    int method = METHOD_DIRECT;
+
     progname = *argv;
     argc--, argv++;
 
     /* check optinos */
     while ( (0 < argc) && (**argv == '-') ) {
-	ptr = *argv + 1;
-	while ( *ptr ) {
-	    switch ( *ptr ) {
-	    case 's':				/* use SOCKS */
-		method = METHOD_SOCKS;
-		break;
+        ptr = *argv + 1;
+        while ( *ptr ) {
+            switch ( *ptr ) {
+                case 's':				/* use SOCKS */
+                    method = METHOD_SOCKS;
+                    break;
 
-	    case 'n':				/* no proxy */
-		method = METHOD_DIRECT;
-		break;
-		
-	    case 'h':				/* use http-proxy */
-		method = METHOD_HTTP;
-		break;
-	    
-	    case 'S':				/* specify SOCKS server */
-		if ( 0 < argc ) {
-		    argv++, argc--;
-		    method = METHOD_SOCKS;
-		    server = *argv;
-		} else {
-		    error("option '-%c' needs argument.\n", *ptr);
-		    err++;
-		}
-		break;
-	    
-	    case 'H':				/* specify http-proxy server */
-		if ( 0 < argc ) {
-		    argv++, argc--;
-		    method = METHOD_HTTP;
-		    server = *argv;
-		} else {
-		    error("option '-%c' needs argument.\n", *ptr);
-		    err++;
-		}
-		break;
-		
-	    case 'P':
-		/* destination port number */
-		if ( 0 < argc ) {
-		    argv++, argc--;
-		    dest_port = resolve_port(*argv);
-		} else {
-		    error("option '-%c' needs argument.\n", *ptr);
-		    err++;
-		}
-		break;
+                case 'n':				/* no proxy */
+                    method = METHOD_DIRECT;
+                    break;
 
-	    case 'p':                          /* specify port to forward */
-	        if ( 0 < argc ) {
-		    argv++, argc--;
-		    local_type = LOCAL_SOCKET;
-		    local_port = resolve_port(*argv);
-		} else {
-		    error("option '-%c' needs argument.\n", *ptr);
-		    err++;
-		}
-		break;
-		
-	    case '4':
-		socks_version = 4;
-		break;
-		
-	    case '5':
-		socks_version = 5;
-		break;
+                case 'h':				/* use http-proxy */
+                    method = METHOD_HTTP;
+                    break;
 
-	    case 'R':				/* specify resolve method */
-		if ( 0 < argc ) {
-		    argv++, argc--;
-		    socks_resolve = lookup_resolve( *argv );
-		} else {
-		    error("option '-%c' needs argument.\n", *ptr);
-		    err++;
-		}
-		break;
-		
-	    case 'd':				/* debug mode */
-		f_debug++;
-		break;
-	    
-	    default:
-		error("unknown option '-%c'\n", *ptr);
-		err++;
-	    }
-	    ptr++;
-	}
-	argc--, argv++;
+                case 'S':				/* specify SOCKS server */
+                    if ( 0 < argc ) {
+                        argv++, argc--;
+                        method = METHOD_SOCKS;
+                        server = *argv;
+                    } else {
+                        error("option '-%c' needs argument.\n", *ptr);
+                        err++;
+                    }
+                    break;
+
+                case 'H':				/* specify http-proxy server */
+                    if ( 0 < argc ) {
+                        argv++, argc--;
+                        method = METHOD_HTTP;
+                        server = *argv;
+                    } else {
+                        error("option '-%c' needs argument.\n", *ptr);
+                        err++;
+                    }
+                    break;
+
+                case 'P':
+                    /* destination port number */
+                    if ( 0 < argc ) {
+                        argv++, argc--;
+                        dest_port = resolve_port(*argv);
+                    } else {
+                        error("option '-%c' needs argument.\n", *ptr);
+                        err++;
+                    }
+                    break;
+
+                case 'p':                          /* specify port to forward */
+                    if ( 0 < argc ) {
+                        argv++, argc--;
+                        local_type = LOCAL_SOCKET;
+                        local_port = resolve_port(*argv);
+                    } else {
+                        error("option '-%c' needs argument.\n", *ptr);
+                        err++;
+                    }
+                    break;
+
+                case '4':
+                    socks_version = 4;
+                    break;
+
+                case '5':
+                    socks_version = 5;
+                    break;
+
+                case 'R':				/* specify resolve method */
+                    if ( 0 < argc ) {
+                        argv++, argc--;
+                        socks_resolve = lookup_resolve( *argv );
+                    } else {
+                        error("option '-%c' needs argument.\n", *ptr);
+                        err++;
+                    }
+                    break;
+
+                case 'd':				/* debug mode */
+                    f_debug++;
+                    break;
+
+                default:
+                    error("unknown option '-%c'\n", *ptr);
+                    err++;
+            }
+            ptr++;
+        }
+        argc--, argv++;
     }
-    
+
     /* check error */
     if ( 0 < err )
-	goto quit;
-	
+        goto quit;
+
     set_relay( method, server );
 
     /* check destination HOST (MUST) */
     if ( argc == 0  ) {
-	error( "You must specify hostname.\n");
-	err++;
-	goto quit;
+        error( "You must specify hostname.\n");
+        err++;
+        goto quit;
     }
     dest_host = argv[0];
     /* decide port or service name from programname or argument */
     if ( ((ptr=strrchr( progname, '/' )) != NULL) ||
-	 ((ptr=strchr( progname, '\\')) != NULL) )
-	ptr++;
+            ((ptr=strchr( progname, '\\')) != NULL) )
+        ptr++;
     else
-	ptr = progname;
+        ptr = progname;
     if ( dest_port == 0 ) {
-	/* accept only if -P is not specified. */
-	if ( 1 < argc ) {
-	    /* get port number from argument (prior to progname) */
-	    /* NOTE: This way is for cvs ext method. */
-	    dest_port = resolve_port(argv[1]);
-	} else if ( strncmp( ptr, "connect-", 8) == 0 ) {
-	    /* decide port number from program name */
-	    char *str = strdup( ptr+8 );
-	    str[strcspn( str, "." )] = '\0';
-	    dest_port = resolve_port(str);
-	    free(str);
-	}
+        /* accept only if -P is not specified. */
+        if ( 1 < argc ) {
+            /* get port number from argument (prior to progname) */
+            /* NOTE: This way is for cvs ext method. */
+            dest_port = resolve_port(argv[1]);
+        } else if ( strncmp( ptr, "connect-", 8) == 0 ) {
+            /* decide port number from program name */
+            char *str = strdup( ptr+8 );
+            str[strcspn( str, "." )] = '\0';
+            dest_port = resolve_port(str);
+            free(str);
+        }
     }
     /* check port number */
     if ( dest_port <= 0 ) {
-	error( "You must specify destination port correctly.\n");
-	err++;
-	goto quit;
+        error( "You must specify destination port correctly.\n");
+        err++;
+        goto quit;
     }
     if ( (relay_method != METHOD_DIRECT) && (relay_port <= 0) ) {
-	error("Invalid relay port: %d\n", dest_port);
-	err++;
-	goto quit;
+        error("Invalid relay port: %d\n", dest_port);
+        err++;
+        goto quit;
     }
 
 quit:
     /* report for debugging */
     debug("relay_method = %s (%d)\n",
-	  method_names[relay_method], relay_method);
+            method_names[relay_method], relay_method);
     if ( relay_method != METHOD_DIRECT ) {
-	debug("relay_host=%s\n", relay_host);
-	debug("relay_port=%d\n", relay_port);
-	debug("relay_user=%s\n", relay_user);
+        debug("relay_host=%s\n", relay_host);
+        debug("relay_port=%d\n", relay_port);
+        debug("relay_user=%s\n", relay_user);
     }
     if ( relay_method == METHOD_SOCKS ) {
-	debug("socks_version=%d\n", socks_version);
-	debug("socks_resolve=%s (%d)\n",
-	      resolve_names[socks_resolve], socks_resolve);
+        debug("socks_version=%d\n", socks_version);
+        debug("socks_resolve=%s (%d)\n",
+                resolve_names[socks_resolve], socks_resolve);
     }
     debug("local_type=%s\n", local_type_names[local_type]);
     if ( local_type == LOCAL_SOCKET ) 
-	debug("local_port=%d\n", local_port);
+        debug("local_port=%d\n", local_port);
     debug("dest_host=%s\n", dest_host);
     debug("dest_port=%d\n", dest_port);
     if ( 0 < err ) {
-	fprintf(stderr, usage, progname);
-	exit(1);
+        fprintf(stderr, usage, progname);
+        exit(1);
     }
     return 0;
 }
 
 
 /* TODO: IPv6 */
-SOCKET
+    SOCKET
 open_connection( const char *host, u_short port )
 {
     SOCKET s;
     struct hostent *ent;
-    struct in_addr iaddr;
     struct sockaddr_in saddr;
 
     if ( relay_method == METHOD_DIRECT ) {
-	host = dest_host;
-	port = dest_port;
+        host = dest_host;
+        port = dest_port;
     } else {
-	host = relay_host;
-	port = relay_port;
+        host = relay_host;
+        port = relay_port;
     }
 
     ent = gethostbyname( host );
     if ( ent == NULL ) {
-	error("can't resolve hostname: %s\n", host);
-	return SOCKET_ERROR;
+        error("can't resolve hostname: %s\n", host);
+        return SOCKET_ERROR;
     }
     memcpy( &saddr.sin_addr, ent->h_addr, ent->h_length );
     saddr.sin_family = ent->h_addrtype;
@@ -897,59 +920,59 @@ open_connection( const char *host, u_short port )
     debug("connecting to %s:%u\n", inet_ntoa(saddr.sin_addr), port);
     s = socket( AF_INET, SOCK_STREAM, 0 );
     if ( connect( s, (struct sockaddr *)&saddr, sizeof(saddr))
-	 == SOCKET_ERROR) {
-	debug( "connect() failed.\n");
-	return SOCKET_ERROR;
+            == SOCKET_ERROR) {
+        debug( "connect() failed.\n");
+        return SOCKET_ERROR;
     }
     return s;
 }
 
 int f_report = 1;				/* report flag */
 
-void
+    void
 report_text( char *prefix, char *buf )
 {
     static char work[1024];
     char *tmp;
 
     if ( !f_debug )
-	return;
+        return;
     if ( !f_report )
-	return;					/* don't report */
+        return;					/* don't report */
     debug("%s \"", prefix);
     while ( *buf ) {
-	memset( work, 0, sizeof(work));
-	tmp = work;
-	while ( *buf && ((tmp-work) < sizeof(work)-5) ) {
-	    switch ( *buf ) {
-	    case '\t': *tmp++ = '\\'; *tmp++ = 't'; break;
-	    case '\r': *tmp++ = '\\'; *tmp++ = 'r'; break;
-	    case '\n': *tmp++ = '\\'; *tmp++ = 'n'; break;
-	    case '\\': *tmp++ = '\\'; *tmp++ = '\\'; break;
-	    default:
-		if ( isprint(*buf) ) {
-		    *tmp++ = *buf;
-		} else {
-		    sprintf( tmp, "\\x%02X", (unsigned char)*buf);
-		    tmp += strlen(tmp);
-		}
-	    }
-	    buf++;
-	    *tmp = '\0';
-	}
-	debug_("%s", work);
+        memset( work, 0, sizeof(work));
+        tmp = work;
+        while ( *buf && ((tmp-work) < sizeof(work)-5) ) {
+            switch ( *buf ) {
+                case '\t': *tmp++ = '\\'; *tmp++ = 't'; break;
+                case '\r': *tmp++ = '\\'; *tmp++ = 'r'; break;
+                case '\n': *tmp++ = '\\'; *tmp++ = 'n'; break;
+                case '\\': *tmp++ = '\\'; *tmp++ = '\\'; break;
+                default:
+                           if ( isprint(*buf) ) {
+                               *tmp++ = *buf;
+                           } else {
+                               sprintf( tmp, "\\x%02X", (unsigned char)*buf);
+                               tmp += strlen(tmp);
+                           }
+            }
+            buf++;
+            *tmp = '\0';
+        }
+        debug_("%s", work);
     }
-    
+
     debug_("\"\n");
 }
 
 
-void
+    void
 report_bytes( char *prefix, char *buf, int len )
 {
     int i = 0;
     if ( ! f_debug )
-	return;
+        return;
     while ( 0 < len ) {
         if ((i%16) == 0) {
             if (i) {
@@ -962,16 +985,16 @@ report_bytes( char *prefix, char *buf, int len )
             }
             debug_("\n%s", prefix );
         }
-	debug_(" %02x", *(unsigned char *)buf);
-	buf++;
-	len--;
+        debug_(" %02x", *(unsigned char *)buf);
+        buf++;
+        len--;
         i++;
     }
     debug_("\n");
     return;
 }
 
-int
+    int
 atomic_out( SOCKET s, char *buf, int size )
 {
     int ret, len;
@@ -981,87 +1004,86 @@ atomic_out( SOCKET s, char *buf, int size )
     /* do atomic out */
     ret = 0;
     while ( 0 < size ) {
-	len = send( s, buf+ret, size, 0 );
-	if ( len == -1 ) {
-	    error("Fail to send(), %d\n", socket_errno());
-	    return -1;
-	}
-	ret += len;
-	size -= len;
+        len = send( s, buf+ret, size, 0 );
+        if ( len == -1 ) {
+            error("Fail to send(), %d\n", socket_errno());
+            return -1;
+        }
+        ret += len;
+        size -= len;
     }
     debug("atomic_out()  [%d bytes]\n", ret);
     report_bytes(">>>", buf, ret);
     return ret;
 }
 
-int
+    int
 atomic_in( SOCKET s, char *buf, int size )
 {
     int ret, len;
 
     assert( buf != NULL );
     assert( 0<=size );
-    
+
     /* do atomic in */
     ret = 0;
     while ( 0 < size ) {
-	len = recv( s, buf+ret, size, 0 );
-	if ( len == -1 ) {
-	    error("Fail to send(), %d\n", socket_errno());
-	    return -1;
-	} else if ( len == 0 ) {
-	    /* closed by peer */
-	    error( "Connection closed by peer.\n");
-	    return -1;				/* can't complete atomic in */
-	}
-	ret += len;
-	size -= len;
+        len = recv( s, buf+ret, size, 0 );
+        if ( len == -1 ) {
+            error("Fail to send(), %d\n", socket_errno());
+            return -1;
+        } else if ( len == 0 ) {
+            /* closed by peer */
+            error( "Connection closed by peer.\n");
+            return -1;				/* can't complete atomic in */
+        }
+        ret += len;
+        size -= len;
     }
     debug("atomic_in() [%d bytes]\n", ret);
     report_bytes("<<<", buf, ret);
     return ret;
 }
 
-int
+    int
 line_input( SOCKET s, char *buf, int size )
 {
-    int len = 0;
     char *dst = buf;
-    char ch;
+
     if ( size == 0 )
-	return 0;				/* no error */
+        return 0;				/* no error */
     size--;
     while ( 0 < size ) {
-	switch ( recv( s, dst, 1, 0) ) {	/* recv one-by-one */
-	case SOCKET_ERROR:
-	    error("recv() error\n");
-	    return -1;				/* error */
-	case 0:
-	    size = 0;				/* end of stream */
-	    break;
-	default:
-	    /* continue reading until last 1 char is EOL? */
-	    if ( *dst == '\n' ) {
-		/* finished */
-		size = 0;
-	    } else {
-		/* more... */
-		size--;
-	    }
-	    dst++;
-	}
+        switch ( recv( s, dst, 1, 0) ) {	/* recv one-by-one */
+            case SOCKET_ERROR:
+                error("recv() error\n");
+                return -1;				/* error */
+            case 0:
+                size = 0;				/* end of stream */
+                break;
+            default:
+                /* continue reading until last 1 char is EOL? */
+                if ( *dst == '\n' ) {
+                    /* finished */
+                    size = 0;
+                } else {
+                    /* more... */
+                    size--;
+                }
+                dst++;
+        }
     }
     *dst = '\0';
     report_text( "<<<", buf);
     return 0;
 }
 
-void
+    void
 skip_all_lines (SOCKET s)
 {
     char buf[1024];
     while (0 < recv (s, buf, sizeof(buf), 0))
-	;
+        ;
 }
 
 /* cut_token()
@@ -1069,40 +1091,24 @@ skip_all_lines (SOCKET s)
    Then replace contiguous DELIMS with '\0' for string termination
    and returns next pointer.
    If no next token, return NULL.
-*/
-char *
+   */
+    char *
 cut_token( char *str, char *delim)
 {
     char *ptr = str + strcspn(str, delim);
     char *end = ptr + strspn(ptr, delim);
     if ( ptr == str )
-	return NULL;
+        return NULL;
     while ( ptr < end )
-	*ptr++ = '\0';
+        *ptr++ = '\0';
     return ptr;
-}
-
-/* expect
-   check STR is begin with substr with case-ignored comparison.
-   Return 1 if matched, otherwise 0.
-*/
-int
-expect( char *str, char *substr)
-{
-    int len = strlen(substr);
-    while ( 0 < len-- ) {
-	if ( toupper(*str) != toupper(*substr) )
-	    return 0;				/* not matched */
-	str++, substr++;
-    }
-    return 1;			/* good, matched */
 }
 
 /* readpass()
    password input routine 
    Use ssh-askpass (same mechanism to OpenSSH)
-*/
-char *
+   */
+    char *
 readpass( const char* prompt, ...)
 {
     static char buf[1000];			/* XXX, don't be fix length */
@@ -1113,96 +1119,96 @@ readpass( const char* prompt, ...)
 
     if ( getenv(ENV_SSH_ASKPASS)
 #if !defined(_WIN32) && !defined(__CYGWIN32__)
-	 && getenv("DISPLAY")
+            && getenv("DISPLAY")
 #endif /* not _WIN32 && not __CYGWIN32__ */
-	) {
-	/* use ssh-askpass to get password */
-	FILE *fp;
-	char *askpass = getenv(ENV_SSH_ASKPASS), *cmd;
-	cmd = malloc(strlen(askpass) +1 +1 +strlen(buf) +1);
-	sprintf(cmd, "%s \"%s\"", askpass, buf);
-	fp = popen(cmd, "r");
-	free(cmd);
-	if ( fp == NULL )
-	    return NULL;			/* fail */
-	buf[0] = '\0';
-	if (fgets(buf, sizeof(buf), fp) == NULL)
-	    return NULL;			/* fail */
-	fclose(fp);
+       ) {
+        /* use ssh-askpass to get password */
+        FILE *fp;
+        char *askpass = getenv(ENV_SSH_ASKPASS), *cmd;
+        cmd = malloc(strlen(askpass) +1 +1 +strlen(buf) +1);
+        sprintf(cmd, "%s \"%s\"", askpass, buf);
+        fp = popen(cmd, "r");
+        free(cmd);
+        if ( fp == NULL )
+            return NULL;			/* fail */
+        buf[0] = '\0';
+        if (fgets(buf, sizeof(buf), fp) == NULL)
+            return NULL;			/* fail */
+        fclose(fp);
     } else {
-	tty_readpass( buf, buf, sizeof(buf));
+        tty_readpass( buf, buf, sizeof(buf));
     }
     buf[strcspn(buf, "\r\n")] = '\0';
     return buf;
 }
 
 #ifdef SOCKS_ALLOW_USERPASS_AUTH
-static int
+    static int
 socks5_do_auth_userpass( int s )
 {
     unsigned char buf[1024], *ptr;
     char *pass;
     int len;
-    
+
     /* do User/Password authentication. */
     /* This feature requires username and password from 
        command line argument or environment variable,
        or terminal. */
     if ( relay_user == NULL )
-	fatal("User name cannot be decided.\n");
+        fatal("User name cannot be decided.\n");
 
     /* get password from environment variable if exists. */
     if ((pass=getenv(ENV_SOCKS5_PASSWORD)) == NULL &&
-	(pass=readpass("Enter SOCKS5 password for %s@%s: ",
-		       relay_user, relay_host)) == NULL )
-	fatal("Cannot get password for user: %s\n", relay_user);
+            (pass=readpass("Enter SOCKS5 password for %s@%s: ",
+                           relay_user, relay_host)) == NULL )
+        fatal("Cannot get password for user: %s\n", relay_user);
 
     /* make authentication packet */
     ptr = buf;
     PUT_BYTE( ptr++, 1 );			/* subnegotiation ver.: 1 */
     len = strlen( relay_user );			/* ULEN and UNAME */
     PUT_BYTE( ptr++, len );
-    strcpy( ptr, relay_user );
+    strcpy( (char *)ptr, relay_user );
     ptr += len;
     len = strlen( pass );			/* PLEN and PASSWD */
     PUT_BYTE( ptr++, strlen(pass));
-    strcpy( ptr, pass );
+    strcpy( (char *)ptr, pass );
     ptr += len;
-    
+
     /* send it and get answer */
-    if ( (atomic_out( s, buf, ptr-buf ) != ptr-buf)
-	 || (atomic_in( s, buf, 2 ) != 2) ) {
-	error("I/O error\n");
-	return -1;
+    if ( (atomic_out( s, (char *)buf, ptr-buf ) != ptr-buf)
+            || (atomic_in( s, (char *)buf, 2 ) != 2) ) {
+        error("I/O error\n");
+        return -1;
     }
 
     /* check status */
     if ( buf[1] == 0 )
-	return 0;				/* success */
+        return 0;				/* success */
     else
-	return -1;				/* fail */
+        return -1;				/* fail */
 }
 #endif /* SOCKS_ALLOW_USERPASS_AUTH */
 
-static const char *
+    static const char *
 socks5_getauthname( int auth )
 {
     switch ( auth ) {
-    case SOCKS5_AUTH_REJECT: return "REJECTED";
-    case SOCKS5_AUTH_NOAUTH: return "NO-AUTH";
-    case SOCKS5_AUTH_GSSAPI: return "GSSAPI";
-    case SOCKS5_AUTH_USERPASS: return "USERPASS";
-    case SOCKS5_AUTH_CHAP: return "CHAP";
-    case SOCKS5_AUTH_EAP: return "EAP";
-    case SOCKS5_AUTH_MAF: return "MAF";
-    default: return "(unknown)";
+        case SOCKS5_AUTH_REJECT: return "REJECTED";
+        case SOCKS5_AUTH_NOAUTH: return "NO-AUTH";
+        case SOCKS5_AUTH_GSSAPI: return "GSSAPI";
+        case SOCKS5_AUTH_USERPASS: return "USERPASS";
+        case SOCKS5_AUTH_CHAP: return "CHAP";
+        case SOCKS5_AUTH_EAP: return "EAP";
+        case SOCKS5_AUTH_MAF: return "MAF";
+        default: return "(unknown)";
     }
 }
 
 /* begin SOCKS5 relaying
    And no authentication is supported.
- */
-int
+   */
+    int
 begin_socks5_relay( SOCKET s )
 {
     unsigned char buf[256], *ptr;
@@ -1210,7 +1216,7 @@ begin_socks5_relay( SOCKET s )
     int len, auth_result;    
 
     debug( "begin_socks_relay()\n");
-    
+
     /* request authentication */
     ptr = buf;
     PUT_BYTE( ptr++, 5);			/* SOCKS version (5) */
@@ -1224,42 +1230,42 @@ begin_socks5_relay( SOCKET s )
 #endif /* SOCKS_ALLOW_USERPASS_AUTH */
     PUT_BYTE( ptr++, n_auth);			/* num auth */
     while (0 < n_auth--)
-	PUT_BYTE( ptr++, auth_list[n_auth]);	/* authentications */
-    if ( (atomic_out( s, buf, ptr-buf ) < 0 ) || /* send requst */
-	 (atomic_in( s, buf, 2 ) < 0) ||	/* recv response */
-	 (buf[0] != 5) ||			/* ver5 response */
-	 (buf[1] == 0xFF) )			/* check auth method */
-	return -1;
+        PUT_BYTE( ptr++, auth_list[n_auth]);	/* authentications */
+    if ( (atomic_out( s, (char *)buf, ptr-buf ) < 0 ) || /* send requst */
+            (atomic_in( s, (char *)buf, 2 ) < 0) ||	/* recv response */
+            (buf[0] != 5) ||			/* ver5 response */
+            (buf[1] == 0xFF) )			/* check auth method */
+        return -1;
     auth_method = buf[1];
 
     debug("auth method: %s\n", socks5_getauthname(auth_method));
     auth_result = -1;
     switch ( auth_method ) {
-    case SOCKS5_AUTH_REJECT:
-	error("No acceptable authentication method\n");
-	return -1;				/* fail */
-	
+        case SOCKS5_AUTH_REJECT:
+            error("No acceptable authentication method\n");
+            return -1;				/* fail */
+
 #ifdef SOCKS_ALLOW_NO_AUTH
-    case SOCKS5_AUTH_NOAUTH:
-	/* nothing to do */
-	auth_result = 0;
-	break;
+        case SOCKS5_AUTH_NOAUTH:
+            /* nothing to do */
+            auth_result = 0;
+            break;
 #endif /* SOCKS_ALLOW_NO_AUTH */
 
 #ifdef SOCKS_ALLOW_USERPASS_AUTH
-    case SOCKS5_AUTH_USERPASS:
-	auth_result = socks5_do_auth_userpass(s);
-	break;
+        case SOCKS5_AUTH_USERPASS:
+            auth_result = socks5_do_auth_userpass(s);
+            break;
 #endif /* SOCKS_ALLOW_USERPASS_AUTH */
-	
-    default:
-	error("Unsupported authentication method: %s\n",
-	      socks5_getauthname( auth_method ));
-	return -1;				/* fail */
+
+        default:
+            error("Unsupported authentication method: %s\n",
+                    socks5_getauthname( auth_method ));
+            return -1;				/* fail */
     }
     if ( auth_result != 0 ) {
-	error("Authentication faield.\n");
-	return -1;
+        error("Authentication faield.\n");
+        return -1;
     }
     /* request to connect */
     ptr = buf;
@@ -1267,38 +1273,38 @@ begin_socks5_relay( SOCKET s )
     PUT_BYTE( ptr++, 1);			/* CMD: CONNECT */
     PUT_BYTE( ptr++, 0);			/* FLG: 0 */
     if ( dest_addr.s_addr == 0 ) {
-	/* resolved by SOCKS server */
-	PUT_BYTE( ptr++, 3);			/* ATYP: DOMAINNAME */
-	len = strlen(dest_host);
-	PUT_BYTE( ptr++, len);			/* DST.ADDR (len) */
-	memcpy( ptr, dest_host, len );		/* (hostname) */
-	ptr += len;
+        /* resolved by SOCKS server */
+        PUT_BYTE( ptr++, 3);			/* ATYP: DOMAINNAME */
+        len = strlen(dest_host);
+        PUT_BYTE( ptr++, len);			/* DST.ADDR (len) */
+        memcpy( ptr, dest_host, len );		/* (hostname) */
+        ptr += len;
     } else {
-	/* resolved localy */
-	PUT_BYTE( ptr++, 1 );			/* ATYP: IPv4 */
-	memcpy( ptr, &dest_addr.s_addr, sizeof(dest_addr.s_addr));
-	ptr += sizeof(dest_addr.s_addr);
+        /* resolved localy */
+        PUT_BYTE( ptr++, 1 );			/* ATYP: IPv4 */
+        memcpy( ptr, &dest_addr.s_addr, sizeof(dest_addr.s_addr));
+        ptr += sizeof(dest_addr.s_addr);
     }
     PUT_BYTE( ptr++, dest_port>>8);	/* DST.PORT */
     PUT_BYTE( ptr++, dest_port&0xFF);
-    if ( (atomic_out( s, buf, ptr-buf) < 0) ||	/* send request */
-	 (atomic_in( s, buf, 4 ) < 0) ||	/* recv response */
-	 (buf[1] != SOCKS5_REP_SUCCEEDED) )	/* check reply code */
-	return -1;
+    if ( (atomic_out( s, (char *)buf, ptr-buf) < 0) ||	/* send request */
+            (atomic_in( s, (char *)buf, 4 ) < 0) ||	/* recv response */
+            (buf[1] != SOCKS5_REP_SUCCEEDED) )	/* check reply code */
+        return -1;
     ptr = buf + 4;
     switch ( buf[3] ) {				/* case by ATYP */
-    case 1:					/* IP v4 ADDR*/
-	atomic_in( s, ptr, 4+2 );		/* recv IPv4 addr and port */
-	break;
-    case 3:					/* DOMAINNAME */
-	atomic_in( s, ptr, 1 );			/* recv name and port */
-	atomic_in( s, ptr+1, *(unsigned char*)ptr + 2);
-	break;
-    case 4:					/* IP v6 ADDR */
-	atomic_in( s, ptr, 16+2 );		/* recv IPv6 addr and port */
-	break;
+        case 1:					/* IP v4 ADDR*/
+            atomic_in( s, (char *)ptr, 4+2 );		/* recv IPv4 addr and port */
+            break;
+        case 3:					/* DOMAINNAME */
+            atomic_in( s, (char *)ptr, 1 );			/* recv name and port */
+            atomic_in( s, (char *)ptr+1, *(unsigned char*)ptr + 2);
+            break;
+        case 4:					/* IP v6 ADDR */
+            atomic_in( s, (char *)ptr, 16+2 );		/* recv IPv6 addr and port */
+            break;
     }
-    
+
     /* Conguraturation, connected via SOCKS5 server! */
     debug("connected.\n");
     return 0;
@@ -1323,30 +1329,27 @@ begin_socks5_relay( SOCKET s )
    SOCKS4 protocol and authentication of SOCKS5 protocol
    requires user name on connect request.
    User name is determined by following method.
-   
+
    1. If server spec has user@hostname:port format then
-      user part is used for this SOCKS server.
-      
+   user part is used for this SOCKS server.
+
    2. Get user name from environment variable LOGNAME, USER
-      (in this order).
+   (in this order).
 
 */
-int
+    int
 begin_socks4_relay( SOCKET s )
 {
     unsigned char buf[256], *ptr;
-    unsigned char n_auth = 0; unsigned char auth_list[10], auth_method;
-    struct in_addr addr;
-    int len;
 
     debug( "begin_socks_relay()\n");
-    
+
     /* make connect request packet 
        protocol v4:
-         VN:1, CD:1, PORT:2, ADDR:4, USER:n, NULL:1
-       protocol v4a:
-         VN:1, CD:1, PORT:2, DUMMY:4, USER:n, NULL:1, HOSTNAME:n, NULL:1
-    */
+VN:1, CD:1, PORT:2, ADDR:4, USER:n, NULL:1
+protocol v4a:
+VN:1, CD:1, PORT:2, DUMMY:4, USER:n, NULL:1, HOSTNAME:n, NULL:1
+*/
     ptr = buf;
     PUT_BYTE( ptr++, 4);			/* protocol version (4) */
     PUT_BYTE( ptr++, 1);			/* CONNECT command */
@@ -1356,41 +1359,41 @@ begin_socks4_relay( SOCKET s )
     memcpy(ptr, &dest_addr.s_addr, sizeof(dest_addr.s_addr));
     ptr += sizeof(dest_addr.s_addr);
     if ( dest_addr.s_addr == 0 )
-	*(ptr-1) = 1;				/* fake, protocol 4a */
+        *(ptr-1) = 1;				/* fake, protocol 4a */
     /* username */
-    strcpy( ptr, relay_user );
+    strcpy( (char *)ptr, relay_user );
     ptr += strlen( relay_user ) +1;
     /* destination host name (for protocol 4a) */
     if ( (socks_version == 4) && (dest_addr.s_addr == 0)) {
-	strcpy( ptr, dest_host );
-	ptr += strlen( dest_host ) +1;
+        strcpy( (char *)ptr, dest_host );
+        ptr += strlen( dest_host ) +1;
     }
     /* send command and get response
        response is: VN:1, CD:1, PORT:2, ADDR:4 */
-    if ( (atomic_out( s, buf, ptr-buf) < 0) ||	/* send request */
-	 (atomic_in( s, buf, 8 ) < 0) ||	/* recv response */
-	 (buf[1] != SOCKS4_REP_SUCCEEDED) )	/* check reply code */
-	return -1;				/* failed */
-    
+    if ( (atomic_out( s, (char *)buf, ptr-buf) < 0) ||	/* send request */
+            (atomic_in( s, (char *)buf, 8 ) < 0) ||	/* recv response */
+            (buf[1] != SOCKS4_REP_SUCCEEDED) )	/* check reply code */
+        return -1;				/* failed */
+
     /* Conguraturation, connected via SOCKS4 server! */
     debug("connected.\n");
     return 0;
 }
 
-int
+    int
 sendf(SOCKET s, const char *fmt,...)
 {
     static char buf[10240];			/* xxx, enough? */
-    
+
     va_list args;
     va_start( args, fmt );
     vsprintf( buf, fmt, args );
     va_end( args );
-    
+
     report_text(">>>", buf);
     if ( send(s, buf, strlen(buf), 0) == SOCKET_ERROR ) {
-	debug("failed to send http request. errno=%d\n", socket_errno());
-	return -1;
+        debug("failed to send http request. errno=%d\n", socket_errno());
+        return -1;
     }
     return 0;
 }
@@ -1398,7 +1401,7 @@ sendf(SOCKET s, const char *fmt,...)
 const char *base64_table =
 "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-char *
+    char *
 make_base64_string(const char *str)
 {
     static char *buf;
@@ -1411,36 +1414,36 @@ make_base64_string(const char *str)
     buf = malloc(dst_len+1);
     bits = data = 0;
     src = (unsigned char *)str;
-    dst = (unsigned char *)buf;
+    dst = buf;
     while ( dst_len-- ) {
-	if ( bits < 6 ) {
-	    data = (data << 8) | *src;
-	    bits += 8;
-	    if ( *src != 0 )
-		src++;
-	}
-	*dst++ = base64_table[0x3F & (data >> bits-6)];
-	bits -= 6;
+        if ( bits < 6 ) {
+            data = (data << 8) | *src;
+            bits += 8;
+            if ( *src != 0 )
+                src++;
+        }
+        *dst++ = base64_table[0x3F & (data >> (bits-6))];
+        bits -= 6;
     }
     *dst = '\0';
     /* fix-up tail padding */
     switch ( src_len%3 ) {
-    case 1:
-	*--dst = '=';
-    case 2:
-	*--dst = '=';
+        case 1:
+            *--dst = '=';
+        case 2:
+            *--dst = '=';
     }
     return buf;
 }
 
 
-int
+    int
 basic_auth( SOCKET s, const char *user, const char *pass )
 {
     char *userpass;
     char *cred;
     int len, ret;
-    
+
     len = strlen(user)+strlen(pass)+1;
     userpass = malloc(len+1);
     sprintf(userpass,"%s:%s", user, pass);
@@ -1451,10 +1454,10 @@ basic_auth( SOCKET s, const char *user, const char *pass )
     ret = sendf(s, "Proxy-Authorization: Basic %s\r\n", cred);
     f_report = 1;
     report_text(">>>", "Proxy-Authorization: Basic xxxxx\r\n");
-    
+
     memset(cred, 0, strlen(cred));
     free(cred);
-    
+
     return ret;
 }
 
@@ -1462,121 +1465,118 @@ basic_auth( SOCKET s, const char *user, const char *pass )
    Directs CONNECT method to proxy server to connect to
    destination host (and port). It may not be allowed on your
    proxy server.
- */
-int
+   */
+    int
 begin_http_relay( SOCKET s )
 {
     char buf[1024];
     int result;
-    char *auth_realm = NULL;
     char *user = NULL, *pass = NULL;
 
     debug("begin_http_relay()\n");
 
     if (proxy_auth_type != PROXY_AUTH_NONE) {
-	/* Get username/password for authentication */
-	if ((user = getenv(ENV_HTTP_PROXY_USER)) == NULL &&
-	    (user = getenv(ENV_CONNECT_USER)) == NULL &&
-	    (user = getusername()) == NULL )
-	    fatal("Cannot decide username for proxy authentication.");
-	if ((pass = getenv(ENV_HTTP_PROXY_PASSWORD)) == NULL &&
-	    (pass = getenv(ENV_CONNECT_PASSWORD)) == NULL &&
-	    (pass = readpass("Enter proxy authentication password for %s@%s: ",
-			     user, relay_host)) == NULL)
-	    fatal("Cannot decide password for proxy authentication.");
-	user = strdup(user);
-	pass = strdup(pass);
+        /* Get username/password for authentication */
+        if ((user = getenv(ENV_HTTP_PROXY_USER)) == NULL &&
+                (user = getenv(ENV_CONNECT_USER)) == NULL &&
+                (user = getusername()) == NULL )
+            fatal("Cannot decide username for proxy authentication.");
+        if ((pass = getenv(ENV_HTTP_PROXY_PASSWORD)) == NULL &&
+                (pass = getenv(ENV_CONNECT_PASSWORD)) == NULL &&
+                (pass = readpass("Enter proxy authentication password for %s@%s: ",
+                                 user, relay_host)) == NULL)
+            fatal("Cannot decide password for proxy authentication.");
+        user = strdup(user);
+        pass = strdup(pass);
     }
     if (sendf(s,"CONNECT %s:%d HTTP/1.0\r\n", dest_host, dest_port) < 0)
-	return -1;
+        return -1;
     if (proxy_auth_type == PROXY_AUTH_BASIC && basic_auth(s, user, pass) < 0)
-	return -1;
+        return -1;
     if (sendf(s,"\r\n") < 0)
-	return -1;
+        return -1;
     if ( user ) { memset(user, 0, strlen(user)); free(user); }
     if ( pass ) { memset(pass, 0, strlen(pass)); free(pass); }
-    
+
     /* get response */
     if ( line_input(s, buf, sizeof(buf)) < 0 ) {
-	debug("failed to read http response.\n");
-	return -1;
+        debug("failed to read http response.\n");
+        return -1;
     }
     /* check status */
     result = atoi(strchr(buf,' '));
     switch ( result ) {
-    case 200:
-	/* Conguraturation, connected via http proxy server! */
-	debug("connected, start user session.\n");
-	break;
-    case 302:					/* redirect */
-	do {
-	    if (line_input(s, buf, sizeof(buf)))
-		break;
-	    downcase(buf);
-	    if (expect(buf, "Location: ")) {
-		char *host;
-		char *port;
-		relay_host = cut_token(buf, "//");
-		cut_token(buf, "/");
-		relay_port = atoi(cut_token(buf, ":"));
-	    }
-	} while (strcmp(buf,"\r\n") != 0);
-	skip_all_lines(s);
-	return START_RETRY;
+        case 200:
+            /* Conguraturation, connected via http proxy server! */
+            debug("connected, start user session.\n");
+            break;
+        case 302:					/* redirect */
+            do {
+                if (line_input(s, buf, sizeof(buf)))
+                    break;
+                downcase(buf);
+                if (expect(buf, "Location: ")) {
+                    relay_host = cut_token(buf, "//");
+                    cut_token(buf, "/");
+                    relay_port = atoi(cut_token(buf, ":"));
+                }
+            } while (strcmp(buf,"\r\n") != 0);
+            skip_all_lines(s);
+            return START_RETRY;
 
-    case 407:					/* Proxy-Auth required */
-	/** NOTE: As easy implementation, we support only BASIC scheme
-	    and ignore realm. */
-	/* If proxy_auth_type is PROXY_AUTH_BASIC and get
-	 this result code, authentication was failed. */
-	if (proxy_auth_type != PROXY_AUTH_NONE) {
-	    error("Authentication failed.\n");
-	    return -1;
-	}
-	do {
-	    if ( line_input(s, buf, sizeof(buf)) ) {
-		break;
-	    }
-	    downcase(buf);
-	    if (expect(buf, "Proxy-Authenticate: ")) {
-		/* parse type and realm */
-		char *scheme, *realm;
-		scheme = cut_token(buf, " ");
-		realm = cut_token(scheme, " ");
-		if ( scheme == NULL || realm == NULL ) {
-		    debug("Invalid format of Proxy-Authenticate: field.");
-		    return -1;			/* fail */
-		}
-		/* check type */
-		if (expect(scheme, "basic")) {
-		    proxy_auth_type = PROXY_AUTH_BASIC;
-		} else {
-		    debug("Unsupported authentication type: %s", scheme);
-		    return -1;
-		}
-	    }
-	} while (strcmp(buf,"\r\n") != 0);
-	skip_all_lines(s);
-	if ( proxy_auth_type == PROXY_AUTH_NONE ) {
-	    debug("Can't find Proxy-Authenticate: in response header.");
-	    return -1;
-	} else {
-	    return START_RETRY;
-	}
-	
-    default:
-	/* Not allowed */
-	debug("http proxy is not allowed.\n");
-	return -1;
+        case 407:					/* Proxy-Auth required */
+            /** NOTE: As easy implementation, we support only BASIC scheme
+              and ignore realm. */
+            /* If proxy_auth_type is PROXY_AUTH_BASIC and get
+               this result code, authentication was failed. */
+            if (proxy_auth_type != PROXY_AUTH_NONE) {
+                error("Authentication failed.\n");
+                return -1;
+            }
+            do {
+                if ( line_input(s, buf, sizeof(buf)) ) {
+                    break;
+                }
+                downcase(buf);
+                if (expect(buf, "Proxy-Authenticate: ")) {
+                    /* parse type and realm */
+                    char *scheme, *realm;
+                    scheme = cut_token(buf, " ");
+                    realm = cut_token(scheme, " ");
+                    if ( scheme == NULL || realm == NULL ) {
+                        debug("Invalid format of Proxy-Authenticate: field.");
+                        return -1;			/* fail */
+                    }
+                    /* check type */
+                    if (expect(scheme, "basic")) {
+                        proxy_auth_type = PROXY_AUTH_BASIC;
+                    } else {
+                        debug("Unsupported authentication type: %s", scheme);
+                        return -1;
+                    }
+                }
+            } while (strcmp(buf,"\r\n") != 0);
+            skip_all_lines(s);
+            if ( proxy_auth_type == PROXY_AUTH_NONE ) {
+                debug("Can't find Proxy-Authenticate: in response header.");
+                return -1;
+            } else {
+                return START_RETRY;
+            }
+
+        default:
+            /* Not allowed */
+            debug("http proxy is not allowed.\n");
+            return -1;
     }
     /* skip to end of response header */
     do {
-	if ( line_input(s, buf, sizeof(buf) ) ) {
-	    debug("Can't skip response headers\n");
-	    return -1;
-	}
+        if ( line_input(s, buf, sizeof(buf) ) ) {
+            debug("Can't skip response headers\n");
+            return -1;
+        }
     } while ( strcmp(buf,"\r\n") != 0 );
-    
+
     return 0;
 }
 
@@ -1584,8 +1584,8 @@ begin_http_relay( SOCKET s )
 #ifdef _WIN32
 /* ddatalen()
    Returns 1 if data is available, otherwise return 0
- */
-int
+   */
+    int
 fddatalen( SOCKET fd )
 {
     DWORD len = 0;
@@ -1593,31 +1593,31 @@ fddatalen( SOCKET fd )
     HANDLE hStdin;
     fstat( 0, &st );
     if ( st.st_mode & _S_IFIFO ) { 
-	/* in case of PIPE */
-	if ( !PeekNamedPipe( GetStdHandle(STD_INPUT_HANDLE),
-			     NULL, 0, NULL, &len, NULL) ) {
-	    if ( GetLastError() == ERROR_BROKEN_PIPE ) {
-		/* PIPE source is closed */
-		/* read() will detects EOF */
-		len = 1;
-	    } else {
-		fatal("PeekNamedPipe() failed, errno=%d\n",
-		      GetLastError());
-	    }
-	}
+        /* in case of PIPE */
+        if ( !PeekNamedPipe( GetStdHandle(STD_INPUT_HANDLE),
+                    NULL, 0, NULL, &len, NULL) ) {
+            if ( GetLastError() == ERROR_BROKEN_PIPE ) {
+                /* PIPE source is closed */
+                /* read() will detects EOF */
+                len = 1;
+            } else {
+                fatal("PeekNamedPipe() failed, errno=%d\n",
+                        GetLastError());
+            }
+        }
     } else if ( st.st_mode & _S_IFREG ) {
-	/* in case of regular file (redirected) */
-	len = 1;			/* always data ready */
+        /* in case of regular file (redirected) */
+        len = 1;			/* always data ready */
     } else if ( _kbhit() ) {
-	/* in case of console */
-	len = 1;
+        /* in case of console */
+        len = 1;
     }
     return len;
 }
 #endif /* _WIN32 */
 
 /* relay byte from stdin to socket and fro socket to stdout */
-int
+    int
 do_repeater( SOCKET local_in, SOCKET local_out, SOCKET remote )
 {
     /** vars for local input data **/
@@ -1635,7 +1635,7 @@ do_repeater( SOCKET local_in, SOCKET local_out, SOCKET remote )
 #ifdef _WIN32
     struct timeval win32_tmo;
 #endif /* _WIN32 */
-    
+
     /* repeater between stdin/out and socket  */
     nfds = ((local_in<remote)? remote: local_in) +1;
     ifds = FD_ALLOC(nfds);
@@ -1646,124 +1646,124 @@ do_repeater( SOCKET local_in, SOCKET local_out, SOCKET remote )
     rbuf_len = 0;
 
     while ( f_local || f_remote ) {
-	FD_ZERO( ifds );
-	FD_ZERO( ofds );
-	tmo = NULL;
+        FD_ZERO( ifds );
+        FD_ZERO( ofds );
+        tmo = NULL;
 
-	/** prepare for reading local input **/
-	if ( f_local && (lbuf_len < sizeof(lbuf)) ) {
+        /** prepare for reading local input **/
+        if ( f_local && (lbuf_len < sizeof(lbuf)) ) {
 #ifdef _WIN32
-	    if ( local_type != LOCAL_SOCKET ) {
-		/* select() on Winsock is not accept standard handle.
-		   So use select() with short timeout and checking data
-		   in stdin by another method. */
-		win32_tmo.tv_sec = 0;
-		win32_tmo.tv_usec = 10*1000;	/* 10 ms */
-		tmo = &win32_tmo;
-	    } else
+            if ( local_type != LOCAL_SOCKET ) {
+                /* select() on Winsock is not accept standard handle.
+                   So use select() with short timeout and checking data
+                   in stdin by another method. */
+                win32_tmo.tv_sec = 0;
+                win32_tmo.tv_usec = 10*1000;	/* 10 ms */
+                tmo = &win32_tmo;
+            } else
 #endif /* !_WIN32 */
-	    FD_SET( local_in, ifds );
-	}
-	
-	/** prepare for reading remote input **/
-	if ( f_remote && (rbuf_len < sizeof(rbuf)) ) {
-	    FD_SET( remote, ifds );
-	}
-	
-	/* FD_SET( local_out, ofds ); */
-	/* FD_SET( remote, ofds ); */
-	
-	if ( select( nfds, ifds, ofds, NULL, tmo ) == -1 ) {
-	    /* some error */
-	    error( "select() failed, %d\n", socket_errno());
-	    return -1;
-	}
+                FD_SET( local_in, ifds );
+        }
+
+        /** prepare for reading remote input **/
+        if ( f_remote && (rbuf_len < sizeof(rbuf)) ) {
+            FD_SET( remote, ifds );
+        }
+
+        /* FD_SET( local_out, ofds ); */
+        /* FD_SET( remote, ofds ); */
+
+        if ( select( nfds, ifds, ofds, NULL, tmo ) == -1 ) {
+            /* some error */
+            error( "select() failed, %d\n", socket_errno());
+            return -1;
+        }
 #ifdef _WIN32
-	/* fake ifds if local is stdio handle because
+        /* fake ifds if local is stdio handle because
            select() of Winsock does not accept stdio
            handle. */
-	if (f_local && (local_type!=LOCAL_SOCKET) && (0<fddatalen(local_in)))
-	    FD_SET(0,ifds);		/* data ready */
+        if (f_local && (local_type!=LOCAL_SOCKET) && (0<fddatalen(local_in)))
+            FD_SET(0,ifds);		/* data ready */
 #endif
 
-	/* remote => local */
-	if ( FD_ISSET(remote, ifds) && (rbuf_len < sizeof(rbuf)) ) {
-	    len = recv( remote, rbuf + rbuf_len, sizeof(rbuf)-rbuf_len, 0);
-	    if ( len == 0 ) {
-		debug("connection closed by peer\n");
-		f_remote = 0;			/* no more read from socket */
-		f_local = 0;
-	    } else if ( len == -1 ) {
-		/* error */
-		fatal("recv() faield, %d\n", socket_errno());
-	    } else {
-		debug("recv %d bytes\n", len);
-		if ( 1 < f_debug )		/* more verbose */
-		    report_bytes( "<<<", rbuf, len);
-		rbuf_len += len;
-	    }
-	}
-	
-	/* local => remote */
-	if ( FD_ISSET(local_in, ifds) && (lbuf_len < sizeof(lbuf)) ) {
-	    if (local_type == LOCAL_SOCKET)
-		len = recv(local_in, lbuf + lbuf_len,
-			   sizeof(lbuf)-lbuf_len, 0);
-	    else
-		len = read(local_in, lbuf + lbuf_len, sizeof(lbuf)-lbuf_len);
-	    if ( len == 0 ) {
-		/* stdin is EOF */
-		debug("local input is EOF\n");
-		shutdown(remote, 1);		/* no-more writing */
-		f_local = 0;
-	    } else if ( len == -1 ) {
-		/* error on reading from stdin */
-		fatal("recv() failed, errno = %d\n", errno);
-	    } else {
-		/* repeat */
-		lbuf_len += len;
-	    }
-	}
-	
-	/* flush data in buffer to socket */
-	if ( 0 < lbuf_len ) {
-	    len = send(remote, lbuf, lbuf_len, 0);
-	    if ( 1 < f_debug )		/* more verbose */
-		report_bytes( ">>>", lbuf, lbuf_len);
-	    if ( len == -1 ) {
-		fatal("send() failed, %d\n", socket_errno());
-	    } else if ( 0 < len ) {
-		/* move data on to top of buffer */
-		debug("send %d bytes\n", len);
-		lbuf_len -= len;
-		if ( 0 < lbuf_len )
-		    memcpy( lbuf, lbuf+len, lbuf_len );
-		assert( 0 <= lbuf_len );
-	    }
-	}
-	
-	/* flush data in buffer to local output */
-	if ( 0 < rbuf_len ) {
-	    if (local_type == LOCAL_SOCKET)
-		len = send( local_out, rbuf, rbuf_len, 0);
-	    else
-		len = write( local_out, rbuf, rbuf_len);
-	    if ( len == -1 ) {
-		fatal("output (local) failed, errno=%d\n", errno);
-	    } 
-	    rbuf_len -= len;
-	    if ( len < rbuf_len )
-		memcpy( rbuf, rbuf+len, rbuf_len );
-	    assert( 0 <= rbuf_len );
-	}
+        /* remote => local */
+        if ( FD_ISSET(remote, ifds) && (rbuf_len < sizeof(rbuf)) ) {
+            len = recv( remote, rbuf + rbuf_len, sizeof(rbuf)-rbuf_len, 0);
+            if ( len == 0 ) {
+                debug("connection closed by peer\n");
+                f_remote = 0;			/* no more read from socket */
+                f_local = 0;
+            } else if ( len == -1 ) {
+                /* error */
+                fatal("recv() faield, %d\n", socket_errno());
+            } else {
+                debug("recv %d bytes\n", len);
+                if ( 1 < f_debug )		/* more verbose */
+                    report_bytes( "<<<", rbuf, len);
+                rbuf_len += len;
+            }
+        }
+
+        /* local => remote */
+        if ( FD_ISSET(local_in, ifds) && (lbuf_len < sizeof(lbuf)) ) {
+            if (local_type == LOCAL_SOCKET)
+                len = recv(local_in, lbuf + lbuf_len,
+                        sizeof(lbuf)-lbuf_len, 0);
+            else
+                len = read(local_in, lbuf + lbuf_len, sizeof(lbuf)-lbuf_len);
+            if ( len == 0 ) {
+                /* stdin is EOF */
+                debug("local input is EOF\n");
+                shutdown(remote, 1);		/* no-more writing */
+                f_local = 0;
+            } else if ( len == -1 ) {
+                /* error on reading from stdin */
+                fatal("recv() failed, errno = %d\n", errno);
+            } else {
+                /* repeat */
+                lbuf_len += len;
+            }
+        }
+
+        /* flush data in buffer to socket */
+        if ( 0 < lbuf_len ) {
+            len = send(remote, lbuf, lbuf_len, 0);
+            if ( 1 < f_debug )		/* more verbose */
+                report_bytes( ">>>", lbuf, lbuf_len);
+            if ( len == -1 ) {
+                fatal("send() failed, %d\n", socket_errno());
+            } else if ( 0 < len ) {
+                /* move data on to top of buffer */
+                debug("send %d bytes\n", len);
+                lbuf_len -= len;
+                if ( 0 < lbuf_len )
+                    memcpy( lbuf, lbuf+len, lbuf_len );
+                assert( 0 <= lbuf_len );
+            }
+        }
+
+        /* flush data in buffer to local output */
+        if ( 0 < rbuf_len ) {
+            if (local_type == LOCAL_SOCKET)
+                len = send( local_out, rbuf, rbuf_len, 0);
+            else
+                len = write( local_out, rbuf, rbuf_len);
+            if ( len == -1 ) {
+                fatal("output (local) failed, errno=%d\n", errno);
+            } 
+            rbuf_len -= len;
+            if ( len < rbuf_len )
+                memcpy( rbuf, rbuf+len, rbuf_len );
+            assert( 0 <= rbuf_len );
+        }
 
     }
-    
+
     return 0;
 }
 
 
-int
+    int
 accept_connection (u_short port)
 {
     int sock;
@@ -1771,67 +1771,67 @@ accept_connection (u_short port)
     struct sockaddr_in name;
 
     struct sockaddr client;
-    int socklen;
+    socklen_t socklen;
 
     /* Create the socket. */
     debug("Creating source port to forward.\n");
     sock = socket (PF_INET, SOCK_STREAM, 0);
     if (sock < 0)
-	fatal("socket() failed, errno=%d\n", socket_errno());
+        fatal("socket() failed, errno=%d\n", socket_errno());
 
     /* Give the socket a name. */
     name.sin_family = AF_INET;
     name.sin_port = htons (port);
     name.sin_addr.s_addr = htonl (INADDR_ANY);
     if (bind (sock, (struct sockaddr *) &name, sizeof (name)) < 0)
-	fatal ("bind() failed, errno=%d\n", socket_errno());
+        fatal ("bind() failed, errno=%d\n", socket_errno());
 
     if (listen( sock, 1) < 0)
-	fatal ("listen() failed, errno=%d\n", socket_errno());
+        fatal ("listen() failed, errno=%d\n", socket_errno());
 
     socklen = sizeof(client);
     connection = accept( sock, &client, &socklen);
     if ( connection < 0 )
-	fatal ("accept() failed, errno=%d\n", socket_errno());
-    
+        fatal ("accept() failed, errno=%d\n", socket_errno());
+
     shutdown(sock, 2);
 
     return connection;
 }
 
 
-int
+    int
 local_resolve(const char *host, struct in_addr *addr)
 {
     struct hostent *ent;
     if ( strspn(host, "0123456789.") == strlen(host) ) {
-	/* given by IP address */
-	dest_addr.s_addr = inet_addr(host);
+        /* given by IP address */
+        dest_addr.s_addr = inet_addr(host);
     } else {
 #if !defined(_WIN32) && !defined(__CYGWIN32__)
-	if (socks_ns.s_addr != 0) {
-	    res_init();
-	    _res.nsaddr_list[0].sin_addr.s_addr = socks_ns.s_addr;
-	    _res.nscount = 1;
-	    debug("Using nameserver at %s\n", inet_ntoa(socks_ns));
-	}
+        if (socks_ns.s_addr != 0) {
+            res_init();
+            _res.nsaddr_list[0].sin_addr.s_addr = socks_ns.s_addr;
+            _res.nscount = 1;
+            debug("Using nameserver at %s\n", inet_ntoa(socks_ns));
+        }
 #endif /* !_WIN32 && !__CYGWIN32__ */
-	debug("resolving host by name: %s\n", dest_host);
-	ent = gethostbyname( dest_host );
-	if ( ent ) {
-	    memcpy( &(dest_addr.s_addr), ent->h_addr, ent->h_length);
-	    debug("resolved: %s (%s)\n",
-		  dest_host, inet_ntoa(dest_addr));
-	} else {
-	    debug("failed to resolve locally.\n", dest_host);
-	    return -1;				/* failed */
-	}
+        debug("resolving host by name: %s\n", dest_host);
+        ent = gethostbyname( dest_host );
+        if ( ent ) {
+            memcpy( &(dest_addr.s_addr), ent->h_addr, ent->h_length);
+            debug("resolved: %s (%s)\n",
+                    dest_host, inet_ntoa(dest_addr));
+        } else {
+            debug("failed to resolve locally.\n", dest_host);
+            return -1;				/* failed */
+        }
     }
     return 0;					/* good */
 }
 
 /** Main of program **/
-int
+    int
 main( int argc, char **argv )
 {
     int ret;
@@ -1849,70 +1849,70 @@ main( int argc, char **argv )
 
     /* Open local_in and local_out if forwarding a port */
     if ( local_type == LOCAL_SOCKET ) {
-	/* Relay between local port and destination */
+        /* Relay between local port and destination */
         local_in = local_out = accept_connection( local_port );
     } else {
-	/* Relay between stdin/stdout and desteination */
-	local_in = 0;
-	local_out = 1;
+        /* Relay between stdin/stdout and desteination */
+        local_in = 0;
+        local_out = 1;
 #ifdef _WIN32
-	_setmode(local_in, O_BINARY);
-	_setmode(local_out, O_BINARY);
+        _setmode(local_in, O_BINARY);
+        _setmode(local_out, O_BINARY);
 #endif
     }
 
 retry:
     /* make connection */
     if ( relay_method == METHOD_DIRECT ) {
-	remote = open_connection (dest_host, dest_port);
-	if ( remote == SOCKET_ERROR )
-	    fatal( "Unable to connect to destination host, errno=%d\n",
-		   socket_errno());
+        remote = open_connection (dest_host, dest_port);
+        if ( remote == SOCKET_ERROR )
+            fatal( "Unable to connect to destination host, errno=%d\n",
+                    socket_errno());
     } else {
-	remote = open_connection (relay_host, relay_port);
-	if ( remote == SOCKET_ERROR )
-	    fatal( "Unable to connect to relay host, errno=%d\n",
-		   socket_errno());
+        remote = open_connection (relay_host, relay_port);
+        if ( remote == SOCKET_ERROR )
+            fatal( "Unable to connect to relay host, errno=%d\n",
+                    socket_errno());
     }
 
     /** resolve destination host (SOCKS) **/
     if (relay_method == METHOD_SOCKS &&
-	socks_resolve == RESOLVE_LOCAL &&
-	local_resolve( dest_host, &dest_addr ) < 0) {
-	fatal("Unknown host: %s", dest_host);
+            socks_resolve == RESOLVE_LOCAL &&
+            local_resolve( dest_host, &dest_addr ) < 0) {
+        fatal("Unknown host: %s", dest_host);
     }
-    
+
     /** relay negociation **/
     switch ( relay_method ) {
-    case METHOD_SOCKS:
-	if ( ((socks_version == 5) && (begin_socks5_relay(remote) < 0)) ||
-	     ((socks_version == 4) && (begin_socks4_relay(remote) < 0)) )
-	    fatal( "failed to begin relaying via SOCKS.\n");
-	break;
-	
-    case METHOD_HTTP:
-	ret = begin_http_relay(remote);
-	switch (ret) {
-	case START_ERROR:
-	    fatal("failed to begin relaying via HTTP.\n");
-	case START_OK:
-	    break;
-	case START_RETRY:
-	    /* retry with authentication */
-	    goto retry;			
-	}
-	break;
+        case METHOD_SOCKS:
+            if ( ((socks_version == 5) && (begin_socks5_relay(remote) < 0)) ||
+                    ((socks_version == 4) && (begin_socks4_relay(remote) < 0)) )
+                fatal( "failed to begin relaying via SOCKS.\n");
+            break;
+
+        case METHOD_HTTP:
+            ret = begin_http_relay(remote);
+            switch (ret) {
+                case START_ERROR:
+                    fatal("failed to begin relaying via HTTP.\n");
+                case START_OK:
+                    break;
+                case START_RETRY:
+                    /* retry with authentication */
+                    goto retry;			
+            }
+            break;
     }
 
     /* main loop */
     do_repeater(local_in, local_out, remote);
     closesocket(remote);
     if ( local_type == LOCAL_SOCKET)
-	closesocket(local_in);
+        closesocket(local_in);
 #ifdef _WIN32
     WSACleanup();
 #endif /* _WIN32 */
-    
+
     return 0;
 }
 
@@ -1921,7 +1921,7 @@ retry:
    compile-command: "cc connect.c -o connect"
    fill-column: 74
    comment-column: 48
-   End:
-   ------------------------------------------------------------ */
+End:
+------------------------------------------------------------ */
 
 /*** end of connect.c ***/

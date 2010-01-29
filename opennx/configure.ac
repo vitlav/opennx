@@ -97,6 +97,7 @@ AC_C_CONST
 AC_TYPE_SIZE_T
 AC_TYPE_OFF_T
 AC_TYPE_PID_T
+AC_CHECK_TYPES(socklen_t)
 
 # Checks for library functions.
 AC_CHECK_FUNCS([memchr memset putenv socket strchr strdup strrchr strstr])
