@@ -275,10 +275,10 @@ AC_DEFINE_UNQUOTED(CUPS_DEFAULT_PATH,"$CUPS_DEFAULT_PATH",
 ac_cv_nxproto="3.2.0"
 AC_ARG_WITH([nxproto],
             AS_HELP_STRING([--with-nxproto],
-                           [Specify NX protocol version (Default: 3.2.0)]),
+                           [Default NX protocol version (Default: 3.2.0)]),
             [ac_cv_nxproto=${withval}])
 AC_DEFINE_UNQUOTED(NX_PROTOCOL_VERSION,"${ac_cv_nxproto}",
-                   [Set to the NX protocol version])
+                   [Set to default NX protocol version])
 
 dnl Don't check for X11 on mingw, otherwise we
 dnl might get incorrect C/CPP/LD FLAGS in a cross-compile

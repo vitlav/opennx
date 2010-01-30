@@ -453,7 +453,7 @@ int intr_flag = 0;
 
 #ifndef _WIN32
     void
-intr_handler(int sig)
+intr_handler(/* int sig */)
 {
     intr_flag = 1;
 }
@@ -514,7 +514,7 @@ tty_readpass( const char *prompt, char *buf, size_t size )
     }
     if ( size <= 0 )
         return -1;				/* no room */
-    if (write(tty, prompt, strlen(prompt)) != strlen(prompt))
+    if (write(tty, prompt, strlen(prompt)) != (int)strlen(prompt))
         return -1;
     buf[0] = '\0';
     tty_change_echo(tty, 0);			/* disable echo */
@@ -943,7 +943,7 @@ report_text( char *prefix, char *buf )
     while ( *buf ) {
         memset( work, 0, sizeof(work));
         tmp = work;
-        while ( *buf && ((tmp-work) < sizeof(work)-5) ) {
+        while ( *buf && ((size_t)(tmp - work) < sizeof(work)-5) ) {
             switch ( *buf ) {
                 case '\t': *tmp++ = '\\'; *tmp++ = 't'; break;
                 case '\r': *tmp++ = '\\'; *tmp++ = 'r'; break;
@@ -1622,11 +1622,11 @@ do_repeater( SOCKET local_in, SOCKET local_out, SOCKET remote )
 {
     /** vars for local input data **/
     char lbuf[1024];				/* local input buffer */
-    int lbuf_len;				/* available data in lbuf */
+    size_t lbuf_len;				/* available data in lbuf */
     int f_local;				/* read local input more? */
     /** vars for remote input data **/
     char rbuf[1024];				/* remote input buffer */
-    int rbuf_len;				/* available data in rbuf */
+    size_t rbuf_len;				/* available data in rbuf */
     int f_remote;				/* read remote input more? */
     /** other variables **/
     int nfds, len;
@@ -1738,7 +1738,6 @@ do_repeater( SOCKET local_in, SOCKET local_out, SOCKET remote )
                 lbuf_len -= len;
                 if ( 0 < lbuf_len )
                     memcpy( lbuf, lbuf+len, lbuf_len );
-                assert( 0 <= lbuf_len );
             }
         }
 
@@ -1752,9 +1751,8 @@ do_repeater( SOCKET local_in, SOCKET local_out, SOCKET remote )
                 fatal("output (local) failed, errno=%d\n", errno);
             } 
             rbuf_len -= len;
-            if ( len < rbuf_len )
+            if ( (size_t)len < rbuf_len )
                 memcpy( rbuf, rbuf+len, rbuf_len );
-            assert( 0 <= rbuf_len );
         }
 
     }
@@ -1801,7 +1799,7 @@ accept_connection (u_short port)
 
 
     int
-local_resolve(const char *host, struct in_addr *addr)
+local_resolve(const char *host)
 {
     struct hostent *ent;
     if ( strspn(host, "0123456789.") == strlen(host) ) {
@@ -1878,7 +1876,7 @@ retry:
     /** resolve destination host (SOCKS) **/
     if (relay_method == METHOD_SOCKS &&
             socks_resolve == RESOLVE_LOCAL &&
-            local_resolve( dest_host, &dest_addr ) < 0) {
+            local_resolve( dest_host ) < 0) {
         fatal("Unknown host: %s", dest_host);
     }
 

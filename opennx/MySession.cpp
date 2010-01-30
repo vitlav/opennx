@@ -85,7 +85,6 @@ static const int KBD_PORT_OFFSET   = 8000;
 static const int HTTP_PORT_OFFSET  = 9000;
 static const int USBIP_PORT_OFFSET = 40000;
 
-#define NX_PROTO wxT(NX_PROTOCOL_VERSION)
 #define X11ARCH_NONE   0
 #define X11ARCH_CYGWIN 1
 #define X11ARCH_MINGW  2
@@ -151,9 +150,11 @@ class RunLog : public wxLogChain
 
         void DoLog(wxLogLevel level, const wxChar *szString, time_t t)
         {
-            PassMessages(level <= wxLOG_Message);
-            wxLogChain::DoLog((level > wxLOG_Message) ? wxLOG_Message : level, szString, t);
+            PassMessages(level <= minlevel);
+            wxLogChain::DoLog((level > minlevel) ? minlevel : level, szString, t);
         }
+    private:
+        static const wxLogLevel minlevel = wxLOG_Message;
 };
 
 class SessionCleaner : public wxDirTraverser
@@ -330,7 +331,7 @@ class SessionWatch : public wxThreadHelper
 };
 
 /**
- * Our specialization ow wxHTTP. Neded, because wxHTTP stops
+ * Our specialization of wxHTTP. Needed, because wxHTTP stops
  * parsing headers when recognizing an error status header (4xx, 5xx ...)
  * but we want it to continue parsing in order to get the Server: header.
  */
@@ -415,6 +416,7 @@ MySession::MySession(wxString dir, wxString status, wxString stype, wxString hos
         m_eSessionStatus = Failed;
 
     m_rePID.Compile(wxT("([[:digit:]]+)"));
+    initversion();
 
     CheckState();
 }
@@ -438,6 +440,8 @@ MySession::MySession(const MySession &src)
     m_bTouched = src.m_bTouched;
     m_rePID.Compile(wxT("([[:digit:]]+)"));
     m_iReader = src.m_iReader;
+    m_lProtocolVersion = src.m_lProtocolVersion;
+    m_sProtocolVersion = src.m_sProtocolVersion;
 }
 
 MySession::MySession()
@@ -450,6 +454,7 @@ MySession::MySession()
     , m_pSessionWatch(NULL)
 {
     m_iReader = -1;
+    initversion();
 }
 
 MySession & MySession::operator =(const MySession &src)
@@ -470,6 +475,8 @@ MySession & MySession::operator =(const MySession &src)
     m_sDir = src.m_sDir;
     m_bTouched = src.m_bTouched;
     m_rePID.Compile(wxT("([[:digit:]]+)"));
+    m_lProtocolVersion = src.m_lProtocolVersion;
+    m_sProtocolVersion = src.m_sProtocolVersion;
     return *this;
 }
 
@@ -665,6 +672,7 @@ MySession::getXauthCookie(int display /* = 0 */, wxString proto)
     return ::wxExecute(cmd) ? wxString() : cookie;
 #else
     wxUnusedVar(display);
+    wxUnusedVar(proto);
 #endif
     return wxString();
 }
@@ -824,7 +832,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     break;
                 case STATE_HELLO:
                     m_pDlg->SetStatusText(_("Authenticating"));
-                    printSsh(wxT("hello NXCLIENT - Version ") NX_PROTO);
+                    printSsh(wxT("hello NXCLIENT - Version ") + m_sProtocolVersion);
                     m_eConnectState = STATE_SHELLMODE;
                     break;
                 case STATE_SHELLMODE:
@@ -840,7 +848,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     break;
                 case STATE_LIST_SESSIONS:
                     m_pDlg->SetStatusText(_("Query server-side sessions"));
-                    scmd = wxT("listsession") + m_pCfg->sGetListParams(intver(NX_PROTO));
+                    scmd = wxT("listsession") + m_pCfg->sGetListParams(m_lProtocolVersion);
                     printSsh(scmd);
                     m_eConnectState = STATE_PARSE_SESSIONS;
                     break;
@@ -856,13 +864,13 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     break;
                 case STATE_START_SESSION:
                     scmd = wxT("startsession");
-                    scmd << m_pCfg->sGetSessionParams(intver(NX_PROTO), true, m_sClearPassword);
+                    scmd << m_pCfg->sGetSessionParams(m_lProtocolVersion, true, m_sClearPassword);
                     printSsh(scmd);
                     m_eConnectState = STATE_FINISH;
                     break;
                 case STATE_ATTACH_SESSION:
                     scmd = wxT("attachsession");
-                    scmd << m_pCfg->sGetSessionParams(intver(NX_PROTO), true, m_sClearPassword)
+                    scmd << m_pCfg->sGetSessionParams(m_lProtocolVersion, true, m_sClearPassword)
                         << wxT(" --display=\"") << m_sResumePort
                         << wxT("\" --id=\"") << m_sResumeId << wxT("\"");
                     printSsh(scmd);
@@ -870,7 +878,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     break;
                 case STATE_RESUME_SESSION:
                     scmd = wxT("restoresession");
-                    scmd << m_pCfg->sGetSessionParams(intver(NX_PROTO), false, m_sClearPassword)
+                    scmd << m_pCfg->sGetSessionParams(m_lProtocolVersion, false, m_sClearPassword)
                         << wxT(" --session=\"") << m_sResumeName
                         << wxT("\" --type=\"") << m_sResumeType
                         << wxT("\" --id=\"") << m_sResumeId << wxT("\"");
@@ -952,7 +960,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                 if (m_eConnectState == STATE_FINISH) {
                     m_pDlg->SetStatusText(_("Starting session"));
                     msg = wxT("NX> 299 Switch connection to: ");
-                    if ((intver(NX_PROTO) > 0x00020000) && m_bSslTunneling) {
+                    if ((m_lProtocolVersion > 0x00020000) && m_bSslTunneling) {
                         msg << wxT("NX mode: encrypted options: nx,options=")
                             << formatOptFilename() << wxT(":") << m_sSessionDisplay;
                     } else {
@@ -1008,18 +1016,19 @@ MySession::OnSshEvent(wxCommandEvent &event)
     }
 }
 
-    long
-MySession::intver(const wxString &ver)
+    void
+MySession::initversion()
 {
-    long ret = 0;
-    wxStringTokenizer t(ver, wxT("."));
+    m_lProtocolVersion = 0;
+    if (!::wxGetEnv(wxT("NX_PROTOCOL_VERSION"), &m_sProtocolVersion))
+        m_sProtocolVersion = wxT(NX_PROTOCOL_VERSION);
+    wxStringTokenizer t(m_sProtocolVersion, wxT("."));
     while (t.HasMoreTokens()) {
         long n;
         t.GetNextToken().ToLong(&n);
-        ret = (ret << 8) + n;
+        m_lProtocolVersion = (m_lProtocolVersion << 8) + n;
     }
-    ::myLogTrace(MYTRACETAG, wxT("protocol version: %08x"), ret);
-    return ret;
+    ::myLogTrace(MYTRACETAG, wxT("protocol version: %08x"), m_lProtocolVersion);
 }
 
     void
@@ -1343,13 +1352,12 @@ MySession::startProxy()
     ::myLogTrace(MYTRACETAG, wxT("MySession::startProxy() called"));
     long cupsport = wxConfigBase::Get()->Read(wxT("Config/CupsPort"), -1);
     wxString popts;
-    int inxproto = intver(NX_PROTO);
-    if (inxproto >= 0x00030000)
+    if (m_lProtocolVersion >= 0x00030000)
         popts << wxT("nx/");
     popts << wxT("nx,cookie=") << m_sProxyCookie;
-    if (inxproto < 0x00030000)
+    if (m_lProtocolVersion < 0x00030000)
         popts << wxT(",root=") << m_sUserDir;
-    popts << m_pCfg->sGetProxyParams(inxproto);
+    popts << m_pCfg->sGetProxyParams(m_lProtocolVersion);
     if (!m_sSubscription.IsEmpty())
         popts << wxT(",product=") << m_sSubscription;
     if (!m_sSmbPort.IsEmpty())
@@ -1372,7 +1380,7 @@ MySession::startProxy()
 #endif
         << wxT(",id=") << m_sSessionID;
     if (m_bSslTunneling) {
-        if (inxproto <= 0x00020000) {
+        if (m_lProtocolVersion <= 0x00020000) {
             m_sProxyIP = wxT("127.0.0.1");
             m_sProxyPort = wxString::Format(wxT("%d"), getFirstFreePort(PROXY_PORT_OFFSET));
             popts << wxT(",listen=") << m_sProxyPort;
@@ -1421,7 +1429,7 @@ MySession::startProxy()
                 << wxFileName::GetPathSeparator() << wxT("nxproxy -S nx,options=")
                 << m_sOptFilename << wxT(":") << m_sSessionDisplay;
             printSsh(wxT("bye"));
-            if ((intver(NX_PROTO) <= 0x00020000) || (!m_bSslTunneling)) {
+            if ((m_lProtocolVersion <= 0x00020000) || (!m_bSslTunneling)) {
                 ::wxExecute(pcmd, wxEXEC_ASYNC);
             }
         } else {
@@ -1826,8 +1834,8 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
         ::wxLogInfo(wxT("env: NX_SYSTEM='%s'"), m_sSysDir.c_str());
         ::wxSetEnv(wxT("NX_CLIENT"), ::wxGetApp().GetSelfPath());
         ::wxLogInfo(wxT("env: NX_CLIENT='%s'"), ::wxGetApp().GetSelfPath().c_str());
-        ::wxSetEnv(wxT("NX_VERSION"), NX_PROTO);
-        ::wxLogInfo(wxT("env: NX_VERSION='") NX_PROTO wxT("'"));
+        ::wxSetEnv(wxT("NX_VERSION"), m_sProtocolVersion);
+        ::wxLogInfo(wxT("env: NX_VERSION='%s'"), m_sProtocolVersion.c_str());
         ::wxSetEnv(wxT("XAUTHORITY"), getXauthPath());
         ::wxLogInfo(wxT("env: XAUTHORITY='%s'"), getXauthPath().c_str());
 #ifdef __UNIX__
