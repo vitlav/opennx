@@ -74,7 +74,7 @@ Group: Applications/Internet
 URL: http://sourceforge.net/projects/opennx
 Source0: opennx-%{version}.tar.gz
 %if !%{with_fetchnx}
-Source100: nxcomp-3.4.0-4.tar.gz
+Source100: nxcomp-3.4.0-1.tar.gz
 Source101: nxesd-3.4.0-1.tar.gz
 Source102: nxssh-3.4.0-1.tar.gz
 Source103: nxproxy-3.4.0-2.tar.gz
