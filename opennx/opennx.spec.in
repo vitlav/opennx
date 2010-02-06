@@ -126,7 +126,6 @@ BuildRequires: libXmu-devel
 BuildRequires: xorg-x11-proto-devel
 BuildRequires: xorg-x11-xtrans-devel
 %endif
-%endif
 
 %if %{with_fetchnx}
 BuildRequires: wget
