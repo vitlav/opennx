@@ -24,12 +24,12 @@
 %define is_fc 0%{?fedora}%{?fedora_version}
 %define is_suse 0%{?suse_version}
 %define is_sles 0%{?sles_version}
-%define is_mdv %(test -e /etc/mandriva-release && echo 1 || echo 0)
+%define is_mdv 0%{?mdvver}
 %if %{is_rh}
 %define ostag %{?dist}
 %endif
 %if %{is_mdv}
-%define ostag .mdv%(rpm -q --queryformat='%{VERSION}' mandriva-release-common | perl -pe 's/(\d+).*/$1/')
+%define ostag .mdv%{mdvver}
 # Mandriva's cool underlink protection unfortunately breaks nxesd
 %define _disable_ld_no_undefined 1
 %endif
@@ -86,10 +86,6 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Obsoletes: nxclient
 Provides: nxclient
 
-%if %{is_suse}
-# Workaround for https://bugzilla.novell.com/show_bug.cgi?id=436992
-BuildRequires: -post-build-checks
-%endif
 BuildRequires: libtool
 BuildRequires: automake
 BuildRequires: audiofile-devel
@@ -97,13 +93,29 @@ BuildRequires: cups-devel
 BuildRequires: opensc-devel
 BuildRequires: libusb-devel
 BuildRequires: libsmbclient-devel
+BuildRequires: gcc-c++
+BuildRequires: zip
+BuildRequires: libpng-devel
+BuildRequires: libjpeg-devel
+BuildRequires: zlib-devel
+BuildRequires: openssl-devel
+
 %if %{is_suse}
+# Workaround for https://bugzilla.novell.com/show_bug.cgi?id=436992
+BuildRequires: -post-build-checks
 BuildRequires: wxGTK-devel >= 2.8.0
-%else
+BuildRequires: xorg-x11-proto-devel
+BuildRequires: xorg-x11-xtrans-devel
+%endif
+
 %if %{is_mdv}
 BuildRequires: libwxgtku2.8-devel >= 2.8.0
 BuildRequires: libxmu6-devel
-%else
+BuildRequires: x11-proto-devel
+BuildRequires: x11-xtrans-devel
+%endif
+
+%if %{is_fc}%{is_rh}
 %if %{is_fc} > 10
 BuildRequires: wxGTK-devel >= 2.8.0
 %else
@@ -111,21 +123,11 @@ BuildRequires: wxGTK2-devel >= 2.8.0
 %endif
 BuildRequires: samba-common
 BuildRequires: libXmu-devel
-%endif
-%endif
-%if %{is_mdv}
-BuildRequires: x11-proto-devel
-BuildRequires: x11-xtrans-devel
-%else
 BuildRequires: xorg-x11-proto-devel
 BuildRequires: xorg-x11-xtrans-devel
 %endif
-BuildRequires: gcc-c++
-BuildRequires: zip
-BuildRequires: libpng-devel
-BuildRequires: libjpeg-devel
-BuildRequires: zlib-devel
-BuildRequires: openssl-devel
+%endif
+
 %if %{with_fetchnx}
 BuildRequires: wget
 %endif
