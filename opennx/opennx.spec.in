@@ -24,12 +24,14 @@
 %define is_fc 0%{?fedora}%{?fedora_version}
 %define is_suse 0%{?suse_version}
 %define is_sles 0%{?sles_version}
-%define is_mdk %(test -e /etc/mandrake-release && echo 1 || echo 0)
+%define is_mdv %(test -e /etc/mandriva-release && echo 1 || echo 0)
 %if %{is_rh}
 %define ostag %{?dist}
 %endif
-%if %{is_mdk}
-%define ostag .mdk%(rpm -q --queryformat='%{VERSION}' mandrake-release | perl -pe 's/(.).*/$1/')
+%if %{is_mdv}
+%define ostag .mdv%(rpm -q --queryformat='%{VERSION}' mandriva-release-common | perl -pe 's/(\d+).*/$1/')
+# Mandriva's cool underlink protection unfortunately breaks nxesd
+%define _disable_ld_no_undefined 1
 %endif
 %if %{is_fc}
 %define ostag %{?dist}
@@ -98,6 +100,10 @@ BuildRequires: libsmbclient-devel
 %if %{is_suse}
 BuildRequires: wxGTK-devel >= 2.8.0
 %else
+%if %{is_mdv}
+BuildRequires: libwxgtku2.8-devel >= 2.8.0
+BuildRequires: libxmu6-devel
+%else
 %if %{is_fc} > 10
 BuildRequires: wxGTK-devel >= 2.8.0
 %else
@@ -106,8 +112,14 @@ BuildRequires: wxGTK2-devel >= 2.8.0
 BuildRequires: samba-common
 BuildRequires: libXmu-devel
 %endif
+%endif
+%if %{is_mdv}
+BuildRequires: x11-proto-devel
+BuildRequires: x11-xtrans-devel
+%else
 BuildRequires: xorg-x11-proto-devel
 BuildRequires: xorg-x11-xtrans-devel
+%endif
 BuildRequires: gcc-c++
 BuildRequires: zip
 BuildRequires: libpng-devel
