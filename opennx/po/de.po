@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-01-27 13:32+0100\n"
+"POT-Creation-Date: 2010-02-06 01:38+0100\n"
 "PO-Revision-Date: 2010-01-24 23:45+0100\n"
 "Last-Translator: Fritz Elfert <fritz@fritz-elfert.de>\n"
 "Language-Team:  <de@li.org>\n"
@@ -328,44 +328,44 @@ msgstr "Autorisierung fehlgeschlagen: %s"
 msgid "Authentication failed"
 msgstr "Authentisierung fehlgeshlagen"
 
-#: MySession.cpp:119
+#: MySession.cpp:118
 msgid "Invalid X11 server platform"
 msgstr "Ungülige X11 Server-Plattform"
 
-#: MySession.cpp:495 MySession.cpp:516
+#: MySession.cpp:502 MySession.cpp:523 MySession.cpp:526
 msgid "unknown"
 msgstr "unbekannt"
 
-#: MySession.cpp:507
+#: MySession.cpp:514
 msgid "terminated"
 msgstr "beendet"
 
-#: MySession.cpp:510
+#: MySession.cpp:517
 msgid "failed"
 msgstr "gescheitert"
 
-#: MySession.cpp:513
+#: MySession.cpp:520
 msgid "running"
 msgstr "laufend"
 
-#: MySession.cpp:524 RdpPropertyDialog_symbols.h:23 SessionAdmin.cpp:194
+#: MySession.cpp:534 RdpPropertyDialog_symbols.h:23 SessionAdmin.cpp:194
 #: SessionProperties_symbols.h:24 VncPropertyDialog_symbols.h:23
 msgid "Server"
 msgstr "Server"
 
-#: MySession.cpp:527
+#: MySession.cpp:537
 msgid "Client"
 msgstr "Client"
 
-#: MySession.cpp:530
+#: MySession.cpp:540 MySession.cpp:543
 msgid "Unknown"
 msgstr "Unbekannt"
 
-#: MySession.cpp:758 MySession.cpp:771
+#: MySession.cpp:772 MySession.cpp:785
 msgid "Warning - OpenNX"
 msgstr "Warnung - OpenNX"
 
-#: MySession.cpp:769
+#: MySession.cpp:783
 msgid ""
 "\n"
 "Do you want to delete the key and retry ?"
@@ -373,70 +373,70 @@ msgstr ""
 "\n"
 "Wollen Sie den Schlüssel löschen und es erneut versuchen? "
 
-#: MySession.cpp:789
+#: MySession.cpp:803
 msgid "Sending username"
 msgstr "Sende Benutzername"
 
-#: MySession.cpp:793 MySession.cpp:820
+#: MySession.cpp:807 MySession.cpp:834
 msgid "Authenticating"
 msgstr "Authentisierung"
 
-#: MySession.cpp:800
+#: MySession.cpp:814
 msgid "Authentication successful"
 msgstr "Authentisierung erfolgreich"
 
-#: MySession.cpp:836
+#: MySession.cpp:850
 msgid "Query server-side sessions"
 msgstr "Abfrage der Sitzungsliste"
 
-#: MySession.cpp:890
+#: MySession.cpp:904
 msgid "Enter PIN for Smart Card access."
 msgstr "Bitte PIN für SmartCard-Zugriff eingeben."
 
-#: MySession.cpp:890
+#: MySession.cpp:904
 msgid "Smart Card PIN"
 msgstr "Smart Card PIN"
 
-#: MySession.cpp:895
+#: MySession.cpp:909
 msgid "Enter passphrase"
 msgstr "Passphrase eingeben"
 
-#: MySession.cpp:897
+#: MySession.cpp:911
 msgid "Empty passphrase"
 msgstr "Leere Passphrase"
 
-#: MySession.cpp:903 MySession.cpp:907 MySession.cpp:911 MySession.cpp:915
-#: MySession.cpp:919 MySession.cpp:923 MySession.cpp:927 MySession.cpp:931
-#: MySession.cpp:935 MySession.cpp:939
+#: MySession.cpp:917 MySession.cpp:921 MySession.cpp:925 MySession.cpp:929
+#: MySession.cpp:933 MySession.cpp:937 MySession.cpp:941 MySession.cpp:945
+#: MySession.cpp:949 MySession.cpp:953
 msgid "Negotiating session parameter"
 msgstr "Aushandlung der Sitzungsparameter"
 
-#: MySession.cpp:947 MySession.cpp:976
+#: MySession.cpp:961 MySession.cpp:990
 msgid "Starting session"
 msgstr "Starte Sitzung"
 
-#: MySession.cpp:969
+#: MySession.cpp:983
 msgid "Unexpected termination of nxssh"
 msgstr "Unerwartetes Ende von nxssh"
 
-#: MySession.cpp:1136
+#: MySession.cpp:1151
 msgid "There are no sessions which can be attached to."
 msgstr "Keine geeigneten Sitzungen vorhanden."
 
-#: MySession.cpp:1137 MySession.cpp:1147
+#: MySession.cpp:1152 MySession.cpp:1162
 msgid "Error - OpenNX"
 msgstr "Fehler - OpenNX"
 
-#: MySession.cpp:1146
+#: MySession.cpp:1161
 msgid "You have reached your session limit. No more sessions allowed"
 msgstr ""
 "Sie haben Ihr Sitzungs-Limit erreicht. Keine weiteren Sitzungen erlaubt"
 
-#: MySession.cpp:1298
+#: MySession.cpp:1313
 msgid "No X server found."
 msgstr "Kein X Server gefunden"
 
-#: MySession.cpp:1401
+#: MySession.cpp:1415
 #, c-format
 msgid ""
 "Could not create session directory\n"
@@ -445,7 +445,7 @@ msgstr ""
 "Konnte Sitzungsverzeichnis nicht anlegen\n"
 "%s\n"
 
-#: MySession.cpp:1422
+#: MySession.cpp:1436
 #, c-format
 msgid ""
 "Could not write session options\n"
@@ -455,45 +455,45 @@ msgstr ""
 "%s\n"
 "speichern.\n"
 
-#: MySession.cpp:1512 MySession.cpp:1526
+#: MySession.cpp:1526 MySession.cpp:1540
 msgid "Could not assign a free port for CUPS printing"
 msgstr "Konnte keinen Port für CUPS zuweisen"
 
-#: MySession.cpp:1781
+#: MySession.cpp:1795
 #, c-format
 msgid "Could not write %s"
 msgstr "Konnte %s nicht schreiben"
 
-#: MySession.cpp:1855 MySession.cpp:1899 MySession.cpp:1909
+#: MySession.cpp:1869 MySession.cpp:1913 MySession.cpp:1923
 #, c-format
 msgid "Connecting to %s ..."
 msgstr "Verbinde mit %s ..."
 
-#: MySession.cpp:1863
+#: MySession.cpp:1877
 msgid "Preparing multimedia service ..."
 msgstr "Multimedia Dienst vorbereiten ..."
 
-#: MySession.cpp:1895
+#: MySession.cpp:1909
 msgid "Could not start multimedia support"
 msgstr "Konnte Multimedia Unterstützung nicht starten"
 
-#: MySession.cpp:1897
+#: MySession.cpp:1911
 msgid "Could not assign a free port for multimedia support"
 msgstr "Konnte keinen Port für Multimedia Unterstützung zuweisen"
 
-#: MySession.cpp:1906
+#: MySession.cpp:1920
 msgid "Preparing CUPS service ..."
 msgstr "CUPS Dienst vorbereiten ..."
 
-#: MySession.cpp:1908
+#: MySession.cpp:1922
 msgid "Could not start CUPS printing"
 msgstr "Konnte CUPS Druckdienst nicht starten"
 
-#: MySession.cpp:1946
+#: MySession.cpp:1960
 msgid "Called command was: "
 msgstr "Aufgerufenes Kommando war:"
 
-#: MySession.cpp:1947
+#: MySession.cpp:1961
 msgid "Could not start nxssh."
 msgstr "Konnte nxssh nicht starten."
 
