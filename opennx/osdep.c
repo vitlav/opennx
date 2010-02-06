@@ -174,10 +174,10 @@ static char _kbd[PATH_MAX+1];
 char *x11_socket_path = _spath;
 char *x11_keyboard_type = _kbd;
 
+#ifdef __WXMAC__
 static void fatal(const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
-#ifdef __WXMAC__
     /* On MacOS, we use osascript (AppleScript) for displaying a simple
      * error message. (wxWidgets is not initialized yet).
      */
@@ -186,11 +186,11 @@ static void fatal(const char *fmt, ...) {
     vfprintf(p, fmt, ap);
     fprintf(p, "\" buttons {\"OK\"} default button \"OK\" with icon stop with title \"OpenNX Error\"\n");
     pclose(p);
-#endif
     vfprintf(stderr, fmt, ap);
     va_end(ap);
     exit(1);
 }
+#endif
 
 # ifdef __WXMAC__
 

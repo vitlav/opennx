@@ -89,7 +89,7 @@ AC_CHECK_LIB(resolv,res_init,[RESLIB=-lresolv],[
 AC_SUBST(RESLIB)
 
 # Checks for header files.
-AC_CHECK_HEADERS([arpa/inet.h limits.h netinet/in.h sys/socket.h])
+AC_CHECK_HEADERS([arpa/inet.h limits.h netinet/in.h sys/socket.h syslog.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
@@ -97,6 +97,7 @@ AC_C_CONST
 AC_TYPE_SIZE_T
 AC_TYPE_OFF_T
 AC_TYPE_PID_T
+AC_CHECK_TYPES(socklen_t)
 
 # Checks for library functions.
 AC_CHECK_FUNCS([memchr memset putenv socket strchr strdup strrchr strstr])
@@ -274,10 +275,10 @@ AC_DEFINE_UNQUOTED(CUPS_DEFAULT_PATH,"$CUPS_DEFAULT_PATH",
 ac_cv_nxproto="3.2.0"
 AC_ARG_WITH([nxproto],
             AS_HELP_STRING([--with-nxproto],
-                           [Specify NX protocol version (Default: 3.2.0)]),
+                           [Default NX protocol version (Default: 3.2.0)]),
             [ac_cv_nxproto=${withval}])
 AC_DEFINE_UNQUOTED(NX_PROTOCOL_VERSION,"${ac_cv_nxproto}",
-                   [Set to the NX protocol version])
+                   [Set to default NX protocol version])
 
 dnl Don't check for X11 on mingw, otherwise we
 dnl might get incorrect C/CPP/LD FLAGS in a cross-compile

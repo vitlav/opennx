@@ -126,7 +126,7 @@ void LoginDialog::ReadConfigDirectory()
         delete m_pCurrentCfg;
     m_pCurrentCfg = NULL;
     m_pCtrlSessionName->Clear();
-    ::wxLogTrace(MYTRACETAG, wxT("ReadConfigDirectory: LastSession='%s'"), m_sLastSessionFilename.c_str());
+    ::myLogTrace(MYTRACETAG, wxT("ReadConfigDirectory: LastSession='%s'"), m_sLastSessionFilename.c_str());
     if (m_sLastSessionFilename.StartsWith(wxT("http://")) ||
             m_sLastSessionFilename.StartsWith(wxT("ftp://")) ||
             ((m_aConfigFiles.Index(m_sLastSessionFilename) == wxNOT_FOUND) &&
@@ -331,7 +331,7 @@ void LoginDialog::OnButtonConfigureClick( wxCommandEvent& event )
                 m_pCurrentCfg = new MyXmlConfig(fn);
                 break;
             case wxID_CLEAR:
-                ::wxLogTrace(MYTRACETAG, wxT("deleting '%s'"), fn.c_str());
+                ::myLogTrace(MYTRACETAG, wxT("deleting '%s'"), fn.c_str());
                 ::wxRemoveFile(fn);
                 ReadConfigDirectory();
                 break;

@@ -54,7 +54,6 @@
 #include "UsbFilterDetailsDialog.h"
 #include "UsbIp.h"
 #include "LibUSB.h"
-#include "LogNull.h"
 #include "osdep.h"
 
 #include "memres.h"
@@ -103,9 +102,9 @@ class ProcessWatcher : public wxThreadHelper
                     while ((!m_bOk) && GetThread()->IsRunning())
                         wxThread::Sleep(100);
                     if (!m_bOk)
-                        ::wxLogTrace(MYTRACETAG, wxT("ssh watch thread terminated unexpectedly"));
+                        ::myLogTrace(MYTRACETAG, wxT("ssh watch thread terminated unexpectedly"));
                 } else
-                    ::wxLogTrace(MYTRACETAG, wxT("could not create ssh watch thread"));
+                    ::myLogTrace(MYTRACETAG, wxT("could not create ssh watch thread"));
             }
 
         virtual ~ProcessWatcher()
@@ -169,12 +168,12 @@ class ProcessWatcher : public wxThreadHelper
 
     // Language overrides from KDE - only applied if running inside a KDE session. 
     if (inKdeSession != 0) {
-        LogNull dummy;
+        wxLogNull dummy;
 
         // If KDE_LANG is set, then it has precedence over kdeglobals.
         wxString lang;
         if (::wxGetEnv(wxT("KDE_LANG"), &lang)) {
-            fprintf(stderr, "Overriding LANG from KDE_LANG environment to: '%s'\n", (const char *)lang.mb_str());
+            myLogDebug(wxT("Overriding LANG from KDE_LANG environment to: '%s'"), lang.c_str());
             ::wxSetEnv(wxT("LANG"), lang);
         } else {
             // Try to get KDE language settings and override locale accordingly
@@ -193,8 +192,7 @@ class ProcessWatcher : public wxThreadHelper
                     if (lang.Length() < 3)
                         lang << wxT("_") << country.Upper();
                     lang << wxT(".UTF-8");
-                    // At this point logging is not yet setup.
-                    fprintf(stderr, "Overriding LANG from kdeglobals to: '%s'\n", (const char *)lang.mb_str());
+                    myLogDebug(wxT("Overriding LANG from kdeglobals to: '%s'"), lang.c_str());
                     ::wxSetEnv(wxT("LANG"), lang);
                 }
             }
@@ -247,7 +245,7 @@ bool watchUsbIpApp::OnCmdLineParsed(wxCmdLineParser& parser)
                 OnCmdLineError(parser);
                 return false;
             }
-            ::wxLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
+            ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
             wxLog::AddTraceMask(tag);
         }
     }
@@ -264,7 +262,7 @@ bool watchUsbIpApp::OnInit()
         while (t.HasMoreTokens()) {
             wxString tag = t.GetNextToken();
             if (allTraceTags.Index(tag) != wxNOT_FOUND) {
-                ::wxLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
+                ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
                 wxLog::AddTraceMask(tag);
             }
         }
@@ -305,7 +303,7 @@ bool watchUsbIpApp::OnInit()
                     {
                         // The following code eliminates a stupid error dialog which shows up
                         // if some .desktop entires (in KDE or GNOME applink dirs) are dangling symlinks.
-                        LogNull lognull;
+                        wxLogNull lognull;
                         wxTheMimeTypesManager->GetFileTypeFromExtension(wxT("zip"));
                     }
                     resok = true;
@@ -321,7 +319,7 @@ bool watchUsbIpApp::OnInit()
             {
                 // The following code eliminates a stupid error dialog which shows up
                 // if some .desktop entires (in KDE or GNOME applink dirs) are dangling symlinks.
-                LogNull lognull;
+                wxLogNull lognull;
                 wxTheMimeTypesManager->GetFileTypeFromExtension(wxT("zip"));
             }
             free_mem_res(resptr);
@@ -383,7 +381,7 @@ bool watchUsbIpApp::OnInit()
 void watchUsbIpApp::OnSshDied(wxCommandEvent &event)
 {
     wxUnusedVar(event);
-    ::wxLogTrace(MYTRACETAG, wxT("nxssh has terminated"));
+    ::myLogTrace(MYTRACETAG, wxT("nxssh has terminated"));
     m_pDialog->Destroy();
 }
 
@@ -395,7 +393,7 @@ void watchUsbIpApp::OnHotplug(HotplugEvent &event)
     size_t i;
 
 
-    while ((NULL == sdev) && (retry++ < 3)) {
+    while ((NULL == sdev) && (retry++ < 10)) {
         USB u;
         ArrayOfUSBDevices au = u.GetDevices();
         for (i = 0; i < au.GetCount(); i++) {
@@ -429,7 +427,7 @@ void watchUsbIpApp::OnHotplug(HotplugEvent &event)
     }
     if (found) {
         // Found device in session config. Silently act on configuration
-        ::wxLogTrace(MYTRACETAG, wxT("Found device in session config action=%s"),
+        ::myLogTrace(MYTRACETAG, wxT("Found device in session config action=%s"),
                 doexport ? wxT("export") : wxT("local"));
         if (!m_pUsbIp->SendHotplugResponse(event.GetCookie()))
             ::wxLogError(_("Could not send hotplug response"));
@@ -448,7 +446,7 @@ void watchUsbIpApp::OnHotplug(HotplugEvent &event)
 
         if (wxID_OK == result) {
             doexport = m_pDialog->GetForwarding();
-            ::wxLogTrace(MYTRACETAG, wxT("Dialog OK, store=%d action=%s"),
+            ::myLogTrace(MYTRACETAG, wxT("Dialog OK, store=%d action=%s"),
                     m_pDialog->GetStoreFilter(), doexport ? wxT("export") : wxT("local"));
             if (m_pDialog->GetStoreFilter()) {
                 ArrayOfUsbForwards a = m_pSessionCfg->aGetUsbForwards();
@@ -486,12 +484,12 @@ void watchUsbIpApp::OnHotplug(HotplugEvent &event)
                 if (!found) {
                     a.Add(dev);
                     m_pSessionCfg->aSetUsbForwards(a);
-                    ::wxLogTrace(MYTRACETAG, wxT("saving to %s"), m_pSessionCfg->sGetFileName().c_str());
+                    ::myLogTrace(MYTRACETAG, wxT("saving to %s"), m_pSessionCfg->sGetFileName().c_str());
                     if (!m_pSessionCfg->SaveToFile())
                         ::wxLogError(_("Could not save session config"));
                 }
             }
-            ::wxLogTrace(MYTRACETAG, wxT("action=%s"), doexport ? wxT("export") : wxT("local"));
+            ::myLogTrace(MYTRACETAG, wxT("action=%s"), doexport ? wxT("export") : wxT("local"));
         }
     }
     if (doexport) {
@@ -503,7 +501,7 @@ void watchUsbIpApp::OnHotplug(HotplugEvent &event)
 void watchUsbIpApp::Terminate()
 {
     ::wxMutexGuiEnter();
-    ::wxLogTrace(MYTRACETAG, wxT("Terminate()"));
+    ::myLogTrace(MYTRACETAG, wxT("Terminate()"));
     wxCommandEvent ev(wxEVT_PROCESS_DIED, wxID_ANY);
     ev.SetInt(0);
     AddPendingEvent(ev);

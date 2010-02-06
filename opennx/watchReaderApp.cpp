@@ -42,7 +42,6 @@
 
 #include "watchReaderApp.h"
 #include "LibOpenSC.h"
-#include "LogNull.h"
 #include "osdep.h"
 
 #include "trace.h"
@@ -73,12 +72,12 @@ watchReaderApp::watchReaderApp()
 #ifndef __WXMSW__
     // Language overrides from KDE - only applied if running inside a KDE session. 
     if (inKdeSession != 0) {
-        LogNull dummy;
+        wxLogNull dummy;
 
         // If KDE_LANG is set, then it has precedence over kdeglobals.
         wxString lang;
         if (::wxGetEnv(wxT("KDE_LANG"), &lang)) {
-            fprintf(stderr, "Overriding LANG from KDE_LANG environment to: '%s'\n", (const char *)lang.mb_str());
+            myLogDebug(wxT("Overriding LANG from KDE_LANG environment to: '%s'"), lang.c_str());
             ::wxSetEnv(wxT("LANG"), lang);
         } else {
             // Try to get KDE language settings and override locale accordingly
@@ -97,8 +96,7 @@ watchReaderApp::watchReaderApp()
                     if (lang.Length() < 3)
                         lang << wxT("_") << country.Upper();
                     lang << wxT(".UTF-8");
-                    // At this point logging is not yet setup.
-                    fprintf(stderr, "Overriding LANG from kdeglobals to: '%s'\n", (const char *)lang.mb_str());
+                    myLogDebug(wxT("Overriding LANG from kdeglobals to: '%s'"), lang.c_str());
                     ::wxSetEnv(wxT("LANG"), lang);
                 }
             }
@@ -188,10 +186,10 @@ bool watchReaderApp::OnInit()
         // on MacOS, we use the --dialog functionality of opennx
         wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp);
         tmp << wxFileName::GetPathSeparator() << wxT("Message.app");
-        ::wxLogTrace(MYTRACETAG, wxT("Executing %s"), tmp.c_str());
+        ::myLogTrace(MYTRACETAG, wxT("Executing %s"), tmp.c_str());
         ::wxExecute(tmp);
 #else
-        ::wxLogTrace(MYTRACETAG, wxT("Showing info dialog"));
+        ::myLogTrace(MYTRACETAG, wxT("Showing info dialog"));
         wxMessageBox(
                 _("OpenNX session has been suspended, because\nthe authenticating smart card has been removed."),
                 _("Smart card removed"), wxOK|wxICON_INFORMATION);

@@ -86,7 +86,7 @@ ProxyPasswordDialog::ProxyPasswordDialog( wxWindow* parent, wxWindowID id, const
  * ProxyPasswordDialog creator
  */
 
-bool ProxyPasswordDialog::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
+bool ProxyPasswordDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxString& WXUNUSED(caption), const wxPoint& WXUNUSED(pos), const wxSize& WXUNUSED(size), long WXUNUSED(style) )
 {
 ////@begin ProxyPasswordDialog creation
     SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS);

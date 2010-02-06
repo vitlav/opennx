@@ -526,7 +526,7 @@ void ShareProperties::OnOkClick( wxCommandEvent& event )
         ShareGroup g;
         SharedResource *res = wxDynamicCast(m_pCtrlLocalShares->GetClientData(m_pCtrlLocalShares->GetSelection()), SharedResource);
         wxASSERT(res);
-        ::wxLogTrace(MYTRACETAG, wxT("selected: %d %p"), event.GetInt(), res);
+        ::myLogTrace(MYTRACETAG, wxT("selected: %d %p"), event.GetInt(), res);
 
         g.m_eType = res->sharetype;
         g.m_sShareName = res->name;

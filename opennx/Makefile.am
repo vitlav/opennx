@@ -15,7 +15,7 @@ EXTRA_PROGRAMS = tracelog$(EXEEXT) watchreader$(EXEEXT) \
 opennx_SOURCES = AboutDialog.cpp AsyncProcess.cpp LibOpenSC.cpp \
 	CardWaiterDialog.cpp ConnectDialog.cpp ExtHtmlWindow.cpp \
 	ForeignFrame.cpp Icon.cpp LogDialog.cpp KeyDialog.cpp LibUSB.cpp \
-	LoginDialog.cpp md5.c MyIPC.cpp MyDynlib.cpp MySession.cpp \
+	LoginDialog.cpp mylog.cpp md5.c MyIPC.cpp MyDynlib.cpp MySession.cpp \
 	MyValidator.cpp MyWizard.cpp MyXmlConfig.cpp opennxApp.cpp \
 	osdep.c PanicDialog.cpp pwcrypt.cpp ProxyPasswordDialog.cpp QuitDialog.cpp \
 	RdpImageSettingsDialog.cpp RdpPropertyDialog.cpp ResumeDialog.cpp \
@@ -30,7 +30,7 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	ConnectDialog.h ConnectDialog_symbols.h debugleak.h \
 	DebugStringGrabber.h ExtHtmlWindow.h ForeignFrame.h \
 	ForeignFrame_symbols.h Icon.h KeyDialog.h KeyDialog_symbols.h \
-	LibUSB.h LogDialog.h LogDialog_symbols.h LogNull.h LoginDialog.h \
+	LibUSB.h LogDialog.h LogDialog_symbols.h LoginDialog.h mylog.h \
 	LoginDialog_symbols.h md5.h memres.h MyIPC.h MyDynlib.h MySession.h \
 	MyValidator.h MyWizard.h MyWizard_symbols.h MyXmlConfig.h opennxApp.h \
 	osdep.h  PanicDialog.h PanicDialog_symbols.h pwcrypt.h QuitDialog.h \
@@ -51,7 +51,7 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 pconnect_SOURCES = pconnect.c
 pconnect_LDADD = $(WS2LIB) $(RESLIB)
 
-watchreader_SOURCES = watchReaderApp.cpp LibOpenSC.cpp MyDynlib.cpp MacOSX.c osdep.c
+watchreader_SOURCES = watchReaderApp.cpp LibOpenSC.cpp MyDynlib.cpp MacOSX.c osdep.c mylog.cpp
 watchreader_DEPENDENCIES = $(WATCHREADER_RES)
 watchreader_LDADD = $(WATCHREADER_RES) $(WX_LIBS) $(X_LIBS) \
 	$(X_PRE_LIBS) $(X_EXTRA_LIBS) $(APP_LDADD)
@@ -60,7 +60,7 @@ watchreader_CXXFLAGS = $(WX_CXXFLAGS)
 watchreader_CFLAGS = $(WX_CFLAGS)
 
 watchusbip_SOURCES = watchUsbIpApp.cpp UsbIp.cpp Icon.cpp LibUSB.cpp \
-	md5.c MyValidator.cpp MyXmlConfig.cpp osdep.c pwcrypt.cpp \
+	md5.c MyValidator.cpp MyXmlConfig.cpp osdep.c pwcrypt.cpp mylog.cpp \
 	UsbFilterDetailsDialog.cpp wxprec.cpp xh_richtext.cpp MyDynlib.cpp
 watchusbip_LDADD = $(WX_LIBS) $(X_LIBS) $(X_PRE_LIBS) $(X_EXTRA_LIBS) \
 	$(APP_LDADD)

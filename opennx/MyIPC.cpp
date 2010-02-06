@@ -179,7 +179,7 @@ MyIPC::OnTerminate(wxCommandEvent &event)
 {
     switch (m_eType) {
         case TypeNone:
-            ::wxLogTrace(MYTRACETAG, wxT("process terminated"));
+            ::myLogTrace(MYTRACETAG, wxT("process terminated"));
             if (m_pEvtHandler) {
                 wxCommandEvent upevent(wxEVT_GENERIC, wxID_ANY);
                 upevent.SetInt(ActionTerminated);
@@ -187,7 +187,7 @@ MyIPC::OnTerminate(wxCommandEvent &event)
             }
             break;
         case TypeSsh:
-            ::wxLogTrace(MYTRACETAG, wxT("nxssh terminated"));
+            ::myLogTrace(MYTRACETAG, wxT("nxssh terminated"));
             if (m_pEvtHandler) {
                 wxCommandEvent upevent(wxEVT_NXSSH, wxID_ANY);
                 upevent.SetInt(ActionTerminated);
@@ -206,7 +206,7 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
 
     switch (m_eType) {
         case TypeNone:
-            ::wxLogTrace(MYTRACETAG, wxT("process O: '%s'"), msg.c_str());
+            ::myLogTrace(MYTRACETAG, wxT("process O: '%s'"), msg.c_str());
             if (m_pEvtHandler) {
                 wxCommandEvent upevent(wxEVT_GENERIC, wxID_ANY);
                 upevent.SetInt(ActionStdout);
@@ -220,7 +220,7 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
             if (msg.StartsWith(wxT("FREENX>")))
                     msg = msg.Mid(4);
             code = parseCode(msg);
-            ::wxLogTrace(MYTRACETAG, wxT("nxssh O[%04d]: '%s'"), code, msg.c_str());
+            ::myLogTrace(MYTRACETAG, wxT("nxssh O[%04d]: '%s'"), code, msg.c_str());
             if (m_pEvtHandler) {
                 wxCommandEvent upevent(wxEVT_NXSSH, wxID_ANY);
                 upevent.SetInt(ActionLog);
@@ -590,7 +590,7 @@ MyIPC::OnErrReceived(wxCommandEvent &event)
 
     switch (m_eType) {
         case TypeNone:
-            ::wxLogTrace(MYTRACETAG, wxT("process E: '%s'"), msg.c_str());
+            ::myLogTrace(MYTRACETAG, wxT("process E: '%s'"), msg.c_str());
             if (m_pEvtHandler) {
                 wxCommandEvent upevent(wxEVT_GENERIC, wxID_ANY);
                 upevent.SetInt(ActionStderr);
@@ -600,7 +600,7 @@ MyIPC::OnErrReceived(wxCommandEvent &event)
             break;
         case TypeSsh:
             code = parseCode(msg);
-            ::wxLogTrace(MYTRACETAG, wxT("nxssh E[%04d]: '%s'"), code, msg.c_str());
+            ::myLogTrace(MYTRACETAG, wxT("nxssh E[%04d]: '%s'"), code, msg.c_str());
             if (m_pEvtHandler) {
                 wxCommandEvent upevent(wxEVT_NXSSH, wxID_ANY);
                 upevent.SetInt(ActionLog);

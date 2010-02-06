@@ -48,7 +48,6 @@
 #include "opennxApp.h"
 #include "osdep.h"
 #include "pwcrypt.h"
-#include "LogNull.h"
 #include "ProxyPasswordDialog.h"
 
 #include <wx/filename.h>
@@ -86,7 +85,6 @@ static const int KBD_PORT_OFFSET   = 8000;
 static const int HTTP_PORT_OFFSET  = 9000;
 static const int USBIP_PORT_OFFSET = 40000;
 
-#define NX_PROTO wxT(NX_PROTOCOL_VERSION)
 #define X11ARCH_NONE   0
 #define X11ARCH_CYGWIN 1
 #define X11ARCH_MINGW  2
@@ -152,9 +150,11 @@ class RunLog : public wxLogChain
 
         void DoLog(wxLogLevel level, const wxChar *szString, time_t t)
         {
-            PassMessages(level <= wxLOG_Message);
-            wxLogChain::DoLog((level > wxLOG_Message) ? wxLOG_Message : level, szString, t);
+            PassMessages(level <= minlevel);
+            wxLogChain::DoLog((level > minlevel) ? minlevel : level, szString, t);
         }
+    private:
+        static const wxLogLevel minlevel = wxLOG_Message;
 };
 
 class SessionCleaner : public wxDirTraverser
@@ -186,7 +186,7 @@ class SessionCleaner : public wxDirTraverser
         {
             for (size_t i = 0; i < m_aDirs.GetCount(); i++) {
                 if (name.StartsWith(m_aDirs[i])) {
-                    ::wxLogTrace(MYTRACETAG, wxT("adding file '%s'"), name.c_str());
+                    ::myLogTrace(MYTRACETAG, wxT("adding file '%s'"), name.c_str());
                     m_aFiles.Add(name);
                     return wxDIR_CONTINUE;
                 }
@@ -197,7 +197,7 @@ class SessionCleaner : public wxDirTraverser
         virtual wxDirTraverseResult OnDir(const wxString &name)
         {
             if (name.StartsWith(m_sTopLevel + wxT("S-"))) {
-                ::wxLogTrace(MYTRACETAG, wxT("Session dir: '%s'"), name.c_str());
+                ::myLogTrace(MYTRACETAG, wxT("Session dir: '%s'"), name.c_str());
                 wxTextFile tf(name + wxFileName::GetPathSeparator() + wxT("session"));
                 if (tf.Exists()) {
                     wxString line;
@@ -206,9 +206,9 @@ class SessionCleaner : public wxDirTraverser
                             if (line.Contains(wxT("mode with pid"))) {
                                 long pid;
                                 line.AfterFirst(wxT('\'')).BeforeLast(wxT('\'')).ToLong(&pid);
-                                ::wxLogTrace(MYTRACETAG, wxT("Proxy-PID: %d"), pid);
+                                ::myLogTrace(MYTRACETAG, wxT("Proxy-PID: %d"), pid);
                                 if (!wxProcess::Exists(pid)) {
-                                    ::wxLogTrace(MYTRACETAG, wxT("PID does not exist, adding '%s'"), name.c_str());
+                                    ::myLogTrace(MYTRACETAG, wxT("PID does not exist, adding '%s'"), name.c_str());
                                     m_aDirs.Add(name);
                                     return wxDIR_CONTINUE;
                                 }
@@ -216,50 +216,50 @@ class SessionCleaner : public wxDirTraverser
                         }
                     }
                 }
-                ::wxLogTrace(MYTRACETAG, wxT("Keeping '%s'"), name.c_str());
+                ::myLogTrace(MYTRACETAG, wxT("Keeping '%s'"), name.c_str());
             }
             if (name.StartsWith(m_sTopLevel + wxT("D-"))) {
-                ::wxLogTrace(MYTRACETAG, wxT("Service dir: '%s'"), name.c_str());
+                ::myLogTrace(MYTRACETAG, wxT("Service dir: '%s'"), name.c_str());
                 wxTextFile tf(name + wxFileName::GetPathSeparator() + wxT("pid"));
                 if (tf.Exists()) {
                     long pid;
                     if (tf.Open()) {
                         tf.GetFirstLine().ToLong(&pid);
-                        ::wxLogTrace(MYTRACETAG, wxT("Service-PID: %d"), pid);
+                        ::myLogTrace(MYTRACETAG, wxT("Service-PID: %d"), pid);
                         if (!wxProcess::Exists(pid)) {
-                            ::wxLogTrace(MYTRACETAG, wxT("PID does not exist, adding '%s'"), name.c_str());
+                            ::myLogTrace(MYTRACETAG, wxT("PID does not exist, adding '%s'"), name.c_str());
                             m_aDirs.Add(name);
                             return wxDIR_CONTINUE;
                         }
                     }
                 }
-                ::wxLogTrace(MYTRACETAG, wxT("Keeping '%s'"), name.c_str());
+                ::myLogTrace(MYTRACETAG, wxT("Keeping '%s'"), name.c_str());
             }
             if (name.StartsWith(m_sTopLevel + wxT("F-"))) {
-                ::wxLogTrace(MYTRACETAG, wxT("Failed session dir: '%s'"), name.c_str());
+                ::myLogTrace(MYTRACETAG, wxT("Failed session dir: '%s'"), name.c_str());
                 m_aDirs.Add(name);
                 return wxDIR_CONTINUE;
             }
             if (m_cRegex.Matches(name)) {
-                ::wxLogTrace(MYTRACETAG, wxT("Temp dir: '%s'"), name.c_str());
+                ::myLogTrace(MYTRACETAG, wxT("Temp dir: '%s'"), name.c_str());
                 long mpid = 0;
                 long spid = 0;
                 m_cRegex.GetMatch(name, 1).ToLong(&mpid);
-                ::wxLogTrace(MYTRACETAG, wxT("Main PID: %d"), mpid);
+                ::myLogTrace(MYTRACETAG, wxT("Main PID: %d"), mpid);
                 wxTextFile tf(name + wxFileName::GetPathSeparator() + wxT("sshlog"));
                 if (tf.Exists()) {
                     if (tf.Open()) {
                         wxString line = tf.GetFirstLine();
                         line.AfterLast(wxT(':')).Strip(wxString::both).ToLong(&spid);
-                        ::wxLogTrace(MYTRACETAG, wxT("Ssh-PID: %d"), spid);
+                        ::myLogTrace(MYTRACETAG, wxT("Ssh-PID: %d"), spid);
                     }
                 }
                 if (mpid && (!wxProcess::Exists(mpid)) && ((!spid) || (!wxProcess::Exists(spid)))) {
-                    ::wxLogTrace(MYTRACETAG, wxT("PIDs do not exist, adding '%s'"), name.c_str());
+                    ::myLogTrace(MYTRACETAG, wxT("PIDs do not exist, adding '%s'"), name.c_str());
                     m_aDirs.Add(name);
                     return wxDIR_CONTINUE;
                 }
-                ::wxLogTrace(MYTRACETAG, wxT("Keeping '%s'"), name.c_str());
+                ::myLogTrace(MYTRACETAG, wxT("Keeping '%s'"), name.c_str());
                 return wxDIR_IGNORE;
             }
             if (name.StartsWith(m_sTopLevel + wxT("temp")))
@@ -331,7 +331,7 @@ class SessionWatch : public wxThreadHelper
 };
 
 /**
- * Our specialization ow wxHTTP. Neded, because wxHTTP stops
+ * Our specialization of wxHTTP. Needed, because wxHTTP stops
  * parsing headers when recognizing an error status header (4xx, 5xx ...)
  * but we want it to continue parsing in order to get the Server: header.
  */
@@ -373,7 +373,7 @@ class MyHTTP : public wxHTTP {
         bool BuildRequest(const wxString& path, wxHTTP_Req req)
         {
             bool ret = wxHTTP::BuildRequest(path, req);
-            ::wxLogTrace(MYTRACETAG, wxT("calling ParseHeaders()"));
+            ::myLogTrace(MYTRACETAG, wxT("calling ParseHeaders()"));
             ParseHeaders();
             return ret;
         }
@@ -416,6 +416,7 @@ MySession::MySession(wxString dir, wxString status, wxString stype, wxString hos
         m_eSessionStatus = Failed;
 
     m_rePID.Compile(wxT("([[:digit:]]+)"));
+    initversion();
 
     CheckState();
 }
@@ -439,6 +440,8 @@ MySession::MySession(const MySession &src)
     m_bTouched = src.m_bTouched;
     m_rePID.Compile(wxT("([[:digit:]]+)"));
     m_iReader = src.m_iReader;
+    m_lProtocolVersion = src.m_lProtocolVersion;
+    m_sProtocolVersion = src.m_sProtocolVersion;
 }
 
 MySession::MySession()
@@ -451,6 +454,7 @@ MySession::MySession()
     , m_pSessionWatch(NULL)
 {
     m_iReader = -1;
+    initversion();
 }
 
 MySession & MySession::operator =(const MySession &src)
@@ -471,12 +475,14 @@ MySession & MySession::operator =(const MySession &src)
     m_sDir = src.m_sDir;
     m_bTouched = src.m_bTouched;
     m_rePID.Compile(wxT("([[:digit:]]+)"));
+    m_lProtocolVersion = src.m_lProtocolVersion;
+    m_sProtocolVersion = src.m_sProtocolVersion;
     return *this;
 }
 
 MySession::~MySession()
 {
-    ::wxLogTrace(MYTRACETAG, wxT("~MySession"));
+    ::myLogTrace(MYTRACETAG, wxT("~MySession"));
     if (m_pSshLog) {
         m_pSshLog->Flush();
         delete m_pSshLog;
@@ -513,6 +519,9 @@ MySession::sGetSessionStatus()
         case Running:
             return _("running");
             break;
+        case Unknown:
+            return _("unknown");
+            break;
     }
     return _("unknown");
 }
@@ -526,6 +535,9 @@ MySession::sGetSessionType()
             break;
         case Client:
             return _("Client");
+            break;
+        case None:
+            return _("Unknown");
             break;
     }
     return _("Unknown");
@@ -660,6 +672,7 @@ MySession::getXauthCookie(int display /* = 0 */, wxString proto)
     return ::wxExecute(cmd) ? wxString() : cookie;
 #else
     wxUnusedVar(display);
+    wxUnusedVar(proto);
 #endif
     return wxString();
 }
@@ -782,7 +795,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
             {
                 // At this point key-based auth is finished and
                 // thus the key-file isn't needed anymore
-                LogNull logdummy;
+                wxLogNull logdummy;
                 wxFileName fn;
                 fn.Assign(m_sTempDir, wxT("keylog"));
                 ::wxRemoveFile(fn.GetFullPath());
@@ -819,7 +832,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     break;
                 case STATE_HELLO:
                     m_pDlg->SetStatusText(_("Authenticating"));
-                    printSsh(wxT("hello NXCLIENT - Version ") NX_PROTO);
+                    printSsh(wxT("hello NXCLIENT - Version ") + m_sProtocolVersion);
                     m_eConnectState = STATE_SHELLMODE;
                     break;
                 case STATE_SHELLMODE:
@@ -835,7 +848,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     break;
                 case STATE_LIST_SESSIONS:
                     m_pDlg->SetStatusText(_("Query server-side sessions"));
-                    scmd = wxT("listsession") + m_pCfg->sGetListParams(intver(NX_PROTO));
+                    scmd = wxT("listsession") + m_pCfg->sGetListParams(m_lProtocolVersion);
                     printSsh(scmd);
                     m_eConnectState = STATE_PARSE_SESSIONS;
                     break;
@@ -851,13 +864,13 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     break;
                 case STATE_START_SESSION:
                     scmd = wxT("startsession");
-                    scmd << m_pCfg->sGetSessionParams(intver(NX_PROTO), true, m_sClearPassword);
+                    scmd << m_pCfg->sGetSessionParams(m_lProtocolVersion, true, m_sClearPassword);
                     printSsh(scmd);
                     m_eConnectState = STATE_FINISH;
                     break;
                 case STATE_ATTACH_SESSION:
                     scmd = wxT("attachsession");
-                    scmd << m_pCfg->sGetSessionParams(intver(NX_PROTO), true, m_sClearPassword)
+                    scmd << m_pCfg->sGetSessionParams(m_lProtocolVersion, true, m_sClearPassword)
                         << wxT(" --display=\"") << m_sResumePort
                         << wxT("\" --id=\"") << m_sResumeId << wxT("\"");
                     printSsh(scmd);
@@ -865,7 +878,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     break;
                 case STATE_RESUME_SESSION:
                     scmd = wxT("restoresession");
-                    scmd << m_pCfg->sGetSessionParams(intver(NX_PROTO), false, m_sClearPassword)
+                    scmd << m_pCfg->sGetSessionParams(m_lProtocolVersion, false, m_sClearPassword)
                         << wxT(" --session=\"") << m_sResumeName
                         << wxT("\" --type=\"") << m_sResumeType
                         << wxT("\" --id=\"") << m_sResumeId << wxT("\"");
@@ -947,7 +960,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                 if (m_eConnectState == STATE_FINISH) {
                     m_pDlg->SetStatusText(_("Starting session"));
                     msg = wxT("NX> 299 Switch connection to: ");
-                    if ((intver(NX_PROTO) > 0x00020000) && m_bSslTunneling) {
+                    if ((m_lProtocolVersion > 0x00020000) && m_bSslTunneling) {
                         msg << wxT("NX mode: encrypted options: nx,options=")
                             << formatOptFilename() << wxT(":") << m_sSessionDisplay;
                     } else {
@@ -1003,25 +1016,26 @@ MySession::OnSshEvent(wxCommandEvent &event)
     }
 }
 
-    long
-MySession::intver(const wxString &ver)
+    void
+MySession::initversion()
 {
-    long ret = 0;
-    wxStringTokenizer t(ver, wxT("."));
+    m_lProtocolVersion = 0;
+    if (!::wxGetEnv(wxT("NX_PROTOCOL_VERSION"), &m_sProtocolVersion))
+        m_sProtocolVersion = wxT(NX_PROTOCOL_VERSION);
+    wxStringTokenizer t(m_sProtocolVersion, wxT("."));
     while (t.HasMoreTokens()) {
         long n;
         t.GetNextToken().ToLong(&n);
-        ret = (ret << 8) + n;
+        m_lProtocolVersion = (m_lProtocolVersion << 8) + n;
     }
-    ::wxLogTrace(MYTRACETAG, wxT("protocol version: %08x"), ret);
-    return ret;
+    ::myLogTrace(MYTRACETAG, wxT("protocol version: %08x"), m_lProtocolVersion);
 }
 
     void
 MySession::printSsh(const wxString &s, bool doLog /* = true */)
 {
     if (m_pNxSsh) {
-        ::wxLogTrace(MYTRACETAG, wxT("sending '%s'"), (doLog ? s.c_str() : wxT("********")));
+        ::myLogTrace(MYTRACETAG, wxT("sending '%s'"), (doLog ? s.c_str() : wxT("********")));
         m_pNxSsh->Print(s, doLog);
     }
 }
@@ -1030,7 +1044,7 @@ MySession::printSsh(const wxString &s, bool doLog /* = true */)
 MySession::parseSessions(bool moreAllowed)
 {
     size_t n = m_aParseBuffer.GetCount();
-    ::wxLogTrace(MYTRACETAG, wxT("parseSessions: Got %d lines to parse"), n);
+    ::myLogTrace(MYTRACETAG, wxT("parseSessions: Got %d lines to parse"), n);
     wxRegEx re(
             wxT("^(\\d+)\\s+([\\w-]+)\\s+([0-9A-F]{32})\\s+([A-Z-]{8})\\s+(\\d+)\\s+(\\d+x\\d+)\\s+(\\w+)\\s+(\\w+)\\s*"),
             wxRE_ADVANCED);
@@ -1061,13 +1075,13 @@ MySession::parseSessions(bool moreAllowed)
             d.AddSession(sName, sState, sType, sSize, sColors, sPort, sOpts, sId);
             bFound = true;
             iSessionCount++;
-            ::wxLogTrace(MYTRACETAG, wxT("parseSessions: re match"));
+            ::myLogTrace(MYTRACETAG, wxT("parseSessions: re match"));
             continue;
         }
         if (m_bIsShadow) {
-            ::wxLogTrace(MYTRACETAG, wxT("parseSessions: re2 probe"));
+            ::myLogTrace(MYTRACETAG, wxT("parseSessions: re2 probe"));
             if (re2.Matches(line) /* && (re2.GetMatchCount() == 9)*/) {
-                ::wxLogTrace(MYTRACETAG, wxT("parseSessions: re2 match: %d"), re2.GetMatchCount());
+                ::myLogTrace(MYTRACETAG, wxT("parseSessions: re2 match: %d"), re2.GetMatchCount());
                 wxString sPort(re2.GetMatch(line, 1));
                 wxString sType(re2.GetMatch(line, 2));
                 wxString sId(re2.GetMatch(line, 3));
@@ -1082,7 +1096,7 @@ MySession::parseSessions(bool moreAllowed)
                 continue;
             }
         }
-        ::wxLogTrace(MYTRACETAG, wxT("parseSessions: NO match on '%s'"), line.c_str());
+        ::myLogTrace(MYTRACETAG, wxT("parseSessions: NO match on '%s'"), line.c_str());
     }
     if (bFound) {
         d.EnableNew(moreAllowed);
@@ -1178,14 +1192,14 @@ MySession::startSharing()
             continue;
         bool bAvailable = false;
         wxString sn = sg[i].m_sShareName;
-        ::wxLogTrace(MYTRACETAG, wxT("startSharing: considering share '%s'"), sn.c_str());
+        ::myLogTrace(MYTRACETAG, wxT("startSharing: considering share '%s'"), sn.c_str());
         for (size_t j = 0; j < sa.GetCount(); j++) {
             if ((sa[j].sharetype == sg[i].m_eType) && (sa[j].name == sn)) {
                 bAvailable = true;
                 break;
             }
         }
-        ::wxLogTrace(MYTRACETAG, wxT("'%s' is %savailable"), sn.c_str(),
+        ::myLogTrace(MYTRACETAG, wxT("'%s' is %savailable"), sn.c_str(),
                 (bAvailable ? wxEmptyString : wxT("not ")));
         if (!bAvailable)
             continue;
@@ -1252,7 +1266,7 @@ MySession::startXserver()
 {
 #ifdef __WXMSW__
     int display = getFirstFreePort(X_PORT_OFFSET);
-    ::wxLogTrace(MYTRACETAG, wxT("startXServer first free port is %d"), display);
+    ::myLogTrace(MYTRACETAG, wxT("startXServer first free port is %d"), display);
     if (0 == display) {
 #warning error-handling
         return;
@@ -1302,7 +1316,7 @@ MySession::startXserver()
     }
 
     {
-        LogNull l;
+        wxLogNull l;
         fn.AssignDir(m_sSysDir);
         fn.AppendDir(wxT("share"));
         fn.AppendDir(wxT("fonts"));
@@ -1325,7 +1339,7 @@ MySession::startXserver()
     // wxWinCmd << wxT(" -nokeyhook");
 
     wxWinCmd << wxT(" ") << dpyStr;
-    ::wxLogTrace(MYTRACETAG, wxT("startXServer executing %s"), wxWinCmd.c_str());
+    ::myLogTrace(MYTRACETAG, wxT("startXServer executing %s"), wxWinCmd.c_str());
     ::wxExecute(wxWinCmd, wxEXEC_ASYNC);
     ::wxSetEnv(wxT("DISPLAY"), dpyStr);
     ::wxLogInfo(wxT("env: DISPLAY='%s'"), dpyStr.c_str());
@@ -1335,16 +1349,15 @@ MySession::startXserver()
     void
 MySession::startProxy()
 {
-    ::wxLogTrace(MYTRACETAG, wxT("MySession::startProxy() called"));
+    ::myLogTrace(MYTRACETAG, wxT("MySession::startProxy() called"));
     long cupsport = wxConfigBase::Get()->Read(wxT("Config/CupsPort"), -1);
     wxString popts;
-    int inxproto = intver(NX_PROTO);
-    if (inxproto >= 0x00030000)
+    if (m_lProtocolVersion >= 0x00030000)
         popts << wxT("nx/");
     popts << wxT("nx,cookie=") << m_sProxyCookie;
-    if (inxproto < 0x00030000)
+    if (m_lProtocolVersion < 0x00030000)
         popts << wxT(",root=") << m_sUserDir;
-    popts << m_pCfg->sGetProxyParams(inxproto);
+    popts << m_pCfg->sGetProxyParams(m_lProtocolVersion);
     if (!m_sSubscription.IsEmpty())
         popts << wxT(",product=") << m_sSubscription;
     if (!m_sSmbPort.IsEmpty())
@@ -1367,7 +1380,7 @@ MySession::startProxy()
 #endif
         << wxT(",id=") << m_sSessionID;
     if (m_bSslTunneling) {
-        if (inxproto <= 0x00020000) {
+        if (m_lProtocolVersion <= 0x00020000) {
             m_sProxyIP = wxT("127.0.0.1");
             m_sProxyPort = wxString::Format(wxT("%d"), getFirstFreePort(PROXY_PORT_OFFSET));
             popts << wxT(",listen=") << m_sProxyPort;
@@ -1380,7 +1393,7 @@ MySession::startProxy()
     // appended to the regular options.
     wxFileName mergeOpts(m_sUserDir, wxT("options"));
     if (mergeOpts.FileExists()) {
-        LogNull dummy;
+        wxLogNull dummy;
         wxTextFile f(mergeOpts.GetFullPath());
         if (f.Open()) {
             wxString mopts = f.GetFirstLine().Strip(wxString::both);
@@ -1416,7 +1429,7 @@ MySession::startProxy()
                 << wxFileName::GetPathSeparator() << wxT("nxproxy -S nx,options=")
                 << m_sOptFilename << wxT(":") << m_sSessionDisplay;
             printSsh(wxT("bye"));
-            if ((intver(NX_PROTO) <= 0x00020000) || (!m_bSslTunneling)) {
+            if ((m_lProtocolVersion <= 0x00020000) || (!m_bSslTunneling)) {
                 ::wxExecute(pcmd, wxEXEC_ASYNC);
             }
         } else {
@@ -1441,19 +1454,19 @@ MySession::getActiveCupsPrinters()
         for (size_t i = ret.GetCount(); i > 0; i--) {
             size_t idx = i - 1;
             if (used.Index(ret[idx].m_sGroupName) == wxNOT_FOUND) {
-                ::wxLogTrace(MYTRACETAG, wxT("removing[%d] '%s'"),
+                ::myLogTrace(MYTRACETAG, wxT("removing[%d] '%s'"),
                         idx, ret[idx].m_sShareName.c_str());
                 ret.RemoveAt(idx);
                 continue;
             }
             if (ret[idx].m_eType != SharedResource::SHARE_CUPS_PRINTER) {
-                ::wxLogTrace(MYTRACETAG, wxT("removing[%d] '%s'"),
+                ::myLogTrace(MYTRACETAG, wxT("removing[%d] '%s'"),
                         idx, ret[idx].m_sShareName.c_str());
                 ret.RemoveAt(idx);
                 continue;
             }
             bool bAvailable = false;
-            ::wxLogTrace(MYTRACETAG, wxT("Considering CUPS printer '%s' %d"),
+            ::myLogTrace(MYTRACETAG, wxT("Considering CUPS printer '%s' %d"),
                     ret[idx].m_sShareName.c_str(), idx);
             for (size_t j = 0; j < sa.GetCount(); j++) {
                 if (sa[j].name == ret[idx].m_sShareName) {
@@ -1461,16 +1474,16 @@ MySession::getActiveCupsPrinters()
                     break;
                 }
             }
-            ::wxLogTrace(MYTRACETAG, wxT("'%s' is %savailable"),
+            ::myLogTrace(MYTRACETAG, wxT("'%s' is %savailable"),
                     ret[idx].m_sShareName.c_str(), (bAvailable ? wxEmptyString : wxT("not ")));
             if (!bAvailable) {
-                ::wxLogTrace(MYTRACETAG, wxT("removing[%d] '%s'"),
+                ::myLogTrace(MYTRACETAG, wxT("removing[%d] '%s'"),
                         idx, ret[idx].m_sShareName.c_str());
                 ret.RemoveAt(idx);
             }
         }
     }
-    ::wxLogTrace(MYTRACETAG, wxT("# of active printers: %d"), ret.GetCount());
+    ::myLogTrace(MYTRACETAG, wxT("# of active printers: %d"), ret.GetCount());
     return ret;
 }
 
@@ -1493,13 +1506,13 @@ MySession::isCupsRunning()
         wxInputStream *is = http.GetInputStream(wxT("/"));
         int res = http.GetResponse();
         wxString svr = http.GetHeader(wxT("server"));
-        ::wxLogTrace(MYTRACETAG, wxT("isCupsRunning RC=%d SVR=%s"), res, svr.c_str());
+        ::myLogTrace(MYTRACETAG, wxT("isCupsRunning RC=%d SVR=%s"), res, svr.c_str());
         if ((res == 200) && svr.Contains(wxT("CUPS")))
             ret = true;
         delete is;
     }
     m_bCupsRunning = ret;
-    ::wxLogTrace(MYTRACETAG, wxT("isCupsRunning returning %s"), (ret ? wxT("true") : wxT("false")));
+    ::myLogTrace(MYTRACETAG, wxT("isCupsRunning returning %s"), (ret ? wxT("true") : wxT("false")));
     return ret;
 }
 
@@ -1515,7 +1528,7 @@ MySession::prepareCups()
         }
         wxConfigBase::Get()->Write(wxT("Config/CupsPort"), cupsport);
     }
-    ::wxLogTrace(MYTRACETAG, wxT("Check for cupsd running at port %d"), cupsport);
+    ::myLogTrace(MYTRACETAG, wxT("Check for cupsd running at port %d"), cupsport);
     if (isCupsRunning())
         return true;
 
@@ -1634,7 +1647,7 @@ MySession::prepareCups()
     }
     wxString cmd = m_pCfg->sGetCupsPath();
     cmd << wxT(" -c ") << sCupsDir << wxT("cupsd.conf");
-    ::wxLogTrace(MYTRACETAG, wxT("Starting '%s'"), cmd.c_str());
+    ::myLogTrace(MYTRACETAG, wxT("Starting '%s'"), cmd.c_str());
     if (::wxExecute(cmd, wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER) <= 0)
         return false;
     wxThread::Sleep(500);
@@ -1646,7 +1659,7 @@ MySession::prepareCups()
 MySession::cleanupOldSessions()
 {
     wxDir ud;
-    ::wxLogTrace(MYTRACETAG, wxT("Cleaning up old session data"));
+    ::myLogTrace(MYTRACETAG, wxT("Cleaning up old session data"));
     if (ud.Open(m_sUserDir)) {
         SessionCleaner sc(m_sUserDir);
         ud.Traverse(sc);
@@ -1656,7 +1669,7 @@ MySession::cleanupOldSessions()
     void
 MySession::clearSshKeys(const wxString &keyloc)
 {
-    ::wxLogTrace(MYTRACETAG, wxT("Clearing keys for %s at %s"),
+    ::myLogTrace(MYTRACETAG, wxT("Clearing keys for %s at %s"),
             m_pCfg->sGetServerHost().c_str(), keyloc.c_str());
     wxString keyfile = keyloc.BeforeLast(wxT(':'));
     long n;
@@ -1665,7 +1678,7 @@ MySession::clearSshKeys(const wxString &keyloc)
         wxTextFile tf(keyfile);
         if (tf.Exists()) {
             if (tf.Open()) {
-                ::wxLogTrace(MYTRACETAG, wxT("Removing '%s'"), tf[n].c_str());
+                ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), tf[n].c_str());
                 tf.RemoveLine(n);
                 wxIPV4address ip;
                 if (ip.Hostname(m_pCfg->sGetServerHost())) {
@@ -1673,7 +1686,7 @@ MySession::clearSshKeys(const wxString &keyloc)
                     wxString line;
                     for (line = tf.GetFirstLine(); !tf.Eof(); line = tf.GetNextLine()) {
                         if (line.Contains(ipnum)) {
-                            ::wxLogTrace(MYTRACETAG, wxT("Removing '%s'"), line.c_str());
+                            ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), line.c_str());
                             tf.RemoveLine(tf.GetCurrentLine());
                         }
                     }
@@ -1761,7 +1774,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
             cleanupOldSessions();
 
         if (m_pCfg->bGetUseSmartCard()) {
-            ::wxLogTrace(MYTRACETAG, wxT("Checking for SmartCard"));
+            ::myLogTrace(MYTRACETAG, wxT("Checking for SmartCard"));
             CardWaiterDialog wd;
             m_iReader = wd.WaitForCard(parent);
             if (m_iReader == -1)
@@ -1822,8 +1835,8 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
         ::wxLogInfo(wxT("env: NX_SYSTEM='%s'"), m_sSysDir.c_str());
         ::wxSetEnv(wxT("NX_CLIENT"), ::wxGetApp().GetSelfPath());
         ::wxLogInfo(wxT("env: NX_CLIENT='%s'"), ::wxGetApp().GetSelfPath().c_str());
-        ::wxSetEnv(wxT("NX_VERSION"), NX_PROTO);
-        ::wxLogInfo(wxT("env: NX_VERSION='") NX_PROTO wxT("'"));
+        ::wxSetEnv(wxT("NX_VERSION"), m_sProtocolVersion);
+        ::wxLogInfo(wxT("env: NX_VERSION='%s'"), m_sProtocolVersion.c_str());
         ::wxSetEnv(wxT("XAUTHORITY"), getXauthPath());
         ::wxLogInfo(wxT("env: XAUTHORITY='%s'"), getXauthPath().c_str());
 #ifdef __UNIX__
@@ -1954,14 +1967,14 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
         } while (m_bRemoveKey);
 
         if (m_pCfg->bGetEnableUSBIP()) {
-            ::wxLogTrace(MYTRACETAG, wxT("Enabling UsbIp"));
+            ::myLogTrace(MYTRACETAG, wxT("Enabling UsbIp"));
             ::wxGetApp().SetNxSshPID(nxssh.GetPID());
             ::wxGetApp().SetSessionCfg(*m_pCfg);
             ::wxGetApp().SetSessionID(m_sSessionID.Right(32));
             ::wxGetApp().SetRequireStartUsbIp(true);
         } else {
             if (m_pCfg->bGetUseSmartCard()) {
-                ::wxLogTrace(MYTRACETAG, wxT("Enabling WatchReader %d"), m_iReader);
+                ::myLogTrace(MYTRACETAG, wxT("Enabling WatchReader %d"), m_iReader);
                 ::wxGetApp().SetNxSshPID(nxssh.GetPID());
                 ::wxGetApp().SetReader(m_iReader);
                 ::wxGetApp().SetRequireWatchReader(true);

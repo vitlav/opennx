@@ -103,7 +103,7 @@ private:
     void startXserver();
     void startSharing();
     void parseSessions(bool moreAllowed);
-    long intver(const wxString&);
+    void initversion();
     bool prepareCups();
     bool isCupsRunning();
     void printSsh(const wxString &s, bool doLog = true);
@@ -129,6 +129,7 @@ private:
     int m_iReader;
     int m_iHttpPort;
     long m_lEsdPort;
+    long m_lProtocolVersion;
     unsigned long m_nSessionPushLength;
     wxLog *m_pSshLog;
     MyIPC *m_pNxSsh;
@@ -158,6 +159,7 @@ private:
     wxString m_sResumePort;
     wxString m_sKillId;
     wxString m_sTempDir;
+    wxString m_sProtocolVersion;
     wxWindow *m_pParent;
     SessionWatch *m_pSessionWatch;
 
