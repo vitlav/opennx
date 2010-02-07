@@ -106,7 +106,7 @@ GETTEXTIZE = $(shell which gettextize)
 
 bootstrap:
 #   Update ChangeLog from SVN
-	svn2cl -i --break-before-msg
+	svn2cl -i --break-before-msg --authors=conf/authors.xml
 # 	Convince gettextize not to modify EXTRA_DIST
 	test -f conf/config.rpath || touch conf/config.rpath
 # 	Convince gettextize not to modify AC_CONFIG_FILES
@@ -269,7 +269,8 @@ unknown:
 
 dist-platform: $(PLATFORMDIST)
 
-EXTRA_DIST = conf/mkinstalldirs  conf/config.rpath INSTALL INSTALL.generic COPYING share \
-	etc/60-opennx.rules opennx.pjd opennx.rc tracelog.rc watchreader.rc \
+EXTRA_DIST = conf/mkinstalldirs conf/config.rpath conf/authors.xml \
+	INSTALL INSTALL.generic COPYING share etc/60-opennx.rules \
+	opennx.pjd opennx.rc tracelog.rc watchreader.rc \
 	opennx.spec patches getnxsrcpkg $(RESDEPS) ChangeLog extres debian \
 	$(wildcard m4/*.m4)
