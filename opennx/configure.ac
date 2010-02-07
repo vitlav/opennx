@@ -170,6 +170,19 @@ esac
 AM_PATH_WXCONFIG(2.8.0,wxWidgets=1,wxWidgets=0,[$_wx_required], $WXPARAMS)
 test ${wxWidgets} = 0 && AC_MSG_ERROR(Could not find wxWidgets library)
 
+# Check, if wxLogStream is available
+save_CPPFLAGS="$CPPFLAGS"
+CPPFLAGS="$WX_CPPFLAGS $CPPFLAGS"
+AC_LANG_PUSH([C++])
+AC_MSG_CHECKING([for wxLogStream])
+AC_COMPILE_IFELSE([[#include <wx/log.h>
+wxLogStream s;]],[AC_MSG_RESULT([ok])],[AC_MSG_ERROR([[
+Your wxWidgets does not provide the required wxLogStream class.
+Please reconfigure wxWidgets using the option --enable-std_iostreams
+]])])
+AC_LANG_POP
+CPPFLAGS="$save_CPPFLAGS"
+
 APP_LDADD=
 OPENNX_RES=
 TRACELOG=
