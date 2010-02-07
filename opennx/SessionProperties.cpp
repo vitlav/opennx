@@ -1906,7 +1906,7 @@ void SessionProperties::OnButtonBrowseCupspathClick( wxCommandEvent& event )
     wxUnusedVar(event);
     wxFileName fn(m_sCupsPath);
     const wxString& file = ::wxFileSelector(_("Select System CUPS daemon"),
-            fn.GetPath(), fn.GetName(), wxEmptyString, wxT("*"), wxOPEN|wxFILE_MUST_EXIST, this);
+            fn.GetPath(), fn.GetName(), wxEmptyString, wxT("*"), wxFD_OPEN|wxFD_FILE_MUST_EXIST, this);
     if (!file.IsEmpty()) {
         m_pCtrlCupsPath->SetValue(file);
         CheckChanged();
@@ -2341,7 +2341,7 @@ void SessionProperties::OnButtonBrowseUsbipdSocketClick( wxCommandEvent& event )
     wxUnusedVar(event);
     wxFileName fn(m_sUsbipdSocket);
     const wxString& file = ::wxFileSelector(_("Select path of USBIPD socket"),
-            fn.GetPath(), fn.GetName(), wxEmptyString, wxT("*"), wxOPEN|wxFILE_MUST_EXIST, this);
+            fn.GetPath(), fn.GetName(), wxEmptyString, wxT("*"), wxFD_OPEN|wxFD_FILE_MUST_EXIST, this);
     if (!file.IsEmpty()) {
         m_pCtrlUsbIpdSocket->SetValue(file);
         CheckChanged();
