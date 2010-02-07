@@ -3,7 +3,7 @@ BUILDUSR = $(shell id -u):$(shell id -g)
 dmg: pkg
 	rm -rf dmgroot
 	mkdir dmgroot
-	sudo cp -a OpenNX.pkg dmgroot
+	sudo cp -R OpenNX.pkg dmgroot
 	cp $(srcdir)/OpenSC.webloc dmgroot
 	$(srcdir)/mkdmg -o \
 	    -b $(srcdir)/folderbg.jpg \
@@ -49,9 +49,9 @@ pkgdir:
 	touch $@
 
 pkg: pkgdir
-	sudo chown -R root.wheel pkgroot
+	sudo chown -R root:admin pkgroot
 	rm -rf OpenNX.pkg
-	cd $(builddir) && /Developer/Tools/packagemaker -build -p OpenNX.pkg -f pkgroot -v \
+	cd $(builddir) && $(PACKAGEMAKER) -build -p OpenNX.pkg -f pkgroot -v \
 	    -r $(srcdir)/pkgResources \
 	    -i $(srcdir)/pkg.plist \
 	    -d $(srcdir)/Description.plist

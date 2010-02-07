@@ -24,11 +24,11 @@ cleanup() {
 trap cleanup EXIT
 mkdir -p "$TDIR"
 cd "$TDIR"
-SRC=samba-3.4.2
-TGZ=$SRC.tar.gz
+TGZ=samba-latest.tar.gz
 DLURL="http://us1.samba.org/samba/ftp/$TGZ"
 
-wget "$DLURL"
+test -f $TGZ || wget "$DLURL"
+SRC=`tar tzf $TGZ|tail -1|cut -d/ -f1`
 tar xzf $TGZ
 cd $SRC/source3
 CFLAGS="-arch i386" LDFLAGS="-arch i386" ./configure \
@@ -47,7 +47,7 @@ mkdir -p "$IDIR"
 for lib in bin/libsmbclient.dylib* ; do
     bn=`basename $lib`
     if [ -L $lib ] ; then
-        cp -a $lib "$IDIR/$bn"
+        cp $lib "$IDIR/$bn"
     else
         lipo -create bin-i386/$bn $lib -output "$IDIR/$bn"
     fi
