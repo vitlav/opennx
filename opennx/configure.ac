@@ -30,7 +30,7 @@ case $build_os in
         ;;
 esac
 case $target_os in
-    darwin8*)
+    darwin*)
         am_dependency_tracking=no
         enable_dependency_tracking=no
         if test "x$prefix" = xNONE; then
@@ -81,7 +81,7 @@ AC_SUBST(WS2LIB)
 RESLIB=
 AC_CHECK_LIB(resolv,res_init,[RESLIB=-lresolv],[
     case $target_os in
-        darwin8*)
+        darwin*)
             AC_MSG_ERROR([Could not find required library resolv])
             ;;
     esac
@@ -199,7 +199,7 @@ case $target_os in
         tagnames="RC"
         _LT_AC_TAGCONFIG
         ;;
-    darwin8*)
+    darwin*)
         MACUNINSTALL='macuninstall$(EXEEXT)'
         MACFINDREADER='macfindreader$(EXEEXT)'
         WATCHREADER='watchreader$(EXEEXT)'
@@ -300,7 +300,7 @@ if test -n "$ac_cv_samba" ; then
     CPPFLAGS="$CPPFLAGS -I$ac_cv_samba/source/include"
 else
     case $target_os in
-        darwin8*)
+        darwin*)
             CPPFLAGS="$CPPFLAGS -I$srcdir/packaging/MacOSX"
             ;;
     esac
@@ -316,7 +316,7 @@ if test -n "$ac_cv_opensc" ; then
     LDFLAGS="$LDFLAGS -L$ac_cv_opensc/lib"
 else
     case $target_os in
-        darwin8*)
+        darwin*)
             CPPFLAGS="$CPPFLAGS -I/Library/OpenSC/include"
             LDFLAGS="$LDFLAGS -L/Library/OpenSC/lib"
             ;;
@@ -376,7 +376,7 @@ case $target_os in
             fi
         fi
         ;;
-    darwin8*)
+    darwin*)
         PLATFORMDIST=dmg
         ;;
     mingw*)

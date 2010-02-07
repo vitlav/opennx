@@ -11716,7 +11716,7 @@ diff -urwN nxproxy-orig/configure.ac nxproxy/configure.ac
 +
 +dnl Try enabling universal binaries on MacOSX
 +case "$target_os" in
-+    darwin8*)
++    darwin*)
 +        fe_CHECK_FLAG([C],[CFLAGS],[-arch i386])
 +        fe_CHECK_FLAG([C++],[CXXFLAGS],[-arch i386])
 +        fe_CHECK_FLAG([C],[CFLAGS],[-arch ppc])
