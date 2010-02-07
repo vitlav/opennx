@@ -8,9 +8,7 @@ AC_CONFIG_SRCDIR([opennxApp.cpp])
 AC_CONFIG_HEADERS([config.h])
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE([foreign no-installinfo no-installman])
-dnl Unfortunately, silent-rules don't work on MacOSX
-dnl AM_INIT_AUTOMAKE([foreign silent-rules no-installinfo no-installman])
-dnl AM_SILENT_RULES([yes])
+m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
 case $build_os in
     mingw*)
@@ -369,6 +367,8 @@ fi
 
 # ISCC env variable
 AC_ARG_VAR([ISCC],[Full path of InnoSetup compiler iscc.exe.])dnl
+# packagemaker on OSX
+AC_ARG_VAR([PACKAGEMAKER],[Full path of packagemaker (Mac OSX only).])dnl
 
 SETUP=
 DLLPATH=
@@ -391,6 +391,7 @@ case $target_os in
         ;;
     darwin*)
         PLATFORMDIST=dmg
+        AC_PATH_PROG([PACKAGEMAKER], [packagemaker], [no], [/Developer/Tools:/Developer/usr/bin])
         ;;
     mingw*)
         PLATFORMDIST=setup
