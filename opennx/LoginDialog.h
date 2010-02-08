@@ -139,7 +139,6 @@ private:
     void ReadConfigDirectory();
 
 ////@begin LoginDialog member variables
-    wxStaticBitmap* m_pCtrlLogo;
     wxTextCtrl* m_pCtrlUsername;
     wxTextCtrl* m_pCtrlPassword;
     wxComboBox* m_pCtrlSessionName;

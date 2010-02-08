@@ -534,7 +534,7 @@
                   <bool name="proxy-Separate files">0</bool>
                   <string name="proxy-Implementation filename">""</string>
                   <string name="proxy-Header filename">""</string>
-                  <string name="proxy-Member variable name">"m_pCtrlLogo"</string>
+                  <string name="proxy-Member variable name">""</string>
                   <string name="proxy-Bitmap">"res/opennx.png"</string>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
@@ -563,8 +563,8 @@
                   <string name="proxy-Custom styles">""</string>
                   <long name="proxy-X">-1</long>
                   <long name="proxy-Y">-1</long>
-                  <long name="proxy-Width">167</long>
-                  <long name="proxy-Height">58</long>
+                  <long name="proxy-Width">-1</long>
+                  <long name="proxy-Height">-1</long>
                   <string name="proxy-AlignH">"Centre"</string>
                   <string name="proxy-AlignV">"Centre"</string>
                   <long name="proxy-Stretch factor">0</long>
