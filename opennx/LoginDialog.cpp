@@ -184,6 +184,7 @@ bool LoginDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
     ////@begin LoginDialog member initialisation
     m_sTmpUsername = wxT("");
     m_sTmpPassword = wxT("");
+    m_pCtrlLogo = NULL;
     m_pCtrlUsername = NULL;
     m_pCtrlPassword = NULL;
     m_pCtrlSessionName = NULL;
@@ -216,6 +217,7 @@ void LoginDialog::CreateControls()
     ////@begin LoginDialog content construction
     if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_LOGIN")))
         wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
+    m_pCtrlLogo = XRCCTRL(*this, "wxID_STATIC", wxStaticBitmap);
     m_pCtrlUsername = XRCCTRL(*this, "ID_TEXTCTRL_USERNAME", wxTextCtrl);
     m_pCtrlPassword = XRCCTRL(*this, "ID_TEXTCTRL_PASSWORD", wxTextCtrl);
     m_pCtrlSessionName = XRCCTRL(*this, "ID_COMBOBOX_SESSION", wxComboBox);
