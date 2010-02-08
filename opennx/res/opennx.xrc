@@ -16,8 +16,8 @@
                     <object class="wxBoxSizer">
                         <orient>wxVERTICAL</orient>
                         <object class="sizeritem">
-                            <flag>wxALIGN_CENTER_HORIZONTAL|wxALL|wxFIXED_MINSIZE</flag>
-                            <border>5</border>
+                            <flag>wxALIGN_CENTER_HORIZONTAL|wxFIXED_MINSIZE</flag>
+                            <border>0</border>
                             <object class="wxStaticBitmap" name="wxID_STATIC">
                                 <bitmap>memory:memrsc#zip:res/opennx.png</bitmap>
                             </object>

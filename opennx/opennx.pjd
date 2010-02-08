@@ -568,11 +568,11 @@
                   <string name="proxy-AlignH">"Centre"</string>
                   <string name="proxy-AlignV">"Centre"</string>
                   <long name="proxy-Stretch factor">0</long>
-                  <long name="proxy-Border">5</long>
-                  <bool name="proxy-wxLEFT">1</bool>
-                  <bool name="proxy-wxRIGHT">1</bool>
-                  <bool name="proxy-wxTOP">1</bool>
-                  <bool name="proxy-wxBOTTOM">1</bool>
+                  <long name="proxy-Border">0</long>
+                  <bool name="proxy-wxLEFT">0</bool>
+                  <bool name="proxy-wxRIGHT">0</bool>
+                  <bool name="proxy-wxTOP">0</bool>
+                  <bool name="proxy-wxBOTTOM">0</bool>
                   <bool name="proxy-wxSHAPED">0</bool>
                   <bool name="proxy-wxADJUST_MINSIZE">0</bool>
                   <bool name="proxy-wxFIXED_MINSIZE">1</bool>
