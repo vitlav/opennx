@@ -156,10 +156,10 @@ RESDEPS = $(wildcard $(srcdir)/res/*.xrc $(srcdir)/res/*.png \
 RESSRC = $(subst $(srcdir)/,,$(RESDEPS))
 
 tmpres.zip: $(RESDEPS)
-	cd $(srcdir) && zip -q9r $(abs_builddir)/$(@F) $(RESSRC)
+	$(AM_V_GEN)cd $(srcdir) && zip -q9r $(abs_builddir)/$(@F) $(RESSRC)
 
 memres.h: tmpres.zip bin2hdr
-	./bin2hdr tmpres.zip memres.h mem_res
+	$(AM_V_GEN)./bin2hdr tmpres.zip memres.h mem_res
 
 $(top_srcdir)/opennxApp.cpp: memres.h
 

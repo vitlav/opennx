@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opennx 0.16\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-02-06 01:38+0100\n"
+"POT-Creation-Date: 2010-02-08 02:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1256,15 +1256,15 @@ msgstr ""
 msgid "&Apply"
 msgstr ""
 
-#: ShareProperties.cpp:264
+#: ShareProperties.cpp:254
 msgid "Modify shared resource - OpenNX"
 msgstr ""
 
-#: ShareProperties.cpp:375
+#: ShareProperties.cpp:365
 msgid "No shares found"
 msgstr ""
 
-#: ShareProperties.cpp:460
+#: ShareProperties.cpp:423
 #, c-format
 msgid ""
 "Do you want to make\n"
@@ -1272,15 +1272,15 @@ msgid ""
 "the default printer?"
 msgstr ""
 
-#: ShareProperties.cpp:461
+#: ShareProperties.cpp:424
 msgid "Default printer"
 msgstr ""
 
-#: ShareProperties.cpp:490
+#: ShareProperties.cpp:453
 msgid "Mountpoint is already used. Please chose another mountpoint"
 msgstr ""
 
-#: ShareProperties.cpp:491
+#: ShareProperties.cpp:454
 msgid "Invalid mountpoint"
 msgstr ""
 
