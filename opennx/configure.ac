@@ -63,7 +63,7 @@ AC_CHECK_TOOL([PERL],[perl],[
             ;;
     esac
 ])
-AC_ARG_VAR([PERL],[[Path to perl binary. (required for win32 builds only)]])
+AC_ARG_VAR([PERL],[Path to perl binary. (required for win32 builds only)])
 AC_CHECK_TOOL([ZIP],[zip],[AC_MSG_ERROR([Could not find required tool 'zip'])])
 AC_ARG_VAR([ZIP],[Path to zip binary.])
 
