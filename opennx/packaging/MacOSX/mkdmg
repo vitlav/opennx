@@ -8,6 +8,7 @@ use File::Basename;
 my $SETFILE = '/Developer/Tools/SetFile';
 
 my $verbose = 1;
+my $quiet = ($verbose ? '' : '-quiet');
 my $rmtmp = 0;
 my $over = 0;
 my $mountpoint = '';
@@ -73,6 +74,7 @@ sub imgsize($) {
     if ($imgfile ne '') {
         open(P, "anytopnm $imgfile 2>/dev/null | pamfile 2>/dev/null |");
         while (<P>) {
+	    chomp;
             if (/^stdin:.*,\s(\d+)\s+by\s+(\d+)/) {
                 $windowsize{'w'} = int($1);
                 $windowsize{'h'} = int($2);
@@ -126,7 +128,7 @@ sub file_options() {
 }
 
 sub END() {
-    system("hdiutil detach $mountpoint -quiet -force >/dev/null 2>&1");
+    system("sudo hdiutil detach $mountpoint $quiet -force >/dev/null 2>&1");
     rmtree($mountpoint) if $rmtmp;
     rmtree($tmpdmg) if ($tmpdmg ne '');
 }
@@ -163,8 +165,8 @@ imgsize($bgimg);
 readfopts();
 mkpath($mountpoint, 0, 0755);
 die "Could not create temporary mountpoint $mountpoint: $!\n" unless (-d $mountpoint);
-chkrun("hdiutil create -format UDRW -quiet -volname '".$volname."' -srcfolder '".$src."' '".$tmpdmg."'");
-chkrun("hdiutil attach '".$tmpdmg."' -mountpoint '".$mountpoint."' -noautoopen -quiet");
+chkrun("sudo hdiutil create -format UDRW $quiet -mode 0777 -volname '".$volname."' -srcfolder '".$src."' '".$tmpdmg."'");
+chkrun("sudo hdiutil attach '".$tmpdmg."' -mountpoint '".$mountpoint."' -noautoopen $quiet");
 #chkrun("bless --folder '".$mountpoint."' --openfolder '".$mountpoint."'");
 if ($bgimg ne '') {
     mkpath("$mountpoint/.bg$$", 0, 0755);
@@ -184,10 +186,8 @@ my $script=<<SCRIPT;
                 set toolbar visible to false
                 set statusbar visible to false
                 set current view to icon view
-                delay 1 -- Sync
                 set the bounds to {@{[window_bounds]}}
             end tell
-            delay 1 -- Sync
             set icon size of the icon view options of container window to $iconsize
             set text size of the icon view options of container window to $textsize
             set arrangement of the icon view options of container window to not arranged
@@ -195,11 +195,8 @@ my $script=<<SCRIPT;
             set the bounds of the container window to {@{[window_bounds]}}
             set background picture of the icon view options of container window to file ".bg$$:$bgimg" 
             update without registering applications
-            delay 5 -- Sync
             close
         end tell
-        -- Sync
-        delay 5
     end tell
 SCRIPT
 runscript($script);
@@ -207,5 +204,5 @@ file_options();
 if ($bgimg ne '') {
     chkrun($SETFILE.' -a V "'.$mountpoint.'/.bg'.$$.'"');
 }
-chkrun("hdiutil detach $mountpoint -quiet -force");
-chkrun("hdiutil convert '".$tmpdmg."' -quiet -format UDZO -imagekey zlib-level=9 -o '".$out."'");
+chkrun("sudo hdiutil detach $mountpoint $quiet -force");
+chkrun("sudo hdiutil convert '".$tmpdmg."' $quiet -format UDZO -imagekey zlib-level=9 -o '".$out."'");
