@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-02-10 00:14+0100\n"
+"POT-Creation-Date: 2010-02-10 01:23+0100\n"
 "PO-Revision-Date: 2009-09-13 11:50+0100\n"
 "Last-Translator: Boris Savelev <boris.savelev@gmail.com>\n"
 "Language-Team:  <de@li.org>\n"
@@ -1065,7 +1065,7 @@ msgstr "Нет доступного сервера CUPS."
 msgid "Select System CUPS daemon"
 msgstr "Выберите сервер CUPS"
 
-#: SessionProperties.cpp:2126 opennxApp.cpp:1103
+#: SessionProperties.cpp:2126 opennxApp.cpp:1105
 msgid "libusb is not available. No USB devices will be exported"
 msgstr "libusb не доступна. USB устройства не смогут быть проброшены."
 
@@ -1762,42 +1762,46 @@ msgid "Run in dialog mode."
 msgstr "Запустить в режиме dialog."
 
 #: opennxApp.cpp:696
+msgid "Compatibility option for dialog mode (ignored)."
+msgstr ""
+
+#: opennxApp.cpp:698
 msgid "Dialog mode proxy."
 msgstr "Dialog mode proxy."
 
-#: opennxApp.cpp:698
+#: opennxApp.cpp:700
 msgid "Specify message for dialog mode."
 msgstr "Сообщение для dialog режима."
 
-#: opennxApp.cpp:700
+#: opennxApp.cpp:702
 msgid "Specify parent PID for dialog mode."
 msgstr "PID родительского процесса для dialog режима."
 
-#: opennxApp.cpp:702
+#: opennxApp.cpp:704
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr "Запустить сессию <str>."
 
-#: opennxApp.cpp:704
+#: opennxApp.cpp:706
 msgid "Specify window-ID for dialog mode."
 msgstr "Window-ID для запуска в dialog режиме."
 
-#: opennxApp.cpp:706 watchUsbIpApp.cpp:225
+#: opennxApp.cpp:708 watchUsbIpApp.cpp:225
 msgid "Specify wxWidgets trace mask."
 msgstr "Specify wxWidgets trace mask."
 
-#: opennxApp.cpp:709
+#: opennxApp.cpp:711
 msgid "Test CardWaiterDialog"
 msgstr "Test CardWaiterDialog"
 
-#: opennxApp.cpp:712
+#: opennxApp.cpp:714
 msgid "Guide the user through the steps to configure a session."
 msgstr "Guide the user through the steps to configure a session."
 
-#: opennxApp.cpp:763 watchReaderApp.cpp:195
+#: opennxApp.cpp:765 watchReaderApp.cpp:195
 msgid "Smart card removed"
 msgstr "Смарт-карта удалена"
 
-#: opennxApp.cpp:765 watchReaderApp.cpp:194
+#: opennxApp.cpp:767 watchReaderApp.cpp:194
 msgid ""
 "OpenNX session has been suspended, because\n"
 "the authenticating smart card has been removed."
@@ -1805,16 +1809,16 @@ msgstr ""
 "Сессия OpenNX была приостановлена,\n"
 "потому что была вытащена смарт-карта."
 
-#: opennxApp.cpp:1117
+#: opennxApp.cpp:1119
 msgid "USBIP tunnel registration timeout"
 msgstr "USBIP tunnel registration timeout"
 
-#: opennxApp.cpp:1119
+#: opennxApp.cpp:1121
 #, c-format
 msgid "Unable to export USB device %s"
 msgstr "Не удалось экспортировать USB устройство '%s'"
 
-#: opennxApp.cpp:1125
+#: opennxApp.cpp:1127
 msgid "Could not connect to usbipd2. No USB devices will be exported"
 msgstr ""
 "Не удалось подключиться к usbipd2. USB устройства не будут экспортированы"
