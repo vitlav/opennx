@@ -692,6 +692,8 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
             _("Secify dialog style for dialog mode."));
     parser.AddOption(wxEmptyString, wxT("dialog"),
             _("Run in dialog mode."));
+    parser.AddOption(wxEmptyString, wxT("display"),
+            _("Compatibility option for dialog mode (ignored)."));
     parser.AddSwitch(wxEmptyString, wxT("local"),
             _("Dialog mode proxy."));
     parser.AddOption(wxEmptyString, wxT("message"),
