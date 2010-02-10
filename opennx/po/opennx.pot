@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opennx 0.16\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-02-08 02:22+0100\n"
+"POT-Creation-Date: 2010-02-10 00:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,11 +24,12 @@ msgstr ""
 msgid "About OpenNX"
 msgstr ""
 
-#: AboutDialog_symbols.h:23 RdpImageSettingsDialog_symbols.h:35
-#: RdpPropertyDialog_symbols.h:35 SessionProperties_symbols.h:110
-#: ShareProperties_symbols.h:51 UnixImageSettingsDialog_symbols.h:34
-#: UsbFilterDetailsDialog_symbols.h:35 VncImageSettingsDialog_symbols.h:27
-#: VncPropertyDialog_symbols.h:31 X11PropertyDialog_symbols.h:32
+#: AboutDialog_symbols.h:23 ProxyPasswordDialog_symbols.h:25
+#: RdpImageSettingsDialog_symbols.h:35 RdpPropertyDialog_symbols.h:35
+#: SessionProperties_symbols.h:110 ShareProperties_symbols.h:51
+#: UnixImageSettingsDialog_symbols.h:34 UsbFilterDetailsDialog_symbols.h:35
+#: VncImageSettingsDialog_symbols.h:27 VncPropertyDialog_symbols.h:31
+#: X11PropertyDialog_symbols.h:32
 msgid "&OK"
 msgstr ""
 
@@ -41,12 +42,13 @@ msgid "Please insert smart card"
 msgstr ""
 
 #: CardWaiterDialog_symbols.h:24 ConnectDialog_symbols.h:24
-#: KeyDialog_symbols.h:26 PanicDialog_symbols.h:23
-#: RdpImageSettingsDialog_symbols.h:36 RdpPropertyDialog_symbols.h:36
-#: ResumeDialog_symbols.h:28 SessionProperties_symbols.h:111
-#: ShareProperties_symbols.h:52 UnixImageSettingsDialog_symbols.h:35
-#: UsbFilterDetailsDialog_symbols.h:36 VncImageSettingsDialog_symbols.h:28
-#: VncPropertyDialog_symbols.h:32 X11PropertyDialog_symbols.h:33
+#: KeyDialog_symbols.h:26 LoginDialog_symbols.h:30 PanicDialog_symbols.h:23
+#: ProxyPasswordDialog_symbols.h:26 RdpImageSettingsDialog_symbols.h:36
+#: RdpPropertyDialog_symbols.h:36 ResumeDialog_symbols.h:28
+#: SessionProperties_symbols.h:111 ShareProperties_symbols.h:52
+#: UnixImageSettingsDialog_symbols.h:35 UsbFilterDetailsDialog_symbols.h:36
+#: VncImageSettingsDialog_symbols.h:28 VncPropertyDialog_symbols.h:32
+#: X11PropertyDialog_symbols.h:33
 msgid "&Cancel"
 msgstr ""
 
@@ -137,11 +139,11 @@ msgid "Login as guest user"
 msgstr ""
 
 #: LoginDialog_symbols.h:28
-msgid "Configure..."
+msgid "Con&figure..."
 msgstr ""
 
-#: LoginDialog_symbols.h:29 ProxyPasswordDialog_symbols.h:26
-msgid "Cancel"
+#: LoginDialog_symbols.h:29
+msgid "L&ogin"
 msgstr ""
 
 #: MacUninstallApp.cpp:57 MacUninstallApp.cpp:332
@@ -547,7 +549,7 @@ msgstr ""
 msgid "Host"
 msgstr ""
 
-#: MyWizard_symbols.h:25 ResumeDialog.cpp:155 SessionAdmin.cpp:195
+#: MyWizard_symbols.h:25 ResumeDialog.cpp:156 SessionAdmin.cpp:195
 #: SessionProperties_symbols.h:26
 msgid "Port"
 msgstr ""
@@ -668,10 +670,6 @@ msgstr ""
 msgid "Please enter your HTTP proxy password"
 msgstr ""
 
-#: ProxyPasswordDialog_symbols.h:25
-msgid "OK"
-msgstr ""
-
 #: QuitDialog_symbols.h:22
 msgid "&Quit"
 msgstr ""
@@ -774,44 +772,44 @@ msgstr ""
 msgid "Run application"
 msgstr ""
 
-#: ResumeDialog.cpp:151 SessionProperties.cpp:685
+#: ResumeDialog.cpp:152 SessionProperties.cpp:685
 msgid "Name"
 msgstr ""
 
-#: ResumeDialog.cpp:152
+#: ResumeDialog.cpp:153
 msgid "State"
 msgstr ""
 
-#: ResumeDialog.cpp:153 SessionAdmin.cpp:200
+#: ResumeDialog.cpp:154 SessionAdmin.cpp:200
 msgid "Type"
 msgstr ""
 
-#: ResumeDialog.cpp:154
+#: ResumeDialog.cpp:155
 msgid "Screen"
 msgstr ""
 
-#: ResumeDialog.cpp:156 SessionAdmin_symbols.h:34
+#: ResumeDialog.cpp:157 SessionAdmin_symbols.h:34
 #: X11PropertyDialog_symbols.h:27
 msgid "Options"
 msgstr ""
 
-#: ResumeDialog.cpp:157 SessionAdmin.cpp:196
+#: ResumeDialog.cpp:158 SessionAdmin.cpp:196
 msgid "Session ID"
 msgstr ""
 
-#: ResumeDialog.cpp:207
+#: ResumeDialog.cpp:208
 msgid "&Attach"
 msgstr ""
 
-#: ResumeDialog.cpp:207 ResumeDialog_symbols.h:26
+#: ResumeDialog.cpp:208 ResumeDialog_symbols.h:26
 msgid "&Resume"
 msgstr ""
 
-#: ResumeDialog.cpp:285
+#: ResumeDialog.cpp:286
 msgid "Do you really want to terminate the selected session?"
 msgstr ""
 
-#: ResumeDialog.cpp:286
+#: ResumeDialog.cpp:287
 msgid "Terminate session - OpenNX"
 msgstr ""
 
@@ -826,7 +824,7 @@ msgid ""
 msgstr ""
 
 #: ResumeDialog_symbols.h:24
-msgid "Teminate"
+msgid "Ter&minate"
 msgstr ""
 
 #: ResumeDialog_symbols.h:25

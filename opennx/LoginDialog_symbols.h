@@ -25,5 +25,6 @@
 #define ID_DIALOG_LOGIN_SYMBOL_3 _("Session")
 #define ID_DIALOG_LOGIN_SYMBOL_4 _("Use SmartCard")
 #define ID_DIALOG_LOGIN_SYMBOL_5 _("Login as guest user")
-#define ID_DIALOG_LOGIN_SYMBOL_6 _("Configure...")
-#define ID_DIALOG_LOGIN_SYMBOL_7 _("Cancel")
+#define ID_DIALOG_LOGIN_SYMBOL_6 _("Con&figure...")
+#define ID_DIALOG_LOGIN_SYMBOL_7 _("L&ogin")
+#define ID_DIALOG_LOGIN_SYMBOL_8 _("&Cancel")

@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-02-08 02:22+0100\n"
-"PO-Revision-Date: 2010-01-24 23:45+0100\n"
+"POT-Creation-Date: 2010-02-10 00:14+0100\n"
+"PO-Revision-Date: 2010-02-09 00:02+0100\n"
 "Last-Translator: Fritz Elfert <fritz@fritz-elfert.de>\n"
 "Language-Team:  <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,6 +16,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-Language: German\n"
 "X-Poedit-Country: GERMANY\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: /usr/share/locale/de/LC_MESSAGES/wxstd.mo\n"
 
 #: AboutDialog.cpp:113 SessionProperties.cpp:1106
 msgid "Version"
@@ -25,11 +27,12 @@ msgstr "Version"
 msgid "About OpenNX"
 msgstr "Über OpenNX"
 
-#: AboutDialog_symbols.h:23 RdpImageSettingsDialog_symbols.h:35
-#: RdpPropertyDialog_symbols.h:35 SessionProperties_symbols.h:110
-#: ShareProperties_symbols.h:51 UnixImageSettingsDialog_symbols.h:34
-#: UsbFilterDetailsDialog_symbols.h:35 VncImageSettingsDialog_symbols.h:27
-#: VncPropertyDialog_symbols.h:31 X11PropertyDialog_symbols.h:32
+#: AboutDialog_symbols.h:23 ProxyPasswordDialog_symbols.h:25
+#: RdpImageSettingsDialog_symbols.h:35 RdpPropertyDialog_symbols.h:35
+#: SessionProperties_symbols.h:110 ShareProperties_symbols.h:51
+#: UnixImageSettingsDialog_symbols.h:34 UsbFilterDetailsDialog_symbols.h:35
+#: VncImageSettingsDialog_symbols.h:27 VncPropertyDialog_symbols.h:31
+#: X11PropertyDialog_symbols.h:32
 msgid "&OK"
 msgstr "&OK"
 
@@ -42,12 +45,13 @@ msgid "Please insert smart card"
 msgstr "Bitte stecken Sie Ihre SmartCard ein"
 
 #: CardWaiterDialog_symbols.h:24 ConnectDialog_symbols.h:24
-#: KeyDialog_symbols.h:26 PanicDialog_symbols.h:23
-#: RdpImageSettingsDialog_symbols.h:36 RdpPropertyDialog_symbols.h:36
-#: ResumeDialog_symbols.h:28 SessionProperties_symbols.h:111
-#: ShareProperties_symbols.h:52 UnixImageSettingsDialog_symbols.h:35
-#: UsbFilterDetailsDialog_symbols.h:36 VncImageSettingsDialog_symbols.h:28
-#: VncPropertyDialog_symbols.h:32 X11PropertyDialog_symbols.h:33
+#: KeyDialog_symbols.h:26 LoginDialog_symbols.h:30 PanicDialog_symbols.h:23
+#: ProxyPasswordDialog_symbols.h:26 RdpImageSettingsDialog_symbols.h:36
+#: RdpPropertyDialog_symbols.h:36 ResumeDialog_symbols.h:28
+#: SessionProperties_symbols.h:111 ShareProperties_symbols.h:52
+#: UnixImageSettingsDialog_symbols.h:35 UsbFilterDetailsDialog_symbols.h:36
+#: VncImageSettingsDialog_symbols.h:28 VncPropertyDialog_symbols.h:32
+#: X11PropertyDialog_symbols.h:33
 msgid "&Cancel"
 msgstr "&Abbruch"
 
@@ -141,12 +145,12 @@ msgid "Login as guest user"
 msgstr "Als Gast anmelden"
 
 #: LoginDialog_symbols.h:28
-msgid "Configure..."
-msgstr "Einstellungen..."
+msgid "Con&figure..."
+msgstr "Eins&tellungen..."
 
-#: LoginDialog_symbols.h:29 ProxyPasswordDialog_symbols.h:26
-msgid "Cancel"
-msgstr "Abbrechen"
+#: LoginDialog_symbols.h:29
+msgid "L&ogin"
+msgstr "L&ogin"
 
 #: MacUninstallApp.cpp:57 MacUninstallApp.cpp:332
 #, c-format
@@ -593,7 +597,7 @@ msgstr "Verbindungs Assistent - OpenNX"
 msgid "Host"
 msgstr "Host"
 
-#: MyWizard_symbols.h:25 ResumeDialog.cpp:155 SessionAdmin.cpp:195
+#: MyWizard_symbols.h:25 ResumeDialog.cpp:156 SessionAdmin.cpp:195
 #: SessionProperties_symbols.h:26
 msgid "Port"
 msgstr "Port"
@@ -714,10 +718,6 @@ msgstr "HTTP Proxy-Passwort - OpenNX"
 msgid "Please enter your HTTP proxy password"
 msgstr "Bitte geben Sie Ihr HTTP Proxy-Passwort ein"
 
-#: ProxyPasswordDialog_symbols.h:25
-msgid "OK"
-msgstr "OK"
-
 #: QuitDialog_symbols.h:22
 msgid "&Quit"
 msgstr "&Verlassen"
@@ -820,44 +820,44 @@ msgstr "Starte Arbeitsplatz"
 msgid "Run application"
 msgstr "Starte Anwendung"
 
-#: ResumeDialog.cpp:151 SessionProperties.cpp:685
+#: ResumeDialog.cpp:152 SessionProperties.cpp:685
 msgid "Name"
 msgstr "Name"
 
-#: ResumeDialog.cpp:152
+#: ResumeDialog.cpp:153
 msgid "State"
 msgstr "Status"
 
-#: ResumeDialog.cpp:153 SessionAdmin.cpp:200
+#: ResumeDialog.cpp:154 SessionAdmin.cpp:200
 msgid "Type"
 msgstr "Typ"
 
-#: ResumeDialog.cpp:154
+#: ResumeDialog.cpp:155
 msgid "Screen"
 msgstr "Bildschirm"
 
-#: ResumeDialog.cpp:156 SessionAdmin_symbols.h:34
+#: ResumeDialog.cpp:157 SessionAdmin_symbols.h:34
 #: X11PropertyDialog_symbols.h:27
 msgid "Options"
 msgstr "Optionen"
 
-#: ResumeDialog.cpp:157 SessionAdmin.cpp:196
+#: ResumeDialog.cpp:158 SessionAdmin.cpp:196
 msgid "Session ID"
 msgstr "Sitzungs-ID"
 
-#: ResumeDialog.cpp:207
+#: ResumeDialog.cpp:208
 msgid "&Attach"
 msgstr "&Teilnehmen"
 
-#: ResumeDialog.cpp:207 ResumeDialog_symbols.h:26
+#: ResumeDialog.cpp:208 ResumeDialog_symbols.h:26
 msgid "&Resume"
 msgstr "&Fortsetzen"
 
-#: ResumeDialog.cpp:285
+#: ResumeDialog.cpp:286
 msgid "Do you really want to terminate the selected session?"
 msgstr "Wollen Sie wirklich die gewählte Sitzung beenden?"
 
-#: ResumeDialog.cpp:286
+#: ResumeDialog.cpp:287
 msgid "Terminate session - OpenNX"
 msgstr "Beende Sitzung - OpenNX"
 
@@ -874,8 +874,9 @@ msgstr ""
 "wählen Sie Neu um eine neue Sitzung anzulegen."
 
 #: ResumeDialog_symbols.h:24
-msgid "Teminate"
-msgstr "Beenden"
+#, fuzzy
+msgid "Ter&minate"
+msgstr "&Beenden"
 
 #: ResumeDialog_symbols.h:25
 msgid "&Takeover"
@@ -1889,6 +1890,15 @@ msgstr "Konnte Sitzungs-Konfiguration nicht speichern."
 #: watchUsbIpApp.cpp:497
 msgid "Could not export USB device"
 msgstr "Konnte USB-Gerät nicht exportieren"
+
+#~ msgid "OK"
+#~ msgstr "OK"
+
+#~ msgid "Cancel"
+#~ msgstr "Abbrechen"
+
+#~ msgid "Teminate"
+#~ msgstr "Beenden"
 
 #~ msgid "Could not query multimedia support"
 #~ msgstr "Konnte Multimedia Unterstützung nicht ermitteln"
