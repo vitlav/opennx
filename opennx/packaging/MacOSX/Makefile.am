@@ -10,6 +10,7 @@ dmg: pkg
 	    -f $(srcdir)/fileopts \
 	    -i $(srcdir)/volicon.icns \
 	    $(top_builddir)/OpenNX-$(FULLVERSION).dmg dmgroot
+	sudo rm -rf dmgroot
 	touch $@
 
 pkgdir:
