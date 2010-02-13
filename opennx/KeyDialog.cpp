@@ -196,7 +196,7 @@ void KeyDialog::OnButtonImportClick( wxCommandEvent& event )
             keyDir = ::wxGetHomeDir();
     }
     wxFileDialog d(this, _("Select key to import"), keyDir, wxEmptyString,
-            _("SSh key files (*.key;*.pub)|*.key;*.pub"), wxOPEN|wxFILE_MUST_EXIST);
+            _("SSh key files (*.key;*.pub)|*.key;*.pub"), wxFD_OPEN|wxFILE_MUST_EXIST);
     d.SetDirectory(keyDir);
     if (d.ShowModal() == wxID_OK) {
         m_pCtrlSshKey->LoadFile(d.GetPath());

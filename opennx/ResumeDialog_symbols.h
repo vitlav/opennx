@@ -1,6 +1,6 @@
 // $Id$
 //
-// Copyright (C) 2009 The OpenNX team
+// Copyright (C) 2010 The OpenNX team
 // Author: Fritz Elfert
 //
 // This program is free software; you can redistribute it and/or modify
@@ -21,7 +21,7 @@
 
 #define ID_RESUMEDIALOG_SYMBOL_0 _("Select session - OpenNX")
 #define ID_RESUMEDIALOG_SYMBOL_1 _("There are multiple sessions available, please select one or click New to create a session.")
-#define ID_RESUMEDIALOG_SYMBOL_2 _("Teminate")
+#define ID_RESUMEDIALOG_SYMBOL_2 _("Ter&minate")
 #define ID_RESUMEDIALOG_SYMBOL_3 _("&Takeover")
 #define ID_RESUMEDIALOG_SYMBOL_4 _("&Resume")
 #define ID_RESUMEDIALOG_SYMBOL_5 _("&New")

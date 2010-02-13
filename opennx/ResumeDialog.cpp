@@ -39,6 +39,7 @@
 #endif
 
 ////@begin includes
+#include "wx/imaglist.h"
 ////@end includes
 
 #include "ResumeDialog.h"

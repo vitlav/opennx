@@ -41715,7 +41715,7 @@ diff -urwN nxcomp-orig/configure nxcomp/configure
 +
 +
 +case "$target_os" in
-+    darwin8*)
++    darwin*)
 +
 +
 +  { echo "$as_me:$LINENO: checking whether compiler accepts -arch i386" >&5
@@ -48032,7 +48032,7 @@ diff -urwN nxcomp-orig/configure nxcomp/configure
 +
 +# Check whether --with-libpng was given.
 +if test "${with_libpng+set}" = set; then
-+  withval=$with_libpng;  CPPFLAGS="$CPPFLAGS $withval/include"; LDFLAGS="$LDFLAGS $withval/lib"
++  withval=$with_libpng;  CPPFLAGS="$CPPFLAGS -I$withval/include"; LDFLAGS="$LDFLAGS -L$withval/lib"
 +
  fi
 -echo "$as_me:$LINENO: result: $nxconf_cv_sun" >&5
@@ -48047,7 +48047,7 @@ diff -urwN nxcomp-orig/configure nxcomp/configure
 -if test "${nxconf_cv_freebsd+set}" = set; then
 +# Check whether --with-libjpeg was given.
 +if test "${with_libjpeg+set}" = set; then
-+  withval=$with_libjpeg;  CPPFLAGS="$CPPFLAGS $withval/include"; LDFLAGS="$LDFLAGS $withval/lib"
++  withval=$with_libjpeg;  CPPFLAGS="$CPPFLAGS -I$withval/include"; LDFLAGS="$LDFLAGS -L$withval/lib"
 +
 +fi
 +
@@ -50051,7 +50051,7 @@ diff -urwN nxcomp-orig/configure.ac nxcomp/configure.ac
 +
 +dnl Try enabling universal binaries on MacOSX
 +case "$target_os" in
-+    darwin8*)
++    darwin*)
 +        fe_CHECK_FLAG([C],[CFLAGS],[-arch i386])
 +        fe_CHECK_FLAG([C++],[CXXFLAGS],[-arch i386])
 +        fe_CHECK_FLAG([C],[CFLAGS],[-arch ppc])
@@ -50102,12 +50102,12 @@ diff -urwN nxcomp-orig/configure.ac nxcomp/configure.ac
 +
 +AC_ARG_WITH([libpng],
 +            AS_HELP_STRING([--with-libpng=DIR],[Use DIR/include and DIR/lib for building against libpng]),
-+            [ CPPFLAGS="$CPPFLAGS $withval/include"; LDFLAGS="$LDFLAGS $withval/lib" ]
++            [ CPPFLAGS="$CPPFLAGS -I$withval/include"; LDFLAGS="$LDFLAGS -L$withval/lib" ]
 +)
 +
 +AC_ARG_WITH([libjpeg],
 +            AS_HELP_STRING([--with-libjpeg=DIR],[Use DIR/include and DIR/lib for building against libjpeg]),
-+            [ CPPFLAGS="$CPPFLAGS $withval/include"; LDFLAGS="$LDFLAGS $withval/lib" ]
++            [ CPPFLAGS="$CPPFLAGS -I$withval/include"; LDFLAGS="$LDFLAGS -L$withval/lib" ]
 +)
 +
 +AC_CHECK_LIB([png],[png_set_expand],[LIBPNG="-lpng"])

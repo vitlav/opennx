@@ -70,16 +70,6 @@ BEGIN_EVENT_TABLE( ShareProperties, wxDialog )
     ////@begin ShareProperties event table entries
     EVT_COMBOBOX( XRCID("ID_COMBOBOX_SHARE_LOCALNAME"), ShareProperties::OnComboboxShareLocalnameSelected )
 
-    EVT_TEXT( XRCID("ID_TEXTCTRL_SMBPRINT_USERNAME"), ShareProperties::OnTextctrlSmbprintUsernameUpdated )
-
-    EVT_TEXT( XRCID("ID_TEXTCTRL_SMBPRINT_PASSWORD"), ShareProperties::OnTextctrlSmbprintPasswordUpdated )
-
-    EVT_TEXT( XRCID("ID_TEXTCTRL_SHARE_MOUNTPOINT"), ShareProperties::OnTextctrlShareMountpointUpdated )
-
-    EVT_TEXT( XRCID("ID_TEXTCTRL_SHARE_USERNAME"), ShareProperties::OnTextctrlShareUsernameUpdated )
-
-    EVT_TEXT( XRCID("ID_TEXTCTRL_SHARE_PASSWORD"), ShareProperties::OnTextctrlSharePasswordUpdated )
-
     EVT_BUTTON( wxID_OK, ShareProperties::OnOkClick )
 
     ////@end ShareProperties event table entries
@@ -422,35 +412,8 @@ void ShareProperties::OnComboboxShareLocalnameSelected( wxCommandEvent& event )
     event.Skip();
 }
 
-/*!
- * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SHARE_MOUNTPOINT
- */
 
-void ShareProperties::OnTextctrlShareMountpointUpdated( wxCommandEvent& event )
-{
-    // Insert custom code here
-    event.Skip();
-}
 
-/*!
- * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SHARE_USERNAME
- */
-
-void ShareProperties::OnTextctrlShareUsernameUpdated( wxCommandEvent& event )
-{
-    // Insert custom code here
-    event.Skip();
-}
-
-/*!
- * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SHARE_PASSWORD
- */
-
-void ShareProperties::OnTextctrlSharePasswordUpdated( wxCommandEvent& event )
-{
-    // Insert custom code here
-    event.Skip();
-}
 
 void ShareProperties::askForDefault(ArrayOfShareGroups &sg, ShareGroup &g)
 {
@@ -594,28 +557,3 @@ wxIcon ShareProperties::GetIconResource( const wxString& name )
     // Icon retrieval
     return CreateIconFromFile(name);
 }
-/*!
- * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SMBPRINT_USERNAME
- */
-
-void ShareProperties::OnTextctrlSmbprintUsernameUpdated( wxCommandEvent& event )
-{
-    ////@begin wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SMBPRINT_USERNAME in ShareProperties.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-    ////@end wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SMBPRINT_USERNAME in ShareProperties. 
-}
-
-/*!
- * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SMBPRINT_PASSWORD
- */
-
-void ShareProperties::OnTextctrlSmbprintPasswordUpdated( wxCommandEvent& event )
-{
-    ////@begin wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SMBPRINT_PASSWORD in ShareProperties.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-    ////@end wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SMBPRINT_PASSWORD in ShareProperties. 
-}
-
-

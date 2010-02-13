@@ -785,10 +785,14 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
         << wxT(" --samba=\"") << (m_bEnableSmbSharing ? 1 : 0) << wxT("\"")
         << wxT(" --cups=\"") << (m_bUseCups ? 1 : 0) << wxT("\"")
         << wxT(" --nodelay=\"") << (m_bDisableTcpNoDelay ? 0 : 1) << wxT("\"")
-#ifdef __UNIX__
-        << wxT(" --client=\"linux\"")
+#ifdef __WXMAC__
+        << wxT(" --client=\"macosx\"")
 #else
-        << wxT(" --client=\"windows\"")
+# ifdef __UNIX__
+        << wxT(" --client=\"linux\"")
+# else
+        << wxT(" --client=\"winnt\"")
+# endif
 #endif
         << wxT(" --media=\"") << (m_bEnableMultimedia ? 1 : 0) << wxT("\"")
         ;

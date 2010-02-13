@@ -692,6 +692,8 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
             _("Secify dialog style for dialog mode."));
     parser.AddOption(wxEmptyString, wxT("dialog"),
             _("Run in dialog mode."));
+    parser.AddOption(wxEmptyString, wxT("display"),
+            _("Compatibility option for dialog mode (ignored)."));
     parser.AddSwitch(wxEmptyString, wxT("local"),
             _("Dialog mode proxy."));
     parser.AddOption(wxEmptyString, wxT("message"),
@@ -715,7 +717,12 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
     // wxCmdLineParser insists on having a '=' as separator
     // between option and option-value. The original however
     // *requires* the separator to be a space instead.
+#ifdef __WXMSW__
+    wxRegEx re(wxT("^--((caption)|(style)|(dialog)|(display)|(message)|(parent)|(session)|(window)|(trace))$"));
+#else
+    // On Unix, --display is a toolkit option
     wxRegEx re(wxT("^--((caption)|(style)|(dialog)|(message)|(parent)|(session)|(window)|(trace))$"));
+#endif
     wxArrayString as(argc, (const wxChar **)argv);
     for (i = 1; i < as.GetCount(); i++) {
         if (re.Matches(as[i])) {

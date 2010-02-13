@@ -106,7 +106,7 @@ GETTEXTIZE = $(shell which gettextize)
 
 bootstrap:
 #   Update ChangeLog from SVN
-	svn2cl -i --break-before-msg
+	svn2cl -i --break-before-msg --authors=conf/authors.xml
 # 	Convince gettextize not to modify EXTRA_DIST
 	test -f conf/config.rpath || touch conf/config.rpath
 # 	Convince gettextize not to modify AC_CONFIG_FILES
@@ -156,10 +156,10 @@ RESDEPS = $(wildcard $(srcdir)/res/*.xrc $(srcdir)/res/*.png \
 RESSRC = $(subst $(srcdir)/,,$(RESDEPS))
 
 tmpres.zip: $(RESDEPS)
-	cd $(srcdir) && zip -q9r $(abs_builddir)/$(@F) $(RESSRC)
+	$(AM_V_GEN)cd $(srcdir) && zip -q9r $(abs_builddir)/$(@F) $(RESSRC)
 
 memres.h: tmpres.zip bin2hdr
-	./bin2hdr tmpres.zip memres.h mem_res
+	$(AM_V_GEN)./bin2hdr tmpres.zip memres.h mem_res
 
 $(top_srcdir)/opennxApp.cpp: memres.h
 
@@ -269,7 +269,8 @@ unknown:
 
 dist-platform: $(PLATFORMDIST)
 
-EXTRA_DIST = conf/config.rpath INSTALL INSTALL.generic COPYING share \
-	etc/60-opennx.rules opennx.pjd opennx.rc tracelog.rc watchreader.rc \
+EXTRA_DIST = conf/mkinstalldirs conf/config.rpath conf/authors.xml \
+	INSTALL INSTALL.generic COPYING share etc/60-opennx.rules \
+	opennx.pjd opennx.rc tracelog.rc watchreader.rc \
 	opennx.spec patches getnxsrcpkg $(RESDEPS) ChangeLog extres debian \
 	$(wildcard m4/*.m4)

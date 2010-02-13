@@ -102,6 +102,10 @@ bool UnixImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id),
         m_bUseJpegQuality = m_pCfg->bGetUseJpegQuality();
         m_bDisableRender = m_pCfg->bGetDisableRender();
         m_iJpegQuality = m_pCfg->iGetJpegQuality();
+        m_bDisableBackingstore = m_pCfg->bGetDisableBackingstore();
+        m_bDisableComposite = m_pCfg->bGetDisableComposite();
+        m_bDisableShmem = m_pCfg->bGetDisableShmem();
+        m_bDisableShpix = m_pCfg->bGetDisableShpix();
     }
 
 ////@begin UnixImageSettingsDialog creation

@@ -18,6 +18,26 @@ for pkg in $ALLPKG ; do
     tar xzf ${pkg}-*.tar.gz
 done
 
+# Prerequisite: libjpeg (Leopard does not provide a universal binary)
+test -f jpegsrc.v6b.tar.gz || wget http://downloads.sourceforge.net/project/libjpeg/libjpeg/6b/jpegsrc.v6b.tar.gz
+tar xzf jpegsrc.v6b.tar.gz
+cd jpeg-6b
+cp ../../../../conf/config.guess .
+cp ../../../../conf/config.sub .
+CFLAGS="-arch i386 -arch ppc" LDFLAGS="-arch i386 -arch ppc" ./configure \
+        --prefix=$PFX --enable-static --disable-shared --disable-dependency-tracking
+mkdir -p $DEST/$PFX/{include,lib}
+make prefix=$DEST$PFX install-lib
+cd ..
+# Prerequisite: libpng
+test -f libpng-1.2.42.tar.gz || wget ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng-1.2.42.tar.gz
+tar xzf libpng-1.2.42.tar.gz
+cd libpng-1.2.42
+CFLAGS="-arch i386 -arch ppc" LDFLAGS="-arch i386 -arch ppc" ./configure \
+        --prefix=$PFX --enable-static --disable-shared --disable-dependency-tracking
+make DESTDIR=$DEST install
+cd ..
+# Prerequisite: libaudiofile
 test -f audiofile-0.2.6.tar.gz || wget http://www.68k.org/~michael/audiofile/audiofile-0.2.6.tar.gz
 tar xzf audiofile-0.2.6.tar.gz
 cd audiofile-0.2.6
@@ -37,6 +57,9 @@ for pkg in nxcomp nxproxy nxesd ; do
     cargs=
     margs=
     case $pkg in
+        nxcomp)
+            cargs="--with-libjpeg=$DEST$PFX --with-libpng=$DEST$PFX"
+            ;;
         nxesd)
             cargs="--disable-audiofiletest --with-audiofile=yes"
             margs="AUDIOFILE_CFLAGS=\"-I$DEST$PFX/include\" LDFLAGS=\"-L$DEST$PFX/lib\" LIBS=-laudiofile"
@@ -68,4 +91,6 @@ rm -rf $DEST$PFX/{include,etc,share} \
        $DEST$PFX/lib/*.la \
        $DEST$PFX/lib/*.a \
        $DEST$PFX/lib/pkgconfig \
-       $DEST$PFX/bin/esd*
+       $DEST$PFX/bin/esd* \
+       $DEST$PFX/bin/*-config \
+       $DEST$PFX/bin/sf*

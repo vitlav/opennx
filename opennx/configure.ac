@@ -8,9 +8,7 @@ AC_CONFIG_SRCDIR([opennxApp.cpp])
 AC_CONFIG_HEADERS([config.h])
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE([foreign no-installinfo no-installman])
-dnl Unfortunately, silent-rules don't work on MacOSX
-dnl AM_INIT_AUTOMAKE([foreign silent-rules no-installinfo no-installman])
-dnl AM_SILENT_RULES([yes])
+m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
 case $build_os in
     mingw*)
@@ -30,7 +28,7 @@ case $build_os in
         ;;
 esac
 case $target_os in
-    darwin8*)
+    darwin*)
         am_dependency_tracking=no
         enable_dependency_tracking=no
         if test "x$prefix" = xNONE; then
@@ -56,7 +54,7 @@ AC_CHECK_TARGET_TOOL([OBJDUMP],[objdump],[
             ;;
     esac
 ])
-AC_SUBST(OBJDUMP)
+AC_ARG_VAR([OBJDUMP],[Path to objdump binary. (required for win32 builds only)])
 dnl For the same reason (and for building Xming), we require perl
 AC_CHECK_TOOL([PERL],[perl],[
     case $target_os in
@@ -65,7 +63,9 @@ AC_CHECK_TOOL([PERL],[perl],[
             ;;
     esac
 ])
-AC_SUBST(PERL)
+AC_ARG_VAR([PERL],[Path to perl binary. (required for win32 builds only)])
+AC_CHECK_TOOL([ZIP],[zip],[AC_MSG_ERROR([Could not find required tool 'zip'])])
+AC_ARG_VAR([ZIP],[Path to zip binary.])
 
 # Checks for libraries.
 WS2LIB=
@@ -81,7 +81,7 @@ AC_SUBST(WS2LIB)
 RESLIB=
 AC_CHECK_LIB(resolv,res_init,[RESLIB=-lresolv],[
     case $target_os in
-        darwin8*)
+        darwin*)
             AC_MSG_ERROR([Could not find required library resolv])
             ;;
     esac
@@ -170,6 +170,19 @@ esac
 AM_PATH_WXCONFIG(2.8.0,wxWidgets=1,wxWidgets=0,[$_wx_required], $WXPARAMS)
 test ${wxWidgets} = 0 && AC_MSG_ERROR(Could not find wxWidgets library)
 
+# Check, if wxLogStream is available
+save_CPPFLAGS="$CPPFLAGS"
+CPPFLAGS="$WX_CPPFLAGS $CPPFLAGS"
+AC_LANG_PUSH([C++])
+AC_MSG_CHECKING([for wxLogStream])
+AC_COMPILE_IFELSE([[#include <wx/log.h>
+wxLogStream s;]],[AC_MSG_RESULT([ok])],[AC_MSG_ERROR([[
+Your wxWidgets does not provide the required wxLogStream class.
+Please reconfigure wxWidgets using the option --enable-std_iostreams
+]])])
+AC_LANG_POP
+CPPFLAGS="$save_CPPFLAGS"
+
 APP_LDADD=
 OPENNX_RES=
 TRACELOG=
@@ -199,7 +212,7 @@ case $target_os in
         tagnames="RC"
         _LT_AC_TAGCONFIG
         ;;
-    darwin8*)
+    darwin*)
         MACUNINSTALL='macuninstall$(EXEEXT)'
         MACFINDREADER='macfindreader$(EXEEXT)'
         WATCHREADER='watchreader$(EXEEXT)'
@@ -300,7 +313,7 @@ if test -n "$ac_cv_samba" ; then
     CPPFLAGS="$CPPFLAGS -I$ac_cv_samba/source/include"
 else
     case $target_os in
-        darwin8*)
+        darwin*)
             CPPFLAGS="$CPPFLAGS -I$srcdir/packaging/MacOSX"
             ;;
     esac
@@ -316,7 +329,7 @@ if test -n "$ac_cv_opensc" ; then
     LDFLAGS="$LDFLAGS -L$ac_cv_opensc/lib"
 else
     case $target_os in
-        darwin8*)
+        darwin*)
             CPPFLAGS="$CPPFLAGS -I/Library/OpenSC/include"
             LDFLAGS="$LDFLAGS -L/Library/OpenSC/lib"
             ;;
@@ -356,6 +369,8 @@ fi
 
 # ISCC env variable
 AC_ARG_VAR([ISCC],[Full path of InnoSetup compiler iscc.exe.])dnl
+# packagemaker on OSX
+AC_ARG_VAR([PACKAGEMAKER],[Full path of packagemaker (Mac OSX only).])dnl
 
 SETUP=
 DLLPATH=
@@ -376,8 +391,9 @@ case $target_os in
             fi
         fi
         ;;
-    darwin8*)
+    darwin*)
         PLATFORMDIST=dmg
+        AC_PATH_PROG([PACKAGEMAKER], [packagemaker], [no], [/Developer/Tools:/Developer/usr/bin])
         ;;
     mingw*)
         PLATFORMDIST=setup

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opennx 0.16\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-02-06 01:38+0100\n"
+"POT-Creation-Date: 2010-02-10 01:23+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,11 +24,12 @@ msgstr ""
 msgid "About OpenNX"
 msgstr ""
 
-#: AboutDialog_symbols.h:23 RdpImageSettingsDialog_symbols.h:35
-#: RdpPropertyDialog_symbols.h:35 SessionProperties_symbols.h:110
-#: ShareProperties_symbols.h:51 UnixImageSettingsDialog_symbols.h:34
-#: UsbFilterDetailsDialog_symbols.h:35 VncImageSettingsDialog_symbols.h:27
-#: VncPropertyDialog_symbols.h:31 X11PropertyDialog_symbols.h:32
+#: AboutDialog_symbols.h:23 ProxyPasswordDialog_symbols.h:25
+#: RdpImageSettingsDialog_symbols.h:35 RdpPropertyDialog_symbols.h:35
+#: SessionProperties_symbols.h:110 ShareProperties_symbols.h:51
+#: UnixImageSettingsDialog_symbols.h:34 UsbFilterDetailsDialog_symbols.h:35
+#: VncImageSettingsDialog_symbols.h:27 VncPropertyDialog_symbols.h:31
+#: X11PropertyDialog_symbols.h:32
 msgid "&OK"
 msgstr ""
 
@@ -41,12 +42,13 @@ msgid "Please insert smart card"
 msgstr ""
 
 #: CardWaiterDialog_symbols.h:24 ConnectDialog_symbols.h:24
-#: KeyDialog_symbols.h:26 PanicDialog_symbols.h:23
-#: RdpImageSettingsDialog_symbols.h:36 RdpPropertyDialog_symbols.h:36
-#: ResumeDialog_symbols.h:28 SessionProperties_symbols.h:111
-#: ShareProperties_symbols.h:52 UnixImageSettingsDialog_symbols.h:35
-#: UsbFilterDetailsDialog_symbols.h:36 VncImageSettingsDialog_symbols.h:28
-#: VncPropertyDialog_symbols.h:32 X11PropertyDialog_symbols.h:33
+#: KeyDialog_symbols.h:26 LoginDialog_symbols.h:30 PanicDialog_symbols.h:23
+#: ProxyPasswordDialog_symbols.h:26 RdpImageSettingsDialog_symbols.h:36
+#: RdpPropertyDialog_symbols.h:36 ResumeDialog_symbols.h:28
+#: SessionProperties_symbols.h:111 ShareProperties_symbols.h:52
+#: UnixImageSettingsDialog_symbols.h:35 UsbFilterDetailsDialog_symbols.h:36
+#: VncImageSettingsDialog_symbols.h:28 VncPropertyDialog_symbols.h:32
+#: X11PropertyDialog_symbols.h:33
 msgid "&Cancel"
 msgstr ""
 
@@ -137,11 +139,11 @@ msgid "Login as guest user"
 msgstr ""
 
 #: LoginDialog_symbols.h:28
-msgid "Configure..."
+msgid "Con&figure..."
 msgstr ""
 
-#: LoginDialog_symbols.h:29 ProxyPasswordDialog_symbols.h:26
-msgid "Cancel"
+#: LoginDialog_symbols.h:29
+msgid "L&ogin"
 msgstr ""
 
 #: MacUninstallApp.cpp:57 MacUninstallApp.cpp:332
@@ -547,7 +549,7 @@ msgstr ""
 msgid "Host"
 msgstr ""
 
-#: MyWizard_symbols.h:25 ResumeDialog.cpp:155 SessionAdmin.cpp:195
+#: MyWizard_symbols.h:25 ResumeDialog.cpp:156 SessionAdmin.cpp:195
 #: SessionProperties_symbols.h:26
 msgid "Port"
 msgstr ""
@@ -668,10 +670,6 @@ msgstr ""
 msgid "Please enter your HTTP proxy password"
 msgstr ""
 
-#: ProxyPasswordDialog_symbols.h:25
-msgid "OK"
-msgstr ""
-
 #: QuitDialog_symbols.h:22
 msgid "&Quit"
 msgstr ""
@@ -774,44 +772,44 @@ msgstr ""
 msgid "Run application"
 msgstr ""
 
-#: ResumeDialog.cpp:151 SessionProperties.cpp:685
+#: ResumeDialog.cpp:152 SessionProperties.cpp:685
 msgid "Name"
 msgstr ""
 
-#: ResumeDialog.cpp:152
+#: ResumeDialog.cpp:153
 msgid "State"
 msgstr ""
 
-#: ResumeDialog.cpp:153 SessionAdmin.cpp:200
+#: ResumeDialog.cpp:154 SessionAdmin.cpp:200
 msgid "Type"
 msgstr ""
 
-#: ResumeDialog.cpp:154
+#: ResumeDialog.cpp:155
 msgid "Screen"
 msgstr ""
 
-#: ResumeDialog.cpp:156 SessionAdmin_symbols.h:34
+#: ResumeDialog.cpp:157 SessionAdmin_symbols.h:34
 #: X11PropertyDialog_symbols.h:27
 msgid "Options"
 msgstr ""
 
-#: ResumeDialog.cpp:157 SessionAdmin.cpp:196
+#: ResumeDialog.cpp:158 SessionAdmin.cpp:196
 msgid "Session ID"
 msgstr ""
 
-#: ResumeDialog.cpp:207
+#: ResumeDialog.cpp:208
 msgid "&Attach"
 msgstr ""
 
-#: ResumeDialog.cpp:207 ResumeDialog_symbols.h:26
+#: ResumeDialog.cpp:208 ResumeDialog_symbols.h:26
 msgid "&Resume"
 msgstr ""
 
-#: ResumeDialog.cpp:285
+#: ResumeDialog.cpp:286
 msgid "Do you really want to terminate the selected session?"
 msgstr ""
 
-#: ResumeDialog.cpp:286
+#: ResumeDialog.cpp:287
 msgid "Terminate session - OpenNX"
 msgstr ""
 
@@ -826,7 +824,7 @@ msgid ""
 msgstr ""
 
 #: ResumeDialog_symbols.h:24
-msgid "Teminate"
+msgid "Ter&minate"
 msgstr ""
 
 #: ResumeDialog_symbols.h:25
@@ -1020,7 +1018,7 @@ msgstr ""
 msgid "Select System CUPS daemon"
 msgstr ""
 
-#: SessionProperties.cpp:2126 opennxApp.cpp:1103
+#: SessionProperties.cpp:2126 opennxApp.cpp:1105
 msgid "libusb is not available. No USB devices will be exported"
 msgstr ""
 
@@ -1256,15 +1254,15 @@ msgstr ""
 msgid "&Apply"
 msgstr ""
 
-#: ShareProperties.cpp:264
+#: ShareProperties.cpp:254
 msgid "Modify shared resource - OpenNX"
 msgstr ""
 
-#: ShareProperties.cpp:375
+#: ShareProperties.cpp:365
 msgid "No shares found"
 msgstr ""
 
-#: ShareProperties.cpp:460
+#: ShareProperties.cpp:423
 #, c-format
 msgid ""
 "Do you want to make\n"
@@ -1272,15 +1270,15 @@ msgid ""
 "the default printer?"
 msgstr ""
 
-#: ShareProperties.cpp:461
+#: ShareProperties.cpp:424
 msgid "Default printer"
 msgstr ""
 
-#: ShareProperties.cpp:490
+#: ShareProperties.cpp:453
 msgid "Mountpoint is already used. Please chose another mountpoint"
 msgstr ""
 
-#: ShareProperties.cpp:491
+#: ShareProperties.cpp:454
 msgid "Invalid mountpoint"
 msgstr ""
 
@@ -1689,57 +1687,61 @@ msgid "Run in dialog mode."
 msgstr ""
 
 #: opennxApp.cpp:696
-msgid "Dialog mode proxy."
+msgid "Compatibility option for dialog mode (ignored)."
 msgstr ""
 
 #: opennxApp.cpp:698
-msgid "Specify message for dialog mode."
+msgid "Dialog mode proxy."
 msgstr ""
 
 #: opennxApp.cpp:700
-msgid "Specify parent PID for dialog mode."
+msgid "Specify message for dialog mode."
 msgstr ""
 
 #: opennxApp.cpp:702
-msgid "Run a session importing configuration settings from FILENAME."
+msgid "Specify parent PID for dialog mode."
 msgstr ""
 
 #: opennxApp.cpp:704
+msgid "Run a session importing configuration settings from FILENAME."
+msgstr ""
+
+#: opennxApp.cpp:706
 msgid "Specify window-ID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:706 watchUsbIpApp.cpp:225
+#: opennxApp.cpp:708 watchUsbIpApp.cpp:225
 msgid "Specify wxWidgets trace mask."
 msgstr ""
 
-#: opennxApp.cpp:709
+#: opennxApp.cpp:711
 msgid "Test CardWaiterDialog"
 msgstr ""
 
-#: opennxApp.cpp:712
+#: opennxApp.cpp:714
 msgid "Guide the user through the steps to configure a session."
 msgstr ""
 
-#: opennxApp.cpp:763 watchReaderApp.cpp:195
+#: opennxApp.cpp:765 watchReaderApp.cpp:195
 msgid "Smart card removed"
 msgstr ""
 
-#: opennxApp.cpp:765 watchReaderApp.cpp:194
+#: opennxApp.cpp:767 watchReaderApp.cpp:194
 msgid ""
 "OpenNX session has been suspended, because\n"
 "the authenticating smart card has been removed."
 msgstr ""
 
-#: opennxApp.cpp:1117
+#: opennxApp.cpp:1119
 msgid "USBIP tunnel registration timeout"
 msgstr ""
 
-#: opennxApp.cpp:1119
+#: opennxApp.cpp:1121
 #, c-format
 msgid "Unable to export USB device %s"
 msgstr ""
 
-#: opennxApp.cpp:1125
+#: opennxApp.cpp:1127
 msgid "Could not connect to usbipd2. No USB devices will be exported"
 msgstr ""
 
