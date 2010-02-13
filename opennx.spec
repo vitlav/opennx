@@ -4,7 +4,7 @@
 Summary: An OpenSource NX client
 Name: opennx
 Version: 0.16
-Release: alt6.svn450
+Release: alt7.svn481
 License: LGPL/GPL
 Group: Networking/Remote access
 Url: http://sourceforge.net/projects/opennx
@@ -112,6 +112,9 @@ install -m 644 etc/*.rules %buildroot%_sysconfdir/udev/rules.d
 %endif
 
 %changelog
+* Sat Feb 13 2010 Boris Savelev <boris@altlinux.org> 0.16-alt7.svn481
+- update from trunk
+
 * Mon Jan 25 2010 Boris Savelev <boris@altlinux.org> 0.16-alt6.svn450
 - update from trunk (work with proxy with authorization)
 
