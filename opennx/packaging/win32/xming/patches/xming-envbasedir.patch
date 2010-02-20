@@ -1,0 +1,22 @@
+diff -urw xc-orig/programs/Xserver/hw/xwin/InitOutput.c xc/programs/Xserver/hw/xwin/InitOutput.c
+--- xc-orig/programs/Xserver/hw/xwin/InitOutput.c	2009-03-18 18:13:40.000000000 +0100
++++ xc/programs/Xserver/hw/xwin/InitOutput.c	2010-02-20 17:13:05.351277841 +0100
+@@ -391,10 +391,16 @@
+     if (!inited)
+     {
+         char *fendptr;
++        DWORD size = 0;
++        buffer[0] = '\0';
++        if (NULL != getenv("XMING_BASEDIR"))
++            strncpy(buffer, getenv("XMING_BASEDIR"), sizeof(buffer));
++        if ('\0' == buffer[0]) {
+         HMODULE module = GetModuleHandle(NULL);
+         DWORD size = GetModuleFileName(module, buffer, sizeof(buffer));
+-        if (sizeof(buffer) > 0)
+-            buffer[sizeof(buffer)-1] = 0;
++        }
++        if (0 < sizeof(buffer))
++            buffer[sizeof(buffer)-1] = '\0';
+     
+         fendptr = buffer + size;
+         while (fendptr > buffer)

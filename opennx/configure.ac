@@ -342,6 +342,24 @@ AC_ARG_WITH([dllpath],
                            [Specify path for DLLs (mingw32 crossbuild only)]),
 	[ac_cv_dllpath=$withval])
 
+NXBUILD=nx
+CYGBINS=
+BUILDXMING=yes
+AC_ARG_WITH([orignx],
+            AS_HELP_STRING([--with-orignx],
+                           [Put original nxssh, nxesd and nxauth into installer (mingw32 build only)]),
+            [test "${withval}" = "yes" && NXBUILD=cygnx])
+AC_SUBST(NXBUILD)
+[test "$NXBUILD" = "cygnx" && CYGBINS="nxssh nxesd nxauth"]
+
+AC_ARG_WITH([nxwin],
+            AS_HELP_STRING([--with-nxwin],
+                           [Put nxwin instead of xming into installer (mingw32 build only)]),
+            [test "${withval}" = "yes" && BUILDXMING=no])
+[test "$BUILDXMING" = "no" && CYGBINS="$CYGBINS NXWin"]
+AC_SUBST(CYGBINS)
+AC_SUBST(BUILDXMING)
+
 FE_SVNREV([SVNREV])
 AC_DEFINE_UNQUOTED(SVNREV,"$SVNREV",[SVN revision])
 FE_RCVERSION
@@ -453,7 +471,7 @@ AC_SUBST(XMING_PLATFORM_PATCHES)
 AC_CONFIG_FILES([Makefile opennx.spec res/opennx.rc
     packaging/win32/Makefile packaging/win32/findrequires.pl
     packaging/win32/xming/Makefile packaging/win32/nx/Makefile
-    packaging/win32/pulse/Makefile
+    packaging/win32/cygnx/Makefile packaging/win32/pulse/Makefile
     packaging/MacOSX/Makefile packaging/MacOSX/opennx.plist
     packaging/MacOSX/opennx-main.plist packaging/MacOSX/pkg.plist
     po/Makefile.in])

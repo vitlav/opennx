@@ -172,7 +172,7 @@ watchUsbIpApp.cpp: memres.h
 SUFFIXES = .rc
 
 .rc.o: $(OSRESDEPS)
-	$(WX_RESCOMP) -I$(top_builddir) -o $@ $<
+	$(AM_V_GEN)$(WX_RESCOMP) -I$(top_builddir) -o $@ $<
 
 CLEANFILES = memres.h tmpres.zip *~ po/*~ *.bak *~ \#.* .\#* OpenNX.app
 

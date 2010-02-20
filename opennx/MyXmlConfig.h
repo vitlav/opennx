@@ -163,6 +163,9 @@ class MyXmlConfig
         wxString sGetSessionParams(const long, bool, const wxString &);
         wxString sGetListParams(const long);
         wxString sGetProxyParams(const long);
+#ifdef __WXMSW__
+        wxString sGetXserverParams(bool forNXWin);
+#endif
 
         bool IsValid() { return m_bValid; }
         bool IsWritable() { return m_bWritable; }
@@ -368,6 +371,7 @@ class MyXmlConfig
         void sAddOption(wxXmlNode *, const wxString &, const wxString &);
         wxXmlNode *AddGroup(wxXmlNode *, const wxString &);
         bool loadFromStream(wxInputStream &is, bool);
+        void getDesktopSize(int &dw, int &dh, int &ww, int &wh);
 
         bool m_bDisableBackingstore;
         bool m_bDisableComposite;

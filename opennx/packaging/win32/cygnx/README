@@ -1,0 +1,16 @@
+In order to build an OpenNX package which
+uses the original nxssh.exe and nxesd.exe,
+you can do the following:
+
+1. Fetch NoMachine's nxclient windows installer into this directory
+2. Fetch innounp from http://sourceforge.net/projects/innounp/files/
+   and put the innounp.exe into this directory.
+3. Run innounp.exe -x nxclient-x.y.z.exe (On Linux, use wine, e.g.:
+   wine innounp.exe -x nxclient-x.y.z.exe)
+
+After that, you should see a directory named '{app}' which contains
+the package contents.
+
+4. Go to the toplevel and configure OpenNX using the option
+   --with-orignx.
+5. Run make dist-target

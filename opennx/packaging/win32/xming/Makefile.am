@@ -8,7 +8,8 @@ CLEANFILES = -rf tmpinstall build-$(XMING_BTYPE) patchedsrc srcdir checktarball 
 DISTCLEANFILES = -rf dist $(TARBALL)
 EXTRA_DIST = version.def Xming_69031_source.tar.bz2.md5sum patches
 XMING_GENERIC_PATCHES = xming-build.patch xming-build-subsys.patch \
-	xming-build-xauth.patch xming-build-xset.patch
+	xming-build-xauth.patch xming-build-xset.patch xming-build-nls.patch \
+	xming-envbasedir.patch
 
 buildfromscratch: distclean tmpinstall
 

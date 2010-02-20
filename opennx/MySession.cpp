@@ -105,19 +105,20 @@ wxString cygPath(const wxString &dir, const wxString &file = wxEmptyString)
 class FontpathTraverser : public wxDirTraverser
 {
     public:
-        wxString GetFontPath(int x11arch)
+        wxString GetFontPath(MySession::tXarch x11arch)
         {
             switch (x11arch) {
-                case X11ARCH_CYGWIN:
+                case MySession::XARCH_CYGWIN:
                     return m_sFontPathCygwin;
                     break;
-                case X11ARCH_MINGW:
+                case MySession::XARCH_XMING:
                     return m_sFontPath;
                     break;
                 default:
                     ::wxLogError(_("Invalid X11 server platform"));
                     break;
             }
+            return wxEmptyString;
         }
 
         virtual wxDirTraverseResult OnFile(const wxString& WXUNUSED(filename))
@@ -656,29 +657,50 @@ MySession::getXauthCookie(int display /* = 0 */, wxString proto)
 #ifdef __WXMSW__
     // On windows we *create* the cookie instead
     wxString cookie = md5sum(::wxGetUserId() + wxDateTime::Now().Format());
-    wxString domain = wxString::Format(wxT("%s%s:%d"),
+    wxString domain1 = wxString::Format(wxT("%s%s:%d"),
             ::wxGetFullHostName().c_str(), proto.c_str(), display);
+    wxString domain2 = wxString::Format(wxT("%s:%d"), 
+            ::wxGetFullHostName().c_str(), display);
     wxFileName fn(m_sSysDir, wxEmptyString);
     fn.AppendDir(wxT("bin"));
-    fn.SetName(wxT("nxauth.exe"));
+    switch (m_eXarch) {
+        case XARCH_CYGWIN:
+            fn.SetFullName(wxT("nxauth.exe"));
+            break;
+        case XARCH_XMING:
+            domain1 = wxT("127.0.0.1:0");
+            domain2 = wxT("localhost:0");
+            fn.SetFullName(wxT("xauth.exe"));
+            break;
+        default:
+            ::wxLogError(_("Invalid X11 server platform"));
+            return wxEmptyString;
+    }
     wxString cmd = fn.GetShortPath();
     cmd << wxT(" -i");
-    cmd << wxT(" -f");
-    cmd << wxT(" ") << getXauthPath();
-    cmd << wxT(" add");
-    cmd << wxT(" ") << domain;
-    cmd << wxT(" MIT-MAGIC-COOKIE-1");
-    cmd << wxT(" ") << cookie;
-    return ::wxExecute(cmd) ? wxString() : cookie;
+    cmd << wxT(" -f ") << getXauthPath(m_eXarch);
+    wxProcess *p = new wxProcess(wxPROCESS_REDIRECT);
+    wxArrayString output, error;
+    wxExecute(cmd, wxEXEC_ASYNC, p);
+    wxTextOutputStream os(*(p->GetOutputStream()));
+    cmd.Empty();
+    cmd << wxT("add ") << domain1 << wxT(" MIT-MAGIC-COOKIE-1 ") << cookie << wxT("\r\n");
+    cmd << wxT("add ") << domain2 << wxT(" MIT-MAGIC-COOKIE-1 ") << cookie << wxT("\r\n");
+    cmd << wxT("quit\r\n");
+    os.WriteString(cmd);
+    p->CloseOutput();
+    p->Detach();
+    // return (0 == CreateDetachedProcess((const char *)cmd.mb_str())) ? cookie : wxT("");
+    return cookie;
 #else
     wxUnusedVar(display);
     wxUnusedVar(proto);
 #endif
-    return wxString();
+    return wxEmptyString;
 }
 
     wxString
-MySession::getXauthPath()
+MySession::getXauthPath(tXarch xarch)
 {
 #ifdef __UNIX__
     wxString cmd = wxT("xauth info");
@@ -700,9 +722,18 @@ MySession::getXauthPath()
     }
 #endif
 #ifdef __WXMSW__
-    return cygPath(m_sUserDir, wxT(".Xauthority"));
+    switch (xarch) {
+        case XARCH_CYGWIN:
+            return cygPath(m_sUserDir, wxT(".Xauthority"));
+        case XARCH_XMING:
+            return wxString::Format(wxT("\"%s\""),
+                        wxFileName(m_sUserDir, wxT(".Xauthority")).GetFullPath().c_str());
+        default:
+            ::wxLogError(_("Invalid X11 server platform"));
+            return wxEmptyString;
+    }
 #endif
-    return wxString();
+    return wxEmptyString;
 }
 
     wxString
@@ -1262,89 +1293,128 @@ MySession::startSharing()
 }
 
     void
-MySession::startXserver()
+MySession::checkXarch()
 {
+    m_eXarch = XARCH_NONE;
 #ifdef __WXMSW__
-    int display = getFirstFreePort(X_PORT_OFFSET);
-    ::myLogTrace(MYTRACETAG, wxT("startXServer first free port is %d"), display);
-    if (0 == display) {
-#warning error-handling
+    wxFileName fn(m_sSysDir, wxT("nxwin.exe"));
+    fn.AppendDir(wxT("bin"));
+    if (fn.IsFileExecutable()) {
+        m_eXarch = XARCH_CYGWIN;
         return;
     }
+    fn.SetFullName(wxT("XMing.exe"));
+    if (fn.IsFileExecutable())
+        m_eXarch = XARCH_XMING;
+#endif
+}
+
+#ifdef __WXMSW__
+    wxString
+MySession::getXfontPath(tXarch Xarch)
+{
+    wxLogNull l;
+    wxFileName fn(m_sSysDir, wxEmptyString);
+    fn.AppendDir(wxT("share"));
+    fn.AppendDir(wxT("fonts"));
+    wxDir d(fn.GetShortPath());
+    FontpathTraverser t;
+    d.Traverse(t);
+    wxString ret = t.GetFontPath(Xarch);
+    if (!ret.IsEmpty())
+        ret.Prepend(wxT(" -fp "));
+    return ret;
+}
+
+    bool
+MySession::startXserver()
+{
+    int display = getFirstFreePort(X_PORT_OFFSET);
+    ::myLogTrace(MYTRACETAG, wxT("startXServer first free port is %d"), display);
+    if (0 == display)
+        return false;
     display -= X_PORT_OFFSET;
     wxString dpyStr = wxT(":");
     dpyStr << display;
-    int xserver = X11ARCH_NONE;
 
     wxString wxWinCmd;
     wxFileName fn(m_sSysDir, wxT("nxwin.exe"));
     fn.AppendDir(wxT("bin"));
-    if (fn.IsFileExecutable()) {
-        m_sXauthCookie = getXauthCookie(display, wxT("/unix"));
-        xserver = X11ARCH_CYGWIN;
-        wxWinCmd = fn.GetShortPath();
-        wxWinCmd << wxT(" -nowinkill");
-        wxWinCmd << wxT(" -clipboard");
-        wxWinCmd << wxT(" -noloadxkb");
-        wxWinCmd << wxT(" -agent");
-        wxWinCmd << wxT(" -hide");
-        wxWinCmd << wxT(" -noreset");
-        wxWinCmd << wxT(" -nolisten tcp");
-        wxWinCmd << wxT(" -auth ") << getXauthPath();
-    } else {
-        // Try Xming
-        wxFileName fn(m_sSysDir, wxT("Xming.exe"));
-        fn.AppendDir(wxT("bin"));
-        if (fn.IsFileExecutable()) {
-            xserver = X11ARCH_MINGW;
-            m_sXauthCookie = getXauthCookie(display, wxEmptyString);
+
+    switch (m_eXarch) {
+        case XARCH_CYGWIN:
+            m_sXauthCookie = getXauthCookie(display, wxT("/unix"));
+            if (m_sXauthCookie.IsEmpty()) {
+                ::wxLogError(_("Could not create X11 authentication cookie"));
+                return false;
+            }
             wxWinCmd = fn.GetShortPath();
             wxWinCmd << wxT(" -nowinkill");
             wxWinCmd << wxT(" -clipboard");
+            wxWinCmd << wxT(" -noloadxkb");
+            wxWinCmd << wxT(" -agent");
+            wxWinCmd << wxT(" -hide");
             wxWinCmd << wxT(" -noreset");
-            wxWinCmd << wxT(" -lesspointer");
+            wxWinCmd << wxT(" -auth ") << getXauthPath(XARCH_CYGWIN);
+            wxWinCmd << wxT(" -nolisten tcp");
+            wxWinCmd << getXfontPath(m_eXarch);
+            wxWinCmd << m_pCfg->sGetXserverParams(true);
+            wxWinCmd << wxT(" -nokeyhook");
+            {
+                wxString title = m_pCfg->sGetUsername();
+                if (m_pCfg->bGetGuestMode()) {
+                    title = m_pCfg->sGetGuestUser();
+                    if (title.IsEmpty())
+                        title << wxT("guest");
+                }
+                wxWinCmd << wxT(" -name ") << title << wxT("@") << m_pCfg->sGetServerHost();
+            }
+            wxWinCmd << wxT(" ") << dpyStr;
+            break;
+        case XARCH_XMING:
+            dpyStr = wxT("127.0.0.1:0");
+            display = 0;
+            fn.SetFullName(wxT("Xming.exe"));
+            m_sXauthCookie = getXauthCookie(display, wxEmptyString);
+            if (m_sXauthCookie.IsEmpty()) {
+                ::wxLogError(_("Could not create X11 authentication cookie"));
+                return false;
+            }
+            wxWinCmd = fn.GetShortPath();
+            wxWinCmd << wxT(" :0");
+            wxWinCmd << wxT(" -br");
+            wxWinCmd << wxT(" -nowinkill");
+            wxWinCmd << wxT(" -clipboard");
             wxWinCmd << wxT(" -notrayicon");
+            wxWinCmd << getXfontPath(m_eXarch);
             wxWinCmd << wxT(" -silent-dup-error");
-            //            wxWinCmd << wxT(" -engine 1");
-            wxWinCmd << wxT(" -multimonitors");
-            wxWinCmd << wxT(" -multiwindow");
-            wxWinCmd << wxT(" -auth ") << getXauthPath();
-        } else {
+            if (::checkMultiMonitors() > 1)
+                wxWinCmd << wxT(" -multimonitors");
+            wxWinCmd << m_pCfg->sGetXserverParams(false);
+            wxWinCmd << wxT(" -auth ") << getXauthPath(XARCH_XMING);
+            fn.Assign(m_sSysDir, wxEmptyString);
+            fn.AppendDir(wxT("share"));
+            fn.AppendDir(wxT("Xming"));
+            fn.MakeAbsolute();
+            ::wxSetEnv(wxT("XMING_BASEDIR"), fn.GetPath());
+            break;
+        default:
             ::wxLogError(_("No X server found."));
-            return;
-        }
+            return false;
+            break;
     }
 
-    {
-        wxLogNull l;
-        fn.AssignDir(m_sSysDir);
-        fn.AppendDir(wxT("share"));
-        fn.AppendDir(wxT("fonts"));
-        wxDir d(fn.GetShortPath());
-        FontpathTraverser t;
-        d.Traverse(t);
-        wxWinCmd << wxT(" -fp ") << t.GetFontPath(xserver);
-    }
-    wxWinCmd << wxT(" -screen 0 800x600");
-
-    wxString user;
-    if (m_pCfg->bGetGuestMode()) {
-        user = m_pCfg->sGetGuestUser();
-        if (user.IsEmpty())
-            user << wxT("guest");
-    } else
-        user = m_pCfg->sGetUsername();
-    if (xserver == X11ARCH_CYGWIN)
-        wxWinCmd << wxT(" -name ") << user << wxT("@") << m_pCfg->sGetServerHost() << wxT(":");
-    // wxWinCmd << wxT(" -nokeyhook");
-
-    wxWinCmd << wxT(" ") << dpyStr;
     ::myLogTrace(MYTRACETAG, wxT("startXServer executing %s"), wxWinCmd.c_str());
-    ::wxExecute(wxWinCmd, wxEXEC_ASYNC);
+    int r = CreateDetachedProcess((const char *)wxWinCmd.mb_str());
+    if (r != 0) {
+        ::wxLogError(_("Could not execute %s: %s\n"), wxWinCmd.c_str(), wxSysErrorMsg(r));
+        return false;
+    }
     ::wxSetEnv(wxT("DISPLAY"), dpyStr);
     ::wxLogInfo(wxT("env: DISPLAY='%s'"), dpyStr.c_str());
-#endif
+    return true;
 }
+#endif
 
     void
 MySession::startProxy()
@@ -1373,10 +1443,15 @@ MySession::startProxy()
     popts
         << wxT(",encryption=") << (m_bSslTunneling ? 1 : 0)
         << wxT(",session=session")
-#ifdef __UNIX__
-        << wxT(",client=linux")
+#ifdef __WXMAC__
+        << wxT(" --client=\"macosx\"")
 #else
-        << wxT(",client=winnt")
+# ifdef __UNIX__
+        << wxT(",client=linux")
+# else
+        //<< wxT(",client=winnt")
+        << wxT(",client=linux")
+# endif
 #endif
         << wxT(",id=") << m_sSessionID;
     if (m_bSslTunneling) {
@@ -1430,7 +1505,11 @@ MySession::startProxy()
                 << m_sOptFilename << wxT(":") << m_sSessionDisplay;
             printSsh(wxT("bye"));
             if ((m_lProtocolVersion <= 0x00020000) || (!m_bSslTunneling)) {
+#ifdef __WXMSW__
+                CreateDetachedProcess((const char *)pcmd.mb_str());
+#else
                 ::wxExecute(pcmd, wxEXEC_ASYNC);
+#endif
             }
         } else {
             ::wxLogSysError(_("Could not write session options\n%s\n"),
@@ -1725,6 +1804,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
 
         wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &m_sSysDir);
         wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &m_sUserDir);
+        checkXarch();
         wxFileName fn(m_sSysDir, wxEmptyString);
 
         fn.AppendDir(wxT("bin"));
@@ -1836,8 +1916,8 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
         ::wxLogInfo(wxT("env: NX_CLIENT='%s'"), ::wxGetApp().GetSelfPath().c_str());
         ::wxSetEnv(wxT("NX_VERSION"), m_sProtocolVersion);
         ::wxLogInfo(wxT("env: NX_VERSION='%s'"), m_sProtocolVersion.c_str());
-        ::wxSetEnv(wxT("XAUTHORITY"), getXauthPath());
-        ::wxLogInfo(wxT("env: XAUTHORITY='%s'"), getXauthPath().c_str());
+        ::wxSetEnv(wxT("XAUTHORITY"), getXauthPath(XARCH_CYGWIN));
+        ::wxLogInfo(wxT("env: XAUTHORITY='%s'"), getXauthPath(XARCH_CYGWIN).c_str());
 #ifdef __UNIX__
         // NX needs TEMP or NX_TEMP to be set to the same dir
         // where .X11-unix resides (typically /tmp)
@@ -1858,7 +1938,10 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
 #endif
 
 #ifdef __WXMSW__
-        startXserver();
+        if (!startXserver()) {
+            ::wxLogError(_("Could not start local X server"));
+            return false;
+        }
 #endif
 
         fn.Assign(m_sSysDir, wxT("bin"));

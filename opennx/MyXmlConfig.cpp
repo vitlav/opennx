@@ -544,6 +544,23 @@ MyXmlConfig::UrlEsc(const wxString &s)
     return ret;
 }
 
+    void
+MyXmlConfig::getDesktopSize(int &dw, int &dh, int &ww, int &wh)
+{
+    // Fetch the size of the display and the workarea
+    // (== display size reduced by the size of the taskbar) where our
+    // toplevel dialog are shown.
+    int dspidx = wxDisplay::GetFromWindow(::wxGetApp().GetTopWindow());
+    wxDisplay dsp(dspidx);
+    wxRect r = dsp.GetGeometry();
+    dw = r.GetWidth();
+    dh = r.GetHeight();
+    r = dsp.GetClientArea();
+    ww = r.GetWidth();
+    wh = r.GetHeight();
+    ::myLogTrace(MYTRACETAG, wxT("Display: %dx%d, Desktop: %dx%d"), dw, dh, ww, wh);
+}
+
 // Retrieve parameters for startsession command
     wxString
 MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxString &clrpass)
@@ -553,18 +570,7 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
     bool bNeedGeometry = bNew;
     int dspw, dsph, clientw, clienth;
 
-    {
-        // Fetch the size of the display where we are shown.
-        int dspidx = wxDisplay::GetFromWindow(::wxGetApp().GetTopWindow());
-        wxDisplay dsp(dspidx);
-        wxRect r = dsp.GetGeometry();
-        dspw = r.GetWidth();
-        dsph = r.GetHeight();
-        r = dsp.GetClientArea();
-        clientw = r.GetWidth();
-        clienth = r.GetHeight();
-    }
-
+    getDesktopSize(dspw, dsph, clientw, clienth);
     if (bNew) {
         ret << wxString::Format(wxT(" --session=\"%s\""), m_sName.c_str());
         ret << wxT(" --type=\"");
@@ -791,7 +797,8 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
 # ifdef __UNIX__
         << wxT(" --client=\"linux\"")
 # else
-        << wxT(" --client=\"winnt\"")
+        // << wxT(" --client=\"winnt\"")
+        << wxT(" --client=\"linux\"")
 # endif
 #endif
         << wxT(" --media=\"") << (m_bEnableMultimedia ? 1 : 0) << wxT("\"")
@@ -803,6 +810,50 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
     ret << wxT(" --strict=\"0\"");
     return ret;
 }
+
+#ifdef __WXMSW__
+    wxString
+MyXmlConfig::sGetXserverParams(bool forNXWin)
+{
+    wxString ret;
+    int dspw, dsph, clientw, clienth;
+    getDesktopSize(dspw, dsph, clientw, clienth);
+
+    if (forNXWin) {
+        switch (m_eDisplayType) {
+            case MyXmlConfig::DPTYPE_640x480:
+                ret << wxT(" -screen 0 640x480");
+                break;
+            case MyXmlConfig::DPTYPE_800x600:
+                // fall thru
+            default:
+                ret << wxT(" -screen 0 800x600");
+                break;
+            case MyXmlConfig::DPTYPE_1024x768:
+                ret << wxT(" -screen 0 1024x768");
+                break;
+            case MyXmlConfig::DPTYPE_AVAILABLE:
+                ret << wxT(" -screen 0 ") << clientw << wxT("x") << clienth;
+                break;
+            case MyXmlConfig::DPTYPE_FULLSCREEN:
+                ret << wxT(" -fullscreen ");
+                break;
+            case MyXmlConfig::DPTYPE_CUSTOM:
+                // Fall thru
+            case MyXmlConfig::DPTYPE_REMOTE:
+                ret << wxT(" -screen 0 ") << m_iDisplayWidth << wxT("x") << m_iDisplayHeight;
+                break;
+        }
+    } else {
+        if (MyXmlConfig::DPTYPE_FULLSCREEN == m_eDisplayType) {
+            ret << wxT(" -reset -terminate -fullscreen");
+        } else {
+            ret << wxT(" -noreset -lesspointer -multiwindow");
+        }
+    }
+    return ret;
+}
+#endif
 
     ShareGroup &
 MyXmlConfig::findShare(const wxString &name)
