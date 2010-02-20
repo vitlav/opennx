@@ -30,18 +30,311 @@
 int inKdeSession = 0;
 
 #ifdef __WXMSW__
-/* dummies for now */
-char *x11_socket_path = "";
-char *x11_keyboard_type = "";
-
-//#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <tlhelp32.h>
 #include <stdlib.h>
+#include <stdio.h>
 
-static char _spath[_MAX_PATH+1];
 static char _kbd[_MAX_PATH+1];
+static char _spath[_MAX_PATH+1];
 
+char *x11_keyboard_type = _kbd;
+/* dummy for now */
+char *x11_socket_path = "";
+
+/* Mappings from windows to X11 keyboard names */
+typedef struct {
+    unsigned int winlayout;
+    int winkbtype;
+    char *xkbmodel;
+    char *xkblayout;
+} WinKBLayoutRec, *WinKBLayoutPtr;
+
+static WinKBLayoutRec winKBLayouts[] = 
+{
+    {  0x404, -1, "pc105", "zh_TW"},
+    {  0x405, -1, "pc105", "cz"},
+    {0x10405, -1, "pc105", "cz_qwerty"},
+    {  0x406, -1, "pc105", "dk"},
+    {  0x407, -1, "pc105", "de"},
+    {0x10407, -1, "pc105", "de"},
+    {  0x807, -1, "pc105", "de_CH"},
+    {  0x409, -1, "pc105", "us"},
+    {0x10409, -1, "pc105", "dvorak"}, 
+    {0x20409, -1, "pc105", "us_intl"}, 
+    {  0x809, -1, "pc105", "gb"},
+    { 0x1809, -1, "pc105", "ie"},
+    {  0x40a, -1, "pc105", "es"},
+    {  0x40b, -1, "pc105", "fi"},
+    {  0x40c, -1, "pc105", "fr"},
+    {  0x80c, -1, "pc105", "be"},
+    {  0xc0c, -1, "pc105", "ca_enhanced"},
+    { 0x100c, -1, "pc105", "fr_CH"},
+    {  0x40e, -1, "pc105", "hu"},
+    {  0x410, -1, "pc105", "it"},
+    {  0x411,  7, "jp106", "jp"},
+    {  0x813, -1, "pc105", "be"},  
+    {  0x414, -1, "pc105", "no"},
+    {  0x415, -1, "pc105", "pl"},
+    {  0x416, -1, "pc105", "br"},
+    {0x10416, -1, "abnt2", "br"},
+    {  0x816, -1, "pc105", "pt"},
+    {  0x41a, -1, "pc105", "hr"},
+    {  0x41d, -1, "pc105", "se"},
+    {  0x424, -1, "pc105", "si"},
+    {  0x425, -1, "pc105", "ee"},
+    {     -1, -1, NULL,    NULL}
+};
+
+/* Listing of language codes from MSDN
+
+Support ID       XKB        Language
+====================================================================
+   ?    0x0000              Language Neutral
+   ?    0x0400              Process or User Default Language
+   ?    0x0800              System Default Language
+        0x0401              Arabic (Saudi Arabia)
+        0x0801              Arabic (Iraq)
+        0x0c01              Arabic (Egypt)
+        0x1001              Arabic (Libya)
+        0x1401              Arabic (Algeria)
+        0x1801              Arabic (Morocco)
+        0x1c01              Arabic (Tunisia)
+        0x2001              Arabic (Oman)
+        0x2401              Arabic (Yemen)
+        0x2801              Arabic (Syria)
+        0x2c01              Arabic (Jordan)
+        0x3001              Arabic (Lebanon)
+        0x3401              Arabic (Kuwait)
+        0x3801              Arabic (U.A.E.)
+        0x3c01              Arabic (Bahrain)
+        0x4001              Arabic (Qatar)
+                            Arabic (102) AZERTY        				
+        0x0402              Bulgarian
+        0x0403              Catalan
+        0x0404              Chinese (Taiwan)
+        0x0804              Chinese (PRC)
+        0x0c04              Chinese (Hong Kong SAR, PRC)
+        0x1004              Chinese (Singapore)
+        0x1404              Chinese (Macao SAR) (98/ME,2K/XP)
+   X    0x0405  cz          Czech
+   X            cz_qwerty   Czech (QWERTY)
+                            Czech (Programmers)
+   X    0x0406  dk          Danish
+   X    0x0407  de          German (Standard)
+   X    0x0807  de_CH       German (Switzerland)
+        0x0c07              German (Austria)
+        0x1007              German (Luxembourg)
+        0x1407              German (Liechtenstein)
+        0x0408              Greek
+   X    0x0409  us          English (United States)
+   X    0x0809  gb          English (United Kingdom)
+        0x0c09              English (Australian)
+        0x1009              English (Canadian)
+        0x1409              English (New Zealand)
+   X    0x1809  ie          English (Ireland)
+        0x1c09              English (South Africa)
+        0x2009              English (Jamaica)
+        0x2409              English (Caribbean)
+        0x2809              English (Belize)
+        0x2c09              English (Trinidad)
+        0x3009              English (Zimbabwe) (98/ME,2K/XP)
+        0x3409              English (Philippines) (98/ME,2K/XP)
+   X    0x040a  es          Spanish (Spain, Traditional Sort)
+        0x080a              Spanish (Mexican)
+        0x0c0a              Spanish (Spain, Modern Sort)
+        0x100a              Spanish (Guatemala)
+        0x140a              Spanish (Costa Rica)
+        0x180a              Spanish (Panama)
+        0x1c0a              Spanish (Dominican Republic)
+        0x200a              Spanish (Venezuela)
+        0x240a              Spanish (Colombia)
+        0x280a              Spanish (Peru)
+        0x2c0a              Spanish (Argentina)
+        0x300a              Spanish (Ecuador)
+        0x340a              Spanish (Chile)
+        0x380a              Spanish (Uruguay)
+        0x3c0a              Spanish (Paraguay)
+        0x400a              Spanish (Bolivia)
+        0x440a              Spanish (El Salvador)
+        0x480a              Spanish (Honduras)
+        0x4c0a              Spanish (Nicaragua)
+        0x500a              Spanish (Puerto Rico)
+   X    0x040b  fi          Finnish
+                            Finnish (with Sami)
+   X    0x040c  fr          French (Standard)
+   X    0x080c  be          French (Belgian)
+   .    0x0c0c              French (Canadian)
+                            French (Canadian, Legacy)
+                            Canadian (Multilingual)
+   X    0x100c  fr_CH       French (Switzerland)
+        0x140c              French (Luxembourg)
+        0x180c              French (Monaco) (98/ME,2K/XP)
+        0x040d              Hebrew
+   X    0x040e  hu          Hungarian
+   .    0x040f              Icelandic
+   X    0x0410  it          Italian (Standard)
+        0x0810              Italian (Switzerland)
+   X    0x0411  jp          Japanese
+        0x0412              Korean
+        0x0812              Korean (Johab) (95,NT)
+   .    0x0413              Dutch (Netherlands)
+   X    0x0813  be          Dutch (Belgium)
+   X    0x0414  no          Norwegian (Bokmal)
+        0x0814              Norwegian (Nynorsk)
+   .    0x0415              Polish
+   X    0x0416  br          Portuguese (Brazil)
+   X    0x0816  pt          Portuguese (Portugal)
+   .    0x0418              Romanian
+        0x0419              Russian
+   .    0x041a              Croatian
+   .    0x081a              Serbian (Latin)
+   .    0x0c1a              Serbian (Cyrillic)
+        0x101a              Croatian (Bosnia and Herzegovina)
+        0x141a              Bosnian (Bosnia and Herzegovina)
+        0x181a              Serbian (Latin, Bosnia, and Herzegovina)
+        0x1c1a              Serbian (Cyrillic, Bosnia, and Herzegovina)
+   .    0x041b              Slovak
+   .    0x041c              Albanian
+   X    0x041d  se          Swedish
+        0x081d              Swedish (Finland)
+        0x041e              Thai
+        0x041f              Turkish
+        0x0420              Urdu (Pakistan) (98/ME,2K/XP) 
+        0x0820              Urdu (India)
+        0x0421              Indonesian
+        0x0422              Ukrainian
+        0x0423              Belarusian
+   .    0x0424              Slovenian
+        0x0425              Estonian
+        0x0426              Latvian
+        0x0427              Lithuanian
+        0x0827              Lithuanian (Classic) (98)
+        0x0429              Farsi
+        0x042a              Vietnamese (98/ME,NT,2K/XP)
+        0x042b              Armenian. This is Unicode only. (2K/XP)
+                            Armenian Eastern
+                            Armenian Western
+        0x042c              Azeri (Latin)
+        0x082c              Azeri (Cyrillic)
+        0x042d              Basque
+        0x042f              Macedonian (FYROM)
+        0x0430              Sutu
+        0x0432              Setswana/Tswana (South Africa)
+        0x0434              isiXhosa/Xhosa (South Africa)
+        0x0435              isiZulu/Zulu (South Africa)
+        0x0436              Afrikaans
+        0x0437              Georgian. This is Unicode only. (2K/XP)
+   .    0x0438              Faeroese
+        0x0439              Hindi. This is Unicode only. (2K/XP)
+        0x043a              Maltese (Malta)
+        0x043b              Sami, Northern (Norway)
+        0x083b              Sami, Northern (Sweden)
+        0x0c3b              Sami, Northern (Finland)
+        0x103b              Sami, Lule (Norway)
+        0x143b              Sami, Lule (Sweden)
+        0x183b              Sami, Southern (Norway)
+        0x1c3b              Sami, Southern (Sweden)
+        0x203b              Sami, Skolt (Finland)
+        0x243b              Sami, Inari (Finland)
+        0x043e              Malay (Malaysian)
+        0x083e              Malay (Brunei Darussalam)
+        0x0440              Kyrgyz. (XP)
+        0x0441              Swahili (Kenya)
+        0x0443              Uzbek (Latin)
+        0x0843              Uzbek (Cyrillic)
+        0x0444              Tatar (Tatarstan)
+        0x0445              Bengali (India)
+                            Bengali (Inscript)
+        0x0446              Punjabi. This is Unicode only. (XP)
+        0x0447              Gujarati. This is Unicode only. (XP)
+        0x0449              Tamil. This is Unicode only. (2K/XP)
+        0x044a              Telugu. This is Unicode only. (XP)
+        0x044b              Kannada. This is Unicode only. (XP)
+        0x044c              Malayalam (India)
+        0x044e              Marathi. This is Unicode only. (2K/XP)
+        0x044f              Sanskrit. This is Unicode only. (2K/XP)
+        0x0450              Mongolian (XP)
+        0x0452              Welsh (United Kingdom)
+        0x0455              Burmese
+        0x0456              Galician (XP)
+        0x0457              Konkani. This is Unicode only. (2K/XP)
+        0x045a              Syriac. This is Unicode only. (XP)
+        0x0465              Divehi. This is Unicode only. (XP)
+                            Divehi (Phonetic)
+                            Divehi (Typewriter)
+        0x046b              Quechua (Bolivia)
+        0x086b              Quechua (Ecuador)
+        0x0c6b              Quechua (Peru)
+        0x046c              Sesotho sa Leboa/Northern Sotho (South Africa)
+        0x007f              LOCALE_INVARIANT. See MAKELCID.
+        0x0481              Maori (New Zealand)
+*/
+
+static void __attribute__ ((constructor))
+getkeyboardtype()
+{
+    char *xkbmodel = NULL;
+    char *xkblayout = NULL;
+    char layoutName[KL_NAMELENGTH];
+    char regLayoutName[256];
+    int keyboardType = GetKeyboardType(0);
+    if (keyboardType > 0 && GetKeyboardLayoutNameA(layoutName)) {
+        WinKBLayoutPtr pLayout;
+
+        unsigned int layoutNum = strtoul(layoutName, (char **)NULL, 16);
+        if ((layoutNum & 0xffff) == 0x411) {
+            /* The japanese layouts know a lot of different IMEs which all have
+               different layout numbers set. Map them to a single entry. 
+               Same might apply for chinese, korean and other symbol languages
+               too */
+            layoutNum = (layoutNum & 0xffff);
+            if (keyboardType == 7) {
+                /* Japanese layouts have problems with key event messages
+                   such as the lack of WM_KEYUP for Caps Lock key.
+                   Loading US layout fixes this problem. */
+                LoadKeyboardLayoutA("00000409", KLF_ACTIVATE);
+            }
+        }
+
+        for (pLayout = winKBLayouts; pLayout->winlayout != -1; pLayout++) {
+            if (pLayout->winlayout != layoutNum)
+                continue;
+            if (pLayout->winkbtype > 0 && pLayout->winkbtype != keyboardType)
+                continue;
+            xkbmodel = pLayout->xkbmodel;
+            xkblayout = pLayout->xkblayout;
+            break;
+        }
+
+        /* Fallback to registry */
+        if (NULL == xkbmodel) {
+            HKEY regkey = NULL;
+            const char *keyname = "SYSTEM\\CurrentControlSet\\Control\\DosKeybCodes\\";
+            DWORD namesize = sizeof(regLayoutName);
+
+            if (ERROR_SUCCESS == RegOpenKeyA(HKEY_LOCAL_MACHINE, keyname, &regkey)) {
+                if (ERROR_SUCCESS == RegQueryValueExA(regkey, layoutName,
+                            0, NULL, (unsigned char *)regLayoutName, &namesize)) {
+                    xkbmodel = "pc105";
+                    xkblayout = regLayoutName;
+                }
+                RegCloseKey(regkey);
+            }
+        }
+    }
+    /* Last resort to pc101-us */
+    if (NULL == xkbmodel) {
+        xkbmodel = "pc101";
+        xkblayout = "us";
+    }
+    snprintf(_kbd, sizeof(_kbd), "%s/%s", xkbmodel, xkblayout);
+}
+
+/**
+ * Helper function to get the parent process id on
+ * windows.
+ */
 long getppid()
 {
     OSVERSIONINFO osver;
@@ -51,21 +344,21 @@ long getppid()
     long mypid;
     long ppid = 0;
 
-	/* ToolHelp Function Pointers.*/
+    /* ToolHelp Function Pointers.*/
     HANDLE (WINAPI *lpfCreateToolhelp32Snapshot)(DWORD,DWORD);
     BOOL (WINAPI *lpfProcess32First)(HANDLE,LPPROCESSENTRY32);
     BOOL (WINAPI *lpfProcess32Next)(HANDLE,LPPROCESSENTRY32);
-	
+
     osver.dwOSVersionInfoSize = sizeof(osver);
     if (!GetVersionEx(&osver))
         return 0;
-	if (osver.dwPlatformId != VER_PLATFORM_WIN32_NT)
+    if (osver.dwPlatformId != VER_PLATFORM_WIN32_NT)
         return 0;
     if ((hKernel32 = LoadLibraryA("kernel32.dll")) == NULL)
         return 0;
-	lpfCreateToolhelp32Snapshot= (HANDLE(WINAPI *)(DWORD,DWORD))
+    lpfCreateToolhelp32Snapshot= (HANDLE(WINAPI *)(DWORD,DWORD))
         GetProcAddress(hKernel32, "CreateToolhelp32Snapshot");
-	lpfProcess32First= (BOOL(WINAPI *)(HANDLE,LPPROCESSENTRY32))
+    lpfProcess32First= (BOOL(WINAPI *)(HANDLE,LPPROCESSENTRY32))
         GetProcAddress(hKernel32, "Process32First");
     lpfProcess32Next= (BOOL(WINAPI *)(HANDLE,LPPROCESSENTRY32))
         GetProcAddress(hKernel32, "Process32Next");
@@ -90,8 +383,36 @@ long getppid()
             procentry.dwSize = sizeof(PROCESSENTRY32);
         } while (lpfProcess32Next(hSnapShot, &procentry));
     }	
-	FreeLibrary(hKernel32);
+    FreeLibrary(hKernel32);
     return ppid;
+}
+
+/**
+ * Create a detached process, without showing it's
+ * console window.
+ *
+ * wxWidgets hides a console window only if the process
+ * is started with redirection. This creates additional I/O-threads
+ * as well as a hidden window for IPC. We use our own function
+ * in order to eliminate this overhead.
+ *
+ * Returns: 0 on success, win32 errorcode on failure.
+ */
+int CreateDetachedProcess(const char *cmdline) {
+    STARTUPINFOA si;
+    PROCESS_INFORMATION pi;
+    DWORD dwFlags = CREATE_DEFAULT_ERROR_MODE|DETACHED_PROCESS;
+    memset(&si, 0, sizeof(si));
+    si.cb = sizeof(si);
+    si.dwFlags = STARTF_USESHOWWINDOW;
+    si.wShowWindow = SW_HIDE;
+    if (CreateProcessA(NULL, cmdline, NULL, NULL,
+                FALSE, dwFlags, NULL, NULL, &si, &pi)) {
+        CloseHandle(pi.hProcess);
+        CloseHandle(pi.hThread);
+        return 0;
+    }
+    return GetLastError();
 }
 
 /**
@@ -100,14 +421,18 @@ long getppid()
  * This function checks for that constraint.
  *
  * Returns number of monitors or 0, if constraits not met.
+ *
+ * TODO: Check, if the same applies to NXWin (very likely)
  */
 int checkMultiMonitors() {
-    DWORD didx;
+    DWORD didx = 0;
     int mnum = 0;
     DISPLAY_DEVICE dd;
-    int w, h, bpp;
+    int w = 0, h = 0, bpp = 0;
 
-	while (EnumDisplayDevices(0, didx, &dd, 0)) {
+    memset(&dd, 0, sizeof(dd));
+    dd.cb = sizeof(dd);
+    while (EnumDisplayDevices(0, didx, &dd, 0)) {
         if (dd.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP) {
             if (!(dd.StateFlags & DISPLAY_DEVICE_MIRRORING_DRIVER)) {
                 /* get information about the monitor attached to this display adapter.
@@ -249,7 +574,7 @@ static Display *launchX11() {
 }
 # endif /* __WXMAC__ */
 
-static void __attribute__ ((constructor))
+    static void __attribute__ ((constructor))
 getx11socket()
 {
     memset(&_spath, 0, sizeof(_spath));

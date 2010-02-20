@@ -31,6 +31,8 @@ extern void close_sid(const char *);
 extern int inKdeSession;
 #ifdef __WXMSW__
 extern long getppid();
+extern int checkMultiMonitors();
+extern int CreateDetachedProcess(const char *cmdline);
 #endif
 #ifdef __WXMAC__
 extern unsigned short macFirstFreePort(unsigned short startPort);
