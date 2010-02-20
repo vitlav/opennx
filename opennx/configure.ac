@@ -89,7 +89,7 @@ AC_CHECK_LIB(resolv,res_init,[RESLIB=-lresolv],[
 AC_SUBST(RESLIB)
 
 # Checks for header files.
-AC_CHECK_HEADERS([arpa/inet.h limits.h netinet/in.h sys/socket.h syslog.h])
+AC_CHECK_HEADERS([arpa/inet.h limits.h netinet/in.h sys/types.h sys/socket.h syslog.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
@@ -97,7 +97,10 @@ AC_C_CONST
 AC_TYPE_SIZE_T
 AC_TYPE_OFF_T
 AC_TYPE_PID_T
-AC_CHECK_TYPES(socklen_t)
+AC_CHECK_TYPES(socklen_t,,,[AC_INCLUDES_DEFAULT()
+[#ifdef HAVE_SYS_SOCKET_H
+#include <sys/socket.h>
+#endif]])
 
 # Checks for library functions.
 AC_CHECK_FUNCS([memchr memset putenv socket strchr strdup strrchr strstr])
