@@ -231,9 +231,11 @@ opennxApp::LoadFileFromResource(const wxString &loc, bool bUseLocale /* = true *
     return ret;
 }
 
+#ifndef __WXMSW__
 static const wxChar *desktopDirs[] = {
     wxT("Desktop"), wxT("KDesktop"), wxT(".gnome-desktop"), NULL
 };
+#endif
 
     bool
 opennxApp::CreateDesktopEntry(MyXmlConfig *cfg)
