@@ -364,7 +364,7 @@ opennxApp::CheckDesktopEntry(MyXmlConfig *cfg)
 #ifdef __UNIX__
 # ifdef __WXMAC__
     wxString fn = wxGetHomeDir() + wxT("/Desktop/") + cfg->sGetName();
-    return fn.FileExists();
+    return wxFileName::FileExists(fn);
 # else
     const wxChar **p = desktopDirs;
 
