@@ -207,7 +207,7 @@ opennxApp::LoadFileFromResource(const wxString &loc, bool bUseLocale /* = true *
         if (!cloc.IsEmpty()) {
             tryloc = wxFileName(loc).GetPath(wxPATH_GET_SEPARATOR|wxPATH_GET_VOLUME)
                 + cloc + wxT("_") + wxFileName(loc).GetFullName();
-            cloc = cloc.BeforeLast(_T('_'));
+            cloc = cloc.BeforeLast(wxT('_'));
         } else
             tryloop = false;
 
@@ -326,8 +326,8 @@ opennxApp::RemoveDesktopEntry(MyXmlConfig *cfg)
 #ifdef __WXMSW__
     TCHAR dtPath[MAX_PATH];
     if (SHGetSpecialFolderPath(NULL, dtPath, CSIDL_DESKTOPDIRECTORY, FALSE)) {
-        wxString lpath = wxString::Format(_T("%s\\%s.lnk"), dtPath,
-                wx_static_cast(const char *,cfg->sGetName().mb_str()));
+        wxString lpath = wxString::Format(wxT("%s\\%s.lnk"),
+                dtPath, cfg->sGetName().c_str());
         ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), lpath.c_str());
         ::wxRemoveFile(lpath);
     }
@@ -340,7 +340,7 @@ opennxApp::RemoveDesktopEntry(MyXmlConfig *cfg)
     const wxChar **p = desktopDirs;
 
     while (*p) {
-        ::wxRemoveFile(wxString::Format(_T("%s/%s/%s.desktop"),
+        ::wxRemoveFile(wxString::Format(wxT("%s/%s/%s.desktop"),
                     ::wxGetHomeDir().c_str(), *p,cfg->sGetName().c_str()));
         p++;
     }
@@ -356,8 +356,8 @@ opennxApp::CheckDesktopEntry(MyXmlConfig *cfg)
 #ifdef __WXMSW__
     TCHAR dtPath[MAX_PATH];
     if (SHGetSpecialFolderPath(NULL, dtPath, CSIDL_DESKTOPDIRECTORY, FALSE)) {
-        wxString lpath = wxString::Format(_T("%s\\%s.lnk"), dtPath,
-                wx_static_cast(const char *,cfg->sGetName().mb_str()));
+        wxString lpath = wxString::Format(wxT("%s\\%s.lnk"),
+                dtPath, cfg->sGetName().c_str());
         return wxFileName::FileExists(lpath);
     }
 #endif
@@ -369,7 +369,7 @@ opennxApp::CheckDesktopEntry(MyXmlConfig *cfg)
     const wxChar **p = desktopDirs;
 
     while (*p) {
-        ret |= wxFileName::FileExists((wxString::Format(_T("%s/%s/%s.desktop"),
+        ret |= wxFileName::FileExists((wxString::Format(wxT("%s/%s/%s.desktop"),
                     ::wxGetHomeDir().c_str(), *p,cfg->sGetName().c_str())));
         p++;
     }
