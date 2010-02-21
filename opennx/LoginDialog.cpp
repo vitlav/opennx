@@ -336,7 +336,8 @@ void LoginDialog::OnButtonConfigureClick( wxCommandEvent& event )
                 ReadConfigDirectory();
                 break;
             case wxID_OK:
-                m_bUseSmartCard = ::wxGetApp().NxSmartCardSupport() && m_pCurrentCfg->bGetUseSmartCard();
+                m_bUseSmartCard = ::wxGetApp().NxSmartCardSupport() &&
+                    m_pCurrentCfg->bGetUseSmartCard();
                 m_pCtrlUseSmartCard->SetValue(m_bUseSmartCard);
                 if (!m_pCurrentCfg->SaveToFile())
                     wxMessageBox(wxString::Format(_("Could not save session to\n%s"),
@@ -348,6 +349,13 @@ void LoginDialog::OnButtonConfigureClick( wxCommandEvent& event )
                 wxConfigBase::Get()->Write(wxT("Config/UsbipdSocket"), d.GetUsbipdSocket());
                 wxConfigBase::Get()->Write(wxT("Config/UsbipPort"), d.GetUsbLocalPort());
 #endif
+                bool bDTI = d.GetbCreateDesktopIcon();
+                if (::wxGetApp().CheckDesktopEntry(m_pCurrentCfg) != bDTI) {
+                    if (bDTI)
+                        ::wxGetApp().CreateDesktopEntry(m_pCurrentCfg);
+                    else
+                        ::wxGetApp().RemoveDesktopEntry(m_pCurrentCfg);
+                }
                 break;
         }
     }

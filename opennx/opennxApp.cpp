@@ -326,7 +326,8 @@ opennxApp::RemoveDesktopEntry(MyXmlConfig *cfg)
 #ifdef __WXMSW__
     TCHAR dtPath[MAX_PATH];
     if (SHGetSpecialFolderPath(NULL, dtPath, CSIDL_DESKTOPDIRECTORY, FALSE)) {
-        wxString lpath = wxString::Format(_T("%s\\%s.lnk"), dtPath, wx_static_cast(const char *,cfg->sGetName().mb_str()));
+        wxString lpath = wxString::Format(_T("%s\\%s.lnk"), dtPath,
+                wx_static_cast(const char *,cfg->sGetName().mb_str()));
         ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), lpath.c_str());
         ::wxRemoveFile(lpath);
     }
@@ -345,9 +346,36 @@ opennxApp::RemoveDesktopEntry(MyXmlConfig *cfg)
     }
 # endif
 #endif
-    ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), cfg->sGetFileName().c_str());
-    ::wxRemoveFile(cfg->sGetFileName());
     return true;
+}
+
+    bool
+opennxApp::CheckDesktopEntry(MyXmlConfig *cfg)
+{
+    bool ret = false;
+#ifdef __WXMSW__
+    TCHAR dtPath[MAX_PATH];
+    if (SHGetSpecialFolderPath(NULL, dtPath, CSIDL_DESKTOPDIRECTORY, FALSE)) {
+        wxString lpath = wxString::Format(_T("%s\\%s.lnk"), dtPath,
+                wx_static_cast(const char *,cfg->sGetName().mb_str()));
+        return wxFileName::FileExists(lpath);
+    }
+#endif
+#ifdef __UNIX__
+# ifdef __WXMAC__
+    wxString fn = wxGetHomeDir() + wxT("/Desktop/") + cfg->sGetName();
+    return fn.FileExists();
+# else
+    const wxChar **p = desktopDirs;
+
+    while (*p) {
+        ret |= wxFileName::FileExists((wxString::Format(_T("%s/%s/%s.desktop"),
+                    ::wxGetHomeDir().c_str(), *p,cfg->sGetName().c_str())));
+        p++;
+    }
+# endif
+#endif
+    return ret;
 }
 
     void

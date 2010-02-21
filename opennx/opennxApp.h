@@ -47,6 +47,7 @@ class opennxApp : public wxApp
 #endif
         bool CreateDesktopEntry(MyXmlConfig *);
         bool RemoveDesktopEntry(MyXmlConfig *);
+        bool CheckDesktopEntry(MyXmlConfig *);
         /**
          * Return status of SmartCard support
          * in nxssh. If nxssh has SmartCard support

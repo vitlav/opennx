@@ -325,6 +325,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_FONT_FIXED
     void OnButtonFontFixedClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_CREATEICON
+    void OnCheckboxCreateiconClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_DELETE
     void OnDeleteClick( wxCommandEvent& event );
 
@@ -346,6 +349,9 @@ public:
 
     wxString GetUsbipdSocket() const { return m_sUsbipdSocket ; }
     void SetUsbipdSocket(wxString value) { m_sUsbipdSocket = value ; }
+
+    bool GetbCreateDesktopIcon() const { return m_bCreateDesktopIcon ; }
+    void SetbCreateDesktopIcon(bool value) { m_bCreateDesktopIcon = value ; }
 
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
@@ -450,6 +456,8 @@ private:
     wxString m_sProxyUser;
     wxString m_sProxyPass;
     bool m_bProxyPassRemember;
+    bool m_bCreateDesktopIcon;
+    bool m_bSavedCreateDesktopIcon;
 ////@end SessionProperties member variables
 
     bool readKbdLayouts();

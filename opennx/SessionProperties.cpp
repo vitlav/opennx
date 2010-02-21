@@ -261,6 +261,8 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
 
     EVT_BUTTON( XRCID("ID_BUTTON_FONT_FIXED"), SessionProperties::OnButtonFontFixedClick )
 
+    EVT_CHECKBOX( XRCID("ID_CHECKBOX_CREATEICON"), SessionProperties::OnCheckboxCreateiconClick )
+
     EVT_BUTTON( wxID_DELETE, SessionProperties::OnDeleteClick )
 
     EVT_BUTTON( wxID_APPLY, SessionProperties::OnApplyClick )
@@ -420,6 +422,7 @@ SessionProperties::CheckChanged()
         changed |= (m_sSavedSystemNxDir != m_sSystemNxDir);
         changed |= (m_sSavedUsbipdSocket != m_sUsbipdSocket);
         changed |= (m_iSavedUsbLocalPort != m_iUsbLocalPort);
+        changed |= (m_bSavedCreateDesktopIcon != m_bCreateDesktopIcon);
         CheckCfgChanges(changed);
     }
 }
@@ -440,6 +443,8 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_iPseudoDesktopTypeIndex = -1;
     m_iPseudoDisplayTypeIndex = -1;
     m_bProxyPassRemember = false;
+    m_bCreateDesktopIcon = false;
+    m_bSavedCreateDesktopIcon = false;
     m_pNoteBook = NULL;
     m_pCtrlHostname = NULL;
     m_pCtrlPort = NULL;
@@ -546,7 +551,10 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
         // variables on 'Environment' tab
         m_bRemoveOldSessionFiles = m_pCfg->bGetRemoveOldSessionFiles();
         m_sCupsPath = m_pCfg->sGetCupsPath();
+        m_bCreateDesktopIcon = m_bSavedCreateDesktopIcon =
+            ::wxGetApp().CheckDesktopEntry(m_pCfg);
     }
+    // Global config
     wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &m_sUserNxDir);
     wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &m_sSystemNxDir);
 #ifdef SUPPORT_USBIP
@@ -1084,6 +1092,8 @@ void SessionProperties::CreateControls()
         FindWindow(XRCID("ID_TEXTCTRL_USBIPD_SOCKET"))->SetValidator( MyValidator(& m_sUsbipdSocket) );
     if (FindWindow(XRCID("ID_SPINCTRL_USB_LOCALPORT")))
         FindWindow(XRCID("ID_SPINCTRL_USB_LOCALPORT"))->SetValidator( MyValidator(MyValidator::MYVAL_NUMERIC, & m_iUsbLocalPort) );
+    if (FindWindow(XRCID("ID_CHECKBOX_CREATEICON")))
+        FindWindow(XRCID("ID_CHECKBOX_CREATEICON"))->SetValidator( wxGenericValidator(& m_bCreateDesktopIcon) );
     ////@end SessionProperties content construction
 
     if ((!m_bStorePasswords) && FindWindow(XRCID("ID_CHECKBOX_PWSAVE")))
@@ -1634,6 +1644,8 @@ void SessionProperties::OnDeleteClick( wxCommandEvent& event )
                     m_pCfg->sGetName().c_str()), _("Delete Session"),
                 wxICON_QUESTION|wxYES_NO|wxNO_DEFAULT) == wxYES) {
         ::wxGetApp().RemoveDesktopEntry(m_pCfg);
+        ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), m_pCfg->sGetFileName().c_str());
+        ::wxRemoveFile(m_pCfg->sGetFileName());
         EndModal(wxID_CLEAR);
     }
 }
@@ -1657,6 +1669,13 @@ void SessionProperties::OnApplyClick( wxCommandEvent& event )
     m_sSavedUserNxDir = m_sUserNxDir;
     m_sSavedSystemNxDir = m_sSystemNxDir;
     m_sSavedUsbipdSocket = m_sUsbipdSocket;
+    m_bSavedCreateDesktopIcon = m_bCreateDesktopIcon;
+    if (NULL != m_pCfg) {
+        if (m_bCreateDesktopIcon)
+            ::wxGetApp().CreateDesktopEntry(m_pCfg);
+        else
+            ::wxGetApp().RemoveDesktopEntry(m_pCfg);
+    }
     m_pCtrlApplyButton->Enable(false);
 }
 
@@ -2378,6 +2397,17 @@ void SessionProperties::OnTextctrlProxyhostUpdated( wxCommandEvent& event )
  */
 
 void SessionProperties::OnCheckboxProxypassRememberClick( wxCommandEvent& event )
+{
+    wxUnusedVar(event);
+    CheckChanged();
+}
+
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_CREATEICON
+ */
+
+void SessionProperties::OnCheckboxCreateiconClick( wxCommandEvent& event )
 {
     wxUnusedVar(event);
     CheckChanged();
