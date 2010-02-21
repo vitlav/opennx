@@ -548,17 +548,25 @@ MyXmlConfig::UrlEsc(const wxString &s)
 MyXmlConfig::getDesktopSize(int &dw, int &dh, int &ww, int &wh)
 {
     // Fetch the size of the display and the workarea
-    // (== display size reduced by the size of the taskbar) where our
-    // toplevel dialog are shown.
-    int dspidx = wxDisplay::GetFromWindow(::wxGetApp().GetTopWindow());
+    // (workarea == display size reduced by the size of the taskbar and window
+    // decorations) where our toplevel dialog are shown.
+    wxWindow *tlw = ::wxGetApp().GetTopWindow();
+    if (NULL == tlw) {
+        ::wxLogError(_("Could not find application window"));
+        return;
+    }
+    int dspidx = wxDisplay::GetFromWindow(tlw);
     wxDisplay dsp(dspidx);
     wxRect r = dsp.GetGeometry();
     dw = r.GetWidth();
     dh = r.GetHeight();
     r = dsp.GetClientArea();
-    ww = r.GetWidth();
-    wh = r.GetHeight();
-    ::myLogTrace(MYTRACETAG, wxT("Display: %dx%d, Desktop: %dx%d"), dw, dh, ww, wh);
+    wxSize sz = tlw->GetSize();
+    wxSize clsz = tlw->GetClientSize();
+    ww = r.GetWidth() - (sz.GetWidth() - clsz.GetWidth());
+    wh = r.GetHeight() - (sz.GetHeight() - clsz.GetHeight());
+    ::myLogTrace(MYTRACETAG, wxT("Display: %dx%d, Workarea: %dx%d (netto: %d,%d)"),
+            dw, dh, r.GetWidth(), r.GetHeight(), ww, wh);
 }
 
 // Retrieve parameters for startsession command

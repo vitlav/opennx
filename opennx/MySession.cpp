@@ -680,17 +680,23 @@ MySession::getXauthCookie(int display /* = 0 */, wxString proto)
     cmd << wxT(" -i");
     cmd << wxT(" -f ") << getXauthPath(m_eXarch);
     wxProcess *p = new wxProcess(wxPROCESS_REDIRECT);
-    wxArrayString output, error;
     wxExecute(cmd, wxEXEC_ASYNC, p);
+    long pid = p->GetPid();
     wxTextOutputStream os(*(p->GetOutputStream()));
+    wxTextInputStream is(*(p->GetInputStream()));
+    wxTextInputStream es(*(p->GetErrorStream()));
     cmd.Empty();
-    cmd << wxT("add ") << domain1 << wxT(" MIT-MAGIC-COOKIE-1 ") << cookie << wxT("\r\n");
-    cmd << wxT("add ") << domain2 << wxT(" MIT-MAGIC-COOKIE-1 ") << cookie << wxT("\r\n");
-    cmd << wxT("quit\r\n");
+    cmd << wxT("add ") << domain1 << wxT(" MIT-MAGIC-COOKIE-1 ") << cookie << wxT("\n");
+    cmd << wxT("add ") << domain2 << wxT(" MIT-MAGIC-COOKIE-1 ") << cookie << wxT("\n");
+    cmd << wxT("quit\n");
     os.WriteString(cmd);
     p->CloseOutput();
-    p->Detach();
-    // return (0 == CreateDetachedProcess((const char *)cmd.mb_str())) ? cookie : wxT("");
+    while (wxProcess::Exists(pid)) {
+        if (p->IsInputAvailable())
+            ::myLogTrace(MYTRACETAG, wxT("xauth stdout: %s"), is.ReadLine().c_str());
+        if (p->IsErrorAvailable())
+            ::myLogTrace(MYTRACETAG, wxT("xauth stderr: %s"), es.ReadLine().c_str());
+    }
     return cookie;
 #else
     wxUnusedVar(display);
@@ -726,8 +732,7 @@ MySession::getXauthPath(tXarch xarch)
         case XARCH_CYGWIN:
             return cygPath(m_sUserDir, wxT(".Xauthority"));
         case XARCH_XMING:
-            return wxString::Format(wxT("\"%s\""),
-                        wxFileName(m_sUserDir, wxT(".Xauthority")).GetFullPath().c_str());
+            return m_sUserDir + wxT("\\.Xauthority");
         default:
             ::wxLogError(_("Invalid X11 server platform"));
             return wxEmptyString;
@@ -1792,6 +1797,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
     m_pParent = parent;
     MyXmlConfig cfg(cfgpar.sGetFileName());
     m_pCfg = &cfg;
+
     if (cfg.IsValid()) {
         // Copy misc values from login dialog
         m_pCfg->bSetUseSmartCard(cfgpar.bGetUseSmartCard());
@@ -1804,9 +1810,11 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
 
         wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &m_sSysDir);
         wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &m_sUserDir);
+        wxFileName fn(m_sUserDir, wxEmptyString);
+        m_sUserDir = fn.GetShortPath();
         checkXarch();
-        wxFileName fn(m_sSysDir, wxEmptyString);
 
+        fn.Assign(m_sSysDir, wxEmptyString);
         fn.AppendDir(wxT("bin"));
 #ifdef __WXMSW__
         fn.SetName(wxT("nxssh.exe"));
