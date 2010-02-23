@@ -1364,7 +1364,6 @@ MySession::startXserver()
             wxWinCmd << wxT(" -nolisten tcp");
             wxWinCmd << getXfontPath(m_eXarch);
             wxWinCmd << m_pCfg->sGetXserverParams(true);
-            wxWinCmd << wxT(" -nokeyhook");
             {
                 wxString title = m_pCfg->sGetUsername();
                 if (m_pCfg->bGetGuestMode()) {
@@ -1375,6 +1374,7 @@ MySession::startXserver()
                 wxWinCmd << wxT(" -name ") << title << wxT("@") << m_pCfg->sGetServerHost();
             }
             wxWinCmd << wxT(" ") << dpyStr;
+            wxWinCmd << wxT(" -nokeyhook");
             break;
         case XARCH_XMING:
             dpyStr = wxT("127.0.0.1:0");

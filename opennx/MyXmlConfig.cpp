@@ -854,7 +854,7 @@ MyXmlConfig::sGetXserverParams(bool forNXWin)
         }
     } else {
         if (MyXmlConfig::DPTYPE_FULLSCREEN == m_eDisplayType) {
-            ret << wxT(" -reset -terminate -fullscreen -hide");
+            ret << wxT(" -terminate -fullscreen -hide");
         } else {
             ret << wxT(" -noreset -lesspointer -multiwindow");
         }
