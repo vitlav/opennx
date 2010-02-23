@@ -67,7 +67,7 @@ de.fwadd=Erstelle Firewall-Regeln
 Name: "desktopicon"; Description: "{cm:dticon}"; GroupDescription: "{cm:dticon_group}";
 
 [Files]
-Source: setupdir\*; DestDir: {app}; Flags: recursesubdirs
+Source: setupdir\*; DestDir: {app}; Flags: recursesubdirs restartreplace replacesameversion
 
 [Icons]
 Name: "{group}\OpenNX"; Filename: "{app}\bin\opennx.exe";
@@ -105,3 +105,37 @@ Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}
 Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\nxesd.exe"" ALL"; Flags: runhidden skipifdoesntexist
 Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\Xming.exe"" ALL"; Flags: runhidden skipifdoesntexist
 
+[UninstallDelete]
+Type: files; Name: "{app}\share\Xming\font-dirs"
+
+[Code]
+procedure CurStepChanged(step: TSetupStep);
+var
+    fontDir:  String;
+    FindRec:  TFindRec;
+    fontDirs: TStringList;
+
+begin
+    if step = ssPostInstall then begin
+        (* Create {app}\share\Xming\font-dirs *)
+        fontDir := ExpandConstant('{app}\share\Xming\fonts');
+        fontDirs := TStringList.Create;
+        (* First, create a list of all subdirs in fonts *)
+        if DirExists(fontDir) then begin
+            if FindFirst(fontDir + '\*', FindRec) then begin
+                try
+                    repeat
+                        if FindRec.Attributes and FILE_ATTRIBUTE_DIRECTORY <> 0 then
+                            fontDirs.Append(fontDir + '\' + FindRec.Name);
+                    until not FindNext(FindRec);
+                finally
+                    FindClose(FindRec);
+                end;
+            end;
+        end;
+        (* Add the windows font dir to the list *)
+        fontDirs.Append(ExpandConstant('{fonts}'));
+        (* Finally, create the file, containing the comma-separated directory list. *)
+        SaveStringToFile(ExpandConstant('{app}\share\Xming\font-dirs'), fontDirs.CommaText, false);
+    end;
+end;
