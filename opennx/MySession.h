@@ -102,7 +102,7 @@ private:
 
     wxArrayString m_aParseBuffer;
     wxString getXauthCookie(int display = 0, wxString = wxT("/unix"));
-    wxString getXauthPath(tXarch);
+    wxString getXauthPath(tXarch = XARCH_XMING);
     wxString formatOptFilename();
     unsigned short getFirstFreePort(unsigned short);
     void checkXarch();

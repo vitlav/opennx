@@ -23,19 +23,20 @@
 #define _OSDEP_H_
 
 extern "C" {
-extern const char *x11_socket_path;
-extern const char *x11_keyboard_type;
-extern void reparent_pulldown(long);
-extern void close_foreign(long);
-extern void close_sid(const char *);
-extern int inKdeSession;
+    extern const char *x11_socket_path;
+    extern const char *x11_keyboard_type;
+    extern void reparent_pulldown(long);
+    extern void close_foreign(long);
+    extern void close_sid(const char *);
+    extern int inKdeSession;
 #ifdef __WXMSW__
-extern long getppid();
-extern int checkMultiMonitors();
-extern int CreateDetachedProcess(const char *cmdline);
+    extern long getppid();
+    extern int checkMultiMonitors();
+    extern int CreateDetachedProcess(const char *cmdline);
+    extern int getXmingPort(int firstfree);
 #endif
 #ifdef __WXMAC__
-extern unsigned short macFirstFreePort(unsigned short startPort);
+    extern unsigned short macFirstFreePort(unsigned short startPort);
 #endif
 };
 #endif

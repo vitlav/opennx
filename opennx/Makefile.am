@@ -1,9 +1,10 @@
 AM_LIBTOOLFLAGS = --silent
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = po packaging/MacOSX packaging/win32
+SUBDIRS = po $(PLATFORM_SUBDIRS)
+DIST_SUBDIRS = packaging/win32 packaging/MacOSX
 
-noinst_PROGRAMS = bin2hdr
+noinst_PROGRAMS = bin2hdr testxauth
 bin2hdr_SOURCES = bin2hdr.cpp
 
 bin_PROGRAMS = opennx pconnect $(TRACELOG) $(WATCHREADER) $(WATCHUSBIP) \
@@ -19,7 +20,7 @@ opennx_SOURCES = AboutDialog.cpp AsyncProcess.cpp LibOpenSC.cpp \
 	MyValidator.cpp MyWizard.cpp MyXmlConfig.cpp opennxApp.cpp \
 	osdep.c PanicDialog.cpp pwcrypt.cpp ProxyPasswordDialog.cpp QuitDialog.cpp \
 	RdpImageSettingsDialog.cpp RdpPropertyDialog.cpp ResumeDialog.cpp \
-	SessionAdmin.cpp SessionList.cpp SessionProperties.cpp \
+	SessionAdmin.cpp SessionList.cpp SessionProperties.cpp SimpleXauth.cpp \
 	ShareProperties.cpp TextViewer.cpp UnixImageSettingsDialog.cpp \
 	UsbFilterDetailsDialog.cpp UsbIp.cpp VncImageSettingsDialog.cpp \
 	VncPropertyDialog.cpp wxprec.cpp WinShare.cpp X11PropertyDialog.cpp \
@@ -37,7 +38,7 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	QuitDialog_symbols.h ProxyPasswordDialog.h ProxyPasswordDialog_symbols.h \
 	RdpImageSettingsDialog.h RdpImageSettingsDialog_symbols.h RdpPropertyDialog.h \
 	RdpPropertyDialog_symbols.h ResumeDialog.h ResumeDialog_symbols.h \
-	SessionAdmin.h SessionAdmin_symbols.h SessionList.h \
+	SessionAdmin.h SessionAdmin_symbols.h SessionList.h SimpleXauth.h \
 	SessionProperties.h SessionProperties_symbols.h ShareProperties.h \
 	ShareProperties_symbols.h TextViewer.h TextViewer_symbols.h \
 	TraceLogFrame.h TraceLogFrame_symbols.h UnixImageSettingsDialog.h \
@@ -50,6 +51,12 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 
 pconnect_SOURCES = pconnect.c
 pconnect_LDADD = $(WS2LIB) $(RESLIB)
+
+testxauth_SOURCES = testxauth.cpp SimpleXauth.cpp pwcrypt.cpp md5.c
+testxauth_LDADD = $(WX_LIBS)
+testxauth_CPPFLAGS = $(WX_CPPFLAGS) -DAPP_TESTXAUTH
+testxauth_CXXFLAGS = $(WX_CXXFLAGS)
+testxauth_CFLAGS = $(WX_CFLAGS)
 
 watchreader_SOURCES = watchReaderApp.cpp LibOpenSC.cpp MyDynlib.cpp MacOSX.c osdep.c mylog.cpp
 watchreader_DEPENDENCIES = $(WATCHREADER_RES)

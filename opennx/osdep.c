@@ -36,7 +36,6 @@ int inKdeSession = 0;
 #include <stdio.h>
 
 static char _kbd[_MAX_PATH+1];
-static char _spath[_MAX_PATH+1];
 
 char *x11_keyboard_type = _kbd;
 /* dummy for now */
@@ -331,6 +330,22 @@ getkeyboardtype()
     snprintf(_kbd, sizeof(_kbd), "%s/%s", xkbmodel, xkblayout);
 }
 
+int getXmingPort(int firstfree)
+{
+    while (firstfree >= 6000) {
+        int dpy = firstfree - 6000;
+        char name[MAX_PATH];
+        snprintf(name, sizeof(name), "Global\\XMING_DISPLAY:%d", dpy);
+        HANDLE h = OpenMutexA(SYNCHRONIZE, FALSE, name);
+        if (NULL != h) {
+            CloseHandle(h);
+            return firstfree;
+        }
+        firstfree--;
+    }
+    return 0;
+}
+
 /**
  * Helper function to get the parent process id on
  * windows.
@@ -406,7 +421,7 @@ int CreateDetachedProcess(const char *cmdline) {
     si.cb = sizeof(si);
     si.dwFlags = STARTF_USESHOWWINDOW;
     si.wShowWindow = SW_HIDE;
-    if (CreateProcessA(NULL, cmdline, NULL, NULL,
+    if (CreateProcessA(NULL, (char *)cmdline, NULL, NULL,
                 FALSE, dwFlags, NULL, NULL, &si, &pi)) {
         CloseHandle(pi.hProcess);
         CloseHandle(pi.hThread);

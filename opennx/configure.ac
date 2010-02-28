@@ -27,6 +27,8 @@ case $build_os in
         fi
         ;;
 esac
+
+PLATFORM_SUBDIRS=
 case $target_os in
     darwin*)
         am_dependency_tracking=no
@@ -34,8 +36,13 @@ case $target_os in
         if test "x$prefix" = xNONE; then
             prefix=/Library/OpenNX
         fi
+        PLATFORM_SUBDIRS=packaging/MacOSX
+        ;;
+    mingw*)
+        PLATFORM_SUBDIRS=packaging/win32
         ;;
 esac
+AC_SUBST(PLATFORM_SUBDIRS)
 
 # Checks for programs.
 AC_DISABLE_SHARED
