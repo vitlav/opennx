@@ -1,4 +1,7 @@
-tmpinstall:
+IURAR = innounp029.rar
+IUDIR = innounp%200.29
+
+tmpinstall: '{app}'
 	mkdir -p dist/bin dist/lib dist/share
 	cp '{app}'/bin/*.dll dist/lib
 	cp '{app}'/bin/*.dll dist/bin
@@ -9,5 +12,25 @@ tmpinstall:
 		test $(BUILDXMING) = yes || cp -r '{app}'/share/$$f dist/share ; \
 	done
 
-CLEANFILES = -r dist
+'{app}': innounp.exe nxsetup.exe
+	$(WINE) innounp.exe -x -q -y nxsetup.exe
+
+$(IURAR):
+	wget -q 'http://sourceforge.net/projects/innounp/files/innounp/$(IUDIR)/$(IURAR)/download'
+
+innounp.exe: unrar.available $(IURAR)
+	$(UNRAR) e -o+ -idcd $(IURAR) $@
+
+unrar.available:
+	@if test -z "$(UNRAR)" ; then \
+		echo "No unrar available! Please unpack innounp rar archive manually." ; \
+		exit 1 ; \
+	fi
+	touch $@
+
+nxsetup.exe:
+	$(PERL) getnxsetup
+
+CLEANFILES = -r dist '{app}' install_script.iss unrar.available
+DISTCLEANFILES = $(IURAR) innounp.exe nxsetup.exe
 MAINTAINERCLEANFILES = Makefile.in

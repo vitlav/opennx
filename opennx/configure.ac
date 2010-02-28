@@ -425,6 +425,7 @@ case $target_os in
         ;;
     mingw*)
         PLATFORMDIST=setup
+        AC_CHECK_TOOL([UNRAR], [unrar], [])
         AC_DEFINE_UNQUOTED(_WIN32_WINNT,0x0500,
                    [Minimum required windows version])
         if test "$build_os" = "$target_os" ; then
