@@ -129,7 +129,7 @@ IMPLEMENT_APP(opennxApp);
             vi = (LPVOID)malloc(viSize);
             if (vi) {
                 if (GetFileVersionInfo(mySelf, dummy, viSize, vi)) {
-                    if (VerQueryValue(vi, wxT("\\"), (LPVOID *)&vsFFI, &vsFFIlen)) {
+                    if (VerQueryValueA(vi, (LPSTR)"\\", (LPVOID *)&vsFFI, &vsFFIlen)) {
                         m_sVersion = wxString::Format(wxT("%d.%d"), HIWORD(vsFFI->dwFileVersionMS),
                                 LOWORD(vsFFI->dwFileVersionMS));
                         if (vsFFI->dwFileVersionLS)
