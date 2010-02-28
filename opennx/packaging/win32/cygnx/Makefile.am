@@ -33,4 +33,5 @@ nxsetup.exe:
 
 CLEANFILES = -r dist '{app}' install_script.iss unrar.available
 DISTCLEANFILES = $(IURAR) innounp.exe nxsetup.exe
+EXTRA_DIST = getnxsetup
 MAINTAINERCLEANFILES = Makefile.in

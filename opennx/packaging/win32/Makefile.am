@@ -31,8 +31,8 @@ SUBDIRS = xming nx cygnx pulse
 nativesetup: .setupdir
 	"$(ISCC)" "$(srcdir)/opennx.iss"
 
-crosssetup: .setupdir
-	$(WINE) "$(ISCC)" "$(srcdir)/opennx.iss"
+crosssetup: .setupdir isccwrap.sh
+	sh isccwrap.sh "$(srcdir)/opennx.iss"
 
 setup: .setupdir  $(SETUP)
 

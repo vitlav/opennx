@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-02-28 07:13+0100\n"
+"POT-Creation-Date: 2010-02-28 18:45+0100\n"
 "PO-Revision-Date: 2009-09-13 11:50+0100\n"
 "Last-Translator: Boris Savelev <boris.savelev@gmail.com>\n"
 "Language-Team:  <de@li.org>\n"
@@ -911,15 +911,15 @@ msgstr "PID"
 msgid "Status"
 msgstr "Статус"
 
-#: SessionAdmin.cpp:289
+#: SessionAdmin.cpp:288
 msgid "Full session statistics - OpenNX"
 msgstr "Полная статистика сессии - OpenNX"
 
-#: SessionAdmin.cpp:290
+#: SessionAdmin.cpp:289
 msgid "Partial session statistics - OpenNX"
 msgstr "Статичтика сессии - OpenNX"
 
-#: SessionAdmin.cpp:369
+#: SessionAdmin.cpp:368
 msgid "Choose new NX session directory."
 msgstr "Выберите директорию с сессиями NX"
 
