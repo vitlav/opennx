@@ -2,7 +2,7 @@ AM_LIBTOOLFLAGS = --silent
 ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = po $(PLATFORM_SUBDIRS)
-DIST_SUBDIRS = packaging/win32 packaging/MacOSX
+DIST_SUBDIRS = po packaging/win32 packaging/MacOSX
 
 noinst_PROGRAMS = bin2hdr testxauth
 bin2hdr_SOURCES = bin2hdr.cpp

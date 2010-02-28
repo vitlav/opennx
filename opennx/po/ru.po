@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-02-21 03:10+0100\n"
+"POT-Creation-Date: 2010-02-28 07:13+0100\n"
 "PO-Revision-Date: 2009-09-13 11:50+0100\n"
 "Last-Translator: Boris Savelev <boris.savelev@gmail.com>\n"
 "Language-Team:  <de@li.org>\n"
@@ -333,45 +333,45 @@ msgstr "Autorisierung fehlgeschlagen: %s"
 msgid "Authentication failed"
 msgstr "Ошибка аутентификации"
 
-#: MySession.cpp:118 MySession.cpp:676 MySession.cpp:737
+#: MySession.cpp:119 MySession.cpp:707
 #, fuzzy
 msgid "Invalid X11 server platform"
 msgstr "Ungüliges plist Format"
 
-#: MySession.cpp:503 MySession.cpp:524 MySession.cpp:527
+#: MySession.cpp:510 MySession.cpp:531 MySession.cpp:534
 msgid "unknown"
 msgstr "неизвестно"
 
-#: MySession.cpp:515
+#: MySession.cpp:522
 msgid "terminated"
 msgstr "завершённая"
 
-#: MySession.cpp:518
+#: MySession.cpp:525
 msgid "failed"
 msgstr "неудачная"
 
-#: MySession.cpp:521
+#: MySession.cpp:528
 msgid "running"
 msgstr "запущенная"
 
-#: MySession.cpp:535 RdpPropertyDialog_symbols.h:23 SessionAdmin.cpp:194
+#: MySession.cpp:542 RdpPropertyDialog_symbols.h:23 SessionAdmin.cpp:194
 #: SessionProperties_symbols.h:24 VncPropertyDialog_symbols.h:23
 msgid "Server"
 msgstr "Сервер"
 
-#: MySession.cpp:538
+#: MySession.cpp:545
 msgid "Client"
 msgstr "Клиент"
 
-#: MySession.cpp:541 MySession.cpp:544
+#: MySession.cpp:548 MySession.cpp:551
 msgid "Unknown"
 msgstr "Unbekannt"
 
-#: MySession.cpp:808 MySession.cpp:821
+#: MySession.cpp:778 MySession.cpp:791
 msgid "Warning - OpenNX"
 msgstr "Предупреждение - OpenNX"
 
-#: MySession.cpp:819
+#: MySession.cpp:789
 msgid ""
 "\n"
 "Do you want to delete the key and retry ?"
@@ -379,81 +379,81 @@ msgstr ""
 "\n"
 "Удалить ключ и попробовать еще раз ? "
 
-#: MySession.cpp:839
+#: MySession.cpp:809
 msgid "Sending username"
 msgstr "Отправка имени пользователя"
 
-#: MySession.cpp:843 MySession.cpp:870
+#: MySession.cpp:813 MySession.cpp:840
 msgid "Authenticating"
 msgstr "Аутентификация"
 
-#: MySession.cpp:850
+#: MySession.cpp:820
 msgid "Authentication successful"
 msgstr "Аутентификация завершена"
 
-#: MySession.cpp:886
+#: MySession.cpp:856
 msgid "Query server-side sessions"
 msgstr "Запрос сессий"
 
-#: MySession.cpp:940
+#: MySession.cpp:910
 msgid "Enter PIN for Smart Card access."
 msgstr "Введите PIN для смарт-карты."
 
-#: MySession.cpp:940
+#: MySession.cpp:910
 msgid "Smart Card PIN"
 msgstr "Smart Card PIN"
 
-#: MySession.cpp:945
+#: MySession.cpp:915
 msgid "Enter passphrase"
 msgstr "Введите секретный код"
 
-#: MySession.cpp:947
+#: MySession.cpp:917
 msgid "Empty passphrase"
 msgstr "Пустой секретный код"
 
-#: MySession.cpp:953 MySession.cpp:957 MySession.cpp:961 MySession.cpp:965
-#: MySession.cpp:969 MySession.cpp:973 MySession.cpp:977 MySession.cpp:981
-#: MySession.cpp:985 MySession.cpp:989
+#: MySession.cpp:923 MySession.cpp:927 MySession.cpp:931 MySession.cpp:935
+#: MySession.cpp:939 MySession.cpp:943 MySession.cpp:947 MySession.cpp:951
+#: MySession.cpp:955 MySession.cpp:959
 msgid "Negotiating session parameter"
 msgstr "Передача параметров сессии"
 
-#: MySession.cpp:997 MySession.cpp:1026
+#: MySession.cpp:967 MySession.cpp:996
 msgid "Starting session"
 msgstr "Начало сессии"
 
-#: MySession.cpp:1019
+#: MySession.cpp:989
 msgid "Unexpected termination of nxssh"
 msgstr "Неожиданное завершение nxssh"
 
-#: MySession.cpp:1187
+#: MySession.cpp:1157
 msgid "There are no sessions which can be attached to."
 msgstr "Keine geeigneten Sitzungen vorhanden."
 
-#: MySession.cpp:1188 MySession.cpp:1198
+#: MySession.cpp:1158 MySession.cpp:1168
 msgid "Error - OpenNX"
 msgstr "Ошибка - OpenNX"
 
-#: MySession.cpp:1197
+#: MySession.cpp:1167
 msgid "You have reached your session limit. No more sessions allowed"
 msgstr "Вы достигли предела на лимит сессий. Новая сессия не разрешена"
 
-#: MySession.cpp:1353 MySession.cpp:1385
+#: MySession.cpp:1323 MySession.cpp:1368
 #, fuzzy
 msgid "Could not create X11 authentication cookie"
 msgstr ""
 "Не удалось создать директорию для сессий\n"
 "%s\n"
 
-#: MySession.cpp:1407
+#: MySession.cpp:1394
 msgid "No X server found."
 msgstr "Не найден X-сервер"
 
-#: MySession.cpp:1415
+#: MySession.cpp:1402
 #, fuzzy, c-format
 msgid "Could not execute %s: %s\n"
 msgstr "Не удалось удалить файл %s"
 
-#: MySession.cpp:1495
+#: MySession.cpp:1482
 #, c-format
 msgid ""
 "Could not create session directory\n"
@@ -462,7 +462,7 @@ msgstr ""
 "Не удалось создать директорию для сессий\n"
 "%s\n"
 
-#: MySession.cpp:1520
+#: MySession.cpp:1507
 #, c-format
 msgid ""
 "Could not write session options\n"
@@ -471,50 +471,50 @@ msgstr ""
 "Не удалось сохранить опции сессии в\n"
 "%s\n"
 
-#: MySession.cpp:1610 MySession.cpp:1624
+#: MySession.cpp:1597 MySession.cpp:1611
 msgid "Could not assign a free port for CUPS printing"
 msgstr "Не удалось назначить свободный порт для CUPS"
 
-#: MySession.cpp:1883
+#: MySession.cpp:1868
 #, c-format
 msgid "Could not write %s"
 msgstr "Не удалось записать %s"
 
-#: MySession.cpp:1950
+#: MySession.cpp:1935
 #, fuzzy
 msgid "Could not start local X server"
 msgstr "Could not stat %s"
 
-#: MySession.cpp:1960 MySession.cpp:2004 MySession.cpp:2014
+#: MySession.cpp:1951 MySession.cpp:1995 MySession.cpp:2005
 #, c-format
 msgid "Connecting to %s ..."
 msgstr "Соединение с %s ..."
 
-#: MySession.cpp:1968
+#: MySession.cpp:1959
 msgid "Preparing multimedia service ..."
 msgstr "Подготовка мультимедиа сервисов ..."
 
-#: MySession.cpp:2000
+#: MySession.cpp:1991
 msgid "Could not start multimedia support"
 msgstr "Не удалось запустить мультимедиа сервисы"
 
-#: MySession.cpp:2002
+#: MySession.cpp:1993
 msgid "Could not assign a free port for multimedia support"
 msgstr "Не удалось назначить свободный порт для мультимедиа сервисов"
 
-#: MySession.cpp:2011
+#: MySession.cpp:2002
 msgid "Preparing CUPS service ..."
 msgstr "Подготовка CUPS ..."
 
-#: MySession.cpp:2013
+#: MySession.cpp:2004
 msgid "Could not start CUPS printing"
 msgstr "Не удалось запустить CUPS"
 
-#: MySession.cpp:2051
+#: MySession.cpp:2042
 msgid "Called command was: "
 msgstr "Комманда: "
 
-#: MySession.cpp:2052
+#: MySession.cpp:2043
 msgid "Could not start nxssh."
 msgstr "Не удалось запустить nxssh."
 
@@ -911,15 +911,15 @@ msgstr "PID"
 msgid "Status"
 msgstr "Статус"
 
-#: SessionAdmin.cpp:288
+#: SessionAdmin.cpp:289
 msgid "Full session statistics - OpenNX"
 msgstr "Полная статистика сессии - OpenNX"
 
-#: SessionAdmin.cpp:289
+#: SessionAdmin.cpp:290
 msgid "Partial session statistics - OpenNX"
 msgstr "Статичтика сессии - OpenNX"
 
-#: SessionAdmin.cpp:367
+#: SessionAdmin.cpp:369
 msgid "Choose new NX session directory."
 msgstr "Выберите директорию с сессиями NX"
 
