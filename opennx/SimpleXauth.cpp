@@ -107,7 +107,7 @@ SimpleXauthEntry::SimpleXauthEntry(wxString cookie)
 {
     init();
     unsigned long l;
-    int idx = 0;
+    unsigned int idx = 0;
     for (idx = 0; idx < cookie.Length(); idx += 2) {
         if (!cookie.Mid(idx, 2).ToULong(&l, 16))
             break;

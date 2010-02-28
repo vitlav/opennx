@@ -254,12 +254,11 @@ void SessionAdmin::ShowSessionStats(long item, bool full)
         wxDynamicCast((void *)m_SessionListCtrl->GetItemData(item), MySession);
     if (s) {
         wxFileName fn(s->sGetDir(), wxT("stats"));
-        long spid = s->lGetPID();
         wxString md5stats1 = Md5OfFile(fn.GetFullPath());
         wxString md5stats2 = md5stats1;
         bool ok = false;
 #ifdef __UNIX__
-        ok = (kill((pid_t)spid, full ? SIGUSR1 : SIGUSR2) == 0);
+        ok = (kill((pid_t)s->lGetPID(), full ? SIGUSR1 : SIGUSR2) == 0);
 #else
 #endif
         if (ok) {
