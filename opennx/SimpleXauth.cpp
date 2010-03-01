@@ -389,12 +389,10 @@ SimpleXauth::SimpleXauth(wxString filename)
     m_pPrivate = new SimpleXauthPrivate();
     m_pPrivate->filename = filename;
     readFile();
-    printf("read %d entries\n", m_pPrivate->entries.size());
 }
 
 SimpleXauth::~SimpleXauth()
 {
-    printf("write %d entries\n", m_pPrivate->entries.size());
     writeFile();
     delete m_pPrivate;
 }

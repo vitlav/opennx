@@ -35,6 +35,7 @@ AppID={#=APPIDVAL}
 UninstallFilesDir={app}\uninstall
 Compression=lzma/ultra64
 SolidCompression=yes
+SetupLogging=yes
 WizardImageFile=compiler:wizmodernimage-IS.bmp
 WizardSmallImageFile=compiler:wizmodernsmallimage-IS.bmp
 ;SetupIconFile=compiler:Examples\Setup.ico
@@ -67,7 +68,7 @@ de.fwadd=Erstelle Firewall-Regeln
 Name: "desktopicon"; Description: "{cm:dticon}"; GroupDescription: "{cm:dticon_group}";
 
 [Files]
-Source: setupdir\*; DestDir: {app}; Flags: recursesubdirs restartreplace replacesameversion
+Source: setupdir\*; DestDir: {app}; Flags: recursesubdirs restartreplace replacesameversion uninsrestartdelete
 
 [Icons]
 Name: "{group}\OpenNX"; Filename: "{app}\bin\opennx.exe";
@@ -101,18 +102,20 @@ Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bi
 
 [UninstallRun]
 ; Remove firewall exceptions
-Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\nxssh.exe"" ALL"; Flags: runhidden skipifdoesntexist
-Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\nxesd.exe"" ALL"; Flags: runhidden skipifdoesntexist
-Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\Xming.exe"" ALL"; Flags: runhidden skipifdoesntexist
+Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\nxssh.exe"" ALL"; Flags: runhidden skipifdoesntexist; RunOnceId: fwdelnxssh
+Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\nxesd.exe"" ALL"; Flags: runhidden skipifdoesntexist; RunOnceId: fwdelnxesd
+Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\Xming.exe"" ALL"; Flags: runhidden skipifdoesntexist; RunOnceId: fwdelxming
 
 [UninstallDelete]
 Type: files; Name: "{app}\share\Xming\font-dirs"
 
 [Code]
+
 procedure CurStepChanged(step: TSetupStep);
 var
-    fontDir:  String;
-    FindRec:  TFindRec;
+    fontDir, mkfsexe, s: String;
+    i, r: Integer;
+    FindRec: TFindRec;
     fontDirs: TStringList;
 
 begin
@@ -135,7 +138,43 @@ begin
         end;
         (* Add the windows font dir to the list *)
         fontDirs.Append(ExpandConstant('{fonts}'));
-        (* Finally, create the file, containing the comma-separated directory list. *)
-        SaveStringToFile(ExpandConstant('{app}\share\Xming\font-dirs'), fontDirs.CommaText, false);
+        (* Create the file, containing the comma-separated directory list. *)
+        s := ExpandConstant('{app}\share\Xming\font-dirs');
+        Log('Creating ' + s);
+        SaveStringToFile(s, fontDirs.CommaText, false);
+        (* Finally, run mkfontscale for all font directories *)
+        mkfsexe := ExpandConstant('{app}\bin\mkfontscale.exe');
+        for i := 0 to fontDirs.Count - 1 do begin
+            s := AddQuotes(fontDirs[i]);
+            Log('Creating fonts.scale and fonts.dir in ' + s);
+            Exec(mkfsexe, s, '', SW_HIDE, ewWaitUntilTerminated, r);
+            Exec(mkfsexe, '-b -s -l ' + s, '', SW_HIDE, ewWaitUntilTerminated, r);
+        end;
     end;
 end;
+
+procedure CurUninstallStepChanged(ustep: TUninstallStep);
+var
+    s, txt, wfonts: String;
+    i: Integer;
+    fontDirs: TStringList;
+
+begin
+    if ustep = usUninstall then begin
+        s := ExpandConstant('{app}\share\Xming\font-dirs');
+        wfonts := ExpandConstant('{fonts}');
+        if LoadStringFromFile(s, txt) then begin
+            fontDirs := TStringList.Create;
+            fontDirs.CommaText := txt;
+            for i := 0 to fontDirs.Count - 1 do begin
+                s := fontDirs[i];
+                if s <> wfonts then begin
+                    s := AddBackSlash(s);
+                    DeleteFile(s + 'fonts.scale');
+                    DeleteFile(s + 'fonts.dir');
+                end;
+            end;
+        end;
+    end;
+end;
+

@@ -1381,7 +1381,6 @@ MySession::startXserver()
             if (::checkMultiMonitors() > 1)
                 wxWinCmd << wxT(" -multimonitors");
             wxWinCmd << m_pCfg->sGetXserverParams(false);
-            wxWinCmd << wxT(" -auth \"") << getXauthPath(XARCH_XMING) << wxT("\"");
             fn.Assign(m_sSysDir, wxEmptyString);
             fn.AppendDir(wxT("share"));
             fn.AppendDir(wxT("Xming"));
@@ -1396,7 +1395,7 @@ MySession::startXserver()
             break;
     }
 
-    ::myLogTrace(MYTRACETAG, wxT("startXServer executing %s"), wxWinCmd.c_str());
+    ::wxLogInfo(wxT("startXServer executing %s"), wxWinCmd.c_str());
     int r = CreateDetachedProcess((const char *)wxWinCmd.mb_str());
     if (r != 0) {
         ::wxLogError(_("Could not execute %s: %s\n"), wxWinCmd.c_str(), wxSysErrorMsg(r));
@@ -1935,7 +1934,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
             ::wxLogError(_("Could not start local X server"));
             return false;
         }
-        if (XARCH_CYGWIN == m_eXarch) {
+        if (XARCH_XMING == m_eXarch) {
             // Now, that the X server has been started, // set XAUTHORITY
             // again, but this time in cygwin notation (for nxssh).
             ::wxSetEnv(wxT("XAUTHORITY"), getXauthPath(XARCH_CYGWIN));

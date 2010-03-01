@@ -1,6 +1,13 @@
 SUBDIRS = xming nx cygnx pulse
 
-.setupdir: findrequires.pl
+FNT1DIR = dejavu-fonts-ttf-2.30
+FNT1BALL = $(FNT1DIR).tar.bz2
+FNT1URL = http://sourceforge.net/projects/dejavu/files/dejavu/$(FNT1BALL)
+FNT2DIR = font-misc-misc-1.1.0
+FNT2BALL = $(FNT2DIR).tar.bz2
+FNT2URL = ftp://ftp.gwdg.de/pub/x11/x.org/pub/X11R7.5/src/font/$(FNT2BALL)
+
+.setupdir: findrequires.pl $(FNT1DIR) .miscfonts
 	$(RM) -rf setupdir
 	mkdir setupdir
 	$(MAKE) -C $(top_builddir) DESTDIR=$(abs_builddir)/setupdir \
@@ -14,6 +21,9 @@ SUBDIRS = xming nx cygnx pulse
 	test $(BUILDXMING) = no || cp xming/dist/usr/X11R6/lib/X11/xserver/SecurityPolicy setupdir/share/Xming
 	test $(BUILDXMING) = no || cp -r xming/dist/usr/X11R6/lib/X11/locale setupdir/share/Xming/locale
 	test $(BUILDXMING) = no || cp xming/xc/programs/rgb/rgb.txt setupdir/share/Xming
+	test $(BUILDXMING) = no || mkdir -p setupdir/share/Xming/fonts/TTF
+	test $(BUILDXMING) = no || cp $(FNT1DIR)/ttf/* setupdir/share/Xming/fonts/TTF
+	test $(BUILDXMING) = no || $(MAKE) -C $(FNT2DIR) DESTDIR=$(abs_builddir)/setupdir install
 	$(MAKE) -C $(NXBUILD) tmpinstall
 	cp $(NXBUILD)/dist/bin/*.exe setupdir/bin
 	cp $(NXBUILD)/dist/bin/*.dll setupdir/bin
@@ -36,6 +46,26 @@ crosssetup: .setupdir isccwrap.sh
 
 setup: .setupdir  $(SETUP)
 
+$(FNT1BALL):
+	@echo downloading tarball $(FNT1BALL)
+	@wget "$(FNT1URL)"
+
+$(FNT1DIR): $(FNT1BALL)
+	@tar xjf $<
+
+$(FNT2BALL):
+	@echo downloading tarball $(FNT2BALL)
+	@wget "$(FNT2URL)"
+
+$(FNT2DIR): $(FNT2BALL)
+	@tar xjf $<
+
+.miscfonts: $(FNT2DIR)
+	@(cd $(FNT2DIR) && ./configure \
+		--with-fontrootdir=/share/Xming/fonts \
+		--with-compression=gzip )
+	touch $@
+
 EXTRA_DIST = opennx.iss
 MAINTAINERCLEANFILES = Makefile.in
-CLEANFILES = -r .setupdir setupdir
+CLEANFILES = -r .setupdir setupdir $(FNT1DIR)
