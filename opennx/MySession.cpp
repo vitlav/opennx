@@ -145,7 +145,12 @@ class FontpathTraverser : public wxDirTraverser
 };
 
 #else
-wxString cygPath(const wxString &dir, const wxString &file = wxEmptyString)
+wxString cygPath(const wxString &path)
+{
+    return wxFileName(path).GetFullPath();
+}
+
+wxString cygPath(const wxString &dir, const wxString &file)
 {
     return wxFileName(dir, file).GetFullPath();
 }
