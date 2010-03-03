@@ -324,6 +324,7 @@ void LoginDialog::OnButtonConfigureClick( wxCommandEvent& event )
         SessionProperties d;
         d.SetConfig(m_pCurrentCfg);
         wxString fn = m_pCurrentCfg->sGetFileName();
+        bool bDTI = ::wxGetApp().CheckDesktopEntry(m_pCurrentCfg);
         d.Create(this);
         switch (d.ShowModal()) {
             case wxID_CANCEL:
@@ -349,9 +350,8 @@ void LoginDialog::OnButtonConfigureClick( wxCommandEvent& event )
                 wxConfigBase::Get()->Write(wxT("Config/UsbipdSocket"), d.GetUsbipdSocket());
                 wxConfigBase::Get()->Write(wxT("Config/UsbipPort"), d.GetUsbLocalPort());
 #endif
-                bool bDTI = d.GetbCreateDesktopIcon();
-                if (::wxGetApp().CheckDesktopEntry(m_pCurrentCfg) != bDTI) {
-                    if (bDTI)
+                if (d.GetbCreateDesktopIcon() != bDTI) {
+                    if (d.GetbCreateDesktopIcon())
                         ::wxGetApp().CreateDesktopEntry(m_pCurrentCfg);
                     else
                         ::wxGetApp().RemoveDesktopEntry(m_pCurrentCfg);

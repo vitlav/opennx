@@ -1477,7 +1477,7 @@ MySession::startProxy()
         << wxT(",encryption=") << (m_bSslTunneling ? 1 : 0)
         << wxT(",session=session")
 #ifdef __WXMAC__
-        << wxT(" --client=\"macosx\"")
+        << wxT(",client=macosx")
 #else
 # ifdef __UNIX__
         << wxT(",client=linux")
