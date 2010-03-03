@@ -33,6 +33,7 @@ extern "C" {
     extern long getppid();
     extern int checkMultiMonitors();
     extern int CreateDetachedProcess(const char *cmdline);
+    extern int GetDetachedPID();
     extern int getXmingPort(int firstfree);
 #endif
 #ifdef __WXMAC__

@@ -402,6 +402,8 @@ long getppid()
     return ppid;
 }
 
+static DWORD detachedPID = 0;
+
 /**
  * Create a detached process, without showing it's
  * console window.
@@ -423,11 +425,17 @@ int CreateDetachedProcess(const char *cmdline) {
     si.wShowWindow = SW_HIDE;
     if (CreateProcessA(NULL, (char *)cmdline, NULL, NULL,
                 FALSE, dwFlags, NULL, NULL, &si, &pi)) {
+        detachedPID = pi.dwProcessId;
         CloseHandle(pi.hProcess);
         CloseHandle(pi.hThread);
         return 0;
     }
+    detachedPID = 0;
     return GetLastError();
+}
+
+int GetDetachedPID() {
+    return detachedPID;
 }
 
 /**

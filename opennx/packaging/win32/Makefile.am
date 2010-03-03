@@ -39,23 +39,23 @@ FNT2URL = ftp://ftp.gwdg.de/pub/x11/x.org/pub/X11R7.5/src/font/$(FNT2BALL)
 	touch $@
 
 nativesetup: .setupdir
-	"$(ISCC)" "$(srcdir)/opennx.iss"
+	"$(ISCC)" "$(srcdir)/opennx.iss" -dBUILDXMING=$(BUILDXMING)
 
 crosssetup: .setupdir isccwrap.sh
-	sh isccwrap.sh "$(srcdir)/opennx.iss"
+	sh isccwrap.sh "$(srcdir)/opennx.iss" -dBUILDXMING=$(BUILDXMING)
 
 setup: .setupdir  $(SETUP)
 
 $(FNT1BALL):
 	@echo downloading tarball $(FNT1BALL)
-	@wget "$(FNT1URL)"
+	@$(WGET) "$(FNT1URL)"
 
 $(FNT1DIR): $(FNT1BALL)
 	@tar xjf $<
 
 $(FNT2BALL):
 	@echo downloading tarball $(FNT2BALL)
-	@wget "$(FNT2URL)"
+	@$(WGET) "$(FNT2URL)"
 
 $(FNT2DIR): $(FNT2BALL)
 	@tar xjf $<
@@ -67,5 +67,5 @@ $(FNT2DIR): $(FNT2BALL)
 	touch $@
 
 EXTRA_DIST = opennx.iss
-MAINTAINERCLEANFILES = Makefile.in
-CLEANFILES = -r .setupdir setupdir $(FNT1DIR)
+MAINTAINERCLEANFILES = Makefile.in $(FNT1BALL) $(FNT2BALL)
+CLEANFILES = -r .setupdir setupdir $(FNT1DIR) $(FNT2DIR)

@@ -1301,6 +1301,41 @@ MySession::getXfontPath(tXarch Xarch)
     return ret;
 }
 
+    void
+MySession::unhideNXWin()
+{
+    if (XARCH_CYGWIN == m_eXarch) {
+        // Required only for NXWin - Xming shows up by itself
+        HWND h = ::GetTopWindow(0);
+        while (h) {
+            wxString wclass;
+            int r = GetClassName(h, wclass.GetWriteBuf(40), 38);
+            wclass.UngetWriteBuf();
+            if ((r > 0) && (wxNOT_FOUND != wclass.Find(wxT("cygwin/xfree86")))) {
+                DWORD pid;
+                GetWindowThreadProcessId(h, &pid);
+                if ((int)pid == m_iXserverPID) {
+                    // Trigger unhiding of fullscreen NXWin
+                    SendMessage(h, WM_USER + 1, 0, 0);
+                    break;
+                }
+            }
+            h = ::GetNextWindow(h , GW_HWNDNEXT);
+        }
+    }
+}
+
+    void
+MySession::terminateXserver()
+{
+    // Xming non-fullscreen: keep running
+    if ((XARCH_CYGWIN == m_eXarch) ||
+            (MyXmlConfig::DPTYPE_FULLSCREEN == m_pCfg->eGetDisplayType())) {
+        if ((0 != m_iXserverPID) && wxProcess::Exists(m_iXserverPID))
+            wxProcess::Kill(m_iXserverPID, wxSIGKILL, wxKILL_NOCHILDREN);
+    }
+}
+
     bool
 MySession::startXserver()
 {
@@ -1395,12 +1430,14 @@ MySession::startXserver()
             break;
     }
 
-    ::wxLogInfo(wxT("startXServer executing %s"), wxWinCmd.c_str());
+    ::wxLogInfo(wxT("Executing %s"), wxWinCmd.c_str());
     int r = CreateDetachedProcess((const char *)wxWinCmd.mb_str());
     if (r != 0) {
         ::wxLogError(_("Could not execute %s: %s\n"), wxWinCmd.c_str(), wxSysErrorMsg(r));
         return false;
     }
+    m_iXserverPID = GetDetachedPID();
+    AllowSetForegroundWindow(m_iXserverPID);
     ::wxSetEnv(wxT("DISPLAY"), dpyStr);
     ::wxLogInfo(wxT("env: DISPLAY='%s'"), dpyStr.c_str());
     return true;
@@ -1496,8 +1533,11 @@ MySession::startProxy()
                 << cygPath(m_sOptFilename) << wxT(":") << m_sSessionDisplay;
             printSsh(wxT("bye"));
             if ((m_lProtocolVersion <= 0x00020000) || (!m_bSslTunneling)) {
+                ::wxLogInfo(wxT("Executing %s"), pcmd.c_str());
 #ifdef __WXMSW__
                 CreateDetachedProcess((const char *)pcmd.mb_str());
+                if (m_iXserverPID)
+                    AllowSetForegroundWindow(m_iXserverPID);
 #else
                 ::wxExecute(pcmd, wxEXEC_ASYNC);
 #endif
@@ -1995,8 +2035,12 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
                         m_pCfg->sGetServerHost().c_str()));
         }
 
-        if (dlg.bGetAbort())
+        if (dlg.bGetAbort()) {
+#ifdef __WXMSW__
+            terminateXserver();
+#endif
             return false;
+        }
         if (getActiveCupsPrinters().GetCount() > 0) {
             dlg.SetStatusText(_("Preparing CUPS service ..."));
             if (!prepareCups())
@@ -2019,6 +2063,10 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
                             (m_bSessionRunning && m_bSessionEstablished))) {
                     wxLog::FlushActive();
                     ::wxGetApp().Yield(true);
+#ifdef __WXMSW__
+                    if (m_iXserverPID)
+                        AllowSetForegroundWindow(m_iXserverPID);
+#endif
                 }
                 if (dlg.bGetAbort() || m_bGotError || m_bAbort) {
                     if (m_bRemoveKey) {
@@ -2028,6 +2076,9 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
                         }
                     } else {
                         nxssh.Kill();
+#ifdef __WXMSW__
+                        terminateXserver();
+#endif
                         return false;
                     }
                 } else {
@@ -2037,14 +2088,25 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
                     }
                 }
                 wxThread::Sleep(500);
+#ifdef __WXMSW__
+                if (m_iXserverPID)
+                    AllowSetForegroundWindow(m_iXserverPID);
+#endif
             } else {
                 ::wxLogError(_("Called command was: ") + nxsshcmd);
                 ::wxLogError(_("Could not start nxssh."));
+#ifdef __WXMSW__
+                terminateXserver();
+#endif
                 return false;
             }
             if (m_bRemoveKey)
                 clearSshKeys(m_sOffendingKey);
         } while (m_bRemoveKey);
+#ifdef __WXMSW__
+        if (m_iXserverPID)
+            AllowSetForegroundWindow(m_iXserverPID);
+#endif
 
         if (m_pCfg->bGetEnableUSBIP()) {
             ::myLogTrace(MYTRACETAG, wxT("Enabling UsbIp"));
@@ -2060,6 +2122,9 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
                 ::wxGetApp().SetRequireWatchReader(true);
             }
         }
+#ifdef __WXMSW__
+        unhideNXWin();
+#endif
         return true;
     }
     return false;

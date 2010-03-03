@@ -69,6 +69,9 @@ Name: "desktopicon"; Description: "{cm:dticon}"; GroupDescription: "{cm:dticon_g
 
 [Files]
 Source: setupdir\*; DestDir: {app}; Flags: recursesubdirs restartreplace replacesameversion uninsrestartdelete
+#if BUILDXMING == "no"
+Source: setupdir\bin\opennx.exe; DestDir: {app}; DestName: nxclient.exe; Flags: restartreplace replacesameversion uninsrestartdelete
+#endif
 
 [Icons]
 Name: "{group}\OpenNX"; Filename: "{app}\bin\opennx.exe";
@@ -98,14 +101,23 @@ Root: HKCU; Subkey: "Software\Classes\OpenNX.session\shell\open\command"; ValueT
 ; Allow nxssh, nxesd and Xming in Windows firewall 
 Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bin\nxssh.exe"" ""OpenNX nxssh"" ENABLE"; StatusMsg: {cm:fwadd}; Flags: runhidden skipifdoesntexist
 Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bin\nxesd.exe"" ""OpenNX nxesd"" ENABLE"; StatusMsg: {cm:fwadd}; Flags: runhidden skipifdoesntexist
+#if BUILDXMING == "yes"
 Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bin\Xming.exe"" ""OpenNX Xming"" ENABLE"; StatusMsg: {cm:fwadd}; Flags: runhidden skipifdoesntexist
+#else
+Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bin\NXWin.exe"" ""OpenNX Xming"" ENABLE"; StatusMsg: {cm:fwadd}; Flags: runhidden skipifdoesntexist
+#endif
 
 [UninstallRun]
 ; Remove firewall exceptions
 Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\nxssh.exe"" ALL"; Flags: runhidden skipifdoesntexist; RunOnceId: fwdelnxssh
 Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\nxesd.exe"" ALL"; Flags: runhidden skipifdoesntexist; RunOnceId: fwdelnxesd
+#if BUILDXMING == "yes"
 Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\Xming.exe"" ALL"; Flags: runhidden skipifdoesntexist; RunOnceId: fwdelxming
+#else
+Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\NXWin.exe"" ALL"; Flags: runhidden skipifdoesntexist; RunOnceId: fwdelnxwin
+#endif
 
+#if BUILDXMING == "yes"
 [UninstallDelete]
 Type: files; Name: "{app}\share\Xming\font-dirs"
 
@@ -177,4 +189,4 @@ begin
         end;
     end;
 end;
-
+#endif

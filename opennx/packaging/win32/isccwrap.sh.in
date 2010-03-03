@@ -4,13 +4,12 @@
 # under wine. This wrapper loops up to MAX times until ISCC finished
 # successfully.
 
-SRC="$1"
 CNT=0
 MAX=5
 
 EOUT=isccerr.$$
 while test $CNT -lt $MAX ; do
-    @WINE@ "@ISCC@" "$SRC" 2>$EOUT
+    @WINE@ "@ISCC@" "$@" 2>$EOUT
     R=$?
     case $R in
         0)

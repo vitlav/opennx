@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opennx 0.16\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-02-28 18:45+0100\n"
+"POT-Creation-Date: 2010-03-03 05:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -409,76 +409,76 @@ msgstr ""
 msgid "You have reached your session limit. No more sessions allowed"
 msgstr ""
 
-#: MySession.cpp:1323 MySession.cpp:1368
+#: MySession.cpp:1358 MySession.cpp:1403
 msgid "Could not create X11 authentication cookie"
 msgstr ""
 
-#: MySession.cpp:1394
+#: MySession.cpp:1428
 msgid "No X server found."
 msgstr ""
 
-#: MySession.cpp:1402
+#: MySession.cpp:1436
 #, c-format
 msgid "Could not execute %s: %s\n"
 msgstr ""
 
-#: MySession.cpp:1482
+#: MySession.cpp:1518
 #, c-format
 msgid ""
 "Could not create session directory\n"
 "%s\n"
 msgstr ""
 
-#: MySession.cpp:1507
+#: MySession.cpp:1546
 #, c-format
 msgid ""
 "Could not write session options\n"
 "%s\n"
 msgstr ""
 
-#: MySession.cpp:1597 MySession.cpp:1611
+#: MySession.cpp:1636 MySession.cpp:1650
 msgid "Could not assign a free port for CUPS printing"
 msgstr ""
 
-#: MySession.cpp:1868
+#: MySession.cpp:1907
 #, c-format
 msgid "Could not write %s"
 msgstr ""
 
-#: MySession.cpp:1935
+#: MySession.cpp:1974
 msgid "Could not start local X server"
 msgstr ""
 
-#: MySession.cpp:1951 MySession.cpp:1995 MySession.cpp:2005
+#: MySession.cpp:1990 MySession.cpp:2034 MySession.cpp:2048
 #, c-format
 msgid "Connecting to %s ..."
 msgstr ""
 
-#: MySession.cpp:1959
+#: MySession.cpp:1998
 msgid "Preparing multimedia service ..."
 msgstr ""
 
-#: MySession.cpp:1991
+#: MySession.cpp:2030
 msgid "Could not start multimedia support"
 msgstr ""
 
-#: MySession.cpp:1993
+#: MySession.cpp:2032
 msgid "Could not assign a free port for multimedia support"
 msgstr ""
 
-#: MySession.cpp:2002
+#: MySession.cpp:2045
 msgid "Preparing CUPS service ..."
 msgstr ""
 
-#: MySession.cpp:2004
+#: MySession.cpp:2047
 msgid "Could not start CUPS printing"
 msgstr ""
 
-#: MySession.cpp:2042
+#: MySession.cpp:2096
 msgid "Called command was: "
 msgstr ""
 
-#: MySession.cpp:2043
+#: MySession.cpp:2097
 msgid "Could not start nxssh."
 msgstr ""
 

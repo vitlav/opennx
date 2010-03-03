@@ -70,6 +70,13 @@ AC_CHECK_TOOL([PERL],[perl],[
             ;;
     esac
 ])
+AC_CHECK_TOOL([WGET],[wget],[
+    case $target_os in
+        mingw*|darwin*)
+            AC_MSG_ERROR([Could not find required tool 'wget'])
+            ;;
+    esac
+])
 AC_ARG_VAR([PERL],[Path to perl binary. (required for win32 builds only)])
 AC_CHECK_TOOL([ZIP],[zip],[AC_MSG_ERROR([Could not find required tool 'zip'])])
 AC_ARG_VAR([ZIP],[Path to zip binary.])
@@ -366,7 +373,7 @@ AC_ARG_WITH([nxwin],
             AS_HELP_STRING([--with-nxwin],
                            [Put nxwin instead of xming into installer (mingw32 build only)]),
             [test "${withval}" = "yes" && BUILDXMING=no])
-[test "$BUILDXMING" = "no" && CYGBINS="$CYGBINS NXWin"]
+[test "$BUILDXMING" = "no" && CYGBINS="$CYGBINS NXWin nxfind nxkill nxservice"]
 AC_SUBST(CYGBINS)
 AC_SUBST(BUILDXMING)
 

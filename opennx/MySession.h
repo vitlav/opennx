@@ -122,6 +122,8 @@ private:
 #ifdef __WXMSW__
     wxString getXfontPath(tXarch);
     bool startXserver();
+    void unhideNXWin();
+    void terminateXserver();
 #endif
 
     tConnectState m_eConnectState;
@@ -140,6 +142,7 @@ private:
     int m_iProgress;
     int m_iReader;
     int m_iHttpPort;
+    int m_iXserverPID;
     long m_lEsdPort;
     long m_lProtocolVersion;
     unsigned long m_nSessionPushLength;
