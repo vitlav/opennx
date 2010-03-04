@@ -1669,13 +1669,15 @@ void SessionProperties::OnApplyClick( wxCommandEvent& event )
     m_sSavedUserNxDir = m_sUserNxDir;
     m_sSavedSystemNxDir = m_sSystemNxDir;
     m_sSavedUsbipdSocket = m_sUsbipdSocket;
-    m_bSavedCreateDesktopIcon = m_bCreateDesktopIcon;
-    if (NULL != m_pCfg) {
-        if (m_bCreateDesktopIcon)
-            ::wxGetApp().CreateDesktopEntry(m_pCfg);
-        else
-            ::wxGetApp().RemoveDesktopEntry(m_pCfg);
+    if (m_bSavedCreateDesktopIcon != m_bCreateDesktopIcon) {
+        if (NULL != m_pCfg) {
+            if (m_bCreateDesktopIcon)
+                ::wxGetApp().CreateDesktopEntry(m_pCfg);
+            else
+                ::wxGetApp().RemoveDesktopEntry(m_pCfg);
+        }
     }
+    m_bSavedCreateDesktopIcon = m_bCreateDesktopIcon;
     m_pCtrlApplyButton->Enable(false);
 }
 
