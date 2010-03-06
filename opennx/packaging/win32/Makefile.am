@@ -9,31 +9,30 @@ FNT2URL = ftp://ftp.gwdg.de/pub/x11/x.org/pub/X11R7.5/src/font/$(FNT2BALL)
 
 .setupdir: findrequires.pl $(FNT1DIR) .miscfonts
 	$(RM) -rf setupdir
-	mkdir setupdir
 	$(MAKE) -C $(top_builddir) DESTDIR=$(abs_builddir)/setupdir \
 		transform= prefix=/ bindir=/bin datadir=/share install
 	test $(BUILDXMING) = no || $(MAKE) -C xming tmpinstall
-	test $(BUILDXMING) = no || cp xming/dist/usr/X11R6/bin/*.exe setupdir/bin
-	test $(BUILDXMING) = no || cp xming/dist/usr/X11R6/bin/*.dll setupdir/bin
-	test $(BUILDXMING) = no || mkdir -p setupdir/share/Xming
-	test $(BUILDXMING) = no || cp xming/dist/usr/X11R6/lib/X11/XErrorDB setupdir/share/Xming
-	test $(BUILDXMING) = no || cp xming/dist/usr/X11R6/lib/X11/XKeysymDB setupdir/share/Xming
-	test $(BUILDXMING) = no || cp xming/dist/usr/X11R6/lib/X11/xserver/SecurityPolicy setupdir/share/Xming
+	test $(BUILDXMING) = no || $(INSTALL_PROGRAM) xming/dist/usr/X11R6/bin/*.exe setupdir/bin
+	test $(BUILDXMING) = no || $(INSTALL_PROGRAM) xming/dist/usr/X11R6/bin/*.dll setupdir/bin
+	test $(BUILDXMING) = no || $(INSTALL) -d setupdir/share/Xming
+	test $(BUILDXMING) = no || $(INSTALL_DATA) xming/dist/usr/X11R6/lib/X11/XErrorDB setupdir/share/Xming
+	test $(BUILDXMING) = no || $(INSTALL_DATA) xming/dist/usr/X11R6/lib/X11/XKeysymDB setupdir/share/Xming
+	test $(BUILDXMING) = no || $(INSTALL_DATA) xming/dist/usr/X11R6/lib/X11/xserver/SecurityPolicy setupdir/share/Xming
 	test $(BUILDXMING) = no || cp -r xming/dist/usr/X11R6/lib/X11/locale setupdir/share/Xming/locale
-	test $(BUILDXMING) = no || cp xming/xc/programs/rgb/rgb.txt setupdir/share/Xming
-	test $(BUILDXMING) = no || mkdir -p setupdir/share/Xming/fonts/TTF
-	test $(BUILDXMING) = no || cp $(FNT1DIR)/ttf/* setupdir/share/Xming/fonts/TTF
+	test $(BUILDXMING) = no || $(INSTALL_DATA) xming/xc/programs/rgb/rgb.txt setupdir/share/Xming
+	test $(BUILDXMING) = no || $(INSTALL) -d setupdir/share/Xming/fonts/TTF
+	test $(BUILDXMING) = no || $(INSTALL_DATA) $(FNT1DIR)/ttf/* setupdir/share/Xming/fonts/TTF
 	test $(BUILDXMING) = no || $(MAKE) -C $(FNT2DIR) DESTDIR=$(abs_builddir)/setupdir install
 	$(MAKE) -C $(NXBUILD) tmpinstall
-	cp $(NXBUILD)/dist/bin/*.exe setupdir/bin
-	cp $(NXBUILD)/dist/bin/*.dll setupdir/bin
-	cp $(NXBUILD)/dist/lib/*.dll setupdir/bin
+	$(INSTALL_PROGRAM) $(NXBUILD)/dist/bin/*.exe setupdir/bin
+	$(INSTALL_PROGRAM) $(NXBUILD)/dist/bin/*.dll setupdir/bin
+	$(INSTALL_PROGRAM) $(NXBUILD)/dist/lib/*.dll setupdir/bin
 	test $(BUILDXMING) = yes || cp -r $(NXBUILD)/dist/share/* setupdir/share
 	perl findrequires.pl "$(DLLPATH)" setupdir/bin/*.exe|xargs cp -t setupdir/bin
-	rm -rf setupdir/share/icons setupdir/share/applnk
-	$(STRIP) --strip-unneeded setupdir/bin/*.exe
-	for lang in `cat $(top_srcdir)/po/LINGUAS` ; do \
-		cp /usr/share/locale/$$lang/LC_MESSAGES/wxstd.mo \
+	$(RM) -rf setupdir/share/icons setupdir/share/applnk
+	$(STRIP) --strip-unneeded setupdir/bin/*.exe `ls setupdir/bin/*.dll|grep -v cyg`
+	for lang in $(shell cat $(top_srcdir)/po/LINGUAS) ; do \
+		$(INSTALL_DATA) $(localedir)/$$lang/LC_MESSAGES/wxstd.mo \
 			setupdir/share/locale/$$lang/LC_MESSAGES/ ; \
 	done
 	touch $@

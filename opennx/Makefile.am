@@ -5,6 +5,7 @@ SUBDIRS = po $(PLATFORM_SUBDIRS)
 DIST_SUBDIRS = po packaging/win32 packaging/MacOSX
 
 noinst_PROGRAMS = bin2hdr testxauth
+
 bin2hdr_SOURCES = bin2hdr.cpp
 
 bin_PROGRAMS = opennx pconnect $(TRACELOG) $(WATCHREADER) $(WATCHUSBIP) \
@@ -24,7 +25,7 @@ opennx_SOURCES = AboutDialog.cpp AsyncProcess.cpp LibOpenSC.cpp \
 	ShareProperties.cpp TextViewer.cpp UnixImageSettingsDialog.cpp \
 	UsbFilterDetailsDialog.cpp UsbIp.cpp VncImageSettingsDialog.cpp \
 	VncPropertyDialog.cpp wxprec.cpp WinShare.cpp X11PropertyDialog.cpp \
-	xh_richtext.cpp MacOSX.c
+	xh_richtext.cpp MacOSX.c WrappedStatic.cpp
 
 noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	LibOpenSC.h CardWaiterDialog.h CardWaiterDialog_symbols.h \
@@ -47,7 +48,8 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	VncImageSettingsDialog.h VncImageSettingsDialog_symbols.h \
 	VncPropertyDialog.h VncPropertyDialog_symbols.h WinShare.h \
 	X11PropertyDialog.h X11PropertyDialog_symbols.h trace.h tracelogApp.h \
-	watchReaderApp.h watchUsbIpApp.h xh_richtext.h MacUninstallApp.h
+	watchReaderApp.h watchUsbIpApp.h xh_richtext.h MacUninstallApp.h \
+	WrappedStatic.h
 
 pconnect_SOURCES = pconnect.c
 pconnect_LDADD = $(WS2LIB) $(RESLIB)
@@ -165,8 +167,8 @@ RESSRC = $(subst $(srcdir)/,,$(RESDEPS))
 tmpres.zip: $(RESDEPS)
 	$(AM_V_GEN)cd $(srcdir) && zip -q9r $(abs_builddir)/$(@F) $(RESSRC)
 
-memres.h: tmpres.zip bin2hdr
-	$(AM_V_GEN)./bin2hdr tmpres.zip memres.h mem_res
+memres.h: tmpres.zip bin2hdr$(EXEEXT)
+	$(AM_V_GEN)./bin2hdr$(EXEEXT) tmpres.zip memres.h mem_res
 
 $(top_srcdir)/opennxApp.cpp: memres.h
 

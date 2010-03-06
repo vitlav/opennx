@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-03-03 22:44+0100\n"
+"POT-Creation-Date: 2010-03-06 18:09+0100\n"
 "PO-Revision-Date: 2009-09-13 11:50+0100\n"
 "Last-Translator: Boris Savelev <boris.savelev@gmail.com>\n"
 "Language-Team:  <de@li.org>\n"
@@ -102,7 +102,7 @@ msgstr "Лог сессии - OpenNX"
 msgid "Close"
 msgstr "Закрыть"
 
-#: LoginDialog.cpp:343 LoginDialog.cpp:436 MyWizard.cpp:1391
+#: LoginDialog.cpp:343 LoginDialog.cpp:436 MyWizard.cpp:1337
 #, c-format
 msgid ""
 "Could not save session to\n"
@@ -111,7 +111,7 @@ msgstr ""
 "Не удалось сохранить сессию в\n"
 "%s"
 
-#: LoginDialog.cpp:344 LoginDialog.cpp:437 MyWizard.cpp:1392
+#: LoginDialog.cpp:344 LoginDialog.cpp:437 MyWizard.cpp:1338
 msgid "Error saving - OpenNX"
 msgstr "Ошибка при сохранении - OpenNX"
 
@@ -129,11 +129,11 @@ msgstr "Login"
 msgid "Password"
 msgstr "Пароль"
 
-#: LoginDialog_symbols.h:25 MyWizard_symbols.h:23
+#: LoginDialog_symbols.h:25 MyWizard_symbols.h:25
 msgid "Session"
 msgstr "Сессия"
 
-#: LoginDialog_symbols.h:26 MyWizard_symbols.h:49
+#: LoginDialog_symbols.h:26 MyWizard_symbols.h:55
 #: SessionProperties_symbols.h:29
 msgid "Use SmartCard"
 msgstr "Использовать смарт-карту"
@@ -518,80 +518,32 @@ msgstr "Комманда: "
 msgid "Could not start nxssh."
 msgstr "Не удалось запустить nxssh."
 
-#: MyWizard.cpp:322
-msgid ""
-"Welcome to the OpenNX Client Connection Wizard which will guide you through "
-"the steps needed to setup your login. Please select the 'Next' button to "
-"start."
-msgstr ""
-"Добро пожаловать в мастер настройки клиента OpenNX, с помощью которого вы "
-"сможете настроить подключение. Нажмите 'Next' для продолжения."
-
-#: MyWizard.cpp:444
+#: MyWizard.cpp:411
 msgid "New Session"
 msgstr "Новая сессия"
 
-#: MyWizard.cpp:447
+#: MyWizard.cpp:414
 #, c-format
 msgid "New Session %d"
 msgstr "Новая сессия %d"
 
-#: MyWizard.cpp:462
-msgid ""
-"Insert the name of the session. Your configuration settings will be saved "
-"with this name."
-msgstr "Напишите имя сессии. Все настройки будут сохранены с этим именем."
-
-#: MyWizard.cpp:464
-msgid "Insert the name and port of the server you want to connect."
-msgstr "Напишите имя и порт сервера, к которому вы хотите подключиться."
-
-#: MyWizard.cpp:466
-msgid "Select the type of your internet connection."
-msgstr "Выберите тип подключения к сети."
-
-#: MyWizard.cpp:650
-msgid ""
-"Using OpenNX Client, you can run RDP, VNC and X desktops, depending on what "
-"your service provider has made available."
-msgstr ""
-"Использую OpenNX, вы можете использовать подключение по RDP, VNC и X, в "
-"зависимости от того, что вам предоставил провайдер услуги удаленного "
-"доступа. "
-
-#: MyWizard.cpp:717 SessionProperties.cpp:845
+#: MyWizard.cpp:671 SessionProperties.cpp:845
 msgid "RDP"
 msgstr "RDP"
 
-#: MyWizard.cpp:735 SessionProperties.cpp:871
+#: MyWizard.cpp:689 SessionProperties.cpp:871
 msgid "RFB"
 msgstr "RFB"
 
-#: MyWizard.cpp:753 SessionProperties.cpp:898
+#: MyWizard.cpp:707 SessionProperties.cpp:898
 msgid "Any"
 msgstr "Любой"
 
-#: MyWizard.cpp:760 SessionProperties.cpp:905
+#: MyWizard.cpp:714 SessionProperties.cpp:905
 msgid "As on server"
 msgstr "Как на сервере"
 
-#: MyWizard.cpp:921
-msgid ""
-"OpenNX Client supports authentication using a variety of USB SmartCard "
-"tokens. Enable this option if you intend to use such a token."
-msgstr ""
-"OpenNX поддерживает аутентификацию с помощью смарт-карт. Включение этой "
-"опции подразумевает использование смарт-карты. "
-
-#: MyWizard.cpp:923
-msgid ""
-"Authorization credentials are always encrypted while establishing a "
-"connection. For increased security, you can enable the following option."
-msgstr ""
-"Данные авторизации всегда передаются по защифрованному каналу. Для "
-"увеличения безопасности, вы можете шифровать весь трафик, включив эту опцию."
-
-#: MyWizard.cpp:1220
+#: MyWizard.cpp:1165
 #, c-format
 msgid ""
 "Congratulations. The connection to '%s' will be saved as '%s'. You may "
@@ -604,117 +556,165 @@ msgstr ""
 msgid "Connection Wizard - OpenNX"
 msgstr "Мастер соединений - OpenNX"
 
-#: MyWizard_symbols.h:24 SessionProperties_symbols.h:25
+#: MyWizard_symbols.h:23
+msgid ""
+"Welcome to the OpenNX Client Connection Wizard which will guide you through "
+"the steps needed to setup your login. Please select the 'Next' button to "
+"start."
+msgstr ""
+"Добро пожаловать в мастер настройки клиента OpenNX, с помощью которого вы "
+"сможете настроить подключение. Нажмите 'Next' для продолжения."
+
+#: MyWizard_symbols.h:24
+msgid ""
+"Insert the name of the session. Your configuration settings will be saved "
+"with this name."
+msgstr "Напишите имя сессии. Все настройки будут сохранены с этим именем."
+
+#: MyWizard_symbols.h:26
+msgid "Insert the name and port of the server you want to connect."
+msgstr "Напишите имя и порт сервера, к которому вы хотите подключиться."
+
+#: MyWizard_symbols.h:27 SessionProperties_symbols.h:25
 #: VncPropertyDialog_symbols.h:25
 msgid "Host"
 msgstr "Host"
 
-#: MyWizard_symbols.h:25 ResumeDialog.cpp:156 SessionAdmin.cpp:195
+#: MyWizard_symbols.h:28 ResumeDialog.cpp:156 SessionAdmin.cpp:195
 #: SessionProperties_symbols.h:26
 msgid "Port"
 msgstr "Порт"
 
-#: MyWizard_symbols.h:26 SessionProperties_symbols.h:41
+#: MyWizard_symbols.h:29
+msgid "Select the type of your internet connection."
+msgstr "Выберите тип подключения к сети."
+
+#: MyWizard_symbols.h:30 SessionProperties_symbols.h:41
 msgid "MODEM"
 msgstr "Модем"
 
-#: MyWizard_symbols.h:27 SessionProperties_symbols.h:42
+#: MyWizard_symbols.h:31 SessionProperties_symbols.h:42
 msgid "ISDN"
 msgstr "ISDN"
 
-#: MyWizard_symbols.h:28 SessionProperties_symbols.h:43
+#: MyWizard_symbols.h:32 SessionProperties_symbols.h:43
 msgid "ADSL"
 msgstr "ADSL"
 
-#: MyWizard_symbols.h:29 SessionProperties_symbols.h:44
+#: MyWizard_symbols.h:33 SessionProperties_symbols.h:44
 msgid "WAN"
 msgstr "WAN"
 
-#: MyWizard_symbols.h:30 SessionProperties_symbols.h:45
+#: MyWizard_symbols.h:34 SessionProperties_symbols.h:45
 msgid "LAN"
 msgstr "LAN"
 
-#: MyWizard_symbols.h:31 SessionProperties_symbols.h:31
+#: MyWizard_symbols.h:35
+msgid ""
+"Using OpenNX Client, you can run RDP, VNC and X desktops, depending on what "
+"your service provider has made available."
+msgstr ""
+"Использую OpenNX, вы можете использовать подключение по RDP, VNC и X, в "
+"зависимости от того, что вам предоставил провайдер услуги удаленного "
+"доступа. "
+
+#: MyWizard_symbols.h:36 SessionProperties_symbols.h:31
 msgid "Unix"
 msgstr "Unix"
 
-#: MyWizard_symbols.h:32 SessionProperties_symbols.h:32
+#: MyWizard_symbols.h:37 SessionProperties_symbols.h:32
 msgid "Windows"
 msgstr "Windows"
 
-#: MyWizard_symbols.h:33 SessionProperties_symbols.h:33
+#: MyWizard_symbols.h:38 SessionProperties_symbols.h:33
 msgid "VNC"
 msgstr "VNC"
 
-#: MyWizard_symbols.h:34 SessionProperties_symbols.h:34
+#: MyWizard_symbols.h:39 SessionProperties_symbols.h:34
 msgid "Shadow"
 msgstr "Shadow"
 
-#: MyWizard_symbols.h:35 SessionProperties_symbols.h:35
+#: MyWizard_symbols.h:40 SessionProperties_symbols.h:35
 msgid "KDE"
 msgstr "KDE"
 
-#: MyWizard_symbols.h:36 SessionProperties_symbols.h:36
+#: MyWizard_symbols.h:41 SessionProperties_symbols.h:36
 msgid "GNOME"
 msgstr "GNOME"
 
-#: MyWizard_symbols.h:37 SessionProperties_symbols.h:37
+#: MyWizard_symbols.h:42 SessionProperties_symbols.h:37
 msgid "CDE"
 msgstr "CDE"
 
-#: MyWizard_symbols.h:38 SessionProperties_symbols.h:38
+#: MyWizard_symbols.h:43 SessionProperties_symbols.h:38
 msgid "XFCE"
 msgstr "XFCE"
 
-#: MyWizard_symbols.h:39 SessionProperties_symbols.h:39
+#: MyWizard_symbols.h:44 SessionProperties_symbols.h:39
 msgid "Custom"
 msgstr "Пользовательский"
 
-#: MyWizard_symbols.h:40 SessionProperties_symbols.h:40
+#: MyWizard_symbols.h:45 SessionProperties_symbols.h:40
 msgid "Settings..."
 msgstr "Настройка..."
 
-#: MyWizard_symbols.h:41
+#: MyWizard_symbols.h:46
 msgid "Select the size of your remote desktop."
 msgstr "Выберите размер удаленного рабочего стола."
 
-#: MyWizard_symbols.h:42 SessionProperties_symbols.h:47
+#: MyWizard_symbols.h:47 SessionProperties_symbols.h:47
 msgid "640x480"
 msgstr "640x480"
 
-#: MyWizard_symbols.h:43 SessionProperties_symbols.h:48
+#: MyWizard_symbols.h:48 SessionProperties_symbols.h:48
 msgid "800x600"
 msgstr "800x600"
 
-#: MyWizard_symbols.h:44 SessionProperties_symbols.h:49
+#: MyWizard_symbols.h:49 SessionProperties_symbols.h:49
 msgid "1024x768"
 msgstr "1024x768"
 
-#: MyWizard_symbols.h:45 SessionProperties_symbols.h:50
+#: MyWizard_symbols.h:50 SessionProperties_symbols.h:50
 msgid "Available Area"
 msgstr "Доступное пространство"
 
-#: MyWizard_symbols.h:46 SessionProperties_symbols.h:51
+#: MyWizard_symbols.h:51 SessionProperties_symbols.h:51
 msgid "Fullscreen"
 msgstr "Полный экран"
 
-#: MyWizard_symbols.h:47 SessionProperties_symbols.h:52
+#: MyWizard_symbols.h:52 SessionProperties_symbols.h:52
 msgid "W"
 msgstr "W"
 
-#: MyWizard_symbols.h:48 SessionProperties_symbols.h:53
+#: MyWizard_symbols.h:53 SessionProperties_symbols.h:53
 msgid "H"
 msgstr "H"
 
-#: MyWizard_symbols.h:50 SessionProperties_symbols.h:64
+#: MyWizard_symbols.h:54
+msgid ""
+"OpenNX Client supports authentication using a variety of USB SmartCard "
+"tokens. Enable this option if you intend to use such a token."
+msgstr ""
+"OpenNX поддерживает аутентификацию с помощью смарт-карт. Включение этой "
+"опции подразумевает использование смарт-карты. "
+
+#: MyWizard_symbols.h:56
+msgid ""
+"Authorization credentials are always encrypted while establishing a "
+"connection. For increased security, you can enable the following option."
+msgstr ""
+"Данные авторизации всегда передаются по защифрованному каналу. Для "
+"увеличения безопасности, вы можете шифровать весь трафик, включив эту опцию."
+
+#: MyWizard_symbols.h:57 SessionProperties_symbols.h:64
 msgid "Enable SSL encryption of all traffic"
 msgstr "Шифровать весь трафик"
 
-#: MyWizard_symbols.h:51
+#: MyWizard_symbols.h:58
 msgid "Create shortcut on desktop"
 msgstr "Создать ярлык на рабочем столе"
 
-#: MyWizard_symbols.h:52
+#: MyWizard_symbols.h:59
 msgid "Show the Advanced Configuration dialog"
 msgstr "Открыть диалог настройки"
 
@@ -1074,23 +1074,23 @@ msgstr "Вы действительно хотите удалить сессию
 msgid "Delete Session"
 msgstr "Удалить сессию"
 
-#: SessionProperties.cpp:1912
+#: SessionProperties.cpp:1914
 msgid "No cups server available."
 msgstr "Нет доступного сервера CUPS."
 
-#: SessionProperties.cpp:1927
+#: SessionProperties.cpp:1929
 msgid "Select System CUPS daemon"
 msgstr "Выберите сервер CUPS"
 
-#: SessionProperties.cpp:2145 opennxApp.cpp:1140
+#: SessionProperties.cpp:2147 opennxApp.cpp:1155
 msgid "libusb is not available. No USB devices will be exported"
 msgstr "libusb не доступна. USB устройства не смогут быть проброшены."
 
-#: SessionProperties.cpp:2150
+#: SessionProperties.cpp:2152
 msgid "No USB devices available."
 msgstr "Нет доступных USB устройств."
 
-#: SessionProperties.cpp:2362
+#: SessionProperties.cpp:2364
 msgid "Select path of USBIPD socket"
 msgstr "Select path of USBIPD socket"
 
@@ -1756,7 +1756,7 @@ msgid ""
 "In order to use CUPS printing, you need to install cups."
 msgstr ""
 
-#: opennxApp.cpp:715 watchUsbIpApp.cpp:216
+#: opennxApp.cpp:730 watchUsbIpApp.cpp:216
 msgid ""
 "\n"
 "\n"
@@ -1766,63 +1766,63 @@ msgstr ""
 "\n"
 "Supported trace tags: "
 
-#: opennxApp.cpp:718
+#: opennxApp.cpp:733
 msgid "Start the session administration tool."
 msgstr "Запустить утилиту администрирования сессий."
 
-#: opennxApp.cpp:720
+#: opennxApp.cpp:735
 msgid "Secify window title for dialog mode."
 msgstr "Заголовок окна в dialog режиме."
 
-#: opennxApp.cpp:722
+#: opennxApp.cpp:737
 msgid "Secify dialog style for dialog mode."
 msgstr "Стиль диалога в dialog режиме."
 
-#: opennxApp.cpp:724
+#: opennxApp.cpp:739
 msgid "Run in dialog mode."
 msgstr "Запустить в режиме dialog."
 
-#: opennxApp.cpp:726
+#: opennxApp.cpp:741
 msgid "Compatibility option for dialog mode (ignored)."
 msgstr ""
 
-#: opennxApp.cpp:728
+#: opennxApp.cpp:743
 msgid "Dialog mode proxy."
 msgstr "Dialog mode proxy."
 
-#: opennxApp.cpp:730
+#: opennxApp.cpp:745
 msgid "Specify message for dialog mode."
 msgstr "Сообщение для dialog режима."
 
-#: opennxApp.cpp:732
+#: opennxApp.cpp:747
 msgid "Specify parent PID for dialog mode."
 msgstr "PID родительского процесса для dialog режима."
 
-#: opennxApp.cpp:734
+#: opennxApp.cpp:749
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr "Запустить сессию <str>."
 
-#: opennxApp.cpp:736
+#: opennxApp.cpp:751
 msgid "Specify window-ID for dialog mode."
 msgstr "Window-ID для запуска в dialog режиме."
 
-#: opennxApp.cpp:738 watchUsbIpApp.cpp:225
+#: opennxApp.cpp:753 watchUsbIpApp.cpp:225
 msgid "Specify wxWidgets trace mask."
 msgstr "Specify wxWidgets trace mask."
 
-#: opennxApp.cpp:741
+#: opennxApp.cpp:756
 msgid "Test CardWaiterDialog"
 msgstr "Test CardWaiterDialog"
 
-#: opennxApp.cpp:744
+#: opennxApp.cpp:759
 msgid "Guide the user through the steps to configure a session."
 msgstr "Guide the user through the steps to configure a session."
 
-#: opennxApp.cpp:800 watchReaderApp.cpp:195
+#: opennxApp.cpp:815 watchReaderApp.cpp:195
 msgid "Smart card removed"
 msgstr "Смарт-карта удалена"
 
-#: opennxApp.cpp:802 watchReaderApp.cpp:194
+#: opennxApp.cpp:817 watchReaderApp.cpp:194
 msgid ""
 "OpenNX session has been suspended, because\n"
 "the authenticating smart card has been removed."
@@ -1830,16 +1830,16 @@ msgstr ""
 "Сессия OpenNX была приостановлена,\n"
 "потому что была вытащена смарт-карта."
 
-#: opennxApp.cpp:1154
+#: opennxApp.cpp:1169
 msgid "USBIP tunnel registration timeout"
 msgstr "USBIP tunnel registration timeout"
 
-#: opennxApp.cpp:1156
+#: opennxApp.cpp:1171
 #, c-format
 msgid "Unable to export USB device %s"
 msgstr "Не удалось экспортировать USB устройство '%s'"
 
-#: opennxApp.cpp:1162
+#: opennxApp.cpp:1177
 msgid "Could not connect to usbipd2. No USB devices will be exported"
 msgstr ""
 "Не удалось подключиться к usbipd2. USB устройства не будут экспортированы"

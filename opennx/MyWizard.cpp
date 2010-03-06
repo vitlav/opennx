@@ -51,6 +51,7 @@
 #include "SessionProperties.h"
 #include "opennxApp.h"
 #include "Icon.h"
+#include "WrappedStatic.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -245,33 +246,6 @@ wxString MyWizard::sGetConfigName()
     return m_pCfg ? m_pCfg->sGetFileName() : _T("");
 }
 
-
-static void initHtml(wxHtmlWindow *w, wxColour wbg, wxString s)
-{
-    int fs[7];
-
-    wxFont fv = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
-    wxFont ff = wxSystemSettings::GetFont(wxSYS_ANSI_FIXED_FONT);
-    wxColour bg = w->GetParent()->GetBackgroundColour();
-    wxColour fg = w->GetParent()->GetForegroundColour();
-    for (int i = 0; i < 7; i++)
-        fs[i] = fv.GetPointSize();
-    w->SetFonts(fv.GetFaceName(), ff.GetFaceName(), fs);
-    w->SetBorders(0);
-    w->Enable(false);
-    s.Prepend(wxString::Format(_T("<HTML><BODY BGCOLOR=\"#%02x%02x%02x\" TEXT=\"#%02x%02x%02x\">"),
-                bg.Red(), bg.Green(), bg.Blue(), fg.Red(), fg.Green(), fg.Blue()));
-    s += _T("</BODY></HTML>");
-    w->SetPage(s);
-    w->SetBackgroundColour(wbg);
-    int width, height;
-    w->GetSize(&width, &height);
-    w->GetInternalRepresentation()->Layout(width);
-    height = w->GetInternalRepresentation()->GetHeight();
-    w->SetSize(width, height);
-    w->SetSizeHints(width, height);
-}
-
 /*!
  * WizardPageWelcome type definition
  */
@@ -311,15 +285,12 @@ WizardPageWelcome::WizardPageWelcome( wxWizard* parent )
 bool WizardPageWelcome::Create( wxWizard* WXUNUSED(parent) )
 {
     ////@begin WizardPageWelcome member initialisation
-    m_pWelcomeText = NULL;
     ////@end WizardPageWelcome member initialisation
 
     ////@begin WizardPageWelcome creation
     CreateControls();
     ////@end WizardPageWelcome creation
     CreateControls();
-    initHtml(m_pWelcomeText, GetBackgroundColour(),
-            _("Welcome to the OpenNX Client Connection Wizard which will guide you through the steps needed to setup your login. Please select the 'Next' button to start."));
     return TRUE;
 }
 
@@ -330,7 +301,6 @@ bool WizardPageWelcome::Create( wxWizard* WXUNUSED(parent) )
 void WizardPageWelcome::CreateControls()
 {
     ////@begin WizardPageWelcome content construction
-    m_pWelcomeText = XRCCTRL(*this, "ID_HTMLWINDOW_WELCOME", wxHtmlWindow);
     ////@end WizardPageWelcome content construction
 
     // Create custom windows not generated automatically here.
@@ -434,12 +404,9 @@ bool WizardPageSession::Create( wxWizard* parent )
     ////@begin WizardPageSession member initialisation
     m_iPort = 22;
     m_iConnectionSpeed = MyXmlConfig::SPEED_ADSL;
-    m_pText1 = NULL;
     m_pCtrlSessionName = NULL;
-    m_pText2 = NULL;
     m_pCtrlHostName = NULL;
     m_pCtrlPort = NULL;
-    m_pText3 = NULL;
     ////@end WizardPageSession member initialisation
     m_sSessionName = _("New Session");
     if (ConfigExists(m_sSessionName)) {
@@ -458,12 +425,6 @@ bool WizardPageSession::Create( wxWizard* parent )
     wxDynamicCast(m_pCtrlSessionName->GetValidator(), MyValidator)->SetKeyTyped(wxDynamicCast(GetParent(), MyWizard));
     wxDynamicCast(m_pCtrlHostName->GetValidator(), MyValidator)->SetKeyTyped(wxDynamicCast(GetParent(), MyWizard));
     wxDynamicCast(m_pCtrlPort->GetValidator(), MyValidator)->SetKeyTyped(wxDynamicCast(GetParent(), MyWizard));
-    initHtml(m_pText1, GetBackgroundColour(),
-		    _("Insert the name of the session. Your configuration settings will be saved with this name."));
-    initHtml(m_pText2, GetBackgroundColour(),
-		    _("Insert the name and port of the server you want to connect."));
-    initHtml(m_pText3, GetBackgroundColour(),
-		    _("Select the type of your internet connection."));
     return TRUE;
 }
 
@@ -474,12 +435,9 @@ bool WizardPageSession::Create( wxWizard* parent )
 void WizardPageSession::CreateControls()
 {
     ////@begin WizardPageSession content construction
-    m_pText1 = XRCCTRL(*this, "ID_HTMLWINDOW_TEXT1", wxHtmlWindow);
     m_pCtrlSessionName = XRCCTRL(*this, "ID_TEXTCTRL_SESSION_NAME", wxTextCtrl);
-    m_pText2 = XRCCTRL(*this, "ID_HTMLWINDOW_TEXT2", wxHtmlWindow);
     m_pCtrlHostName = XRCCTRL(*this, "ID_TEXTCTRL_SVRNAME", wxTextCtrl);
     m_pCtrlPort = XRCCTRL(*this, "ID_TEXTCTRL_SVRPORT", wxTextCtrl);
-    m_pText3 = XRCCTRL(*this, "ID_HTMLWINDOW_TEXT3", wxHtmlWindow);
     // Set validators
     if (FindWindow(XRCID("ID_TEXTCTRL_SESSION_NAME")))
         FindWindow(XRCID("ID_TEXTCTRL_SESSION_NAME"))->SetValidator( MyValidator(MyValidator::MYVAL_FILENAME, & m_sSessionName) );
@@ -632,7 +590,6 @@ bool WizardPageDesktop::Create( wxWizard* parent )
     m_iDisplayHeight = 600;
     m_iPseudoDesktopTypeIndex = -1;
     m_iPseudoDisplayTypeIndex = -1;
-    m_pText1 = NULL;
     m_pCtrlDesktopType = NULL;
     m_pCtrlDesktopSettings = NULL;
     m_pCtrlDisplayType = NULL;
@@ -646,8 +603,6 @@ bool WizardPageDesktop::Create( wxWizard* parent )
     CreateControls();
     ////@end WizardPageDesktop creation
     CreateControls();
-    initHtml(m_pText1, GetBackgroundColour(),
-		    _("Using OpenNX Client, you can run RDP, VNC and X desktops, depending on what your service provider has made available."));
     UpdateDialogConstraints(false);
     m_pCtrlDisplayWidth->SetFont(wxSystemSettings::GetFont(wxSYS_ANSI_VAR_FONT));
     m_pCtrlDisplayHeight->SetFont(wxSystemSettings::GetFont(wxSYS_ANSI_VAR_FONT));
@@ -662,7 +617,6 @@ bool WizardPageDesktop::Create( wxWizard* parent )
 void WizardPageDesktop::CreateControls()
 {
     ////@begin WizardPageDesktop content construction
-    m_pText1 = XRCCTRL(*this, "ID_HTMLWINDOW_TEXT1", wxHtmlWindow);
     m_pCtrlDesktopType = XRCCTRL(*this, "ID_COMBOBOX_DTYPE", wxComboBox);
     m_pCtrlDesktopSettings = XRCCTRL(*this, "ID_BUTTON_DSETTINGS", wxButton);
     m_pCtrlDisplayType = XRCCTRL(*this, "ID_COMBOBOX_DISPTYPE", wxComboBox);
@@ -905,9 +859,7 @@ bool WizardPageSecurity::Create( wxWizard* parent )
     ////@begin WizardPageSecurity member initialisation
     m_bUseSmartCard = false;
     m_bEnableSSL = true;
-    m_pText1 = NULL;
     m_pCtrlUseSmartCard = NULL;
-    m_pText2 = NULL;
     m_pCtrlEnableSSL = NULL;
     ////@end WizardPageSecurity member initialisation
     m_bUseSmartCard = ::wxGetApp().NxSmartCardSupport();
@@ -917,10 +869,6 @@ bool WizardPageSecurity::Create( wxWizard* parent )
     CreateControls();
     ////@end WizardPageSecurity creation
     CreateControls();
-    initHtml(m_pText1, GetBackgroundColour(),
-		    _("OpenNX Client supports authentication using a variety of USB SmartCard tokens. Enable this option if you intend to use such a token."));
-    initHtml(m_pText2, GetBackgroundColour(),
-		    _("Authorization credentials are always encrypted while establishing a connection. For increased security, you can enable the following option."));
     return TRUE;
 }
 
@@ -931,9 +879,7 @@ bool WizardPageSecurity::Create( wxWizard* parent )
 void WizardPageSecurity::CreateControls()
 {
     ////@begin WizardPageSecurity content construction
-    m_pText1 = XRCCTRL(*this, "ID_HTMLWINDOW_TEXT1", wxHtmlWindow);
     m_pCtrlUseSmartCard = XRCCTRL(*this, "ID_CHECKBOX_SCARD", wxCheckBox);
-    m_pText2 = XRCCTRL(*this, "ID_HTMLWINDOW_TEXT2", wxHtmlWindow);
     m_pCtrlEnableSSL = XRCCTRL(*this, "ID_CHECKBOX_SSLENABLE", wxCheckBox);
     // Set validators
     if (FindWindow(XRCID("ID_CHECKBOX_SCARD")))
@@ -947,7 +893,7 @@ void WizardPageSecurity::CreateControls()
     ////@begin WizardPageSecurity content initialisation
     ////@end WizardPageSecurity content initialisation
     m_pCtrlUseSmartCard->Enable(::wxGetApp().NxSmartCardSupport());
-    if (m_bUseSmartCard) {
+    if (m_bUseSmartCard || (!::wxGetApp().NxProxyAvailable())) {
         m_pCtrlEnableSSL->SetValue(true);
         m_pCtrlEnableSSL->Enable(false);
     }
@@ -1031,7 +977,7 @@ bool WizardPageFinish::Create( wxWizard* parent )
     ////@begin WizardPageFinish member initialisation
     m_bCreateShortcut = true;
     m_bShowAdvancedConfig = false;
-    m_pText1 = NULL;
+    m_pCtrlHeader = NULL;
     ////@end WizardPageFinish member initialisation
 
     ////@begin WizardPageFinish creation
@@ -1048,7 +994,7 @@ bool WizardPageFinish::Create( wxWizard* parent )
 void WizardPageFinish::CreateControls()
 {
     ////@begin WizardPageFinish content construction
-    m_pText1 = XRCCTRL(*this, "ID_HTMLWINDOW_TEXT1", wxHtmlWindow);
+    m_pCtrlHeader = XRCCTRL(*this, "wxID_STATIC", WrappedStaticText);
     // Set validators
     if (FindWindow(XRCID("ID_CHECKBOX_SHORTCUT")))
         FindWindow(XRCID("ID_CHECKBOX_SHORTCUT"))->SetValidator( wxGenericValidator(& m_bCreateShortcut) );
@@ -1154,7 +1100,7 @@ void WizardPageDesktop::OnComboboxDisptypeSelected( wxCommandEvent& event )
 
 void WizardPageSecurity::OnCheckboxScardClick( wxCommandEvent& event )
 {
-    if (event.IsChecked()) {
+    if (event.IsChecked() || (!::wxGetApp().NxProxyAvailable())) {
         m_pCtrlEnableSSL->SetValue(true);
         m_pCtrlEnableSSL->Enable(false);
     } else
@@ -1214,11 +1160,11 @@ void WizardPageFinish::OnWizardpageFinishPageChanged( wxWizardEvent& event )
     wxDynamicCast(GetParent(), MyWizard)->EnableNext(true);
     MyXmlConfig *cfg = wxDynamicCast(GetParent(), MyWizard)->pGetConfig();
     wxString cfgName = cfg->sGetName();
-    cfgName.Replace(_T(" "), _T("&nbsp;"));
-    initHtml(m_pText1, GetBackgroundColour(),
-		    wxString::Format(
+    //cfgName.Replace(_T(" "), _T("&nbsp;"));
+    m_pCtrlHeader->SetLabel(wxString::Format(
                 _("Congratulations. The connection to '%s' will be saved as '%s'. You may further configure your session by running the Advanced Configuration dialog."),
                 cfg->sGetServerHost().c_str(), cfgName.c_str()));
+    m_pCtrlHeader->Wrap(9999);
     Layout();
     event.Skip();
 }

@@ -2855,19 +2855,15 @@ this share.</label>
         <icon>memory:memrsc#zip:res/opennx-wizard.png</icon>
         <object class="wxWizardPageSimple" name="ID_WIZARDPAGE_WELCOME" subclass="WizardPageWelcome">
             <style>wxTAB_TRAVERSAL</style>
-            <object class="wxFlexGridSizer">
-                <cols>1</cols>
-                <rows>2</rows>
-                <vgap>0</vgap>
-                <hgap>0</hgap>
-                <growablecols>0</growablecols>
+            <object class="wxBoxSizer">
+                <orient>wxVERTICAL</orient>
                 <object class="sizeritem">
-                    <flag>wxGROW|wxALIGN_TOP|wxALL</flag>
+                    <flag>wxGROW|wxALL|wxFIXED_MINSIZE</flag>
                     <border>5</border>
-                    <object class="wxHtmlWindow" name="ID_HTMLWINDOW_WELCOME">
-                        <size>200,10</size>
-                        <style>wxHW_SCROLLBAR_NEVER</style>
-                        <enabled>0</enabled>
+                    <object class="wxStaticText" name="wxID_STATIC" subclass="WrappedStaticText">
+                        <size>200,-1</size>
+                        <label>Welcome to the OpenNX Client Connection Wizard which will guide you through the steps needed to setup your login. Please select the 'Next' button to start.</label>
+                        <wrap>999</wrap>
                     </object>
                 </object>
             </object>
@@ -2882,11 +2878,12 @@ this share.</label>
                 <growablecols>0</growablecols>
                 <growablerows>7</growablerows>
                 <object class="sizeritem">
-                    <flag>wxGROW|wxALIGN_TOP|wxLEFT|wxRIGHT|wxTOP</flag>
+                    <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                     <border>5</border>
-                    <object class="wxHtmlWindow" name="ID_HTMLWINDOW_TEXT1">
-                        <size>200,10</size>
-                        <style>wxHW_SCROLLBAR_NEVER</style>
+                    <object class="wxStaticText" name="wxID_STATIC" subclass="WrappedStaticText">
+                        <size>200,-1</size>
+                        <label>Insert the name of the session. Your configuration settings will be saved with this name.</label>
+                        <wrap>9999</wrap>
                     </object>
                 </object>
                 <object class="sizeritem">
@@ -2911,11 +2908,12 @@ this share.</label>
                     </object>
                 </object>
                 <object class="sizeritem">
-                    <flag>wxGROW|wxALIGN_TOP|wxLEFT|wxRIGHT</flag>
+                    <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                     <border>5</border>
-                    <object class="wxHtmlWindow" name="ID_HTMLWINDOW_TEXT2">
-                        <size>200,10</size>
-                        <style>wxHW_SCROLLBAR_NEVER</style>
+                    <object class="wxStaticText" name="wxID_STATIC" subclass="WrappedStaticText">
+                        <size>200,-1</size>
+                        <label>Insert the name and port of the server you want to connect.</label>
+                        <wrap>9999</wrap>
                     </object>
                 </object>
                 <object class="sizeritem">
@@ -2956,11 +2954,12 @@ this share.</label>
                     </object>
                 </object>
                 <object class="sizeritem">
-                    <flag>wxGROW|wxALIGN_TOP|wxLEFT|wxRIGHT</flag>
+                    <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                     <border>5</border>
-                    <object class="wxHtmlWindow" name="ID_HTMLWINDOW_TEXT3">
-                        <size>200,10</size>
-                        <style>wxHW_SCROLLBAR_NEVER</style>
+                    <object class="wxStaticText" name="wxID_STATIC" subclass="WrappedStaticText">
+                        <size>200,-1</size>
+                        <label>Select the type of your internet connection.</label>
+                        <wrap>9999</wrap>
                     </object>
                 </object>
                 <object class="sizeritem">
@@ -3035,11 +3034,12 @@ this share.</label>
                 <growablecols>0</growablecols>
                 <growablerows>4</growablerows>
                 <object class="sizeritem">
-                    <flag>wxGROW|wxALIGN_TOP|wxALL</flag>
+                    <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                     <border>5</border>
-                    <object class="wxHtmlWindow" name="ID_HTMLWINDOW_TEXT1">
-                        <size>200,10</size>
-                        <style>wxHW_SCROLLBAR_NEVER</style>
+                    <object class="wxStaticText" name="wxID_STATIC" subclass="WrappedStaticText">
+                        <size>200,-1</size>
+                        <label>Using OpenNX Client, you can run RDP, VNC and X desktops, depending on what your service provider has made available.</label>
+                        <wrap>9999</wrap>
                     </object>
                 </object>
                 <object class="sizeritem">
@@ -3093,11 +3093,13 @@ this share.</label>
                     </object>
                 </object>
                 <object class="sizeritem">
-                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                    <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                     <border>5</border>
-                    <object class="wxStaticText" name="wxID_STATIC">
+                    <object class="wxStaticText" name="wxID_STATIC" subclass="WrappedStaticText">
+                        <size>200,-1</size>
                         <style>wxALIGN_LEFT</style>
                         <label>Select the size of your remote desktop.</label>
+                        <wrap>9999</wrap>
                     </object>
                 </object>
                 <object class="sizeritem">
@@ -3180,11 +3182,12 @@ this share.</label>
                 <growablecols>0</growablecols>
                 <growablerows>4</growablerows>
                 <object class="sizeritem">
-                    <flag>wxGROW|wxALIGN_TOP|wxALL</flag>
+                    <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                     <border>5</border>
-                    <object class="wxHtmlWindow" name="ID_HTMLWINDOW_TEXT1">
-                        <size>200,20</size>
-                        <style>wxHW_SCROLLBAR_NEVER</style>
+                    <object class="wxStaticText" name="wxID_STATIC" subclass="WrappedStaticText">
+                        <size>200,-1</size>
+                        <label>OpenNX Client supports authentication using a variety of USB SmartCard tokens. Enable this option if you intend to use such a token.</label>
+                        <wrap>9999</wrap>
                     </object>
                 </object>
                 <object class="sizeritem">
@@ -3203,11 +3206,12 @@ this share.</label>
                     </object>
                 </object>
                 <object class="sizeritem">
-                    <flag>wxGROW|wxALIGN_TOP|wxALL</flag>
+                    <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                     <border>5</border>
-                    <object class="wxHtmlWindow" name="ID_HTMLWINDOW_TEXT2">
-                        <size>200,20</size>
-                        <style>wxHW_SCROLLBAR_NEVER</style>
+                    <object class="wxStaticText" name="wxID_STATIC" subclass="WrappedStaticText">
+                        <size>200,-1</size>
+                        <label>Authorization credentials are always encrypted while establishing a connection. For increased security, you can enable the following option.</label>
+                        <wrap>9999</wrap>
                     </object>
                 </object>
                 <object class="sizeritem">
@@ -3243,11 +3247,12 @@ this share.</label>
                 <growablecols>0</growablecols>
                 <growablerows>3</growablerows>
                 <object class="sizeritem">
-                    <flag>wxGROW|wxALIGN_TOP|wxALL</flag>
+                    <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                     <border>5</border>
-                    <object class="wxHtmlWindow" name="ID_HTMLWINDOW_TEXT1">
-                        <size>200,20</size>
-                        <style>wxHW_SCROLLBAR_NEVER</style>
+                    <object class="wxStaticText" name="wxID_STATIC" subclass="WrappedStaticText">
+                        <size>200,-1</size>
+                        <label></label>
+                        <wrap>9999</wrap>
                     </object>
                 </object>
                 <object class="sizeritem">

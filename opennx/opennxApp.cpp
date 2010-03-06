@@ -612,6 +612,7 @@ opennxApp::preInit()
 
     checkLibUSB();
     checkNxSmartCardSupport();
+    checkNxProxy();
     return true;
 }
 
@@ -696,6 +697,20 @@ void opennxApp::checkNxSmartCardSupport()
         }
         wxConfigBase::Get()->Flush();
     }
+}
+
+void opennxApp::checkNxProxy()
+{
+    wxString sysdir;
+    wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &sysdir);
+    wxFileName fn(sysdir, wxEmptyString);
+    fn.AppendDir(wxT("bin"));
+#ifdef __WXMSW__
+    fn.SetName(wxT("nxproxy.exe"));
+#else
+    fn.SetName(wxT("nxproxy"));
+#endif
+    m_bNxProxyAvailable = fn.IsFileExecutable();
 }
 
 void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)

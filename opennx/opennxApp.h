@@ -55,6 +55,7 @@ class opennxApp : public wxApp
          */
         bool NxSmartCardSupport() { return m_bNxSmartCardSupport; }
         bool LibUSBAvailable() { return m_bLibUSBAvailable; }
+        bool NxProxyAvailable() { return m_bNxProxyAvailable; }
 
         void SetRequireWatchReader(bool b) { m_bRequireWatchReader = b; }
         void SetRequireStartUsbIp(bool b) { m_bRequireStartUsbIp = b; }
@@ -104,6 +105,7 @@ class opennxApp : public wxApp
         bool m_bRequireWatchReader;
         bool m_bRequireStartUsbIp;
         bool m_bTestCardWaiter;
+        bool m_bNxProxyAvailable;
         LoginDialog *m_pLoginDialog;
 
         bool preInit();
@@ -112,6 +114,7 @@ class opennxApp : public wxApp
         void setUserDir();
         void checkNxSmartCardSupport();
         void checkLibUSB();
+        void checkNxProxy();
         wxString findExecutable(wxString name);
 };
 
