@@ -34,6 +34,7 @@ class MacUninstallApp: public wxApp
         virtual int OnExit();
 
     private:
+        wxVariant GetPlistValue(const wxXmlDocument &doc, const wxString &docname, const wxString &keyname);
         bool ElevatedUninstall(const wxString &);
         bool DoUninstall(const wxString &);
         bool TestReceipt(const wxString &);
@@ -42,6 +43,7 @@ class MacUninstallApp: public wxApp
         wxString MacAuthError(long);
 
         bool m_bBatchMode;
+        bool m_bTestMode;
         bool m_bCancelled;
         wxLocale m_cLocale;
         wxString m_sSelfPath;

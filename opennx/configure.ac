@@ -186,6 +186,8 @@ case $target_os in
 esac
 AM_PATH_WXCONFIG(2.8.0,wxWidgets=1,wxWidgets=0,[$_wx_required], $WXPARAMS)
 test ${wxWidgets} = 0 && AC_MSG_ERROR(Could not find wxWidgets library)
+WX_PREFIX=`$WX_CONFIG_WITH_ARGS --prefix`
+AC_SUBST(WX_PREFIX)
 
 # Check, if wxLogStream is available
 save_CPPFLAGS="$CPPFLAGS"
@@ -209,6 +211,8 @@ WATCHREADER_RES=
 WATCHUSBIP=
 MACFIDREADER=
 MACUNINSTALL=
+MACTESTKBD=
+TESTXAUTH=
 BUNDLE=
 OSRESDEPS=
 UNIFLAGS=
@@ -226,6 +230,7 @@ case $target_os in
         WATCHREADER='watchreader$(EXEEXT)'
         WATCHREADER_RES='watchreader.$(OBJEXT)'
         OSRESDEPS='$(top_srcdir)/extres/*.ico'
+        TESTXAUTH='testxauth$(EXEEXT)'
         tagnames="RC"
         _LT_AC_TAGCONFIG
         ;;
@@ -233,6 +238,7 @@ case $target_os in
         MACUNINSTALL='macuninstall$(EXEEXT)'
         MACFINDREADER='macfindreader$(EXEEXT)'
         WATCHREADER='watchreader$(EXEEXT)'
+        MACTESTKBD='mactestkbd$(EXEEXT)'
         BUNDLE=bundle
         OSRESDEPS='$(top_srcdir)/extres/*.icns'
         APP_LDADD="-lX11 -lXmu"
@@ -267,6 +273,8 @@ AC_SUBST(BUNDLE)
 AC_SUBST(OSRESDEPS)
 AC_SUBST(MACFINDREADER)
 AC_SUBST(MACUNINSTALL)
+AC_SUBST(MACTESTKBD)
+AC_SUBST(TESTXAUTH)
 AC_SUBST(UNIFLAGS)
 
 AC_ARG_ENABLE([warn],
@@ -302,10 +310,10 @@ test -n "$cupsd" && CUPS_DEFAULT_PATH=$cupsd
 AC_DEFINE_UNQUOTED(CUPS_DEFAULT_PATH,"$CUPS_DEFAULT_PATH",
                    [Set to the path of your CUPS daemon])
 
-ac_cv_nxproto="3.2.0"
+ac_cv_nxproto="3.3.0"
 AC_ARG_WITH([nxproto],
             AS_HELP_STRING([--with-nxproto],
-                           [Default NX protocol version (Default: 3.2.0)]),
+                           [Default NX protocol version (Default: 3.3.0)]),
             [ac_cv_nxproto=${withval}])
 AC_DEFINE_UNQUOTED(NX_PROTOCOL_VERSION,"${ac_cv_nxproto}",
                    [Set to default NX protocol version])

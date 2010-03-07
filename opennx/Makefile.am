@@ -4,7 +4,7 @@ ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = po $(PLATFORM_SUBDIRS)
 DIST_SUBDIRS = po packaging/win32 packaging/MacOSX
 
-noinst_PROGRAMS = bin2hdr testxauth
+noinst_PROGRAMS = bin2hdr $(TESTXAUTH) $(MACTESTKBD)
 
 bin2hdr_SOURCES = bin2hdr.cpp
 
@@ -12,7 +12,8 @@ bin_PROGRAMS = opennx pconnect $(TRACELOG) $(WATCHREADER) $(WATCHUSBIP) \
 	       $(MACFINDREADER) $(MACUNINSTALL)
 
 EXTRA_PROGRAMS = tracelog$(EXEEXT) watchreader$(EXEEXT) \
-		 watchusbip$(EXEEXT) macfindreader$(EXEEXT) macuninstall$(EXEEXT)
+	watchusbip$(EXEEXT) macfindreader$(EXEEXT) macuninstall$(EXEEXT) \
+	mactestkbd$(EXEEXT) testxauth$(EXEEXT)
 
 opennx_SOURCES = AboutDialog.cpp AsyncProcess.cpp LibOpenSC.cpp \
 	CardWaiterDialog.cpp ConnectDialog.cpp ExtHtmlWindow.cpp \
@@ -87,7 +88,6 @@ tracelog_CFLAGS = $(WX_CFLAGS)
 
 macfindreader_SOURCES = macfindreader.c
 macfindreader_CFLAGS = $(UNIFLAGS)
-macfindreader_LDLAGS = $(UNIFLAGS)
 macfindreader_LDADD = -lopensc
 
 macuninstall_SOURCES = MacUninstallApp.cpp MacOSX.c
@@ -96,6 +96,11 @@ macuninstall_LDFLAGS = -framework Security
 macuninstall_CPPFLAGS = $(WX_CPPFLAGS) -DAPP_MACUNINSTALL
 macuninstall_CXXFLAGS = $(WX_CXXFLAGS)
 macuninstall_CFLAGS = $(WX_CFLAGS)
+
+mactestkbd_SOURCES = mactestkbd.c MacOSX.c
+mactestkbd_LDADD = $(WX_LIBS)
+mactextkbd_CPPFLAGS = $(WX_CPPFLAGS)
+mactestkbd_CFLAGS = $(WX_CFLAGS)
 
 EXTRA_HEADERS = res/opennx.rc
 
@@ -203,6 +208,7 @@ cupsdir = $(datadir)/cups
 cups_DATA = $(top_srcdir)/share/cups/*
 
 install-data-local:
+	$(MAKE) -C po install-data-yes
 	$(INSTALL) -d $(DESTDIR)$(datadir)/icons
 	cd $(top_srcdir)/extres && \
 		for d in 16x16 32x32 48x48 128x128 256x256 512x512 scalable ; do \

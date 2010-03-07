@@ -45,7 +45,8 @@ static unsigned long failed_dirs;
 class RmRfTraverser : public wxDirTraverser
 {
     public:
-        RmRfTraverser() { }
+        RmRfTraverser(bool testMode)
+            : m_bTestMode(testMode) { }
 
         ~RmRfTraverser()
         {
@@ -53,21 +54,29 @@ class RmRfTraverser : public wxDirTraverser
             wxString fn;
             while (n >= 0) {
                 fn = m_aFiles[n--];
-                if (::wxRemoveFile(fn))
-                    ::wxLogMessage(_("Deleted file: %s"), fn.c_str());
-                else {
-                    failed_files++;
-                    ::wxLogWarning(_("Could not delete file %s"), fn.c_str());
+                if (m_bTestMode) {
+                    ::wxLogMessage(_("TEST: Would delete file: %s"), fn.c_str());
+                } else {
+                    if (::wxRemoveFile(fn))
+                        ::wxLogMessage(_("Deleted file: %s"), fn.c_str());
+                    else {
+                        failed_files++;
+                        ::wxLogWarning(_("Could not delete file %s"), fn.c_str());
+                    }
                 }
             }
             n = m_aDirs.GetCount() - 1;
             while (n >= 0) {
                 fn = m_aDirs[n--];
-                if (::wxRmdir(fn))
-                    ::wxLogMessage(_("Deleted diretory %s"), fn.c_str());
-                else {
-                    failed_dirs++;
-                    ::wxLogWarning(_("Could not delete directory %s"), fn.c_str());
+                if (m_bTestMode) {
+                    ::wxLogMessage(_("TEST: Would delete diretory %s"), fn.c_str());
+                } else {
+                    if (::wxRmdir(fn))
+                        ::wxLogMessage(_("Deleted diretory %s"), fn.c_str());
+                    else {
+                        failed_dirs++;
+                        ::wxLogWarning(_("Could not delete directory %s"), fn.c_str());
+                    }
                 }
             }
         }
@@ -85,6 +94,7 @@ class RmRfTraverser : public wxDirTraverser
         }
 
     private:
+        bool m_bTestMode;
         wxArrayString m_aDirs;
         wxArrayString m_aFiles;
 };
@@ -111,6 +121,8 @@ void MacUninstallApp::OnInitCmdLine(wxCmdLineParser& parser)
 {
     // Init standard options (--help, --verbose);
     wxApp::OnInitCmdLine(parser);
+    parser.AddSwitch(wxEmptyString, wxT("test"),
+            _("Test mode. Just create log file reporting what would happen."));
     parser.AddSwitch(wxEmptyString, wxT("batch"),
             _("Uninstall without asking the user (needs admin rights)."));
 }
@@ -118,6 +130,9 @@ void MacUninstallApp::OnInitCmdLine(wxCmdLineParser& parser)
 bool MacUninstallApp::OnCmdLineParsed(wxCmdLineParser& parser)
 {
     m_bBatchMode = parser.Found(wxT("batch"));
+    m_bTestMode = parser.Found(wxT("test"));
+    if (m_bTestMode)
+        m_bBatchMode = true;
     return true;
 }
 
@@ -134,6 +149,7 @@ bool MacUninstallApp::OnInit()
     m_cLocale.AddCatalogLookupPathPrefix(fn.GetPath());
     m_cLocale.Init();
     m_cLocale.AddCatalog(wxT("opennx"));
+    wxString targetPkg = wxT("OpenNX");
 
     // Call to base class needed for initializing command line processing
     if (!wxApp::OnInit())
@@ -141,38 +157,45 @@ bool MacUninstallApp::OnInit()
 
     wxInitAllImageHandlers();
     wxBitmap::InitStandardHandlers();
-    m_sLogName << wxT("/tmp/uninstall-") << wxT("OpenNX") << wxT(".log");
+    m_sLogName << wxT("/tmp/uninstall-") << targetPkg << wxT(".log");
     if (m_bBatchMode) {
-        if (0 != geteuid()) {
+        if ((!m_bTestMode) && (0 != geteuid())) {
             ::wxMessageBox(_("Batch uninstall needs to be started as root."),
-                    _("Uninstall OpenNX"), wxOK|wxICON_ERROR);
+                    wxString::Format(_("Uninstall %s"), targetPkg.c_str()),
+                    wxOK|wxICON_ERROR);
             while (Pending())
                 Dispatch();
             return false;
         }
-        bool ok = DoUninstall(wxT("OpenNX"));
+        bool ok = DoUninstall(targetPkg);
         ::wxLogMessage(_("Uninstall finished at %s"), wxDateTime::Now().Format().c_str());
-        printf("%d %lu %lu\n", ok ? 0 : 1, failed_files, failed_dirs);
+        ::wxLogMessage(_("Status: %s, failed files: %lu, failed dirs: %lu"),
+            (ok ? _("OK") : _("FAILED")), failed_files, failed_dirs);
     } else {
         int r = ::wxMessageBox(
-                _("This operation can not be undone!\nDo you really want to uninstall OpenNX?"),
-                _("Uninstall OpenNX"), wxYES_NO|wxNO_DEFAULT|wxICON_EXCLAMATION);
+                wxString::Format(
+                    _("This operation can not be undone!\nDo you really want to uninstall %s?"),
+                    targetPkg.c_str()),
+                wxString::Format(_("Uninstall %s"), targetPkg.c_str()),
+                wxYES_NO|wxNO_DEFAULT|wxICON_EXCLAMATION);
         if (wxYES == r) {
-            if (!TestReceipt(wxT("OpenNX"))) {
+            if (!TestReceipt(targetPkg)) {
                 while (Pending())
                     Dispatch();
                 return false;
             }
-            if (ElevatedUninstall(wxT("OpenNX"))) {
+            if (ElevatedUninstall(targetPkg)) {
                 if (!m_bCancelled) {
                     if (0 == (failed_files + failed_dirs)) {
-                        ::wxMessageBox(_("OpenNX has been removed successfully."),
+                        ::wxMessageBox(
+                                wxString::Format(_("%s has been removed successfully."),
+                                    targetPkg.c_str()),
                                 _("Uninstallation complete"), wxOK|wxICON_INFORMATION);
                     } else {
                         ::wxMessageBox(
                                 wxString::Format(
-                                    _("OpenNX could not be removed completely.\nSome files or directories could not be deleted.\nPlease investigate the log file\n%s\n for more information."),
-                                    m_sLogName.c_str()),
+                                    _("%s could not be removed completely.\nSome files or directories could not be deleted.\nPlease investigate the log file\n%s\n for more information."),
+                                    targetPkg.c_str(), m_sLogName.c_str()),
                                 _("Uninstallation incomplete"), wxOK|wxICON_EXCLAMATION);
                     }
                 }
@@ -194,48 +217,116 @@ int MacUninstallApp::OnExit()
     return wxApp::OnExit();
 }
 
+wxVariant MacUninstallApp::GetPlistValue(
+        const wxXmlDocument &doc, const wxString &docname, const wxString &keyname)
+{
+    wxVariant ret;
+    if (doc.GetRoot()->GetName() != wxT("plist")) {
+        ::wxLogError(_("Not an XML plist: %s"), docname.c_str());
+        return ret;
+    }
+    wxXmlNode *child = doc.GetRoot()->GetChildren();
+    if (child->GetName() != wxT("dict")) {
+        ::wxLogError(
+                _("Invalid plist (missing toplevel <dict> in %s"),
+                docname.c_str());
+        return ret;
+    }
+    child = child->GetChildren();
+    bool needkey = true;
+    bool found = false;
+    while (child) {
+        if (needkey) {
+            if (child->GetName() != wxT("key")) {
+                ::wxLogError(
+                        _("Invalid plist (expected a key) in %s"),
+                        docname.c_str());
+                return ret;
+            }
+            if (child->GetNodeContent().IsSameAs(keyname))
+                found = true;
+        } else {
+            if (found) {
+                if (child->GetName().IsSameAs(wxT("array"))) {
+                    ::wxLogError(
+                            _("Unsupported type array in %s"), docname.c_str());
+                    return ret;
+                }
+                if (child->GetName().IsSameAs(wxT("real"))) {
+                    double val;
+                    if (!child->GetNodeContent().ToDouble(&val)) {
+                        ::wxLogError(
+                                _("Invalid plist (invalid real value %s) in %s"),
+                                child->GetNodeContent().c_str(), docname.c_str());
+                    } else
+                        ret = val;
+                    return ret;
+                }
+                if (child->GetName().IsSameAs(wxT("integer"))) {
+                    long val;
+                    if (!child->GetNodeContent().ToLong(&val)) {
+                        ::wxLogError(
+                                _("Invalid plist (invalid integer value %s) in %s"),
+                                child->GetNodeContent().c_str(), docname.c_str());
+                    } else
+                        ret = val;
+                    return ret;
+                }
+                if (child->GetName().IsSameAs(wxT("string"))) {
+                    ret = child->GetNodeContent();
+                    return ret;
+                }
+                if (child->GetName().IsSameAs(wxT("true")) ||
+                        child->GetName().IsSameAs(wxT("false"))) {
+                    ret = child->GetName().IsSameAs(wxT("true"));
+                    return ret;
+                }
+                if (child->GetName().IsSameAs(wxT("date"))) {
+                    wxDateTime dt;
+                    if (NULL == dt.ParseDateTime(child->GetNodeContent())) {
+                        ::wxLogError(
+                                _("Invalid plist (invalid date value %s) in %s"),
+                                child->GetNodeContent().c_str(), docname.c_str());
+                    } else
+                        ret = dt;
+                    return ret;
+                }
+                ::wxLogError(
+                        _("Invalid plist (unexpected type %s) in %s"),
+                        child->GetName().c_str(), docname.c_str());
+                return ret;
+            }
+        }
+        needkey = (!needkey);
+        child = child->GetNext();
+    }
+    if (!found)
+        ::wxLogError(_("Could not find requested key '%s' in receipt %s"),
+                keyname.c_str(), docname.c_str());
+    return ret;
+}
+
 wxString MacUninstallApp::GetInstalledPath(const wxString &rcpt)
 {
     wxXmlDocument doc(rcpt);
     if (doc.IsOk()) {
-        if (doc.GetRoot()->GetName() != wxT("plist")) {
-            ::wxLogError(_("Not an XML plist: %s"), rcpt.c_str());
+        wxVariant v = GetPlistValue(doc, rcpt, wxT("IFPkgFlagRelocatable"));
+        wxString t = v.GetType();
+        if (t != wxT("bool")) {
+            ::wxLogError(_("Unexpected type '%s' of 'IFPkgFlagRelocatable' in receipt %s"),
+                    t.c_str(), rcpt.c_str());
             return wxEmptyString;
         }
-        wxXmlNode *child = doc.GetRoot()->GetChildren();
-        if (child->GetName() != wxT("dict")) {
-            ::wxLogError(
-                    _("Invalid plist (missing toplevel <dict> in %s"),
-                    rcpt.c_str());
+        wxString pkey = (v.GetBool() ?
+                wxT("IFPkgRelocatedPath") : wxT("IFPkgFlagDefaultLocation"));
+        v = GetPlistValue(doc, rcpt, pkey);
+        t = v.GetType();
+        if (t != wxT("string")) {
+            ::wxLogError(_("Unexpected type '%s' of '%s' in receipt %s"),
+                    t.c_str(), pkey.c_str(), rcpt.c_str());
             return wxEmptyString;
         }
-        child = child->GetChildren();
-        bool needkey = true;
-        bool found = false;
-        while (child) {
-            if (needkey) {
-                if (child->GetName() != wxT("key")) {
-                    ::wxLogError(
-                            _("Invalid plist (expected a key) in %s"),
-                            rcpt.c_str());
-                    return wxEmptyString;
-                }
-                if (child->GetNodeContent() == wxT("IFPkgRelocatedPath"))
-                    found = true;
-            } else {
-                if (found) {
-                    if (child->GetName() != wxT("string")) {
-                        ::wxLogError(
-                                _("Invalid plist (expected a string value) in %s"),
-                                rcpt.c_str());
-                        return wxEmptyString;
-                    }
-                    return child->GetNodeContent();
-                }
-            }
-            needkey = (!needkey);
-            child = child->GetNext();
-        }
+        return v.GetString();
     } else
         ::wxLogError(_("Could not read package receipt %s"), rcpt.c_str());
     return wxEmptyString;
@@ -307,7 +398,7 @@ bool MacUninstallApp::DoUninstall(const wxString &pkg)
     std::ofstream *log = new std::ofstream();
     log->open(m_sLogName.mb_str());
     delete wxLog::SetActiveTarget(new wxLogStream(log));
-    ::wxLogMessage(wxT("Uninstall started at %s"), wxDateTime::Now().Format().c_str());
+    ::wxLogMessage(_("Uninstall started at %s"), wxDateTime::Now().Format().c_str());
     wxString rpath = wxT("/Library/Receipts/");
     rpath.Append(pkg).Append(wxT(".pkg"));
     wxString proot = GetInstalledPath(rpath + wxT("/Contents/Info.plist"));
@@ -318,7 +409,7 @@ bool MacUninstallApp::DoUninstall(const wxString &pkg)
     if (!FetchBOM(rpath + wxT("/Contents/Archive.bom"), d, f))
         return false;
     size_t i;
-    ::wxLogMessage(wxT("Deleting package content"));
+    ::wxLogMessage(_("Deleting package content"));
     for (i = 0; i < f.GetCount(); i++) {
         if (m_nodelete.find(f[i]) != m_nodelete.end()) {
             f.RemoveAt(i--);
@@ -327,12 +418,17 @@ bool MacUninstallApp::DoUninstall(const wxString &pkg)
         wxFileName fn(proot + f[i]);
         if (fn.Normalize(wxPATH_NORM_DOTS|wxPATH_NORM_ABSOLUTE)) {
             wxString name = fn.GetFullPath();
-            if (::wxRemoveFile(name) || (!fn.FileExists())) {
+            if (m_bTestMode) {
                 f.RemoveAt(i--);
-                ::wxLogMessage(_("Deleted file: %s"), name.c_str());
+                ::wxLogMessage(_("TEST: Would delete file: %s"), name.c_str());
             } else {
-                failed_files++;
-                ::wxLogWarning(_("Could not delete file %s"), name.c_str());
+                if (::wxRemoveFile(name) || (!fn.FileExists())) {
+                    f.RemoveAt(i--);
+                    ::wxLogMessage(_("Deleted file: %s"), name.c_str());
+                } else {
+                    failed_files++;
+                    ::wxLogWarning(_("Could not delete file %s"), name.c_str());
+                }
             }
         }
     }
@@ -347,9 +443,14 @@ bool MacUninstallApp::DoUninstall(const wxString &pkg)
             wxFileName fn(proot + d[i]);
             if (fn.Normalize(wxPATH_NORM_DOTS|wxPATH_NORM_ABSOLUTE)) {
                 wxString name = fn.GetFullPath();
-                if (::wxRmdir(name) || (!fn.DirExists())) {
+                if (m_bTestMode) {
                     d.RemoveAt(i--);
-                    ::wxLogMessage(_("Deleted directory: %s"), name.c_str());
+                    ::wxLogMessage(_("TEST: Would delete directory: %s"), name.c_str());
+                } else {
+                    if (::wxRmdir(name) || (!fn.DirExists())) {
+                        d.RemoveAt(i--);
+                        ::wxLogMessage(_("Deleted directory: %s"), name.c_str());
+                    }
                 }
             }
         }
@@ -362,17 +463,21 @@ bool MacUninstallApp::DoUninstall(const wxString &pkg)
     }
     if (0 == (d.GetCount() + f.GetCount())) {
         // Finally delete the receipe itself
-        ::wxLogMessage(wxT("Deleting receipt"));
+        ::wxLogMessage(_("Deleting receipt"));
         {
             wxDir d(rpath);
-            RmRfTraverser t;
+            RmRfTraverser t(m_bTestMode);
             d.Traverse(t);
         }
-        if (::wxRmdir(rpath))
-            ::wxLogMessage(_("Deleted directory: %s"), rpath.c_str());
-        else {
-            failed_dirs++;
-            ::wxLogWarning(_("Could not delete directory %s"), rpath.c_str());
+        if (m_bTestMode) {
+            ::wxLogMessage(_("TEST: Would delete directory: %s"), rpath.c_str());
+        } else {
+            if (::wxRmdir(rpath))
+                ::wxLogMessage(_("Deleted directory: %s"), rpath.c_str());
+            else {
+                failed_dirs++;
+                ::wxLogWarning(_("Could not delete directory %s"), rpath.c_str());
+            }
         }
     } else
         ::wxLogMessage(_("Receipt NOT deleted, because package files have been left."));
@@ -384,6 +489,7 @@ bool MacUninstallApp::DoUninstall(const wxString &pkg)
  */
 bool MacUninstallApp::ElevatedUninstall(const wxString &pkg)
 {
+    // If we are already root, do the uninstall directly
     if (geteuid() == 0)
         return DoUninstall(pkg);
 

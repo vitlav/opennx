@@ -41,4 +41,17 @@ static void __attribute__ ((constructor))
 # endif
     }
 }
+
+#include <Carbon/Carbon.h>
+void getMacKeyboard() {
+	KeyboardLayoutRef klr;
+	if (noErr == KLGetCurrentKeyboardLayout(&klr)) {
+		uint32 pt = kKLIdentifier;
+		void *oValue;
+		fprintf(stderr, "KLGetCurrentKeyboardLayout OK\n"); fflush(stderr);
+		if (noErr == KLGetKeyboardLayoutProperty(klr, pt, &oValue)) {
+			fprintf(stderr, "KLGetKeyboardLayoutProperty OK\n"); fflush(stderr);
+		}
+	}
+}
 #endif
