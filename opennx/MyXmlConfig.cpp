@@ -781,10 +781,14 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
 
     wxString kbdLocal = wxString(wxConvLocal.cMB2WX(x11_keyboard_type)).BeforeFirst(wxT(','));
     ret << wxT(" --keyboard=\"");
+#ifdef __WXMAC__
+    ret << wxT("query");
+#else
     if (m_bKbdLayoutOther)
         ret << kbdLocal.BeforeFirst(wxT('/')) << wxT("/") << m_sKbdLayoutLanguage;
     else
         ret << kbdLocal;
+#endif
     ret << wxT("\"")
         << wxT(" --backingstore=\"")
         << (m_bDisableBackingstore ? 0 : 1)

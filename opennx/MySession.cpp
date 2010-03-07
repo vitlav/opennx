@@ -681,6 +681,7 @@ MySession::getXauthCookie(int display /* = 0 */, wxString proto)
     wxString
 MySession::getXauthPath(tXarch xarch)
 {
+    wxFileName fn;
 #ifdef __UNIX__
     wxString cmd = wxT("xauth info");
     wxArrayString clines;
@@ -689,19 +690,16 @@ MySession::getXauthPath(tXarch xarch)
         for (size_t i = 0; i < count; i++) {
             wxString line = clines[i];
             if (line.StartsWith(wxT("Authority file:"))) {
-                wxStringTokenizer t(line, wxT(":"));
-                int ecount = 0;
-                while (t.HasMoreTokens()) {
-                    wxString tok = t.GetNextToken();
-                    if (++ecount == 2)
-                        return tok.Strip(wxString::both);
-                }
+                return line.AfterFirst(wxT(':')).Strip(wxString::both);
             }
         }
     }
+    // Fallback: $HOME/.Xauthority
+    fn.AssignHomeDir();
+    fn.SetName(wxT(".Xauthority"));
+    return fn.GetFullPath();
 #endif
 #ifdef __WXMSW__
-    wxFileName fn;
     switch (xarch) {
         case XARCH_CYGWIN:
             return cygPath(m_sUserDir, wxT(".Xauthority"));
