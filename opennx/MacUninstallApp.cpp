@@ -109,6 +109,7 @@ MacUninstallApp::MacUninstallApp()
 {
     failed_files = failed_dirs = 0;
     m_bBatchMode = false;
+    m_bTestMode = false;
     m_bCancelled = false;
     m_sSelfPath = wxFileName(
             GetTraits()->GetStandardPaths().GetExecutablePath()).GetFullPath();
@@ -171,6 +172,17 @@ bool MacUninstallApp::OnInit()
         ::wxLogMessage(_("Uninstall finished at %s"), wxDateTime::Now().Format().c_str());
         ::wxLogMessage(_("Status: %s, failed files: %lu, failed dirs: %lu"),
             (ok ? _("OK") : _("FAILED")), failed_files, failed_dirs);
+        // Print result to stdout for parent (elevation wrapper)
+        wxString ptmp;
+        if (::wxGetEnv(wxT("MACUNINST_ELEVATION_PID"), &ptmp)) {
+            long epid;
+            if (ptmp.ToLong(&epid)) {
+                if (getppid() == epid) {
+                    ::wxLogMessage(_("Reporting result to elevation wrapper %s"), ptmp.c_str());
+                    printf("%d %lu %lu\n", ok ? 0 : 1, failed_files, failed_dirs);
+                }
+            }
+        }
     } else {
         int r = ::wxMessageBox(
                 wxString::Format(
@@ -524,6 +536,10 @@ bool MacUninstallApp::ElevatedUninstall(const wxString &pkg)
         char *executable = strdup(m_sSelfPath.utf8_str());
         char *args[] = { "--batch", NULL };
         FILE *pout = NULL;
+
+        if (!::wxGetEnv(wxT("TMPDIR"), NULL))
+            ::wxSetEnv(wxT("TMPDIR"), wxFileName::GetTempDir());
+        ::wxSetEnv(wxT("MACUNINST_ELEVATION_PID"), wxString::Format(wxT("%d"), ::wxGetProcessId()));
         st = AuthorizationExecuteWithPrivileges(aRef,
                 executable, kAuthorizationFlagDefaults, args, &pout);
         if (errAuthorizationSuccess == st) {
