@@ -42,7 +42,7 @@
 
 IMPLEMENT_DYNAMIC_CLASS(WrappedStaticText, wxStaticText)
 
-#ifdef __WXMSW__
+#if defined(__WXMSW__) || defined(__WXMAC__)
 
 // this class is used to wrap the text on word boundary: wrapping is done by
 // calling OnStartLine() and OnOutputLine() functions
@@ -172,7 +172,6 @@ private:
 void WrappedStaticText::Wrap(int width)
 {
     inWrap = true;
-    fprintf(stdout, "Wrap(%d)\n", width); fflush(stdout);
     MinLabelWrapper wrapper;
     wrapper.WrapLabel(this, 300);
     inWrap = false;

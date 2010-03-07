@@ -36,7 +36,7 @@ class WrappedStaticText : public wxStaticText
         WrappedStaticText()
             : wxStaticText()
         {
-#ifdef __WXMSW__
+#if defined(__WXMSW__) || defined(__WXMAC__)
             minwrap = -1;
             inWrap = false;
 #endif
@@ -48,13 +48,13 @@ class WrappedStaticText : public wxStaticText
                 long style = 0, const wxString &name = wxStaticTextNameStr )
             : wxStaticText(parent, id, label, pos, size, style, name)
         {
-#ifdef __WXMSW__
+#if defined(__WXMSW__) || defined(__WXMAC__)
             minwrap = -1;
             inWrap = false;
 #endif
         }
 
-#ifdef __WXMSW__
+#if defined(__WXMSW__) || defined(__WXMAC__)
         virtual void DoSetSize(int x, int y, int w, int h, int sizeFlags)
         {
             if ((!inWrap) && (w > minwrap)) {
