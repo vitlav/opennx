@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-03-06 18:09+0100\n"
+"POT-Creation-Date: 2010-03-08 01:32+0100\n"
 "PO-Revision-Date: 2009-09-13 11:50+0100\n"
 "Last-Translator: Boris Savelev <boris.savelev@gmail.com>\n"
 "Language-Team:  <de@li.org>\n"
@@ -152,64 +152,100 @@ msgstr "Настройка..."
 msgid "L&ogin"
 msgstr "Login"
 
-#: MacUninstallApp.cpp:57 MacUninstallApp.cpp:332
+#: MacUninstallApp.cpp:58 MacUninstallApp.cpp:435
+#, fuzzy, c-format
+msgid "TEST: Would delete file: %s"
+msgstr "Не удалось удалить файл %s"
+
+#: MacUninstallApp.cpp:61 MacUninstallApp.cpp:439
 #, c-format
 msgid "Deleted file: %s"
 msgstr "Удаленный файл: %s"
 
-#: MacUninstallApp.cpp:60 MacUninstallApp.cpp:335
+#: MacUninstallApp.cpp:64 MacUninstallApp.cpp:442
 #, c-format
 msgid "Could not delete file %s"
 msgstr "Не удалось удалить файл %s"
 
-#: MacUninstallApp.cpp:67
+#: MacUninstallApp.cpp:72
+#, fuzzy, c-format
+msgid "TEST: Would delete diretory %s"
+msgstr "Не удалось удалить директорию %s"
+
+#: MacUninstallApp.cpp:75
 #, c-format
 msgid "Deleted diretory %s"
 msgstr "Удаленная директория: %s"
 
-#: MacUninstallApp.cpp:70 MacUninstallApp.cpp:360 MacUninstallApp.cpp:375
+#: MacUninstallApp.cpp:78 MacUninstallApp.cpp:473 MacUninstallApp.cpp:491
 #, c-format
 msgid "Could not delete directory %s"
 msgstr "Не удалось удалить директорию %s"
 
-#: MacUninstallApp.cpp:115
+#: MacUninstallApp.cpp:126
+msgid "Test mode. Just create log file reporting what would happen."
+msgstr ""
+
+#: MacUninstallApp.cpp:128
 msgid "Uninstall without asking the user (needs admin rights)."
 msgstr ""
 "Деинсталировать без спроса пользователя (требуются права Администратора)."
 
-#: MacUninstallApp.cpp:147
+#: MacUninstallApp.cpp:164
 msgid "Batch uninstall needs to be started as root."
 msgstr "Пакетная деинсталяция требует прав супер-пользователя."
 
-#: MacUninstallApp.cpp:148 MacUninstallApp.cpp:159
-msgid "Uninstall OpenNX"
+#: MacUninstallApp.cpp:165 MacUninstallApp.cpp:191
+#, fuzzy, c-format
+msgid "Uninstall %s"
 msgstr "Деинсталяция OpenNX"
 
-#: MacUninstallApp.cpp:154
+#: MacUninstallApp.cpp:172
 #, c-format
 msgid "Uninstall finished at %s"
 msgstr "Деинсталяция завершена в %s"
 
-#: MacUninstallApp.cpp:158
+#: MacUninstallApp.cpp:173
+#, c-format
+msgid "Status: %s, failed files: %lu, failed dirs: %lu"
+msgstr ""
+
+#: MacUninstallApp.cpp:174
+#, fuzzy
+msgid "OK"
+msgstr "&OK"
+
+#: MacUninstallApp.cpp:174
+msgid "FAILED"
+msgstr ""
+
+#: MacUninstallApp.cpp:181
+#, c-format
+msgid "Reporting result to elevation wrapper %s"
+msgstr ""
+
+#: MacUninstallApp.cpp:189
+#, fuzzy, c-format
 msgid ""
 "This operation can not be undone!\n"
-"Do you really want to uninstall OpenNX?"
+"Do you really want to uninstall %s?"
 msgstr ""
 "Diese Aktion kann nicht rückgängig gemacht werden!\n"
 "Wollen Sie OpenNX wirklich deinstallieren?"
 
-#: MacUninstallApp.cpp:169
-msgid "OpenNX has been removed successfully."
+#: MacUninstallApp.cpp:203
+#, fuzzy, c-format
+msgid "%s has been removed successfully."
 msgstr "OpenNX wurde erfolgreich entfernt."
 
-#: MacUninstallApp.cpp:170
+#: MacUninstallApp.cpp:205
 msgid "Uninstallation complete"
 msgstr "Deinstallation vollständig"
 
-#: MacUninstallApp.cpp:174
-#, c-format
+#: MacUninstallApp.cpp:209
+#, fuzzy, c-format
 msgid ""
-"OpenNX could not be removed completely.\n"
+"%s could not be removed completely.\n"
 "Some files or directories could not be deleted.\n"
 "Please investigate the log file\n"
 "%s\n"
@@ -221,11 +257,11 @@ msgstr ""
 "%s\n"
 "um genauere Infos zu erhalten."
 
-#: MacUninstallApp.cpp:176
+#: MacUninstallApp.cpp:211
 msgid "Uninstallation incomplete"
 msgstr "Deinstallation unvollständig"
 
-#: MacUninstallApp.cpp:182
+#: MacUninstallApp.cpp:217
 #, c-format
 msgid ""
 "Uninstallation has failed.\n"
@@ -236,72 +272,125 @@ msgstr ""
 "Der Grund sollte in der Datei\n"
 "%s aufgezeichent worden sein."
 
-#: MacUninstallApp.cpp:184
+#: MacUninstallApp.cpp:219
 msgid "Uninstallation failed"
 msgstr "Deinstallation fehlgeschlagen"
 
-#: MacUninstallApp.cpp:202
+#: MacUninstallApp.cpp:237
 #, c-format
 msgid "Not an XML plist: %s"
 msgstr "Keine XML plist-Datei: %s"
 
-#: MacUninstallApp.cpp:208
+#: MacUninstallApp.cpp:243
 #, c-format
 msgid "Invalid plist (missing toplevel <dict> in %s"
 msgstr "Ungültige plist (Fehlender <dict> Marker auf oberster Ebene) in %s"
 
-#: MacUninstallApp.cpp:219
+#: MacUninstallApp.cpp:254
 #, c-format
 msgid "Invalid plist (expected a key) in %s"
 msgstr "Ungültige plist (Schlüssel erwartet) in %s"
 
-#: MacUninstallApp.cpp:229
+#: MacUninstallApp.cpp:264
 #, c-format
-msgid "Invalid plist (expected a string value) in %s"
+msgid "Unsupported type array in %s"
+msgstr ""
+
+#: MacUninstallApp.cpp:271
+#, fuzzy, c-format
+msgid "Invalid plist (invalid real value %s) in %s"
 msgstr "Ungültige plist (String-Wert erwartet) in %s"
 
-#: MacUninstallApp.cpp:240
+#: MacUninstallApp.cpp:281
+#, fuzzy, c-format
+msgid "Invalid plist (invalid integer value %s) in %s"
+msgstr "Ungültige plist (String-Wert erwartet) in %s"
+
+#: MacUninstallApp.cpp:300
+#, fuzzy, c-format
+msgid "Invalid plist (invalid date value %s) in %s"
+msgstr "Ungültige plist (String-Wert erwartet) in %s"
+
+#: MacUninstallApp.cpp:307
+#, fuzzy, c-format
+msgid "Invalid plist (unexpected type %s) in %s"
+msgstr "Ungültige plist (Schlüssel erwartet) in %s"
+
+#: MacUninstallApp.cpp:316
+#, fuzzy, c-format
+msgid "Could not find requested key '%s' in receipt %s"
+msgstr "Konnte Packet-Quittungsdatei nicht lesen %s"
+
+#: MacUninstallApp.cpp:328
+#, c-format
+msgid "Unexpected type '%s' of 'IFPkgFlagRelocatable' in receipt %s"
+msgstr ""
+
+#: MacUninstallApp.cpp:337
+#, c-format
+msgid "Unexpected type '%s' of '%s' in receipt %s"
+msgstr ""
+
+#: MacUninstallApp.cpp:343
 #, c-format
 msgid "Could not read package receipt %s"
 msgstr "Konnte Packet-Quittungsdatei nicht lesen %s"
 
-#: MacUninstallApp.cpp:249
+#: MacUninstallApp.cpp:352
 #, c-format
 msgid "Missing BOM (Bill Of Materials) '%s'. Already unistalled?"
 msgstr "Fehlende BOM-Datei (Bill Of Materials) '%s'. Bereits deinstalliert?"
 
-#: MacUninstallApp.cpp:257 MacUninstallApp.cpp:270
+#: MacUninstallApp.cpp:360 MacUninstallApp.cpp:373
 #, c-format
 msgid "Could not list BOM (Bill Of Materials) '%s'. Already unistalled?"
 msgstr ""
 "Konnte BOM (Bill Of Materials) nicht auflisten '%s'. Bereits deinstalliert?"
 
-#: MacUninstallApp.cpp:262 MacUninstallApp.cpp:275
+#: MacUninstallApp.cpp:365 MacUninstallApp.cpp:378
 #, c-format
 msgid "Invalid BOM (Bill Of Materials) '%s'. Already unistalled?"
 msgstr "Ungültige BOM-Datei (Bill Of Materials) '%s'. Bereits deinstalliert?"
 
-#: MacUninstallApp.cpp:287
+#: MacUninstallApp.cpp:390
 msgid "The package receipt does not exist. Already unistalled?"
 msgstr "Die Packet-Quittungsdatei fehlt. Bereits deinstalliert?"
 
-#: MacUninstallApp.cpp:295
+#: MacUninstallApp.cpp:398
 msgid "The package install path does not exist. Already unistalled?"
 msgstr ""
 "Der Installationspfad des Packets existiert nicht. Bereits deinstalliert?"
 
-#: MacUninstallApp.cpp:352 MacUninstallApp.cpp:372
+#: MacUninstallApp.cpp:413
+#, fuzzy, c-format
+msgid "Uninstall started at %s"
+msgstr "Деинсталяция завершена в %s"
+
+#: MacUninstallApp.cpp:424
+msgid "Deleting package content"
+msgstr ""
+
+#: MacUninstallApp.cpp:460 MacUninstallApp.cpp:485
+#, fuzzy, c-format
+msgid "TEST: Would delete directory: %s"
+msgstr "Не удалось удалить директорию %s"
+
+#: MacUninstallApp.cpp:464 MacUninstallApp.cpp:488
 #, c-format
 msgid "Deleted directory: %s"
 msgstr "Verzeichnis gelöscht: %s"
 
-#: MacUninstallApp.cpp:378
+#: MacUninstallApp.cpp:478
+msgid "Deleting receipt"
+msgstr ""
+
+#: MacUninstallApp.cpp:495
 msgid "Receipt NOT deleted, because package files have been left."
 msgstr ""
 "Packet-Quittung wurde NICHT gelöscht, weil ungelöschte Dateien vorhanden "
 "sind."
 
-#: MacUninstallApp.cpp:391
+#: MacUninstallApp.cpp:509
 #, c-format
 msgid ""
 "In order to uninstall %s, administrative rights are required.\n"
@@ -310,12 +399,12 @@ msgstr ""
 "Um %s zu deinstallieren, sind administrative Rechte erforderlich.\n"
 "\n"
 
-#: MacUninstallApp.cpp:406
+#: MacUninstallApp.cpp:524
 #, c-format
 msgid "Authorization could not be created: %s"
 msgstr "Autorisierung konnte nicht erzeugt werden: %s"
 
-#: MacUninstallApp.cpp:428
+#: MacUninstallApp.cpp:550
 #, c-format
 msgid ""
 "Could not execute with administrative rights:\n"
@@ -324,7 +413,7 @@ msgstr ""
 "Konnte nicht mit administrativen Rechten ausführen:\n"
 "%s"
 
-#: MacUninstallApp.cpp:433
+#: MacUninstallApp.cpp:555
 #, c-format
 msgid "Authorization failed: %s"
 msgstr "Autorisierung fehlgeschlagen: %s"
@@ -333,7 +422,7 @@ msgstr "Autorisierung fehlgeschlagen: %s"
 msgid "Authentication failed"
 msgstr "Ошибка аутентификации"
 
-#: MySession.cpp:119 MySession.cpp:712
+#: MySession.cpp:119 MySession.cpp:710
 #, fuzzy
 msgid "Invalid X11 server platform"
 msgstr "Ungüliges plist Format"
@@ -367,11 +456,11 @@ msgstr "Клиент"
 msgid "Unknown"
 msgstr "Unbekannt"
 
-#: MySession.cpp:783 MySession.cpp:796
+#: MySession.cpp:781 MySession.cpp:794
 msgid "Warning - OpenNX"
 msgstr "Предупреждение - OpenNX"
 
-#: MySession.cpp:794
+#: MySession.cpp:792
 msgid ""
 "\n"
 "Do you want to delete the key and retry ?"
@@ -379,81 +468,81 @@ msgstr ""
 "\n"
 "Удалить ключ и попробовать еще раз ? "
 
-#: MySession.cpp:814
+#: MySession.cpp:812
 msgid "Sending username"
 msgstr "Отправка имени пользователя"
 
-#: MySession.cpp:818 MySession.cpp:845
+#: MySession.cpp:816 MySession.cpp:843
 msgid "Authenticating"
 msgstr "Аутентификация"
 
-#: MySession.cpp:825
+#: MySession.cpp:823
 msgid "Authentication successful"
 msgstr "Аутентификация завершена"
 
-#: MySession.cpp:861
+#: MySession.cpp:859
 msgid "Query server-side sessions"
 msgstr "Запрос сессий"
 
-#: MySession.cpp:915
+#: MySession.cpp:913
 msgid "Enter PIN for Smart Card access."
 msgstr "Введите PIN для смарт-карты."
 
-#: MySession.cpp:915
+#: MySession.cpp:913
 msgid "Smart Card PIN"
 msgstr "Smart Card PIN"
 
-#: MySession.cpp:920
+#: MySession.cpp:918
 msgid "Enter passphrase"
 msgstr "Введите секретный код"
 
-#: MySession.cpp:922
+#: MySession.cpp:920
 msgid "Empty passphrase"
 msgstr "Пустой секретный код"
 
-#: MySession.cpp:928 MySession.cpp:932 MySession.cpp:936 MySession.cpp:940
-#: MySession.cpp:944 MySession.cpp:948 MySession.cpp:952 MySession.cpp:956
-#: MySession.cpp:960 MySession.cpp:964
+#: MySession.cpp:926 MySession.cpp:930 MySession.cpp:934 MySession.cpp:938
+#: MySession.cpp:942 MySession.cpp:946 MySession.cpp:950 MySession.cpp:954
+#: MySession.cpp:958 MySession.cpp:962
 msgid "Negotiating session parameter"
 msgstr "Передача параметров сессии"
 
-#: MySession.cpp:972 MySession.cpp:1001
+#: MySession.cpp:970 MySession.cpp:999
 msgid "Starting session"
 msgstr "Начало сессии"
 
-#: MySession.cpp:994
+#: MySession.cpp:992
 msgid "Unexpected termination of nxssh"
 msgstr "Неожиданное завершение nxssh"
 
-#: MySession.cpp:1162
+#: MySession.cpp:1160
 msgid "There are no sessions which can be attached to."
 msgstr "Keine geeigneten Sitzungen vorhanden."
 
-#: MySession.cpp:1163 MySession.cpp:1173
+#: MySession.cpp:1161 MySession.cpp:1171
 msgid "Error - OpenNX"
 msgstr "Ошибка - OpenNX"
 
-#: MySession.cpp:1172
+#: MySession.cpp:1170
 msgid "You have reached your session limit. No more sessions allowed"
 msgstr "Вы достигли предела на лимит сессий. Новая сессия не разрешена"
 
-#: MySession.cpp:1363 MySession.cpp:1408
+#: MySession.cpp:1361 MySession.cpp:1406
 #, fuzzy
 msgid "Could not create X11 authentication cookie"
 msgstr ""
 "Не удалось создать директорию для сессий\n"
 "%s\n"
 
-#: MySession.cpp:1433
+#: MySession.cpp:1431
 msgid "No X server found."
 msgstr "Не найден X-сервер"
 
-#: MySession.cpp:1441
+#: MySession.cpp:1439
 #, fuzzy, c-format
 msgid "Could not execute %s: %s\n"
 msgstr "Не удалось удалить файл %s"
 
-#: MySession.cpp:1523
+#: MySession.cpp:1521
 #, c-format
 msgid ""
 "Could not create session directory\n"
@@ -462,7 +551,7 @@ msgstr ""
 "Не удалось создать директорию для сессий\n"
 "%s\n"
 
-#: MySession.cpp:1551
+#: MySession.cpp:1549
 #, c-format
 msgid ""
 "Could not write session options\n"
@@ -471,50 +560,50 @@ msgstr ""
 "Не удалось сохранить опции сессии в\n"
 "%s\n"
 
-#: MySession.cpp:1641 MySession.cpp:1655
+#: MySession.cpp:1639 MySession.cpp:1653
 msgid "Could not assign a free port for CUPS printing"
 msgstr "Не удалось назначить свободный порт для CUPS"
 
-#: MySession.cpp:1912
+#: MySession.cpp:1910
 #, c-format
 msgid "Could not write %s"
 msgstr "Не удалось записать %s"
 
-#: MySession.cpp:1979
+#: MySession.cpp:1977
 #, fuzzy
 msgid "Could not start local X server"
 msgstr "Could not stat %s"
 
-#: MySession.cpp:1995 MySession.cpp:2039 MySession.cpp:2053
+#: MySession.cpp:1993 MySession.cpp:2037 MySession.cpp:2051
 #, c-format
 msgid "Connecting to %s ..."
 msgstr "Соединение с %s ..."
 
-#: MySession.cpp:2003
+#: MySession.cpp:2001
 msgid "Preparing multimedia service ..."
 msgstr "Подготовка мультимедиа сервисов ..."
 
-#: MySession.cpp:2035
+#: MySession.cpp:2033
 msgid "Could not start multimedia support"
 msgstr "Не удалось запустить мультимедиа сервисы"
 
-#: MySession.cpp:2037
+#: MySession.cpp:2035
 msgid "Could not assign a free port for multimedia support"
 msgstr "Не удалось назначить свободный порт для мультимедиа сервисов"
 
-#: MySession.cpp:2050
+#: MySession.cpp:2048
 msgid "Preparing CUPS service ..."
 msgstr "Подготовка CUPS ..."
 
-#: MySession.cpp:2052
+#: MySession.cpp:2050
 msgid "Could not start CUPS printing"
 msgstr "Не удалось запустить CUPS"
 
-#: MySession.cpp:2101
+#: MySession.cpp:2099
 msgid "Called command was: "
 msgstr "Комманда: "
 
-#: MySession.cpp:2102
+#: MySession.cpp:2100
 msgid "Could not start nxssh."
 msgstr "Не удалось запустить nxssh."
 
@@ -1903,10 +1992,6 @@ msgstr "Could not save session config"
 #: watchUsbIpApp.cpp:497
 msgid "Could not export USB device"
 msgstr "Could not export USB device"
-
-#, fuzzy
-#~ msgid "OK"
-#~ msgstr "&OK"
 
 #~ msgid "Cancel"
 #~ msgstr "Отмена"
