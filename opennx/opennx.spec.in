@@ -76,10 +76,10 @@ Group: Applications/Internet
 URL: http://sourceforge.net/projects/opennx
 Source0: opennx-%{version}.tar.gz
 %if !%{with_fetchnx}
-Source100: nxcomp-3.4.0-1.tar.gz
-Source101: nxesd-3.4.0-1.tar.gz
-Source102: nxssh-3.4.0-1.tar.gz
-Source103: nxproxy-3.4.0-2.tar.gz
+Source100: nxcomp-3.3.0-4.tar.gz
+Source101: nxesd-3.3.0-1.tar.gz
+Source102: nxssh-3.3.0-1.tar.gz
+Source103: nxproxy-3.3.0-2.tar.gz
 %endif
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
@@ -175,7 +175,10 @@ done
 # Apply openssh askPIN patch (see https://bugzilla.mindrot.org/show_bug.cgi?id=608)
 cd nxssh && patch -p1 < ../patches/openssh-scard-pin.patch
 cd ..
-patch -p0 < patches/nxcomp-gcc44.patch
+ncver=`ls nxcomp-*.tar.gz|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxcomp-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
+if test $ncver -lt 03040006 ;then
+    patch -p0 < patches/nxcomp-gcc44.patch
+fi
 # Make nxssh load libopensc dynamically
 patch -p0 < patches/nxssh-dynopensc.patch
 
