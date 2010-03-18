@@ -168,14 +168,15 @@ opennx is an OSS replacement for Nomachine's NX client.
 for pkg in %{nxpkgsall} ; do
     tar xzf ${pkg}-*.tar.gz
 done
+ncver=`ls nxcomp-*.tar.gz|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxcomp-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
 %else
 %setup -q -a 100 -a 101 -a 102 -a 103
+ncver=`basename %{SOURCE100}|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxcomp-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
 %endif
 
 # Apply openssh askPIN patch (see https://bugzilla.mindrot.org/show_bug.cgi?id=608)
 cd nxssh && patch -p1 < ../patches/openssh-scard-pin.patch
 cd ..
-ncver=`ls nxcomp-*.tar.gz|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxcomp-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
 if test $ncver -lt 03040006 ;then
     patch -p0 < patches/nxcomp-gcc44.patch
 fi
