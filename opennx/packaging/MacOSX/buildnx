@@ -47,11 +47,17 @@ CFLAGS="-arch i386 -arch ppc" LDFLAGS="-arch i386 -arch ppc" ./configure \
 make DESTDIR=$DEST install
 cd ..
 
+ncver=`ls nxcomp-*.tar.gz|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxcomp-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
 for pkg in nxcomp nxproxy nxesd ; do
     cd $pkg
     for p in $TOPSRC/patches/${pkg}-*.patch ; do
-        echo === Applying `basename $p` in $pkg
-        patch -p1 < $p
+        bn=`basename $p`
+        if [ $bn = nxcomp-gcc44.patch -a $ncver -ge 03040006 ] ; then
+            echo === Skipping $bn in $pkg
+        else
+            echo === Applying $bn in $pkg
+            patch -p1 < $p
+        fi
     done
     autoreconf -f -i
     cargs=
