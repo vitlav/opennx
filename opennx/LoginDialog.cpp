@@ -475,9 +475,14 @@ void LoginDialog::OnComboboxSessionSelected( wxCommandEvent& event )
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
  */
 
-void LoginDialog::OnOkClick( wxCommandEvent& event )
+void LoginDialog::OnOkClick(wxCommandEvent& event)
 {
     if (m_pCurrentCfg) {
+#ifdef SINGLE_SESSION
+        if (NULL != m_pNxSshWatcher)
+            delete m_pNxSshWatcher;
+        m_pNxSshWatcher = NULL;
+#endif
         TransferDataFromWindow();
         m_pCurrentCfg->bSetGuestMode(m_bGuestLogin);
         if (!m_bGuestLogin) {
@@ -510,7 +515,6 @@ void LoginDialog::OnOkClick( wxCommandEvent& event )
         }
         m_sLastSessionFilename = m_pCurrentCfg->sGetFileName();
     }
-    event.Skip();
 }
 
 #ifdef SINGLE_SESSION
