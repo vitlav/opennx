@@ -59,6 +59,57 @@
 #include "trace.h"
 ENABLE_TRACE;
 
+#ifdef SINGLE_SESSION
+DECLARE_LOCAL_EVENT_TYPE(wxEVT_SSHCOUNT, -1)
+DEFINE_LOCAL_EVENT_TYPE(wxEVT_SSHCOUNT);
+
+class NxSshWatcher : public wxThreadHelper
+{
+public:
+    NxSshWatcher(wxEvtHandler *h);
+    virtual ~NxSshWatcher();
+
+    virtual wxThread::ExitCode Entry();
+    
+private:
+    wxEvtHandler *m_pHandler;
+};
+
+NxSshWatcher::NxSshWatcher(wxEvtHandler* h)
+    : wxThreadHelper()
+    , m_pHandler(h)
+{
+    Create(
+#ifdef __OPENBSD__
+            32768
+#endif
+          );
+    m_thread->Run();
+}
+
+NxSshWatcher::~NxSshWatcher()
+{
+    m_thread->Delete();
+    while (m_thread->IsRunning())
+        wxThread::Sleep(100);
+}
+
+    wxThread::ExitCode
+NxSshWatcher::Entry()
+{
+    int cnt = 0;
+    while (!m_thread->TestDestroy()) {
+        if (cnt-- == 0) {
+            wxCommandEvent ev(wxEVT_SSHCOUNT, wxID_ANY);
+            m_pHandler->AddPendingEvent(ev);
+            cnt = 20;
+        }
+        wxThread::Sleep(100);
+    }
+    return 0;
+}
+#endif
+
 /*!
  * LoginDialog type definition
  */
@@ -84,6 +135,10 @@ BEGIN_EVENT_TABLE( LoginDialog, wxDialog )
 
     ////@end LoginDialog event table entries
 
+#ifdef SINGLE_SESSION
+    EVT_COMMAND(wxID_ANY, wxEVT_SSHCOUNT, LoginDialog::OnSshCount )
+#endif
+
 END_EVENT_TABLE()
 
     /*!
@@ -92,6 +147,9 @@ END_EVENT_TABLE()
 
     LoginDialog::LoginDialog( )
 : m_pCurrentCfg(NULL)
+#ifdef SINGLE_SESSION
+, m_pNxSshWatcher(NULL)
+#endif
 {
     m_bGuestLogin = false;
     m_bUseSmartCard = false;
@@ -110,6 +168,11 @@ LoginDialog::~LoginDialog()
     if (m_pCurrentCfg)
         delete m_pCurrentCfg;
     m_pCurrentCfg = NULL;
+#ifdef SINGLE_SESSION
+    if (m_pNxSshWatcher)
+        delete m_pNxSshWatcher;
+    m_pNxSshWatcher = NULL;
+#endif
 }
 
 void LoginDialog::ReadConfigDirectory()
@@ -190,6 +253,7 @@ bool LoginDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
     m_pCtrlUseSmartCard = NULL;
     m_pCtrlGuestLogin = NULL;
     m_pCtrlConfigure = NULL;
+    m_pCtrlLoginButton = NULL;
     ////@end LoginDialog member initialisation
 
     ////@begin LoginDialog creation
@@ -203,6 +267,9 @@ bool LoginDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
     }
     Centre();
     ////@end LoginDialog creation
+#ifdef SINGLE_SESSION
+    m_pNxSshWatcher = new NxSshWatcher(this);
+#endif
     return TRUE;
 }
 
@@ -222,6 +289,7 @@ void LoginDialog::CreateControls()
     m_pCtrlUseSmartCard = XRCCTRL(*this, "ID_CHECKBOX_SMARTCARD", wxCheckBox);
     m_pCtrlGuestLogin = XRCCTRL(*this, "ID_CHECKBOX_GUESTLOGIN", wxCheckBox);
     m_pCtrlConfigure = XRCCTRL(*this, "ID_BUTTON_CONFIGURE", wxButton);
+    m_pCtrlLoginButton = XRCCTRL(*this, "wxID_OK", wxButton);
     // Set validators
     if (FindWindow(XRCID("ID_TEXTCTRL_USERNAME")))
         FindWindow(XRCID("ID_TEXTCTRL_USERNAME"))->SetValidator( wxGenericValidator(& m_sUsername) );
@@ -250,6 +318,9 @@ void LoginDialog::CreateControls()
     }
     m_pCtrlGuestLogin->Enable(m_pCurrentCfg && m_pCurrentCfg->IsWritable());
     m_pCtrlConfigure->Enable(m_pCurrentCfg && m_pCurrentCfg->IsWritable());
+#ifdef SINGLE_SESSION
+    m_pCtrlLoginButton->Enable(false);
+#endif
 }
 
 /*!
@@ -261,7 +332,6 @@ void LoginDialog::OnCheckboxSmartcardClick( wxCommandEvent& event )
     // Nothing to do here (validator sets var already)
     event.Skip();
 }
-
 
 /*!
  * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_GUESTLOGIN
@@ -442,3 +512,15 @@ void LoginDialog::OnOkClick( wxCommandEvent& event )
     }
     event.Skip();
 }
+
+#ifdef SINGLE_SESSION
+/*!
+ * Handle events from NxSshWatcher
+ */
+void LoginDialog::OnSshCount(wxCommandEvent& event)
+{
+    wxArrayString cmdout;
+    wxExecute(wxT("ps h -C nxssh"), cmdout, wxEXEC_SYNC|wxEXEC_NODISABLE);
+    m_pCtrlLoginButton->Enable(cmdout.GetCount() == 0);
+}
+#endif

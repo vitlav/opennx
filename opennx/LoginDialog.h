@@ -42,6 +42,9 @@
  */
 
 class MyXmlConfig;
+#ifdef SINGLE_SESSION
+class NxSshWatcher;
+#endif
 
 ////@begin forward declarations
 ////@end forward declarations
@@ -89,6 +92,11 @@ public:
 private:
     /// Creates the controls and sizers
     void CreateControls();
+
+#ifdef SINGLE_SESSION
+    // Event handler for events from NxSshWatcher
+    void OnSshCount(wxCommandEvent& event);
+#endif
 
 ////@begin LoginDialog event handler declarations
 
@@ -145,6 +153,7 @@ private:
     wxCheckBox* m_pCtrlUseSmartCard;
     wxCheckBox* m_pCtrlGuestLogin;
     wxButton* m_pCtrlConfigure;
+    wxButton* m_pCtrlLoginButton;
 private:
     wxString m_sUsername;
     wxString m_sPassword;
@@ -155,6 +164,9 @@ private:
     wxString m_sTmpPassword;
 ////@end LoginDialog member variables
 
+#ifdef SINGLE_SESSION
+    NxSshWatcher *m_pNxSshWatcher;
+#endif
     MyXmlConfig *m_pCurrentCfg;
     wxArrayString m_aConfigFiles;
     wxString m_sLastSessionFilename;

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opennx 0.16\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-03-15 13:21+0100\n"
+"POT-Creation-Date: 2010-04-01 14:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -100,18 +100,18 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: LoginDialog.cpp:343 LoginDialog.cpp:436 MyWizard.cpp:1337
+#: LoginDialog.cpp:413 LoginDialog.cpp:506 MyWizard.cpp:1337
 #, c-format
 msgid ""
 "Could not save session to\n"
 "%s"
 msgstr ""
 
-#: LoginDialog.cpp:344 LoginDialog.cpp:437 MyWizard.cpp:1338
+#: LoginDialog.cpp:414 LoginDialog.cpp:507 MyWizard.cpp:1338
 msgid "Error saving - OpenNX"
 msgstr ""
 
-#: LoginDialog.h:56 LoginDialog_symbols.h:22
+#: LoginDialog.h:59 LoginDialog_symbols.h:22
 msgid "Login - OpenNX"
 msgstr ""
 

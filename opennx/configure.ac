@@ -123,6 +123,16 @@ AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK
 WXPARAMS=
 AM_OPTIONS_WXCONFIG
 
+ac_cv_enable_singlesession=NO
+AC_ARG_ENABLE([singlesession],
+	AS_HELP_STRING([--enable-singlesession],
+		[Enable singlesession support (Default: NO)]),
+	[ test "$enableval" = "yes" && ac_cv_enable_singlesession=YES ]
+)
+if test "$ac_cv_enable_singlesession" = "YES" ; then
+    AC_DEFINE(SINGLE_SESSION,1,[Set to 1 for enabling single session support])
+fi
+
 ac_cv_enable_usbip=NO
 AC_ARG_ENABLE([usbip],
 	AS_HELP_STRING([--enable-usbip],

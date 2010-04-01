@@ -8,6 +8,8 @@
 %define with_staticwx %{?_with_staticwx: 1} %{?!_with_staticwx: 0}
 # Enable USBIP support
 %define with_usbip %{?_with_usbip: 1} %{?!_with_usbip: 0}
+# Enable single session support
+%define with_singlesession %{?_with_singlesession: 1} %{?!_with_singlesession: 0}
 # Make recommended RPM dependencies mandatory
 %define with_forceopt %{?_with_forceopt: 1} %{?!_with_forceopt: 0}
 
@@ -192,6 +194,9 @@ patch -p0 < patches/nxssh-dynopensc.patch
 %endif
 %if %{with_debug}
     --enable-debug \
+%endif
+%if %{with_singlesession}
+    --enable-singlesession \
 %endif
 %if %{with_usbip}
     --enable-usbip
