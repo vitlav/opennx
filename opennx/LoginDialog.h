@@ -42,9 +42,6 @@
  */
 
 class MyXmlConfig;
-#ifdef SINGLE_SESSION
-class NxSshWatcher;
-#endif
 
 ////@begin forward declarations
 ////@end forward declarations
@@ -94,8 +91,8 @@ private:
     void CreateControls();
 
 #ifdef SINGLE_SESSION
-    // Event handler for events from NxSshWatcher
-    void OnSshCount(wxCommandEvent& event);
+    // Event handler for events from nxssh watch timer
+    void OnTimer(wxTimerEvent& event);
 #endif
 
 ////@begin LoginDialog event handler declarations
@@ -165,7 +162,7 @@ private:
 ////@end LoginDialog member variables
 
 #ifdef SINGLE_SESSION
-    NxSshWatcher *m_pNxSshWatcher;
+    wxTimer m_cNxSshWatchTimer;
 #endif
     MyXmlConfig *m_pCurrentCfg;
     wxArrayString m_aConfigFiles;

@@ -60,54 +60,7 @@
 ENABLE_TRACE;
 
 #ifdef SINGLE_SESSION
-DECLARE_LOCAL_EVENT_TYPE(wxEVT_SSHCOUNT, -1)
-DEFINE_LOCAL_EVENT_TYPE(wxEVT_SSHCOUNT);
-
-class NxSshWatcher : public wxThreadHelper
-{
-public:
-    NxSshWatcher(wxEvtHandler *h);
-    virtual ~NxSshWatcher();
-
-    virtual wxThread::ExitCode Entry();
-    
-private:
-    wxEvtHandler *m_pHandler;
-};
-
-NxSshWatcher::NxSshWatcher(wxEvtHandler* h)
-    : wxThreadHelper()
-    , m_pHandler(h)
-{
-    Create(
-#ifdef __OPENBSD__
-            32768
-#endif
-          );
-    m_thread->Run();
-}
-
-NxSshWatcher::~NxSshWatcher()
-{
-    m_thread->Delete();
-    while (m_thread->IsRunning())
-        wxThread::Sleep(100);
-}
-
-    wxThread::ExitCode
-NxSshWatcher::Entry()
-{
-    int cnt = 0;
-    while (!m_thread->TestDestroy()) {
-        if (cnt-- == 0) {
-            wxCommandEvent ev(wxEVT_SSHCOUNT, wxID_ANY);
-            m_pHandler->AddPendingEvent(ev);
-            cnt = 20;
-        }
-        wxThread::Sleep(100);
-    }
-    return 0;
-}
+# define NXSSH_TIMER 5432
 #endif
 
 /*!
@@ -136,7 +89,7 @@ BEGIN_EVENT_TABLE( LoginDialog, wxDialog )
     ////@end LoginDialog event table entries
 
 #ifdef SINGLE_SESSION
-    EVT_COMMAND(wxID_ANY, wxEVT_SSHCOUNT, LoginDialog::OnSshCount )
+    EVT_TIMER(NXSSH_TIMER, LoginDialog::OnTimer)
 #endif
 
 END_EVENT_TABLE()
@@ -148,7 +101,7 @@ END_EVENT_TABLE()
     LoginDialog::LoginDialog( )
 : m_pCurrentCfg(NULL)
 #ifdef SINGLE_SESSION
-, m_pNxSshWatcher(NULL)
+, m_cNxSshWatchTimer(this, NXSSH_TIMER)
 #endif
 {
     m_bGuestLogin = false;
@@ -157,6 +110,9 @@ END_EVENT_TABLE()
 
     LoginDialog::LoginDialog( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 : m_pCurrentCfg(NULL)
+#ifdef SINGLE_SESSION
+, m_cNxSshWatchTimer(this, NXSSH_TIMER)
+#endif
 {
     m_bGuestLogin = false;
     m_bUseSmartCard = false;
@@ -168,11 +124,6 @@ LoginDialog::~LoginDialog()
     if (m_pCurrentCfg)
         delete m_pCurrentCfg;
     m_pCurrentCfg = NULL;
-#ifdef SINGLE_SESSION
-    if (m_pNxSshWatcher)
-        delete m_pNxSshWatcher;
-    m_pNxSshWatcher = NULL;
-#endif
 }
 
 void LoginDialog::ReadConfigDirectory()
@@ -267,9 +218,6 @@ bool LoginDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
     }
     Centre();
     ////@end LoginDialog creation
-#ifdef SINGLE_SESSION
-    m_pNxSshWatcher = new NxSshWatcher(this);
-#endif
     return TRUE;
 }
 
@@ -320,6 +268,8 @@ void LoginDialog::CreateControls()
     m_pCtrlConfigure->Enable(m_pCurrentCfg && m_pCurrentCfg->IsWritable());
 #ifdef SINGLE_SESSION
     m_pCtrlLoginButton->Enable(false);
+    m_cNxSshWatchTimer.Start(1000);
+    ::myLogTrace(MYTRACETAG, wxT("Starting nxssh watch timer"));
 #endif
 }
 
@@ -478,11 +428,6 @@ void LoginDialog::OnComboboxSessionSelected( wxCommandEvent& event )
 void LoginDialog::OnOkClick(wxCommandEvent& event)
 {
     if (m_pCurrentCfg) {
-#ifdef SINGLE_SESSION
-        if (NULL != m_pNxSshWatcher)
-            delete m_pNxSshWatcher;
-        m_pNxSshWatcher = NULL;
-#endif
         TransferDataFromWindow();
         m_pCurrentCfg->bSetGuestMode(m_bGuestLogin);
         if (!m_bGuestLogin) {
@@ -501,11 +446,20 @@ void LoginDialog::OnOkClick(wxCommandEvent& event)
             m_pCurrentCfg->bSetRdpRememberPassword(true);
 
         MySession s;
+#ifdef SINGLE_SESSION
+        m_cNxSshWatchTimer.Stop();
+        ::myLogTrace(MYTRACETAG, wxT("Stopping nxssh watch timer"));
+#endif
         Disable();
         bool b = s.Create(*m_pCurrentCfg, m_sPassword, this);
         Enable();
-        if (!b)
+        if (!b) {
+#ifdef SINGLE_SESSION
+            m_cNxSshWatchTimer.Start(1000);
+            ::myLogTrace(MYTRACETAG, wxT("Starting nxssh watch timer"));
+#endif
             return;
+        }
         if (m_pCurrentCfg->IsWritable()) {
             if (!m_pCurrentCfg->SaveToFile())
                 wxMessageBox(wxString::Format(_("Could not save session to\n%s"),
@@ -515,16 +469,18 @@ void LoginDialog::OnOkClick(wxCommandEvent& event)
         }
         m_sLastSessionFilename = m_pCurrentCfg->sGetFileName();
     }
+    event.Skip();
 }
 
 #ifdef SINGLE_SESSION
 /*!
- * Handle events from NxSshWatcher
+ * Handle events from NxSshWatchTimer
  */
-void LoginDialog::OnSshCount(wxCommandEvent& event)
+void LoginDialog::OnTimer(wxTimerEvent& event)
 {
     wxArrayString cmdout;
     wxExecute(wxT("ps h -C nxssh"), cmdout, wxEXEC_SYNC|wxEXEC_NODISABLE);
-    m_pCtrlLoginButton->Enable(cmdout.GetCount() == 0);
+    if (NULL != m_pCtrlLoginButton)
+        m_pCtrlLoginButton->Enable(cmdout.GetCount() == 0);
 }
 #endif
