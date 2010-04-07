@@ -390,14 +390,23 @@ void watchUsbIpApp::OnHotplug(HotplugEvent &event)
     ArrayOfUsbForwards af = m_pSessionCfg->aGetUsbForwards();
     SharedUsbDevice *sdev = NULL;
     int retry = 0;
-    size_t i;
+    size_t i, j;
 
 
+    bool found = false;
+    bool doexport = false;
     while ((NULL == sdev) && (retry++ < 10)) {
         USB u;
         ArrayOfUSBDevices au = u.GetDevices();
         for (i = 0; i < au.GetCount(); i++) {
             if ((au[i].GetBusNum() == event.GetBusNum()) && (au[i].GetDevNum() == event.GetDevNum())) {
+                for (j = 0; j < af.GetCount(); j++) {
+                    if (af[j].MatchHotplug(au[i])) {
+                        found = true;
+                        doexport = (af[j].m_eMode == SharedUsbDevice::MODE_REMOTE);
+                        break;
+                    }
+                }
                 sdev = new SharedUsbDevice;
                 sdev->m_iVendorID = au[i].GetVendorID();
                 sdev->m_iProductID = au[i].GetProductID();
@@ -415,15 +424,6 @@ void watchUsbIpApp::OnHotplug(HotplugEvent &event)
         m_pUsbIp->SendHotplugResponse(event.GetCookie());
         ::wxLogError(_("Got hotplug event, but device is not available in libusb"));
         return;
-    }
-    bool found = false;
-    bool doexport = false;
-    for (i = 0; i < af.GetCount(); i++) {
-        if (af[i].MatchHotplug(*sdev)) {
-            found = true;
-            doexport = (af[i].m_eMode == SharedUsbDevice::MODE_REMOTE);
-            break;
-        }
     }
     if (found) {
         // Found device in session config. Silently act on configuration
@@ -492,6 +492,7 @@ void watchUsbIpApp::OnHotplug(HotplugEvent &event)
             ::myLogTrace(MYTRACETAG, wxT("action=%s"), doexport ? wxT("export") : wxT("local"));
         }
     }
+    delete sdev;
     if (doexport) {
         if (!m_pUsbIp->ExportDevice(event.GetBusID()))
             ::wxLogError(_("Could not export USB device"));
