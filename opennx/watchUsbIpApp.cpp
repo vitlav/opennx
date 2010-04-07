@@ -419,7 +419,7 @@ void watchUsbIpApp::OnHotplug(HotplugEvent &event)
     bool found = false;
     bool doexport = false;
     for (i = 0; i < af.GetCount(); i++) {
-        if (af[i].cmpNoMode(*sdev)) {
+        if (af[i].MatchHotplug(*sdev)) {
             found = true;
             doexport = (af[i].m_eMode == SharedUsbDevice::MODE_REMOTE);
             break;
