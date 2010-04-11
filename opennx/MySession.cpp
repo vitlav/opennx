@@ -1784,6 +1784,13 @@ MySession::clearSshKeys(const wxString &keyloc)
     ::myLogTrace(MYTRACETAG, wxT("Clearing keys for %s at %s"),
             m_pCfg->sGetServerHost().c_str(), keyloc.c_str());
     wxString keyfile = keyloc.BeforeLast(wxT(':'));
+#ifdef __WXMSW__
+    if (keyfile.StartsWith(wxT("/cygdrive/"), &keyfile)) {
+        keyfile = keyfile.BeforeFirst(wxT('/')).Upper().Append(wxT(":/")).Append(keyfile.AfterFirst(wxT('/')));
+        keyfile.Replace(wxT("/"), wxT("\\"));
+        ::myLogTrace(MYTRACETAG, wxT("Keyfile: %s"), keyfile.c_str());
+    }
+#endif
     long n;
     if (keyloc.AfterLast(wxT(':')).ToLong(&n)) {
         n--;
