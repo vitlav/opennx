@@ -592,7 +592,7 @@
                                                     <object class="wxRadioButton" name="ID_RADIOBUTTON_NOPROXY">
                                                         <style>wxRB_GROUP</style>
                                                         <label>Use direct connection</label>
-                                                        <value>0</value>
+                                                        <value>1</value>
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">

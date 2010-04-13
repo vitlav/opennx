@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opennx 0.16\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-04-01 14:08+0200\n"
+"POT-Creation-Date: 2010-04-12 10:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -100,18 +100,18 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: LoginDialog.cpp:413 LoginDialog.cpp:506 MyWizard.cpp:1337
+#: LoginDialog.cpp:363 LoginDialog.cpp:465 MyWizard.cpp:1337
 #, c-format
 msgid ""
 "Could not save session to\n"
 "%s"
 msgstr ""
 
-#: LoginDialog.cpp:414 LoginDialog.cpp:507 MyWizard.cpp:1338
+#: LoginDialog.cpp:364 LoginDialog.cpp:466 MyWizard.cpp:1338
 msgid "Error saving - OpenNX"
 msgstr ""
 
-#: LoginDialog.h:59 LoginDialog_symbols.h:22
+#: LoginDialog.h:56 LoginDialog_symbols.h:22
 msgid "Login - OpenNX"
 msgstr ""
 
@@ -528,45 +528,45 @@ msgstr ""
 msgid "Could not assign a free port for CUPS printing"
 msgstr ""
 
-#: MySession.cpp:1910
+#: MySession.cpp:1917
 #, c-format
 msgid "Could not write %s"
 msgstr ""
 
-#: MySession.cpp:1977
+#: MySession.cpp:1984
 msgid "Could not start local X server"
 msgstr ""
 
-#: MySession.cpp:1993 MySession.cpp:2037 MySession.cpp:2051
+#: MySession.cpp:2000 MySession.cpp:2044 MySession.cpp:2058
 #, c-format
 msgid "Connecting to %s ..."
 msgstr ""
 
-#: MySession.cpp:2001
+#: MySession.cpp:2008
 msgid "Preparing multimedia service ..."
 msgstr ""
 
-#: MySession.cpp:2033
+#: MySession.cpp:2040
 msgid "Could not start multimedia support"
 msgstr ""
 
-#: MySession.cpp:2035
+#: MySession.cpp:2042
 msgid "Could not assign a free port for multimedia support"
 msgstr ""
 
-#: MySession.cpp:2048
+#: MySession.cpp:2055
 msgid "Preparing CUPS service ..."
 msgstr ""
 
-#: MySession.cpp:2050
+#: MySession.cpp:2057
 msgid "Could not start CUPS printing"
 msgstr ""
 
-#: MySession.cpp:2099
+#: MySession.cpp:2106
 msgid "Called command was: "
 msgstr ""
 
-#: MySession.cpp:2100
+#: MySession.cpp:2107
 msgid "Could not start nxssh."
 msgstr ""
 
@@ -1894,7 +1894,7 @@ msgstr ""
 msgid "Could not connect to usbipd2! No hotplugging functionality."
 msgstr ""
 
-#: watchUsbIpApp.cpp:416
+#: watchUsbIpApp.cpp:425
 msgid "Got hotplug event, but device is not available in libusb"
 msgstr ""
 
@@ -1906,6 +1906,6 @@ msgstr ""
 msgid "Could not save session config"
 msgstr ""
 
-#: watchUsbIpApp.cpp:497
+#: watchUsbIpApp.cpp:498
 msgid "Could not export USB device"
 msgstr ""

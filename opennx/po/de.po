@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-04-01 14:08+0200\n"
+"POT-Creation-Date: 2010-04-12 10:44+0200\n"
 "PO-Revision-Date: 2010-03-08 01:53+0100\n"
 "Last-Translator: Fritz Elfert <fritz@fritz-elfert.de>\n"
 "Language-Team:  <de@li.org>\n"
@@ -103,7 +103,7 @@ msgstr "Sitzungsprotokoll - OpenNX"
 msgid "Close"
 msgstr "Schließen"
 
-#: LoginDialog.cpp:413 LoginDialog.cpp:506 MyWizard.cpp:1337
+#: LoginDialog.cpp:363 LoginDialog.cpp:465 MyWizard.cpp:1337
 #, c-format
 msgid ""
 "Could not save session to\n"
@@ -113,11 +113,11 @@ msgstr ""
 "%s\n"
 "speichern."
 
-#: LoginDialog.cpp:414 LoginDialog.cpp:507 MyWizard.cpp:1338
+#: LoginDialog.cpp:364 LoginDialog.cpp:466 MyWizard.cpp:1338
 msgid "Error saving - OpenNX"
 msgstr "Fehler beim Speichern - OpenNX"
 
-#: LoginDialog.h:59 LoginDialog_symbols.h:22
+#: LoginDialog.h:56 LoginDialog_symbols.h:22
 msgid "Login - OpenNX"
 msgstr "Anmeldung - OpenNX"
 
@@ -565,45 +565,45 @@ msgstr ""
 msgid "Could not assign a free port for CUPS printing"
 msgstr "Konnte keinen Port für CUPS zuweisen"
 
-#: MySession.cpp:1910
+#: MySession.cpp:1917
 #, c-format
 msgid "Could not write %s"
 msgstr "Konnte %s nicht schreiben"
 
-#: MySession.cpp:1977
+#: MySession.cpp:1984
 msgid "Could not start local X server"
 msgstr "Konnte lokalen X-Server nicht starten"
 
-#: MySession.cpp:1993 MySession.cpp:2037 MySession.cpp:2051
+#: MySession.cpp:2000 MySession.cpp:2044 MySession.cpp:2058
 #, c-format
 msgid "Connecting to %s ..."
 msgstr "Verbinde mit %s ..."
 
-#: MySession.cpp:2001
+#: MySession.cpp:2008
 msgid "Preparing multimedia service ..."
 msgstr "Multimedia Dienst vorbereiten ..."
 
-#: MySession.cpp:2033
+#: MySession.cpp:2040
 msgid "Could not start multimedia support"
 msgstr "Konnte Multimedia Unterstützung nicht starten"
 
-#: MySession.cpp:2035
+#: MySession.cpp:2042
 msgid "Could not assign a free port for multimedia support"
 msgstr "Konnte keinen Port für Multimedia Unterstützung zuweisen"
 
-#: MySession.cpp:2048
+#: MySession.cpp:2055
 msgid "Preparing CUPS service ..."
 msgstr "CUPS Dienst vorbereiten ..."
 
-#: MySession.cpp:2050
+#: MySession.cpp:2057
 msgid "Could not start CUPS printing"
 msgstr "Konnte CUPS Druckdienst nicht starten"
 
-#: MySession.cpp:2099
+#: MySession.cpp:2106
 msgid "Called command was: "
 msgstr "Aufgerufenes Kommando war:"
 
-#: MySession.cpp:2100
+#: MySession.cpp:2107
 msgid "Could not start nxssh."
 msgstr "Konnte nxssh nicht starten."
 
@@ -1986,7 +1986,7 @@ msgstr ""
 msgid "Could not connect to usbipd2! No hotplugging functionality."
 msgstr "Verbindung zu usbipd2 gescheitert. Keine Hotplug-Funktionalität."
 
-#: watchUsbIpApp.cpp:416
+#: watchUsbIpApp.cpp:425
 msgid "Got hotplug event, but device is not available in libusb"
 msgstr ""
 "Hotplug-Ereignis empfangen, aber das zugehörige Gerät ist nicht in libusb "
@@ -2000,7 +2000,7 @@ msgstr "Konnte Hotplug-Ereignis nicht bestätigen"
 msgid "Could not save session config"
 msgstr "Konnte Sitzungs-Konfiguration nicht speichern."
 
-#: watchUsbIpApp.cpp:497
+#: watchUsbIpApp.cpp:498
 msgid "Could not export USB device"
 msgstr "Konnte USB-Gerät nicht exportieren"
 
