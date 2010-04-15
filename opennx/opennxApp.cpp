@@ -100,6 +100,7 @@ IMPLEMENT_APP(opennxApp);
     ,m_bRequireWatchReader(false)
     ,m_bRequireStartUsbIp(false)
     ,m_bTestCardWaiter(false)
+    ,m_bAutoLogin(false)
     ,m_pLoginDialog(NULL)
 {
     SetAppName(wxT("OpenNX"));
@@ -729,6 +730,8 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
     }
     tags.Prepend(_("\n\nSupported trace tags: "));
 
+    parser.AddSwitch(wxEmptyString, wxT("autologin"),
+            _("Automatically login to the specified session."));
     parser.AddSwitch(wxEmptyString, wxT("admin"),
             _("Start the session administration tool."));
     parser.AddOption(wxEmptyString, wxT("caption"),
@@ -884,6 +887,8 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
         m_eMode = MODE_ADMIN;
     if (parser.Found(wxT("wizard")))
         m_eMode = MODE_WIZARD;
+    if (parser.Found(wxT("autologin")))
+        m_bAutoLogin = true;
     if (parser.Found(wxT("waittest")))
         m_bTestCardWaiter = true;
     (void)parser.Found(wxT("session"), &m_sSessionName);

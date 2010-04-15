@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-04-12 10:44+0200\n"
+"POT-Creation-Date: 2010-04-15 11:41+0200\n"
 "PO-Revision-Date: 2009-09-13 11:50+0100\n"
 "Last-Translator: Boris Savelev <boris.savelev@gmail.com>\n"
 "Language-Team:  <de@li.org>\n"
@@ -102,7 +102,7 @@ msgstr "Лог сессии - OpenNX"
 msgid "Close"
 msgstr "Закрыть"
 
-#: LoginDialog.cpp:363 LoginDialog.cpp:465 MyWizard.cpp:1337
+#: LoginDialog.cpp:369 LoginDialog.cpp:471 MyWizard.cpp:1337
 #, c-format
 msgid ""
 "Could not save session to\n"
@@ -111,7 +111,7 @@ msgstr ""
 "Не удалось сохранить сессию в\n"
 "%s"
 
-#: LoginDialog.cpp:364 LoginDialog.cpp:466 MyWizard.cpp:1338
+#: LoginDialog.cpp:370 LoginDialog.cpp:472 MyWizard.cpp:1338
 msgid "Error saving - OpenNX"
 msgstr "Ошибка при сохранении - OpenNX"
 
@@ -1171,7 +1171,7 @@ msgstr "Нет доступного сервера CUPS."
 msgid "Select System CUPS daemon"
 msgstr "Выберите сервер CUPS"
 
-#: SessionProperties.cpp:2147 opennxApp.cpp:1155
+#: SessionProperties.cpp:2147 opennxApp.cpp:1160
 msgid "libusb is not available. No USB devices will be exported"
 msgstr "libusb не доступна. USB устройства не смогут быть проброшены."
 
@@ -1805,47 +1805,47 @@ msgstr "Disable X agent encoding"
 msgid "Disable taint of X replies"
 msgstr "Disable taint of X replies"
 
-#: opennxApp.cpp:252
+#: opennxApp.cpp:253
 msgid "Launch NX Session"
 msgstr "Запустить сессию NX"
 
-#: opennxApp.cpp:319
+#: opennxApp.cpp:320
 msgid "Could not create link on Desktop."
 msgstr "Не удалось создать ярлык на рабочем столе."
 
-#: opennxApp.cpp:421
+#: opennxApp.cpp:422
 msgid "Could not get PATH environment"
 msgstr "Не удалось определить PATH"
 
-#: opennxApp.cpp:436
+#: opennxApp.cpp:437
 #, c-format
 msgid "Could not find %s in PATH"
 msgstr "%s не найдена в PATH"
 
-#: opennxApp.cpp:446
+#: opennxApp.cpp:447
 #, c-format
 msgid "Could not stat %s"
 msgstr "Could not stat %s"
 
-#: opennxApp.cpp:452
+#: opennxApp.cpp:453
 #, c-format
 msgid "Could not read link %s"
 msgstr "Could not read link %s"
 
-#: opennxApp.cpp:524
+#: opennxApp.cpp:525
 #, c-format
 msgid ""
 "Found a CUPS daemon binary in %s, however it is not executable.\n"
 "In order to use CUPS printing, you need to fix its permissions."
 msgstr ""
 
-#: opennxApp.cpp:529
+#: opennxApp.cpp:530
 msgid ""
 "Could not find any CUPS daemon binary.\n"
 "In order to use CUPS printing, you need to install cups."
 msgstr ""
 
-#: opennxApp.cpp:730 watchUsbIpApp.cpp:216
+#: opennxApp.cpp:731 watchUsbIpApp.cpp:216
 msgid ""
 "\n"
 "\n"
@@ -1855,63 +1855,67 @@ msgstr ""
 "\n"
 "Supported trace tags: "
 
-#: opennxApp.cpp:733
+#: opennxApp.cpp:734
+msgid "Automatically login to the specified session."
+msgstr ""
+
+#: opennxApp.cpp:736
 msgid "Start the session administration tool."
 msgstr "Запустить утилиту администрирования сессий."
 
-#: opennxApp.cpp:735
+#: opennxApp.cpp:738
 msgid "Secify window title for dialog mode."
 msgstr "Заголовок окна в dialog режиме."
 
-#: opennxApp.cpp:737
+#: opennxApp.cpp:740
 msgid "Secify dialog style for dialog mode."
 msgstr "Стиль диалога в dialog режиме."
 
-#: opennxApp.cpp:739
+#: opennxApp.cpp:742
 msgid "Run in dialog mode."
 msgstr "Запустить в режиме dialog."
 
-#: opennxApp.cpp:741
+#: opennxApp.cpp:744
 msgid "Compatibility option for dialog mode (ignored)."
 msgstr ""
 
-#: opennxApp.cpp:743
+#: opennxApp.cpp:746
 msgid "Dialog mode proxy."
 msgstr "Dialog mode proxy."
 
-#: opennxApp.cpp:745
+#: opennxApp.cpp:748
 msgid "Specify message for dialog mode."
 msgstr "Сообщение для dialog режима."
 
-#: opennxApp.cpp:747
+#: opennxApp.cpp:750
 msgid "Specify parent PID for dialog mode."
 msgstr "PID родительского процесса для dialog режима."
 
-#: opennxApp.cpp:749
+#: opennxApp.cpp:752
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr "Запустить сессию <str>."
 
-#: opennxApp.cpp:751
+#: opennxApp.cpp:754
 msgid "Specify window-ID for dialog mode."
 msgstr "Window-ID для запуска в dialog режиме."
 
-#: opennxApp.cpp:753 watchUsbIpApp.cpp:225
+#: opennxApp.cpp:756 watchUsbIpApp.cpp:225
 msgid "Specify wxWidgets trace mask."
 msgstr "Specify wxWidgets trace mask."
 
-#: opennxApp.cpp:756
+#: opennxApp.cpp:759
 msgid "Test CardWaiterDialog"
 msgstr "Test CardWaiterDialog"
 
-#: opennxApp.cpp:759
+#: opennxApp.cpp:762
 msgid "Guide the user through the steps to configure a session."
 msgstr "Guide the user through the steps to configure a session."
 
-#: opennxApp.cpp:815 watchReaderApp.cpp:195
+#: opennxApp.cpp:818 watchReaderApp.cpp:195
 msgid "Smart card removed"
 msgstr "Смарт-карта удалена"
 
-#: opennxApp.cpp:817 watchReaderApp.cpp:194
+#: opennxApp.cpp:820 watchReaderApp.cpp:194
 msgid ""
 "OpenNX session has been suspended, because\n"
 "the authenticating smart card has been removed."
@@ -1919,16 +1923,16 @@ msgstr ""
 "Сессия OpenNX была приостановлена,\n"
 "потому что была вытащена смарт-карта."
 
-#: opennxApp.cpp:1169
+#: opennxApp.cpp:1174
 msgid "USBIP tunnel registration timeout"
 msgstr "USBIP tunnel registration timeout"
 
-#: opennxApp.cpp:1171
+#: opennxApp.cpp:1176
 #, c-format
 msgid "Unable to export USB device %s"
 msgstr "Не удалось экспортировать USB устройство '%s'"
 
-#: opennxApp.cpp:1177
+#: opennxApp.cpp:1182
 msgid "Could not connect to usbipd2. No USB devices will be exported"
 msgstr ""
 "Не удалось подключиться к usbipd2. USB устройства не будут экспортированы"

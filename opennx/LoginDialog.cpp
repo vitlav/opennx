@@ -62,6 +62,7 @@ ENABLE_TRACE;
 #ifdef SINGLE_SESSION
 # define NXSSH_TIMER 5432
 #endif
+#define AUTOLOGIN_TIMER 5433
 
 /*!
  * LoginDialog type definition
@@ -76,6 +77,8 @@ IMPLEMENT_CLASS( LoginDialog, wxDialog )
 BEGIN_EVENT_TABLE( LoginDialog, wxDialog )
 
     ////@begin LoginDialog event table entries
+    EVT_INIT_DIALOG( LoginDialog::OnInitDialog )
+
     EVT_COMBOBOX( XRCID("ID_COMBOBOX_SESSION"), LoginDialog::OnComboboxSessionSelected )
 
     EVT_CHECKBOX( XRCID("ID_CHECKBOX_SMARTCARD"), LoginDialog::OnCheckboxSmartcardClick )
@@ -91,6 +94,7 @@ BEGIN_EVENT_TABLE( LoginDialog, wxDialog )
 #ifdef SINGLE_SESSION
     EVT_TIMER(NXSSH_TIMER, LoginDialog::OnTimer)
 #endif
+    EVT_TIMER(AUTOLOGIN_TIMER, LoginDialog::OnLoginTimer)
 
 END_EVENT_TABLE()
 
@@ -103,6 +107,7 @@ END_EVENT_TABLE()
 #ifdef SINGLE_SESSION
 , m_cNxSshWatchTimer(this, NXSSH_TIMER)
 #endif
+, m_cAutoLoginTimer(this, AUTOLOGIN_TIMER)
 {
     m_bGuestLogin = false;
     m_bUseSmartCard = false;
@@ -113,6 +118,7 @@ END_EVENT_TABLE()
 #ifdef SINGLE_SESSION
 , m_cNxSshWatchTimer(this, NXSSH_TIMER)
 #endif
+, m_cAutoLoginTimer(this, AUTOLOGIN_TIMER)
 {
     m_bGuestLogin = false;
     m_bUseSmartCard = false;
@@ -472,6 +478,15 @@ void LoginDialog::OnOkClick(wxCommandEvent& event)
     event.Skip();
 }
 
+/*!
+ * Handle events from AutoLoginTimer
+ */
+void LoginDialog::OnLoginTimer(wxTimerEvent& event)
+{
+    wxCommandEvent ev(wxEVT_COMMAND_BUTTON_CLICKED, wxID_OK);
+    AddPendingEvent(ev);
+}
+
 #ifdef SINGLE_SESSION
 /*!
  * Handle events from NxSshWatchTimer
@@ -484,3 +499,17 @@ void LoginDialog::OnTimer(wxTimerEvent& event)
         m_pCtrlLoginButton->Enable(cmdout.GetCount() == 0);
 }
 #endif
+
+
+/*!
+ * wxEVT_INIT_DIALOG event handler for ID_DIALOG_LOGIN
+ */
+
+void LoginDialog::OnInitDialog( wxInitDialogEvent& event )
+{
+    wxDialog::OnInitDialog(event);
+    if (::wxGetApp().AutoLogin())
+        m_cAutoLoginTimer.Start(1000, wxTIMER_ONE_SHOT);
+    event.Skip();
+}
+
