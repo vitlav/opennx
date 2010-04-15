@@ -495,8 +495,13 @@ void LoginDialog::OnTimer(wxTimerEvent& event)
 {
     wxArrayString cmdout;
     wxExecute(wxT("ps h -C nxssh"), cmdout, wxEXEC_SYNC|wxEXEC_NODISABLE);
+    bool enable = (cmdout.GetCount() == 0);
     if (NULL != m_pCtrlLoginButton)
-        m_pCtrlLoginButton->Enable(cmdout.GetCount() == 0);
+        m_pCtrlLoginButton->Enable(enable);
+    if (enable && ::wxGetApp().AutoLogin()) {
+        wxCommandEvent ev(wxEVT_COMMAND_BUTTON_CLICKED, wxID_OK);
+        AddPendingEvent(ev);
+    }
 }
 #endif
 
@@ -508,8 +513,10 @@ void LoginDialog::OnTimer(wxTimerEvent& event)
 void LoginDialog::OnInitDialog( wxInitDialogEvent& event )
 {
     wxDialog::OnInitDialog(event);
+#ifndef SINGLE_SESSION
     if (::wxGetApp().AutoLogin())
         m_cAutoLoginTimer.Start(1000, wxTIMER_ONE_SHOT);
+#endif
     event.Skip();
 }
 
