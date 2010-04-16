@@ -108,6 +108,7 @@ class opennxApp : public wxApp
         bool m_bTestCardWaiter;
         bool m_bNxProxyAvailable;
         bool m_bAutoLogin;
+        bool m_bKillErrors;
         LoginDialog *m_pLoginDialog;
 
         bool preInit();

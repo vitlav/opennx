@@ -101,6 +101,7 @@ IMPLEMENT_APP(opennxApp);
     ,m_bRequireStartUsbIp(false)
     ,m_bTestCardWaiter(false)
     ,m_bAutoLogin(false)
+    ,m_bKillErrors(false)
     ,m_pLoginDialog(NULL)
 {
     SetAppName(wxT("OpenNX"));
@@ -732,6 +733,8 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
 
     parser.AddSwitch(wxEmptyString, wxT("autologin"),
             _("Automatically login to the specified session."));
+    parser.AddSwitch(wxEmptyString, wxT("killerrors"),
+            _("Automatically destroy error dialogs at termination."));
     parser.AddSwitch(wxEmptyString, wxT("admin"),
             _("Start the session administration tool."));
     parser.AddOption(wxEmptyString, wxT("caption"),
@@ -889,6 +892,8 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
         m_eMode = MODE_WIZARD;
     if (parser.Found(wxT("autologin")))
         m_bAutoLogin = true;
+    if (parser.Found(wxT("killerrors")))
+        m_bKillErrors = true;
     if (parser.Found(wxT("waittest")))
         m_bTestCardWaiter = true;
     (void)parser.Found(wxT("session"), &m_sSessionName);
@@ -1231,6 +1236,15 @@ bool opennxApp::OnInit()
         ::wxGetApp().Dispatch();
     if (!ret) {
         wxLogNull lognull;
+        if (m_bKillErrors) {
+            // Close all possible error popups
+            wxWindow *w = NULL;
+            while (w = ::wxGetApp().GetTopWindow()) {
+                w->Destroy();
+                while (::wxGetApp().Pending())
+                    ::wxGetApp().Dispatch();
+            }
+        }
         wxMemoryFSHandler::RemoveFile(wxT("memrsc"));
     }
     return ret;
