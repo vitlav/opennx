@@ -1142,8 +1142,10 @@ bool opennxApp::realInit()
 bool opennxApp::OnInit()
 {
     bool ret = realInit();
-    if (m_bKillErrors)
+    if (m_bKillErrors) {
         wxLog::SetActiveTarget(new wxLogStderr());
+        wxLog::SetLogLevel(0);
+    }
 #ifdef SUPPORT_USBIP
     if (m_bRequireStartUsbIp) {
         long usessionTO = wxConfigBase::Get()->Read(wxT("Config/UsbipTunnelTimeout"), 20);
@@ -1165,6 +1167,7 @@ bool opennxApp::OnInit()
                 if (SharedUsbDevice::MODE_REMOTE == af[i].m_eMode) {
                     if (!LibUSBAvailable()) {
                         ::wxLogError(_("libusb is not available. No USB devices will be exported"));
+                        m_bRequireStartUsbIp = false;
                         break;
                     }
                     ::myLogTrace(MYTRACETAG, wxT("possibly exported USB device: %04x/%04x %s"),
@@ -1177,16 +1180,20 @@ bool opennxApp::OnInit()
                                     wxString exBusID = aid[k].GetUsbIpBusID();
                                     ::myLogTrace(MYTRACETAG, wxT("Exporting usbup-busid %s (libusb-busid %s)"),
                                             exBusID.c_str(), ad[j].GetBusID().c_str());
-                                    if (!usbip.WaitForSession(usessionTO))
+                                    if (!usbip.WaitForSession(usessionTO)) {
                                         ::wxLogError(_("USBIP tunnel registration timeout"));
+                                        m_bRequireStartUsbIp = false;
+                                    }
                                     if (!usbip.ExportDevice(exBusID))
                                         ::wxLogError(_("Unable to export USB device %s"), af[i].toShortString().c_str());
                                 }
                             }
                         }
                 }
-        } else
+        } else {
             ::wxLogError(_("Could not connect to usbipd2. No USB devices will be exported"));
+            m_bRequireStartUsbIp = false;
+        }
     }
 
     if (m_bRequireStartUsbIp) {
