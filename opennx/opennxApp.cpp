@@ -1142,6 +1142,8 @@ bool opennxApp::realInit()
 bool opennxApp::OnInit()
 {
     bool ret = realInit();
+    if (m_bKillErrors)
+        wxLog::SetActiveTarget(new wxLogStderr());
 #ifdef SUPPORT_USBIP
     if (m_bRequireStartUsbIp) {
         long usessionTO = wxConfigBase::Get()->Read(wxT("Config/UsbipTunnelTimeout"), 20);
@@ -1236,15 +1238,6 @@ bool opennxApp::OnInit()
         ::wxGetApp().Dispatch();
     if (!ret) {
         wxLogNull lognull;
-        if (m_bKillErrors) {
-            // Close all possible error popups
-            wxWindow *w = NULL;
-            while (w = ::wxGetApp().GetTopWindow()) {
-                w->Destroy();
-                while (::wxGetApp().Pending())
-                    ::wxGetApp().Dispatch();
-            }
-        }
         wxMemoryFSHandler::RemoveFile(wxT("memrsc"));
     }
     return ret;
