@@ -22,11 +22,12 @@ opennx_SOURCES = AboutDialog.cpp AsyncProcess.cpp LibOpenSC.cpp \
 	MyValidator.cpp MyWizard.cpp MyXmlConfig.cpp opennxApp.cpp \
 	osdep.c PanicDialog.cpp pwcrypt.cpp ProxyPasswordDialog.cpp QuitDialog.cpp \
 	RdpImageSettingsDialog.cpp RdpPropertyDialog.cpp ResumeDialog.cpp \
-	SessionAdmin.cpp SessionList.cpp SessionProperties.cpp SimpleXauth.cpp \
-	ShareProperties.cpp TextViewer.cpp UnixImageSettingsDialog.cpp \
-	UsbFilterDetailsDialog.cpp UsbIp.cpp VncImageSettingsDialog.cpp \
-	VncPropertyDialog.cpp wxprec.cpp WinShare.cpp X11PropertyDialog.cpp \
-	xh_richtext.cpp MacOSX.c WrappedStatic.cpp
+	ProxyPropertyDialog.cpp SessionAdmin.cpp SessionList.cpp \
+	SessionProperties.cpp SimpleXauth.cpp ShareProperties.cpp \
+	TextViewer.cpp UnixImageSettingsDialog.cpp UsbFilterDetailsDialog.cpp \
+	UsbIp.cpp VncImageSettingsDialog.cpp VncPropertyDialog.cpp \
+	wxprec.cpp WinShare.cpp X11PropertyDialog.cpp xh_richtext.cpp \
+	MacOSX.c WrappedStatic.cpp
 
 noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	LibOpenSC.h CardWaiterDialog.h CardWaiterDialog_symbols.h \
@@ -38,6 +39,7 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	MyValidator.h MyWizard.h MyWizard_symbols.h MyXmlConfig.h opennxApp.h \
 	osdep.h  PanicDialog.h PanicDialog_symbols.h pwcrypt.h QuitDialog.h \
 	QuitDialog_symbols.h ProxyPasswordDialog.h ProxyPasswordDialog_symbols.h \
+	ProxyPropertyDialog.h ProxyPropertyDialog_symbols.h \
 	RdpImageSettingsDialog.h RdpImageSettingsDialog_symbols.h RdpPropertyDialog.h \
 	RdpPropertyDialog_symbols.h ResumeDialog.h ResumeDialog_symbols.h \
 	SessionAdmin.h SessionAdmin_symbols.h SessionList.h SimpleXauth.h \

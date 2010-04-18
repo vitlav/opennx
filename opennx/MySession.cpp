@@ -1382,7 +1382,6 @@ MySession::startXserver()
                 wxWinCmd << wxT(" -name ") << title << wxT("@") << m_pCfg->sGetServerHost();
             }
             wxWinCmd << wxT(" ") << dpyStr;
-            wxWinCmd << wxT(" -nokeyhook");
             break;
         case XARCH_XMING:
             if (m_pCfg->eGetDisplayType() != MyXmlConfig::DPTYPE_FULLSCREEN) {

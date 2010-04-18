@@ -257,6 +257,9 @@ MyXmlConfig::init()
     m_bVirtualDesktop = false;
     m_bVncRememberPassword = false;
     m_bVncUseNxAuth = false;
+    m_bDisableDirectDraw = false;
+    m_bDisableDeferredUpdates = false;
+    m_bGrabKeyboard = false;
 
     m_iCupsPort = 631;
     m_iDisplayHeight = 480;
@@ -379,6 +382,9 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
     m_bVirtualDesktop = other.m_bVirtualDesktop;
     m_bVncRememberPassword = other.m_bVncRememberPassword;
     m_bVncUseNxAuth = other.m_bVncUseNxAuth;
+    m_bDisableDirectDraw = other.m_bDisableDirectDraw;
+    m_bDisableDeferredUpdates = other.m_bDisableDeferredUpdates;
+    m_bGrabKeyboard = other.m_bGrabKeyboard;
 
     m_iCupsPort = other.m_iCupsPort;
     m_iDisplayHeight = other.m_iDisplayHeight;
@@ -803,6 +809,7 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
         << wxT(" --samba=\"") << (m_bEnableSmbSharing ? 1 : 0) << wxT("\"")
         << wxT(" --cups=\"") << (m_bUseCups ? 1 : 0) << wxT("\"")
         << wxT(" --nodelay=\"") << (m_bDisableTcpNoDelay ? 0 : 1) << wxT("\"")
+        << wxT(" --defer=\"") << (m_bDisableDeferredUpdates ? 1 : 0) << wxT("\"")
 #ifdef __WXMAC__
         << wxT(" --client=\"macosx\"")
 #else
@@ -819,7 +826,7 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
         ret << wxT(" --mediahelper=\"esd\"");
     }
     // FIXME: Add real settings
-    ret << wxT(" --strict=\"0\"");
+    ret << wxT(" --strict=\"0\" --aux=\"1\"");
     return ret;
 }
 
@@ -863,6 +870,9 @@ MyXmlConfig::sGetXserverParams(bool forNXWin)
             ret << wxT(" -noreset -lesspointer -multiwindow");
         }
     }
+    if (m_bDisableDirectDraw)
+        ret << wxT(" -engine 1");
+    ret << wxT(" -") << (m_bGrabKeyboard ? wxT("") : wxT("no")) << wxT("keyhook");
     return ret;
 }
 #endif
@@ -991,6 +1001,9 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
     if (m_bVirtualDesktop != other.m_bVirtualDesktop) return false;
     if (m_bVncRememberPassword != other.m_bVncRememberPassword) return false;
     if (m_bVncUseNxAuth != other.m_bVncUseNxAuth) return false;
+    if (m_bDisableDirectDraw != other.m_bDisableDirectDraw) return false;
+    if (m_bDisableDeferredUpdates != other.m_bDisableDeferredUpdates) return false;
+    if (m_bGrabKeyboard != other.m_bGrabKeyboard) return false;
 
     if (m_iCupsPort != other.m_iCupsPort) return false;
     if (m_iDisplayHeight != other.m_iDisplayHeight) return false;
@@ -1181,6 +1194,12 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                         m_bDisableZlibCompression = getBool(opt,
                                 wxT("Disable ZLIB stream compression"),
                                 m_bDisableZlibCompression);
+                        m_bGrabKeyboard = getBool(opt, wxT("Grab keyboard"),
+                                m_bGrabKeyboard);
+                        m_bDisableDirectDraw = getBool(opt, wxT("Disable DirectDraw"),
+                                m_bDisableDirectDraw);
+                        m_bDisableDeferredUpdates = getBool(opt, wxT("Disable deferred updates"),
+                                m_bDisableDeferredUpdates);
                         m_bUseProxy = getBool(opt, wxT("Enable HTTP proxy"), m_bUseProxy);
                         m_bExternalProxy = getBool(opt, wxT("Enable external proxy"), m_bExternalProxy);
                         m_bEnableSSL = getBool(opt, wxT("Enable SSL encryption"), m_bEnableSSL);
@@ -1992,6 +2011,9 @@ MyXmlConfig::SaveToFile()
     bAddOption(g, wxT("Enable external proxy"), m_bExternalProxy);
     bAddOption(g, wxT("Enable USBIP"), m_bEnableUSBIP);
     bAddOption(g, wxT("Enable response time optimisations"), false); // ???
+    bAddOption(g, wxT("Grab keyboard"), m_bGrabKeyboard);
+    bAddOption(g, wxT("Disable DirectDraw"), m_bDisableDirectDraw);
+    bAddOption(g, wxT("Disable deferred updates"), m_bDisableDeferredUpdates);
     sAddOption(g, wxT("Proxy command"), m_sProxyCommand);
     sAddOption(g, wxT("HTTP proxy host"), m_sProxyHost);
     optval = m_bProxyPassRemember ? encodeString(m_sProxyPass) : wxT("");

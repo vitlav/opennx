@@ -121,6 +121,8 @@ private:
      */
     void InstallOnCharHandlers(wxWindow *w = NULL); 
 
+    void SaveState();
+
 public:
 
     void OnFocus( wxFocusEvent& event );
@@ -199,35 +201,24 @@ public:
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_ENABLESSL
     void OnCheckboxEnablesslClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_NOPROXY
-    void OnRadiobuttonNoproxySelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_PROXY
+    void OnCheckboxProxyClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_HTTPPROXY
-    void OnRadiobuttonHttpproxySelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_PROXYSETTINGS
+    void OnButtonProxysettingsClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_PROXYHOST
-    void OnTextctrlProxyhostUpdated( wxCommandEvent& event );
+#if defined(__WXMSW__)
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_DISABLEDX
+    void OnCheckboxDisabledxClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINCTRL_PROXYPORT
-    void OnSpinctrlProxyportUpdated( wxSpinEvent& event );
+#endif
+#if defined(__WXMSW__)
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_GRABKB
+    void OnCheckboxGrabkbClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_PROXYPORT
-    void OnSpinctrlProxyportTextUpdated( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_PROXYUSER
-    void OnTextctrlProxyuserUpdated( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_PROXYPASS
-    void OnTextctrlProxypassUpdated( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_PROXYPASS_REMEMBER
-    void OnCheckboxProxypassRememberClick( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_EXTERNALPROXY
-    void OnRadiobuttonExternalproxySelected( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_PROXYCOMMAND
-    void OnTextctrlProxycommandTextUpdated( wxCommandEvent& event );
+#endif
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_NODEFERRED
+    void OnCheckboxNodeferredClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_CACHEMEM
     void OnComboboxCachememSelected( wxCommandEvent& event );
@@ -382,12 +373,7 @@ private:
     wxRadioButton* m_pCtrlKeyboardOther;
     wxComboBox* m_pCtrlKeyboardLayout;
     wxCheckBox* m_pCtrlEnableSSL;
-    wxTextCtrl* m_pCtrlProxyHost;
-    wxSpinCtrl* m_pCtrlProxyPort;
-    wxTextCtrl* m_pCtrlProxyUser;
-    wxTextCtrl* m_pCtrlProxyPass;
-    wxCheckBox* m_pCtrlProxyPassRemember;
-    wxTextCtrl* m_pCtrlProxyCommand;
+    wxButton* m_pCtrlProxySettings;
     wxCheckBox* m_pCtrlSmbEnable;
     wxCheckBox* m_pCtrlCupsEnable;
     wxSpinCtrl* m_pCtrlCupsPort;
@@ -458,6 +444,9 @@ private:
     bool m_bProxyPassRemember;
     bool m_bCreateDesktopIcon;
     bool m_bSavedCreateDesktopIcon;
+    bool m_bDisableDirectDraw;
+    bool m_bGrabKeyboard;
+    bool m_bDisableDeferredUpdates;
 ////@end SessionProperties member variables
 
     bool readKbdLayouts();

@@ -209,6 +209,9 @@ class MyXmlConfig
         bool bGetVncRememberPassword() { return m_bVncRememberPassword; }
         bool bGetVncUseNxAuth() { return m_bVncUseNxAuth; }
         bool bGetEnableUSBIP() { return m_bEnableUSBIP; }
+        bool bGetDisableDirectDraw() { return m_bDisableDirectDraw; }
+        bool bGetDisableDeferredUpdates() { return m_bDisableDeferredUpdates; }
+        bool bGetGrabKeyboard() { return m_bGrabKeyboard; }
 
         MyXmlConfig::ConnectionSpeed eGetConnectionSpeed() { return m_eConnectionSpeed; }
         MyXmlConfig::DesktopType eGetDesktopType() { return m_eDesktopType; }
@@ -300,6 +303,9 @@ class MyXmlConfig
         void bSetVncRememberPassword(bool b) { m_bVncRememberPassword = b; }
         void bSetVncUseNxAuth(bool b) { m_bVncUseNxAuth = b; }
         void bSetEnableUSBIP(bool b) { m_bEnableUSBIP = b; }
+        bool bSetDisableDirectDraw(bool b) { m_bDisableDirectDraw = b; }
+        bool bSetDisableDeferredUpdates(bool b) { m_bDisableDeferredUpdates = b; }
+        bool bSetGrabKeyboard(bool b) { m_bGrabKeyboard = b; }
 
         void eSetCacheDisk(MyXmlConfig::CacheDisk e) { m_eCacheDisk = e; }
         void eSetCacheMemory(MyXmlConfig::CacheMemory e) { m_eCacheMemory = e; }
@@ -414,6 +420,9 @@ class MyXmlConfig
         bool m_bVirtualDesktop;
         bool m_bVncRememberPassword;
         bool m_bVncUseNxAuth;
+        bool m_bDisableDirectDraw;
+        bool m_bGrabKeyboard;
+        bool m_bDisableDeferredUpdates;
 
         int m_iCupsPort;
         int m_iDisplayHeight;
