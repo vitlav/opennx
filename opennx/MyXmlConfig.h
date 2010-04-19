@@ -303,9 +303,9 @@ class MyXmlConfig
         void bSetVncRememberPassword(bool b) { m_bVncRememberPassword = b; }
         void bSetVncUseNxAuth(bool b) { m_bVncUseNxAuth = b; }
         void bSetEnableUSBIP(bool b) { m_bEnableUSBIP = b; }
-        bool bSetDisableDirectDraw(bool b) { m_bDisableDirectDraw = b; }
-        bool bSetDisableDeferredUpdates(bool b) { m_bDisableDeferredUpdates = b; }
-        bool bSetGrabKeyboard(bool b) { m_bGrabKeyboard = b; }
+        void bSetDisableDirectDraw(bool b) { m_bDisableDirectDraw = b; }
+        void bSetDisableDeferredUpdates(bool b) { m_bDisableDeferredUpdates = b; }
+        void bSetGrabKeyboard(bool b) { m_bGrabKeyboard = b; }
 
         void eSetCacheDisk(MyXmlConfig::CacheDisk e) { m_eCacheDisk = e; }
         void eSetCacheMemory(MyXmlConfig::CacheMemory e) { m_eCacheMemory = e; }
