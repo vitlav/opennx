@@ -595,6 +595,8 @@ opennxApp::preInit()
 # ifdef __WXMAC__
     ldpath += wxT(":/Library/OpenSC/lib");
 # endif
+    if (wxFileName::DirExists(wxT("/opt/libjpeg-turbo/lib")))
+        ldpath = ldpath.Prepend(wxT("/opt/libjpeg-turbo/lib:"));
     if (!::wxSetEnv(LD_LIBRARY_PATH, ldpath)) {
         ::wxLogSysError(wxT("Can not set LD_LIBRARY_PATH"));
         return false;
