@@ -600,14 +600,17 @@ opennxApp::preInit()
     // order to speed-up image compression.
     wxFileName tjpeg;
     tjpeg.AssignDir(wxT("/usr"));
-    tjpeg.AppendDirDir(archlib);
-    tjpeg.AppendDirDir(wxT("libjpeg-turbo"));
-    if (wxFileName::DirExists())
+    tjpeg.AppendDir(archlib);
+    tjpeg.AppendDir(wxT("libjpeg-turbo"));
+    if (tjpeg.DirExists()) {
         ldpath = ldpath.Prepend(tjpeg.GetPath());
-    tjpeg.AssignDir(wxT("/opt/libjpeg-turbo"));
-    tjpeg.AppendDirDir(archlib);
-    if (wxFileName::DirExists())
-        ldpath = ldpath.Prepend(tjpeg.GetPath());
+    } else {
+        tjpeg.AssignDir(wxT("/opt/libjpeg-turbo"));
+        tjpeg.AppendDir(archlib);
+        if (tjpeg.DirExists()) {
+            ldpath = ldpath.Prepend(tjpeg.GetPath());
+        }
+    }
     if (!::wxSetEnv(LD_LIBRARY_PATH, ldpath)) {
         ::wxLogSysError(wxT("Cannot set LD_LIBRARY_PATH"));
         return false;

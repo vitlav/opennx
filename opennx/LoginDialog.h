@@ -165,11 +165,11 @@ private:
     wxString m_sTmpPassword;
 ////@end LoginDialog member variables
 
+    MyXmlConfig *m_pCurrentCfg;
 #ifdef SINGLE_SESSION
     wxTimer m_cNxSshWatchTimer;
 #endif
     wxTimer m_cAutoLoginTimer;
-    MyXmlConfig *m_pCurrentCfg;
     wxArrayString m_aConfigFiles;
     wxString m_sLastSessionFilename;
 };
