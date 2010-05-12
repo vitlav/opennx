@@ -592,7 +592,7 @@ opennxApp::preInit()
     wxString ldpath;
     if (::wxGetEnv(LD_LIBRARY_PATH, &ldpath))
         ldpath += wxT(":");
-    ldpath += tmp + archlib;
+    ldpath += tmp + wxFileName::GetPathSeparator() + archlib;
 # ifdef __WXMAC__
     ldpath += wxT(":/Library/OpenSC/lib");
 # endif
@@ -603,14 +603,15 @@ opennxApp::preInit()
     tjpeg.AppendDir(archlib);
     tjpeg.AppendDir(wxT("libjpeg-turbo"));
     if (tjpeg.DirExists()) {
-        ldpath = ldpath.Prepend(tjpeg.GetPath());
+        ldpath = ldpath.Prepend(tjpeg.GetPath().Append(wxT(":")));
     } else {
         tjpeg.AssignDir(wxT("/opt/libjpeg-turbo"));
         tjpeg.AppendDir(archlib);
         if (tjpeg.DirExists()) {
-            ldpath = ldpath.Prepend(tjpeg.GetPath());
+            ldpath = ldpath.Prepend(tjpeg.GetPath().Append(wxT(":")));
         }
     }
+    ::myLogDebug(wxT("LD_LIBRARY_PATH='%s'"), ldpath.c_str());
     if (!::wxSetEnv(LD_LIBRARY_PATH, ldpath)) {
         ::wxLogSysError(wxT("Cannot set LD_LIBRARY_PATH"));
         return false;
