@@ -584,21 +584,32 @@ opennxApp::preInit()
 #  define LD_LIBRARY_PATH wxT("LD_LIBRARY_PATH")
 # endif
 
+# if defined(__x86_64) || defined(__IA64__)
+    wxString archlib = wxT("/lib64");
+# else
+    wxString archlib = wxT("/lib");
+# endif
     wxString ldpath;
     if (::wxGetEnv(LD_LIBRARY_PATH, &ldpath))
         ldpath += wxT(":");
-# if defined(__x86_64) || defined(__IA64__)
-    ldpath += tmp + wxT("/lib64");
-# else
-    ldpath += tmp + wxT("/lib");
-# endif
+    ldpath += tmp + archlib;
 # ifdef __WXMAC__
     ldpath += wxT(":/Library/OpenSC/lib");
 # endif
-    if (wxFileName::DirExists(wxT("/opt/libjpeg-turbo/lib")))
-        ldpath = ldpath.Prepend(wxT("/opt/libjpeg-turbo/lib:"));
+    // If libjpeg-turbo is installed, prepend it's path in
+    // order to speed-up image compression.
+    wxFileName tjpeg;
+    tjpeg.AssignDir(wxT("/usr"));
+    tjpeg.AppendDirDir(archlib);
+    tjpeg.AppendDirDir(wxT("libjpeg-turbo"));
+    if (wxFileName::DirExists())
+        ldpath = ldpath.Prepend(tjpeg.GetPath());
+    tjpeg.AssignDir(wxT("/opt/libjpeg-turbo"));
+    tjpeg.AppendDirDir(archlib);
+    if (wxFileName::DirExists())
+        ldpath = ldpath.Prepend(tjpeg.GetPath());
     if (!::wxSetEnv(LD_LIBRARY_PATH, ldpath)) {
-        ::wxLogSysError(wxT("Can not set LD_LIBRARY_PATH"));
+        ::wxLogSysError(wxT("Cannot set LD_LIBRARY_PATH"));
         return false;
     }
 #endif
