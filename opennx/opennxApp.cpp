@@ -585,9 +585,9 @@ opennxApp::preInit()
 # endif
 
 # if defined(__x86_64) || defined(__IA64__)
-    wxString archlib = wxT("/lib64");
+    wxString archlib = wxT("lib64");
 # else
-    wxString archlib = wxT("/lib");
+    wxString archlib = wxT("lib");
 # endif
     wxString ldpath;
     if (::wxGetEnv(LD_LIBRARY_PATH, &ldpath))
