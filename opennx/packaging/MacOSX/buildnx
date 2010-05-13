@@ -18,29 +18,16 @@ for pkg in $ALLPKG ; do
     tar xzf ${pkg}-*.tar.gz
 done
 
-# We build a special fat binary, containing a regular libjpeg for ppc and a libjpeg-turbo for x86
-# Prerequisite: libjpeg => ppc only
+# Prerequisite: libjpeg
 test -f jpegsrc.v6b.tar.gz || wget http://downloads.sourceforge.net/project/libjpeg/libjpeg/6b/jpegsrc.v6b.tar.gz
 tar xzf jpegsrc.v6b.tar.gz
 cd jpeg-6b
-cp ../../../../conf/config.guess .
-cp ../../../../conf/config.sub .
-CFLAGS="-arch ppc" LDFLAGS="-arch ppc" ./configure \
-        --prefix=$PFX --enable-static --disable-shared --disable-dependency-tracking
+patch -p1 < $TOPSRC/patches/jpeg-autoconf.patch
+CFLAGS="-arch ppc -arch i386" CXXFLAGS="-arch ppc -arch i386" LDFLAGS="-arch ppc -arch i386" ./configure \
+        --prefix=$PFX --disable-static --enable-shared
 mkdir -p $DEST$PFX/{include,lib}
-make prefix=$DEST$PFX install-lib
+make DESTDIR=$DEST install-lib
 cd ..
-# Prerequisite: libjpeg-turbo (Fast implementation for intel CPUs) => x86 only
-test -f libjpeg-turbo-0.0.93.tar.gz || wget http://downloads.sourceforge.net/project/libjpeg-turbo/0.0.93/libjpeg-turbo-0.0.93.tar.gz
-tar xzf libjpeg-turbo-0.0.93.tar.gz
-cd libjpeg-turbo-0.0.93
-CFLAGS="-O3 -m32" CXXFLAGS="-O3 -m32" LDFLAGS="-m32" ./configure --prefix=$PFX --enable-static --disable-shared --with-pic
-make prefix=$BUILDDIR/lipotmp install
-# Merge libjpeg (ppc) and libjpeg-turbo (x86)
-cd ../lipotmp
-lipo -create -arch i386 lib/libjpeg.a -arch ppc $DEST$PFX/lib/libjpeg.a -output libjpeg.a
-cp libjpeg.a $DEST$PFX/lib/libjpeg.a
-cd .. && rm -rf lipotmp
 # Prerequisite: libpng
 test -f libpng-1.2.43.tar.gz || wget ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng-1.2.43.tar.gz
 tar xzf libpng-1.2.43.tar.gz
