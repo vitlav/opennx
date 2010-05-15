@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opennx 0.16\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-05-12 12:58+0200\n"
+"POT-Creation-Date: 2010-05-12 16:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1119,7 +1119,7 @@ msgstr ""
 msgid "Select System CUPS daemon"
 msgstr ""
 
-#: SessionProperties.cpp:2047 opennxApp.cpp:1185
+#: SessionProperties.cpp:2047 opennxApp.cpp:1186
 msgid "libusb is not available. No USB devices will be exported"
 msgstr ""
 
@@ -1764,93 +1764,93 @@ msgid ""
 "In order to use CUPS printing, you need to install cups."
 msgstr ""
 
-#: opennxApp.cpp:748 watchUsbIpApp.cpp:216
+#: opennxApp.cpp:749 watchUsbIpApp.cpp:216
 msgid ""
 "\n"
 "\n"
 "Supported trace tags: "
 msgstr ""
 
-#: opennxApp.cpp:751
+#: opennxApp.cpp:752
 msgid "Automatically login to the specified session."
 msgstr ""
 
-#: opennxApp.cpp:753
+#: opennxApp.cpp:754
 msgid "Automatically destroy error dialogs at termination."
 msgstr ""
 
-#: opennxApp.cpp:755
+#: opennxApp.cpp:756
 msgid "Start the session administration tool."
 msgstr ""
 
-#: opennxApp.cpp:757
+#: opennxApp.cpp:758
 msgid "Secify window title for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:759
+#: opennxApp.cpp:760
 msgid "Secify dialog style for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:761
+#: opennxApp.cpp:762
 msgid "Run in dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:763
+#: opennxApp.cpp:764
 msgid "Compatibility option for dialog mode (ignored)."
 msgstr ""
 
-#: opennxApp.cpp:765
+#: opennxApp.cpp:766
 msgid "Dialog mode proxy."
 msgstr ""
 
-#: opennxApp.cpp:767
+#: opennxApp.cpp:768
 msgid "Specify message for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:769
+#: opennxApp.cpp:770
 msgid "Specify parent PID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:771
+#: opennxApp.cpp:772
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr ""
 
-#: opennxApp.cpp:773
+#: opennxApp.cpp:774
 msgid "Specify window-ID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:775 watchUsbIpApp.cpp:225
+#: opennxApp.cpp:776 watchUsbIpApp.cpp:225
 msgid "Specify wxWidgets trace mask."
 msgstr ""
 
-#: opennxApp.cpp:778
+#: opennxApp.cpp:779
 msgid "Test CardWaiterDialog"
 msgstr ""
 
-#: opennxApp.cpp:781
+#: opennxApp.cpp:782
 msgid "Guide the user through the steps to configure a session."
 msgstr ""
 
-#: opennxApp.cpp:837 watchReaderApp.cpp:195
+#: opennxApp.cpp:838 watchReaderApp.cpp:195
 msgid "Smart card removed"
 msgstr ""
 
-#: opennxApp.cpp:839 watchReaderApp.cpp:194
+#: opennxApp.cpp:840 watchReaderApp.cpp:194
 msgid ""
 "OpenNX session has been suspended, because\n"
 "the authenticating smart card has been removed."
 msgstr ""
 
-#: opennxApp.cpp:1200
+#: opennxApp.cpp:1201
 msgid "USBIP tunnel registration timeout"
 msgstr ""
 
-#: opennxApp.cpp:1204
+#: opennxApp.cpp:1205
 #, c-format
 msgid "Unable to export USB device %s"
 msgstr ""
 
-#: opennxApp.cpp:1210
+#: opennxApp.cpp:1211
 msgid "Could not connect to usbipd2. No USB devices will be exported"
 msgstr ""
 
