@@ -201,6 +201,8 @@ patch -p0 < patches/nxssh-dynopensc.patch
 %if %{with_usbip}
     --enable-usbip
 %endif
+# keep this comment line!!
+
 make
 for pkg in %{nxpkgs} ; do
 	cd $pkg && ./configure --prefix=%{_prefix} && make
