@@ -292,7 +292,7 @@ for lname in usb-0 opensc smbclient cups ; do
 done
 
 # Install icons
-cd %{_datadir}/icons
+cd %{_prefix}/share/icons
 SIZES="16 32 48 128 256"
 ICINSTALL="xdg-icon-resource install --noupdate --novendor --mode system"
 for sz in $SIZES ; do
@@ -317,7 +317,7 @@ for sz in $SIZES ; do
 done
 xdg-icon-resource forceupdate
 # Install menu entries
-cd %{_datadir}/applnk/xdg
+cd %{_prefix}/share/applnk/xdg
 xdg-desktop-menu install --mode system *.directory *.desktop
 
 %preun
@@ -331,10 +331,10 @@ rm -f %{nxlib}/libsmbclient.so
 rm -f %{nxlib}/libcups.so
 
 # Uninstall menu entries
-cd %{_datadir}/applnk/xdg
+cd %{_prefix}/share/applnk/xdg
 xdg-desktop-menu uninstall --mode system *.directory *.desktop
 # Install icons
-cd %{_datadir}/icons
+cd %{_prefix}/share/icons
 SIZES="16 32 48 128 256"
 ICREMOVE="xdg-icon-resource uninstall --noupdate --novendor --mode system"
 for sz in $SIZES ; do
