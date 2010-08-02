@@ -18,21 +18,20 @@ for pkg in $ALLPKG ; do
     tar xzf ${pkg}-*.tar.gz
 done
 
-# Prerequisite: libjpeg (Leopard does not provide a universal binary)
+# Prerequisite: libjpeg
 test -f jpegsrc.v6b.tar.gz || wget http://downloads.sourceforge.net/project/libjpeg/libjpeg/6b/jpegsrc.v6b.tar.gz
 tar xzf jpegsrc.v6b.tar.gz
 cd jpeg-6b
-cp ../../../../conf/config.guess .
-cp ../../../../conf/config.sub .
-CFLAGS="-arch i386 -arch ppc" LDFLAGS="-arch i386 -arch ppc" ./configure \
-        --prefix=$PFX --enable-static --disable-shared --disable-dependency-tracking
-mkdir -p $DEST/$PFX/{include,lib}
-make prefix=$DEST$PFX install-lib
+patch -p1 < $TOPSRC/patches/jpeg-autoconf.patch
+CFLAGS="-arch ppc -arch i386" CXXFLAGS="-arch ppc -arch i386" LDFLAGS="-arch ppc -arch i386" ./configure \
+        --prefix=$PFX --disable-static --enable-shared
+mkdir -p $DEST$PFX/{include,lib}
+make DESTDIR=$DEST install-lib
 cd ..
 # Prerequisite: libpng
-test -f libpng-1.2.42.tar.gz || wget ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng-1.2.42.tar.gz
-tar xzf libpng-1.2.42.tar.gz
-cd libpng-1.2.42
+test -f libpng-1.2.43.tar.gz || wget ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng-1.2.43.tar.gz
+tar xzf libpng-1.2.43.tar.gz
+cd libpng-1.2.43
 CFLAGS="-arch i386 -arch ppc" LDFLAGS="-arch i386 -arch ppc" ./configure \
         --prefix=$PFX --enable-static --disable-shared --disable-dependency-tracking
 make DESTDIR=$DEST install
@@ -47,11 +46,17 @@ CFLAGS="-arch i386 -arch ppc" LDFLAGS="-arch i386 -arch ppc" ./configure \
 make DESTDIR=$DEST install
 cd ..
 
+ncver=`ls nxcomp-*.tar.gz|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxcomp-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
 for pkg in nxcomp nxproxy nxesd ; do
     cd $pkg
     for p in $TOPSRC/patches/${pkg}-*.patch ; do
-        echo === Applying `basename $p` in $pkg
-        patch -p1 < $p
+        bn=`basename $p`
+        if [ $bn = nxcomp-gcc44.patch -a $ncver -ge 03040006 ] ; then
+            echo === Skipping $bn in $pkg
+        else
+            echo === Applying $bn in $pkg
+            patch -p1 < $p
+        fi
     done
     autoreconf -f -i
     cargs=

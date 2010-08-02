@@ -34,7 +34,6 @@
 #include "MyWizard_symbols.h"
 #include "wx/xrc/xmlres.h"
 #include "wx/wizard.h"
-#include "wx/html/htmlwin.h"
 #include "wx/valgen.h"
 #include "wx/spinctrl.h"
 ////@end includes
@@ -47,12 +46,12 @@
 
 ////@begin forward declarations
 class WizardPageWelcome;
-class wxHtmlWindow;
 class WizardPageSession;
 class WizardPageDesktop;
 class wxSpinCtrl;
 class WizardPageSecurity;
 class WizardPageFinish;
+class WrappedStaticText;
 ////@end forward declarations
 class MyXmlConfig;
 
@@ -187,7 +186,6 @@ private:
     static bool ShowToolTips();
 
 ////@begin WizardPageWelcome member variables
-    wxHtmlWindow* m_pWelcomeText;
 ////@end WizardPageWelcome member variables
 };
 
@@ -252,12 +250,9 @@ private:
     static bool ShowToolTips();
 
 ////@begin WizardPageSession member variables
-    wxHtmlWindow* m_pText1;
     wxTextCtrl* m_pCtrlSessionName;
-    wxHtmlWindow* m_pText2;
     wxTextCtrl* m_pCtrlHostName;
     wxTextCtrl* m_pCtrlPort;
-    wxHtmlWindow* m_pText3;
     wxString m_sHostName;
     int m_iPort;
     int m_iConnectionSpeed;
@@ -333,7 +328,6 @@ private:
     static bool ShowToolTips();
 
 ////@begin WizardPageDesktop member variables
-    wxHtmlWindow* m_pText1;
     wxComboBox* m_pCtrlDesktopType;
     wxButton* m_pCtrlDesktopSettings;
     wxComboBox* m_pCtrlDisplayType;
@@ -403,9 +397,7 @@ private:
     static bool ShowToolTips();
 
 ////@begin WizardPageSecurity member variables
-    wxHtmlWindow* m_pText1;
     wxCheckBox* m_pCtrlUseSmartCard;
-    wxHtmlWindow* m_pText2;
     wxCheckBox* m_pCtrlEnableSSL;
     bool m_bUseSmartCard;
     bool m_bEnableSSL;
@@ -458,7 +450,7 @@ private:
     static bool ShowToolTips();
 
 ////@begin WizardPageFinish member variables
-    wxHtmlWindow* m_pText1;
+    WrappedStaticText* m_pCtrlHeader;
     bool m_bCreateShortcut;
     bool m_bShowAdvancedConfig;
 ////@end WizardPageFinish member variables

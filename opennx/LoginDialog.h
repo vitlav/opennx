@@ -90,7 +90,16 @@ private:
     /// Creates the controls and sizers
     void CreateControls();
 
+#ifdef SINGLE_SESSION
+    // Event handler for events from nxssh watch timer
+    void OnTimer(wxTimerEvent& event);
+#endif
+    void OnLoginTimer(wxTimerEvent& event);
+
 ////@begin LoginDialog event handler declarations
+
+    /// wxEVT_INIT_DIALOG event handler for ID_DIALOG_LOGIN
+    void OnInitDialog( wxInitDialogEvent& event );
 
     /// wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_SESSION
     void OnComboboxSessionSelected( wxCommandEvent& event );
@@ -145,6 +154,7 @@ private:
     wxCheckBox* m_pCtrlUseSmartCard;
     wxCheckBox* m_pCtrlGuestLogin;
     wxButton* m_pCtrlConfigure;
+    wxButton* m_pCtrlLoginButton;
 private:
     wxString m_sUsername;
     wxString m_sPassword;
@@ -156,6 +166,10 @@ private:
 ////@end LoginDialog member variables
 
     MyXmlConfig *m_pCurrentCfg;
+#ifdef SINGLE_SESSION
+    wxTimer m_cNxSshWatchTimer;
+#endif
+    wxTimer m_cAutoLoginTimer;
     wxArrayString m_aConfigFiles;
     wxString m_sLastSessionFilename;
 };

@@ -100,6 +100,8 @@ IMPLEMENT_APP(opennxApp);
     ,m_bRequireWatchReader(false)
     ,m_bRequireStartUsbIp(false)
     ,m_bTestCardWaiter(false)
+    ,m_bAutoLogin(false)
+    ,m_bKillErrors(false)
     ,m_pLoginDialog(NULL)
 {
     SetAppName(wxT("OpenNX"));
@@ -129,7 +131,7 @@ IMPLEMENT_APP(opennxApp);
             vi = (LPVOID)malloc(viSize);
             if (vi) {
                 if (GetFileVersionInfo(mySelf, dummy, viSize, vi)) {
-                    if (VerQueryValue(vi, wxT("\\"), (LPVOID *)&vsFFI, &vsFFIlen)) {
+                    if (VerQueryValueA(vi, (LPSTR)"\\", (LPVOID *)&vsFFI, &vsFFIlen)) {
                         m_sVersion = wxString::Format(wxT("%d.%d"), HIWORD(vsFFI->dwFileVersionMS),
                                 LOWORD(vsFFI->dwFileVersionMS));
                         if (vsFFI->dwFileVersionLS)
@@ -207,7 +209,7 @@ opennxApp::LoadFileFromResource(const wxString &loc, bool bUseLocale /* = true *
         if (!cloc.IsEmpty()) {
             tryloc = wxFileName(loc).GetPath(wxPATH_GET_SEPARATOR|wxPATH_GET_VOLUME)
                 + cloc + wxT("_") + wxFileName(loc).GetFullName();
-            cloc = cloc.BeforeLast(_T('_'));
+            cloc = cloc.BeforeLast(wxT('_'));
         } else
             tryloop = false;
 
@@ -231,9 +233,11 @@ opennxApp::LoadFileFromResource(const wxString &loc, bool bUseLocale /* = true *
     return ret;
 }
 
+#ifndef __WXMSW__
 static const wxChar *desktopDirs[] = {
     wxT("Desktop"), wxT("KDesktop"), wxT(".gnome-desktop"), NULL
 };
+#endif
 
     bool
 opennxApp::CreateDesktopEntry(MyXmlConfig *cfg)
@@ -324,7 +328,8 @@ opennxApp::RemoveDesktopEntry(MyXmlConfig *cfg)
 #ifdef __WXMSW__
     TCHAR dtPath[MAX_PATH];
     if (SHGetSpecialFolderPath(NULL, dtPath, CSIDL_DESKTOPDIRECTORY, FALSE)) {
-        wxString lpath = wxString::Format(_T("%s\\%s.lnk"), dtPath, wx_static_cast(const char *,cfg->sGetName().mb_str()));
+        wxString lpath = wxString::Format(wxT("%s\\%s.lnk"),
+                dtPath, cfg->sGetName().c_str());
         ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), lpath.c_str());
         ::wxRemoveFile(lpath);
     }
@@ -337,15 +342,42 @@ opennxApp::RemoveDesktopEntry(MyXmlConfig *cfg)
     const wxChar **p = desktopDirs;
 
     while (*p) {
-        ::wxRemoveFile(wxString::Format(_T("%s/%s/%s.desktop"),
+        ::wxRemoveFile(wxString::Format(wxT("%s/%s/%s.desktop"),
                     ::wxGetHomeDir().c_str(), *p,cfg->sGetName().c_str()));
         p++;
     }
 # endif
 #endif
-    ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), cfg->sGetFileName().c_str());
-    ::wxRemoveFile(cfg->sGetFileName());
     return true;
+}
+
+    bool
+opennxApp::CheckDesktopEntry(MyXmlConfig *cfg)
+{
+    bool ret = false;
+#ifdef __WXMSW__
+    TCHAR dtPath[MAX_PATH];
+    if (SHGetSpecialFolderPath(NULL, dtPath, CSIDL_DESKTOPDIRECTORY, FALSE)) {
+        wxString lpath = wxString::Format(wxT("%s\\%s.lnk"),
+                dtPath, cfg->sGetName().c_str());
+        return wxFileName::FileExists(lpath);
+    }
+#endif
+#ifdef __UNIX__
+# ifdef __WXMAC__
+    wxString fn = wxGetHomeDir() + wxT("/Desktop/") + cfg->sGetName();
+    return wxFileName::FileExists(fn);
+# else
+    const wxChar **p = desktopDirs;
+
+    while (*p) {
+        ret |= wxFileName::FileExists((wxString::Format(wxT("%s/%s/%s.desktop"),
+                    ::wxGetHomeDir().c_str(), *p,cfg->sGetName().c_str())));
+        p++;
+    }
+# endif
+#endif
+    return ret;
 }
 
     void
@@ -552,19 +584,36 @@ opennxApp::preInit()
 #  define LD_LIBRARY_PATH wxT("LD_LIBRARY_PATH")
 # endif
 
+# if defined(__x86_64) || defined(__IA64__)
+    wxString archlib = wxT("lib64");
+# else
+    wxString archlib = wxT("lib");
+# endif
     wxString ldpath;
     if (::wxGetEnv(LD_LIBRARY_PATH, &ldpath))
         ldpath += wxT(":");
-# if defined(__x86_64) || defined(__IA64__)
-    ldpath += tmp + wxT("/lib64");
-# else
-    ldpath += tmp + wxT("/lib");
-# endif
+    ldpath += tmp + wxFileName::GetPathSeparator() + archlib;
 # ifdef __WXMAC__
     ldpath += wxT(":/Library/OpenSC/lib");
 # endif
+    // If libjpeg-turbo is installed, prepend it's path in
+    // order to speed-up image compression.
+    wxFileName tjpeg;
+    tjpeg.AssignDir(wxT("/usr"));
+    tjpeg.AppendDir(archlib);
+    tjpeg.AppendDir(wxT("libjpeg-turbo"));
+    if (tjpeg.DirExists()) {
+        ldpath = ldpath.Prepend(tjpeg.GetPath().Append(wxT(":")));
+    } else {
+        tjpeg.AssignDir(wxT("/opt/libjpeg-turbo"));
+        tjpeg.AppendDir(archlib);
+        if (tjpeg.DirExists()) {
+            ldpath = ldpath.Prepend(tjpeg.GetPath().Append(wxT(":")));
+        }
+    }
+    ::myLogDebug(wxT("LD_LIBRARY_PATH='%s'"), ldpath.c_str());
     if (!::wxSetEnv(LD_LIBRARY_PATH, ldpath)) {
-        ::wxLogSysError(wxT("Can not set LD_LIBRARY_PATH"));
+        ::wxLogSysError(wxT("Cannot set LD_LIBRARY_PATH"));
         return false;
     }
 #endif
@@ -582,6 +631,7 @@ opennxApp::preInit()
 
     checkLibUSB();
     checkNxSmartCardSupport();
+    checkNxProxy();
     return true;
 }
 
@@ -668,6 +718,20 @@ void opennxApp::checkNxSmartCardSupport()
     }
 }
 
+void opennxApp::checkNxProxy()
+{
+    wxString sysdir;
+    wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &sysdir);
+    wxFileName fn(sysdir, wxEmptyString);
+    fn.AppendDir(wxT("bin"));
+#ifdef __WXMSW__
+    fn.SetName(wxT("nxproxy.exe"));
+#else
+    fn.SetName(wxT("nxproxy"));
+#endif
+    m_bNxProxyAvailable = fn.IsFileExecutable();
+}
+
 void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
 {
     // Init standard options (--help, --verbose);
@@ -684,6 +748,10 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
     }
     tags.Prepend(_("\n\nSupported trace tags: "));
 
+    parser.AddSwitch(wxEmptyString, wxT("autologin"),
+            _("Automatically login to the specified session."));
+    parser.AddSwitch(wxEmptyString, wxT("killerrors"),
+            _("Automatically destroy error dialogs at termination."));
     parser.AddSwitch(wxEmptyString, wxT("admin"),
             _("Start the session administration tool."));
     parser.AddOption(wxEmptyString, wxT("caption"),
@@ -839,6 +907,10 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
         m_eMode = MODE_ADMIN;
     if (parser.Found(wxT("wizard")))
         m_eMode = MODE_WIZARD;
+    if (parser.Found(wxT("autologin")))
+        m_bAutoLogin = true;
+    if (parser.Found(wxT("killerrors")))
+        m_bKillErrors = true;
     if (parser.Found(wxT("waittest")))
         m_bTestCardWaiter = true;
     (void)parser.Found(wxT("session"), &m_sSessionName);
@@ -1087,6 +1159,10 @@ bool opennxApp::realInit()
 bool opennxApp::OnInit()
 {
     bool ret = realInit();
+    if (m_bKillErrors) {
+        wxLog::SetActiveTarget(new wxLogStderr());
+        wxLog::SetLogLevel(0);
+    }
 #ifdef SUPPORT_USBIP
     if (m_bRequireStartUsbIp) {
         long usessionTO = wxConfigBase::Get()->Read(wxT("Config/UsbipTunnelTimeout"), 20);
@@ -1108,6 +1184,7 @@ bool opennxApp::OnInit()
                 if (SharedUsbDevice::MODE_REMOTE == af[i].m_eMode) {
                     if (!LibUSBAvailable()) {
                         ::wxLogError(_("libusb is not available. No USB devices will be exported"));
+                        m_bRequireStartUsbIp = false;
                         break;
                     }
                     ::myLogTrace(MYTRACETAG, wxT("possibly exported USB device: %04x/%04x %s"),
@@ -1120,16 +1197,20 @@ bool opennxApp::OnInit()
                                     wxString exBusID = aid[k].GetUsbIpBusID();
                                     ::myLogTrace(MYTRACETAG, wxT("Exporting usbup-busid %s (libusb-busid %s)"),
                                             exBusID.c_str(), ad[j].GetBusID().c_str());
-                                    if (!usbip.WaitForSession(usessionTO))
+                                    if (!usbip.WaitForSession(usessionTO)) {
                                         ::wxLogError(_("USBIP tunnel registration timeout"));
+                                        m_bRequireStartUsbIp = false;
+                                    }
                                     if (!usbip.ExportDevice(exBusID))
                                         ::wxLogError(_("Unable to export USB device %s"), af[i].toShortString().c_str());
                                 }
                             }
                         }
                 }
-        } else
+        } else {
             ::wxLogError(_("Could not connect to usbipd2. No USB devices will be exported"));
+            m_bRequireStartUsbIp = false;
+        }
     }
 
     if (m_bRequireStartUsbIp) {

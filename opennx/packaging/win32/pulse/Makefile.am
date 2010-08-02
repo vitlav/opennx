@@ -104,5 +104,5 @@ $(subtarget)-checkarchive: $(subsrc).tar.gz
 
 $(subsrc).tar.gz: $(srcdir)/urls.txt
 	@echo Downloading $@
-	@wget $(shell grep $(subsrc).tar.gz $(srcdir)/urls.txt)
+	@$(WGET) $(shell grep $(subsrc).tar.gz $(srcdir)/urls.txt)
 	@touch $@

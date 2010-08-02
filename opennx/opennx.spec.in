@@ -8,6 +8,8 @@
 %define with_staticwx %{?_with_staticwx: 1} %{?!_with_staticwx: 0}
 # Enable USBIP support
 %define with_usbip %{?_with_usbip: 1} %{?!_with_usbip: 0}
+# Enable single session support
+%define with_singlesession %{?_with_singlesession: 1} %{?!_with_singlesession: 0}
 # Make recommended RPM dependencies mandatory
 %define with_forceopt %{?_with_forceopt: 1} %{?!_with_forceopt: 0}
 
@@ -24,12 +26,16 @@
 %define is_fc 0%{?fedora}%{?fedora_version}
 %define is_suse 0%{?suse_version}
 %define is_sles 0%{?sles_version}
-%define is_mdv 0%{?mdvver}
+%define is_mdv 0%{?mdkversion}
 %if %{is_rh}
 %define ostag %{?dist}
 %endif
 %if %{is_mdv}
-%define ostag .mdv%{mdvver}
+%if %{mdkversion} > 200000
+%define ostag .mdv%(echo %{mdkversion}|sed -e 's/\\(....\\).*/\\1/')
+%else
+%define ostag .mdv%{mdkversion}
+%endif
 # Mandriva's cool underlink protection unfortunately breaks nxesd
 %define _disable_ld_no_undefined 1
 %endif
@@ -53,12 +59,18 @@
 %endif
 %endif
 
-%define _prefix /opt/%{name}
+%global _prefix /opt/%{name}
 
 %ifarch x86_64
+%if %{is_mdv}
+%define lpfx  lib64
+%else
+%define lpfx  lib
+%endif
 %define nxlib %{_prefix}/lib64
 %else
 %define nxlib %{_prefix}/lib
+%define lpfx  lib
 %endif
 
 %define nxdlurl http://www.nomachine.com/sources.php
@@ -76,10 +88,10 @@ Group: Applications/Internet
 URL: http://sourceforge.net/projects/opennx
 Source0: opennx-%{version}.tar.gz
 %if !%{with_fetchnx}
-Source100: nxcomp-3.4.0-1.tar.gz
-Source101: nxesd-3.4.0-1.tar.gz
-Source102: nxssh-3.4.0-1.tar.gz
-Source103: nxproxy-3.4.0-2.tar.gz
+Source100: nxcomp-3.3.0-4.tar.gz
+Source101: nxesd-3.3.0-1.tar.gz
+Source102: nxssh-3.3.0-1.tar.gz
+Source103: nxproxy-3.3.0-2.tar.gz
 %endif
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
@@ -109,8 +121,8 @@ BuildRequires: xorg-x11-xtrans-devel
 %endif
 
 %if %{is_mdv}
-BuildRequires: libwxgtku2.8-devel >= 2.8.0
-BuildRequires: libxmu6-devel
+BuildRequires: %{lpfx}wxgtku2.8-devel >= 2.8.0
+BuildRequires: %{lpfx}xmu6-devel
 BuildRequires: x11-proto-devel
 BuildRequires: x11-xtrans-devel
 %endif
@@ -168,19 +180,23 @@ opennx is an OSS replacement for Nomachine's NX client.
 for pkg in %{nxpkgsall} ; do
     tar xzf ${pkg}-*.tar.gz
 done
+ncver=`ls nxcomp-*.tar.gz|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxcomp-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
 %else
 %setup -q -a 100 -a 101 -a 102 -a 103
+ncver=`basename %{SOURCE100}|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxcomp-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
 %endif
 
 # Apply openssh askPIN patch (see https://bugzilla.mindrot.org/show_bug.cgi?id=608)
 cd nxssh && patch -p1 < ../patches/openssh-scard-pin.patch
 cd ..
-patch -p0 < patches/nxcomp-gcc44.patch
+if test $ncver -lt 03040006 ;then
+    patch -p0 < patches/nxcomp-gcc44.patch
+fi
 # Make nxssh load libopensc dynamically
 patch -p0 < patches/nxssh-dynopensc.patch
 
 %build
-%configure \
+./configure --prefix=%{_prefix} \
 %if %{with_staticwx}
     --enable-staticwx \
 %else
@@ -189,9 +205,14 @@ patch -p0 < patches/nxssh-dynopensc.patch
 %if %{with_debug}
     --enable-debug \
 %endif
+%if %{with_singlesession}
+    --enable-singlesession \
+%endif
 %if %{with_usbip}
     --enable-usbip
 %endif
+# keep this comment line!!
+
 make
 for pkg in %{nxpkgs} ; do
 	cd $pkg && ./configure --prefix=%{_prefix} && make
@@ -215,15 +236,15 @@ cd nxssh && ./configure --prefix=%{_prefix} --with-opensc --enable-opensc-dynami
 cd ..
 
 %install
-%makeinstall
-%{__install} -d -m 755 %{buildroot}%{_libdir}
-%{__install} -m 755 nxcomp/libXcomp.so.*.*.* %{buildroot}%{_libdir}
-%{__install} -m 755 nxesd/nxesd %{buildroot}%{_bindir}
-%{__install} -m 755 nxssh/nxssh %{buildroot}%{_bindir}
-%{__install} -m 755 nxproxy/nxproxy %{buildroot}%{_bindir}
-/sbin/ldconfig -n %{buildroot}%{_libdir}
+make DESTDIR=%{buildroot} install
+%{__install} -d -m 755 %{buildroot}%{_prefix}/lib
+%{__install} -m 755 nxcomp/libXcomp.so.*.*.* %{buildroot}%{_prefix}/lib
+%{__install} -m 755 nxesd/nxesd %{buildroot}%{_prefix}/bin
+%{__install} -m 755 nxssh/nxssh %{buildroot}%{_prefix}/bin
+%{__install} -m 755 nxproxy/nxproxy %{buildroot}%{_prefix}/bin
+/sbin/ldconfig -n %{buildroot}%{_prefix}/lib
 %{__install} -d -m 755 %{buildroot}/usr/bin
-ln -s %{_bindir}/opennx %{buildroot}/usr/bin/nxclient
+ln -s %{_prefix}/bin/opennx %{buildroot}/usr/bin/nxclient
 %if %{with_usbip}
 %{__install} -d -m 755 %{buildroot}%{_sysconfdir}/udev/rules.d
 %{__install} -m 644 etc/*.rules %{buildroot}%{_sysconfdir}/udev/rules.d
@@ -271,7 +292,7 @@ for lname in usb-0 opensc smbclient cups ; do
 done
 
 # Install icons
-cd %{_datadir}/icons
+cd %{_prefix}/share/icons
 SIZES="16 32 48 128 256"
 ICINSTALL="xdg-icon-resource install --noupdate --novendor --mode system"
 for sz in $SIZES ; do
@@ -296,7 +317,7 @@ for sz in $SIZES ; do
 done
 xdg-icon-resource forceupdate
 # Install menu entries
-cd %{_datadir}/applnk/xdg
+cd %{_prefix}/share/applnk/xdg
 xdg-desktop-menu install --mode system *.directory *.desktop
 
 %preun
@@ -310,10 +331,10 @@ rm -f %{nxlib}/libsmbclient.so
 rm -f %{nxlib}/libcups.so
 
 # Uninstall menu entries
-cd %{_datadir}/applnk/xdg
+cd %{_prefix}/share/applnk/xdg
 xdg-desktop-menu uninstall --mode system *.directory *.desktop
 # Install icons
-cd %{_datadir}/icons
+cd %{_prefix}/share/icons
 SIZES="16 32 48 128 256"
 ICREMOVE="xdg-icon-resource uninstall --noupdate --novendor --mode system"
 for sz in $SIZES ; do

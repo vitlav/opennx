@@ -163,6 +163,9 @@ class MyXmlConfig
         wxString sGetSessionParams(const long, bool, const wxString &);
         wxString sGetListParams(const long);
         wxString sGetProxyParams(const long);
+#ifdef __WXMSW__
+        wxString sGetXserverParams(bool forNXWin);
+#endif
 
         bool IsValid() { return m_bValid; }
         bool IsWritable() { return m_bWritable; }
@@ -206,6 +209,9 @@ class MyXmlConfig
         bool bGetVncRememberPassword() { return m_bVncRememberPassword; }
         bool bGetVncUseNxAuth() { return m_bVncUseNxAuth; }
         bool bGetEnableUSBIP() { return m_bEnableUSBIP; }
+        bool bGetDisableDirectDraw() { return m_bDisableDirectDraw; }
+        bool bGetDisableDeferredUpdates() { return m_bDisableDeferredUpdates; }
+        bool bGetGrabKeyboard() { return m_bGrabKeyboard; }
 
         MyXmlConfig::ConnectionSpeed eGetConnectionSpeed() { return m_eConnectionSpeed; }
         MyXmlConfig::DesktopType eGetDesktopType() { return m_eDesktopType; }
@@ -297,6 +303,9 @@ class MyXmlConfig
         void bSetVncRememberPassword(bool b) { m_bVncRememberPassword = b; }
         void bSetVncUseNxAuth(bool b) { m_bVncUseNxAuth = b; }
         void bSetEnableUSBIP(bool b) { m_bEnableUSBIP = b; }
+        void bSetDisableDirectDraw(bool b) { m_bDisableDirectDraw = b; }
+        void bSetDisableDeferredUpdates(bool b) { m_bDisableDeferredUpdates = b; }
+        void bSetGrabKeyboard(bool b) { m_bGrabKeyboard = b; }
 
         void eSetCacheDisk(MyXmlConfig::CacheDisk e) { m_eCacheDisk = e; }
         void eSetCacheMemory(MyXmlConfig::CacheMemory e) { m_eCacheMemory = e; }
@@ -368,6 +377,7 @@ class MyXmlConfig
         void sAddOption(wxXmlNode *, const wxString &, const wxString &);
         wxXmlNode *AddGroup(wxXmlNode *, const wxString &);
         bool loadFromStream(wxInputStream &is, bool);
+        void getDesktopSize(int &dw, int &dh, int &ww, int &wh);
 
         bool m_bDisableBackingstore;
         bool m_bDisableComposite;
@@ -410,6 +420,9 @@ class MyXmlConfig
         bool m_bVirtualDesktop;
         bool m_bVncRememberPassword;
         bool m_bVncUseNxAuth;
+        bool m_bDisableDirectDraw;
+        bool m_bGrabKeyboard;
+        bool m_bDisableDeferredUpdates;
 
         int m_iCupsPort;
         int m_iDisplayHeight;

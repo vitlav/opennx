@@ -557,7 +557,6 @@
                                         <object class="sizeritem">
                                             <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                             <border>5</border>
-                                            <option>1</option>
                                             <object class="wxStaticBoxSizer" name="wxID_ANY">
                                                 <orient>wxVERTICAL</orient>
                                                 <label>Network</label>
@@ -588,172 +587,72 @@
                                                 </object>
                                                 <object class="sizeritem">
                                                     <flag>wxGROW|wxALL</flag>
-                                                    <border>5</border>
-                                                    <object class="wxRadioButton" name="ID_RADIOBUTTON_NOPROXY">
-                                                        <style>wxRB_GROUP</style>
-                                                        <label>Use direct connection</label>
-                                                        <value>0</value>
-                                                    </object>
-                                                </object>
-                                                <object class="sizeritem">
-                                                    <flag>wxGROW|wxALL</flag>
-                                                    <border>5</border>
-                                                    <object class="wxRadioButton" name="ID_RADIOBUTTON_HTTPPROXY">
-                                                        <label>Connect through internal (NoMachine) HTTP proxy</label>
-                                                        <value>0</value>
-                                                    </object>
-                                                </object>
-                                                <object class="sizeritem">
-                                                    <flag>wxGROW</flag>
                                                     <border>0</border>
-                                                    <object class="wxFlexGridSizer">
-                                                        <cols>5</cols>
-                                                        <rows>1</rows>
-                                                        <vgap>0</vgap>
-                                                        <hgap>0</hgap>
-                                                        <growablecols>2</growablecols>
-                                                        <object class="spacer">
-                                                            <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
-                                                            <border>5</border>
-                                                            <size>7,2d</size>
-                                                        </object>
+                                                    <object class="wxBoxSizer">
+                                                        <orient>wxHORIZONTAL</orient>
                                                         <object class="sizeritem">
-                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                            <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                             <border>5</border>
-                                                            <object class="wxStaticText" name="wxID_STATIC">
-                                                                <label>Host</label>
-                                                            </object>
-                                                        </object>
-                                                        <object class="sizeritem">
-                                                            <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
-                                                            <border>5</border>
-                                                            <object class="wxTextCtrl" name="ID_TEXTCTRL_PROXYHOST">
-                                                                <enabled>0</enabled>
-                                                            </object>
-                                                        </object>
-                                                        <object class="sizeritem">
-                                                            <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
-                                                            <border>5</border>
-                                                            <object class="wxStaticText" name="wxID_STATIC">
-                                                                <label>Port</label>
-                                                            </object>
-                                                        </object>
-                                                        <object class="sizeritem">
-                                                            <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
-                                                            <border>5</border>
-                                                            <object class="wxSpinCtrl" name="ID_SPINCTRL_PROXYPORT">
-                                                                <size>40,-1d</size>
-                                                                <style>wxSP_ARROW_KEYS</style>
-                                                                <enabled>0</enabled>
-                                                                <value>3128</value>
-                                                                <min>1</min>
-                                                                <max>65535</max>
-                                                            </object>
-                                                        </object>
-                                                    </object>
-                                                </object>
-                                                <object class="sizeritem">
-                                                    <flag>wxGROW</flag>
-                                                    <border>0</border>
-                                                    <object class="wxFlexGridSizer">
-                                                        <cols>3</cols>
-                                                        <rows>3</rows>
-                                                        <vgap>0</vgap>
-                                                        <hgap>0</hgap>
-                                                        <growablecols>2</growablecols>
-                                                        <object class="spacer">
-                                                            <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
-                                                            <border>5</border>
-                                                            <size>7,2d</size>
-                                                        </object>
-                                                        <object class="sizeritem">
-                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
-                                                            <border>5</border>
-                                                            <object class="wxStaticText" name="wxID_STATIC">
-                                                                <label>User</label>
-                                                            </object>
-                                                        </object>
-                                                        <object class="sizeritem">
-                                                            <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
-                                                            <border>5</border>
-                                                            <object class="wxTextCtrl" name="ID_TEXTCTRL_PROXYUSER">
-                                                                <enabled>0</enabled>
-                                                            </object>
-                                                        </object>
-                                                        <object class="spacer">
-                                                            <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
-                                                            <border>5</border>
-                                                            <size>7,2d</size>
-                                                        </object>
-                                                        <object class="sizeritem">
-                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
-                                                            <border>5</border>
-                                                            <object class="wxStaticText" name="wxID_STATIC">
-                                                                <label>Password</label>
-                                                            </object>
-                                                        </object>
-                                                        <object class="sizeritem">
-                                                            <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
-                                                            <border>5</border>
-                                                            <object class="wxTextCtrl" name="ID_TEXTCTRL_PROXYPASS">
-                                                                <style>wxTE_PASSWORD</style>
-                                                                <enabled>0</enabled>
-                                                            </object>
-                                                        </object>
-                                                        <object class="spacer">
-                                                            <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
-                                                            <border>5</border>
-                                                            <size>5,5d</size>
-                                                        </object>
-                                                        <object class="spacer">
-                                                            <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
-                                                            <border>5</border>
-                                                            <size>5,5d</size>
-                                                        </object>
-                                                        <object class="sizeritem">
-                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
-                                                            <border>5</border>
-                                                            <object class="wxCheckBox" name="ID_CHECKBOX_PROXYPASS_REMEMBER">
-                                                                <label>Remember proxy password</label>
+                                                            <object class="wxCheckBox" name="ID_CHECKBOX_PROXY">
+                                                                <label>Connect through proxy</label>
                                                                 <checked>0</checked>
                                                             </object>
                                                         </object>
+                                                        <object class="spacer">
+                                                            <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                            <border>5</border>
+                                                            <option>1</option>
+                                                            <size>5,5d</size>
+                                                        </object>
+                                                        <object class="sizeritem">
+                                                            <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                            <border>5</border>
+                                                            <object class="wxButton" name="ID_BUTTON_PROXYSETTINGS">
+                                                                <enabled>0</enabled>
+                                                                <label>Settings...</label>
+                                                            </object>
+                                                        </object>
                                                     </object>
                                                 </object>
-                                                <object class="sizeritem">
-                                                    <flag>wxGROW|wxALL</flag>
-                                                    <border>5</border>
-                                                    <object class="wxRadioButton" name="ID_RADIOBUTTON_EXTERNALPROXY">
-                                                        <label>Connect through external proxy</label>
-                                                        <value>0</value>
-                                                    </object>
-                                                </object>
+                                            </object>
+                                        </object>
+                                        <object class="sizeritem">
+                                            <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                            <border>5</border>
+                                            <object class="wxStaticBoxSizer" name="wxID_ANY">
+                                                <orient>wxVERTICAL</orient>
+                                                <label>System</label>
                                                 <object class="sizeritem">
                                                     <flag>wxGROW</flag>
                                                     <border>5</border>
                                                     <object class="wxFlexGridSizer">
-                                                        <cols>3</cols>
-                                                        <rows>1</rows>
+                                                        <cols>1</cols>
+                                                        <rows>0</rows>
                                                         <vgap>0</vgap>
                                                         <hgap>0</hgap>
-                                                        <growablecols>2</growablecols>
-                                                        <object class="spacer">
-                                                            <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                        <growablerows>0</growablerows>
+                                                        <object platform="win" class="sizeritem">
+                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                             <border>5</border>
-                                                            <size>7,2d</size>
+                                                            <object platform="win" class="wxCheckBox" name="ID_CHECKBOX_DISABLEDX">
+                                                                <label>Disable DirectDraw rendering</label>
+                                                                <checked>0</checked>
+                                                            </object>
                                                         </object>
-                                                        <object class="sizeritem">
-                                                            <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                        <object platform="win" class="sizeritem">
+                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                             <border>5</border>
-                                                            <object class="wxStaticText" name="wxID_STATIC">
-                                                                <label>Command</label>
+                                                            <object platform="win" class="wxCheckBox" name="ID_CHECKBOX_GRABKB">
+                                                                <label>Grab keyboard when client has focus</label>
+                                                                <checked>0</checked>
                                                             </object>
                                                         </object>
                                                         <object class="sizeritem">
-                                                            <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                             <border>5</border>
-                                                            <object class="wxTextCtrl" name="ID_TEXTCTRL_PROXYCOMMAND">
-                                                                <enabled>0</enabled>
+                                                            <object class="wxCheckBox" name="ID_CHECKBOX_NODEFERRED">
+                                                                <label>Disable deferred screen updates</label>
+                                                                <checked>0</checked>
                                                             </object>
                                                         </object>
                                                     </object>
@@ -1291,6 +1190,22 @@
                                                     <border>5</border>
                                                     <object class="wxButton" name="ID_BUTTON_FONT_FIXED">
                                                         <label>Font</label>
+                                                    </object>
+                                                </object>
+                                            </object>
+                                        </object>
+                                        <object class="sizeritem">
+                                            <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                            <border>5</border>
+                                            <object class="wxStaticBoxSizer" name="wxID_ANY">
+                                                <orient>wxHORIZONTAL</orient>
+                                                <label>Desktop</label>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_CHECKBOX_CREATEICON">
+                                                        <label>Create a desktop icon for this session</label>
+                                                        <checked>0</checked>
                                                     </object>
                                                 </object>
                                             </object>
@@ -2839,19 +2754,15 @@ this share.</label>
         <icon>memory:memrsc#zip:res/opennx-wizard.png</icon>
         <object class="wxWizardPageSimple" name="ID_WIZARDPAGE_WELCOME" subclass="WizardPageWelcome">
             <style>wxTAB_TRAVERSAL</style>
-            <object class="wxFlexGridSizer">
-                <cols>1</cols>
-                <rows>2</rows>
-                <vgap>0</vgap>
-                <hgap>0</hgap>
-                <growablecols>0</growablecols>
+            <object class="wxBoxSizer">
+                <orient>wxVERTICAL</orient>
                 <object class="sizeritem">
-                    <flag>wxGROW|wxALIGN_TOP|wxALL</flag>
+                    <flag>wxGROW|wxALL|wxFIXED_MINSIZE</flag>
                     <border>5</border>
-                    <object class="wxHtmlWindow" name="ID_HTMLWINDOW_WELCOME">
-                        <size>200,10</size>
-                        <style>wxHW_SCROLLBAR_NEVER</style>
-                        <enabled>0</enabled>
+                    <object class="wxStaticText" name="wxID_STATIC" subclass="WrappedStaticText">
+                        <size>200,-1</size>
+                        <label>Welcome to the OpenNX Client Connection Wizard which will guide you through the steps needed to setup your login. Please select the 'Next' button to start.</label>
+                        <wrap>999</wrap>
                     </object>
                 </object>
             </object>
@@ -2866,11 +2777,12 @@ this share.</label>
                 <growablecols>0</growablecols>
                 <growablerows>7</growablerows>
                 <object class="sizeritem">
-                    <flag>wxGROW|wxALIGN_TOP|wxLEFT|wxRIGHT|wxTOP</flag>
+                    <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                     <border>5</border>
-                    <object class="wxHtmlWindow" name="ID_HTMLWINDOW_TEXT1">
-                        <size>200,10</size>
-                        <style>wxHW_SCROLLBAR_NEVER</style>
+                    <object class="wxStaticText" name="wxID_STATIC" subclass="WrappedStaticText">
+                        <size>200,-1</size>
+                        <label>Insert the name of the session. Your configuration settings will be saved with this name.</label>
+                        <wrap>9999</wrap>
                     </object>
                 </object>
                 <object class="sizeritem">
@@ -2895,11 +2807,12 @@ this share.</label>
                     </object>
                 </object>
                 <object class="sizeritem">
-                    <flag>wxGROW|wxALIGN_TOP|wxLEFT|wxRIGHT</flag>
+                    <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                     <border>5</border>
-                    <object class="wxHtmlWindow" name="ID_HTMLWINDOW_TEXT2">
-                        <size>200,10</size>
-                        <style>wxHW_SCROLLBAR_NEVER</style>
+                    <object class="wxStaticText" name="wxID_STATIC" subclass="WrappedStaticText">
+                        <size>200,-1</size>
+                        <label>Insert the name and port of the server you want to connect.</label>
+                        <wrap>9999</wrap>
                     </object>
                 </object>
                 <object class="sizeritem">
@@ -2940,11 +2853,12 @@ this share.</label>
                     </object>
                 </object>
                 <object class="sizeritem">
-                    <flag>wxGROW|wxALIGN_TOP|wxLEFT|wxRIGHT</flag>
+                    <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                     <border>5</border>
-                    <object class="wxHtmlWindow" name="ID_HTMLWINDOW_TEXT3">
-                        <size>200,10</size>
-                        <style>wxHW_SCROLLBAR_NEVER</style>
+                    <object class="wxStaticText" name="wxID_STATIC" subclass="WrappedStaticText">
+                        <size>200,-1</size>
+                        <label>Select the type of your internet connection.</label>
+                        <wrap>9999</wrap>
                     </object>
                 </object>
                 <object class="sizeritem">
@@ -3019,11 +2933,12 @@ this share.</label>
                 <growablecols>0</growablecols>
                 <growablerows>4</growablerows>
                 <object class="sizeritem">
-                    <flag>wxGROW|wxALIGN_TOP|wxALL</flag>
+                    <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                     <border>5</border>
-                    <object class="wxHtmlWindow" name="ID_HTMLWINDOW_TEXT1">
-                        <size>200,10</size>
-                        <style>wxHW_SCROLLBAR_NEVER</style>
+                    <object class="wxStaticText" name="wxID_STATIC" subclass="WrappedStaticText">
+                        <size>200,-1</size>
+                        <label>Using OpenNX Client, you can run RDP, VNC and X desktops, depending on what your service provider has made available.</label>
+                        <wrap>9999</wrap>
                     </object>
                 </object>
                 <object class="sizeritem">
@@ -3077,11 +2992,13 @@ this share.</label>
                     </object>
                 </object>
                 <object class="sizeritem">
-                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                    <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                     <border>5</border>
-                    <object class="wxStaticText" name="wxID_STATIC">
+                    <object class="wxStaticText" name="wxID_STATIC" subclass="WrappedStaticText">
+                        <size>200,-1</size>
                         <style>wxALIGN_LEFT</style>
                         <label>Select the size of your remote desktop.</label>
+                        <wrap>9999</wrap>
                     </object>
                 </object>
                 <object class="sizeritem">
@@ -3164,11 +3081,12 @@ this share.</label>
                 <growablecols>0</growablecols>
                 <growablerows>4</growablerows>
                 <object class="sizeritem">
-                    <flag>wxGROW|wxALIGN_TOP|wxALL</flag>
+                    <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                     <border>5</border>
-                    <object class="wxHtmlWindow" name="ID_HTMLWINDOW_TEXT1">
-                        <size>200,20</size>
-                        <style>wxHW_SCROLLBAR_NEVER</style>
+                    <object class="wxStaticText" name="wxID_STATIC" subclass="WrappedStaticText">
+                        <size>200,-1</size>
+                        <label>OpenNX Client supports authentication using a variety of USB SmartCard tokens. Enable this option if you intend to use such a token.</label>
+                        <wrap>9999</wrap>
                     </object>
                 </object>
                 <object class="sizeritem">
@@ -3187,11 +3105,12 @@ this share.</label>
                     </object>
                 </object>
                 <object class="sizeritem">
-                    <flag>wxGROW|wxALIGN_TOP|wxALL</flag>
+                    <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                     <border>5</border>
-                    <object class="wxHtmlWindow" name="ID_HTMLWINDOW_TEXT2">
-                        <size>200,20</size>
-                        <style>wxHW_SCROLLBAR_NEVER</style>
+                    <object class="wxStaticText" name="wxID_STATIC" subclass="WrappedStaticText">
+                        <size>200,-1</size>
+                        <label>Authorization credentials are always encrypted while establishing a connection. For increased security, you can enable the following option.</label>
+                        <wrap>9999</wrap>
                     </object>
                 </object>
                 <object class="sizeritem">
@@ -3227,11 +3146,12 @@ this share.</label>
                 <growablecols>0</growablecols>
                 <growablerows>3</growablerows>
                 <object class="sizeritem">
-                    <flag>wxGROW|wxALIGN_TOP|wxALL</flag>
+                    <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL|wxFIXED_MINSIZE</flag>
                     <border>5</border>
-                    <object class="wxHtmlWindow" name="ID_HTMLWINDOW_TEXT1">
-                        <size>200,20</size>
-                        <style>wxHW_SCROLLBAR_NEVER</style>
+                    <object class="wxStaticText" name="wxID_STATIC" subclass="WrappedStaticText">
+                        <size>200,-1</size>
+                        <label></label>
+                        <wrap>9999</wrap>
                     </object>
                 </object>
                 <object class="sizeritem">
@@ -3978,6 +3898,208 @@ enter the filter specification directly.</label>
                             <style>wxTE_PASSWORD</style>
                         </object>
                     </object>
+                </object>
+            </object>
+            <object class="sizeritem">
+                <flag>wxALIGN_RIGHT|wxALL</flag>
+                <border>5</border>
+                <object class="wxBoxSizer">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxButton" name="wxID_OK">
+                            <label>&amp;OK</label>
+                            <default>1</default>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxButton" name="wxID_CANCEL">
+                            <label>&amp;Cancel</label>
+                        </object>
+                    </object>
+                </object>
+            </object>
+        </object>
+    </object>
+    <object class="wxDialog" name="ID_PROXYPROPERTYDIALOG" subclass="ProxyPropertyDialog">
+        <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxTAB_TRAVERSAL</style>
+        <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
+        <title>Proxy settings</title>
+        <centered>1</centered>
+        <object class="wxBoxSizer">
+            <orient>wxVERTICAL</orient>
+            <object class="sizeritem">
+                <flag>wxGROW|wxALL</flag>
+                <border>5</border>
+                <object class="wxRadioButton" name="ID_RADIOBUTTON_HTTPPROXY">
+                    <label>Connect through internal (NoMachine) HTTP proxy</label>
+                    <value>0</value>
+                </object>
+            </object>
+            <object class="sizeritem">
+                <flag>wxGROW</flag>
+                <border>0</border>
+                <object class="wxFlexGridSizer">
+                    <cols>5</cols>
+                    <rows>1</rows>
+                    <vgap>0</vgap>
+                    <hgap>0</hgap>
+                    <growablecols>2</growablecols>
+                    <object class="spacer">
+                        <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <size>7,2d</size>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxStaticText" name="wxID_STATIC">
+                            <label>Host</label>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxTextCtrl" name="ID_TEXTCTRL_PROXYHOST">
+                            <enabled>0</enabled>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxStaticText" name="wxID_STATIC">
+                            <label>Port</label>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxSpinCtrl" name="ID_SPINCTRL_PROXYPORT">
+                            <size>40,-1d</size>
+                            <style>wxSP_ARROW_KEYS</style>
+                            <enabled>0</enabled>
+                            <value>3128</value>
+                            <min>1</min>
+                            <max>65535</max>
+                        </object>
+                    </object>
+                </object>
+            </object>
+            <object class="sizeritem">
+                <flag>wxGROW</flag>
+                <border>0</border>
+                <object class="wxFlexGridSizer">
+                    <cols>3</cols>
+                    <rows>3</rows>
+                    <vgap>0</vgap>
+                    <hgap>0</hgap>
+                    <growablecols>2</growablecols>
+                    <object class="spacer">
+                        <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <size>7,2d</size>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxStaticText" name="wxID_STATIC">
+                            <label>User</label>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxTextCtrl" name="ID_TEXTCTRL_PROXYUSER">
+                            <enabled>0</enabled>
+                        </object>
+                    </object>
+                    <object class="spacer">
+                        <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <size>7,2d</size>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxStaticText" name="wxID_STATIC">
+                            <label>Password</label>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxTextCtrl" name="ID_TEXTCTRL_PROXYPASS">
+                            <style>wxTE_PASSWORD</style>
+                            <enabled>0</enabled>
+                        </object>
+                    </object>
+                    <object class="spacer">
+                        <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <size>5,5d</size>
+                    </object>
+                    <object class="spacer">
+                        <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <size>5,5d</size>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxCheckBox" name="ID_CHECKBOX_PROXYPASS_REMEMBER">
+                            <enabled>0</enabled>
+                            <label>Remember proxy password</label>
+                            <checked>0</checked>
+                        </object>
+                    </object>
+                </object>
+            </object>
+            <object class="sizeritem">
+                <flag>wxGROW|wxALL</flag>
+                <border>5</border>
+                <object class="wxRadioButton" name="ID_RADIOBUTTON_EXTERNALPROXY">
+                    <label>Connect through external proxy</label>
+                    <value>0</value>
+                </object>
+            </object>
+            <object class="sizeritem">
+                <flag>wxGROW</flag>
+                <border>5</border>
+                <object class="wxFlexGridSizer">
+                    <cols>3</cols>
+                    <rows>1</rows>
+                    <vgap>0</vgap>
+                    <hgap>0</hgap>
+                    <growablecols>2</growablecols>
+                    <object class="spacer">
+                        <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <size>7,2d</size>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxStaticText" name="wxID_STATIC">
+                            <label>Command</label>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxTextCtrl" name="ID_TEXTCTRL_PROXYCOMMAND">
+                            <enabled>0</enabled>
+                        </object>
+                    </object>
+                </object>
+            </object>
+            <object class="sizeritem">
+                <flag>wxGROW|wxALL</flag>
+                <border>5</border>
+                <object class="wxStaticLine" name="wxID_STATIC">
+                    <style>wxLI_HORIZONTAL</style>
                 </object>
             </object>
             <object class="sizeritem">

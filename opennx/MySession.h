@@ -50,6 +50,12 @@ public:
         Running,
     } tSessionStatus;
 
+    typedef enum {
+        XARCH_NONE,
+        XARCH_CYGWIN,
+        XARCH_XMING,
+    } tXarch;
+
     MySession();
     MySession(wxString dir, wxString status, wxString stype, wxString host, int port, wxString md5);
     MySession(const MySession &src);
@@ -96,11 +102,11 @@ private:
 
     wxArrayString m_aParseBuffer;
     wxString getXauthCookie(int display = 0, wxString = wxT("/unix"));
-    wxString getXauthPath();
+    wxString getXauthPath(tXarch = XARCH_XMING);
     wxString formatOptFilename();
     unsigned short getFirstFreePort(unsigned short);
+    void checkXarch();
     void startProxy();
-    void startXserver();
     void startSharing();
     void parseSessions(bool moreAllowed);
     void initversion();
@@ -113,7 +119,15 @@ private:
     virtual void OnSshEvent(wxCommandEvent &);
     virtual void OnSessionEvent(wxCommandEvent &);
 
+#ifdef __WXMSW__
+    wxString getXfontPath(tXarch);
+    bool startXserver();
+    void unhideNXWin();
+    void terminateXserver();
+#endif
+
     tConnectState m_eConnectState;
+    tXarch m_eXarch;
     bool m_bGotError;
     bool m_bAbort;
     bool m_bSslTunneling;
@@ -128,6 +142,7 @@ private:
     int m_iProgress;
     int m_iReader;
     int m_iHttpPort;
+    int m_iXserverPID;
     long m_lEsdPort;
     long m_lProtocolVersion;
     unsigned long m_nSessionPushLength;

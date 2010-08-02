@@ -254,12 +254,12 @@ void SessionAdmin::ShowSessionStats(long item, bool full)
         wxDynamicCast((void *)m_SessionListCtrl->GetItemData(item), MySession);
     if (s) {
         wxFileName fn(s->sGetDir(), wxT("stats"));
-        long spid = s->lGetPID();
         wxString md5stats1 = Md5OfFile(fn.GetFullPath());
         wxString md5stats2 = md5stats1;
         bool ok = false;
 #ifdef __UNIX__
-        ok = (kill((pid_t)spid, full ? SIGUSR1 : SIGUSR2) == 0);
+        ok = (kill((pid_t)s->lGetPID(), full ? SIGUSR1 : SIGUSR2) == 0);
+#else
 #endif
         if (ok) {
             // Wait until file starts changing
@@ -358,6 +358,7 @@ void SessionAdmin::OnToolSessionNewClick( wxCommandEvent& event )
 {
     OnMenuSessionNewClick(event);
 }
+
 /*!
  * wxEVT_COMMAND_MENU_SELECTED event handler for ID_MENU_FILE_CHDIR
  */
@@ -370,7 +371,6 @@ void SessionAdmin::OnPREFERENCESClick( wxCommandEvent& event )
         m_NxDirectory = dir;
         m_sessions->SetDir(dir);
     }
-    event.Skip();
 }
 
 /*!
@@ -380,7 +380,6 @@ void SessionAdmin::OnPREFERENCESClick( wxCommandEvent& event )
 void SessionAdmin::OnEXITClick( wxCommandEvent& event )
 {
     Close();
-    event.Skip();
 }
 
 /*!
@@ -467,7 +466,6 @@ void SessionAdmin::OnListctrlSelected( wxListEvent& event )
         wxDynamicCast((void *)m_SessionListCtrl->GetItemData(event.GetIndex()), MySession);
     bool running = ((NULL != s) && (s->eGetSessionStatus() == MySession::Running));
     SessionToolsEnable(true, running);
-    event.Skip();
 }
 
 /*!
@@ -477,7 +475,6 @@ void SessionAdmin::OnListctrlSelected( wxListEvent& event )
 void SessionAdmin::OnListctrlDeselected( wxListEvent& event )
 {
     SessionToolsEnable(false);
-    event.Skip();
 }
 
 
@@ -489,7 +486,6 @@ void SessionAdmin::OnMenuSessionNewClick( wxCommandEvent& event )
 {
     LoginDialog d(this);
     d.ShowModal();
-    event.Skip();
 }
 
 /*!
@@ -505,7 +501,6 @@ void SessionAdmin::OnMenuSessionTerminateClick( wxCommandEvent& event )
         if (s)
             close_sid(s->sGetMd5().mb_str());
     }
-    event.Skip();
 }
 
 /*!
@@ -517,7 +512,6 @@ void SessionAdmin::OnMenuSessionPstatsClick( wxCommandEvent& event )
     long item = m_SessionListCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
     if (item != -1)
         ShowSessionStats(item, false);
-    event.Skip();
 }
 
 /*!
@@ -529,7 +523,6 @@ void SessionAdmin::OnMenuSessionFstatsClick( wxCommandEvent& event )
     long item = m_SessionListCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
     if (item != -1)
         ShowSessionStats(item, true);
-    event.Skip();
 }
 
 /*!
@@ -548,7 +541,6 @@ void SessionAdmin::OnMenuSessionLogClick( wxCommandEvent& event )
             d.ShowModal();
         }
     }
-    event.Skip();
 }
 
 /*!
@@ -566,7 +558,6 @@ void SessionAdmin::OnMenuSessionRemoveClick( wxCommandEvent& event )
             m_sessions->CleanupDir(dir);
         }
     }
-    event.Skip();
 }
 
 /*!
@@ -581,7 +572,6 @@ void SessionAdmin::OnMenuSessionKillClick( wxCommandEvent& event )
             wxDynamicCast((void *)m_SessionListCtrl->GetItemData(item), MySession);
         wxProcess::Kill(s->lGetPID());
     }
-    event.Skip();
 }
 
 /*!
@@ -591,7 +581,6 @@ void SessionAdmin::OnMenuSessionKillClick( wxCommandEvent& event )
 void SessionAdmin::OnMenuRefreshClick( wxCommandEvent& event )
 {
     m_sessions->ScanDir();
-    event.Skip();
 }
 
 

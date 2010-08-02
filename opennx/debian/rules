@@ -34,7 +34,6 @@ ifneq "$(wildcard /usr/share/misc/config.guess)" ""
 	cp -f /usr/share/misc/config.guess config.guess
 endif
 	./configure $(CROSS) --prefix=$(prefix) --datarootdir=/usr/share/opennx
-	patch -p0 < patches/nxcomp-gcc44.patch
 	cd nxcomp && ./configure --prefix=$(prefix)
 	cd nxesd && ./configure --prefix=$(prefix)
 	cd nxproxy && ./configure --prefix=$(prefix)

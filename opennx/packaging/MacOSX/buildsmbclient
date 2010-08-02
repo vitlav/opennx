@@ -25,7 +25,7 @@ trap cleanup EXIT
 mkdir -p "$TDIR"
 cd "$TDIR"
 TGZ=samba-latest.tar.gz
-DLURL="http://us1.samba.org/samba/ftp/$TGZ"
+DLURL="ftp://ftp.samba.org/pub/samba/$TGZ"
 
 test -f $TGZ || wget "$DLURL"
 SRC=`tar tzf $TGZ|tail -1|cut -d/ -f1`

@@ -59,6 +59,11 @@
 #include "trace.h"
 ENABLE_TRACE;
 
+#ifdef SINGLE_SESSION
+# define NXSSH_TIMER 5432
+#endif
+#define AUTOLOGIN_TIMER 5433
+
 /*!
  * LoginDialog type definition
  */
@@ -72,6 +77,8 @@ IMPLEMENT_CLASS( LoginDialog, wxDialog )
 BEGIN_EVENT_TABLE( LoginDialog, wxDialog )
 
     ////@begin LoginDialog event table entries
+    EVT_INIT_DIALOG( LoginDialog::OnInitDialog )
+
     EVT_COMBOBOX( XRCID("ID_COMBOBOX_SESSION"), LoginDialog::OnComboboxSessionSelected )
 
     EVT_CHECKBOX( XRCID("ID_CHECKBOX_SMARTCARD"), LoginDialog::OnCheckboxSmartcardClick )
@@ -84,6 +91,11 @@ BEGIN_EVENT_TABLE( LoginDialog, wxDialog )
 
     ////@end LoginDialog event table entries
 
+#ifdef SINGLE_SESSION
+    EVT_TIMER(NXSSH_TIMER, LoginDialog::OnTimer)
+#endif
+    EVT_TIMER(AUTOLOGIN_TIMER, LoginDialog::OnLoginTimer)
+
 END_EVENT_TABLE()
 
     /*!
@@ -92,6 +104,10 @@ END_EVENT_TABLE()
 
     LoginDialog::LoginDialog( )
 : m_pCurrentCfg(NULL)
+#ifdef SINGLE_SESSION
+, m_cNxSshWatchTimer(this, NXSSH_TIMER)
+#endif
+, m_cAutoLoginTimer(this, AUTOLOGIN_TIMER)
 {
     m_bGuestLogin = false;
     m_bUseSmartCard = false;
@@ -99,6 +115,10 @@ END_EVENT_TABLE()
 
     LoginDialog::LoginDialog( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 : m_pCurrentCfg(NULL)
+#ifdef SINGLE_SESSION
+, m_cNxSshWatchTimer(this, NXSSH_TIMER)
+#endif
+, m_cAutoLoginTimer(this, AUTOLOGIN_TIMER)
 {
     m_bGuestLogin = false;
     m_bUseSmartCard = false;
@@ -190,6 +210,7 @@ bool LoginDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
     m_pCtrlUseSmartCard = NULL;
     m_pCtrlGuestLogin = NULL;
     m_pCtrlConfigure = NULL;
+    m_pCtrlLoginButton = NULL;
     ////@end LoginDialog member initialisation
 
     ////@begin LoginDialog creation
@@ -222,6 +243,7 @@ void LoginDialog::CreateControls()
     m_pCtrlUseSmartCard = XRCCTRL(*this, "ID_CHECKBOX_SMARTCARD", wxCheckBox);
     m_pCtrlGuestLogin = XRCCTRL(*this, "ID_CHECKBOX_GUESTLOGIN", wxCheckBox);
     m_pCtrlConfigure = XRCCTRL(*this, "ID_BUTTON_CONFIGURE", wxButton);
+    m_pCtrlLoginButton = XRCCTRL(*this, "wxID_OK", wxButton);
     // Set validators
     if (FindWindow(XRCID("ID_TEXTCTRL_USERNAME")))
         FindWindow(XRCID("ID_TEXTCTRL_USERNAME"))->SetValidator( wxGenericValidator(& m_sUsername) );
@@ -250,6 +272,11 @@ void LoginDialog::CreateControls()
     }
     m_pCtrlGuestLogin->Enable(m_pCurrentCfg && m_pCurrentCfg->IsWritable());
     m_pCtrlConfigure->Enable(m_pCurrentCfg && m_pCurrentCfg->IsWritable());
+#ifdef SINGLE_SESSION
+    m_pCtrlLoginButton->Enable(false);
+    m_cNxSshWatchTimer.Start(1000);
+    ::myLogTrace(MYTRACETAG, wxT("Starting nxssh watch timer"));
+#endif
 }
 
 /*!
@@ -261,7 +288,6 @@ void LoginDialog::OnCheckboxSmartcardClick( wxCommandEvent& event )
     // Nothing to do here (validator sets var already)
     event.Skip();
 }
-
 
 /*!
  * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_GUESTLOGIN
@@ -336,7 +362,8 @@ void LoginDialog::OnButtonConfigureClick( wxCommandEvent& event )
                 ReadConfigDirectory();
                 break;
             case wxID_OK:
-                m_bUseSmartCard = ::wxGetApp().NxSmartCardSupport() && m_pCurrentCfg->bGetUseSmartCard();
+                m_bUseSmartCard = ::wxGetApp().NxSmartCardSupport() &&
+                    m_pCurrentCfg->bGetUseSmartCard();
                 m_pCtrlUseSmartCard->SetValue(m_bUseSmartCard);
                 if (!m_pCurrentCfg->SaveToFile())
                     wxMessageBox(wxString::Format(_("Could not save session to\n%s"),
@@ -348,6 +375,13 @@ void LoginDialog::OnButtonConfigureClick( wxCommandEvent& event )
                 wxConfigBase::Get()->Write(wxT("Config/UsbipdSocket"), d.GetUsbipdSocket());
                 wxConfigBase::Get()->Write(wxT("Config/UsbipPort"), d.GetUsbLocalPort());
 #endif
+                bool bDTI = ::wxGetApp().CheckDesktopEntry(m_pCurrentCfg);
+                if (d.GetbCreateDesktopIcon() != bDTI) {
+                    if (d.GetbCreateDesktopIcon())
+                        ::wxGetApp().CreateDesktopEntry(m_pCurrentCfg);
+                    else
+                        ::wxGetApp().RemoveDesktopEntry(m_pCurrentCfg);
+                }
                 break;
         }
     }
@@ -397,7 +431,7 @@ void LoginDialog::OnComboboxSessionSelected( wxCommandEvent& event )
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
  */
 
-void LoginDialog::OnOkClick( wxCommandEvent& event )
+void LoginDialog::OnOkClick(wxCommandEvent& event)
 {
     if (m_pCurrentCfg) {
         TransferDataFromWindow();
@@ -408,7 +442,7 @@ void LoginDialog::OnOkClick( wxCommandEvent& event )
                 m_pCurrentCfg->sSetPassword(m_sPassword);
         }
         m_pCurrentCfg->bSetUseSmartCard(m_bUseSmartCard);
-        if (m_bUseSmartCard)
+        if (m_bUseSmartCard || (!::wxGetApp().NxProxyAvailable()))
             m_pCurrentCfg->bSetEnableSSL(true);
 
         // Workaround for a bug-compatibility to original nxclient:
@@ -418,11 +452,20 @@ void LoginDialog::OnOkClick( wxCommandEvent& event )
             m_pCurrentCfg->bSetRdpRememberPassword(true);
 
         MySession s;
+#ifdef SINGLE_SESSION
+        m_cNxSshWatchTimer.Stop();
+        ::myLogTrace(MYTRACETAG, wxT("Stopping nxssh watch timer"));
+#endif
         Disable();
         bool b = s.Create(*m_pCurrentCfg, m_sPassword, this);
         Enable();
-        if (!b)
+        if (!b) {
+#ifdef SINGLE_SESSION
+            m_cNxSshWatchTimer.Start(1000);
+            ::myLogTrace(MYTRACETAG, wxT("Starting nxssh watch timer"));
+#endif
             return;
+        }
         if (m_pCurrentCfg->IsWritable()) {
             if (!m_pCurrentCfg->SaveToFile())
                 wxMessageBox(wxString::Format(_("Could not save session to\n%s"),
@@ -434,3 +477,46 @@ void LoginDialog::OnOkClick( wxCommandEvent& event )
     }
     event.Skip();
 }
+
+/*!
+ * Handle events from AutoLoginTimer
+ */
+void LoginDialog::OnLoginTimer(wxTimerEvent& event)
+{
+    wxCommandEvent ev(wxEVT_COMMAND_BUTTON_CLICKED, wxID_OK);
+    AddPendingEvent(ev);
+}
+
+#ifdef SINGLE_SESSION
+/*!
+ * Handle events from NxSshWatchTimer
+ */
+void LoginDialog::OnTimer(wxTimerEvent& event)
+{
+    wxArrayString cmdout;
+    wxExecute(wxT("ps h -C nxssh"), cmdout, wxEXEC_SYNC|wxEXEC_NODISABLE);
+    bool enable = (cmdout.GetCount() == 0);
+    if (NULL != m_pCtrlLoginButton)
+        m_pCtrlLoginButton->Enable(enable);
+    if (enable && ::wxGetApp().AutoLogin()) {
+        wxCommandEvent ev(wxEVT_COMMAND_BUTTON_CLICKED, wxID_OK);
+        AddPendingEvent(ev);
+    }
+}
+#endif
+
+
+/*!
+ * wxEVT_INIT_DIALOG event handler for ID_DIALOG_LOGIN
+ */
+
+void LoginDialog::OnInitDialog( wxInitDialogEvent& event )
+{
+    wxDialog::OnInitDialog(event);
+#ifndef SINGLE_SESSION
+    if (::wxGetApp().AutoLogin())
+        m_cAutoLoginTimer.Start(1000, wxTIMER_ONE_SHOT);
+#endif
+    event.Skip();
+}
+

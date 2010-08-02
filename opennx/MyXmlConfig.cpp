@@ -257,6 +257,9 @@ MyXmlConfig::init()
     m_bVirtualDesktop = false;
     m_bVncRememberPassword = false;
     m_bVncUseNxAuth = false;
+    m_bDisableDirectDraw = false;
+    m_bDisableDeferredUpdates = false;
+    m_bGrabKeyboard = false;
 
     m_iCupsPort = 631;
     m_iDisplayHeight = 480;
@@ -379,6 +382,9 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
     m_bVirtualDesktop = other.m_bVirtualDesktop;
     m_bVncRememberPassword = other.m_bVncRememberPassword;
     m_bVncUseNxAuth = other.m_bVncUseNxAuth;
+    m_bDisableDirectDraw = other.m_bDisableDirectDraw;
+    m_bDisableDeferredUpdates = other.m_bDisableDeferredUpdates;
+    m_bGrabKeyboard = other.m_bGrabKeyboard;
 
     m_iCupsPort = other.m_iCupsPort;
     m_iDisplayHeight = other.m_iDisplayHeight;
@@ -544,6 +550,31 @@ MyXmlConfig::UrlEsc(const wxString &s)
     return ret;
 }
 
+    void
+MyXmlConfig::getDesktopSize(int &dw, int &dh, int &ww, int &wh)
+{
+    // Fetch the size of the display and the workarea
+    // (workarea == display size reduced by the size of the taskbar and window
+    // decorations) where our toplevel dialog are shown.
+    wxWindow *tlw = ::wxGetApp().GetTopWindow();
+    if (NULL == tlw) {
+        ::wxLogError(_("Could not find application window"));
+        return;
+    }
+    int dspidx = wxDisplay::GetFromWindow(tlw);
+    wxDisplay dsp(dspidx);
+    wxRect r = dsp.GetGeometry();
+    dw = r.GetWidth();
+    dh = r.GetHeight();
+    r = dsp.GetClientArea();
+    wxSize sz = tlw->GetSize();
+    wxSize clsz = tlw->GetClientSize();
+    ww = r.GetWidth() - (sz.GetWidth() - clsz.GetWidth());
+    wh = r.GetHeight() - (sz.GetHeight() - clsz.GetHeight());
+    ::myLogTrace(MYTRACETAG, wxT("Display: %dx%d, Workarea: %dx%d (netto: %d,%d)"),
+            dw, dh, r.GetWidth(), r.GetHeight(), ww, wh);
+}
+
 // Retrieve parameters for startsession command
     wxString
 MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxString &clrpass)
@@ -553,18 +584,7 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
     bool bNeedGeometry = bNew;
     int dspw, dsph, clientw, clienth;
 
-    {
-        // Fetch the size of the display where we are shown.
-        int dspidx = wxDisplay::GetFromWindow(::wxGetApp().GetTopWindow());
-        wxDisplay dsp(dspidx);
-        wxRect r = dsp.GetGeometry();
-        dspw = r.GetWidth();
-        dsph = r.GetHeight();
-        r = dsp.GetClientArea();
-        clientw = r.GetWidth();
-        clienth = r.GetHeight();
-    }
-
+    getDesktopSize(dspw, dsph, clientw, clienth);
     if (bNew) {
         ret << wxString::Format(wxT(" --session=\"%s\""), m_sName.c_str());
         ret << wxT(" --type=\"");
@@ -767,10 +787,15 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
 
     wxString kbdLocal = wxString(wxConvLocal.cMB2WX(x11_keyboard_type)).BeforeFirst(wxT(','));
     ret << wxT(" --keyboard=\"");
-    if (m_bKbdLayoutOther)
-        ret << kbdLocal.BeforeFirst(wxT('/')) << wxT("/") << m_sKbdLayoutLanguage;
-    else
+    if (m_bKbdLayoutOther) {
+        if (wxNOT_FOUND != kbdLocal.Find(wxT('/')))
+            ret << kbdLocal.BeforeFirst(wxT('/')) << wxT("/");
+        ret << m_sKbdLayoutLanguage;
+    } else {
+        if (kbdLocal.IsEmpty())
+            kbdLocal = wxT("query");
         ret << kbdLocal;
+    }
     ret << wxT("\"")
         << wxT(" --backingstore=\"")
         << (m_bDisableBackingstore ? 0 : 1)
@@ -785,13 +810,15 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
         << wxT(" --samba=\"") << (m_bEnableSmbSharing ? 1 : 0) << wxT("\"")
         << wxT(" --cups=\"") << (m_bUseCups ? 1 : 0) << wxT("\"")
         << wxT(" --nodelay=\"") << (m_bDisableTcpNoDelay ? 0 : 1) << wxT("\"")
+        << wxT(" --defer=\"") << (m_bDisableDeferredUpdates ? 1 : 0) << wxT("\"")
 #ifdef __WXMAC__
         << wxT(" --client=\"macosx\"")
 #else
 # ifdef __UNIX__
         << wxT(" --client=\"linux\"")
 # else
-        << wxT(" --client=\"winnt\"")
+        // << wxT(" --client=\"winnt\"")
+        << wxT(" --client=\"linux\"")
 # endif
 #endif
         << wxT(" --media=\"") << (m_bEnableMultimedia ? 1 : 0) << wxT("\"")
@@ -800,9 +827,56 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
         ret << wxT(" --mediahelper=\"esd\"");
     }
     // FIXME: Add real settings
-    ret << wxT(" --strict=\"0\"");
+    ret << wxT(" --strict=\"0\" --aux=\"1\"");
     return ret;
 }
+
+#ifdef __WXMSW__
+    wxString
+MyXmlConfig::sGetXserverParams(bool forNXWin)
+{
+    wxString ret;
+    int dspw, dsph, clientw, clienth;
+    getDesktopSize(dspw, dsph, clientw, clienth);
+
+    if (forNXWin) {
+        switch (m_eDisplayType) {
+            case MyXmlConfig::DPTYPE_640x480:
+                ret << wxT(" -screen 0 640x480");
+                break;
+            case MyXmlConfig::DPTYPE_800x600:
+                // fall thru
+            default:
+                ret << wxT(" -screen 0 800x600");
+                break;
+            case MyXmlConfig::DPTYPE_1024x768:
+                ret << wxT(" -screen 0 1024x768");
+                break;
+            case MyXmlConfig::DPTYPE_AVAILABLE:
+                ret << wxT(" -screen 0 ") << clientw << wxT("x") << clienth;
+                break;
+            case MyXmlConfig::DPTYPE_FULLSCREEN:
+                ret << wxT(" -fullscreen ");
+                break;
+            case MyXmlConfig::DPTYPE_CUSTOM:
+                // Fall thru
+            case MyXmlConfig::DPTYPE_REMOTE:
+                ret << wxT(" -screen 0 ") << m_iDisplayWidth << wxT("x") << m_iDisplayHeight;
+                break;
+        }
+    } else {
+        if (MyXmlConfig::DPTYPE_FULLSCREEN == m_eDisplayType) {
+            ret << wxT(" -terminate -fullscreen -hide");
+        } else {
+            ret << wxT(" -noreset -lesspointer -multiwindow");
+        }
+    }
+    if (m_bDisableDirectDraw)
+        ret << wxT(" -engine 1");
+    ret << wxT(" -") << (m_bGrabKeyboard ? wxT("") : wxT("no")) << wxT("keyhook");
+    return ret;
+}
+#endif
 
     ShareGroup &
 MyXmlConfig::findShare(const wxString &name)
@@ -928,6 +1002,9 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
     if (m_bVirtualDesktop != other.m_bVirtualDesktop) return false;
     if (m_bVncRememberPassword != other.m_bVncRememberPassword) return false;
     if (m_bVncUseNxAuth != other.m_bVncUseNxAuth) return false;
+    if (m_bDisableDirectDraw != other.m_bDisableDirectDraw) return false;
+    if (m_bDisableDeferredUpdates != other.m_bDisableDeferredUpdates) return false;
+    if (m_bGrabKeyboard != other.m_bGrabKeyboard) return false;
 
     if (m_iCupsPort != other.m_iCupsPort) return false;
     if (m_iDisplayHeight != other.m_iDisplayHeight) return false;
@@ -1118,6 +1195,12 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                         m_bDisableZlibCompression = getBool(opt,
                                 wxT("Disable ZLIB stream compression"),
                                 m_bDisableZlibCompression);
+                        m_bGrabKeyboard = getBool(opt, wxT("Grab keyboard"),
+                                m_bGrabKeyboard);
+                        m_bDisableDirectDraw = getBool(opt, wxT("Disable DirectDraw"),
+                                m_bDisableDirectDraw);
+                        m_bDisableDeferredUpdates = getBool(opt, wxT("Disable deferred updates"),
+                                m_bDisableDeferredUpdates);
                         m_bUseProxy = getBool(opt, wxT("Enable HTTP proxy"), m_bUseProxy);
                         m_bExternalProxy = getBool(opt, wxT("Enable external proxy"), m_bExternalProxy);
                         m_bEnableSSL = getBool(opt, wxT("Enable SSL encryption"), m_bEnableSSL);
@@ -1929,6 +2012,9 @@ MyXmlConfig::SaveToFile()
     bAddOption(g, wxT("Enable external proxy"), m_bExternalProxy);
     bAddOption(g, wxT("Enable USBIP"), m_bEnableUSBIP);
     bAddOption(g, wxT("Enable response time optimisations"), false); // ???
+    bAddOption(g, wxT("Grab keyboard"), m_bGrabKeyboard);
+    bAddOption(g, wxT("Disable DirectDraw"), m_bDisableDirectDraw);
+    bAddOption(g, wxT("Disable deferred updates"), m_bDisableDeferredUpdates);
     sAddOption(g, wxT("Proxy command"), m_sProxyCommand);
     sAddOption(g, wxT("HTTP proxy host"), m_sProxyHost);
     optval = m_bProxyPassRemember ? encodeString(m_sProxyPass) : wxT("");

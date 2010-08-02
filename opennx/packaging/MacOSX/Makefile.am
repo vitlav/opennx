@@ -44,7 +44,10 @@ pkgdir:
 	mkdir nxbuild
 	(cd nxbuild ; DEST=$(abs_builddir)/pkgroot PFX=$(prefix) $(abs_srcdir)/buildnx)
 	$(MAKE) -C $(top_builddir) DESTDIR=$(abs_builddir)/pkgroot install
-	$(MAKE) -C $(top_builddir)/po DESTDIR=$(abs_builddir)/pkgroot install-data-yes
+	for lang in $(shell cat $(top_srcdir)/po/LINGUAS) ; do \
+		$(INSTALL_DATA) $(WX_PREFIX)/share/locale/$$lang/LC_MESSAGES/wxstd.mo \
+			pkgroot/$(localedir)/$$lang/LC_MESSAGES/ ; \
+	done
 	$(srcdir)/buildsmbclient $(prefix) \
 	    $(abs_builddir)/pkgroot$(libdir)
 	touch $@

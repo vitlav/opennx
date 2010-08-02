@@ -1,5 +1,5 @@
 TARBALL = Xming_69031_source.tar.bz2
-DLURL = http://sourceforge.net/projects/xming/files/Xming-source/6.9.0.31/Xming_69031_source.tar.bz2/download
+DLURL = http://sourceforge.net/projects/xming/files/Xming-source/6.9.0.31/$(TARBALL)/download
 TMPDIST = $(abs_builddir)/dist
 
 MAINTAINERCLEANFILES = Makefile.in
@@ -8,7 +8,9 @@ CLEANFILES = -rf tmpinstall build-$(XMING_BTYPE) patchedsrc srcdir checktarball 
 DISTCLEANFILES = -rf dist $(TARBALL)
 EXTRA_DIST = version.def Xming_69031_source.tar.bz2.md5sum patches
 XMING_GENERIC_PATCHES = xming-build.patch xming-build-subsys.patch \
-	xming-build-xauth.patch xming-build-xset.patch
+	xming-build-xauth.patch xming-build-xset.patch xming-build-nls.patch \
+	xming-envbasedir.patch xming-optionhide.patch xming-mutex.patch \
+	xming-terminate.patch xming-build-fontutils.patch
 
 buildfromscratch: distclean tmpinstall
 
@@ -72,7 +74,7 @@ checktarball: $(TARBALL)
 
 $(TARBALL):
 	@echo downloading tarball $(TARBALL)
-	@wget "$(DLURL)"
+	@$(WGET) "$(DLURL)"
 
 ccdir:
 	@echo creating CROSSCOMPILEDIR

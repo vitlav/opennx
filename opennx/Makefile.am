@@ -1,16 +1,19 @@
 AM_LIBTOOLFLAGS = --silent
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = po packaging/MacOSX packaging/win32
+SUBDIRS = po $(PLATFORM_SUBDIRS)
+DIST_SUBDIRS = po packaging/win32 packaging/MacOSX
 
-noinst_PROGRAMS = bin2hdr
+noinst_PROGRAMS = bin2hdr $(TESTXAUTH) $(MACTESTKBD)
+
 bin2hdr_SOURCES = bin2hdr.cpp
 
 bin_PROGRAMS = opennx pconnect $(TRACELOG) $(WATCHREADER) $(WATCHUSBIP) \
 	       $(MACFINDREADER) $(MACUNINSTALL)
 
 EXTRA_PROGRAMS = tracelog$(EXEEXT) watchreader$(EXEEXT) \
-		 watchusbip$(EXEEXT) macfindreader$(EXEEXT) macuninstall$(EXEEXT)
+	watchusbip$(EXEEXT) macfindreader$(EXEEXT) macuninstall$(EXEEXT) \
+	mactestkbd$(EXEEXT) testxauth$(EXEEXT)
 
 opennx_SOURCES = AboutDialog.cpp AsyncProcess.cpp LibOpenSC.cpp \
 	CardWaiterDialog.cpp ConnectDialog.cpp ExtHtmlWindow.cpp \
@@ -19,11 +22,12 @@ opennx_SOURCES = AboutDialog.cpp AsyncProcess.cpp LibOpenSC.cpp \
 	MyValidator.cpp MyWizard.cpp MyXmlConfig.cpp opennxApp.cpp \
 	osdep.c PanicDialog.cpp pwcrypt.cpp ProxyPasswordDialog.cpp QuitDialog.cpp \
 	RdpImageSettingsDialog.cpp RdpPropertyDialog.cpp ResumeDialog.cpp \
-	SessionAdmin.cpp SessionList.cpp SessionProperties.cpp \
-	ShareProperties.cpp TextViewer.cpp UnixImageSettingsDialog.cpp \
-	UsbFilterDetailsDialog.cpp UsbIp.cpp VncImageSettingsDialog.cpp \
-	VncPropertyDialog.cpp wxprec.cpp WinShare.cpp X11PropertyDialog.cpp \
-	xh_richtext.cpp MacOSX.c
+	ProxyPropertyDialog.cpp SessionAdmin.cpp SessionList.cpp \
+	SessionProperties.cpp SimpleXauth.cpp ShareProperties.cpp \
+	TextViewer.cpp UnixImageSettingsDialog.cpp UsbFilterDetailsDialog.cpp \
+	UsbIp.cpp VncImageSettingsDialog.cpp VncPropertyDialog.cpp \
+	wxprec.cpp WinShare.cpp X11PropertyDialog.cpp xh_richtext.cpp \
+	MacOSX.c WrappedStatic.cpp
 
 noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	LibOpenSC.h CardWaiterDialog.h CardWaiterDialog_symbols.h \
@@ -35,9 +39,10 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	MyValidator.h MyWizard.h MyWizard_symbols.h MyXmlConfig.h opennxApp.h \
 	osdep.h  PanicDialog.h PanicDialog_symbols.h pwcrypt.h QuitDialog.h \
 	QuitDialog_symbols.h ProxyPasswordDialog.h ProxyPasswordDialog_symbols.h \
+	ProxyPropertyDialog.h ProxyPropertyDialog_symbols.h \
 	RdpImageSettingsDialog.h RdpImageSettingsDialog_symbols.h RdpPropertyDialog.h \
 	RdpPropertyDialog_symbols.h ResumeDialog.h ResumeDialog_symbols.h \
-	SessionAdmin.h SessionAdmin_symbols.h SessionList.h \
+	SessionAdmin.h SessionAdmin_symbols.h SessionList.h SimpleXauth.h \
 	SessionProperties.h SessionProperties_symbols.h ShareProperties.h \
 	ShareProperties_symbols.h TextViewer.h TextViewer_symbols.h \
 	TraceLogFrame.h TraceLogFrame_symbols.h UnixImageSettingsDialog.h \
@@ -46,10 +51,17 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	VncImageSettingsDialog.h VncImageSettingsDialog_symbols.h \
 	VncPropertyDialog.h VncPropertyDialog_symbols.h WinShare.h \
 	X11PropertyDialog.h X11PropertyDialog_symbols.h trace.h tracelogApp.h \
-	watchReaderApp.h watchUsbIpApp.h xh_richtext.h MacUninstallApp.h
+	watchReaderApp.h watchUsbIpApp.h xh_richtext.h MacUninstallApp.h \
+	WrappedStatic.h
 
 pconnect_SOURCES = pconnect.c
 pconnect_LDADD = $(WS2LIB) $(RESLIB)
+
+testxauth_SOURCES = testxauth.cpp SimpleXauth.cpp pwcrypt.cpp md5.c
+testxauth_LDADD = $(WX_LIBS)
+testxauth_CPPFLAGS = $(WX_CPPFLAGS) -DAPP_TESTXAUTH
+testxauth_CXXFLAGS = $(WX_CXXFLAGS)
+testxauth_CFLAGS = $(WX_CFLAGS)
 
 watchreader_SOURCES = watchReaderApp.cpp LibOpenSC.cpp MyDynlib.cpp MacOSX.c osdep.c mylog.cpp
 watchreader_DEPENDENCIES = $(WATCHREADER_RES)
@@ -78,7 +90,6 @@ tracelog_CFLAGS = $(WX_CFLAGS)
 
 macfindreader_SOURCES = macfindreader.c
 macfindreader_CFLAGS = $(UNIFLAGS)
-macfindreader_LDLAGS = $(UNIFLAGS)
 macfindreader_LDADD = -lopensc
 
 macuninstall_SOURCES = MacUninstallApp.cpp MacOSX.c
@@ -87,6 +98,11 @@ macuninstall_LDFLAGS = -framework Security
 macuninstall_CPPFLAGS = $(WX_CPPFLAGS) -DAPP_MACUNINSTALL
 macuninstall_CXXFLAGS = $(WX_CXXFLAGS)
 macuninstall_CFLAGS = $(WX_CFLAGS)
+
+mactestkbd_SOURCES = mactestkbd.c MacOSX.c
+mactestkbd_LDADD = $(WX_LIBS)
+mactextkbd_CPPFLAGS = $(WX_CPPFLAGS)
+mactestkbd_CFLAGS = $(WX_CFLAGS)
 
 EXTRA_HEADERS = res/opennx.rc
 
@@ -158,8 +174,8 @@ RESSRC = $(subst $(srcdir)/,,$(RESDEPS))
 tmpres.zip: $(RESDEPS)
 	$(AM_V_GEN)cd $(srcdir) && zip -q9r $(abs_builddir)/$(@F) $(RESSRC)
 
-memres.h: tmpres.zip bin2hdr
-	$(AM_V_GEN)./bin2hdr tmpres.zip memres.h mem_res
+memres.h: tmpres.zip bin2hdr$(EXEEXT)
+	$(AM_V_GEN)./bin2hdr$(EXEEXT) tmpres.zip memres.h mem_res
 
 $(top_srcdir)/opennxApp.cpp: memres.h
 
@@ -172,7 +188,7 @@ watchUsbIpApp.cpp: memres.h
 SUFFIXES = .rc
 
 .rc.o: $(OSRESDEPS)
-	$(WX_RESCOMP) -I$(top_builddir) -o $@ $<
+	$(AM_V_GEN)$(WX_RESCOMP) -I$(top_builddir) -o $@ $<
 
 CLEANFILES = memres.h tmpres.zip *~ po/*~ *.bak *~ \#.* .\#* OpenNX.app
 
@@ -194,6 +210,7 @@ cupsdir = $(datadir)/cups
 cups_DATA = $(top_srcdir)/share/cups/*
 
 install-data-local:
+	$(MAKE) -C po stamp-po install-data-yes
 	$(INSTALL) -d $(DESTDIR)$(datadir)/icons
 	cd $(top_srcdir)/extres && \
 		for d in 16x16 32x32 48x48 128x128 256x256 512x512 scalable ; do \

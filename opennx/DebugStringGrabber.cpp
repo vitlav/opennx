@@ -47,7 +47,7 @@ DEFINE_LOCAL_EVENT_TYPE(wxEVT_DEBUGSTRING);
 
 typedef struct {
     DWORD pid;
-    char msg[1] __attribute__((packed));
+    char msg[1];
 } tDebugBuffer;
 
 class DebugStringGrabberData {
@@ -60,8 +60,8 @@ class DebugStringGrabberData {
 
 DebugStringGrabber::DebugStringGrabber(wxEvtHandler *handler, pid_t filterPID)
     : wxThreadHelper()
-    , m_bOk(false)
     , m_pEvtHandler(handler)
+    , m_bOk(false)
 {
     m_pData = new DebugStringGrabberData();
     m_pData->FilterPID = filterPID;

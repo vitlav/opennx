@@ -27,6 +27,8 @@ case $build_os in
         fi
         ;;
 esac
+
+PLATFORM_SUBDIRS=
 case $target_os in
     darwin*)
         am_dependency_tracking=no
@@ -34,8 +36,13 @@ case $target_os in
         if test "x$prefix" = xNONE; then
             prefix=/Library/OpenNX
         fi
+        PLATFORM_SUBDIRS=packaging/MacOSX
+        ;;
+    mingw*)
+        PLATFORM_SUBDIRS=packaging/win32
         ;;
 esac
+AC_SUBST(PLATFORM_SUBDIRS)
 
 # Checks for programs.
 AC_DISABLE_SHARED
@@ -60,6 +67,13 @@ AC_CHECK_TOOL([PERL],[perl],[
     case $target_os in
         mingw*)
             AC_MSG_ERROR([Could not find required tool 'perl'])
+            ;;
+    esac
+])
+AC_CHECK_TOOL([WGET],[wget],[
+    case $target_os in
+        mingw*|darwin*)
+            AC_MSG_ERROR([Could not find required tool 'wget'])
             ;;
     esac
 ])
@@ -89,7 +103,7 @@ AC_CHECK_LIB(resolv,res_init,[RESLIB=-lresolv],[
 AC_SUBST(RESLIB)
 
 # Checks for header files.
-AC_CHECK_HEADERS([arpa/inet.h limits.h netinet/in.h sys/socket.h syslog.h])
+AC_CHECK_HEADERS([arpa/inet.h limits.h netinet/in.h sys/types.h sys/socket.h syslog.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
@@ -97,7 +111,10 @@ AC_C_CONST
 AC_TYPE_SIZE_T
 AC_TYPE_OFF_T
 AC_TYPE_PID_T
-AC_CHECK_TYPES(socklen_t)
+AC_CHECK_TYPES(socklen_t,,,[AC_INCLUDES_DEFAULT()
+[#ifdef HAVE_SYS_SOCKET_H
+#include <sys/socket.h>
+#endif]])
 
 # Checks for library functions.
 AC_CHECK_FUNCS([memchr memset putenv socket strchr strdup strrchr strstr])
@@ -105,6 +122,16 @@ AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK
 
 WXPARAMS=
 AM_OPTIONS_WXCONFIG
+
+ac_cv_enable_singlesession=NO
+AC_ARG_ENABLE([singlesession],
+	AS_HELP_STRING([--enable-singlesession],
+		[Enable singlesession support (Default: NO)]),
+	[ test "$enableval" = "yes" && ac_cv_enable_singlesession=YES ]
+)
+if test "$ac_cv_enable_singlesession" = "YES" ; then
+    AC_DEFINE(SINGLE_SESSION,1,[Set to 1 for enabling single session support])
+fi
 
 ac_cv_enable_usbip=NO
 AC_ARG_ENABLE([usbip],
@@ -169,6 +196,8 @@ case $target_os in
 esac
 AM_PATH_WXCONFIG(2.8.0,wxWidgets=1,wxWidgets=0,[$_wx_required], $WXPARAMS)
 test ${wxWidgets} = 0 && AC_MSG_ERROR(Could not find wxWidgets library)
+WX_PREFIX=`$WX_CONFIG_WITH_ARGS --prefix`
+AC_SUBST(WX_PREFIX)
 
 # Check, if wxLogStream is available
 save_CPPFLAGS="$CPPFLAGS"
@@ -192,6 +221,8 @@ WATCHREADER_RES=
 WATCHUSBIP=
 MACFIDREADER=
 MACUNINSTALL=
+MACTESTKBD=
+TESTXAUTH=
 BUNDLE=
 OSRESDEPS=
 UNIFLAGS=
@@ -209,6 +240,7 @@ case $target_os in
         WATCHREADER='watchreader$(EXEEXT)'
         WATCHREADER_RES='watchreader.$(OBJEXT)'
         OSRESDEPS='$(top_srcdir)/extres/*.ico'
+        TESTXAUTH='testxauth$(EXEEXT)'
         tagnames="RC"
         _LT_AC_TAGCONFIG
         ;;
@@ -216,6 +248,7 @@ case $target_os in
         MACUNINSTALL='macuninstall$(EXEEXT)'
         MACFINDREADER='macfindreader$(EXEEXT)'
         WATCHREADER='watchreader$(EXEEXT)'
+        MACTESTKBD='mactestkbd$(EXEEXT)'
         BUNDLE=bundle
         OSRESDEPS='$(top_srcdir)/extres/*.icns'
         APP_LDADD="-lX11 -lXmu"
@@ -250,6 +283,8 @@ AC_SUBST(BUNDLE)
 AC_SUBST(OSRESDEPS)
 AC_SUBST(MACFINDREADER)
 AC_SUBST(MACUNINSTALL)
+AC_SUBST(MACTESTKBD)
+AC_SUBST(TESTXAUTH)
 AC_SUBST(UNIFLAGS)
 
 AC_ARG_ENABLE([warn],
@@ -285,10 +320,10 @@ test -n "$cupsd" && CUPS_DEFAULT_PATH=$cupsd
 AC_DEFINE_UNQUOTED(CUPS_DEFAULT_PATH,"$CUPS_DEFAULT_PATH",
                    [Set to the path of your CUPS daemon])
 
-ac_cv_nxproto="3.2.0"
+ac_cv_nxproto="3.3.0"
 AC_ARG_WITH([nxproto],
             AS_HELP_STRING([--with-nxproto],
-                           [Default NX protocol version (Default: 3.2.0)]),
+                           [Default NX protocol version (Default: 3.3.0)]),
             [ac_cv_nxproto=${withval}])
 AC_DEFINE_UNQUOTED(NX_PROTOCOL_VERSION,"${ac_cv_nxproto}",
                    [Set to default NX protocol version])
@@ -341,6 +376,24 @@ AC_ARG_WITH([dllpath],
             AS_HELP_STRING([--with-dllpath=PATH],
                            [Specify path for DLLs (mingw32 crossbuild only)]),
 	[ac_cv_dllpath=$withval])
+
+NXBUILD=nx
+CYGBINS=
+BUILDXMING=yes
+AC_ARG_WITH([orignx],
+            AS_HELP_STRING([--with-orignx],
+                           [Put original nxssh, nxesd and nxauth into installer (mingw32 build only)]),
+            [test "${withval}" = "yes" && NXBUILD=cygnx])
+AC_SUBST(NXBUILD)
+[test "$NXBUILD" = "cygnx" && CYGBINS="nxssh nxesd nxauth"]
+
+AC_ARG_WITH([nxwin],
+            AS_HELP_STRING([--with-nxwin],
+                           [Put nxwin instead of xming into installer (mingw32 build only)]),
+            [test "${withval}" = "yes" && BUILDXMING=no])
+[test "$BUILDXMING" = "no" && CYGBINS="$CYGBINS NXWin nxfind nxkill nxservice"]
+AC_SUBST(CYGBINS)
+AC_SUBST(BUILDXMING)
 
 FE_SVNREV([SVNREV])
 AC_DEFINE_UNQUOTED(SVNREV,"$SVNREV",[SVN revision])
@@ -397,6 +450,7 @@ case $target_os in
         ;;
     mingw*)
         PLATFORMDIST=setup
+        AC_CHECK_TOOL([UNRAR], [unrar], [])
         AC_DEFINE_UNQUOTED(_WIN32_WINNT,0x0500,
                    [Minimum required windows version])
         if test "$build_os" = "$target_os" ; then
@@ -452,9 +506,9 @@ AC_SUBST(XMING_PLATFORM_PATCHES)
 
 AC_CONFIG_FILES([Makefile opennx.spec res/opennx.rc
     packaging/win32/Makefile packaging/win32/findrequires.pl
-    packaging/win32/xming/Makefile packaging/win32/nx/Makefile
-    packaging/win32/pulse/Makefile
-    packaging/MacOSX/Makefile packaging/MacOSX/opennx.plist
-    packaging/MacOSX/opennx-main.plist packaging/MacOSX/pkg.plist
-    po/Makefile.in])
+    packaging/win32/isccwrap.sh packaging/win32/xming/Makefile
+    packaging/win32/nx/Makefile packaging/win32/cygnx/Makefile
+    packaging/win32/pulse/Makefile packaging/MacOSX/Makefile
+    packaging/MacOSX/opennx.plist packaging/MacOSX/opennx-main.plist
+    packaging/MacOSX/pkg.plist po/Makefile.in])
 AC_OUTPUT

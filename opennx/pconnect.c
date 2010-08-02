@@ -199,12 +199,8 @@
 #endif /* !__CYGWIN32__ */
 #endif /* !_WIN32 */
 
-#ifndef LINT
- static char *vcid = "$Id$";
-#endif
-
 #ifndef HAVE_SOCKLEN_T
-  typedef unsigned int socklen_t;
+  typedef int socklen_t;
 #endif
 
  /* available authentication types */
@@ -549,8 +545,8 @@ w32_tty_readpass( const char *prompt, char *buf, size_t size )
 {
     HANDLE in  = GetStdHandle(STD_INPUT_HANDLE);
     HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
-    DWORD mode;
-    int ret, bytes;
+    DWORD mode, bytes;
+    int ret;
 
     WriteFile(out, prompt, strlen(prompt), &bytes, 0);
     SetConsoleCtrlHandler(w32_intr_handler, TRUE ); /* add handler */
@@ -1590,7 +1586,6 @@ fddatalen( SOCKET fd )
 {
     DWORD len = 0;
     struct stat st;
-    HANDLE hStdin;
     fstat( 0, &st );
     if ( st.st_mode & _S_IFIFO ) { 
         /* in case of PIPE */
@@ -1788,7 +1783,7 @@ accept_connection (u_short port)
         fatal ("listen() failed, errno=%d\n", socket_errno());
 
     socklen = sizeof(client);
-    connection = accept( sock, &client, &socklen);
+    connection = accept(sock, &client, &socklen);
     if ( connection < 0 )
         fatal ("accept() failed, errno=%d\n", socket_errno());
 
