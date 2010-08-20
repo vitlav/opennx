@@ -73,6 +73,7 @@
 #include "xh_richtext.h"
 #include "UsbIp.h"
 #include "CardWaiterDialog.h"
+#include "SupressibleMessageDialog.h"
 
 #include "memres.h"
 
