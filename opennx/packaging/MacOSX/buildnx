@@ -29,7 +29,7 @@ mkdir -p $DEST$PFX/{include,lib}
 make DESTDIR=$DEST install-lib
 cd ..
 # Prerequisite: libpng
-test -f libpng-1.2.44.tar.gz || wget ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng-1.2.43.tar.gz
+test -f libpng-1.2.44.tar.gz || wget ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng-1.2.44.tar.gz
 tar xzf libpng-1.2.44.tar.gz
 cd libpng-1.2.44
 CFLAGS="-arch i386 -arch ppc" LDFLAGS="-arch i386 -arch ppc" ./configure \
