@@ -771,7 +771,12 @@ MySession::OnSshEvent(wxCommandEvent &event)
             }
             break;
         case MyIPC::ActionWarning:
-            ::wxLogWarning(msg);
+            {
+                wxString cfgid(wxT("sshwarn."));
+                SupressibleMessageDialog d(m_pParent, msg,
+                        _("Warning - OpenNX"), wxOK|wxICON_EXCLAMATION);
+                d.ShowModal(cfgid.Append(msg.Left(15)), wxID_OK);
+            }
             break;
         case MyIPC::ActionError:
             ::wxLogError(msg);
@@ -779,9 +784,10 @@ MySession::OnSshEvent(wxCommandEvent &event)
             break;
         case MyIPC::ActionPromptYesNo:
             {
+                wxString cfgid(wxT("sshyesno."));
                 SupressibleMessageDialog d(m_pParent, msg,
                         _("Warning - OpenNX"), wxYES_NO|wxICON_EXCLAMATION);
-                if (d.ShowModal(wxT("sshyesno"), wxID_YES) == wxID_YES)
+                if (d.ShowModal(cfgid.Append(msg.Left(15)), wxID_YES) == wxID_YES)
                     printSsh(wxT("yes"));
                 else {
                     printSsh(wxT("no"));
@@ -791,10 +797,11 @@ MySession::OnSshEvent(wxCommandEvent &event)
             break;
         case MyIPC::ActionKeyChangedYesNo:
             {
+                wxString cfgid(wxT("sshkeychanged."));
                 msg << _("\nDo you want to delete the key and retry ?");
                 SupressibleMessageDialog d(m_pParent, msg,
                         _("Warning - OpenNX"), wxYES_NO|wxICON_EXCLAMATION);
-                if (d.ShowModal(wxT("deletechangedkey"), wxID_YES) == wxID_YES)
+                if (d.ShowModal(cfgid.Append(msg.Left(15)), wxID_YES) == wxID_YES)
                     m_bRemoveKey = true;
                 m_bGotError = true;
             }
