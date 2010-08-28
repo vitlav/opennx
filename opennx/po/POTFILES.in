@@ -5,7 +5,6 @@ CardWaiterDialog.h
 CardWaiterDialog_symbols.h
 ConnectDialog.h
 ConnectDialog_symbols.h
-DebugStringGrabber.cpp
 ForeignFrame.h
 ForeignFrame_symbols.h
 KeyDialog.cpp
@@ -22,10 +21,12 @@ MyIPC.cpp
 MySession.cpp
 MyWizard.cpp
 MyWizard_symbols.h
+MyXmlConfig.cpp
 PanicDialog_symbols.h
-ProxyPasswordDialog.cpp
 ProxyPasswordDialog.h
 ProxyPasswordDialog_symbols.h
+ProxyPropertyDialog.h
+ProxyPropertyDialog_symbols.h
 QuitDialog_symbols.h
 RdpImageSettingsDialog.h
 RdpImageSettingsDialog_symbols.h
@@ -43,6 +44,8 @@ SessionProperties_symbols.h
 ShareProperties.cpp
 ShareProperties.h
 ShareProperties_symbols.h
+SupressibleMessageDialog.h
+SupressibleMessageDialog_symbols.h
 TextViewer.cpp
 TextViewer.h
 TextViewer_symbols.h

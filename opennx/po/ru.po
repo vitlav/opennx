@@ -1,3 +1,5 @@
+# translation of ru.po to Russian
+# Shakirov Lenar <snejok@altlinux.org>, 2010.
 # translation of ru.po to
 # Boris Savelev <boris.savelev@gmail.com>
 # Djelf from linuxforum.ru
@@ -6,16 +8,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-08-24 16:06+0200\n"
-"PO-Revision-Date: 2009-09-13 11:50+0100\n"
-"Last-Translator: Boris Savelev <boris.savelev@gmail.com>\n"
-"Language-Team:  <de@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2010-08-28 20:33+0200\n"
+"PO-Revision-Date: 2010-08-27 12:21+0400\n"
+"Last-Translator: Shakirov Lenar <snejok@altlinux.org>\n"
+"Language-Team: Russian <ru@li.org>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms:  nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Poedit-Language: Russian\n"
 "X-Poedit-Country: RUSSIA\n"
 
@@ -28,11 +31,11 @@ msgid "About OpenNX"
 msgstr "О OpenNX"
 
 #: AboutDialog_symbols.h:23 ProxyPasswordDialog_symbols.h:25
-#: RdpImageSettingsDialog_symbols.h:35 RdpPropertyDialog_symbols.h:35
-#: SessionProperties_symbols.h:106 ShareProperties_symbols.h:51
-#: UnixImageSettingsDialog_symbols.h:34 UsbFilterDetailsDialog_symbols.h:35
-#: VncImageSettingsDialog_symbols.h:27 VncPropertyDialog_symbols.h:31
-#: X11PropertyDialog_symbols.h:32
+#: ProxyPropertyDialog_symbols.h:31 RdpImageSettingsDialog_symbols.h:35
+#: RdpPropertyDialog_symbols.h:35 SessionProperties_symbols.h:106
+#: ShareProperties_symbols.h:51 UnixImageSettingsDialog_symbols.h:34
+#: UsbFilterDetailsDialog_symbols.h:35 VncImageSettingsDialog_symbols.h:27
+#: VncPropertyDialog_symbols.h:31 X11PropertyDialog_symbols.h:32
 msgid "&OK"
 msgstr "&OK"
 
@@ -46,12 +49,12 @@ msgstr "Пожалуйста, вставьте смарт-карту"
 
 #: CardWaiterDialog_symbols.h:24 ConnectDialog_symbols.h:24
 #: KeyDialog_symbols.h:26 LoginDialog_symbols.h:30 PanicDialog_symbols.h:23
-#: ProxyPasswordDialog_symbols.h:26 RdpImageSettingsDialog_symbols.h:36
-#: RdpPropertyDialog_symbols.h:36 ResumeDialog_symbols.h:28
-#: SessionProperties_symbols.h:107 ShareProperties_symbols.h:52
-#: UnixImageSettingsDialog_symbols.h:35 UsbFilterDetailsDialog_symbols.h:36
-#: VncImageSettingsDialog_symbols.h:28 VncPropertyDialog_symbols.h:32
-#: X11PropertyDialog_symbols.h:33
+#: ProxyPasswordDialog_symbols.h:26 ProxyPropertyDialog_symbols.h:32
+#: RdpImageSettingsDialog_symbols.h:36 RdpPropertyDialog_symbols.h:36
+#: ResumeDialog_symbols.h:28 SessionProperties_symbols.h:107
+#: ShareProperties_symbols.h:52 UnixImageSettingsDialog_symbols.h:35
+#: UsbFilterDetailsDialog_symbols.h:36 VncImageSettingsDialog_symbols.h:28
+#: VncPropertyDialog_symbols.h:32 X11PropertyDialog_symbols.h:33
 msgid "&Cancel"
 msgstr "&Отмена"
 
@@ -81,11 +84,11 @@ msgstr "Управление ключами - OpenNX"
 
 #: KeyDialog_symbols.h:23
 msgid "&Import"
-msgstr "&Import"
+msgstr "&Импорт"
 
 #: KeyDialog_symbols.h:24
 msgid "&Default"
-msgstr "&Импорт"
+msgstr "&По умолчанию"
 
 #: KeyDialog_symbols.h:25
 msgid "&Save"
@@ -93,7 +96,7 @@ msgstr "&Сохранить"
 
 #: LibOpenSC.cpp:383
 msgid "Could not terminate nxssh"
-msgstr "Konnte nxssh nicht beenden"
+msgstr "Не удалось завершить nxssh"
 
 #: LogDialog.h:52 LogDialog_symbols.h:22
 msgid "Session Log - OpenNX"
@@ -122,11 +125,11 @@ msgstr "Имя пользователя - OpenNX"
 
 #: LoginDialog_symbols.h:23
 msgid "Login"
-msgstr "Login"
+msgstr "Логин"
 
 #: LoginDialog_symbols.h:24 ProxyPasswordDialog_symbols.h:24
-#: RdpPropertyDialog_symbols.h:30 ShareProperties_symbols.h:44
-#: VncPropertyDialog_symbols.h:29
+#: ProxyPropertyDialog_symbols.h:27 RdpPropertyDialog_symbols.h:30
+#: ShareProperties_symbols.h:44 VncPropertyDialog_symbols.h:29
 msgid "Password"
 msgstr "Пароль"
 
@@ -144,19 +147,17 @@ msgid "Login as guest user"
 msgstr "Войти как гость"
 
 #: LoginDialog_symbols.h:28
-#, fuzzy
 msgid "Con&figure..."
 msgstr "Настройка..."
 
 #: LoginDialog_symbols.h:29
-#, fuzzy
 msgid "L&ogin"
-msgstr "Login"
+msgstr "Подключиться"
 
 #: MacUninstallApp.cpp:58 MacUninstallApp.cpp:435
-#, fuzzy, c-format
+#, c-format
 msgid "TEST: Would delete file: %s"
-msgstr "Не удалось удалить файл %s"
+msgstr "ТЕСТ: Будет удален файл %s"
 
 #: MacUninstallApp.cpp:61 MacUninstallApp.cpp:439
 #, c-format
@@ -169,9 +170,9 @@ msgid "Could not delete file %s"
 msgstr "Не удалось удалить файл %s"
 
 #: MacUninstallApp.cpp:72
-#, fuzzy, c-format
+#, c-format
 msgid "TEST: Would delete diretory %s"
-msgstr "Не удалось удалить директорию %s"
+msgstr "ТЕСТ: Будет удалена директория %s"
 
 #: MacUninstallApp.cpp:75
 #, c-format
@@ -185,66 +186,65 @@ msgstr "Не удалось удалить директорию %s"
 
 #: MacUninstallApp.cpp:126
 msgid "Test mode. Just create log file reporting what would happen."
-msgstr ""
+msgstr "Тестовый режим. Просто создастся отчет о том, что произойдет."
 
 #: MacUninstallApp.cpp:128
 msgid "Uninstall without asking the user (needs admin rights)."
 msgstr ""
-"Деинсталировать без спроса пользователя (требуются права Администратора)."
+"Деинсталлировать без спроса пользователя (требуются права Администратора)."
 
 #: MacUninstallApp.cpp:164
 msgid "Batch uninstall needs to be started as root."
-msgstr "Пакетная деинсталяция требует прав супер-пользователя."
+msgstr "Пакетная деинсталляция требует прав супер-пользователя."
 
 #: MacUninstallApp.cpp:165 MacUninstallApp.cpp:191
-#, fuzzy, c-format
+#, c-format
 msgid "Uninstall %s"
-msgstr "Деинсталяция OpenNX"
+msgstr "Удаление %s"
 
 #: MacUninstallApp.cpp:172
 #, c-format
 msgid "Uninstall finished at %s"
-msgstr "Деинсталяция завершена в %s"
+msgstr "Деинсталляция завершена в %s"
 
 #: MacUninstallApp.cpp:173
 #, c-format
 msgid "Status: %s, failed files: %lu, failed dirs: %lu"
-msgstr ""
+msgstr "Статус: %s, не удачные файлы: %lu, не удачные каталоги: %lu"
 
 #: MacUninstallApp.cpp:174
-#, fuzzy
 msgid "OK"
 msgstr "&OK"
 
 #: MacUninstallApp.cpp:174
 msgid "FAILED"
-msgstr ""
+msgstr "ОШИБКА"
 
 #: MacUninstallApp.cpp:181
 #, c-format
 msgid "Reporting result to elevation wrapper %s"
-msgstr ""
+msgstr "Отправка результатов в %s"
 
 #: MacUninstallApp.cpp:189
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "This operation can not be undone!\n"
 "Do you really want to uninstall %s?"
 msgstr ""
-"Diese Aktion kann nicht rückgängig gemacht werden!\n"
-"Wollen Sie OpenNX wirklich deinstallieren?"
+"Эта операция не может быть отменена!\n"
+"Вы действительно хотите удалить %s?"
 
 #: MacUninstallApp.cpp:203
-#, fuzzy, c-format
+#, c-format
 msgid "%s has been removed successfully."
-msgstr "OpenNX wurde erfolgreich entfernt."
+msgstr "%s был успешно удален."
 
 #: MacUninstallApp.cpp:205
 msgid "Uninstallation complete"
-msgstr "Deinstallation vollständig"
+msgstr "Деинсталляция завершена"
 
 #: MacUninstallApp.cpp:209
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s could not be removed completely.\n"
 "Some files or directories could not be deleted.\n"
@@ -252,15 +252,15 @@ msgid ""
 "%s\n"
 " for more information."
 msgstr ""
-"OpenNX konnte nicht vollständig entfernt werden.\n"
-"Einige Dateien oder Verzeichnisse konnten nicht gelöscht werden.\n"
-"Bitte untersuchen Sie die Datei\n"
+"Не удалось полностью удалить %s\n"
+"Некоторые файлы или каталоги не были удалены.\n"
+"Для большей информации смотрите в лог файл\n"
 "%s\n"
-"um genauere Infos zu erhalten."
+"."
 
 #: MacUninstallApp.cpp:211
 msgid "Uninstallation incomplete"
-msgstr "Deinstallation unvollständig"
+msgstr "Деинсталляция завершена"
 
 #: MacUninstallApp.cpp:217
 #, c-format
@@ -269,127 +269,123 @@ msgid ""
 "The reason should have been logged in the file\n"
 "%s"
 msgstr ""
-"Deistallation fehlgeschlagen.\n"
-"Der Grund sollte in der Datei\n"
-"%s aufgezeichent worden sein."
+"Деинсталляция не удалась.\n"
+"Причина должна быть указана в файле\n"
+"%s"
 
 #: MacUninstallApp.cpp:219
 msgid "Uninstallation failed"
-msgstr "Deinstallation fehlgeschlagen"
+msgstr "Деинсталляция не удалась"
 
 #: MacUninstallApp.cpp:237
 #, c-format
 msgid "Not an XML plist: %s"
-msgstr "Keine XML plist-Datei: %s"
+msgstr "Не XML plist: %s"
 
 #: MacUninstallApp.cpp:243
 #, c-format
 msgid "Invalid plist (missing toplevel <dict> in %s"
-msgstr "Ungültige plist (Fehlender <dict> Marker auf oberster Ebene) in %s"
+msgstr "Некорректный plist (отсутствует корневой <dict> в %s"
 
 #: MacUninstallApp.cpp:254
 #, c-format
 msgid "Invalid plist (expected a key) in %s"
-msgstr "Ungültige plist (Schlüssel erwartet) in %s"
+msgstr "Не корректный plist (ожидается ключ) в %s"
 
 #: MacUninstallApp.cpp:264
 #, c-format
 msgid "Unsupported type array in %s"
-msgstr ""
+msgstr "Неподдерживаемый тип массива в %s"
 
 #: MacUninstallApp.cpp:271
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid plist (invalid real value %s) in %s"
-msgstr "Ungültige plist (String-Wert erwartet) in %s"
+msgstr "Некорректный plist (некорректное вещественное значение %s) в %s"
 
 #: MacUninstallApp.cpp:281
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid plist (invalid integer value %s) in %s"
-msgstr "Ungültige plist (String-Wert erwartet) in %s"
+msgstr "Некорректный plist (некорректное целое значение %s) в %s"
 
 #: MacUninstallApp.cpp:300
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid plist (invalid date value %s) in %s"
-msgstr "Ungültige plist (String-Wert erwartet) in %s"
+msgstr "Некорректный plist (некорректное значение даты %s) в %s"
 
 #: MacUninstallApp.cpp:307
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid plist (unexpected type %s) in %s"
-msgstr "Ungültige plist (Schlüssel erwartet) in %s"
+msgstr "Некорректный plist (неожиданный тип %s) в %s"
 
 #: MacUninstallApp.cpp:316
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find requested key '%s' in receipt %s"
-msgstr "Konnte Packet-Quittungsdatei nicht lesen %s"
+msgstr "Не удается найти запрошенный ключ '%s' в спецификации %s"
 
 #: MacUninstallApp.cpp:328
 #, c-format
 msgid "Unexpected type '%s' of 'IFPkgFlagRelocatable' in receipt %s"
-msgstr ""
+msgstr "Неожиданный тип '%s' значения 'IFPkgFlagRelocatable' в спецификации %s"
 
 #: MacUninstallApp.cpp:337
 #, c-format
 msgid "Unexpected type '%s' of '%s' in receipt %s"
-msgstr ""
+msgstr "Неожиданный тип '%s' значения '%s' в спецификации %s"
 
 #: MacUninstallApp.cpp:343
 #, c-format
 msgid "Could not read package receipt %s"
-msgstr "Konnte Packet-Quittungsdatei nicht lesen %s"
+msgstr "Не удается прочитать спецификацию пакета %s"
 
 #: MacUninstallApp.cpp:352
 #, c-format
 msgid "Missing BOM (Bill Of Materials) '%s'. Already unistalled?"
-msgstr "Fehlende BOM-Datei (Bill Of Materials) '%s'. Bereits deinstalliert?"
+msgstr "Отсутствует BOM (Список материалов) '%s'. Уже удален?"
 
 #: MacUninstallApp.cpp:360 MacUninstallApp.cpp:373
 #, c-format
 msgid "Could not list BOM (Bill Of Materials) '%s'. Already unistalled?"
-msgstr ""
-"Konnte BOM (Bill Of Materials) nicht auflisten '%s'. Bereits deinstalliert?"
+msgstr "Нет списка BOM (Список материалов) '%s'. Уже удален?"
 
 #: MacUninstallApp.cpp:365 MacUninstallApp.cpp:378
 #, c-format
 msgid "Invalid BOM (Bill Of Materials) '%s'. Already unistalled?"
-msgstr "Ungültige BOM-Datei (Bill Of Materials) '%s'. Bereits deinstalliert?"
+msgstr "Не корректный BOM (Список материалов) '%s'. Уже удален?"
 
 #: MacUninstallApp.cpp:390
 msgid "The package receipt does not exist. Already unistalled?"
-msgstr "Die Packet-Quittungsdatei fehlt. Bereits deinstalliert?"
+msgstr "Спецификация пакета отсутствует. Уже удалена?"
 
 #: MacUninstallApp.cpp:398
 msgid "The package install path does not exist. Already unistalled?"
-msgstr ""
-"Der Installationspfad des Packets existiert nicht. Bereits deinstalliert?"
+msgstr "Каталог пакета отсутствует. Уже удален?"
 
 #: MacUninstallApp.cpp:413
-#, fuzzy, c-format
+#, c-format
 msgid "Uninstall started at %s"
-msgstr "Деинсталяция завершена в %s"
+msgstr "Деинсталляция начата в %s"
 
 #: MacUninstallApp.cpp:424
 msgid "Deleting package content"
-msgstr ""
+msgstr "Удаление содержимого пакета"
 
 #: MacUninstallApp.cpp:460 MacUninstallApp.cpp:485
-#, fuzzy, c-format
+#, c-format
 msgid "TEST: Would delete directory: %s"
-msgstr "Не удалось удалить директорию %s"
+msgstr "ТЕСТ: Будет удалена директория %s"
 
 #: MacUninstallApp.cpp:464 MacUninstallApp.cpp:488
 #, c-format
 msgid "Deleted directory: %s"
-msgstr "Verzeichnis gelöscht: %s"
+msgstr "Удаленная директория: %s"
 
 #: MacUninstallApp.cpp:478
 msgid "Deleting receipt"
-msgstr ""
+msgstr "Спецификация удалена"
 
 #: MacUninstallApp.cpp:495
 msgid "Receipt NOT deleted, because package files have been left."
-msgstr ""
-"Packet-Quittung wurde NICHT gelöscht, weil ungelöschte Dateien vorhanden "
-"sind."
+msgstr "Спецификация НЕ удалена, т.к. остались файлы пакета"
 
 #: MacUninstallApp.cpp:509
 #, c-format
@@ -397,13 +393,13 @@ msgid ""
 "In order to uninstall %s, administrative rights are required.\n"
 "\n"
 msgstr ""
-"Um %s zu deinstallieren, sind administrative Rechte erforderlich.\n"
+"Нужны права администратора чтобы удалить %s.\n"
 "\n"
 
 #: MacUninstallApp.cpp:524
 #, c-format
 msgid "Authorization could not be created: %s"
-msgstr "Autorisierung konnte nicht erzeugt werden: %s"
+msgstr "Авторизация не может быть произведена: %s"
 
 #: MacUninstallApp.cpp:550
 #, c-format
@@ -411,22 +407,21 @@ msgid ""
 "Could not execute with administrative rights:\n"
 "%s"
 msgstr ""
-"Konnte nicht mit administrativen Rechten ausführen:\n"
+"Не удалось выполнить с правами администратора:\n"
 "%s"
 
 #: MacUninstallApp.cpp:555
 #, c-format
 msgid "Authorization failed: %s"
-msgstr "Autorisierung fehlgeschlagen: %s"
+msgstr "Ошибка авторизации: %s"
 
 #: MyIPC.cpp:350
 msgid "Authentication failed"
 msgstr "Ошибка аутентификации"
 
 #: MySession.cpp:121 MySession.cpp:712
-#, fuzzy
 msgid "Invalid X11 server platform"
-msgstr "Ungüliges plist Format"
+msgstr "Неверная платформа сервера X11"
 
 #: MySession.cpp:517 MySession.cpp:538 MySession.cpp:541
 msgid "unknown"
@@ -434,7 +429,7 @@ msgstr "неизвестно"
 
 #: MySession.cpp:529
 msgid "terminated"
-msgstr "завершённая"
+msgstr "завершенная"
 
 #: MySession.cpp:532
 msgid "failed"
@@ -455,13 +450,13 @@ msgstr "Клиент"
 
 #: MySession.cpp:555 MySession.cpp:558
 msgid "Unknown"
-msgstr "Unbekannt"
+msgstr "Неизвестный"
 
-#: MySession.cpp:783 MySession.cpp:796
+#: MySession.cpp:777 MySession.cpp:789 MySession.cpp:803
 msgid "Warning - OpenNX"
 msgstr "Предупреждение - OpenNX"
 
-#: MySession.cpp:794
+#: MySession.cpp:801
 msgid ""
 "\n"
 "Do you want to delete the key and retry ?"
@@ -469,81 +464,78 @@ msgstr ""
 "\n"
 "Удалить ключ и попробовать еще раз ? "
 
-#: MySession.cpp:814
+#: MySession.cpp:821
 msgid "Sending username"
 msgstr "Отправка имени пользователя"
 
-#: MySession.cpp:818 MySession.cpp:845
+#: MySession.cpp:825 MySession.cpp:852
 msgid "Authenticating"
 msgstr "Аутентификация"
 
-#: MySession.cpp:825
+#: MySession.cpp:832
 msgid "Authentication successful"
 msgstr "Аутентификация завершена"
 
-#: MySession.cpp:861
+#: MySession.cpp:868
 msgid "Query server-side sessions"
 msgstr "Запрос сессий"
 
-#: MySession.cpp:915
+#: MySession.cpp:922
 msgid "Enter PIN for Smart Card access."
 msgstr "Введите PIN для смарт-карты."
 
-#: MySession.cpp:915
+#: MySession.cpp:922
 msgid "Smart Card PIN"
-msgstr "Smart Card PIN"
+msgstr "PIN Смарт-карты"
 
-#: MySession.cpp:920
+#: MySession.cpp:927
 msgid "Enter passphrase"
 msgstr "Введите секретный код"
 
-#: MySession.cpp:922
+#: MySession.cpp:929
 msgid "Empty passphrase"
 msgstr "Пустой секретный код"
 
-#: MySession.cpp:928 MySession.cpp:932 MySession.cpp:936 MySession.cpp:940
-#: MySession.cpp:944 MySession.cpp:948 MySession.cpp:952 MySession.cpp:956
-#: MySession.cpp:960 MySession.cpp:964
+#: MySession.cpp:935 MySession.cpp:939 MySession.cpp:943 MySession.cpp:947
+#: MySession.cpp:951 MySession.cpp:955 MySession.cpp:959 MySession.cpp:963
+#: MySession.cpp:967 MySession.cpp:971
 msgid "Negotiating session parameter"
 msgstr "Передача параметров сессии"
 
-#: MySession.cpp:972 MySession.cpp:1001
+#: MySession.cpp:979 MySession.cpp:1008
 msgid "Starting session"
 msgstr "Начало сессии"
 
-#: MySession.cpp:994
+#: MySession.cpp:1001
 msgid "Unexpected termination of nxssh"
 msgstr "Неожиданное завершение nxssh"
 
-#: MySession.cpp:1162
+#: MySession.cpp:1169
 msgid "There are no sessions which can be attached to."
-msgstr "Keine geeigneten Sitzungen vorhanden."
+msgstr "Нет сессий, к которым можно подключиться."
 
-#: MySession.cpp:1163 MySession.cpp:1174
+#: MySession.cpp:1170 MySession.cpp:1181
 msgid "Error - OpenNX"
 msgstr "Ошибка - OpenNX"
 
-#: MySession.cpp:1173
+#: MySession.cpp:1180
 msgid "You have reached your session limit. No more sessions allowed"
 msgstr "Вы достигли предела на лимит сессий. Новая сессия не разрешена"
 
-#: MySession.cpp:1365 MySession.cpp:1409
-#, fuzzy
+#: MySession.cpp:1372 MySession.cpp:1416
 msgid "Could not create X11 authentication cookie"
-msgstr ""
-"Не удалось создать директорию для сессий\n"
-"%s\n"
+msgstr "Не удалось создать X11 авторизацию"
 
-#: MySession.cpp:1434
+#: MySession.cpp:1441
 msgid "No X server found."
 msgstr "Не найден X-сервер"
 
-#: MySession.cpp:1442
-#, fuzzy, c-format
+#: MySession.cpp:1449
+#, c-format
 msgid "Could not execute %s: %s\n"
-msgstr "Не удалось удалить файл %s"
+msgstr "Не удалось запустить %s: %s\n"
 
-#: MySession.cpp:1524
+#: MySession.cpp:1531
 #, c-format
 msgid ""
 "Could not create session directory\n"
@@ -552,7 +544,7 @@ msgstr ""
 "Не удалось создать директорию для сессий\n"
 "%s\n"
 
-#: MySession.cpp:1552
+#: MySession.cpp:1559
 #, c-format
 msgid ""
 "Could not write session options\n"
@@ -561,50 +553,49 @@ msgstr ""
 "Не удалось сохранить опции сессии в\n"
 "%s\n"
 
-#: MySession.cpp:1642 MySession.cpp:1656
+#: MySession.cpp:1649 MySession.cpp:1663
 msgid "Could not assign a free port for CUPS printing"
 msgstr "Не удалось назначить свободный порт для CUPS"
 
-#: MySession.cpp:1920
+#: MySession.cpp:1927
 #, c-format
 msgid "Could not write %s"
 msgstr "Не удалось записать %s"
 
-#: MySession.cpp:1987
-#, fuzzy
+#: MySession.cpp:1994
 msgid "Could not start local X server"
-msgstr "Could not stat %s"
+msgstr "Не удалось запустить локальный X сервер"
 
-#: MySession.cpp:2003 MySession.cpp:2047 MySession.cpp:2061
+#: MySession.cpp:2010 MySession.cpp:2054 MySession.cpp:2068
 #, c-format
 msgid "Connecting to %s ..."
 msgstr "Соединение с %s ..."
 
-#: MySession.cpp:2011
+#: MySession.cpp:2018
 msgid "Preparing multimedia service ..."
 msgstr "Подготовка мультимедиа сервисов ..."
 
-#: MySession.cpp:2043
+#: MySession.cpp:2050
 msgid "Could not start multimedia support"
 msgstr "Не удалось запустить мультимедиа сервисы"
 
-#: MySession.cpp:2045
+#: MySession.cpp:2052
 msgid "Could not assign a free port for multimedia support"
 msgstr "Не удалось назначить свободный порт для мультимедиа сервисов"
 
-#: MySession.cpp:2058
+#: MySession.cpp:2065
 msgid "Preparing CUPS service ..."
 msgstr "Подготовка CUPS ..."
 
-#: MySession.cpp:2060
+#: MySession.cpp:2067
 msgid "Could not start CUPS printing"
 msgstr "Не удалось запустить CUPS"
 
-#: MySession.cpp:2109
+#: MySession.cpp:2116
 msgid "Called command was: "
 msgstr "Комманда: "
 
-#: MySession.cpp:2110
+#: MySession.cpp:2117
 msgid "Could not start nxssh."
 msgstr "Не удалось запустить nxssh."
 
@@ -665,13 +656,13 @@ msgstr "Напишите имя сессии. Все настройки буду
 msgid "Insert the name and port of the server you want to connect."
 msgstr "Напишите имя и порт сервера, к которому вы хотите подключиться."
 
-#: MyWizard_symbols.h:27 SessionProperties_symbols.h:25
-#: VncPropertyDialog_symbols.h:25
+#: MyWizard_symbols.h:27 ProxyPropertyDialog_symbols.h:24
+#: SessionProperties_symbols.h:25 VncPropertyDialog_symbols.h:25
 msgid "Host"
-msgstr "Host"
+msgstr "Хост"
 
-#: MyWizard_symbols.h:28 ResumeDialog.cpp:156 SessionAdmin.cpp:195
-#: SessionProperties_symbols.h:26
+#: MyWizard_symbols.h:28 ProxyPropertyDialog_symbols.h:25 ResumeDialog.cpp:156
+#: SessionAdmin.cpp:195 SessionProperties_symbols.h:26
 msgid "Port"
 msgstr "Порт"
 
@@ -774,11 +765,11 @@ msgstr "Полный экран"
 
 #: MyWizard_symbols.h:52 SessionProperties_symbols.h:52
 msgid "W"
-msgstr "W"
+msgstr "Ш"
 
 #: MyWizard_symbols.h:53 SessionProperties_symbols.h:53
 msgid "H"
-msgstr "H"
+msgstr "В"
 
 #: MyWizard_symbols.h:54
 msgid ""
@@ -793,12 +784,12 @@ msgid ""
 "Authorization credentials are always encrypted while establishing a "
 "connection. For increased security, you can enable the following option."
 msgstr ""
-"Данные авторизации всегда передаются по защифрованному каналу. Для "
+"Данные авторизации всегда передаются по зашифрованному каналу. Для "
 "увеличения безопасности, вы можете шифровать весь трафик, включив эту опцию."
 
 #: MyWizard_symbols.h:57 SessionProperties_symbols.h:64
 msgid "Enable SSL encryption of all traffic"
-msgstr "Шифровать весь трафик"
+msgstr "Шифровать весь трафик используя SSL"
 
 #: MyWizard_symbols.h:58
 msgid "Create shortcut on desktop"
@@ -808,18 +799,52 @@ msgstr "Создать ярлык на рабочем столе"
 msgid "Show the Advanced Configuration dialog"
 msgstr "Открыть диалог настройки"
 
+#: MyXmlConfig.cpp:561
+#, fuzzy
+msgid "Could not find application window"
+msgstr "%s не найдена в PATH"
+
 #: PanicDialog_symbols.h:22
 msgid "&Terminate"
 msgstr "&Завершить"
 
 #: ProxyPasswordDialog.h:53 ProxyPasswordDialog_symbols.h:22
 msgid "HTTP proxy password - OpenNX"
-msgstr ""
+msgstr "Пароль HTTP прокси - OpenNX"
 
 #: ProxyPasswordDialog_symbols.h:23
-#, fuzzy
 msgid "Please enter your HTTP proxy password"
+msgstr "Пожалуйста, введите пароль вашего HTTP прокси"
+
+#: ProxyPropertyDialog.h:57 ProxyPropertyDialog_symbols.h:22
+#, fuzzy
+msgid "Proxy settings"
+msgstr "Пользовательские настройки"
+
+#: ProxyPropertyDialog_symbols.h:23
+#, fuzzy
+msgid "Connect through internal (NoMachine) HTTP proxy"
+msgstr "Соединяться через внешний proxy сервер"
+
+#: ProxyPropertyDialog_symbols.h:26
+#, fuzzy
+msgid "User"
+msgstr "Логин"
+
+#: ProxyPropertyDialog_symbols.h:28
+#, fuzzy
+msgid "Remember proxy password"
 msgstr "Запомнить пароль"
+
+#: ProxyPropertyDialog_symbols.h:29
+#, fuzzy
+msgid "Connect through external proxy"
+msgstr "Соединяться через внешний proxy сервер"
+
+#: ProxyPropertyDialog_symbols.h:30
+#, fuzzy
+msgid "Command"
+msgstr "Комментарий"
 
 #: QuitDialog_symbols.h:22
 msgid "&Quit"
@@ -827,7 +852,7 @@ msgstr "&Выход"
 
 #: RdpImageSettingsDialog.h:55 RdpImageSettingsDialog_symbols.h:22
 msgid "RDP Image Settings - OpenNX"
-msgstr "RDP Настройка изображения - OpenNX"
+msgstr "Настройка изображения RDP - OpenNX"
 
 #: RdpImageSettingsDialog_symbols.h:23
 msgid "Allowed colors"
@@ -851,32 +876,32 @@ msgstr "16M"
 
 #: RdpImageSettingsDialog_symbols.h:28 UnixImageSettingsDialog_symbols.h:23
 msgid "Encoding"
-msgstr "Encoding"
+msgstr "Кодирование"
 
 #: RdpImageSettingsDialog_symbols.h:29
 msgid "Use RDP image encoding"
-msgstr "Use RDP image encoding"
+msgstr "Использовать кодирование изображений RDP"
 
 #: RdpImageSettingsDialog_symbols.h:30
 msgid "Use compressed RDP bitmaps"
-msgstr "Use compressed RDP bitmaps"
+msgstr "Использовать сжатые растры RDP"
 
 #: RdpImageSettingsDialog_symbols.h:31
 msgid "Use RGB image encoding"
-msgstr "Use RGB image encoding"
+msgstr "Использовать сжатие изображений RGB"
 
 #: RdpImageSettingsDialog_symbols.h:32 UnixImageSettingsDialog_symbols.h:25
 #: VncImageSettingsDialog_symbols.h:26
 msgid "Use plain X bitmaps"
-msgstr "Use plain X bitmaps"
+msgstr "Использовать простые растры X"
 
 #: RdpImageSettingsDialog_symbols.h:33 SessionProperties_symbols.h:70
 msgid "Cache"
-msgstr "Cache"
+msgstr "Кэш"
 
 #: RdpImageSettingsDialog_symbols.h:34
 msgid "Enable RDP image cache"
-msgstr "Enable RDP image cache"
+msgstr "Включить кэш изображений RDP"
 
 #: RdpPropertyDialog.h:57 RdpPropertyDialog_symbols.h:22
 msgid "RDP Session Settings - OpenNX"
@@ -892,19 +917,19 @@ msgstr "Аутентификация"
 
 #: RdpPropertyDialog_symbols.h:26
 msgid "Show the Windows logon"
-msgstr "Показывать Windows logon"
+msgstr "Показывать окно приветствия"
 
 #: RdpPropertyDialog_symbols.h:27
 msgid "Use NX credentials"
-msgstr "Use NX credentials"
+msgstr "Использовать NX полномочия"
 
 #: RdpPropertyDialog_symbols.h:28
 msgid "Use the following credentials"
-msgstr "Use the following credentials"
+msgstr "Использовать следующие полномочия"
 
 #: RdpPropertyDialog_symbols.h:29 ShareProperties_symbols.h:43
 msgid "Username"
-msgstr "Username"
+msgstr "Логин"
 
 #: RdpPropertyDialog_symbols.h:31 SessionProperties_symbols.h:27
 #: VncPropertyDialog_symbols.h:30
@@ -917,7 +942,7 @@ msgstr "Тип сессии"
 
 #: RdpPropertyDialog_symbols.h:33
 msgid "Run desktop"
-msgstr "Run desktop"
+msgstr "Запустить рабочий стол"
 
 #: RdpPropertyDialog_symbols.h:34
 msgid "Run application"
@@ -962,7 +987,7 @@ msgstr "Вы уверены что хотите завершить выделе�
 
 #: ResumeDialog.cpp:287
 msgid "Terminate session - OpenNX"
-msgstr "Завершить сесию - OpenNX"
+msgstr "Завершить сессию - OpenNX"
 
 #: ResumeDialog.h:55 ResumeDialog_symbols.h:22
 msgid "Select session - OpenNX"
@@ -974,10 +999,9 @@ msgid ""
 "create a session."
 msgstr ""
 "Доступно несколько сессий, пожалуйста выберите одну или нажмите 'Новая' для "
-"созднания новой сессии."
+"создания новой сессии."
 
 #: ResumeDialog_symbols.h:24
-#, fuzzy
 msgid "Ter&minate"
 msgstr "&Завершить"
 
@@ -1007,11 +1031,11 @@ msgstr "Полная статистика сессии - OpenNX"
 
 #: SessionAdmin.cpp:289
 msgid "Partial session statistics - OpenNX"
-msgstr "Статичтика сессии - OpenNX"
+msgstr "Частичная статистика сессии - OpenNX"
 
 #: SessionAdmin.cpp:368
 msgid "Choose new NX session directory."
-msgstr "Выберите директорию с сессиями NX"
+msgstr "Выберите новую директорию с сессиями NX"
 
 #: SessionAdmin.h:57 SessionAdmin_symbols.h:22
 msgid "Session Administrator - OpenNX"
@@ -1019,7 +1043,7 @@ msgstr "Администратор сессий - OpenNX"
 
 #: SessionAdmin_symbols.h:23 TraceLogFrame_symbols.h:24
 msgid "&File"
-msgstr "&Datei"
+msgstr "&Файл"
 
 #: SessionAdmin_symbols.h:24
 msgid "New NX Session..."
@@ -1027,7 +1051,7 @@ msgstr "Новая NX сессия..."
 
 #: SessionAdmin_symbols.h:25
 msgid "Change NX directory..."
-msgstr "Изменить каталого NX..."
+msgstr "Изменить директорию NX..."
 
 #: SessionAdmin_symbols.h:26
 msgid "Exit"
@@ -1035,7 +1059,7 @@ msgstr "Выход"
 
 #: SessionAdmin_symbols.h:27
 msgid "&Session"
-msgstr "&Sitzung"
+msgstr "&Сессия"
 
 #: SessionAdmin_symbols.h:28
 msgid "Terminate session"
@@ -1043,7 +1067,7 @@ msgstr "Завершить сессию"
 
 #: SessionAdmin_symbols.h:29
 msgid "View partial statistics"
-msgstr "Просмотр статистики"
+msgstr "Просмотр частичной статистики"
 
 #: SessionAdmin_symbols.h:30
 msgid "View full statistics"
@@ -1055,7 +1079,7 @@ msgstr "Просмотр лога сессии"
 
 #: SessionAdmin_symbols.h:32
 msgid "Remove session"
-msgstr "Sitzung entfernen"
+msgstr "Удалить сессию"
 
 #: SessionAdmin_symbols.h:33
 msgid "Kill application"
@@ -1067,7 +1091,7 @@ msgstr "Обновить список сессий"
 
 #: SessionAdmin_symbols.h:36
 msgid "Help"
-msgstr "Hilfe"
+msgstr "Помощь"
 
 #: SessionAdmin_symbols.h:37
 msgid "About OpenNX client..."
@@ -1115,33 +1139,33 @@ msgstr "Serial"
 
 #: SessionProperties.cpp:1152
 msgid "Error while reading keyboard table"
-msgstr "Error while reading keyboard table"
+msgstr "Ошибка при загрузке раскладки клавиатуры"
 
 #: SessionProperties.cpp:1181
 #, c-format
 msgid "Invalid line='%s'"
-msgstr "Invalid line='%s'"
+msgstr "Ошибочная линия='%s'"
 
 #: SessionProperties.cpp:1182
 #, c-format
 msgid "Invalid entry in %s"
-msgstr "Invalid entry in %s"
+msgstr "Ошибочное значение в %s"
 
 #: SessionProperties.cpp:1326
 msgid "Do you really want to delete all cache directories?"
-msgstr "Вы уверены что хотите удалить все каталоги с кешом?"
+msgstr "Вы уверены что хотите удалить все каталоги с кэшем?"
 
 #: SessionProperties.cpp:1327
 msgid "Clean cache - OpenNX"
-msgstr "Очистить кеш - OpenNX"
+msgstr "Очистить кэш - OpenNX"
 
 #: SessionProperties.cpp:1375
 msgid "No local samba server is running."
-msgstr "Серве samba не запущен."
+msgstr "Не запущен локальный сервер samba."
 
 #: SessionProperties.cpp:1431
 msgid "No sharable resources found"
-msgstr "Keine verteilten Ressourcen gefunden"
+msgstr "Не найдено общедоступных ресурсов"
 
 #: SessionProperties.cpp:1508
 msgid "Select User NX directory"
@@ -1166,9 +1190,9 @@ msgstr "Нет доступного сервера CUPS."
 
 #: SessionProperties.cpp:1828
 msgid "Select System CUPS daemon"
-msgstr "Выберите сервер CUPS"
+msgstr "Выберите системный сервер CUPS"
 
-#: SessionProperties.cpp:1964 opennxApp.cpp:1187
+#: SessionProperties.cpp:1964 opennxApp.cpp:1188
 msgid "libusb is not available. No USB devices will be exported"
 msgstr "libusb не доступна. USB устройства не смогут быть проброшены."
 
@@ -1178,7 +1202,7 @@ msgstr "Нет доступных USB устройств."
 
 #: SessionProperties.cpp:2181
 msgid "Select path of USBIPD socket"
-msgstr "Select path of USBIPD socket"
+msgstr "Выберите путь к сокету USBIPD"
 
 #: SessionProperties.h:65 SessionProperties_symbols.h:22
 msgid "Session properties - OpenNX"
@@ -1194,19 +1218,19 @@ msgstr "Ключ..."
 
 #: SessionProperties_symbols.h:30
 msgid "Desktop"
-msgstr "Desktop"
+msgstr "Рабочий стол"
 
 #: SessionProperties_symbols.h:46
 msgid "Display"
-msgstr "Display"
+msgstr "Дисплей"
 
 #: SessionProperties_symbols.h:54
 msgid "Use default image encoding"
-msgstr "Use default image encoding"
+msgstr "Стандартные настройки"
 
 #: SessionProperties_symbols.h:55
 msgid "Use custom settings"
-msgstr "Use custom settings"
+msgstr "Пользовательские настройки"
 
 #: SessionProperties_symbols.h:56
 msgid "Modify..."
@@ -1222,7 +1246,7 @@ msgstr "Использовать текущие настройки"
 
 #: SessionProperties_symbols.h:59
 msgid "Use other layout"
-msgstr "Использовать другой Layout"
+msgstr "Использовать другую раскладку"
 
 #: SessionProperties_symbols.h:60
 msgid "Advanced"
@@ -1234,33 +1258,31 @@ msgstr "Сеть"
 
 #: SessionProperties_symbols.h:62
 msgid "Disable no-delay on TCP connection"
-msgstr "Disable no-delay on TCP connection"
+msgstr "Отключить no-delay при TCP соединении"
 
 #: SessionProperties_symbols.h:63
 msgid "Disable ZLIB stream compression"
 msgstr "Отключить сжатие ZLIB"
 
 #: SessionProperties_symbols.h:65
-#, fuzzy
 msgid "Connect through proxy"
 msgstr "Соединяться через внешний proxy сервер"
 
 #: SessionProperties_symbols.h:66
 msgid "System"
-msgstr ""
+msgstr "Система"
 
 #: SessionProperties_symbols.h:67
-#, fuzzy
 msgid "Disable DirectDraw rendering"
-msgstr "Disable X agent encoding"
+msgstr "Отключить DirectDraw rendering"
 
 #: SessionProperties_symbols.h:68
 msgid "Grab keyboard when client has focus"
-msgstr ""
+msgstr "Захватывать клавиатуру когда фокус на клиенте"
 
 #: SessionProperties_symbols.h:69
 msgid "Disable deferred screen updates"
-msgstr ""
+msgstr "Отключить отложенные обновления экрана"
 
 #: SessionProperties_symbols.h:71
 msgid "In memory"
@@ -1308,7 +1330,7 @@ msgstr "128 MB"
 
 #: SessionProperties_symbols.h:82
 msgid "Clean all cache files"
-msgstr "Очистить кеш"
+msgstr "Очистить кэш"
 
 #: SessionProperties_symbols.h:83
 msgid "Services"
@@ -1336,7 +1358,7 @@ msgstr "Удалить"
 
 #: SessionProperties_symbols.h:89
 msgid "Enable multimedia support"
-msgstr "Включить поддержку мультимедии"
+msgstr "Включить поддержку мультимедиа"
 
 #: SessionProperties_symbols.h:91
 msgid "Enable USB forwarding"
@@ -1348,7 +1370,7 @@ msgstr "Окружение"
 
 #: SessionProperties_symbols.h:93
 msgid "User NX directory"
-msgstr "Каталог NX пользователя"
+msgstr "Пользовательский каталог NX"
 
 #: SessionProperties_symbols.h:94
 msgid "..."
@@ -1372,15 +1394,15 @@ msgstr "Путь к демону USBIP"
 
 #: SessionProperties_symbols.h:99
 msgid "Local command socket path"
-msgstr "Local command socket path"
+msgstr "Путь к локальному сокету комманд"
 
 #: SessionProperties_symbols.h:100
 msgid "Local port"
-msgstr "Local port"
+msgstr "Локальный порт"
 
 #: SessionProperties_symbols.h:101
 msgid "Create a desktop icon for this session"
-msgstr ""
+msgstr "Создать ссылку на рабочем столе для этой сессии"
 
 #: SessionProperties_symbols.h:102
 msgid "Reset hidden messages"
@@ -1396,11 +1418,11 @@ msgstr "&Удалить"
 
 #: SessionProperties_symbols.h:105
 msgid "&Apply"
-msgstr "&Приминить"
+msgstr "&Применить"
 
 #: ShareProperties.cpp:254
 msgid "Modify shared resource - OpenNX"
-msgstr "Измение общих сетевых ресурсов - OpenNX"
+msgstr "Изменить общий сетевой ресурс - OpenNX"
 
 #: ShareProperties.cpp:365
 msgid "No shares found"
@@ -1439,8 +1461,8 @@ msgid ""
 "Please select the name of the shared resource on the\n"
 "local computer."
 msgstr ""
-"Please select the name of the shared resource on the\n"
-"local computer."
+"Пожалуйства, выберите имя общего сетевого ресурса на\n"
+"локальном компьютере."
 
 #: ShareProperties_symbols.h:25
 msgid "SMB printer options"
@@ -1517,10 +1539,10 @@ msgid ""
 "username and password with which you configured\n"
 "this share."
 msgstr ""
-"The remote system will need to provide security\n"
-"credentials to your local client. Please specify\n"
-"username and password with which you configured\n"
-"this share."
+"Удаленной системе необходимы полномочия для доступа\n"
+"к вашему локальному клиенту. Пожалуйста, укажите\n"
+"имя пользователя и пароль для доступа к общему\n"
+"сетевому ресурсу."
 
 #: ShareProperties_symbols.h:45
 msgid "CUPS options"
@@ -1528,11 +1550,11 @@ msgstr "Параметры CUPS"
 
 #: ShareProperties_symbols.h:46
 msgid "cups driver"
-msgstr "cups driver"
+msgstr "драйвер cups"
 
 #: ShareProperties_symbols.h:47
 msgid "USB Filter Details"
-msgstr "USB Filter Details"
+msgstr "Детали фильтра USB"
 
 #: ShareProperties_symbols.h:48
 msgid "SMB options"
@@ -1543,8 +1565,16 @@ msgid ""
 "Please specify the resource name on the remote\n"
 "machine with which this share will be made available."
 msgstr ""
-"Please specify the resource name on the remote\n"
-"machine with which this share will be made available."
+"Пожалуйста, укажите имя ресурса на удаленной машине\n"
+"в которой этот сетевой ресурс будет доступен."
+
+#: SupressibleMessageDialog.h:53 SupressibleMessageDialog_symbols.h:22
+msgid "SupressibleMessageDialog"
+msgstr ""
+
+#: SupressibleMessageDialog_symbols.h:23
+msgid "Do not show this message again"
+msgstr ""
 
 #: TextViewer.cpp:83
 msgid "File couldn't be loaded."
@@ -1560,11 +1590,11 @@ msgstr "&Закрыть"
 
 #: TraceLogFrame.cpp:149
 msgid "Time"
-msgstr "Zeit"
+msgstr "Время"
 
 #: TraceLogFrame.cpp:151
 msgid "Text"
-msgstr "Время"
+msgstr "Текст"
 
 #: TraceLogFrame.cpp:247
 msgid "Save logfile"
@@ -1576,7 +1606,7 @@ msgstr "Логи (*.log)"
 
 #: TraceLogFrame.h:52 TraceLogFrame_symbols.h:23
 msgid "Trace Log"
-msgstr "Trace Log"
+msgstr "Лог трассировки"
 
 #: TraceLogFrame_symbols.h:26
 msgid "Save as ..."
@@ -1592,7 +1622,7 @@ msgstr "&Выход"
 
 #: UnixImageSettingsDialog.h:55 UnixImageSettingsDialog_symbols.h:22
 msgid "Unix Image Settings - OpenNX"
-msgstr "Unix Image Settings - OpenNX"
+msgstr "Настройки изображения - OpenNX"
 
 #: UnixImageSettingsDialog_symbols.h:24
 msgid "Use PNG image compression"
@@ -1604,7 +1634,7 @@ msgstr "Использовать JPEG сжатие"
 
 #: UnixImageSettingsDialog_symbols.h:27
 msgid "Use custom image quality"
-msgstr "Use custom image quality"
+msgstr "Качество изображения"
 
 #: UnixImageSettingsDialog_symbols.h:28
 msgid "Performance"
@@ -1636,7 +1666,7 @@ msgstr "Новое USB устройство - OpenNX"
 
 #: UsbFilterDetailsDialog.h:58 UsbFilterDetailsDialog_symbols.h:22
 msgid "USB Filter Details - OpenNX"
-msgstr "USB Filter Details - OpenNX"
+msgstr "Детали фильтра USB - OpenNX"
 
 #: UsbFilterDetailsDialog_symbols.h:23
 msgid ""
@@ -1646,59 +1676,59 @@ msgid ""
 "want to use this device locally, or if you want\n"
 "to use it on the remote machine."
 msgstr ""
-"A new USB device has been detected. The\n"
-"parameters for this device have been filled\n"
-"into the form below. Please decide, if you\n"
-"want to use this device locally, or if you want\n"
-"to use it on the remote machine."
+"Было обнаружено новое USB устройство.\n"
+"Параметры устройства указаны в форме ниже.\n"
+"Решите, хотите ли вы использовать это устройство\n"
+"локально или на удаленной машине\n"
+"."
 
 #: UsbFilterDetailsDialog_symbols.h:24
 msgid "Remember this decision"
-msgstr "Remember this decision"
+msgstr "Запомнить это решение"
 
 #: UsbFilterDetailsDialog_symbols.h:25
 msgid ""
 "Select from existing devices below or\n"
 "enter the filter specification directly."
 msgstr ""
-"Select from existing devices below or\n"
-"enter the filter specification directly."
+"Выберите из существующих устройств или\n"
+"непосредственно введите фильтр."
 
 #: UsbFilterDetailsDialog_symbols.h:26
 msgid "Vendor ID"
-msgstr "Vendor ID"
+msgstr "ID производителя"
 
 #: UsbFilterDetailsDialog_symbols.h:27
 msgid "Product ID"
-msgstr "Product ID"
+msgstr "ID продукта"
 
 #: UsbFilterDetailsDialog_symbols.h:28
 msgid "Device Class"
-msgstr "Device Class"
+msgstr "Класс устройства"
 
 #: UsbFilterDetailsDialog_symbols.h:29
 msgid "Vendor"
-msgstr "Vendor"
+msgstr "Производитель"
 
 #: UsbFilterDetailsDialog_symbols.h:30
 msgid "Product"
-msgstr "Product"
+msgstr "Продукт"
 
 #: UsbFilterDetailsDialog_symbols.h:31
 msgid "Serial Nr."
-msgstr "Serial Nr."
+msgstr "Серийный №."
 
 #: UsbFilterDetailsDialog_symbols.h:32
 msgid "Mode"
-msgstr "Mode"
+msgstr "Режим"
 
 #: UsbFilterDetailsDialog_symbols.h:33
 msgid "Use locally"
-msgstr "Use locally"
+msgstr "Использовать локально"
 
 #: UsbFilterDetailsDialog_symbols.h:34
 msgid "Forward to remote"
-msgstr "Forward to remote"
+msgstr "Пробросить удаленно"
 
 #: UsbIp.cpp:194
 msgid "USB device is already exported in another session"
@@ -1720,15 +1750,15 @@ msgstr "Настройка изображения VNC - OpenNX"
 
 #: VncImageSettingsDialog_symbols.h:23
 msgid "Use RFB Hextile encoding"
-msgstr "Use RFB Hextile encoding"
+msgstr "Использовать кодирование RFB Hextile"
 
 #: VncImageSettingsDialog_symbols.h:24
 msgid "Use RFB Tight encoding"
-msgstr "Use RFB Tight encoding"
+msgstr "Использовать кодирование RFB Tight"
 
 #: VncImageSettingsDialog_symbols.h:25
 msgid "Enable JPEG encoding"
-msgstr "Enable JPEG encoding"
+msgstr "Включить кодирование JPEG"
 
 #: VncPropertyDialog.h:56 VncPropertyDialog_symbols.h:22
 msgid "VNC Session Settings - OpenNX"
@@ -1739,8 +1769,8 @@ msgid ""
 "Please specify the name and the display number of the\n"
 "remote VNC computer connected to the NX server"
 msgstr ""
-"Please specify the name and the display number of the\n"
-"remote VNC computer connected to the NX server"
+"Пожалуйста, укажите имя и номер дисплея\n"
+"удаленной VNC машины подключенной к NX серверу"
 
 #: VncPropertyDialog_symbols.h:26
 msgid ":"
@@ -1751,8 +1781,8 @@ msgid ""
 "Please specify a password. NX will use it to login to the\n"
 "remote VNC server"
 msgstr ""
-"Please specify a password. NX will use it to login to the\n"
-"remote VNC server"
+"Пожалуйста, укажите пароль. NX будет использовать его для\n"
+"подключения к удаленному VNC серверу"
 
 #: X11PropertyDialog.h:55 X11PropertyDialog_symbols.h:22
 msgid "X11 Session Settings - OpenNX"
@@ -1784,11 +1814,11 @@ msgstr "Rootless режим"
 
 #: X11PropertyDialog_symbols.h:30
 msgid "Disable X agent encoding"
-msgstr "Disable X agent encoding"
+msgstr "Отключить кодирование у X агента"
 
 #: X11PropertyDialog_symbols.h:31
 msgid "Disable taint of X replies"
-msgstr "Disable taint of X replies"
+msgstr "Отключить taint of X replies"
 
 #: opennxApp.cpp:255
 msgid "Launch NX Session"
@@ -1800,7 +1830,7 @@ msgstr "Не удалось создать ярлык на рабочем сто
 
 #: opennxApp.cpp:424
 msgid "Could not get PATH environment"
-msgstr "Не удалось определить PATH"
+msgstr "Не удалось получить переменную окружения PATH"
 
 #: opennxApp.cpp:439
 #, c-format
@@ -1810,27 +1840,31 @@ msgstr "%s не найдена в PATH"
 #: opennxApp.cpp:449
 #, c-format
 msgid "Could not stat %s"
-msgstr "Could not stat %s"
+msgstr "Не удалось зафиксировать %s"
 
 #: opennxApp.cpp:455
 #, c-format
 msgid "Could not read link %s"
-msgstr "Could not read link %s"
+msgstr "Не удалось прочитать ссылку %s"
 
-#: opennxApp.cpp:527
+#: opennxApp.cpp:546
 #, c-format
 msgid ""
 "Found a CUPS daemon binary in %s, however it is not executable.\n"
 "In order to use CUPS printing, you need to fix its permissions."
 msgstr ""
+"В %s найден демон CUPS , однако он не исполняемый.\n"
+"Вы должны исправить его права, чтобы печатать через CUPS."
 
-#: opennxApp.cpp:532
+#: opennxApp.cpp:551
 msgid ""
 "Could not find any CUPS daemon binary.\n"
 "In order to use CUPS printing, you need to install cups."
 msgstr ""
+"Не найдено ни одного исполняемого файла демона CUPS.\n"
+"Вы должны установить cups, чтобы печатать через службу CUPS."
 
-#: opennxApp.cpp:750 watchUsbIpApp.cpp:216
+#: opennxApp.cpp:756 watchUsbIpApp.cpp:216
 msgid ""
 "\n"
 "\n"
@@ -1838,73 +1872,73 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Supported trace tags: "
+"Поддерживаемые тэги трассировки: "
 
-#: opennxApp.cpp:753
+#: opennxApp.cpp:759
 msgid "Automatically login to the specified session."
-msgstr ""
+msgstr "Автоматически входить в указанную сессию"
 
-#: opennxApp.cpp:755
+#: opennxApp.cpp:761
 msgid "Automatically destroy error dialogs at termination."
-msgstr ""
+msgstr "Автоматически закрыть диалоги об ошибках при завершении."
 
-#: opennxApp.cpp:757
+#: opennxApp.cpp:763
 msgid "Start the session administration tool."
 msgstr "Запустить утилиту администрирования сессий."
 
-#: opennxApp.cpp:759
+#: opennxApp.cpp:765
 msgid "Secify window title for dialog mode."
 msgstr "Заголовок окна в dialog режиме."
 
-#: opennxApp.cpp:761
+#: opennxApp.cpp:767
 msgid "Secify dialog style for dialog mode."
 msgstr "Стиль диалога в dialog режиме."
 
-#: opennxApp.cpp:763
+#: opennxApp.cpp:769
 msgid "Run in dialog mode."
 msgstr "Запустить в режиме dialog."
 
-#: opennxApp.cpp:765
+#: opennxApp.cpp:771
 msgid "Compatibility option for dialog mode (ignored)."
-msgstr ""
+msgstr "Режим совместимости для dialog режима (игнорируется)."
 
-#: opennxApp.cpp:767
+#: opennxApp.cpp:773
 msgid "Dialog mode proxy."
-msgstr "Dialog mode proxy."
+msgstr "Прокси dialog режима."
 
-#: opennxApp.cpp:769
+#: opennxApp.cpp:775
 msgid "Specify message for dialog mode."
 msgstr "Сообщение для dialog режима."
 
-#: opennxApp.cpp:771
+#: opennxApp.cpp:777
 msgid "Specify parent PID for dialog mode."
 msgstr "PID родительского процесса для dialog режима."
 
-#: opennxApp.cpp:773
+#: opennxApp.cpp:779
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr "Запустить сессию <str>."
 
-#: opennxApp.cpp:775
+#: opennxApp.cpp:781
 msgid "Specify window-ID for dialog mode."
 msgstr "Window-ID для запуска в dialog режиме."
 
-#: opennxApp.cpp:777 watchUsbIpApp.cpp:225
+#: opennxApp.cpp:783 watchUsbIpApp.cpp:225
 msgid "Specify wxWidgets trace mask."
-msgstr "Specify wxWidgets trace mask."
+msgstr "Укажите маску трассировки wxWidgets."
 
-#: opennxApp.cpp:780
+#: opennxApp.cpp:786
 msgid "Test CardWaiterDialog"
-msgstr "Test CardWaiterDialog"
+msgstr "Протестировать CardWaiterDialog"
 
-#: opennxApp.cpp:783
+#: opennxApp.cpp:789
 msgid "Guide the user through the steps to configure a session."
-msgstr "Guide the user through the steps to configure a session."
+msgstr "Руководит пользователем во время конфигурирования сессии."
 
-#: opennxApp.cpp:839 watchReaderApp.cpp:195
+#: opennxApp.cpp:845 watchReaderApp.cpp:195
 msgid "Smart card removed"
 msgstr "Смарт-карта удалена"
 
-#: opennxApp.cpp:841 watchReaderApp.cpp:194
+#: opennxApp.cpp:847 watchReaderApp.cpp:194
 msgid ""
 "OpenNX session has been suspended, because\n"
 "the authenticating smart card has been removed."
@@ -1912,23 +1946,23 @@ msgstr ""
 "Сессия OpenNX была приостановлена,\n"
 "потому что была вытащена смарт-карта."
 
-#: opennxApp.cpp:1202
+#: opennxApp.cpp:1203
 msgid "USBIP tunnel registration timeout"
-msgstr "USBIP tunnel registration timeout"
+msgstr "Тайм-аут регистрации туннеля USBIP"
 
-#: opennxApp.cpp:1206
+#: opennxApp.cpp:1207
 #, c-format
 msgid "Unable to export USB device %s"
 msgstr "Не удалось экспортировать USB устройство '%s'"
 
-#: opennxApp.cpp:1212
+#: opennxApp.cpp:1213
 msgid "Could not connect to usbipd2. No USB devices will be exported"
 msgstr ""
 "Не удалось подключиться к usbipd2. USB устройства не будут экспортированы"
 
 #: tracelogApp.cpp:75
 msgid "Show Trace Log"
-msgstr "Показать trace лог"
+msgstr "Показать лог трассировки"
 
 #: tracelogApp.cpp:76
 msgid "E&xit"
@@ -1940,7 +1974,7 @@ msgstr "OpenNX"
 
 #: watchReaderApp.cpp:113
 msgid "Number of smart card reader to watch for."
-msgstr "Number of smart card reader to watch for."
+msgstr "Количество наблюдаемых считывателей смарт-карт."
 
 #: watchReaderApp.cpp:115 watchUsbIpApp.cpp:222
 msgid "Process ID of the nxssh process."
@@ -1948,46 +1982,46 @@ msgstr "PID процесса nxssh."
 
 #: watchUsbIpApp.cpp:218
 msgid "NX SessionID to watch for."
-msgstr "NX SessionID to watch for."
+msgstr "NX SessionID для слежения."
 
 #: watchUsbIpApp.cpp:220
 msgid "Path of session config file."
-msgstr "Path of session config file."
+msgstr "Путь к конфигурационному файлу сессии."
 
 #: watchUsbIpApp.cpp:342
 msgid "An empty session ID is not allowed"
-msgstr "An empty session ID is not allowed"
+msgstr "Пустой ID сессии не допускается"
 
 #: watchUsbIpApp.cpp:347
 msgid "Could not load session config file"
-msgstr "Could not load session config file"
+msgstr "Не удалось загрузить конфигурационный файл сессии"
 
 #: watchUsbIpApp.cpp:365
 msgid "Could not register at usbipd2! No hotplugging functionality."
-msgstr "Could not register at usbipd2! No hotplugging functionality."
+msgstr "Не удалось зарегистрироваться на usbipd2! Нет функции автоопределения."
 
 #: watchUsbIpApp.cpp:372
 msgid "Could not connect to usbipd2! No hotplugging functionality."
-msgstr "Could not connect to usbipd2! No hotplugging functionality."
+msgstr "Не удалось подключиться к usbipd2! Нет функции автоопределения."
 
 #: watchUsbIpApp.cpp:425
 msgid "Got hotplug event, but device is not available in libusb"
-msgstr "Got hotplug event, but device is not available in libusb"
+msgstr "Получено событие автоопределения, но устройство в libusb отсутствует"
 
 #: watchUsbIpApp.cpp:433
 msgid "Could not send hotplug response"
-msgstr "Could not send hotplug response"
+msgstr "Не удалось отправить ответ автоопределения"
 
 #: watchUsbIpApp.cpp:489
 msgid "Could not save session config"
-msgstr "Could not save session config"
+msgstr "Не удалось сохранить конфигурацию сессии"
 
 #: watchUsbIpApp.cpp:498
 msgid "Could not export USB device"
-msgstr "Could not export USB device"
+msgstr "Не удалось экспортировать USB устройство"
 
 #~ msgid "Font"
-#~ msgstr "Font"
+#~ msgstr "Шрифт"
 
 #~ msgid "Select NX fonts"
 #~ msgstr "Шрифты NX"
@@ -1996,30 +2030,4 @@ msgstr "Could not export USB device"
 #~ msgstr "По умолчанию"
 
 #~ msgid "Fixed"
-#~ msgstr "Fixed"
-
-#~ msgid "Use direct connection"
-#~ msgstr "Использовать прямое соединение"
-
-#~ msgid "Connect through internal (NoMachine) HTTP proxy"
-#~ msgstr "Соединяться через внутренний (NoMachine) HTTP Proxy"
-
-#, fuzzy
-#~ msgid "User"
-#~ msgstr "Username"
-
-#, fuzzy
-#~ msgid "Remember proxy password"
-#~ msgstr "Запомнить пароль"
-
-#~ msgid "Command"
-#~ msgstr "Команда"
-
-#~ msgid "Cancel"
-#~ msgstr "Отмена"
-
-#~ msgid "Teminate"
-#~ msgstr "Завершить"
-
-#~ msgid "Could not query multimedia support"
-#~ msgstr "Konnte Multimedia Unterstützung nicht ermitteln"
+#~ msgstr "Исправлено"
