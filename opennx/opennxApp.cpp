@@ -505,6 +505,25 @@ opennxApp::preInit()
         return false;
 
     wxString tmp;
+    if (!wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp)) {
+        wxFileName fn(GetSelfPath());
+        if (fn.GetDirs().Last().IsSameAs(wxT("bin")))
+            fn.RemoveLastDir();
+        fn.SetFullName(wxEmptyString);
+        tmp = fn.GetFullPath();
+        wxString rest;
+        wxString sep = wxFileName::GetPathSeparator();
+        if (tmp.EndsWith(sep, &rest))
+            tmp = rest;
+        wxConfigBase::Get()->Write(wxT("Config/SystemNxDir"), tmp);
+        wxConfigBase::Get()->Flush();
+    }
+    m_cLocale.AddCatalogLookupPathPrefix(tmp + wxFileName::GetPathSeparator()
+            + wxT("share") + wxFileName::GetPathSeparator() + wxT("locale"));
+    m_cLocale.AddCatalogLookupPathPrefix(wxT("locale"));
+    m_cLocale.Init();
+    m_cLocale.AddCatalog(wxT("opennx"));
+
     if (!wxConfigBase::Get()->Read(wxT("Config/CupsPath"), &tmp)) {
 #if defined(__LINUX__) || defined(__OPENBSD__) || defined(__WXMAC__)
         tmp = findExecutable(wxT("cupsd"));
@@ -535,19 +554,6 @@ opennxApp::preInit()
         }
 #endif
         wxConfigBase::Get()->Write(wxT("Config/CupsPath"), tmp);
-        wxConfigBase::Get()->Flush();
-    }
-    if (!wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp)) {
-        wxFileName fn(GetSelfPath());
-        if (fn.GetDirs().Last().IsSameAs(wxT("bin")))
-            fn.RemoveLastDir();
-        fn.SetFullName(wxEmptyString);
-        tmp = fn.GetFullPath();
-        wxString rest;
-        wxString sep = wxFileName::GetPathSeparator();
-        if (tmp.EndsWith(sep, &rest))
-            tmp = rest;
-        wxConfigBase::Get()->Write(wxT("Config/SystemNxDir"), tmp);
         wxConfigBase::Get()->Flush();
     }
 #ifdef SUPPORT_USBIP
@@ -939,11 +945,6 @@ bool opennxApp::realInit()
 
     wxString tmp;
     wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp);
-    m_cLocale.AddCatalogLookupPathPrefix(tmp + wxFileName::GetPathSeparator()
-            + wxT("share") + wxFileName::GetPathSeparator() + wxT("locale"));
-    m_cLocale.AddCatalogLookupPathPrefix(wxT("locale"));
-    m_cLocale.Init();
-    m_cLocale.AddCatalog(wxT("opennx"));
 
     // Win: Don't remap bitmaps to system colors
     wxSystemOptions::SetOption(wxT("msw.remap"), 0);
