@@ -253,11 +253,9 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
     EVT_SPINCTRL( XRCID("ID_SPINCTRL_USB_LOCALPORT"), SessionProperties::OnSpinctrlUsbLocalportUpdated )
     EVT_TEXT( XRCID("ID_SPINCTRL_USB_LOCALPORT"), SessionProperties::OnSpinctrlUsbLocalportTextUpdated )
 
-    EVT_BUTTON( XRCID("ID_BUTTON_FONT_DEFAULT"), SessionProperties::OnButtonFontDefaultClick )
-
-    EVT_BUTTON( XRCID("ID_BUTTON_FONT_FIXED"), SessionProperties::OnButtonFontFixedClick )
-
     EVT_CHECKBOX( XRCID("ID_CHECKBOX_CREATEICON"), SessionProperties::OnCheckboxCreateiconClick )
+
+    EVT_CHECKBOX( XRCID("ID_CHECKBOX_RESETMSGBOXES"), SessionProperties::OnCheckboxResetmsgboxesClick )
 
     EVT_BUTTON( wxID_DELETE, SessionProperties::OnDeleteClick )
 
@@ -275,7 +273,6 @@ SessionProperties::SessionProperties( )
     : m_bKeyTyped(false)
     , m_pCfg(NULL)
 {
-    initFontSettings();
     readKbdLayouts();
 }
 
@@ -283,44 +280,8 @@ SessionProperties::SessionProperties( wxWindow* parent, wxWindowID id, const wxS
     : m_bKeyTyped(false)
     , m_pCfg(NULL)
 {
-    initFontSettings();
     readKbdLayouts();
     Create(parent, id, caption, pos, size, style);
-}
-
-    void
-SessionProperties::initFontSettings()
-{
-    wxString font = wxEmptyString;
-    wxConfigBase::Get()->Read(wxT("Config/DialogFont"), &font);
-    if (font.IsEmpty()) {
-        m_cFontDefault = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
-        font = m_cFontDefault.GetNativeFontInfoDesc();
-        wxConfigBase::Get()->Write(wxT("Config/DialogFont"), font);
-    } else
-        m_cFontDefault.SetNativeFontInfo(font);
-    font = wxEmptyString;
-    wxConfigBase::Get()->Read(wxT("Config/FixedFont"), &font);
-    if (font.IsEmpty()) {
-#ifdef __WXMSW__
-        m_cFontFixed = wxSystemSettings::GetFont(wxSYS_ANSI_FIXED_FONT);
-#else
-        m_cFontFixed = wxFont(m_cFontDefault.GetPointSize(),
-                wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-#endif
-        font = m_cFontFixed.GetNativeFontInfoDesc();
-        wxConfigBase::Get()->Write(wxT("Config/FixedFont"), font);
-    } else
-        m_cFontFixed.SetNativeFontInfo(font);
-}
-
-    void
-SessionProperties::saveFontSettings()
-{
-    wxString font = m_cFontDefault.GetNativeFontInfoDesc();
-    wxConfigBase::Get()->Write(wxT("Config/DialogFont"), font);
-    font = m_cFontFixed.GetNativeFontInfoDesc();
-    wxConfigBase::Get()->Write(wxT("Config/FixedFont"), font);
 }
 
     void
@@ -424,6 +385,7 @@ SessionProperties::CheckChanged()
         changed |= (m_sSavedUsbipdSocket != m_sUsbipdSocket);
         changed |= (m_iSavedUsbLocalPort != m_iUsbLocalPort);
         changed |= (m_bSavedCreateDesktopIcon != m_bCreateDesktopIcon);
+        changed |= (m_bSavedResetMessageBoxes != m_bResetMessageBoxes);
         CheckCfgChanges(changed);
     }
 }
@@ -449,6 +411,8 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_bDisableDirectDraw = false;
     m_bGrabKeyboard = false;
     m_bDisableDeferredUpdates = false;
+    m_bResetMessageBoxes = false;
+    m_bSavedResetMessageBoxes = false;
     m_pNoteBook = NULL;
     m_pCtrlHostname = NULL;
     m_pCtrlPort = NULL;
@@ -487,8 +451,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlUsbIpdSocket = NULL;
     m_pCtrlUsbipdSocketBrowse = NULL;
     m_pCtrlUsbLocalPort = NULL;
-    m_pCtrlFontDefault = NULL;
-    m_pCtrlFontFixed = NULL;
+    m_pCtrlResetMessageBoxes = NULL;
     m_pCtrlPanelAbout = NULL;
     m_pHtmlWindow = NULL;
     m_pCtrlApplyButton = NULL;
@@ -584,8 +547,6 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     removePage(_("USB"));
     m_pCtrlUsbipdDaemon->Hide();
 #endif
-    setFontLabel(m_pCtrlFontDefault, m_cFontDefault);
-    setFontLabel(m_pCtrlFontFixed, m_cFontFixed);
 
     // Populate keyboard layout combobox
     size_t idx1 = (size_t)-1;
@@ -993,8 +954,7 @@ void SessionProperties::CreateControls()
     m_pCtrlUsbIpdSocket = XRCCTRL(*this, "ID_TEXTCTRL_USBIPD_SOCKET", wxTextCtrl);
     m_pCtrlUsbipdSocketBrowse = XRCCTRL(*this, "ID_BUTTON_BROWSE_USBIPD_SOCKET", wxButton);
     m_pCtrlUsbLocalPort = XRCCTRL(*this, "ID_SPINCTRL_USB_LOCALPORT", wxSpinCtrl);
-    m_pCtrlFontDefault = XRCCTRL(*this, "ID_BUTTON_FONT_DEFAULT", wxButton);
-    m_pCtrlFontFixed = XRCCTRL(*this, "ID_BUTTON_FONT_FIXED", wxButton);
+    m_pCtrlResetMessageBoxes = XRCCTRL(*this, "ID_CHECKBOX_RESETMSGBOXES", wxCheckBox);
     m_pCtrlPanelAbout = XRCCTRL(*this, "ID_PANEL_ABOUT", wxPanel);
     m_pHtmlWindow = XRCCTRL(*this, "ID_HTMLWINDOW_ABOUT", extHtmlWindow);
     m_pCtrlApplyButton = XRCCTRL(*this, "wxID_APPLY", wxButton);
@@ -1069,6 +1029,8 @@ void SessionProperties::CreateControls()
         FindWindow(XRCID("ID_SPINCTRL_USB_LOCALPORT"))->SetValidator( MyValidator(MyValidator::MYVAL_NUMERIC, & m_iUsbLocalPort) );
     if (FindWindow(XRCID("ID_CHECKBOX_CREATEICON")))
         FindWindow(XRCID("ID_CHECKBOX_CREATEICON"))->SetValidator( wxGenericValidator(& m_bCreateDesktopIcon) );
+    if (FindWindow(XRCID("ID_CHECKBOX_RESETMSGBOXES")))
+        FindWindow(XRCID("ID_CHECKBOX_RESETMSGBOXES"))->SetValidator( wxGenericValidator(& m_bResetMessageBoxes) );
     ////@end SessionProperties content construction
 
     if ((!m_bStorePasswords) && FindWindow(XRCID("ID_CHECKBOX_PWSAVE")))
@@ -1154,21 +1116,6 @@ wxIcon SessionProperties::GetIconResource( const wxString& name )
     return CreateIconFromFile(name);
 }
 
-    void
-SessionProperties::setFontLabel(wxButton *b, const wxFont &f)
-{
-    wxString lbl = f.GetFaceName();
-    lbl = wxString::Format(wxT("%s %dpt"), lbl.IsEmpty() ? _("Font") : lbl.c_str(), f.GetPointSize());
-    b->SetFont(f);
-    b->SetLabel(lbl);
-    b->SetSize(b->GetBestSize());
-    wxSizer *s = b->GetContainingSizer();
-    if (s) {
-        s->SetItemMinSize(b, b->GetBestSize().GetWidth(), b->GetBestSize().GetHeight());
-        s->Layout();
-    }
-}
-
     int
 SessionProperties::findSelectedShare()
 {
@@ -1249,6 +1196,7 @@ void SessionProperties::SaveState()
     m_sSavedUsbipdSocket = m_sUsbipdSocket;
     m_iSavedUsbLocalPort = m_iUsbLocalPort;
     m_bSavedCreateDesktopIcon = m_bCreateDesktopIcon;
+    m_bSavedResetMessageBoxes = m_bResetMessageBoxes = false;
 }
 
 // ====================== Event handlers ===============================
@@ -1584,42 +1532,6 @@ void SessionProperties::OnButtonBrowseSysdirClick( wxCommandEvent& event )
 
 
 /*!
- * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_FONT_DEFAULT
- */
-
-void SessionProperties::OnButtonFontDefaultClick( wxCommandEvent& event )
-{
-    wxUnusedVar(event);
-    wxFont tmp = wxGetFontFromUser(this, m_cFontDefault);
-    if (tmp.Ok()) {
-        setFontLabel(m_pCtrlFontDefault, tmp);
-        if (tmp != m_cFontDefault) {
-            m_cFontDefault = tmp;
-            SetFont(tmp);
-            Refresh();
-            CheckCfgChanges(true);
-        }
-    }
-}
-
-/*!
- * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_FONT_FIXED
- */
-
-void SessionProperties::OnButtonFontFixedClick( wxCommandEvent& event )
-{
-    wxUnusedVar(event);
-    wxFont tmp = wxGetFontFromUser(this, m_cFontFixed);
-    if (tmp.Ok()) {
-        setFontLabel(m_pCtrlFontFixed, tmp);
-        if (tmp != m_cFontFixed) {
-            m_cFontFixed = tmp;
-            CheckCfgChanges(true);
-        }
-    }
-}
-
-/*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_DELETE
  */
 
@@ -1649,7 +1561,6 @@ void SessionProperties::OnApplyClick( wxCommandEvent& event )
     wxConfigBase::Get()->Write(wxT("Config/UsbipdSocket"), m_sUsbipdSocket);
     wxConfigBase::Get()->Write(wxT("Config/UsbipPort"), m_iUsbLocalPort);
 #endif
-    saveFontSettings();
 
     if (m_bSavedCreateDesktopIcon != m_bCreateDesktopIcon) {
         if (NULL != m_pCfg) {
@@ -1659,7 +1570,13 @@ void SessionProperties::OnApplyClick( wxCommandEvent& event )
                 ::wxGetApp().RemoveDesktopEntry(m_pCfg);
         }
     }
+    if (m_bSavedResetMessageBoxes != m_bResetMessageBoxes) {
+        if (m_bResetMessageBoxes) {
+            wxConfigBase::Get()->DeleteGroup(wxT("SupressedDialogs"));
+        }
+    }
     SaveState();
+    m_pCtrlResetMessageBoxes->SetValue(m_bResetMessageBoxes);
     m_pCtrlApplyButton->Enable(false);
 }
 
@@ -2350,6 +2267,17 @@ void SessionProperties::OnCheckboxGrabkbClick( wxCommandEvent& event )
  */
 
 void SessionProperties::OnCheckboxNodeferredClick( wxCommandEvent& event )
+{
+    wxUnusedVar(event);
+    CheckChanged();
+}
+
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_RESETMSGBOXES
+ */
+
+void SessionProperties::OnCheckboxResetmsgboxesClick( wxCommandEvent& event )
 {
     wxUnusedVar(event);
     CheckChanged();

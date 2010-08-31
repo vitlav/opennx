@@ -1433,7 +1433,7 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                         m_sSshKey = getString(opt, wxT("Public Key"), m_sSshKey);
                         if (tmp != m_sSshKey) {
                             if (!m_sSshKey.IsEmpty()) {
-                                wxRegEx r(wxT("^(-----BEGIN .SA PRIVATE KEY-----)\\s+(.*)(-----END .SA PRIVATE KEY-----)\\s+$"), wxRE_ADVANCED);
+                                wxRegEx r(wxT("^(-----BEGIN .SA PRIVATE KEY-----)\\s+(.*)(-----END .SA PRIVATE KEY-----)\\s*$"), wxRE_ADVANCED);
                                 if (r.Matches(m_sSshKey)) {
                                     tmp = r.GetMatch(m_sSshKey, 2);
                                     tmp.Replace(wxT(" "), wxT("\n"));

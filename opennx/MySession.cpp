@@ -50,6 +50,8 @@
 #include "pwcrypt.h"
 #include "ProxyPasswordDialog.h"
 #include "SimpleXauth.h"
+#include "Icon.h"
+#include "SupressibleMessageDialog.h"
 
 #include <wx/filename.h>
 #include <wx/regex.h>
@@ -769,7 +771,12 @@ MySession::OnSshEvent(wxCommandEvent &event)
             }
             break;
         case MyIPC::ActionWarning:
-            ::wxLogWarning(msg);
+            {
+                wxString cfgid(wxT("sshwarn."));
+                SupressibleMessageDialog d(m_pParent, msg,
+                        _("Warning - OpenNX"), wxOK|wxICON_EXCLAMATION);
+                d.ShowModal(cfgid.Append(msg.Left(15)), wxID_OK);
+            }
             break;
         case MyIPC::ActionError:
             ::wxLogError(msg);
@@ -777,9 +784,10 @@ MySession::OnSshEvent(wxCommandEvent &event)
             break;
         case MyIPC::ActionPromptYesNo:
             {
-                wxMessageDialog d(m_pParent, msg,
+                wxString cfgid(wxT("sshyesno."));
+                SupressibleMessageDialog d(m_pParent, msg,
                         _("Warning - OpenNX"), wxYES_NO|wxICON_EXCLAMATION);
-                if (d.ShowModal() == wxID_YES)
+                if (d.ShowModal(cfgid.Append(msg.Left(15)), wxID_YES) == wxID_YES)
                     printSsh(wxT("yes"));
                 else {
                     printSsh(wxT("no"));
@@ -789,10 +797,11 @@ MySession::OnSshEvent(wxCommandEvent &event)
             break;
         case MyIPC::ActionKeyChangedYesNo:
             {
+                wxString cfgid(wxT("sshkeychanged."));
                 msg << _("\nDo you want to delete the key and retry ?");
-                wxMessageDialog d(m_pParent, msg,
+                SupressibleMessageDialog d(m_pParent, msg,
                         _("Warning - OpenNX"), wxYES_NO|wxICON_EXCLAMATION);
-                if (d.ShowModal() == wxID_YES)
+                if (d.ShowModal(cfgid.Append(msg.Left(15)), wxID_YES) == wxID_YES)
                     m_bRemoveKey = true;
                 m_bGotError = true;
             }
@@ -1159,6 +1168,7 @@ MySession::parseSessions(bool moreAllowed)
             wxMessageDialog d(m_pParent,
                     _("There are no sessions which can be attached to."),
                     _("Error - OpenNX"), wxOK);
+            d.SetIcon(CreateIconFromFile(wxT("res/nx.png")));
             d.ShowModal();
             m_bGotError = true;
         } else {
@@ -1169,6 +1179,7 @@ MySession::parseSessions(bool moreAllowed)
                 wxMessageDialog d(m_pParent,
                         _("You have reached your session limit. No more sessions allowed"),
                         _("Error - OpenNX"), wxOK);
+                d.SetIcon(CreateIconFromFile(wxT("res/nx.png")));
                 d.ShowModal();
                 m_bGotError = true;
             }

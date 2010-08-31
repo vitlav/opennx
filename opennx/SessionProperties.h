@@ -51,7 +51,6 @@ class wxSpinCtrl;
 class wxListCtrl;
 class extHtmlWindow;
 ////@end forward declarations
-class wxFont;
 
 #include "MyValidator.h"
 #include "MyXmlConfig.h"
@@ -310,14 +309,11 @@ public:
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_USB_LOCALPORT
     void OnSpinctrlUsbLocalportTextUpdated( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_FONT_DEFAULT
-    void OnButtonFontDefaultClick( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_FONT_FIXED
-    void OnButtonFontFixedClick( wxCommandEvent& event );
-
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_CREATEICON
     void OnCheckboxCreateiconClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_RESETMSGBOXES
+    void OnCheckboxResetmsgboxesClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_DELETE
     void OnDeleteClick( wxCommandEvent& event );
@@ -343,6 +339,9 @@ public:
 
     bool GetbCreateDesktopIcon() const { return m_bCreateDesktopIcon ; }
     void SetbCreateDesktopIcon(bool value) { m_bCreateDesktopIcon = value ; }
+
+    bool GetbResetMessageBoxes() const { return m_bResetMessageBoxes ; }
+    void SetbResetMessageBoxes(bool value) { m_bResetMessageBoxes = value ; }
 
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
@@ -394,8 +393,7 @@ private:
     wxTextCtrl* m_pCtrlUsbIpdSocket;
     wxButton* m_pCtrlUsbipdSocketBrowse;
     wxSpinCtrl* m_pCtrlUsbLocalPort;
-    wxButton* m_pCtrlFontDefault;
-    wxButton* m_pCtrlFontFixed;
+    wxCheckBox* m_pCtrlResetMessageBoxes;
     wxPanel* m_pCtrlPanelAbout;
     extHtmlWindow* m_pHtmlWindow;
     wxButton* m_pCtrlApplyButton;
@@ -447,10 +445,11 @@ private:
     bool m_bDisableDirectDraw;
     bool m_bGrabKeyboard;
     bool m_bDisableDeferredUpdates;
+    bool m_bResetMessageBoxes;
+    bool m_bSavedResetMessageBoxes;
 ////@end SessionProperties member variables
 
     bool readKbdLayouts();
-    void setFontLabel(wxButton *, const wxFont &);
     int findSelectedShare();
 #ifdef SUPPORT_USBIP
     int findSelectedUsbDevice();
@@ -458,11 +457,7 @@ private:
 #endif
     void updateListCtrlColumnWidth(wxListCtrl *);
     void removePage(const wxString &);
-    void initFontSettings();
-    void saveFontSettings();
 
-    wxFont m_cFontDefault;
-    wxFont m_cFontFixed;
     wxString m_sSavedUserNxDir;
     wxString m_sSavedSystemNxDir;
     wxString m_sSavedUsbipdSocket;
