@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
 "POT-Creation-Date: 2010-08-28 20:33+0200\n"
-"PO-Revision-Date: 2010-04-18 22:00+0100\n"
+"PO-Revision-Date: 2010-09-02 17:53+0100\n"
 "Last-Translator: Fritz Elfert <fritz@fritz-elfert.de>\n"
 "Language-Team:  <de@li.org>\n"
 "Language: de\n"
@@ -814,9 +814,8 @@ msgid "Show the Advanced Configuration dialog"
 msgstr "Erweiterte Einstellungen anzeigen"
 
 #: MyXmlConfig.cpp:561
-#, fuzzy
 msgid "Could not find application window"
-msgstr "Konnte %s nicht im PATH finden"
+msgstr "Konnte Applikations-Fenster nicht finden"
 
 #: PanicDialog_symbols.h:22
 msgid "&Terminate"
@@ -831,9 +830,8 @@ msgid "Please enter your HTTP proxy password"
 msgstr "Bitte geben Sie Ihr HTTP Proxy-Passwort ein"
 
 #: ProxyPropertyDialog.h:57 ProxyPropertyDialog_symbols.h:22
-#, fuzzy
 msgid "Proxy settings"
-msgstr "Verwende benutzerdefinierte Einstellungen"
+msgstr "Proxy Einstellungen"
 
 #: ProxyPropertyDialog_symbols.h:23
 msgid "Connect through internal (NoMachine) HTTP proxy"
@@ -848,9 +846,8 @@ msgid "Remember proxy password"
 msgstr "Proxy-Passwort speichern"
 
 #: ProxyPropertyDialog_symbols.h:29
-#, fuzzy
 msgid "Connect through external proxy"
-msgstr "Verbinde über Proxy"
+msgstr "Verbinde über externen Proxy"
 
 #: ProxyPropertyDialog_symbols.h:30
 msgid "Command"
@@ -1416,7 +1413,7 @@ msgstr "Erstelle ein Desktop-Symbol für diese Sitzung"
 
 #: SessionProperties_symbols.h:102
 msgid "Reset hidden messages"
-msgstr ""
+msgstr "Unterdrückte Nachrichten reaktivieren"
 
 #: SessionProperties_symbols.h:103
 msgid "About"
@@ -1580,11 +1577,11 @@ msgstr ""
 
 #: SupressibleMessageDialog.h:53 SupressibleMessageDialog_symbols.h:22
 msgid "SupressibleMessageDialog"
-msgstr ""
+msgstr "SupressibleMessageDialog"
 
 #: SupressibleMessageDialog_symbols.h:23
 msgid "Do not show this message again"
-msgstr ""
+msgstr "Diese Nachricht in Zukunft nicht mehr anzeigen"
 
 #: TextViewer.cpp:83
 msgid "File couldn't be loaded."

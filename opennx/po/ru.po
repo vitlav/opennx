@@ -800,9 +800,8 @@ msgid "Show the Advanced Configuration dialog"
 msgstr "Открыть диалог настройки"
 
 #: MyXmlConfig.cpp:561
-#, fuzzy
 msgid "Could not find application window"
-msgstr "%s не найдена в PATH"
+msgstr "Окно приложения не найдено"
 
 #: PanicDialog_symbols.h:22
 msgid "&Terminate"
@@ -817,34 +816,28 @@ msgid "Please enter your HTTP proxy password"
 msgstr "Пожалуйста, введите пароль вашего HTTP прокси"
 
 #: ProxyPropertyDialog.h:57 ProxyPropertyDialog_symbols.h:22
-#, fuzzy
 msgid "Proxy settings"
-msgstr "Пользовательские настройки"
+msgstr "Настройки прокси"
 
 #: ProxyPropertyDialog_symbols.h:23
-#, fuzzy
 msgid "Connect through internal (NoMachine) HTTP proxy"
-msgstr "Соединяться через внешний proxy сервер"
+msgstr "Соединятся через внутренний (NoMachine) HTTP прокси"
 
 #: ProxyPropertyDialog_symbols.h:26
-#, fuzzy
 msgid "User"
 msgstr "Логин"
 
 #: ProxyPropertyDialog_symbols.h:28
-#, fuzzy
 msgid "Remember proxy password"
-msgstr "Запомнить пароль"
+msgstr "Запомнить пароль для прокси"
 
 #: ProxyPropertyDialog_symbols.h:29
-#, fuzzy
 msgid "Connect through external proxy"
-msgstr "Соединяться через внешний proxy сервер"
+msgstr "Соединяться через внешний прокси сервер"
 
 #: ProxyPropertyDialog_symbols.h:30
-#, fuzzy
 msgid "Command"
-msgstr "Комментарий"
+msgstr "Команда"
 
 #: QuitDialog_symbols.h:22
 msgid "&Quit"
@@ -1266,7 +1259,7 @@ msgstr "Отключить сжатие ZLIB"
 
 #: SessionProperties_symbols.h:65
 msgid "Connect through proxy"
-msgstr "Соединяться через внешний proxy сервер"
+msgstr "Соединяться через прокси сервер"
 
 #: SessionProperties_symbols.h:66
 msgid "System"
@@ -1406,7 +1399,7 @@ msgstr "Создать ссылку на рабочем столе для это
 
 #: SessionProperties_symbols.h:102
 msgid "Reset hidden messages"
-msgstr ""
+msgstr "Сбросить скрытые сообщения"
 
 #: SessionProperties_symbols.h:103
 msgid "About"
@@ -1574,7 +1567,7 @@ msgstr ""
 
 #: SupressibleMessageDialog_symbols.h:23
 msgid "Do not show this message again"
-msgstr ""
+msgstr "Не показывать это сообщение снова"
 
 #: TextViewer.cpp:83
 msgid "File couldn't be loaded."
