@@ -46,11 +46,13 @@ static void __attribute__ ((constructor))
 void getMacKeyboard() {
 	KeyboardLayoutRef klr;
 	if (noErr == KLGetCurrentKeyboardLayout(&klr)) {
-		uint32 pt = kKLIdentifier;
-		void *oValue;
-		fprintf(stderr, "KLGetCurrentKeyboardLayout OK\n"); fflush(stderr);
+		uint32 pt = kKLName;
+		const void *oValue;
 		if (noErr == KLGetKeyboardLayoutProperty(klr, pt, &oValue)) {
-			fprintf(stderr, "KLGetKeyboardLayoutProperty OK\n"); fflush(stderr);
+			char buf[1024];
+			if (CFStringGetCString((CFStringRef)oValue, buf, sizeof(buf), kCFStringEncodingISOLatin1)) {
+				fprintf(stderr, "kbdlayout='%s'\n", buf); fflush(stderr);
+			}
 		}
 	}
 }

@@ -13,22 +13,29 @@ fi
 PFX=$1
 LIBDEST=$2
 
-wget http://www.opensc-project.org/files/opensc/opensc-$V.tar.gz
-rm -rf opensc-$V
-tar xzf opensc-$V.tar.gz
-cd opensc-$V
-OPENSSL_CFLAGS="-I$D/dist$PFX/include" \
-OPENSSL_LIBS="-L$D/dist$PFX/lib -lcrypto" \
-CFLAGS="-arch ppc -arch i386" \
-LDLAGS="-arch ppc -arch i386" \
-./configure \
-        --prefix=$PFX \
-        --enable-pcsc \
-        --sysconfdir=/Library/OpenSC/etc \
-        --disable-static \
-        --disable-dependency-tracking
-make
-rm -rf $D/dist
-mkdir $D/dist
-make DESTDIR=$D/dist install
+CACHEDBUILD=../opensc-prebuild.tgz
+
+if [ -f ../opensc-prebuild.tgz ] ; then
+	tar xzf $CACHEDBUILD
+else
+	wget http://www.opensc-project.org/files/opensc/opensc-$V.tar.gz
+	rm -rf opensc-$V
+	tar xzf opensc-$V.tar.gz
+	cd opensc-$V
+	OPENSSL_CFLAGS="-I$D/dist$PFX/include" \
+	OPENSSL_LIBS="-L$D/dist$PFX/lib -lcrypto" \
+	CFLAGS="-arch ppc -arch i386" \
+	LDLAGS="-arch ppc -arch i386" \
+	./configure \
+        	--prefix=$PFX \
+        	--enable-pcsc \
+        	--sysconfdir=/Library/OpenSC/etc \
+        	--disable-static \
+        	--disable-dependency-tracking
+	make
+	rm -rf $D/dist
+	mkdir $D/dist
+	make DESTDIR=$D/dist install
+	tar czf $CACHEDBUILD .
+fi
 mkdir -p $LIBDEST

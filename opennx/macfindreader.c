@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <opensc/opensc.h>
 
 #define CTXNAME "openssh"

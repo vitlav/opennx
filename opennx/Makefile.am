@@ -195,8 +195,7 @@ CLEANFILES = memres.h tmpres.zip *~ po/*~ *.bak *~ \#.* .\#* OpenNX.app
 MAINTAINERCLEANFILES = ABOUT-NLS Makefile.in configure aclocal.m4 \
 	conf/config.guess conf/config.sub conf/depcomp conf/install-sh \
 	conf/missing conf/mkinstalldirs conf/ltmain.sh conf/config.rpath \
-	m4/*~ m4/gettext.m4 m4/iconv.m4 m4/lib-*.m4 m4/nls.m4 m4/po.m4 \
-	m4/progtest.m4 po/*.sin po/*.sed po/*.header po/Rules-quot \
+	m4/[cgilnpuwx]*.m4 m4/s[it]*.m4 po/*.sin po/*.sed po/*.header po/Rules-quot \
 	po/*.template po/Makefile*.in
 
 DISTCLEANFILES = res/*.prv.*
@@ -286,7 +285,7 @@ unknown:
 
 dist-platform: $(PLATFORMDIST)
 
-EXTRA_DIST = conf/mkinstalldirs conf/config.rpath conf/authors.xml \
+EXTRA_DIST = conf/mkinstalldirs  conf/mkinstalldirs  conf/mkinstalldirs  conf/mkinstalldirs  conf/mkinstalldirs conf/config.rpath conf/authors.xml \
 	INSTALL INSTALL.generic COPYING share etc/60-opennx.rules \
 	opennx.pjd opennx.rc tracelog.rc watchreader.rc \
 	opennx.spec patches getnxsrcpkg $(RESDEPS) ChangeLog extres debian \

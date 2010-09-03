@@ -42,7 +42,6 @@
 #include "wx/imaglist.h"
 ////@end includes
 #include <wx/config.h>
-#include <wx/fontdlg.h>
 #include <wx/imaglist.h>
 #include <wx/tokenzr.h>
 #include <wx/wfstream.h>

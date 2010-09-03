@@ -13,84 +13,117 @@ if test -z "$PFX" ; then
     PFX=/Library/OpenNX
 fi
 ALLPKG="nxcomp nxproxy nxesd nxssh"
-$TOPSRC/getnxsrcpkg $ALLPKG
-for pkg in $ALLPKG ; do
-    tar xzf ${pkg}-*.tar.gz
-done
+CACHEDBUILD=../nx-prebuild.tgz
 
-# Prerequisite: libjpeg
-test -f jpegsrc.v6b.tar.gz || wget http://downloads.sourceforge.net/project/libjpeg/libjpeg/6b/jpegsrc.v6b.tar.gz
-tar xzf jpegsrc.v6b.tar.gz
-cd jpeg-6b
-patch -p1 < $TOPSRC/patches/jpeg-autoconf.patch
-CFLAGS="-arch ppc -arch i386" CXXFLAGS="-arch ppc -arch i386" LDFLAGS="-arch ppc -arch i386" ./configure \
-        --prefix=$PFX --disable-static --enable-shared
-mkdir -p $DEST$PFX/{include,lib}
-make DESTDIR=$DEST install-lib
-cd ..
-# Prerequisite: libpng
-test -f libpng-1.2.44.tar.gz || wget ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng-1.2.44.tar.gz
-tar xzf libpng-1.2.44.tar.gz
-cd libpng-1.2.44
-CFLAGS="-arch i386 -arch ppc" LDFLAGS="-arch i386 -arch ppc" ./configure \
-        --prefix=$PFX --enable-static --disable-shared --disable-dependency-tracking
-make DESTDIR=$DEST install
-cd ..
-# Prerequisite: libaudiofile
-test -f audiofile-0.2.6.tar.gz || wget http://www.68k.org/~michael/audiofile/audiofile-0.2.6.tar.gz
-tar xzf audiofile-0.2.6.tar.gz
-cd audiofile-0.2.6
-autoreconf -f -i
-CFLAGS="-arch i386 -arch ppc" LDFLAGS="-arch i386 -arch ppc" ./configure \
+NEEDREBUILD=no
+if [ -f $CACHEDBUILD ] ; then
+	tar xzf $CACHEDBUILD
+	for TARBALL in `$TOPSRC/getnxsrcpkg -l $ALLPKG` ; do
+		test -f $TARBALL || NEEDREBUILD=yes
+	done
+	if [ $NEEDREBUILD = yes ] ; then
+		rm -rf *
+	fi
+fi
+
+if [ $NEEDREBUILD = yes ] ; then
+	$TOPSRC/getnxsrcpkg $ALLPKG
+	for pkg in $ALLPKG ; do
+    		tar xzf ${pkg}-*.tar.gz
+	done
+
+	# Prerequisite: libjpeg
+	test -f jpegsrc.v6b.tar.gz || wget http://downloads.sourceforge.net/project/libjpeg/libjpeg/6b/jpegsrc.v6b.tar.gz
+	tar xzf jpegsrc.v6b.tar.gz
+	cd jpeg-6b
+	patch -p1 < $TOPSRC/patches/jpeg-autoconf.patch
+	CFLAGS="-arch ppc -arch i386" CXXFLAGS="-arch ppc -arch i386" LDFLAGS="-arch ppc -arch i386" ./configure \
+        	--prefix=$PFX --disable-static --enable-shared
+	mkdir -p $DEST$PFX/{include,lib}
+	make DESTDIR=$DEST install-lib
+	cd ..
+	# Prerequisite: libpng
+	test -f libpng-1.2.44.tar.gz || wget ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng-1.2.44.tar.gz
+	tar xzf libpng-1.2.44.tar.gz
+	cd libpng-1.2.44
+	CFLAGS="-arch i386 -arch ppc" LDFLAGS="-arch i386 -arch ppc" ./configure \
+        	--prefix=$PFX --enable-static --disable-shared --disable-dependency-tracking
+	make DESTDIR=$DEST install
+	cd ..
+	# Prerequisite: libaudiofile
+	test -f audiofile-0.2.6.tar.gz || wget http://www.68k.org/~michael/audiofile/audiofile-0.2.6.tar.gz
+	tar xzf audiofile-0.2.6.tar.gz
+	cd audiofile-0.2.6
+	autoreconf -f -i
+	CFLAGS="-arch i386 -arch ppc" LDFLAGS="-arch i386 -arch ppc" ./configure \
         --prefix=$PFX --disable-static --disable-dependency-tracking
-make DESTDIR=$DEST install
-cd ..
+	make DESTDIR=$DEST install
+	cd ..
 
-ncver=`ls nxcomp-*.tar.gz|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxcomp-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
-for pkg in nxcomp nxproxy nxesd ; do
-    cd $pkg
-    for p in $TOPSRC/patches/${pkg}-*.patch ; do
-        bn=`basename $p`
-        if [ $bn = nxcomp-gcc44.patch -a $ncver -ge 03040006 ] ; then
-            echo === Skipping $bn in $pkg
-        else
-            echo === Applying $bn in $pkg
-            patch -p1 < $p
-        fi
-    done
-    autoreconf -f -i
-    cargs=
-    margs=
-    case $pkg in
-        nxcomp)
-            cargs="--with-libjpeg=$DEST$PFX --with-libpng=$DEST$PFX"
-            ;;
-        nxesd)
-            cargs="--disable-audiofiletest --with-audiofile=yes"
-            margs="AUDIOFILE_CFLAGS=\"-I$DEST$PFX/include\" LDFLAGS=\"-L$DEST$PFX/lib\" LIBS=-laudiofile"
-            ;;
-    esac
-    ./configure --prefix=$PFX $cargs
-    echo make $margs
-    make $margs
-    make DESTDIR=$DEST $margs install
-    cd ..
-    echo === Build of $pkg complete
-done
+	ncver=`ls nxcomp-*.tar.gz|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxcomp-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
+	for pkg in nxcomp nxproxy nxesd ; do
+    		cd $pkg
+    		for p in $TOPSRC/patches/${pkg}-*.patch ; do
+        		bn=`basename $p`
+        		if [ $bn = nxcomp-gcc44.patch -a $ncver -ge 03040006 ] ; then
+            			echo === Skipping $bn in $pkg
+        		else
+            			echo === Applying $bn in $pkg
+            			patch -p1 < $p
+        		fi
+    		done
+    		autoreconf -f -i
+    		cargs=
+    		margs=
+    		case $pkg in
+        		nxcomp)
+            			cargs="--with-libjpeg=$DEST$PFX --with-libpng=$DEST$PFX"
+            			;;
+        		nxesd)
+            			cargs="--disable-audiofiletest --with-audiofile=yes"
+            			margs="AUDIOFILE_CFLAGS=\"-I$DEST$PFX/include\" LDFLAGS=\"-L$DEST$PFX/lib\" LIBS=-laudiofile"
+            			;;
+    		esac
+    		./configure --prefix=$PFX $cargs
+    		echo make $margs
+    		make $margs
+    		make DESTDIR=$DEST $margs install
+    		cd ..
+    		echo === Build of $pkg complete
+	done
 
-cd nxssh
-patch -p1 < $TOPSRC/patches/openssh-scard-pin.patch
-patch -p1 < $TOPSRC/patches/nxssh-dynopensc.patch
-autoreconf -f -i
-LDFLAGS="-L$DEST$PFX/lib" \
-./configure --prefix=$PFX \
-  --with-opensc=$BUILDDIR/../scbuild/dist$PFX \
-  --enable-opensc-dynamic \
-  --with-cflags="-arch i386 -arch ppc" \
-  --with-ldflags="-arch i386 -arch ppc"
-make
-cp nxssh $DEST$PFX/bin/nxssh
-cd ..
+	cd nxssh
+	patch -p1 < $TOPSRC/patches/openssh-scard-pin.patch
+	patch -p1 < $TOPSRC/patches/nxssh-dynopensc.patch
+	autoreconf -f -i
+	# When building nxssh on OSX10.6, we need to forcibly add -lresolv
+	R=
+	case "`uname -r`" in
+		10.*)
+			R="-lresolv"
+			;;
+	esac
+	LIBS="$R" \
+	LDFLAGS="-L$DEST$PFX/lib" \
+	./configure --prefix=$PFX \
+  		--with-opensc=$BUILDDIR/../scbuild/dist$PFX \
+  		--enable-opensc-dynamic \
+  		--with-cflags="-arch i386 -arch ppc" \
+  		--with-ldflags="-arch i386 -arch ppc"
+	make
+	cp nxssh $DEST$PFX/bin/nxssh
+	cd ..
+	tar czf $CACHEDBUILD .
+else
+	mkdir -p $DEST$PFX/{include,lib}
+	make -C jpeg-6b DESTDIR=$DEST install-lib
+	make -C libpng-1.2.44 DESTDIR=$DEST install
+	make -C audiofile-0.2.6 DESTDIR=$DEST install
+	make -C nxcomp DESTDIR=$DEST install
+	make -C nxproxy DESTDIR=$DEST install
+	make -C nxesd DESTDIR=$DEST install
+	cp nxssh/nxssh $DEST$PFX/bin/nxssh
+fi
 
 rm -rf $DEST$PFX/{include,etc,share} \
        $DEST$PFX/lib/*.la \

@@ -7,6 +7,14 @@ AC_CONFIG_AUX_DIR([conf])
 AC_CONFIG_SRCDIR([opennxApp.cpp])
 AC_CONFIG_HEADERS([config.h])
 AC_CANONICAL_TARGET
+preferred_cc=
+preferred_cxx=
+case $target_os in
+    darwin10*)
+	preferred_cc="gcc-4.0 gcc cc"
+	preferred_cxx="g++-4.0 g++ c++"
+	;;
+esac
 AM_INIT_AUTOMAKE([foreign no-installinfo no-installman])
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
@@ -45,10 +53,10 @@ esac
 AC_SUBST(PLATFORM_SUBDIRS)
 
 # Checks for programs.
+AC_PROG_CXX([$preferred_cxx])
+AC_PROG_CC([$preferred_cc])
 AC_DISABLE_SHARED
 AC_PROG_LIBTOOL
-AC_PROG_CXX
-AC_PROG_CC
 AC_PROG_LN_S
 dnl AM_GNU_GETTEXT_VERSION(0.14.5)
 AM_GNU_GETTEXT([external])

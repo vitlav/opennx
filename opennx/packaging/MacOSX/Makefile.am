@@ -13,7 +13,7 @@ dmg: pkg
 	sudo rm -rf dmgroot
 	touch $@
 
-pkgdir:
+createpkgroot:
 	rm -rf pkgroot
 	mkdir -p pkgroot/Applications/OpenNX
 	mkdir -p pkgroot$(prefix)
@@ -34,21 +34,23 @@ pkgdir:
 	$(srcdir)/mkbundle pkgroot/Library/OpenNX/Message.app OpenNXMessage \
 	    $(top_srcdir)/extres/nx.icns $(bindir)/opennx \
 	    $(srcdir)/opennx.plist "" --dialog ok --style info --caption CARDREMOVED --message CARDREMOVED
+
+pkgdir: createpkgroot
 	rm -rf scbuild
 	mkdir scbuild
-	(cd scbuild ; $(abs_srcdir)/buildopensc $(prefix) $(abs_builddir)/pkgroot$(libdir))
+	(cd scbuild ; CC=$(CC) CXX=$(CXX) $(abs_srcdir)/buildopensc $(prefix) $(abs_builddir)/pkgroot$(libdir))
 	sed -e "s!_PREFIX_!$(abs_builddir)/scbuild/dist/$(prefix)!" \
 	    < $(srcdir)/opensc-config.tmpl > scbuild/dist$(prefix)/bin/opensc-config
 	chmod a+x scbuild/dist$(prefix)/bin/opensc-config
 	rm -rf nxbuild
 	mkdir nxbuild
-	(cd nxbuild ; DEST=$(abs_builddir)/pkgroot PFX=$(prefix) $(abs_srcdir)/buildnx)
+	(cd nxbuild ; DEST=$(abs_builddir)/pkgroot PFX=$(prefix) CC=$(CC) CXX=$(CXX) $(abs_srcdir)/buildnx)
 	$(MAKE) -C $(top_builddir) DESTDIR=$(abs_builddir)/pkgroot install
 	for lang in $(shell cat $(top_srcdir)/po/LINGUAS) ; do \
 		$(INSTALL_DATA) $(WX_PREFIX)/share/locale/$$lang/LC_MESSAGES/wxstd.mo \
 			pkgroot/$(localedir)/$$lang/LC_MESSAGES/ ; \
 	done
-	$(srcdir)/buildsmbclient $(prefix) \
+	CC=$(CC) CXX=$(CXX) $(srcdir)/buildsmbclient $(prefix) \
 	    $(abs_builddir)/pkgroot$(libdir)
 	touch $@
 

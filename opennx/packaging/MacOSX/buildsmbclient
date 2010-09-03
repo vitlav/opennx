@@ -22,33 +22,47 @@ cleanup() {
     rm -rf "$TDIR"
 }
 trap cleanup EXIT
-mkdir -p "$TDIR"
-cd "$TDIR"
-TGZ=samba-latest.tar.gz
-DLURL="ftp://ftp.samba.org/pub/samba/$TGZ"
 
-test -f $TGZ || wget "$DLURL"
-SRC=`tar tzf $TGZ|tail -1|cut -d/ -f1`
-tar xzf $TGZ
-cd $SRC/source3
-CFLAGS="-arch i386" LDFLAGS="-arch i386" ./configure \
-    --prefix=$PFX \
-    --with-configdir=/etc \
-    --disable-swat \
-    --without-wbclient \
-    --without-libnetapi \
-    --with-static-libs=libtalloc,libtdb \
-    --with-shared-libs=libsmbclient
-make && mv bin bin-i386
-make clean
-sed -e s/i386/ppc/g < config.status | sh
-make
-mkdir -p "$IDIR"
-for lib in bin/libsmbclient.dylib* ; do
-    bn=`basename $lib`
-    if [ -L $lib ] ; then
-        cp $lib "$IDIR/$bn"
-    else
-        lipo -create bin-i386/$bn $lib -output "$IDIR/$bn"
-    fi
-done
+CACHEDBUILD=$WDIR/smbc-prebuild.tgz
+
+if [ -f $CACHEDBUILD ] ; then
+	tar xzCf $IDIR $CACHEDBUILD
+else
+	mkdir -p "$TDIR"
+	cd "$TDIR"
+	TGZ=samba-latest.tar.gz
+	DLURL="ftp://ftp.samba.org/pub/samba/$TGZ"
+
+	test -f $TGZ || wget "$DLURL"
+	SRC=`tar tzf $TGZ|tail -1|cut -d/ -f1`
+	tar xzf $TGZ
+	cd $SRC/source3
+	CFLAGS="-arch i386" LDFLAGS="-arch i386" ./configure \
+    		--prefix=$PFX \
+    		--with-configdir=/etc \
+    		--disable-swat \
+    		--without-readline \
+    		--without-wbclient \
+    		--without-libnetapi \
+		--without-libsmbsharemodes \
+		--without-winbind \
+		--without-pam_smbpass \
+    		--with-static-libs=libtalloc,libtdb \
+		--with-libsmbclient
+	make libsmbclient && mv bin bin-i386
+	make clean
+	sed -e s/i386/ppc/g < config.status | sh
+	make libsmbclient
+	mkdir -p "$IDIR"
+	TOARCH=
+	for lib in bin/libsmbclient.dylib* ; do
+    		bn=`basename $lib`
+    		TOARCH="$TOARCH $bn"
+    		if [ -L $lib ] ; then
+        		cp $lib "$IDIR/$bn"
+    		else
+        		lipo -create bin-i386/$bn $lib -output "$IDIR/$bn"
+    		fi
+	done
+	tar cvzCf $IDIR $CACHEDBUILD $TOARCH
+fi

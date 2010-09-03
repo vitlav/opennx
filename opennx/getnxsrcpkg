@@ -1,6 +1,14 @@
 #!/usr/bin/perl
 
 my @urls;
+my $do_fetch = 1;
+
+if ($#ARGV ge 0) {
+	if ($ARGV[0] eq '-l') {
+		$do_fetch = 0;
+		shift(@ARGV);
+	}
+}
 
 open(P, "wget -q -O - http://www.nomachine.com/sources.php|") || die "Can't run wget: $!\n";
 while (<P>) {
@@ -22,7 +30,11 @@ foreach (@urls) {
         }
         next if ($skipit);
     }
-    print "Fetching $fn ...";
-    system("wget -q $_");
-    print " done\n";
+    if ($do_fetch) {
+        print "Fetching $fn ...";
+        system("wget -q $_");
+        print " done\n";
+    } else {
+        print "$fn\n";
+    }
 }

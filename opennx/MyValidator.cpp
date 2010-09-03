@@ -38,7 +38,6 @@
   #include "wx/defs.h"
 #endif
 #include <wx/config.h>
-#include <wx/fontdlg.h>
 #include <wx/filename.h>
 
 #ifndef WX_PRECOMP

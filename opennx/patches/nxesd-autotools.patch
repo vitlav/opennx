@@ -294,8 +294,8 @@ diff -urwN nxesd-orig/m4/flags.m4 nxesd/m4/flags.m4
 +AC_DEFUN([fe_CHECK_FLAG],[
 +  AC_REQUIRE([AC_LANG_PUSH])dnl
 +  AC_REQUIRE([AC_LANG_POP])dnl
-+  AC_REQUIRE([AC_LANG_PROGRAM])dnl
-+  AC_REQUIRE([AC_LINK_IFELSE])dnl
++  AC_REQUIRE([AC_PROG_CC])dnl
++  AC_REQUIRE([AC_PROG_CXX])dnl
 +
 +  AC_MSG_CHECKING(whether compiler accepts $3)
 +  AC_LANG_PUSH($1)
