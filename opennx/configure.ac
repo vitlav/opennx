@@ -7,12 +7,12 @@ AC_CONFIG_AUX_DIR([conf])
 AC_CONFIG_SRCDIR([opennxApp.cpp])
 AC_CONFIG_HEADERS([config.h])
 AC_CANONICAL_TARGET
-preferred_cc=
-preferred_cxx=
+preferred_cc="gcc cc"
+preferred_cxx="g++ c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC"
 case $target_os in
     darwin10*)
-	preferred_cc="gcc-4.0 gcc cc"
-	preferred_cxx="g++-4.0 g++ c++"
+	preferred_cc="gcc-4.0 $preferred_cc"
+	preferred_cxx="g++-4.0 $preferred_cxx"
 	;;
 esac
 AM_INIT_AUTOMAKE([foreign no-installinfo no-installman])
