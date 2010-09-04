@@ -23,7 +23,8 @@ cleanup() {
 }
 trap cleanup EXIT
 
-CACHEDBUILD=$WDIR/smbc-prebuild.tgz
+CACHEDIR=$HOME/savebuild
+CACHEDBUILD=$CACHEDIR/smbc-prebuild.tgz
 
 if [ -f $CACHEDBUILD ] ; then
 	tar xzCf $IDIR $CACHEDBUILD
@@ -64,5 +65,6 @@ else
         		lipo -create bin-i386/$bn $lib -output "$IDIR/$bn"
     		fi
 	done
-	tar cvzCf $IDIR $CACHEDBUILD $TOARCH
+    mkdir -p $CACHEDIR
+	tar czCf $IDIR $CACHEDBUILD $TOARCH
 fi

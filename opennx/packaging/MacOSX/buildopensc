@@ -2,8 +2,7 @@
 
 set -e
 
-SV=0.9.8k
-V=0.11.9
+V=0.11.13
 D=`pwd`
 
 if [ $# != 2 ] ; then
@@ -13,9 +12,10 @@ fi
 PFX=$1
 LIBDEST=$2
 
-CACHEDBUILD=../opensc-prebuild.tgz
+CACHEDIR=$HOME/savebuild
+CACHEDBUILD=$CACHEDIR/opensc-${V}-prebuild.tgz
 
-if [ -f ../opensc-prebuild.tgz ] ; then
+if [ -f $CACHEDBUILD ] ; then
 	tar xzf $CACHEDBUILD
 else
 	wget http://www.opensc-project.org/files/opensc/opensc-$V.tar.gz
@@ -36,6 +36,7 @@ else
 	rm -rf $D/dist
 	mkdir $D/dist
 	make DESTDIR=$D/dist install
+    mkdir -p $CACHEDIR
 	tar czf $CACHEDBUILD .
 fi
 mkdir -p $LIBDEST

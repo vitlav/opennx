@@ -13,7 +13,8 @@ if test -z "$PFX" ; then
     PFX=/Library/OpenNX
 fi
 ALLPKG="nxcomp nxproxy nxesd nxssh"
-CACHEDBUILD=../nx-prebuild.tgz
+CACHEDIR=$HOME/savebuild
+CACHEDBUILD=$CACHEDIR/nx-prebuild.tgz
 
 NEEDREBUILD=yes
 if [ -f $CACHEDBUILD ] ; then
@@ -114,6 +115,7 @@ if [ $NEEDREBUILD = yes ] ; then
 	make
 	cp nxssh $DEST$PFX/bin/nxssh
 	cd ..
+    mkdir -p $CACHEDIR
 	tar czf $CACHEDBUILD .
 else
 	mkdir -p $DEST$PFX/{include,lib}
