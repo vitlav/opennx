@@ -36,7 +36,8 @@ else
 	rm -rf $D/dist
 	mkdir $D/dist
 	make DESTDIR=$D/dist install
-    mkdir -p $CACHEDIR
-	tar czf $CACHEDBUILD .
+	cd ..
+	mkdir -p $CACHEDIR
+	tar czf $CACHEDBUILD opensc-$V
 fi
 mkdir -p $LIBDEST
