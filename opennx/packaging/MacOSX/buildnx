@@ -15,8 +15,9 @@ fi
 ALLPKG="nxcomp nxproxy nxesd nxssh"
 CACHEDBUILD=../nx-prebuild.tgz
 
-NEEDREBUILD=no
+NEEDREBUILD=yes
 if [ -f $CACHEDBUILD ] ; then
+    NEEDREBUILD=no
 	tar xzf $CACHEDBUILD
 	for TARBALL in `$TOPSRC/getnxsrcpkg -l $ALLPKG` ; do
 		test -f $TARBALL || NEEDREBUILD=yes
