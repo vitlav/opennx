@@ -10,7 +10,13 @@ if ($#ARGV ge 0) {
 	}
 }
 
-open(P, "wget -q -O - http://www.nomachine.com/sources.php|") || die "Can't run wget: $!\n";
+my $have_wget = (`which wget` ne '');
+
+if ($have_wget) {
+	open(P, "wget -q -O - http://www.nomachine.com/sources.php|") || die "Can't run wget: $!\n";
+} else {
+	open(P, "curl -f -L http://www.nomachine.com/sources.php|") || die "Can't run wget: $!\n";
+}
 while (<P>) {
         chomp;
         if (/A\s+HREF="([^"]+)"\s+class=link2/) {
@@ -32,7 +38,13 @@ foreach (@urls) {
     }
     if ($do_fetch) {
         print "Fetching $fn ...";
+if ($have_wget) {
         system("wget -q $_");
+} else {
+	my $of = $_;
+	$of =~ s/.*\///;
+        system("curl -f -L -o $of $_");
+}
         print " done\n";
     } else {
         print "$fn\n";
