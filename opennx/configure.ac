@@ -62,27 +62,28 @@ dnl AM_GNU_GETTEXT_VERSION(0.14.5)
 AM_GNU_GETTEXT([external])
 dnl We use objdump on the MinGW target for the
 dnl findrequires.pl script
-AC_CHECK_TARGET_TOOL([OBJDUMP],[objdump],[
-    case $target_os in
-        mingw*)
-            AC_MSG_ERROR([Could not find required tool 'objdump'])
-            ;;
-    esac
-])
+AC_CHECK_TARGET_TOOL([OBJDUMP],[objdump],[no])
+case ${OBJDUMP}-${target_os} in
+    no-mingw*)
+        AC_MSG_ERROR([Could not find required tool 'objdump'])
+        ;;
+esac
 AC_ARG_VAR([OBJDUMP],[Path to objdump binary. (required for win32 builds only)])
 dnl For the same reason (and for building Xming), we require perl
-AC_CHECK_TOOL([PERL],[perl],[
-    case $target_os in
-        mingw*)
-            AC_MSG_ERROR([Could not find required tool 'perl'])
-            ;;
-    esac
-])
+AC_CHECK_TOOL([PERL],[perl],[no])
+case ${PERL}-${target_os} in
+    no-mingw*)
+        AC_MSG_ERROR([Could not find required tool 'perl'])
+        ;;
+esac
 AC_CHECK_TOOL([WGET],[wget],[no])
 AC_CHECK_TOOL([CURL],[curl],[no])
 if test "$WGET" = "no" -a "$CURL" = "no" ; then
-    case $target_os in
-        mingw*|darwin*)
+    case ${WGET}-${CURL}-${target_os} in
+        no-*-mingw*)
+            AC_MSG_ERROR([Could not find required tool 'wget'])
+            ;;
+        no-no-darwin*)
             AC_MSG_ERROR([Could not find required tool 'wget' or 'curl'])
             ;;
     esac
