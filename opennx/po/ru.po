@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-08-28 20:33+0200\n"
+"POT-Creation-Date: 2010-09-08 11:13+0200\n"
 "PO-Revision-Date: 2010-08-27 12:21+0400\n"
 "Last-Translator: Shakirov Lenar <snejok@altlinux.org>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "X-Poedit-Language: Russian\n"
 "X-Poedit-Country: RUSSIA\n"
 
-#: AboutDialog.cpp:113 SessionProperties.cpp:1053
+#: AboutDialog.cpp:113 SessionProperties.cpp:1052
 msgid "Version"
 msgstr "Версия"
 
@@ -608,19 +608,19 @@ msgstr "Новая сессия"
 msgid "New Session %d"
 msgstr "Новая сессия %d"
 
-#: MyWizard.cpp:671 SessionProperties.cpp:795
+#: MyWizard.cpp:671 SessionProperties.cpp:794
 msgid "RDP"
 msgstr "RDP"
 
-#: MyWizard.cpp:689 SessionProperties.cpp:821
+#: MyWizard.cpp:689 SessionProperties.cpp:820
 msgid "RFB"
 msgstr "RFB"
 
-#: MyWizard.cpp:707 SessionProperties.cpp:848
+#: MyWizard.cpp:707 SessionProperties.cpp:847
 msgid "Any"
 msgstr "Любой"
 
-#: MyWizard.cpp:714 SessionProperties.cpp:855
+#: MyWizard.cpp:714 SessionProperties.cpp:854
 msgid "As on server"
 msgstr "Как на сервере"
 
@@ -941,7 +941,7 @@ msgstr "Запустить рабочий стол"
 msgid "Run application"
 msgstr "Запустить приложение"
 
-#: ResumeDialog.cpp:152 SessionProperties.cpp:646
+#: ResumeDialog.cpp:152 SessionProperties.cpp:645
 msgid "Name"
 msgstr "Имя"
 
@@ -1094,106 +1094,106 @@ msgstr "О программе..."
 msgid "New NX session"
 msgstr "Новая NX сессия"
 
-#: SessionProperties.cpp:547 SessionProperties_symbols.h:90
+#: SessionProperties.cpp:546 SessionProperties_symbols.h:90
 msgid "USB"
 msgstr "USB"
 
-#: SessionProperties.cpp:584 ShareProperties_symbols.h:24
+#: SessionProperties.cpp:583 ShareProperties_symbols.h:24
 msgid "Share"
 msgstr "Сетевой ресурс"
 
-#: SessionProperties.cpp:585 ShareProperties_symbols.h:50
+#: SessionProperties.cpp:584 ShareProperties_symbols.h:50
 msgid "Mount on"
 msgstr "Смонтировать в"
 
-#: SessionProperties.cpp:586
+#: SessionProperties.cpp:585
 msgid "Comment"
 msgstr "Комментарий"
 
-#: SessionProperties.cpp:598 SessionProperties.cpp:1402
+#: SessionProperties.cpp:597 SessionProperties.cpp:1401
 msgid "Currently not available"
 msgstr "Не доступно"
 
-#: SessionProperties.cpp:643
+#: SessionProperties.cpp:642
 msgid "VendorID"
 msgstr "VendorID"
 
-#: SessionProperties.cpp:644
+#: SessionProperties.cpp:643
 msgid "ProductID"
 msgstr "ProductID"
 
-#: SessionProperties.cpp:645
+#: SessionProperties.cpp:644
 msgid "Class"
 msgstr "Класс"
 
-#: SessionProperties.cpp:647
+#: SessionProperties.cpp:646
 msgid "Serial"
 msgstr "Serial"
 
-#: SessionProperties.cpp:1152
+#: SessionProperties.cpp:1151
 msgid "Error while reading keyboard table"
 msgstr "Ошибка при загрузке раскладки клавиатуры"
 
-#: SessionProperties.cpp:1181
+#: SessionProperties.cpp:1180
 #, c-format
 msgid "Invalid line='%s'"
 msgstr "Ошибочная линия='%s'"
 
-#: SessionProperties.cpp:1182
+#: SessionProperties.cpp:1181
 #, c-format
 msgid "Invalid entry in %s"
 msgstr "Ошибочное значение в %s"
 
-#: SessionProperties.cpp:1326
+#: SessionProperties.cpp:1325
 msgid "Do you really want to delete all cache directories?"
 msgstr "Вы уверены что хотите удалить все каталоги с кэшем?"
 
-#: SessionProperties.cpp:1327
+#: SessionProperties.cpp:1326
 msgid "Clean cache - OpenNX"
 msgstr "Очистить кэш - OpenNX"
 
-#: SessionProperties.cpp:1375
+#: SessionProperties.cpp:1374
 msgid "No local samba server is running."
 msgstr "Не запущен локальный сервер samba."
 
-#: SessionProperties.cpp:1431
+#: SessionProperties.cpp:1430
 msgid "No sharable resources found"
 msgstr "Не найдено общедоступных ресурсов"
 
-#: SessionProperties.cpp:1508
+#: SessionProperties.cpp:1507
 msgid "Select User NX directory"
 msgstr "Выберите каталог NX для пользователя"
 
-#: SessionProperties.cpp:1524
+#: SessionProperties.cpp:1523
 msgid "Select System NX directory"
 msgstr "Выберите системный каталог NX"
 
-#: SessionProperties.cpp:1541
+#: SessionProperties.cpp:1540
 #, c-format
 msgid "Really delete Session '%s' ?"
 msgstr "Вы действительно хотите удалить сессию '%s' ?"
 
-#: SessionProperties.cpp:1542
+#: SessionProperties.cpp:1541
 msgid "Delete Session"
 msgstr "Удалить сессию"
 
-#: SessionProperties.cpp:1813
+#: SessionProperties.cpp:1812
 msgid "No cups server available."
 msgstr "Нет доступного сервера CUPS."
 
-#: SessionProperties.cpp:1828
+#: SessionProperties.cpp:1827
 msgid "Select System CUPS daemon"
 msgstr "Выберите системный сервер CUPS"
 
-#: SessionProperties.cpp:1964 opennxApp.cpp:1188
+#: SessionProperties.cpp:1963 opennxApp.cpp:1188
 msgid "libusb is not available. No USB devices will be exported"
 msgstr "libusb не доступна. USB устройства не смогут быть проброшены."
 
-#: SessionProperties.cpp:1969
+#: SessionProperties.cpp:1968
 msgid "No USB devices available."
 msgstr "Нет доступных USB устройств."
 
-#: SessionProperties.cpp:2181
+#: SessionProperties.cpp:2180
 msgid "Select path of USBIPD socket"
 msgstr "Выберите путь к сокету USBIPD"
 

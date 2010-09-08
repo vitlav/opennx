@@ -23,11 +23,12 @@
 ## OS detection
 ##
 %define is_rh %(test -n "`echo %{?dist}|grep rh`" && echo 1 || echo 0)
+%define is_el %(test -n "`echo %{?dist}|grep el`" && echo 1 || echo 0)
 %define is_fc 0%{?fedora}%{?fedora_version}
 %define is_suse 0%{?suse_version}
 %define is_sles 0%{?sles_version}
 %define is_mdv 0%{?mdkversion}
-%if %{is_rh}
+%if %{is_rh}%{is_el}
 %define ostag %{?dist}
 %endif
 %if %{is_mdv}
@@ -127,11 +128,15 @@ BuildRequires: x11-proto-devel
 BuildRequires: x11-xtrans-devel
 %endif
 
-%if %{is_fc}%{is_rh}
+%if %{is_fc}%{is_rh}%{is_el}
 %if %{is_fc} > 10
 BuildRequires: wxGTK-devel >= 2.8.0
 %else
+%if %{is_el}
+BuildRequires: wxGTK-devel >= 2.8.0
+%else
 BuildRequires: wxGTK2-devel >= 2.8.0
+%endif
 %endif
 BuildRequires: samba-common
 BuildRequires: libXmu-devel
@@ -218,7 +223,7 @@ for pkg in %{nxpkgs} ; do
 	cd $pkg && ./configure --prefix=%{_prefix} && make
     cd ..
 done
-%if %{is_fc}
+%if %{is_fc}%{is_el}
 # On FC10, opensc-config is currently broken. It returns "-I" when
 # called with the --cflags option, breaking ./configure. Therefore
 # we provide a wrapper here.
@@ -229,7 +234,11 @@ cat<<"EOF">opensc-config
 EOF
 chmod a+x opensc-config
 export PATH=.:$PATH
+%if %{is_el}
+LIBS=-lresolv ./configure --prefix=%{_prefix} --with-opensc --enable-opensc-dynamic && make
+%else
 ./configure --prefix=%{_prefix} --with-opensc --enable-opensc-dynamic && make
+%endif
 %else
 cd nxssh && ./configure --prefix=%{_prefix} --with-opensc --enable-opensc-dynamic && make
 %endif
