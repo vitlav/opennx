@@ -25,6 +25,11 @@ while (<P>) {
 }
 close P;
 
+if ($#urls eq 0) {
+    print "Nothing to download\n";
+    exit(0);
+}
+
 foreach (@urls) {
     my $skipit = 0;
     my $fn = $_;

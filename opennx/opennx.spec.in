@@ -100,7 +100,7 @@ Obsoletes: nxclient
 Provides: nxclient
 
 BuildRequires: libtool
-BuildRequires: automake
+BuildRequires: automake >= 1.10
 BuildRequires: audiofile-devel
 BuildRequires: cups-devel
 BuildRequires: opensc-devel
@@ -181,7 +181,7 @@ opennx is an OSS replacement for Nomachine's NX client.
 %prep
 %if %{with_fetchnx}
 %setup -q
-./getnxsrcpkg %{nxpkgsall}
+perl getnxsrcpkg %{nxpkgsall}
 for pkg in %{nxpkgsall} ; do
     tar xzf ${pkg}-*.tar.gz
 done
