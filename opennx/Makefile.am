@@ -167,6 +167,14 @@ clean-local:
 distclean-local:
 	rm -f po/stamp-po
 
+install-wxstdmo-local:
+	for lang in $(shell cat $(top_srcdir)/po/LINGUAS) ; do \
+		$(INSTALL_DATA) $(WX_PREFIX)/share/locale/$$lang/LC_MESSAGES/wxstd.mo \
+			$(DESTDIR)$(localedir)/$$lang/LC_MESSAGES/ ; \
+	done
+
+install-data-local: $(STATIC_LOCAL_INSTALLDATA_TARGET)
+
 RESDEPS = $(wildcard $(srcdir)/res/*.xrc $(srcdir)/res/*.png \
 		  $(srcdir)/res/*.html $(srcdir)/res/*.xml)
 RESSRC = $(subst $(srcdir)/,,$(RESDEPS))

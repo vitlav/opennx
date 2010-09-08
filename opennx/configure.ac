@@ -78,13 +78,15 @@ AC_CHECK_TOOL([PERL],[perl],[
             ;;
     esac
 ])
-AC_CHECK_TOOL([WGET],[wget],[
+AC_CHECK_TOOL([WGET],[wget],[no])
+AC_CHECK_TOOL([CURL],[curl],[no])
+if test "$WGET" = "no" -a "$CURL" = "no" ; then
     case $target_os in
         mingw*|darwin*)
-            AC_MSG_ERROR([Could not find required tool 'wget'])
+            AC_MSG_ERROR([Could not find required tool 'wget' or 'curl'])
             ;;
     esac
-])
+fi
 AC_ARG_VAR([PERL],[Path to perl binary. (required for win32 builds only)])
 AC_CHECK_TOOL([ZIP],[zip],[AC_MSG_ERROR([Could not find required tool 'zip'])])
 AC_ARG_VAR([ZIP],[Path to zip binary.])
@@ -180,6 +182,7 @@ else
 fi
 
 ac_cv_enable_staticwx=NO
+STATIC_LOCAL_INSTALLDATA_TARGET=
 AC_ARG_ENABLE([staticwx],
 	AS_HELP_STRING([--enable-staticwx],
 		[Link against static wxWidgets libs (Default: NO)]),
@@ -188,10 +191,12 @@ AC_ARG_ENABLE([staticwx],
 if test "$ac_cv_enable_staticwx" = "YES" ; then
     AC_MSG_NOTICE([will link against static wxWidgets libs])
     WXPARAMS="$WXPARAMS --static=yes"
+    STATIC_LOCAL_INSTALLDATA_TARGET=install-wxstdmo-local
 else
     AC_MSG_NOTICE([will link against shared wxWidgets libs])
     WXPARAMS="$WXPARAMS --static=no"
 fi
+AC_SUBST(STATIC_LOCAL_INSTALLDATA_TARGET)
 
 case $target_os in
     mingw*)
