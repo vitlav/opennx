@@ -279,8 +279,9 @@ debprep: distcheck
 
 # Create debian source package
 debsrc: debprep
-	dpkg-source -b -sP $(PACKAGE)-$(VERSION) $(PACKAGE)-$(VERSION).tar.gz
-	echo "Debtransform-Tar: $(PACKAGE)-$(VERSION).tar.gz" >> $(PACKAGE)_$(VERSION)-$(SVNREV).dsc
+	ln -snf $(PACKAGE)-$(VERSION).tar.gz $(PACKAGE)_$(VERSION).orig.tar.gz
+	dpkg-source -b -sP $(PACKAGE)-$(VERSION) $(PACKAGE)_$(VERSION).orig.tar.gz
+	echo "Debtransform-Tar: $(PACKAGE)_$(VERSION).orig.tar.gz" >> $(PACKAGE)_$(VERSION)-$(SVNREV).dsc
 
 deb: debprep
 	cd $(PACKAGE)-$(VERSION) && dpkg-buildpackage -us -uc
