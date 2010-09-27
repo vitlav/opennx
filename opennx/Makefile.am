@@ -264,16 +264,25 @@ dist-hook:
 	find $(distdir) -type d -name .svn | xargs $(RM) -r
 
 # Platform specific special targets
-deb: distcheck
+debprep: distcheck
 	tar xfz $(PACKAGE)-$(VERSION).tar.gz
 	cd $(PACKAGE)-$(VERSION) && ./getnxsrcpkg nxesd nxcomp nxproxy nxssh
 	cd $(PACKAGE)-$(VERSION) && tar xzf nxesd-*.tar.gz
 	cd $(PACKAGE)-$(VERSION) && tar xzf nxcomp-*.tar.gz
 	cd $(PACKAGE)-$(VERSION) && tar xzf nxproxy-*.tar.gz
 	cd $(PACKAGE)-$(VERSION) && tar xzf nxssh-*.tar.gz
-	cd $(PACKAGE)-$(VERSION) && rm -f *.tar.gz
+	$(RM) $(PACKAGE)-$(VERSION)/*.tar.gz
+	$(RM) $(PACKAGE)-$(VERSION)/nxesd/test.wav
+	$(RM) $(PACKAGE)-$(VERSION)/nxssh/scard/Ssh.bin
 	cd $(PACKAGE)-$(VERSION) && perl debian/mkchangelog.pl $(VERSION) \
 		< ChangeLog > debian/changelog
+
+# Create debian source package
+debsrc: debprep
+	dpkg-source -b -sP $(PACKAGE)-$(VERSION) $(PACKAGE)-$(VERSION).tar.gz
+	echo "Debtransform-Tar: $(PACKAGE)-$(VERSION).tar.gz" >> $(PACKAGE)_$(VERSION)-$(SVNREV).dsc
+
+deb: debprep
 	cd $(PACKAGE)-$(VERSION) && dpkg-buildpackage -us -uc
 	lintian -i $(PACKAGE)_$(VERSION).$(SVNREV)_*.changes
 	$(RM) -r $(PACKAGE)-$(VERSION)

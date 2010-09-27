@@ -15,7 +15,7 @@ while (<>) {
         if ($inmsg) {
             $inmsg = 0;
 	    next if ($msg eq '');
-            print 'opennx (' . $version . '.' . $rev . ') unstable; urgency=low' . "\n";
+            print 'opennx (' . $version . '-' . $rev . ') unstable; urgency=low' . "\n";
             print $msg;
             print ' -- ' . $name . '  ' . $stamp . "\n\n";
             if ($msg =~ /Bumped up version/) {
