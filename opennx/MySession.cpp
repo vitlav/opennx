@@ -1931,26 +1931,31 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
             nxsshcmd << wxT(" -i ") << cygPath(fn.GetFullPath());
         }
 
-        if (m_pCfg->bGetUseProxy() && (!m_pCfg->sGetProxyHost().IsEmpty())) {
-            // Internal (NoMachine) proxy
-            if (m_pCfg->sGetProxyUser().IsEmpty())
-                nxsshcmd << wxT(" -P ") << m_pCfg->sGetProxyHost() << wxT(":") << m_pCfg->iGetProxyPort();
-            else {
-                wxString proxyPass = m_pCfg->sGetProxyPass();
-                if (!m_pCfg->bGetProxyPassRemember()) {
-                    ProxyPasswordDialog dlg(m_pParent);
-                    if (dlg.ShowModal() == wxID_OK)
-                        proxyPass = dlg.GetPassword();
-                    else
-                        return false;
+        if (m_pCfg->bGetUseProxy()) {
+            if (m_pCfg->bGetExternalProxy()) {
+                if (!m_pCfg->sGetProxyCommand().IsEmpty())
+                    nxsshcmd << wxT(" -o 'ProxyCommand ") << cygPath(m_pCfg->sGetProxyCommand()) << wxT("'");
+            } else {
+
+                if (!m_pCfg->sGetProxyHost().IsEmpty()) {
+                    // Internal (NoMachine) proxy
+                    if (m_pCfg->sGetProxyUser().IsEmpty())
+                        nxsshcmd << wxT(" -P ") << m_pCfg->sGetProxyHost() << wxT(":") << m_pCfg->iGetProxyPort();
+                    else {
+                        wxString proxyPass = m_pCfg->sGetProxyPass();
+                        if (!m_pCfg->bGetProxyPassRemember()) {
+                            ProxyPasswordDialog dlg(m_pParent);
+                            if (dlg.ShowModal() == wxID_OK)
+                                proxyPass = dlg.GetPassword();
+                            else
+                                return false;
+                        }
+                        nxsshcmd << wxT(" -P ") << m_pCfg->sGetProxyUser() << wxT(":") << proxyPass << wxT("@")
+                            << m_pCfg->sGetProxyHost() << wxT(":") << m_pCfg->iGetProxyPort();
+                    }
                 }
-                nxsshcmd << wxT(" -P ") << m_pCfg->sGetProxyUser() << wxT(":") << proxyPass << wxT("@")
-                    << m_pCfg->sGetProxyHost() << wxT(":") << m_pCfg->iGetProxyPort();
             }
         }
-
-        if (m_pCfg->bGetExternalProxy() && (!m_pCfg->sGetProxyCommand().IsEmpty()))
-            nxsshcmd << wxT(" -o 'ProxyCommand ") << cygPath(m_pCfg->sGetProxyCommand()) << wxT("'");
 
         if (m_pCfg->bGetEnableSSL())
             nxsshcmd << wxT(" -B");
