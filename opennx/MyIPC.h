@@ -43,6 +43,7 @@ public:
     typedef enum {
         ActionNone,
         ActionStatus,
+        ActionHello,
         ActionLog,
         ActionWarning,
         ActionError,

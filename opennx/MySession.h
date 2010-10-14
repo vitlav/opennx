@@ -86,6 +86,7 @@ public:
 private:
     // locals for connection setup
     typedef enum {
+        STATE_INIT,
         STATE_HELLO,
         STATE_SHELLMODE,
         STATE_AUTHMODE,
@@ -109,7 +110,7 @@ private:
     void startProxy();
     void startSharing();
     void parseSessions(bool moreAllowed);
-    void initversion();
+    void initversion(const wxString &s = wxEmptyString);
     bool prepareCups();
     bool isCupsRunning();
     void printSsh(const wxString &s, bool doLog = true);

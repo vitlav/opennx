@@ -750,6 +750,10 @@ MySession::OnSshEvent(wxCommandEvent &event)
         case MyIPC::ActionStatus:
             m_pDlg->SetStatusText(msg);
             break;
+        case MyIPC::ActionHello:
+            initversion(msg);
+            m_eConnectState = STATE_HELLO;
+            break;
         case MyIPC::ActionLog:
             m_pDlg->SetProgress(m_iProgress++);
             if (m_bCollectSessions)
@@ -1035,17 +1039,24 @@ MySession::OnSshEvent(wxCommandEvent &event)
 }
 
     void
-MySession::initversion()
+MySession::initversion(const wxString &s /* = wxEmptyString */)
 {
     m_lProtocolVersion = 0;
     if (!::wxGetEnv(wxT("NX_PROTOCOL_VERSION"), &m_sProtocolVersion))
         m_sProtocolVersion = wxT(NX_PROTOCOL_VERSION);
+    if (!s.IsEmpty())
+        m_sProtocolVersion = s;
     wxStringTokenizer t(m_sProtocolVersion, wxT("."));
+    int digits = 0;
     while (t.HasMoreTokens()) {
         long n;
         t.GetNextToken().ToLong(&n);
         m_lProtocolVersion = (m_lProtocolVersion << 8) + n;
+        if (++digits > 3)
+            break;
     }
+    while (digits++ < 3)
+        m_lProtocolVersion = (m_lProtocolVersion << 8);
     ::myLogTrace(MYTRACETAG, wxT("protocol version: %08x"), m_lProtocolVersion);
 }
 
@@ -2083,7 +2094,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
             m_sOffendingKey = wxEmptyString;
             if (nxssh.SshProcess(nxsshcmd, fn.GetShortPath(), this)) {
                 m_bGotError = false;
-                m_eConnectState = STATE_HELLO;
+                m_eConnectState = STATE_INIT;
                 while (!(dlg.bGetAbort() || m_bGotError || m_bAbort ||
                             (m_bSessionRunning && m_bSessionEstablished))) {
                     wxLog::FlushActive();

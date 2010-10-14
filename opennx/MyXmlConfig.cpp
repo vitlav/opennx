@@ -476,8 +476,11 @@ MyXmlConfig::sGetListParams(const long protocolVersion)
             ret << m_sGuestUser;
     } else
         ret << m_sUsername;
-    ret << wxT("\" --status=\"suspended,running\"")
-        << wxT(" --type=\"");
+    if (protocolVersion >= 0x00040000)
+        ret << wxT("\" --status=\"disconnected,connected\"");
+    else
+        ret << wxT("\" --status=\"suspended,running\"");
+    ret << wxT(" --type=\"");
     switch (m_eSessionType) {
         case STYPE_SHADOW:
             break;
@@ -585,7 +588,7 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
     int dspw, dsph, clientw, clienth;
 
     getDesktopSize(dspw, dsph, clientw, clienth);
-    if (bNew) {
+    if (bNew || (protocolVersion >= 0x00040000)) {
         ret << wxString::Format(wxT(" --session=\"%s\""), m_sName.c_str());
         ret << wxT(" --type=\"");
         switch (m_eSessionType) {
