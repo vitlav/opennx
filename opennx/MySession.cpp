@@ -873,16 +873,16 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     scmd = wxT("listsession") + m_pCfg->sGetListParams(m_lProtocolVersion);
                     printSsh(scmd);
                     m_eConnectState = STATE_PARSE_SESSIONS;
+                    m_bNextCmd = false;
                     break;
                 case STATE_PARSE_SESSIONS:
+                    m_bNextCmd = true;
                     if (m_bIsShadow) {
                         // Server has sent list of attachable sessions
                         m_bCollectSessions = false;
                         ::wxLogInfo(wxT("received end of attachable session list"));
                         parseSessions(false);
-                        break;
                     }
-                    printSsh(wxEmptyString);
                     break;
                 case STATE_START_SESSION:
                     scmd = wxT("startsession");
@@ -1132,6 +1132,7 @@ MySession::parseSessions(bool moreAllowed)
         if (m_bIsShadow || (iSessionCount > 1) || (!sName.IsSameAs(m_pCfg->sGetName()))) {
             switch (d.ShowModal()) {
                 case wxID_OK:
+                    ::myLogTrace(MYTRACETAG, wxT("ResumeDialog returned OK"));
                     switch (d.GetMode()) {
                         case ResumeDialog::Terminate:
                             ::wxLogInfo(wxT("TERMINATE"));
@@ -1145,8 +1146,6 @@ MySession::parseSessions(bool moreAllowed)
                             m_sResumeId = d.GetSelectedId();
                             m_sResumePort = d.GetSelectedPort();
                             m_eConnectState = m_bIsShadow ? STATE_ATTACH_SESSION : STATE_RESUME_SESSION;
-                            if (m_bIsShadow)
-                                printSsh(wxEmptyString);
                             break;
                         case ResumeDialog::Takeover:
                             ::wxLogInfo(wxT("TAKEOVER"));
@@ -1159,8 +1158,14 @@ MySession::parseSessions(bool moreAllowed)
                             m_eConnectState = STATE_START_SESSION;
                             break;
                     }
+                    if (m_bNextCmd) {
+                        wxCommandEvent upevent(wxEVT_NXSSH, wxID_ANY);
+                        upevent.SetInt(MyIPC::ActionNextCommand);
+                        AddPendingEvent(upevent);
+                    }
                     break;
                 case wxID_CANCEL:
+                    ::myLogTrace(MYTRACETAG, wxT("ResumeDialog returned CANCEL"));
                     printSsh(wxT("bye"));
                     if (m_bIsShadow)
                         m_eConnectState = STATE_ABORT;
@@ -1850,6 +1855,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
     m_bCollectSessions = false;
     m_bCollectConfig = false;
     m_bIsShadow = false;
+    m_bNextCmd = false;
     m_sSessionID = wxEmptyString;
     m_pParent = parent;
     MyXmlConfig cfg(cfgpar.sGetFileName());
@@ -2039,6 +2045,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
                 m_lEsdPort = getFirstFreePort(6000);
                 if (0 < m_lEsdPort) {
                     esdcmd << wxT(" -tcp -nobeeps -bind 127.0.0.1 -spawnfd 1 -port ") << m_lEsdPort;
+                    ::wxLogInfo(wxT("starting in background: %s"), esdcmd.c_str());
                     wxProcess *nxesd = wxProcess::Open(esdcmd,
                             wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
                     if (nxesd) {

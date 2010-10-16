@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opennx 0.16\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-10-14 18:17+0200\n"
+"POT-Creation-Date: 2010-10-16 02:35+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -486,88 +486,88 @@ msgstr ""
 msgid "Unexpected termination of nxssh"
 msgstr ""
 
-#: MySession.cpp:1180
+#: MySession.cpp:1185
 msgid "There are no sessions which can be attached to."
 msgstr ""
 
-#: MySession.cpp:1181 MySession.cpp:1192
+#: MySession.cpp:1186 MySession.cpp:1197
 msgid "Error - OpenNX"
 msgstr ""
 
-#: MySession.cpp:1191
+#: MySession.cpp:1196
 msgid "You have reached your session limit. No more sessions allowed"
 msgstr ""
 
-#: MySession.cpp:1383 MySession.cpp:1427
+#: MySession.cpp:1388 MySession.cpp:1432
 msgid "Could not create X11 authentication cookie"
 msgstr ""
 
-#: MySession.cpp:1452
+#: MySession.cpp:1457
 msgid "No X server found."
 msgstr ""
 
-#: MySession.cpp:1460
+#: MySession.cpp:1465
 #, c-format
 msgid "Could not execute %s: %s\n"
 msgstr ""
 
-#: MySession.cpp:1542
+#: MySession.cpp:1547
 #, c-format
 msgid ""
 "Could not create session directory\n"
 "%s\n"
 msgstr ""
 
-#: MySession.cpp:1570
+#: MySession.cpp:1575
 #, c-format
 msgid ""
 "Could not write session options\n"
 "%s\n"
 msgstr ""
 
-#: MySession.cpp:1660 MySession.cpp:1674
+#: MySession.cpp:1665 MySession.cpp:1679
 msgid "Could not assign a free port for CUPS printing"
 msgstr ""
 
-#: MySession.cpp:1938
+#: MySession.cpp:1944
 #, c-format
 msgid "Could not write %s"
 msgstr ""
 
-#: MySession.cpp:2010
+#: MySession.cpp:2016
 msgid "Could not start local X server"
 msgstr ""
 
-#: MySession.cpp:2026 MySession.cpp:2070 MySession.cpp:2084
+#: MySession.cpp:2032 MySession.cpp:2076 MySession.cpp:2090
 #, c-format
 msgid "Connecting to %s ..."
 msgstr ""
 
-#: MySession.cpp:2034
+#: MySession.cpp:2040
 msgid "Preparing multimedia service ..."
 msgstr ""
 
-#: MySession.cpp:2066
+#: MySession.cpp:2072
 msgid "Could not start multimedia support"
 msgstr ""
 
-#: MySession.cpp:2068
+#: MySession.cpp:2074
 msgid "Could not assign a free port for multimedia support"
 msgstr ""
 
-#: MySession.cpp:2081
+#: MySession.cpp:2087
 msgid "Preparing CUPS service ..."
 msgstr ""
 
-#: MySession.cpp:2083
+#: MySession.cpp:2089
 msgid "Could not start CUPS printing"
 msgstr ""
 
-#: MySession.cpp:2132
+#: MySession.cpp:2138
 msgid "Called command was: "
 msgstr ""
 
-#: MySession.cpp:2133
+#: MySession.cpp:2139
 msgid "Could not start nxssh."
 msgstr ""
 
@@ -935,11 +935,11 @@ msgstr ""
 msgid "&Resume"
 msgstr ""
 
-#: ResumeDialog.cpp:286
+#: ResumeDialog.cpp:284
 msgid "Do you really want to terminate the selected session?"
 msgstr ""
 
-#: ResumeDialog.cpp:287
+#: ResumeDialog.cpp:285
 msgid "Terminate session - OpenNX"
 msgstr ""
 

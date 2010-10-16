@@ -140,6 +140,7 @@ private:
     bool m_bIsShadow;
     bool m_bCupsRunning;
     bool m_bRemoveKey;
+    bool m_bNextCmd;
     int m_iProgress;
     int m_iReader;
     int m_iHttpPort;

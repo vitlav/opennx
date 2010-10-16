@@ -263,7 +263,6 @@ void ResumeDialog::OnButtonTakeoverClick( wxCommandEvent& event )
 {
     m_eMode = Takeover;
     EndModal(wxID_OK);
-    event.Skip();
 }
 
 /*!
@@ -274,7 +273,6 @@ void ResumeDialog::OnButtonResumeClick( wxCommandEvent& event )
 {
     m_eMode = Resume;
     EndModal(wxID_OK);
-    event.Skip();
 }
 
 /*!
@@ -288,7 +286,6 @@ void ResumeDialog::OnButtonTerminateClick( wxCommandEvent& event )
         return;
     m_eMode = Terminate;
     EndModal(wxID_OK);
-    event.Skip();
 }
 
 /*!
