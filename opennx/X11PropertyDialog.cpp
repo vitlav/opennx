@@ -115,6 +115,7 @@ bool X11PropertyDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
         m_bVirtualDesktop = m_pCfg->bGetVirtualDesktop();
         m_bFloatingWindow = !m_bVirtualDesktop;
         m_bDisableTaint = m_pCfg->bGetDisableTaint();
+        m_bDisableXagent = m_pCfg->bGetDisableXagent();
     }
 
 ////@begin X11PropertyDialog creation
@@ -269,6 +270,7 @@ void X11PropertyDialog::OnOkClick( wxCommandEvent& event )
         m_pCfg->sSetCommandLine(m_sCustomCommand);
         m_pCfg->bSetVirtualDesktop(m_bVirtualDesktop);
         m_pCfg->bSetDisableTaint(m_bDisableTaint);
+        m_pCfg->bSetDisableXagent(m_bDisableXagent);
     }
     event.Skip();
 }
