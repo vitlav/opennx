@@ -504,6 +504,35 @@ opennxApp::preInit()
     if (!setSelfPath())
         return false;
 
+    wxString appver;
+    wxString thisver(wxT(PACKAGE_VERSION));
+    thisver.Append(wxT(".")).Append(wxT(SVNREV));
+    wxConfigBase::Get()->Read(wxT("Config/CurrentVersion"), &appver, thisver);
+    if (!thisver.IsSameAs(appver)) {
+        wxFileName fn(GetSelfPath());
+        if (fn.GetDirs().Last().IsSameAs(wxT("bin")))
+            fn.RemoveLastDir();
+        fn.SetFullName(wxEmptyString);
+        wxString thissysdir = fn.GetFullPath();
+        wxString rest;
+        wxString sep = wxFileName::GetPathSeparator();
+        if (thissysdir.EndsWith(sep, &rest))
+            thissysdir = rest;
+        wxString cfgsysdir;
+        if (wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &cfgsysdir)) {
+            if (!thissysdir.IsSameAs(cfgsysdir)) {
+                wxString msg(wxString::Format(_("Your System NX directory setting (%s)\nappears to be incorrect.\nDo you want to change it to the correct default value\n(%s)?"), cfgsysdir.c_str(), thissysdir.c_str()));
+                int response = wxMessageBox(msg, _("Update System NX directory? - OpenNX"), wxYES_NO|wxICON_QUESTION);
+                if (wxYES == response) {
+                    wxConfigBase::Get()->Write(wxT("Config/SystemNxDir"), thissysdir);
+                    wxConfigBase::Get()->Flush();
+                }
+            }
+        }
+    }
+    wxConfigBase::Get()->Write(wxT("Config/CurrentVersion"), thisver);
+    wxConfigBase::Get()->Flush();
+
     wxString tmp;
     if (!wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp)) {
         wxFileName fn(GetSelfPath());
