@@ -132,6 +132,20 @@ LoginDialog::~LoginDialog()
     m_pCurrentCfg = NULL;
 }
 
+void LoginDialog::SetInitialFocus()
+{
+    wxString u(m_pCtrlUsername->GetValue());
+    wxString p(m_pCtrlPassword->GetValue());
+    if (m_pCtrlUsername->GetValue().IsEmpty()) {
+        m_pCtrlUsername->SetFocus();
+    } else {
+        if (m_pCtrlPassword->GetValue().IsEmpty())
+            m_pCtrlPassword->SetFocus();
+        else
+            m_pCtrlLoginButton->SetFocus();
+    }
+}
+
 void LoginDialog::ReadConfigDirectory()
 {
     wxString cfgdir;
@@ -417,6 +431,7 @@ void LoginDialog::OnComboboxSessionSelected( wxCommandEvent& event )
                 m_pCtrlUsername->SetValue(cfg.sGetUsername());
                 m_pCtrlPassword->Enable(true);
                 m_pCtrlUsername->Enable(true);
+                SetInitialFocus();
             }
             m_pCtrlUseSmartCard->SetValue(::wxGetApp().NxSmartCardSupport() && cfg.bGetUseSmartCard());
         }

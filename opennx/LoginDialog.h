@@ -146,6 +146,7 @@ public:
 
 private:
     void ReadConfigDirectory();
+    void SetInitialFocus();
 
 ////@begin LoginDialog member variables
     wxTextCtrl* m_pCtrlUsername;
