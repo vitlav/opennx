@@ -171,7 +171,7 @@ private:
     wxTimer m_cNxSshWatchTimer;
 #endif
     wxTimer m_cAutoLoginTimer;
-    wxArrayString m_aConfigFiles;
+    wxSortedArrayString m_aConfigFiles;
     wxString m_sLastSessionFilename;
 };
 

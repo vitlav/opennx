@@ -1139,9 +1139,7 @@ bool opennxApp::realInit()
     }
     if ((m_eMode == MODE_CLIENT) && m_sSessionName.IsEmpty()) {
         if (!wxConfigBase::Get()->Read(wxT("Config/LastSession"), &m_sSessionName)) {
-#ifdef __WXMAC__
-            // On MacOSX we might get called via MacOpenFile,
-            // so only run the wizard if there a no session config files.
+            // Only run the wizard if there a no session config files.
             wxString cfgdir;
             wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &cfgdir);
             cfgdir = cfgdir + wxFileName::GetPathSeparator() + wxT("config");
@@ -1149,9 +1147,6 @@ bool opennxApp::realInit()
             wxDir::GetAllFiles(cfgdir, &a, wxT("*.nxs"), wxDIR_FILES);
             if (0 == a.GetCount())
                 m_eMode = MODE_WIZARD;
-#else
-            m_eMode = MODE_WIZARD;
-#endif
         }
     } else {
         if (!m_sSessionName.IsEmpty()) {
