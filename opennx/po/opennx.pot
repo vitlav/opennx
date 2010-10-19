@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opennx 0.16\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-10-18 18:16+0200\n"
+"POT-Creation-Date: 2010-10-19 11:42+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1144,7 +1144,7 @@ msgstr ""
 msgid "Select System CUPS daemon"
 msgstr ""
 
-#: SessionProperties.cpp:1963 opennxApp.cpp:1217
+#: SessionProperties.cpp:1963 opennxApp.cpp:1212
 msgid "libusb is not available. No USB devices will be exported"
 msgstr ""
 
@@ -1879,16 +1879,16 @@ msgid ""
 "the authenticating smart card has been removed."
 msgstr ""
 
-#: opennxApp.cpp:1232
+#: opennxApp.cpp:1227
 msgid "USBIP tunnel registration timeout"
 msgstr ""
 
-#: opennxApp.cpp:1236
+#: opennxApp.cpp:1231
 #, c-format
 msgid "Unable to export USB device %s"
 msgstr ""
 
-#: opennxApp.cpp:1242
+#: opennxApp.cpp:1237
 msgid "Could not connect to usbipd2. No USB devices will be exported"
 msgstr ""
 
