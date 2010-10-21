@@ -379,7 +379,7 @@ xdg-icon-resource forceupdate
 %doc COPYING INSTALL ChangeLog
 %_prefix
 /usr/bin/nxclient
-%{_mandir}/man1/*
+/usr/share/man/man1/*
 %if %{with_usbip}
 %{_sysconfdir}/udev
 %endif
