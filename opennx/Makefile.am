@@ -62,8 +62,8 @@ pconnect_LDADD = $(WS2LIB) $(RESLIB)
 pulsetest_SOURCES = pulseTest.cpp PulseAudio.cpp MyDynlib.cpp mylog.cpp
 pulsetest_LDADD = $(WX_LIBS)
 pulsetest_CPPFLAGS = $(WX_CPPFLAGS) -DAPP_PULSETEST
-pulsetest_CXXFLAGS = $(WX_CXXFLAGS) $(PULSE_CFLAGS)
-pulsetest_CFLAGS = $(WX_CFLAGS) $(PULSE_CFLAGS)
+pulsetest_CXXFLAGS = $(WX_CXXFLAGS)
+pulsetest_CFLAGS = $(WX_CFLAGS)
 
 
 testxauth_SOURCES = testxauth.cpp SimpleXauth.cpp pwcrypt.cpp md5.c
@@ -123,8 +123,8 @@ opennx_LDADD = $(OPENNX_RES) $(WX_LIBS) $(X_LIBS) $(X_PRE_LIBS) \
 	$(X_EXTRA_LIBS) $(APP_LDADD)
 opennx_DEPENDENCIES = $(OPENNX_RES)
 opennx_CPPFLAGS = $(WX_CPPFLAGS) $(X_CFLAGS) -DAPP_OPENNX
-opennx_CXXFLAGS = $(WX_CXXFLAGS) $(PULSE_CFLAGS)
-opennx_CFLAGS = $(PULSE_CFLAGS) $(WX_CFLAGS)
+opennx_CXXFLAGS = $(WX_CXXFLAGS)
+opennx_CFLAGS = $(WX_CFLAGS)
 
 
 GETTEXTIZE = $(shell which gettextize)

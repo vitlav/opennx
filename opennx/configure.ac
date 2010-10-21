@@ -384,7 +384,6 @@ else
             ;;
     esac
 fi
-PKG_CHECK_MODULES([PULSEAUDIO],[libpulse])
 
 ac_cv_dllpath=
 AC_ARG_WITH([dllpath],
