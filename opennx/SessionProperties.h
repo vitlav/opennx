@@ -380,6 +380,7 @@ private:
     wxButton* m_pCtrlShareAdd;
     wxButton* m_pCtrlShareModify;
     wxButton* m_pCtrlShareDelete;
+    wxCheckBox* m_pCtrlEnableMultimedia;
     wxCheckBox* m_pCtrlUsbEnable;
     wxListCtrl* m_pCtrlUsbFilter;
     wxButton* m_pCtrlUsbAdd;

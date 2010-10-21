@@ -68,6 +68,7 @@
 #include "LibUSB.h"
 #include "opennxApp.h"
 #include "osdep.h"
+#include "PulseAudio.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -437,6 +438,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlShareAdd = NULL;
     m_pCtrlShareModify = NULL;
     m_pCtrlShareDelete = NULL;
+    m_pCtrlEnableMultimedia = NULL;
     m_pCtrlUsbEnable = NULL;
     m_pCtrlUsbFilter = NULL;
     m_pCtrlUsbAdd = NULL;
@@ -492,7 +494,19 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
 
         // variables on 'Services' tab
         m_bEnableSmbSharing = m_pCfg->bGetEnableSmbSharing();
-        m_bEnableMultimedia = m_pCfg->bGetEnableMultimedia();
+#ifdef HAVE_PULSE_PULSEAUDIO_H
+        PulseAudio pa;
+        if (pa.IsAvailable())
+#endif
+            m_bEnableMultimedia = m_pCfg->bGetEnableMultimedia();
+#ifdef HAVE_PULSE_PULSEAUDIO_H
+        else {
+            // disable MM, disable checkbox
+            m_bEnableMultimedia = false;
+            m_pCfg->bSetEnableMultimedia(false);
+            m_pCtrlEnableMultimedia->Enable(false);
+        }
+#endif
 #ifdef __UNIX__
         m_bUseCups = m_pCfg->bGetUseCups();
 #else
@@ -940,6 +954,7 @@ void SessionProperties::CreateControls()
     m_pCtrlShareAdd = XRCCTRL(*this, "ID_BUTTON_SMB_ADD", wxButton);
     m_pCtrlShareModify = XRCCTRL(*this, "ID_BUTTON_SMB_MODIFY", wxButton);
     m_pCtrlShareDelete = XRCCTRL(*this, "ID_BUTTON_SMB_DELETE", wxButton);
+    m_pCtrlEnableMultimedia = XRCCTRL(*this, "ID_CHECKBOX_MMEDIA", wxCheckBox);
     m_pCtrlUsbEnable = XRCCTRL(*this, "ID_CHECKBOX_USBENABLE", wxCheckBox);
     m_pCtrlUsbFilter = XRCCTRL(*this, "ID_LISTCTRL_USBFILTER", wxListCtrl);
     m_pCtrlUsbAdd = XRCCTRL(*this, "ID_BUTTON_USBADD", wxButton);

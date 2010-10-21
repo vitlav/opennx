@@ -114,7 +114,7 @@ AC_CHECK_LIB(resolv,res_init,[RESLIB=-lresolv],[
 AC_SUBST(RESLIB)
 
 # Checks for header files.
-AC_CHECK_HEADERS([arpa/inet.h limits.h netinet/in.h sys/types.h sys/socket.h syslog.h])
+AC_CHECK_HEADERS([arpa/inet.h limits.h netinet/in.h sys/types.h sys/socket.h syslog.h pulse/pulseaudio.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
@@ -384,6 +384,7 @@ else
             ;;
     esac
 fi
+PKG_CHECK_MODULES([PULSEAUDIO],[libpulse])
 
 ac_cv_dllpath=
 AC_ARG_WITH([dllpath],

@@ -52,6 +52,7 @@
 #include "SimpleXauth.h"
 #include "Icon.h"
 #include "SupressibleMessageDialog.h"
+#include "PulseAudio.h"
 
 #include <wx/filename.h>
 #include <wx/regex.h>
@@ -2032,47 +2033,66 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
         dlg.SetStatusText(wxString::Format(_("Connecting to %s ..."),
                     m_pCfg->sGetServerHost().c_str()));
         if (m_pCfg->bGetEnableMultimedia()) {
-            long esdpid = wxConfigBase::Get()->Read(wxT("State/nxesdPID"), -1);
-            m_lEsdPort = wxConfigBase::Get()->Read(wxT("State/nxesdPort"), -1);
-            if ((-1 != esdpid) && (0 < m_lEsdPort))
-                m_bEsdRunning = wxProcess::Exists(esdpid);
-            if ((!dlg.bGetAbort()) && (!m_bEsdRunning)) {
-                dlg.SetStatusText(_("Preparing multimedia service ..."));
-                wxFileName fn(m_sSysDir, wxEmptyString);
-                fn.AppendDir(wxT("bin"));
-                fn.SetName(wxT("nxesd"));
-                wxString esdcmd = fn.GetFullPath();
-                m_lEsdPort = getFirstFreePort(6000);
+            m_bEsdRunning = false;
+            dlg.SetStatusText(_("Preparing multimedia service ..."));
+            PulseAudio pa;
+            if (pa.IsAvailable()) {
+                m_lEsdPort = wxConfigBase::Get()->Read(wxT("State/nxesdPort"), -1);
+                if (m_lEsdPort < 0)
+                    m_lEsdPort = getFirstFreePort(6000);
                 if (0 < m_lEsdPort) {
-                    esdcmd << wxT(" -tcp -nobeeps -bind 127.0.0.1 -spawnfd 1 -port ") << m_lEsdPort;
-                    ::wxLogInfo(wxT("starting in background: %s"), esdcmd.c_str());
-                    wxProcess *nxesd = wxProcess::Open(esdcmd,
-                            wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
-                    if (nxesd) {
-                        nxesd->CloseOutput();
-                        wxStopWatch sw;
-                        while (!(dlg.bGetAbort() || nxesd->IsInputAvailable())) {
-                            ::wxGetApp().Yield(true);
-                            wxLog::FlushActive();
-                            // Timeout after 10 sec
-                            if (sw.Time() > 10000)
-                                break;
-                        }
-                        char msg = '\0';
-                        if (nxesd->IsInputAvailable())
-                            nxesd->GetInputStream()->Read(&msg, 1);
-                        long esdpid = nxesd->GetPid();
-                        nxesd->Detach();
-                        if (msg) {
-                            m_bEsdRunning = true;
-                            wxConfigBase::Get()->Write(wxT("State/nxesdPID"), esdpid);
-                            wxConfigBase::Get()->Write(wxT("State/nxesdPort"), m_lEsdPort);
-                        }
+                    if (pa.ActivateEsound(m_lEsdPort)) {
+                        ::wxLogInfo(wxT("using existing pulseaudio"));
+                        m_bEsdRunning = true;
+                        wxConfigBase::Get()->Write(wxT("State/nxesdPort"), m_lEsdPort);
+                        wxConfigBase::Get()->Write(wxT("State/nxesdPID"), -1);
                     }
-                    if (!m_bEsdRunning)
-                        ::wxLogWarning(_("Could not start multimedia support"));
                 } else
                     ::wxLogWarning(_("Could not assign a free port for multimedia support"));
+            }
+            if (!m_bEsdRunning) {
+                // Fallback: original old nxesd
+                long esdpid = wxConfigBase::Get()->Read(wxT("State/nxesdPID"), -1);
+                m_lEsdPort = wxConfigBase::Get()->Read(wxT("State/nxesdPort"), -1);
+                if ((-1 != esdpid) && (0 < m_lEsdPort))
+                    m_bEsdRunning = wxProcess::Exists(esdpid);
+                if ((!dlg.bGetAbort()) && (!m_bEsdRunning)) {
+                    wxFileName fn(m_sSysDir, wxEmptyString);
+                    fn.AppendDir(wxT("bin"));
+                    fn.SetName(wxT("nxesd"));
+                    wxString esdcmd = fn.GetFullPath();
+                    m_lEsdPort = getFirstFreePort(6000);
+                    if (0 < m_lEsdPort) {
+                        esdcmd << wxT(" -tcp -nobeeps -bind 127.0.0.1 -spawnfd 1 -port ") << m_lEsdPort;
+                        ::wxLogInfo(wxT("starting in background: %s"), esdcmd.c_str());
+                        wxProcess *nxesd = wxProcess::Open(esdcmd,
+                                wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
+                        if (nxesd) {
+                            nxesd->CloseOutput();
+                            wxStopWatch sw;
+                            while (!(dlg.bGetAbort() || nxesd->IsInputAvailable())) {
+                                ::wxGetApp().Yield(true);
+                                wxLog::FlushActive();
+                                // Timeout after 10 sec
+                                if (sw.Time() > 10000)
+                                    break;
+                            }
+                            char msg = '\0';
+                            if (nxesd->IsInputAvailable())
+                                nxesd->GetInputStream()->Read(&msg, 1);
+                            long esdpid = nxesd->GetPid();
+                            nxesd->Detach();
+                            if (msg) {
+                                m_bEsdRunning = true;
+                                wxConfigBase::Get()->Write(wxT("State/nxesdPID"), esdpid);
+                                wxConfigBase::Get()->Write(wxT("State/nxesdPort"), m_lEsdPort);
+                            }
+                        }
+                        if (!m_bEsdRunning)
+                            ::wxLogWarning(_("Could not start multimedia support"));
+                    } else
+                        ::wxLogWarning(_("Could not assign a free port for multimedia support"));
+                }
             }
             dlg.SetStatusText(wxString::Format(_("Connecting to %s ..."),
                         m_pCfg->sGetServerHost().c_str()));

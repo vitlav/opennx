@@ -4,7 +4,7 @@ ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = po $(PLATFORM_SUBDIRS)
 DIST_SUBDIRS = po packaging/win32 packaging/MacOSX
 
-noinst_PROGRAMS = bin2hdr $(TESTXAUTH) $(MACTESTKBD)
+noinst_PROGRAMS = bin2hdr pulsetest $(TESTXAUTH) $(MACTESTKBD)
 
 bin2hdr_SOURCES = bin2hdr.cpp
 
@@ -20,11 +20,12 @@ opennx_SOURCES = AboutDialog.cpp AsyncProcess.cpp LibOpenSC.cpp \
 	ForeignFrame.cpp Icon.cpp LogDialog.cpp KeyDialog.cpp LibUSB.cpp \
 	LoginDialog.cpp mylog.cpp md5.c MyIPC.cpp MyDynlib.cpp MySession.cpp \
 	MyValidator.cpp MyWizard.cpp MyXmlConfig.cpp opennxApp.cpp \
-	osdep.c PanicDialog.cpp pwcrypt.cpp ProxyPasswordDialog.cpp QuitDialog.cpp \
-	RdpImageSettingsDialog.cpp RdpPropertyDialog.cpp ResumeDialog.cpp \
-	ProxyPropertyDialog.cpp SessionAdmin.cpp SessionList.cpp \
-	SessionProperties.cpp SimpleXauth.cpp ShareProperties.cpp \
-	TextViewer.cpp UnixImageSettingsDialog.cpp UsbFilterDetailsDialog.cpp \
+	osdep.c PanicDialog.cpp pwcrypt.cpp ProxyPasswordDialog.cpp \
+	PulseAudio.cpp QuitDialog.cpp RdpImageSettingsDialog.cpp \
+	RdpPropertyDialog.cpp ResumeDialog.cpp ProxyPropertyDialog.cpp \
+	SessionAdmin.cpp SessionList.cpp SessionProperties.cpp \
+	SimpleXauth.cpp ShareProperties.cpp TextViewer.cpp \
+	UnixImageSettingsDialog.cpp UsbFilterDetailsDialog.cpp \
 	UsbIp.cpp VncImageSettingsDialog.cpp VncPropertyDialog.cpp \
 	wxprec.cpp WinShare.cpp X11PropertyDialog.cpp xh_richtext.cpp \
 	MacOSX.c WrappedStatic.cpp SupressibleMessageDialog.cpp
@@ -37,10 +38,11 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	LibUSB.h LogDialog.h LogDialog_symbols.h LoginDialog.h mylog.h \
 	LoginDialog_symbols.h md5.h memres.h MyIPC.h MyDynlib.h MySession.h \
 	MyValidator.h MyWizard.h MyWizard_symbols.h MyXmlConfig.h opennxApp.h \
-	osdep.h  PanicDialog.h PanicDialog_symbols.h pwcrypt.h QuitDialog.h \
-	QuitDialog_symbols.h ProxyPasswordDialog.h ProxyPasswordDialog_symbols.h \
-	ProxyPropertyDialog.h ProxyPropertyDialog_symbols.h \
-	RdpImageSettingsDialog.h RdpImageSettingsDialog_symbols.h RdpPropertyDialog.h \
+	osdep.h  PanicDialog.h PanicDialog_symbols.h PulseAudio.h pwcrypt.h \
+	QuitDialog.h QuitDialog_symbols.h ProxyPasswordDialog.h \
+	ProxyPasswordDialog_symbols.h ProxyPropertyDialog.h pulseTest.h \
+	ProxyPropertyDialog_symbols.h RdpImageSettingsDialog.h \
+	RdpImageSettingsDialog_symbols.h RdpPropertyDialog.h \
 	RdpPropertyDialog_symbols.h ResumeDialog.h ResumeDialog_symbols.h \
 	SessionAdmin.h SessionAdmin_symbols.h SessionList.h SimpleXauth.h \
 	SessionProperties.h SessionProperties_symbols.h ShareProperties.h \
@@ -56,6 +58,13 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 
 pconnect_SOURCES = pconnect.c
 pconnect_LDADD = $(WS2LIB) $(RESLIB)
+
+pulsetest_SOURCES = pulseTest.cpp PulseAudio.cpp MyDynlib.cpp mylog.cpp
+pulsetest_LDADD = $(WX_LIBS)
+pulsetest_CPPFLAGS = $(WX_CPPFLAGS) -DAPP_PULSETEST
+pulsetest_CXXFLAGS = $(WX_CXXFLAGS) $(PULSE_CFLAGS)
+pulsetest_CFLAGS = $(WX_CFLAGS) $(PULSE_CFLAGS)
+
 
 testxauth_SOURCES = testxauth.cpp SimpleXauth.cpp pwcrypt.cpp md5.c
 testxauth_LDADD = $(WX_LIBS)
@@ -114,8 +123,8 @@ opennx_LDADD = $(OPENNX_RES) $(WX_LIBS) $(X_LIBS) $(X_PRE_LIBS) \
 	$(X_EXTRA_LIBS) $(APP_LDADD)
 opennx_DEPENDENCIES = $(OPENNX_RES)
 opennx_CPPFLAGS = $(WX_CPPFLAGS) $(X_CFLAGS) -DAPP_OPENNX
-opennx_CXXFLAGS = $(WX_CXXFLAGS)
-opennx_CFLAGS = $(WX_CFLAGS)
+opennx_CXXFLAGS = $(WX_CXXFLAGS) $(PULSE_CFLAGS)
+opennx_CFLAGS = $(PULSE_CFLAGS) $(WX_CFLAGS)
 
 
 GETTEXTIZE = $(shell which gettextize)
@@ -207,6 +216,8 @@ MAINTAINERCLEANFILES = ABOUT-NLS Makefile.in configure aclocal.m4 \
 	po/*.template po/Makefile*.in
 
 DISTCLEANFILES = res/*.prv.*
+
+man_MANS = man/pconnect.1
 
 data_DATA = share/keyboards
 
@@ -307,4 +318,4 @@ EXTRA_DIST = conf/mkinstalldirs  conf/mkinstalldirs  conf/mkinstalldirs  conf/mk
 	INSTALL INSTALL.generic COPYING share etc/60-opennx.rules \
 	opennx.pjd opennx.rc tracelog.rc watchreader.rc \
 	opennx.spec patches getnxsrcpkg $(RESDEPS) ChangeLog extres debian \
-	$(wildcard m4/*.m4)
+	$(wildcard m4/*.m4) $(man_MANS)

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opennx 0.16\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-10-19 11:42+0200\n"
+"POT-Creation-Date: 2010-10-20 23:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: AboutDialog.cpp:113 SessionProperties.cpp:1052
+#: AboutDialog.cpp:113 SessionProperties.cpp:1067
 msgid "Version"
 msgstr ""
 
@@ -397,177 +397,177 @@ msgstr ""
 msgid "Authentication failed"
 msgstr ""
 
-#: MySession.cpp:121 MySession.cpp:712
+#: MySession.cpp:122 MySession.cpp:713
 msgid "Invalid X11 server platform"
 msgstr ""
 
-#: MySession.cpp:517 MySession.cpp:538 MySession.cpp:541
+#: MySession.cpp:518 MySession.cpp:539 MySession.cpp:542
 msgid "unknown"
 msgstr ""
 
-#: MySession.cpp:529
+#: MySession.cpp:530
 msgid "terminated"
 msgstr ""
 
-#: MySession.cpp:532
+#: MySession.cpp:533
 msgid "failed"
 msgstr ""
 
-#: MySession.cpp:535
+#: MySession.cpp:536
 msgid "running"
 msgstr ""
 
-#: MySession.cpp:549 RdpPropertyDialog_symbols.h:23 SessionAdmin.cpp:194
+#: MySession.cpp:550 RdpPropertyDialog_symbols.h:23 SessionAdmin.cpp:194
 #: SessionProperties_symbols.h:24 VncPropertyDialog_symbols.h:23
 msgid "Server"
 msgstr ""
 
-#: MySession.cpp:552
+#: MySession.cpp:553
 msgid "Client"
 msgstr ""
 
-#: MySession.cpp:555 MySession.cpp:558
+#: MySession.cpp:556 MySession.cpp:559
 msgid "Unknown"
 msgstr ""
 
-#: MySession.cpp:781 MySession.cpp:793 MySession.cpp:807
+#: MySession.cpp:782 MySession.cpp:794 MySession.cpp:808
 msgid "Warning - OpenNX"
 msgstr ""
 
-#: MySession.cpp:805
+#: MySession.cpp:806
 msgid ""
 "\n"
 "Do you want to delete the key and retry ?"
 msgstr ""
 
-#: MySession.cpp:825
+#: MySession.cpp:826
 msgid "Sending username"
 msgstr ""
 
-#: MySession.cpp:829 MySession.cpp:856
+#: MySession.cpp:830 MySession.cpp:857
 msgid "Authenticating"
 msgstr ""
 
-#: MySession.cpp:836
+#: MySession.cpp:837
 msgid "Authentication successful"
 msgstr ""
 
-#: MySession.cpp:872
+#: MySession.cpp:873
 msgid "Query server-side sessions"
 msgstr ""
 
-#: MySession.cpp:926
+#: MySession.cpp:927
 msgid "Enter PIN for Smart Card access."
 msgstr ""
 
-#: MySession.cpp:926
+#: MySession.cpp:927
 msgid "Smart Card PIN"
 msgstr ""
 
-#: MySession.cpp:931
+#: MySession.cpp:932
 msgid "Enter passphrase"
 msgstr ""
 
-#: MySession.cpp:933
+#: MySession.cpp:934
 msgid "Empty passphrase"
 msgstr ""
 
-#: MySession.cpp:939 MySession.cpp:943 MySession.cpp:947 MySession.cpp:951
-#: MySession.cpp:955 MySession.cpp:959 MySession.cpp:963 MySession.cpp:967
-#: MySession.cpp:971 MySession.cpp:975
+#: MySession.cpp:940 MySession.cpp:944 MySession.cpp:948 MySession.cpp:952
+#: MySession.cpp:956 MySession.cpp:960 MySession.cpp:964 MySession.cpp:968
+#: MySession.cpp:972 MySession.cpp:976
 msgid "Negotiating session parameter"
 msgstr ""
 
-#: MySession.cpp:983 MySession.cpp:1012
+#: MySession.cpp:984 MySession.cpp:1013
 msgid "Starting session"
 msgstr ""
 
-#: MySession.cpp:1005
+#: MySession.cpp:1006
 msgid "Unexpected termination of nxssh"
 msgstr ""
 
-#: MySession.cpp:1185
+#: MySession.cpp:1186
 msgid "There are no sessions which can be attached to."
 msgstr ""
 
-#: MySession.cpp:1186 MySession.cpp:1197
+#: MySession.cpp:1187 MySession.cpp:1198
 msgid "Error - OpenNX"
 msgstr ""
 
-#: MySession.cpp:1196
+#: MySession.cpp:1197
 msgid "You have reached your session limit. No more sessions allowed"
 msgstr ""
 
-#: MySession.cpp:1388 MySession.cpp:1432
+#: MySession.cpp:1389 MySession.cpp:1433
 msgid "Could not create X11 authentication cookie"
 msgstr ""
 
-#: MySession.cpp:1457
+#: MySession.cpp:1458
 msgid "No X server found."
 msgstr ""
 
-#: MySession.cpp:1465
+#: MySession.cpp:1466
 #, c-format
 msgid "Could not execute %s: %s\n"
 msgstr ""
 
-#: MySession.cpp:1547
+#: MySession.cpp:1548
 #, c-format
 msgid ""
 "Could not create session directory\n"
 "%s\n"
 msgstr ""
 
-#: MySession.cpp:1575
+#: MySession.cpp:1576
 #, c-format
 msgid ""
 "Could not write session options\n"
 "%s\n"
 msgstr ""
 
-#: MySession.cpp:1665 MySession.cpp:1679
+#: MySession.cpp:1666 MySession.cpp:1680
 msgid "Could not assign a free port for CUPS printing"
 msgstr ""
 
-#: MySession.cpp:1944
+#: MySession.cpp:1945
 #, c-format
 msgid "Could not write %s"
 msgstr ""
 
-#: MySession.cpp:2016
+#: MySession.cpp:2017
 msgid "Could not start local X server"
 msgstr ""
 
-#: MySession.cpp:2032 MySession.cpp:2077 MySession.cpp:2091
+#: MySession.cpp:2033 MySession.cpp:2097 MySession.cpp:2111
 #, c-format
 msgid "Connecting to %s ..."
 msgstr ""
 
-#: MySession.cpp:2040
+#: MySession.cpp:2037
 msgid "Preparing multimedia service ..."
 msgstr ""
 
-#: MySession.cpp:2073
-msgid "Could not start multimedia support"
-msgstr ""
-
-#: MySession.cpp:2075
+#: MySession.cpp:2051 MySession.cpp:2094
 msgid "Could not assign a free port for multimedia support"
 msgstr ""
 
-#: MySession.cpp:2088
+#: MySession.cpp:2092
+msgid "Could not start multimedia support"
+msgstr ""
+
+#: MySession.cpp:2108
 msgid "Preparing CUPS service ..."
 msgstr ""
 
-#: MySession.cpp:2090
+#: MySession.cpp:2110
 msgid "Could not start CUPS printing"
 msgstr ""
 
-#: MySession.cpp:2139
+#: MySession.cpp:2159
 msgid "Called command was: "
 msgstr ""
 
-#: MySession.cpp:2140
+#: MySession.cpp:2160
 msgid "Could not start nxssh."
 msgstr ""
 
@@ -580,19 +580,19 @@ msgstr ""
 msgid "New Session %d"
 msgstr ""
 
-#: MyWizard.cpp:671 SessionProperties.cpp:794
+#: MyWizard.cpp:671 SessionProperties.cpp:808
 msgid "RDP"
 msgstr ""
 
-#: MyWizard.cpp:689 SessionProperties.cpp:820
+#: MyWizard.cpp:689 SessionProperties.cpp:834
 msgid "RFB"
 msgstr ""
 
-#: MyWizard.cpp:707 SessionProperties.cpp:847
+#: MyWizard.cpp:707 SessionProperties.cpp:861
 msgid "Any"
 msgstr ""
 
-#: MyWizard.cpp:714 SessionProperties.cpp:854
+#: MyWizard.cpp:714 SessionProperties.cpp:868
 msgid "As on server"
 msgstr ""
 
@@ -902,7 +902,7 @@ msgstr ""
 msgid "Run application"
 msgstr ""
 
-#: ResumeDialog.cpp:152 SessionProperties.cpp:645
+#: ResumeDialog.cpp:152 SessionProperties.cpp:659
 msgid "Name"
 msgstr ""
 
@@ -1053,106 +1053,106 @@ msgstr ""
 msgid "New NX session"
 msgstr ""
 
-#: SessionProperties.cpp:546 SessionProperties_symbols.h:90
+#: SessionProperties.cpp:560 SessionProperties_symbols.h:90
 msgid "USB"
 msgstr ""
 
-#: SessionProperties.cpp:583 ShareProperties_symbols.h:24
+#: SessionProperties.cpp:597 ShareProperties_symbols.h:24
 msgid "Share"
 msgstr ""
 
-#: SessionProperties.cpp:584 ShareProperties_symbols.h:50
+#: SessionProperties.cpp:598 ShareProperties_symbols.h:50
 msgid "Mount on"
 msgstr ""
 
-#: SessionProperties.cpp:585
+#: SessionProperties.cpp:599
 msgid "Comment"
 msgstr ""
 
-#: SessionProperties.cpp:597 SessionProperties.cpp:1401
+#: SessionProperties.cpp:611 SessionProperties.cpp:1416
 msgid "Currently not available"
 msgstr ""
 
-#: SessionProperties.cpp:642
+#: SessionProperties.cpp:656
 msgid "VendorID"
 msgstr ""
 
-#: SessionProperties.cpp:643
+#: SessionProperties.cpp:657
 msgid "ProductID"
 msgstr ""
 
-#: SessionProperties.cpp:644
+#: SessionProperties.cpp:658
 msgid "Class"
 msgstr ""
 
-#: SessionProperties.cpp:646
+#: SessionProperties.cpp:660
 msgid "Serial"
 msgstr ""
 
-#: SessionProperties.cpp:1151
+#: SessionProperties.cpp:1166
 msgid "Error while reading keyboard table"
 msgstr ""
 
-#: SessionProperties.cpp:1180
+#: SessionProperties.cpp:1195
 #, c-format
 msgid "Invalid line='%s'"
 msgstr ""
 
-#: SessionProperties.cpp:1181
+#: SessionProperties.cpp:1196
 #, c-format
 msgid "Invalid entry in %s"
 msgstr ""
 
-#: SessionProperties.cpp:1325
+#: SessionProperties.cpp:1340
 msgid "Do you really want to delete all cache directories?"
 msgstr ""
 
-#: SessionProperties.cpp:1326
+#: SessionProperties.cpp:1341
 msgid "Clean cache - OpenNX"
 msgstr ""
 
-#: SessionProperties.cpp:1374
+#: SessionProperties.cpp:1389
 msgid "No local samba server is running."
 msgstr ""
 
-#: SessionProperties.cpp:1430
+#: SessionProperties.cpp:1445
 msgid "No sharable resources found"
 msgstr ""
 
-#: SessionProperties.cpp:1507
+#: SessionProperties.cpp:1522
 msgid "Select User NX directory"
 msgstr ""
 
-#: SessionProperties.cpp:1523
+#: SessionProperties.cpp:1538
 msgid "Select System NX directory"
 msgstr ""
 
-#: SessionProperties.cpp:1540
+#: SessionProperties.cpp:1555
 #, c-format
 msgid "Really delete Session '%s' ?"
 msgstr ""
 
-#: SessionProperties.cpp:1541
+#: SessionProperties.cpp:1556
 msgid "Delete Session"
 msgstr ""
 
-#: SessionProperties.cpp:1812
+#: SessionProperties.cpp:1827
 msgid "No cups server available."
 msgstr ""
 
-#: SessionProperties.cpp:1827
+#: SessionProperties.cpp:1842
 msgid "Select System CUPS daemon"
 msgstr ""
 
-#: SessionProperties.cpp:1963 opennxApp.cpp:1212
+#: SessionProperties.cpp:1978 opennxApp.cpp:1212
 msgid "libusb is not available. No USB devices will be exported"
 msgstr ""
 
-#: SessionProperties.cpp:1968
+#: SessionProperties.cpp:1983
 msgid "No USB devices available."
 msgstr ""
 
-#: SessionProperties.cpp:2180
+#: SessionProperties.cpp:2195
 msgid "Select path of USBIPD socket"
 msgstr ""
 
