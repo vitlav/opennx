@@ -33,7 +33,7 @@ my @sysdlls = (
     'softpub', 'spoolss', 'sti', 'svrapi', 'sxs', 'tapi32', 'traffic', 'twain_32', 'unicows',
     'updspapi', 'url', 'urlmon', 'user32', 'userenv', 'usp10', 'uxtheme', 'vdmdbg', 'version',
     'w32skrnl', 'wined3d', 'winedos', 'wing32', 'winhttp', 'wininet', 'winmm', 'winnls32',
-    'winscard', 'wintab32', 'wintrust', 'wldap32', 'wmi', 'wnaspi32', 'wow32', 'ws2_32',
+    'winscard', 'winspool', 'wintab32', 'wintrust', 'wldap32', 'wmi', 'wnaspi32', 'wow32', 'ws2_32',
     'wsock32', 'wtsapi32', 'wuapi', 'xinput1_1', 'xinput1_2', 'xinput1_3', 'xinput9_1_0',
 );
 
@@ -64,6 +64,7 @@ sub finddeps($$) {
             my $dll = $1;
             my $cdll = lc($dll);
             $cdll =~ s/\.dll$//;
+            $cdll =~ s/\.drv$//;
             next if grep { $cdll eq $_ } @sysdlls;
             next if (-f ($dstdir ."/" . $dll));
             my $absdll = '';
