@@ -1095,7 +1095,6 @@ void SessionProperties::CreateControls()
         width = m_pHtmlWindow->GetInternalRepresentation()->GetWidth();
         m_pHtmlWindow->SetSize(width, height);
         m_pHtmlWindow->SetSizeHints(width, height);
-#warning Check geometry on all platforms
         m_pCtrlPanelAbout->Layout();
     }
 }
@@ -2226,7 +2225,7 @@ void SessionProperties::OnCheckboxProxyClick( wxCommandEvent& event )
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_PROXYSETTINGS
  */
-void SessionProperties::OnButtonProxysettingsClick( wxCommandEvent& event )
+void SessionProperties::OnButtonProxysettingsClick( wxCommandEvent& )
 {
     ProxyPropertyDialog d(this);
     d.SetSProxyHost(m_sProxyHost);

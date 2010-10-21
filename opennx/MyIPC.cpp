@@ -278,6 +278,11 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
                         upevent.SetInt(ActionWelcome);
                         m_pEvtHandler->AddPendingEvent(upevent);
                         break;
+                    case 104:
+                        // NX4 resource list
+                        upevent.SetInt(ActionResList);
+                        m_pEvtHandler->AddPendingEvent(upevent);
+                        break;
                     case 105:
                         // request for next command
                         upevent.SetInt(ActionNextCommand);
@@ -655,6 +660,7 @@ MyIPC::OnErrReceived(wxCommandEvent &event)
                             break;
                         }
                         if (msg.Contains(wxT("Connection refused")) ||
+                                msg.Contains(wxT("onnection closed")) ||
                                 msg.Contains(wxT("no address associated")) ||
                                 msg.Contains(wxT("failed with error")) ||
                                 msg.Contains(wxT("Smartcard init failed")) ||

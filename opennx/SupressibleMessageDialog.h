@@ -85,7 +85,7 @@ public:
     /// Creates the controls and sizers
     void CreateControls();
 
-    int ShowModal(const wxString &msgid, int defaultResult);
+    int ShowConditional(const wxString &msgid, int defaultResult);
 
     void OnNoClick( wxCommandEvent& event );
 

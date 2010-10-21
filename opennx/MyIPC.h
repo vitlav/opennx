@@ -73,6 +73,7 @@ public:
         ActionSessionListEnd,
         ActionSessionPushLength,
         ActionSessionPushStart,
+        ActionResList,
         ActionTerminated,
         ActionStdout,
         ActionStderr,

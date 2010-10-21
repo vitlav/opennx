@@ -93,6 +93,8 @@ private:
         STATE_LOGIN,
         STATE_LIST_SESSIONS,
         STATE_PARSE_SESSIONS,
+        STATE_LIST_RESOURCES,
+        STATE_PARSE_RESOURCES,
         STATE_START_SESSION,
         STATE_ATTACH_SESSION,
         STATE_RESUME_SESSION,
@@ -110,6 +112,7 @@ private:
     void startProxy();
     void startSharing();
     void parseSessions(bool moreAllowed);
+    void parseResources();
     void initversion(const wxString &s = wxEmptyString);
     bool prepareCups();
     bool isCupsRunning();
@@ -137,6 +140,7 @@ private:
     bool m_bSessionEstablished;
     bool m_bCollectSessions;
     bool m_bCollectConfig;
+    bool m_bCollectResources;
     bool m_bIsShadow;
     bool m_bCupsRunning;
     bool m_bRemoveKey;

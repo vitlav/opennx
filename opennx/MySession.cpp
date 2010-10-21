@@ -686,6 +686,7 @@ MySession::getXauthPath(tXarch xarch)
 {
     wxFileName fn;
 #ifdef __UNIX__
+    wxUnusedVar(xarch);
     wxString cmd = wxT("xauth info");
     wxArrayString clines;
     if (::wxExecute(cmd, clines) == 0) {
@@ -757,7 +758,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
             break;
         case MyIPC::ActionLog:
             m_pDlg->SetProgress(m_iProgress++);
-            if (m_bCollectSessions)
+            if (m_bCollectSessions || m_bCollectResources)
                 m_aParseBuffer.Add(msg);
             if (m_bCollectConfig) {
                 m_sConfigBuffer << msg << wxT("\n");
@@ -780,7 +781,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                 wxString cfgid(wxT("sshwarn."));
                 SupressibleMessageDialog d(m_pParent, msg,
                         _("Warning - OpenNX"), wxOK|wxICON_EXCLAMATION);
-                d.ShowModal(cfgid.Append(msg.Left(15)), wxID_OK);
+                d.ShowConditional(cfgid.Append(msg.Left(15)), wxID_OK);
             }
             break;
         case MyIPC::ActionError:
@@ -792,7 +793,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                 wxString cfgid(wxT("sshyesno."));
                 SupressibleMessageDialog d(m_pParent, msg,
                         _("Warning - OpenNX"), wxYES_NO|wxICON_EXCLAMATION);
-                if (d.ShowModal(cfgid.Append(msg.Left(15)), wxID_YES) == wxID_YES)
+                if (d.ShowConditional(cfgid.Append(msg.Left(15)), wxID_YES) == wxID_YES)
                     printSsh(wxT("yes"));
                 else {
                     printSsh(wxT("no"));
@@ -806,7 +807,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                 msg << _("\nDo you want to delete the key and retry ?");
                 SupressibleMessageDialog d(m_pParent, msg,
                         _("Warning - OpenNX"), wxYES_NO|wxICON_EXCLAMATION);
-                if (d.ShowModal(cfgid.Append(msg.Left(15)), wxID_YES) == wxID_YES)
+                if (d.ShowConditional(cfgid.Append(msg.Left(15)), wxID_YES) == wxID_YES)
                     m_bRemoveKey = true;
                 m_bGotError = true;
             }
@@ -835,7 +836,8 @@ MySession::OnSshEvent(wxCommandEvent &event)
             break;
         case MyIPC::ActionWelcome:
             m_pDlg->SetStatusText(_("Authentication successful"));
-            m_eConnectState = STATE_LIST_SESSIONS;
+            m_eConnectState = (m_lProtocolVersion >= 0x00040000)
+                ? STATE_LIST_RESOURCES : STATE_LIST_SESSIONS;
             break;
         case MyIPC::ActionSessionPushLength:
             // Session file length: 213
@@ -851,6 +853,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
             m_iProgress += 4;
             m_pDlg->SetProgress(m_iProgress);
             switch (m_eConnectState) {
+                case STATE_INIT:
                 case STATE_ABORT:
                     break;
                 case STATE_HELLO:
@@ -869,6 +872,18 @@ MySession::OnSshEvent(wxCommandEvent &event)
                 case STATE_LOGIN:
                     printSsh(wxT("login"));
                     break;
+                case STATE_LIST_RESOURCES:
+                    m_pDlg->SetStatusText(_("Query server-side features"));
+                    printSsh(wxT("resourcelist"));
+                    m_eConnectState = STATE_PARSE_RESOURCES;
+                    m_bNextCmd = false;
+                    break;
+                case STATE_PARSE_RESOURCES:
+                    // Server has sent list of attachable sessions
+                    m_bCollectResources = false;
+                    ::wxLogInfo(wxT("received end of feature list"));
+                    parseResources();
+                    // intentionally fall thru
                 case STATE_LIST_SESSIONS:
                     m_pDlg->SetStatusText(_("Query server-side sessions"));
                     scmd = wxT("listsession") + m_pCfg->sGetListParams(m_lProtocolVersion);
@@ -1036,6 +1051,12 @@ MySession::OnSshEvent(wxCommandEvent &event)
             ::wxLogInfo(wxT("received end of session list"));
             parseSessions(event.GetExtraLong() == 148);
             break;
+        case MyIPC::ActionResList:
+            // NX4: Server starts sending resource info
+            ::wxLogInfo(wxT("receiving resource info .."));
+            m_aParseBuffer.Empty();
+            m_bCollectResources = true;
+            break;
     }
 }
 
@@ -1067,6 +1088,37 @@ MySession::printSsh(const wxString &s, bool doLog /* = true */)
     if (m_pNxSsh) {
         ::myLogTrace(MYTRACETAG, wxT("sending '%s'"), (doLog ? s.c_str() : wxT("********")));
         m_pNxSsh->Print(s, doLog);
+    }
+}
+
+    void
+MySession::parseResources()
+{
+    size_t n = m_aParseBuffer.GetCount();
+    ::myLogTrace(MYTRACETAG, wxT("parseResources: Got %d lines to parse"), n);
+    wxRegEx re(wxT("^((?:session)|(?:service)|(?:feature))\\s+([^\\s]+)(?:\\s+([^\\s]+))?$"), wxRE_ADVANCED);
+    wxASSERT(re.IsValid());
+    for (size_t i = 0; i < n; i++) {
+        wxString line(m_aParseBuffer[i].Strip(wxString::both));
+        if (re.Matches(line) && (4 == re.GetMatchCount())) {
+            if (re.GetMatchCount() == 4) {
+                wxString sClass(re.GetMatch(line, 1));
+                wxString sType(re.GetMatch(line, 2));
+                wxString sValue(re.GetMatch(line, 3));
+                ::myLogTrace(MYTRACETAG, wxT("parseResources: match c='%s' t='%s', v='%s'"),
+                        sClass.c_str(), sType.c_str(), sValue.c_str());
+                if (sClass.IsSameAs(wxT("session"))) {
+                    // Not yet clear what to do with that data.
+                }
+                if (sClass.IsSameAs(wxT("service"))) {
+                    // Not yet clear what to do with that data.
+                }
+                if (sClass.IsSameAs(wxT("feature"))) {
+                    // Not yet clear what to do with that data.
+                }
+            }
+        } else
+            ::myLogTrace(MYTRACETAG, wxT("parseResources: NO match line='%s'"), line.c_str());
     }
 }
 
@@ -1855,6 +1907,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
     m_bSessionEstablished = false;
     m_bCollectSessions = false;
     m_bCollectConfig = false;
+    m_bCollectResources = false;
     m_bIsShadow = false;
     m_bNextCmd = false;
     m_sSessionID = wxEmptyString;

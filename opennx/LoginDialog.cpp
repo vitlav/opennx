@@ -496,7 +496,7 @@ void LoginDialog::OnOkClick(wxCommandEvent& event)
 /*!
  * Handle events from AutoLoginTimer
  */
-void LoginDialog::OnLoginTimer(wxTimerEvent& event)
+void LoginDialog::OnLoginTimer(wxTimerEvent&)
 {
     wxCommandEvent ev(wxEVT_COMMAND_BUTTON_CLICKED, wxID_OK);
     AddPendingEvent(ev);
@@ -506,7 +506,7 @@ void LoginDialog::OnLoginTimer(wxTimerEvent& event)
 /*!
  * Handle events from NxSshWatchTimer
  */
-void LoginDialog::OnTimer(wxTimerEvent& event)
+void LoginDialog::OnTimer(wxTimerEvent&)
 {
     wxArrayString cmdout;
     wxExecute(wxT("ps h -C nxssh"), cmdout, wxEXEC_SYNC|wxEXEC_NODISABLE);

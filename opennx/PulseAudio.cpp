@@ -288,9 +288,6 @@ class pawrapper {
 
         void get_module_info_callback(pa_context *c, const pa_module_info *i, int is_last)
         {
-            char t[32];
-            char *pl;
-
             if (is_last < 0) {
                 ::myLogTrace(MYTRACETAG, wxT("Failed to get module information: %s"), Ppa_strerror(Ppa_context_errno(c)));
                 m_bError = true;

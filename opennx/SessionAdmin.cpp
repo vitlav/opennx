@@ -363,7 +363,7 @@ void SessionAdmin::OnToolSessionNewClick( wxCommandEvent& event )
  * wxEVT_COMMAND_MENU_SELECTED event handler for ID_MENU_FILE_CHDIR
  */
 
-void SessionAdmin::OnPREFERENCESClick( wxCommandEvent& event )
+void SessionAdmin::OnPREFERENCESClick( wxCommandEvent& )
 {
     const wxString& dir = wxDirSelector(_("Choose new NX session directory."),
             m_NxDirectory, wxDD_DEFAULT_STYLE, wxDefaultPosition, this);
@@ -377,7 +377,7 @@ void SessionAdmin::OnPREFERENCESClick( wxCommandEvent& event )
  * wxEVT_COMMAND_MENU_SELECTED event handler for ID_MENU_FILE_EXIT
  */
 
-void SessionAdmin::OnEXITClick( wxCommandEvent& event )
+void SessionAdmin::OnEXITClick( wxCommandEvent& )
 {
     Close();
 }
@@ -449,9 +449,8 @@ void SessionAdmin::OnToolRefreshClick( wxCommandEvent& event )
  * wxEVT_COMMAND_MENU_SELECTED event handler for ID_MENU_HELP_ABOUT
  */
 
-void SessionAdmin::OnABOUTClick( wxCommandEvent& event )
+void SessionAdmin::OnABOUTClick( wxCommandEvent& )
 {
-    wxUnusedVar(event);
     AboutDialog d(this);
     d.ShowModal();
 }
@@ -472,7 +471,7 @@ void SessionAdmin::OnListctrlSelected( wxListEvent& event )
  * wxEVT_COMMAND_LIST_ITEM_DESELECTED event handler for ID_LISTCTRL
  */
 
-void SessionAdmin::OnListctrlDeselected( wxListEvent& event )
+void SessionAdmin::OnListctrlDeselected( wxListEvent& )
 {
     SessionToolsEnable(false);
 }
@@ -482,7 +481,7 @@ void SessionAdmin::OnListctrlDeselected( wxListEvent& event )
  * wxEVT_COMMAND_MENU_SELECTED event handler for ID_MENU_SESSION_NEW
  */
 
-void SessionAdmin::OnMenuSessionNewClick( wxCommandEvent& event )
+void SessionAdmin::OnMenuSessionNewClick( wxCommandEvent& )
 {
     LoginDialog d(this);
     d.ShowModal();
@@ -492,7 +491,7 @@ void SessionAdmin::OnMenuSessionNewClick( wxCommandEvent& event )
  * wxEVT_COMMAND_MENU_SELECTED event handler for ID_MENU_SESSION_TERMINATE
  */
 
-void SessionAdmin::OnMenuSessionTerminateClick( wxCommandEvent& event )
+void SessionAdmin::OnMenuSessionTerminateClick( wxCommandEvent& )
 {
     long item = m_SessionListCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
     if (item != -1) {
@@ -507,7 +506,7 @@ void SessionAdmin::OnMenuSessionTerminateClick( wxCommandEvent& event )
  * wxEVT_COMMAND_MENU_SELECTED event handler for ID_MENU_SESSION_PSTATS
  */
 
-void SessionAdmin::OnMenuSessionPstatsClick( wxCommandEvent& event )
+void SessionAdmin::OnMenuSessionPstatsClick( wxCommandEvent& )
 {
     long item = m_SessionListCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
     if (item != -1)
@@ -518,7 +517,7 @@ void SessionAdmin::OnMenuSessionPstatsClick( wxCommandEvent& event )
  * wxEVT_COMMAND_MENU_SELECTED event handler for ID_MENU_SESSION_FSTATS
  */
 
-void SessionAdmin::OnMenuSessionFstatsClick( wxCommandEvent& event )
+void SessionAdmin::OnMenuSessionFstatsClick( wxCommandEvent& )
 {
     long item = m_SessionListCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
     if (item != -1)
@@ -529,7 +528,7 @@ void SessionAdmin::OnMenuSessionFstatsClick( wxCommandEvent& event )
  * wxEVT_COMMAND_MENU_SELECTED event handler for ID_MENU_SESSION_LOG
  */
 
-void SessionAdmin::OnMenuSessionLogClick( wxCommandEvent& event )
+void SessionAdmin::OnMenuSessionLogClick( wxCommandEvent& )
 {
     long item = m_SessionListCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
     if (item != -1) {
@@ -547,7 +546,7 @@ void SessionAdmin::OnMenuSessionLogClick( wxCommandEvent& event )
  * wxEVT_COMMAND_MENU_SELECTED event handler for ID_MENU_SESSION_REMOVE
  */
 
-void SessionAdmin::OnMenuSessionRemoveClick( wxCommandEvent& event )
+void SessionAdmin::OnMenuSessionRemoveClick( wxCommandEvent& )
 {
     long item = m_SessionListCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
     if (item != -1) {
@@ -564,7 +563,7 @@ void SessionAdmin::OnMenuSessionRemoveClick( wxCommandEvent& event )
  * wxEVT_COMMAND_MENU_SELECTED event handler for ID_MENU_SESSION_KILL
  */
 
-void SessionAdmin::OnMenuSessionKillClick( wxCommandEvent& event )
+void SessionAdmin::OnMenuSessionKillClick( wxCommandEvent& )
 {
     long item = m_SessionListCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
     if (item != -1) {
@@ -578,7 +577,7 @@ void SessionAdmin::OnMenuSessionKillClick( wxCommandEvent& event )
  * wxEVT_COMMAND_MENU_SELECTED event handler for ID_MENU_REFRESH
  */
 
-void SessionAdmin::OnMenuRefreshClick( wxCommandEvent& event )
+void SessionAdmin::OnMenuRefreshClick( wxCommandEvent& )
 {
     m_sessions->ScanDir();
 }
