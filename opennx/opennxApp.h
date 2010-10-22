@@ -64,6 +64,7 @@ class opennxApp : public wxApp
         void SetReader(int i) { m_iReader = i; }
         void SetSessionCfg(MyXmlConfig &);
         void SetSessionID(const wxString &s) { m_sSessionID = s; };
+        void EnableContextHelp(wxWindow *w);
 
         virtual bool OnInit();
         virtual void OnInitCmdLine(wxCmdLineParser& parser);

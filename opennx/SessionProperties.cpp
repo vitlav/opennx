@@ -48,6 +48,7 @@
 #include <wx/txtstrm.h>
 #include <wx/dir.h>
 #include <wx/scopeguard.h>
+#include <wx/cshelp.h>
 
 #include "SessionProperties.h"
 #include "ProxyPropertyDialog.h"
@@ -263,6 +264,8 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
 
 ////@end SessionProperties event table entries
 //
+    EVT_MENU(wxID_CONTEXT_HELP, SessionProperties::OnContextHelp)
+
 END_EVENT_TABLE()
 
 /*!
@@ -682,7 +685,14 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlCupsPath->Enable(false);
     m_pCtrlCupsBrowse->Enable(false);
 #endif
+
+    ::wxGetApp().EnableContextHelp(this);
     return TRUE;
+}
+
+void SessionProperties::OnContextHelp(wxCommandEvent &)
+{
+    wxContextHelp contextHelp(this);
 }
 
 void SessionProperties::updateListCtrlColumnWidth(wxListCtrl *ctrl)
@@ -1213,22 +1223,6 @@ void SessionProperties::SaveState()
 }
 
 // ====================== Event handlers ===============================
-
-void SessionProperties::OnFocus( wxFocusEvent& event )
-{
-    ::myLogTrace(MYTRACETAG, wxT("wxSpinCtrl lost focus"));
-#if 0
-    event.Skip();
-    // In order to prevent endless recursion, instead of calling
-    // CheckChanged() directly, we use a pending event
-    // (any event that triggers CheckChanged() will do). This event
-    // is then evaluated upon the next event-loop iteration.
-    wxCommandEvent e(wxEVT_COMMAND_SLIDER_UPDATED, XRCID("ID_SLIDER_SPEED"));
-    AddPendingEvent(e);
-#else
-    wxUnusedVar(event);
-#endif
-}
 
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_DSETTINGS

@@ -124,7 +124,7 @@ private:
 
 public:
 
-    void OnFocus( wxFocusEvent& event );
+    void OnContextHelp(wxCommandEvent &);
 
 ////@begin SessionProperties event handler declarations
 

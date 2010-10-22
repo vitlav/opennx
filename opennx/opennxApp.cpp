@@ -55,6 +55,7 @@
 #include <wx/socket.h>
 #include <wx/regex.h>
 #include <wx/dir.h>
+#include <wx/cshelp.h>
 
 #include "opennxApp.h"
 #include "SessionAdmin.h"
@@ -193,6 +194,18 @@ opennxApp::~opennxApp()
         delete m_pCfg;
     if (m_pSessionCfg)
         delete m_pSessionCfg;
+}
+
+void
+opennxApp::EnableContextHelp(wxWindow *w)
+{
+    if (NULL == w)
+        return;
+    wxAcceleratorEntry entries[1];
+    entries[0].Set(wxACCEL_SHIFT, WXK_F1, wxID_CONTEXT_HELP);
+    wxAcceleratorTable accel(1, entries);
+    w->SetAcceleratorTable(accel);
+    w->SetFocus();
 }
 
     wxString
@@ -987,6 +1000,8 @@ bool opennxApp::realInit()
     wxFileName::MacRegisterDefaultTypeAndCreator(wxT("nxs"), 'TEXT', 'OPNX');
 #endif
 
+    wxHelpProvider::Set(new wxSimpleHelpProvider);
+
     wxFileSystem::AddHandler(new wxZipFSHandler);
     wxFileSystem::AddHandler(new wxMemoryFSHandler);
     wxInitAllImageHandlers();
@@ -1298,6 +1313,7 @@ bool opennxApp::OnInit()
  */
 int opennxApp::OnExit()
 {
+    delete wxHelpProvider::Set(NULL);
     {
         wxLogNull lognull;
         wxMemoryFSHandler::RemoveFile(wxT("memrsc"));
