@@ -40,6 +40,9 @@
 #include "X11PropertyDialog.h"
 #include "MyXmlConfig.h"
 #include "Icon.h"
+#include "opennxApp.h"
+
+#include <wx/cshelp.h>
 
 ////@begin XPM images
 ////@end XPM images
@@ -70,6 +73,8 @@ BEGIN_EVENT_TABLE( X11PropertyDialog, wxDialog )
     EVT_BUTTON( wxID_OK, X11PropertyDialog::OnOkClick )
 
 ////@end X11PropertyDialog event table entries
+
+    EVT_MENU(wxID_CONTEXT_HELP, X11PropertyDialog::OnContextHelp)
 
 END_EVENT_TABLE()
 
@@ -119,12 +124,13 @@ bool X11PropertyDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     }
 
 ////@begin X11PropertyDialog creation
-    SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
+    SetExtraStyle(wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP);
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));
     Centre();
 ////@end X11PropertyDialog creation
+    ::wxGetApp().EnableContextHelp(this);
     return TRUE;
 }
 
@@ -195,6 +201,11 @@ wxIcon X11PropertyDialog::GetIconResource( const wxString& name )
 {
     // Icon retrieval
     return CreateIconFromFile(name);
+}
+
+void X11PropertyDialog::OnContextHelp(wxCommandEvent &)
+{
+    wxContextHelp contextHelp(this);
 }
 
 /*!

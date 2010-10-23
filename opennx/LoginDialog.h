@@ -90,6 +90,7 @@ private:
     /// Creates the controls and sizers
     void CreateControls();
 
+    void OnContextHelp(wxCommandEvent &);
 #ifdef SINGLE_SESSION
     // Event handler for events from nxssh watch timer
     void OnTimer(wxTimerEvent& event);

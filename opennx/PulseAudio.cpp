@@ -453,5 +453,8 @@ bool PulseAudio::ActivateEsound(int port)
     ::myLogTrace(MYTRACETAG, wxT("loading"));
     return pa->loadmodule(wxT("module-esound-protocol-tcp"),
             wxString::Format(wxT("port=%d listen=127.0.0.1"), port));
+#else
+    wxUnusedVar(port);
+    return false;
 #endif
 }

@@ -44,6 +44,9 @@
 #include "RdpImageSettingsDialog.h"
 #include "MyXmlConfig.h"
 #include "Icon.h"
+#include "opennxApp.h"
+
+#include <wx/cshelp.h>
 
 ////@begin XPM images
 ////@end XPM images
@@ -72,6 +75,8 @@ BEGIN_EVENT_TABLE( RdpImageSettingsDialog, wxDialog )
     EVT_BUTTON( wxID_OK, RdpImageSettingsDialog::OnOkClick )
 
 ////@end RdpImageSettingsDialog event table entries
+
+    EVT_MENU(wxID_CONTEXT_HELP, RdpImageSettingsDialog::OnContextHelp)
 
 END_EVENT_TABLE()
 
@@ -141,7 +146,7 @@ bool RdpImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), 
     }
 
 ////@begin RdpImageSettingsDialog creation
-    SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS);
+    SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP);
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));
@@ -153,6 +158,7 @@ bool RdpImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), 
 ////@end RdpImageSettingsDialog creation
 
     UpdateDialogConstraints();
+    ::wxGetApp().EnableContextHelp(this);
     return TRUE;
 }
 
@@ -216,6 +222,11 @@ wxIcon RdpImageSettingsDialog::GetIconResource( const wxString& name )
 {
     // Icon retrieval
     return CreateIconFromFile(name);
+}
+
+void RdpImageSettingsDialog::OnContextHelp(wxCommandEvent &)
+{
+    wxContextHelp contextHelp(this);
 }
 
 /*!

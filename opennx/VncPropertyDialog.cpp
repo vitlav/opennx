@@ -44,12 +44,15 @@
 #ifdef HAVE_CONFIG_H
 # include "config.h"
 #endif
-#include <wx/config.h>
 
 #include "VncPropertyDialog.h"
 #include "Icon.h"
 #include "MyXmlConfig.h"
 #include "MyValidator.h"
+#include "opennxApp.h"
+
+#include <wx/config.h>
+#include <wx/cshelp.h>
 
 ////@begin XPM images
 ////@end XPM images
@@ -70,6 +73,8 @@ BEGIN_EVENT_TABLE( VncPropertyDialog, wxDialog )
     EVT_BUTTON( wxID_OK, VncPropertyDialog::OnOkClick )
 
 ////@end VncPropertyDialog event table entries
+
+    EVT_MENU(wxID_CONTEXT_HELP, VncPropertyDialog::OnContextHelp)
 
 END_EVENT_TABLE()
 
@@ -116,7 +121,7 @@ bool VncPropertyDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
         m_bRememberPassword = false;
 
 ////@begin VncPropertyDialog creation
-    SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
+    SetExtraStyle(wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP);
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));
@@ -126,6 +131,8 @@ bool VncPropertyDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     }
     Centre();
 ////@end VncPropertyDialog creation
+    
+    ::wxGetApp().EnableContextHelp(this);
     return TRUE;
 }
 
@@ -185,6 +192,11 @@ wxIcon VncPropertyDialog::GetIconResource( const wxString& name )
 {
     // Icon retrieval
     return CreateIconFromFile(name);
+}
+
+void VncPropertyDialog::OnContextHelp(wxCommandEvent &)
+{
+    wxContextHelp contextHelp(this);
 }
 
 /*!

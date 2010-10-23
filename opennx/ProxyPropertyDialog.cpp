@@ -92,7 +92,7 @@ ProxyPropertyDialog::ProxyPropertyDialog( wxWindow* parent, wxWindowID id, const
 bool ProxyPropertyDialog::Create( wxWindow* parent, wxWindowID, const wxString&, const wxPoint&, const wxSize&, long )
 {
 ////@begin ProxyPropertyDialog creation
-    SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
+    SetExtraStyle(wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP);
     SetParent(parent);
     CreateControls();
     if (GetSizer())

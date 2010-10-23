@@ -90,6 +90,8 @@ private:
     /// Creates the controls and sizers
     void CreateControls();
 
+    void OnContextHelp(wxCommandEvent &);
+
 ////@begin VncPropertyDialog event handler declarations
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK

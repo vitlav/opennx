@@ -105,11 +105,7 @@ public:
 ////@begin ProxyPropertyDialog member function declarations
 
     bool GetBUseProxy() const { return m_bUseProxy ; }
-    void SetBUseProxy(bool value) {
-        m_bUseProxy = value;
-        m_bExternalProxy = !value;
-        UpdateDialogConstraints();
-    }
+    void SetBUseProxy(bool value) { m_bUseProxy = value ; }
 
     wxString GetSProxyHost() const { return m_sProxyHost ; }
     void SetSProxyHost(wxString value) { m_sProxyHost = value ; }
@@ -127,11 +123,7 @@ public:
     void SetBProxyPassRemember(bool value) { m_bProxyPassRemember = value ; }
 
     bool GetBExternalProxy() const { return m_bExternalProxy ; }
-    void SetBExternalProxy(bool value) {
-        m_bExternalProxy = value ;
-        m_bUseProxy = !value;
-        UpdateDialogConstraints();
-    }
+    void SetBExternalProxy(bool value) { m_bExternalProxy = value ; }
 
     wxString GetSProxyCommand() const { return m_sProxyCommand ; }
     void SetSProxyCommand(wxString value) { m_sProxyCommand = value ; }

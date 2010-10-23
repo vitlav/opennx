@@ -46,8 +46,10 @@
 #include "WinShare.h"
 #include "ShareProperties.h"
 #include "Icon.h"
+#include "opennxApp.h"
 
 #include <wx/bmpcbox.h>
+#include <wx/cshelp.h>
 
 ////@begin XPM images
 ////@end XPM images
@@ -73,6 +75,8 @@ BEGIN_EVENT_TABLE( ShareProperties, wxDialog )
     EVT_BUTTON( wxID_OK, ShareProperties::OnOkClick )
 
     ////@end ShareProperties event table entries
+
+    EVT_MENU(wxID_CONTEXT_HELP, ShareProperties::OnContextHelp)
 
 END_EVENT_TABLE()
 
@@ -141,7 +145,7 @@ bool ShareProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const w
     ////@end ShareProperties member initialisation
 
     ////@begin ShareProperties creation
-    SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
+    SetExtraStyle(wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP);
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));
@@ -151,6 +155,7 @@ bool ShareProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const w
     }
     Centre();
     ////@end ShareProperties creation
+    ::wxGetApp().EnableContextHelp(this);
     return TRUE;
 }
 
@@ -369,6 +374,11 @@ void ShareProperties::CreateControls()
             m_pCtrlPassword->Enable(false);
         }
     }
+}
+
+void ShareProperties::OnContextHelp(wxCommandEvent &)
+{
+    wxContextHelp contextHelp(this);
 }
 
 /*!

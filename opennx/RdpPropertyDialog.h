@@ -92,6 +92,8 @@ private:
     /// Creates the controls and sizers
     void CreateControls();
 
+    void OnContextHelp(wxCommandEvent &);
+
 ////@begin RdpPropertyDialog event handler declarations
 
     /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_WINLOGON

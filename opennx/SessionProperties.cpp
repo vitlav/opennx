@@ -263,7 +263,7 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
     EVT_BUTTON( wxID_APPLY, SessionProperties::OnApplyClick )
 
 ////@end SessionProperties event table entries
-//
+
     EVT_MENU(wxID_CONTEXT_HELP, SessionProperties::OnContextHelp)
 
 END_EVENT_TABLE()
@@ -548,7 +548,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
         m_bRememberPassword = false;
 
     ////@begin SessionProperties creation
-    SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS);
+    SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP);
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));

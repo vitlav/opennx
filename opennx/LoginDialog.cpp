@@ -42,6 +42,7 @@
 #include <wx/dir.h>
 #include <wx/file.h>
 #include <wx/xml/xml.h>
+#include <wx/cshelp.h>
 
 ////@begin includes
 ////@end includes
@@ -91,6 +92,7 @@ BEGIN_EVENT_TABLE( LoginDialog, wxDialog )
 
     ////@end LoginDialog event table entries
 
+    EVT_MENU(wxID_CONTEXT_HELP, LoginDialog::OnContextHelp)
 #ifdef SINGLE_SESSION
     EVT_TIMER(NXSSH_TIMER, LoginDialog::OnTimer)
 #endif
@@ -228,7 +230,7 @@ bool LoginDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
     ////@end LoginDialog member initialisation
 
     ////@begin LoginDialog creation
-    SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
+    SetExtraStyle(wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP);
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));
@@ -238,6 +240,7 @@ bool LoginDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
     }
     Centre();
     ////@end LoginDialog creation
+    ::wxGetApp().EnableContextHelp(this);
     return TRUE;
 }
 
@@ -291,6 +294,11 @@ void LoginDialog::CreateControls()
     m_cNxSshWatchTimer.Start(1000);
     ::myLogTrace(MYTRACETAG, wxT("Starting nxssh watch timer"));
 #endif
+}
+
+void LoginDialog::OnContextHelp(wxCommandEvent &)
+{
+    wxContextHelp contextHelp(this);
 }
 
 /*!

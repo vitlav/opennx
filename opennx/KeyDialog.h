@@ -92,6 +92,8 @@ private:
 
     void CheckChanged();
 
+    void OnContextHelp(wxCommandEvent &);
+
 ////@begin KeyDialog event handler declarations
 
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SSHKEY

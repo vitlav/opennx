@@ -40,6 +40,9 @@
 #include "VncImageSettingsDialog.h"
 #include "MyXmlConfig.h"
 #include "Icon.h"
+#include "opennxApp.h"
+
+#include <wx/cshelp.h>
 
 ////@begin XPM images
 ////@end XPM images
@@ -66,6 +69,8 @@ BEGIN_EVENT_TABLE( VncImageSettingsDialog, wxDialog )
     EVT_BUTTON( wxID_OK, VncImageSettingsDialog::OnOkClick )
 
 ////@end VncImageSettingsDialog event table entries
+
+    EVT_MENU(wxID_CONTEXT_HELP, VncImageSettingsDialog::OnContextHelp)
 
 END_EVENT_TABLE()
 
@@ -125,12 +130,13 @@ bool VncImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), 
     }
 
 ////@begin VncImageSettingsDialog creation
-    SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
+    SetExtraStyle(wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP);
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));
     Centre();
 ////@end VncImageSettingsDialog creation
+    ::wxGetApp().EnableContextHelp(this);
     return TRUE;
 }
 
@@ -192,6 +198,11 @@ wxIcon VncImageSettingsDialog::GetIconResource( const wxString& name )
 {
     // Icon retrieval
     return CreateIconFromFile(name);
+}
+
+void VncImageSettingsDialog::OnContextHelp(wxCommandEvent &)
+{
+    wxContextHelp contextHelp(this);
 }
 
 /*!

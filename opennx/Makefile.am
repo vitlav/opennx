@@ -215,7 +215,7 @@ MAINTAINERCLEANFILES = ABOUT-NLS Makefile.in configure aclocal.m4 \
 	m4/[cgilnpuwx]*.m4 m4/s[it]*.m4 po/*.sin po/*.sed po/*.header po/Rules-quot \
 	po/*.template po/Makefile*.in
 
-DISTCLEANFILES = res/*.prv.*
+DISTCLEANFILES = mingw32-config.cache res/*.prv.*
 
 man_MANS = man/pconnect.1
 

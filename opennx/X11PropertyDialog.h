@@ -93,6 +93,8 @@ private:
     void CreateControls();
     void UpdateDialogConstraints(bool);
 
+    void OnContextHelp(wxCommandEvent &);
+
 ////@begin X11PropertyDialog event handler declarations
 
     /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_X11_CONSOLE
