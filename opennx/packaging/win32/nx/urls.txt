@@ -1,4 +1,3 @@
 http://www.68k.org/~michael/audiofile/audiofile-0.2.6.tar.gz
 http://prdownloads.sourceforge.net/libpng/libpng-1.2.40.tar.gz?download
-ftp://ftp.42.org/pub/FreeBSD/distfiles/jpegsrc.v6b.tar.gz
-#ftp://ftp.uu.net/graphics/jpeg/jpegsrc.v6b.tar.gz
+http://sourceforge.net/projects/libjpeg-turbo/files/1.0.1/libjpeg-turbo-1.0.1.tar.gz/download

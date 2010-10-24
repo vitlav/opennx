@@ -38,6 +38,13 @@
 #include "wx/wx.h"
 #endif
 
+/*
+ * Defines canonicalized platform names (e.g. __LINUX__)
+ */
+#include <wx/platform.h>
+
+#ifndef __WXMSW__
+
 ////@begin includes
 ////@end includes
 
@@ -229,3 +236,5 @@ void ForeignFrame::OnCreate( wxWindowCreateEvent& event )
     event.Skip();
 }
 
+#endif
+    // !__WXMSW__

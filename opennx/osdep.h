@@ -25,9 +25,11 @@
 extern "C" {
     extern const char *x11_socket_path;
     extern const char *x11_keyboard_type;
+#ifndef __WXMSW__
     extern void reparent_pulldown(long);
     extern void close_foreign(long);
     extern void close_sid(const char *);
+#endif
     extern int inKdeSession;
 #ifdef __WXMSW__
     extern long getppid();

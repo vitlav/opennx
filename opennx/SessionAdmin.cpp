@@ -493,6 +493,7 @@ void SessionAdmin::OnMenuSessionNewClick( wxCommandEvent& )
 
 void SessionAdmin::OnMenuSessionTerminateClick( wxCommandEvent& )
 {
+#ifndef __WXMSW__
     long item = m_SessionListCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
     if (item != -1) {
         MySession *s =
@@ -500,6 +501,7 @@ void SessionAdmin::OnMenuSessionTerminateClick( wxCommandEvent& )
         if (s)
             close_sid(s->sGetMd5().mb_str());
     }
+#endif
 }
 
 /*!

@@ -930,6 +930,7 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
                 // quit (Button: Quit, no signals)
                 m_eMode = MODE_DIALOG_QUIT;
                 return true;
+#ifndef __WXMSW__
             case 5:
                 // pulldown (a toolbar, docked to top-center of wID),
                 // timing out after ~ 6sec. The toolbar has 3 buttons:
@@ -942,6 +943,10 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
                 }
                 m_eMode = MODE_FOREIGN_TOOLBAR;
                 return true;
+#else
+                OnCmdLineError(parser);
+                return false;
+#endif
             case 6:
                 // yesnosuspend (Buttons: Suspend, Terminate and Cancel,
                 // Terminate sends SIGTERM to pPID, Suspend sends SIGHUP to real ppid)
@@ -1108,6 +1113,7 @@ bool opennxApp::realInit()
                 return false;
             }
             break;
+#ifndef __WXMSW__
         case MODE_FOREIGN_TOOLBAR:
             {
                 ForeignFrame *ff = new ForeignFrame(NULL);
@@ -1121,6 +1127,7 @@ bool opennxApp::realInit()
                 SetTopWindow(ff);
                 return true;
             }
+#endif
             break;
         case MODE_ADMIN:
             {

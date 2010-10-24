@@ -5,8 +5,10 @@ AUDIOFILE         = audiofile
 AUDIOFILE_VERSION = 0.2.6
 LIBPNG            = libpng
 LIBPNG_VERSION    = 1.2.40
-LIBJPEG           = jpeg
-LIBJPEG_VERSION   = 6b
+LIBJPEG           = libjpeg
+LIBJPEG_VERSION   = turbo-1.0.1
+#LIBJPEG           = jpeg
+#LIBJPEG_VERSION   = 6b
 TMPDIST           = $(abs_builddir)/dist
 
 CFG_GENERIC = \
@@ -20,7 +22,8 @@ CFG_nxcomp = $(CFG_GENERIC) \
 			 --x-libraries=$(abs_top_builddir)/packaging/win32/xming/dist/usr/X11R6/lib
 CFG_nxproxy = $(CFG_GENERIC) --program-transform-name='s/i686-pc-mingw32-//'
 CFG_nxssh = $(CFG_GENERIC)
-CFG_libpng = $(CFG_GENERIC) --disable-static --enable-shared
+CFG_libjpeg = $(CFG_GENERIC) --disable-static --enable-shared
+CFG_libpng = $(CFG_GENERIC) --disable-static --enable-shared --with-libpng-compat
 CFG_jpeg =  --prefix=$(TMPDIST) --libdir=$(TMPDIST)/lib --bindir=$(TMPDIST)/bin \
 	--mandir=$(TMPDIST)/share/man --includedir=$(TMPDIST)/include \
 	--datadir=$(TMPDIST)/share --exec-prefix=$(TMPDIST) \
@@ -35,7 +38,7 @@ ENV_nxcomp = env $(ENV_GENERIC)
 ENV_nxesd = env $(ENV_GENERIC) LIBS=-laudiofile
 
 EXTRA_DIST = urls.txt patches $(AUDIOFILE).md5sum $(NXESD).md5sum \
-	$(NXCOMP).md5sum $(LIBPNG).md5sum
+	$(NXCOMP).md5sum $(LIBJPEG).md5sum $(LIBPNG).md5sum
 
 CLEANFILES = -r $(TMPDIST) \
 	$(AUDIOFILE)-$(AUDIOFILE_VERSION) $(AUDIOFILE)-build-$(NX_BTYPE) \

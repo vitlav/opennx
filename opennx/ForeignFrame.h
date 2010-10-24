@@ -26,6 +26,12 @@
 #pragma interface "ForeignFrame.h"
 #endif
 
+/*
+ * Defines canonicalized platform names (e.g. __LINUX__)
+ */
+#include <wx/platform.h>
+
+#ifndef __WXMSW__
 /*!
  * Includes
  */
@@ -131,5 +137,7 @@ private:
 ////@end ForeignFrame member variables
 };
 
+#endif
+    // !__WXMSW__
 #endif
     // _FOREIGNFRAME_H_
