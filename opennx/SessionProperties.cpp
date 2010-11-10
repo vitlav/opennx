@@ -507,7 +507,6 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
             // disable MM, disable checkbox
             m_bEnableMultimedia = false;
             m_pCfg->bSetEnableMultimedia(false);
-            m_pCtrlEnableMultimedia->Enable(false);
         }
 #endif
 #ifdef __UNIX__
@@ -685,6 +684,10 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlCupsPath->Enable(false);
     m_pCtrlCupsBrowse->Enable(false);
 #endif
+#ifdef HAVE_PULSE_PULSEAUDIO_H
+    m_pCtrlEnableMultimedia->Enable(pa.IsAvailable());
+#endif
+
 
     ::wxGetApp().EnableContextHelp(this);
     return TRUE;
