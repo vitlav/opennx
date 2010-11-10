@@ -462,6 +462,9 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     ////@end SessionProperties member initialisation
 
     wxASSERT_MSG(m_pCfg, _T("SessionProperties::Create: No configuration"));
+#ifdef HAVE_PULSE_PULSEAUDIO_H
+    PulseAudio pa;
+#endif
     if (m_pCfg) {
         // variables on 'General' Tab
         m_bRememberPassword = m_pCfg->bGetRememberPassword();
@@ -498,12 +501,11 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
         // variables on 'Services' tab
         m_bEnableSmbSharing = m_pCfg->bGetEnableSmbSharing();
 #ifdef HAVE_PULSE_PULSEAUDIO_H
-        PulseAudio pa;
-        if (pa.IsAvailable())
+        if (pa.IsAvailable()) {
 #endif
             m_bEnableMultimedia = m_pCfg->bGetEnableMultimedia();
 #ifdef HAVE_PULSE_PULSEAUDIO_H
-        else {
+        } else {
             // disable MM, disable checkbox
             m_bEnableMultimedia = false;
             m_pCfg->bSetEnableMultimedia(false);
