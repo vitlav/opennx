@@ -4,7 +4,7 @@
 Summary: An OpenSource NX client
 Name: opennx
 Version: 0.16
-Release: alt10.svn567
+Release: alt11.svn567
 License: LGPL/GPL
 Group: Networking/Remote access
 Url: http://sourceforge.net/projects/opennx
@@ -118,6 +118,9 @@ install -m 644 etc/*.rules %buildroot%_sysconfdir/udev/rules.d
 %endif
 
 %changelog
+* Sat Nov 13 2010 Lenar Shakirov <snejok@altlinux.ru> 0.16-alt11.svn567
+- package nx-desktop.png (closes: #24467)
+
 * Thu Sep 09 2010 Boris Savelev <boris@altlinux.org> 0.16-alt10.svn567
 - update from trunk
 
