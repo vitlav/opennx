@@ -55,11 +55,9 @@ patchedsrc: srcdir version.def
 			patch -p0 < $(srcdir)/patches/$$p ; \
 		fi \
 	done
-	@cp xc/programs/Xserver/hw/xwin/X.ico xc/programs/xkbcomp/
+	@cp $(top_srcdir)/extres/nx.ico xc/programs/Xserver/hw/xwin/X.ico
+	@cp $(top_srcdir)/extres/nx.ico xc/programs/xkbcomp/X.ico
 	@touch $@
-
-version.def: $(srcdir)/version.def
-	@cp $(srcdir)/version.def $@
 
 srcdir: checktarball
 	@rm -rf xc
