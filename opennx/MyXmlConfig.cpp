@@ -1246,22 +1246,19 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                         // Automatic reconnect true
                         m_sCommandLine = getString(opt, wxT("Command line"), m_sCommandLine);
                         tmp = getString(opt,
-                                wxT("Custom Unix desktop"), wxEmptyString);
+                                wxT("Custom Unix Desktop"), wxEmptyString);
                         if (!tmp.IsEmpty()) {
                             if (tmp.CmpNoCase(wxT("application")) == 0) {
                                 m_bRunConsole = false;
                                 m_bRunXclients = false;
-                                continue;
                             }
                             if (tmp.CmpNoCase(wxT("console")) == 0) {
                                 m_bRunConsole = true;
                                 m_bRunXclients = false;
-                                continue;
                             }
                             if (tmp.CmpNoCase(wxT("default")) == 0) {
                                 m_bRunConsole = false;
                                 m_bRunXclients = true;
-                                continue;
                             }
                         }
                         tmp = getString(opt, wxT("Desktop"));
