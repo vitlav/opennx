@@ -42,6 +42,7 @@
 #include <wx/dir.h>
 #include <wx/file.h>
 #include <wx/xml/xml.h>
+#include <wx/cshelp.h>
 
 ////@begin includes
 ////@end includes
@@ -91,6 +92,7 @@ BEGIN_EVENT_TABLE( LoginDialog, wxDialog )
 
     ////@end LoginDialog event table entries
 
+    EVT_MENU(wxID_CONTEXT_HELP, LoginDialog::OnContextHelp)
 #ifdef SINGLE_SESSION
     EVT_TIMER(NXSSH_TIMER, LoginDialog::OnTimer)
 #endif
@@ -130,6 +132,20 @@ LoginDialog::~LoginDialog()
     if (m_pCurrentCfg)
         delete m_pCurrentCfg;
     m_pCurrentCfg = NULL;
+}
+
+void LoginDialog::SetInitialFocus()
+{
+    wxString u(m_pCtrlUsername->GetValue());
+    wxString p(m_pCtrlPassword->GetValue());
+    if (m_pCtrlUsername->GetValue().IsEmpty()) {
+        m_pCtrlUsername->SetFocus();
+    } else {
+        if (m_pCtrlPassword->GetValue().IsEmpty())
+            m_pCtrlPassword->SetFocus();
+        else
+            m_pCtrlLoginButton->SetFocus();
+    }
 }
 
 void LoginDialog::ReadConfigDirectory()
@@ -214,7 +230,7 @@ bool LoginDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
     ////@end LoginDialog member initialisation
 
     ////@begin LoginDialog creation
-    SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
+    SetExtraStyle(wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP);
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));
@@ -224,6 +240,7 @@ bool LoginDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
     }
     Centre();
     ////@end LoginDialog creation
+    ::wxGetApp().EnableContextHelp(this);
     return TRUE;
 }
 
@@ -277,6 +294,11 @@ void LoginDialog::CreateControls()
     m_cNxSshWatchTimer.Start(1000);
     ::myLogTrace(MYTRACETAG, wxT("Starting nxssh watch timer"));
 #endif
+}
+
+void LoginDialog::OnContextHelp(wxCommandEvent &)
+{
+    wxContextHelp contextHelp(this);
 }
 
 /*!
@@ -417,6 +439,7 @@ void LoginDialog::OnComboboxSessionSelected( wxCommandEvent& event )
                 m_pCtrlUsername->SetValue(cfg.sGetUsername());
                 m_pCtrlPassword->Enable(true);
                 m_pCtrlUsername->Enable(true);
+                SetInitialFocus();
             }
             m_pCtrlUseSmartCard->SetValue(::wxGetApp().NxSmartCardSupport() && cfg.bGetUseSmartCard());
         }
@@ -481,7 +504,7 @@ void LoginDialog::OnOkClick(wxCommandEvent& event)
 /*!
  * Handle events from AutoLoginTimer
  */
-void LoginDialog::OnLoginTimer(wxTimerEvent& event)
+void LoginDialog::OnLoginTimer(wxTimerEvent&)
 {
     wxCommandEvent ev(wxEVT_COMMAND_BUTTON_CLICKED, wxID_OK);
     AddPendingEvent(ev);
@@ -491,7 +514,7 @@ void LoginDialog::OnLoginTimer(wxTimerEvent& event)
 /*!
  * Handle events from NxSshWatchTimer
  */
-void LoginDialog::OnTimer(wxTimerEvent& event)
+void LoginDialog::OnTimer(wxTimerEvent&)
 {
     wxArrayString cmdout;
     wxExecute(wxT("ps h -C nxssh"), cmdout, wxEXEC_SYNC|wxEXEC_NODISABLE);

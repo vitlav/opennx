@@ -662,6 +662,7 @@ getx11socket()
 }
 #endif /* !__WXMSW__ */
 
+#ifndef __WXMSW__
 /*
  * Close a foreign X11 window (just like a window-manager would do.
  */
@@ -787,7 +788,8 @@ void close_sid(const char *sid)
     }
 #else
     (void)sid;
-#pragma message(__FILE__ " : warning: Implement reparent_pulldown")
+#pragma message(__FILE__ " : warning: Implement close_sid")
 #endif
 }
 
+#endif /* !__WXMSW__ */

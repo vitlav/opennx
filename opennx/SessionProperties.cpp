@@ -42,13 +42,13 @@
 #include "wx/imaglist.h"
 ////@end includes
 #include <wx/config.h>
-#include <wx/fontdlg.h>
 #include <wx/imaglist.h>
 #include <wx/tokenzr.h>
 #include <wx/wfstream.h>
 #include <wx/txtstrm.h>
 #include <wx/dir.h>
 #include <wx/scopeguard.h>
+#include <wx/cshelp.h>
 
 #include "SessionProperties.h"
 #include "ProxyPropertyDialog.h"
@@ -69,6 +69,7 @@
 #include "LibUSB.h"
 #include "opennxApp.h"
 #include "osdep.h"
+#include "PulseAudio.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -262,7 +263,9 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
     EVT_BUTTON( wxID_APPLY, SessionProperties::OnApplyClick )
 
 ////@end SessionProperties event table entries
-//
+
+    EVT_MENU(wxID_CONTEXT_HELP, SessionProperties::OnContextHelp)
+
 END_EVENT_TABLE()
 
 /*!
@@ -438,6 +441,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlShareAdd = NULL;
     m_pCtrlShareModify = NULL;
     m_pCtrlShareDelete = NULL;
+    m_pCtrlEnableMultimedia = NULL;
     m_pCtrlUsbEnable = NULL;
     m_pCtrlUsbFilter = NULL;
     m_pCtrlUsbAdd = NULL;
@@ -458,6 +462,9 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     ////@end SessionProperties member initialisation
 
     wxASSERT_MSG(m_pCfg, _T("SessionProperties::Create: No configuration"));
+#ifdef HAVE_PULSE_PULSEAUDIO_H
+    PulseAudio pa;
+#endif
     if (m_pCfg) {
         // variables on 'General' Tab
         m_bRememberPassword = m_pCfg->bGetRememberPassword();
@@ -493,7 +500,17 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
 
         // variables on 'Services' tab
         m_bEnableSmbSharing = m_pCfg->bGetEnableSmbSharing();
-        m_bEnableMultimedia = m_pCfg->bGetEnableMultimedia();
+#ifdef HAVE_PULSE_PULSEAUDIO_H
+        if (pa.IsAvailable()) {
+#endif
+            m_bEnableMultimedia = m_pCfg->bGetEnableMultimedia();
+#ifdef HAVE_PULSE_PULSEAUDIO_H
+        } else {
+            // disable MM, disable checkbox
+            m_bEnableMultimedia = false;
+            m_pCfg->bSetEnableMultimedia(false);
+        }
+#endif
 #ifdef __UNIX__
         m_bUseCups = m_pCfg->bGetUseCups();
 #else
@@ -532,7 +549,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
         m_bRememberPassword = false;
 
     ////@begin SessionProperties creation
-    SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS);
+    SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP);
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));
@@ -669,7 +686,18 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlCupsPath->Enable(false);
     m_pCtrlCupsBrowse->Enable(false);
 #endif
+#ifdef HAVE_PULSE_PULSEAUDIO_H
+    m_pCtrlEnableMultimedia->Enable(pa.IsAvailable());
+#endif
+
+
+    ::wxGetApp().EnableContextHelp(this);
     return TRUE;
+}
+
+void SessionProperties::OnContextHelp(wxCommandEvent &)
+{
+    wxContextHelp contextHelp(this);
 }
 
 void SessionProperties::updateListCtrlColumnWidth(wxListCtrl *ctrl)
@@ -941,6 +969,7 @@ void SessionProperties::CreateControls()
     m_pCtrlShareAdd = XRCCTRL(*this, "ID_BUTTON_SMB_ADD", wxButton);
     m_pCtrlShareModify = XRCCTRL(*this, "ID_BUTTON_SMB_MODIFY", wxButton);
     m_pCtrlShareDelete = XRCCTRL(*this, "ID_BUTTON_SMB_DELETE", wxButton);
+    m_pCtrlEnableMultimedia = XRCCTRL(*this, "ID_CHECKBOX_MMEDIA", wxCheckBox);
     m_pCtrlUsbEnable = XRCCTRL(*this, "ID_CHECKBOX_USBENABLE", wxCheckBox);
     m_pCtrlUsbFilter = XRCCTRL(*this, "ID_LISTCTRL_USBFILTER", wxListCtrl);
     m_pCtrlUsbAdd = XRCCTRL(*this, "ID_BUTTON_USBADD", wxButton);
@@ -1081,7 +1110,6 @@ void SessionProperties::CreateControls()
         width = m_pHtmlWindow->GetInternalRepresentation()->GetWidth();
         m_pHtmlWindow->SetSize(width, height);
         m_pHtmlWindow->SetSizeHints(width, height);
-#warning Check geometry on all platforms
         m_pCtrlPanelAbout->Layout();
     }
 }
@@ -1200,22 +1228,6 @@ void SessionProperties::SaveState()
 }
 
 // ====================== Event handlers ===============================
-
-void SessionProperties::OnFocus( wxFocusEvent& event )
-{
-    ::myLogTrace(MYTRACETAG, wxT("wxSpinCtrl lost focus"));
-#if 0
-    event.Skip();
-    // In order to prevent endless recursion, instead of calling
-    // CheckChanged() directly, we use a pending event
-    // (any event that triggers CheckChanged() will do). This event
-    // is then evaluated upon the next event-loop iteration.
-    wxCommandEvent e(wxEVT_COMMAND_SLIDER_UPDATED, XRCID("ID_SLIDER_SPEED"));
-    AddPendingEvent(e);
-#else
-    wxUnusedVar(event);
-#endif
-}
 
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_DSETTINGS
@@ -2212,7 +2224,7 @@ void SessionProperties::OnCheckboxProxyClick( wxCommandEvent& event )
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_PROXYSETTINGS
  */
-void SessionProperties::OnButtonProxysettingsClick( wxCommandEvent& event )
+void SessionProperties::OnButtonProxysettingsClick( wxCommandEvent& )
 {
     ProxyPropertyDialog d(this);
     d.SetSProxyHost(m_sProxyHost);

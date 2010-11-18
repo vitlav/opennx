@@ -88,6 +88,8 @@ private:
     /// Creates the controls and sizers
     void CreateControls();
 
+    void OnContextHelp(wxCommandEvent &);
+
 ////@begin RdpImageSettingsDialog event handler declarations
 
     /// wxEVT_SCROLL_THUMBRELEASE event handler for ID_SLIDER_RDP_COLORS

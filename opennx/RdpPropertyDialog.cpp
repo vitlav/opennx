@@ -41,12 +41,14 @@
 ////@begin includes
 ////@end includes
 
-#include <wx/config.h>
-
 #include "RdpPropertyDialog.h"
 #include "Icon.h"
 #include "MyXmlConfig.h"
 #include "MyValidator.h"
+#include "opennxApp.h"
+
+#include <wx/config.h>
+#include <wx/cshelp.h>
 
 ////@begin XPM images
 ////@end XPM images
@@ -77,6 +79,8 @@ BEGIN_EVENT_TABLE( RdpPropertyDialog, wxDialog )
     EVT_BUTTON( wxID_OK, RdpPropertyDialog::OnOkClick )
 
 ////@end RdpPropertyDialog event table entries
+
+    EVT_MENU(wxID_CONTEXT_HELP, RdpPropertyDialog::OnContextHelp)
 
 END_EVENT_TABLE()
 
@@ -146,7 +150,7 @@ bool RdpPropertyDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
         m_bRememberPassword = false;
 
 ////@begin RdpPropertyDialog creation
-    SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
+    SetExtraStyle(wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP);
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));
@@ -156,6 +160,7 @@ bool RdpPropertyDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     }
     Centre();
 ////@end RdpPropertyDialog creation
+    ::wxGetApp().EnableContextHelp(this);
     return TRUE;
 }
 
@@ -234,6 +239,11 @@ wxIcon RdpPropertyDialog::GetIconResource( const wxString& name )
 {
     // Icon retrieval
     return CreateIconFromFile(name);
+}
+
+void RdpPropertyDialog::OnContextHelp(wxCommandEvent &)
+{
+    wxContextHelp contextHelp(this);
 }
 
 /*!

@@ -1,6 +1,6 @@
 // $Id$
 //
-// Copyright (C) 2010 The OpenNX team
+// Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert
 //
 // This program is free software; you can redistribute it and/or modify
@@ -19,10 +19,28 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
-#define ID_DIALOG_IMAGE_VNC_SYMBOL_0 _("VNC Image Settings - OpenNX")
-#define ID_DIALOG_IMAGE_VNC_SYMBOL_1 _("Use RFB Hextile encoding")
-#define ID_DIALOG_IMAGE_VNC_SYMBOL_2 _("Use RFB Tight encoding")
-#define ID_DIALOG_IMAGE_VNC_SYMBOL_3 _("Enable JPEG encoding")
-#define ID_DIALOG_IMAGE_VNC_SYMBOL_4 _("Use plain X bitmaps")
-#define ID_DIALOG_IMAGE_VNC_SYMBOL_5 _("&OK")
-#define ID_DIALOG_IMAGE_VNC_SYMBOL_6 _("&Cancel")
+#ifndef _PULSETEST_H_
+#define _PULSETEST_H_
+
+#include <wx/intl.h>
+
+class pulseTest: public wxApp
+{    
+    DECLARE_CLASS(pulseTest);
+    DECLARE_EVENT_TABLE()
+
+    public:
+        pulseTest();
+        virtual bool OnInit();
+        virtual void OnInitCmdLine(wxCmdLineParser& parser);
+        virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
+        virtual int OnExit();
+
+    private:
+        wxLocale m_cLocale;
+};
+
+DECLARE_APP(pulseTest)
+
+#endif
+    // _PULSETEST_H_

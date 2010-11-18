@@ -104,7 +104,7 @@ bool UsbFilterDetailsDialog::Create( wxWindow* parent, wxWindowID id, const wxSt
     wxUnusedVar(size);
     wxUnusedVar(style);
     ////@begin UsbFilterDetailsDialog creation
-    SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS);
+    SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP);
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));

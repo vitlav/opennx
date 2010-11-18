@@ -90,6 +90,7 @@ private:
     /// Creates the controls and sizers
     void CreateControls();
 
+    void OnContextHelp(wxCommandEvent &);
 #ifdef SINGLE_SESSION
     // Event handler for events from nxssh watch timer
     void OnTimer(wxTimerEvent& event);
@@ -146,6 +147,7 @@ public:
 
 private:
     void ReadConfigDirectory();
+    void SetInitialFocus();
 
 ////@begin LoginDialog member variables
     wxTextCtrl* m_pCtrlUsername;
@@ -170,7 +172,7 @@ private:
     wxTimer m_cNxSshWatchTimer;
 #endif
     wxTimer m_cAutoLoginTimer;
-    wxArrayString m_aConfigFiles;
+    wxSortedArrayString m_aConfigFiles;
     wxString m_sLastSessionFilename;
 };
 

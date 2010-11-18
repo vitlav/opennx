@@ -67,7 +67,7 @@ BEGIN_EVENT_TABLE( SupressibleMessageDialog, wxDialog )
 
 END_EVENT_TABLE()
 
-int SupressibleMessageDialog::ShowModal(const wxString &msgid, int defaultResult)
+int SupressibleMessageDialog::ShowConditional(const wxString &msgid, int defaultResult)
 {
     wxString cfgname(wxT("SupressedDialogs/"));
     cfgname.Append(msgid);
@@ -144,7 +144,7 @@ SupressibleMessageDialog::SupressibleMessageDialog(wxWindow *parent, const wxStr
  * SupessibleMessageDialog creator
  */
 
-bool SupressibleMessageDialog::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
+bool SupressibleMessageDialog::Create( wxWindow* parent, wxWindowID, const wxString&, const wxPoint&, const wxSize&, long)
 {
     ////@begin SupressibleMessageDialog creation
     SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
@@ -240,7 +240,7 @@ wxIcon SupressibleMessageDialog::GetIconResource( const wxString& name )
 }
 
 
-void SupressibleMessageDialog::OnNoClick( wxCommandEvent& event )
+void SupressibleMessageDialog::OnNoClick( wxCommandEvent& )
 {
     EndModal(wxID_NO);
 }

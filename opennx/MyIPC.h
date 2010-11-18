@@ -43,6 +43,7 @@ public:
     typedef enum {
         ActionNone,
         ActionStatus,
+        ActionHello,
         ActionLog,
         ActionWarning,
         ActionError,
@@ -72,6 +73,7 @@ public:
         ActionSessionListEnd,
         ActionSessionPushLength,
         ActionSessionPushStart,
+        ActionResList,
         ActionTerminated,
         ActionStdout,
         ActionStderr,

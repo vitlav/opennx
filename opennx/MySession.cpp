@@ -52,6 +52,7 @@
 #include "SimpleXauth.h"
 #include "Icon.h"
 #include "SupressibleMessageDialog.h"
+#include "PulseAudio.h"
 
 #include <wx/filename.h>
 #include <wx/regex.h>
@@ -685,6 +686,7 @@ MySession::getXauthPath(tXarch xarch)
 {
     wxFileName fn;
 #ifdef __UNIX__
+    wxUnusedVar(xarch);
     wxString cmd = wxT("xauth info");
     wxArrayString clines;
     if (::wxExecute(cmd, clines) == 0) {
@@ -750,9 +752,13 @@ MySession::OnSshEvent(wxCommandEvent &event)
         case MyIPC::ActionStatus:
             m_pDlg->SetStatusText(msg);
             break;
+        case MyIPC::ActionHello:
+            initversion(msg);
+            m_eConnectState = STATE_HELLO;
+            break;
         case MyIPC::ActionLog:
             m_pDlg->SetProgress(m_iProgress++);
-            if (m_bCollectSessions)
+            if (m_bCollectSessions || m_bCollectResources)
                 m_aParseBuffer.Add(msg);
             if (m_bCollectConfig) {
                 m_sConfigBuffer << msg << wxT("\n");
@@ -775,7 +781,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                 wxString cfgid(wxT("sshwarn."));
                 SupressibleMessageDialog d(m_pParent, msg,
                         _("Warning - OpenNX"), wxOK|wxICON_EXCLAMATION);
-                d.ShowModal(cfgid.Append(msg.Left(15)), wxID_OK);
+                d.ShowConditional(cfgid.Append(msg.Left(15)), wxID_OK);
             }
             break;
         case MyIPC::ActionError:
@@ -787,7 +793,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                 wxString cfgid(wxT("sshyesno."));
                 SupressibleMessageDialog d(m_pParent, msg,
                         _("Warning - OpenNX"), wxYES_NO|wxICON_EXCLAMATION);
-                if (d.ShowModal(cfgid.Append(msg.Left(15)), wxID_YES) == wxID_YES)
+                if (d.ShowConditional(cfgid.Append(msg.Left(15)), wxID_YES) == wxID_YES)
                     printSsh(wxT("yes"));
                 else {
                     printSsh(wxT("no"));
@@ -801,7 +807,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                 msg << _("\nDo you want to delete the key and retry ?");
                 SupressibleMessageDialog d(m_pParent, msg,
                         _("Warning - OpenNX"), wxYES_NO|wxICON_EXCLAMATION);
-                if (d.ShowModal(cfgid.Append(msg.Left(15)), wxID_YES) == wxID_YES)
+                if (d.ShowConditional(cfgid.Append(msg.Left(15)), wxID_YES) == wxID_YES)
                     m_bRemoveKey = true;
                 m_bGotError = true;
             }
@@ -830,7 +836,8 @@ MySession::OnSshEvent(wxCommandEvent &event)
             break;
         case MyIPC::ActionWelcome:
             m_pDlg->SetStatusText(_("Authentication successful"));
-            m_eConnectState = STATE_LIST_SESSIONS;
+            m_eConnectState = (m_lProtocolVersion >= 0x00040000)
+                ? STATE_LIST_RESOURCES : STATE_LIST_SESSIONS;
             break;
         case MyIPC::ActionSessionPushLength:
             // Session file length: 213
@@ -846,6 +853,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
             m_iProgress += 4;
             m_pDlg->SetProgress(m_iProgress);
             switch (m_eConnectState) {
+                case STATE_INIT:
                 case STATE_ABORT:
                     break;
                 case STATE_HELLO:
@@ -864,21 +872,33 @@ MySession::OnSshEvent(wxCommandEvent &event)
                 case STATE_LOGIN:
                     printSsh(wxT("login"));
                     break;
+                case STATE_LIST_RESOURCES:
+                    m_pDlg->SetStatusText(_("Query server-side features"));
+                    printSsh(wxT("resourcelist"));
+                    m_eConnectState = STATE_PARSE_RESOURCES;
+                    m_bNextCmd = false;
+                    break;
+                case STATE_PARSE_RESOURCES:
+                    // Server has sent list of attachable sessions
+                    m_bCollectResources = false;
+                    ::wxLogInfo(wxT("received end of feature list"));
+                    parseResources();
+                    // intentionally fall thru
                 case STATE_LIST_SESSIONS:
                     m_pDlg->SetStatusText(_("Query server-side sessions"));
                     scmd = wxT("listsession") + m_pCfg->sGetListParams(m_lProtocolVersion);
                     printSsh(scmd);
                     m_eConnectState = STATE_PARSE_SESSIONS;
+                    m_bNextCmd = false;
                     break;
                 case STATE_PARSE_SESSIONS:
+                    m_bNextCmd = true;
                     if (m_bIsShadow) {
                         // Server has sent list of attachable sessions
                         m_bCollectSessions = false;
                         ::wxLogInfo(wxT("received end of attachable session list"));
                         parseSessions(false);
-                        break;
                     }
-                    printSsh(wxEmptyString);
                     break;
                 case STATE_START_SESSION:
                     scmd = wxT("startsession");
@@ -1031,21 +1051,34 @@ MySession::OnSshEvent(wxCommandEvent &event)
             ::wxLogInfo(wxT("received end of session list"));
             parseSessions(event.GetExtraLong() == 148);
             break;
+        case MyIPC::ActionResList:
+            // NX4: Server starts sending resource info
+            ::wxLogInfo(wxT("receiving resource info .."));
+            m_aParseBuffer.Empty();
+            m_bCollectResources = true;
+            break;
     }
 }
 
     void
-MySession::initversion()
+MySession::initversion(const wxString &s /* = wxEmptyString */)
 {
     m_lProtocolVersion = 0;
     if (!::wxGetEnv(wxT("NX_PROTOCOL_VERSION"), &m_sProtocolVersion))
         m_sProtocolVersion = wxT(NX_PROTOCOL_VERSION);
+    if (!s.IsEmpty())
+        m_sProtocolVersion = s;
     wxStringTokenizer t(m_sProtocolVersion, wxT("."));
+    int digits = 0;
     while (t.HasMoreTokens()) {
         long n;
         t.GetNextToken().ToLong(&n);
         m_lProtocolVersion = (m_lProtocolVersion << 8) + n;
+        if (++digits > 3)
+            break;
     }
+    while (digits++ < 3)
+        m_lProtocolVersion = (m_lProtocolVersion << 8);
     ::myLogTrace(MYTRACETAG, wxT("protocol version: %08x"), m_lProtocolVersion);
 }
 
@@ -1055,6 +1088,37 @@ MySession::printSsh(const wxString &s, bool doLog /* = true */)
     if (m_pNxSsh) {
         ::myLogTrace(MYTRACETAG, wxT("sending '%s'"), (doLog ? s.c_str() : wxT("********")));
         m_pNxSsh->Print(s, doLog);
+    }
+}
+
+    void
+MySession::parseResources()
+{
+    size_t n = m_aParseBuffer.GetCount();
+    ::myLogTrace(MYTRACETAG, wxT("parseResources: Got %d lines to parse"), n);
+    wxRegEx re(wxT("^((?:session)|(?:service)|(?:feature))\\s+([^\\s]+)(?:\\s+([^\\s]+))?$"), wxRE_ADVANCED);
+    wxASSERT(re.IsValid());
+    for (size_t i = 0; i < n; i++) {
+        wxString line(m_aParseBuffer[i].Strip(wxString::both));
+        if (re.Matches(line) && (4 == re.GetMatchCount())) {
+            if (re.GetMatchCount() == 4) {
+                wxString sClass(re.GetMatch(line, 1));
+                wxString sType(re.GetMatch(line, 2));
+                wxString sValue(re.GetMatch(line, 3));
+                ::myLogTrace(MYTRACETAG, wxT("parseResources: match c='%s' t='%s', v='%s'"),
+                        sClass.c_str(), sType.c_str(), sValue.c_str());
+                if (sClass.IsSameAs(wxT("session"))) {
+                    // Not yet clear what to do with that data.
+                }
+                if (sClass.IsSameAs(wxT("service"))) {
+                    // Not yet clear what to do with that data.
+                }
+                if (sClass.IsSameAs(wxT("feature"))) {
+                    // Not yet clear what to do with that data.
+                }
+            }
+        } else
+            ::myLogTrace(MYTRACETAG, wxT("parseResources: NO match line='%s'"), line.c_str());
     }
 }
 
@@ -1121,6 +1185,7 @@ MySession::parseSessions(bool moreAllowed)
         if (m_bIsShadow || (iSessionCount > 1) || (!sName.IsSameAs(m_pCfg->sGetName()))) {
             switch (d.ShowModal()) {
                 case wxID_OK:
+                    ::myLogTrace(MYTRACETAG, wxT("ResumeDialog returned OK"));
                     switch (d.GetMode()) {
                         case ResumeDialog::Terminate:
                             ::wxLogInfo(wxT("TERMINATE"));
@@ -1134,8 +1199,6 @@ MySession::parseSessions(bool moreAllowed)
                             m_sResumeId = d.GetSelectedId();
                             m_sResumePort = d.GetSelectedPort();
                             m_eConnectState = m_bIsShadow ? STATE_ATTACH_SESSION : STATE_RESUME_SESSION;
-                            if (m_bIsShadow)
-                                printSsh(wxEmptyString);
                             break;
                         case ResumeDialog::Takeover:
                             ::wxLogInfo(wxT("TAKEOVER"));
@@ -1148,8 +1211,14 @@ MySession::parseSessions(bool moreAllowed)
                             m_eConnectState = STATE_START_SESSION;
                             break;
                     }
+                    if (m_bNextCmd) {
+                        wxCommandEvent upevent(wxEVT_NXSSH, wxID_ANY);
+                        upevent.SetInt(MyIPC::ActionNextCommand);
+                        AddPendingEvent(upevent);
+                    }
                     break;
                 case wxID_CANCEL:
+                    ::myLogTrace(MYTRACETAG, wxT("ResumeDialog returned CANCEL"));
                     printSsh(wxT("bye"));
                     if (m_bIsShadow)
                         m_eConnectState = STATE_ABORT;
@@ -1839,7 +1908,9 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
     m_bSessionEstablished = false;
     m_bCollectSessions = false;
     m_bCollectConfig = false;
+    m_bCollectResources = false;
     m_bIsShadow = false;
+    m_bNextCmd = false;
     m_sSessionID = wxEmptyString;
     m_pParent = parent;
     MyXmlConfig cfg(cfgpar.sGetFileName());
@@ -1932,26 +2003,31 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
             nxsshcmd << wxT(" -i ") << cygPath(fn.GetFullPath());
         }
 
-        if (m_pCfg->bGetUseProxy() && (!m_pCfg->sGetProxyHost().IsEmpty())) {
-            // Internal (NoMachine) proxy
-            if (m_pCfg->sGetProxyUser().IsEmpty())
-                nxsshcmd << wxT(" -P ") << m_pCfg->sGetProxyHost() << wxT(":") << m_pCfg->iGetProxyPort();
-            else {
-                wxString proxyPass = m_pCfg->sGetProxyPass();
-                if (!m_pCfg->bGetProxyPassRemember()) {
-                    ProxyPasswordDialog dlg(m_pParent);
-                    if (dlg.ShowModal() == wxID_OK)
-                        proxyPass = dlg.GetPassword();
-                    else
-                        return false;
+        if (m_pCfg->bGetUseProxy()) {
+            if (m_pCfg->bGetExternalProxy()) {
+                if (!m_pCfg->sGetProxyCommand().IsEmpty())
+                    nxsshcmd << wxT(" -o 'ProxyCommand ") << cygPath(m_pCfg->sGetProxyCommand()) << wxT("'");
+            } else {
+
+                if (!m_pCfg->sGetProxyHost().IsEmpty()) {
+                    // Internal (NoMachine) proxy
+                    if (m_pCfg->sGetProxyUser().IsEmpty())
+                        nxsshcmd << wxT(" -P ") << m_pCfg->sGetProxyHost() << wxT(":") << m_pCfg->iGetProxyPort();
+                    else {
+                        wxString proxyPass = m_pCfg->sGetProxyPass();
+                        if (!m_pCfg->bGetProxyPassRemember()) {
+                            ProxyPasswordDialog dlg(m_pParent);
+                            if (dlg.ShowModal() == wxID_OK)
+                                proxyPass = dlg.GetPassword();
+                            else
+                                return false;
+                        }
+                        nxsshcmd << wxT(" -P ") << m_pCfg->sGetProxyUser() << wxT(":") << proxyPass << wxT("@")
+                            << m_pCfg->sGetProxyHost() << wxT(":") << m_pCfg->iGetProxyPort();
+                    }
                 }
-                nxsshcmd << wxT(" -P ") << m_pCfg->sGetProxyUser() << wxT(":") << proxyPass << wxT("@")
-                    << m_pCfg->sGetProxyHost() << wxT(":") << m_pCfg->iGetProxyPort();
             }
         }
-
-        if (m_pCfg->bGetExternalProxy() && (!m_pCfg->sGetProxyCommand().IsEmpty()))
-            nxsshcmd << wxT(" -o 'ProxyCommand ") << cygPath(m_pCfg->sGetProxyCommand()) << wxT("'");
 
         if (m_pCfg->bGetEnableSSL())
             nxsshcmd << wxT(" -B");
@@ -2011,46 +2087,66 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
         dlg.SetStatusText(wxString::Format(_("Connecting to %s ..."),
                     m_pCfg->sGetServerHost().c_str()));
         if (m_pCfg->bGetEnableMultimedia()) {
-            long esdpid = wxConfigBase::Get()->Read(wxT("State/nxesdPID"), -1);
-            m_lEsdPort = wxConfigBase::Get()->Read(wxT("State/nxesdPort"), -1);
-            if ((-1 != esdpid) && (0 < m_lEsdPort))
-                m_bEsdRunning = wxProcess::Exists(esdpid);
-            if ((!dlg.bGetAbort()) && (!m_bEsdRunning)) {
-                dlg.SetStatusText(_("Preparing multimedia service ..."));
-                wxFileName fn(m_sSysDir, wxEmptyString);
-                fn.AppendDir(wxT("bin"));
-                fn.SetName(wxT("nxesd"));
-                wxString esdcmd = fn.GetFullPath();
-                m_lEsdPort = getFirstFreePort(6000);
+            m_bEsdRunning = false;
+            dlg.SetStatusText(_("Preparing multimedia service ..."));
+            PulseAudio pa;
+            if (pa.IsAvailable()) {
+                m_lEsdPort = wxConfigBase::Get()->Read(wxT("State/nxesdPort"), -1);
+                if (m_lEsdPort < 0)
+                    m_lEsdPort = getFirstFreePort(6000);
                 if (0 < m_lEsdPort) {
-                    esdcmd << wxT(" -tcp -nobeeps -bind 127.0.0.1 -spawnfd 1 -port ") << m_lEsdPort;
-                    wxProcess *nxesd = wxProcess::Open(esdcmd,
-                            wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
-                    if (nxesd) {
-                        nxesd->CloseOutput();
-                        wxStopWatch sw;
-                        while (!(dlg.bGetAbort() || nxesd->IsInputAvailable())) {
-                            ::wxGetApp().Yield(true);
-                            wxLog::FlushActive();
-                            // Timeout after 10 sec
-                            if (sw.Time() > 10000)
-                                break;
-                        }
-                        char msg = '\0';
-                        if (nxesd->IsInputAvailable())
-                            nxesd->GetInputStream()->Read(&msg, 1);
-                        long esdpid = nxesd->GetPid();
-                        nxesd->Detach();
-                        if (msg) {
-                            m_bEsdRunning = true;
-                            wxConfigBase::Get()->Write(wxT("State/nxesdPID"), esdpid);
-                            wxConfigBase::Get()->Write(wxT("State/nxesdPort"), m_lEsdPort);
-                        }
+                    if (pa.ActivateEsound(m_lEsdPort)) {
+                        ::wxLogInfo(wxT("using existing pulseaudio"));
+                        m_bEsdRunning = true;
+                        wxConfigBase::Get()->Write(wxT("State/nxesdPort"), m_lEsdPort);
+                        wxConfigBase::Get()->Write(wxT("State/nxesdPID"), -1);
                     }
-                    if (!m_bEsdRunning)
-                        ::wxLogWarning(_("Could not start multimedia support"));
                 } else
                     ::wxLogWarning(_("Could not assign a free port for multimedia support"));
+            }
+            if (!m_bEsdRunning) {
+                // Fallback: original old nxesd
+                long esdpid = wxConfigBase::Get()->Read(wxT("State/nxesdPID"), -1);
+                m_lEsdPort = wxConfigBase::Get()->Read(wxT("State/nxesdPort"), -1);
+                if ((-1 != esdpid) && (0 < m_lEsdPort))
+                    m_bEsdRunning = wxProcess::Exists(esdpid);
+                if ((!dlg.bGetAbort()) && (!m_bEsdRunning)) {
+                    wxFileName fn(m_sSysDir, wxEmptyString);
+                    fn.AppendDir(wxT("bin"));
+                    fn.SetName(wxT("nxesd"));
+                    wxString esdcmd = fn.GetFullPath();
+                    m_lEsdPort = getFirstFreePort(6000);
+                    if (0 < m_lEsdPort) {
+                        esdcmd << wxT(" -tcp -nobeeps -bind 127.0.0.1 -spawnfd 1 -port ") << m_lEsdPort;
+                        ::wxLogInfo(wxT("starting in background: %s"), esdcmd.c_str());
+                        wxProcess *nxesd = wxProcess::Open(esdcmd,
+                                wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
+                        if (nxesd) {
+                            nxesd->CloseOutput();
+                            wxStopWatch sw;
+                            while (!(dlg.bGetAbort() || nxesd->IsInputAvailable())) {
+                                ::wxGetApp().Yield(true);
+                                wxLog::FlushActive();
+                                // Timeout after 10 sec
+                                if (sw.Time() > 10000)
+                                    break;
+                            }
+                            char msg = '\0';
+                            if (nxesd->IsInputAvailable())
+                                nxesd->GetInputStream()->Read(&msg, 1);
+                            long esdpid = nxesd->GetPid();
+                            nxesd->Detach();
+                            if (msg) {
+                                m_bEsdRunning = true;
+                                wxConfigBase::Get()->Write(wxT("State/nxesdPID"), esdpid);
+                                wxConfigBase::Get()->Write(wxT("State/nxesdPort"), m_lEsdPort);
+                            }
+                        }
+                        if (!m_bEsdRunning)
+                            ::wxLogWarning(_("Could not start multimedia support"));
+                    } else
+                        ::wxLogWarning(_("Could not assign a free port for multimedia support"));
+                }
             }
             dlg.SetStatusText(wxString::Format(_("Connecting to %s ..."),
                         m_pCfg->sGetServerHost().c_str()));
@@ -2079,7 +2175,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
             m_sOffendingKey = wxEmptyString;
             if (nxssh.SshProcess(nxsshcmd, fn.GetShortPath(), this)) {
                 m_bGotError = false;
-                m_eConnectState = STATE_HELLO;
+                m_eConnectState = STATE_INIT;
                 while (!(dlg.bGetAbort() || m_bGotError || m_bAbort ||
                             (m_bSessionRunning && m_bSessionEstablished))) {
                     wxLog::FlushActive();

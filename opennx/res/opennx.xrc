@@ -2,7 +2,7 @@
 <resource version="2.3.0.1" xmlns="http://www.wxwidgets.org/wxxrc">
     <object class="wxDialog" name="ID_DIALOG_LOGIN" subclass="LoginDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
-        <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
+        <exstyle>wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP</exstyle>
         <title>Login - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -150,7 +150,7 @@
     </object>
     <object class="wxDialog" name="ID_DIALOG_PROPERTIES" subclass="SessionProperties">
         <style>wxCAPTION|wxSYSTEM_MENU|wxCLOSE_BOX</style>
-        <exstyle>wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS</exstyle>
+        <exstyle>wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP</exstyle>
         <title>Session properties - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -1240,7 +1240,7 @@
     </object>
     <object class="wxDialog" name="ID_DIALOG_SETTINGS_VNC" subclass="VncPropertyDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
-        <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
+        <exstyle>wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP</exstyle>
         <title>VNC Session Settings - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -1383,7 +1383,7 @@ remote VNC server</label>
     </object>
     <object class="wxDialog" name="ID_DIALOG_SETTINGS_RDP" subclass="RdpPropertyDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
-        <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
+        <exstyle>wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP</exstyle>
         <title>RDP Session Settings - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -1587,7 +1587,7 @@ remote VNC server</label>
     </object>
     <object class="wxDialog" name="ID_DIALOG_SETTINGS_X11" subclass="X11PropertyDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
-        <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
+        <exstyle>wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP</exstyle>
         <size>114,75d</size>
         <title>X11 Session Settings - OpenNX</title>
         <centered>1</centered>
@@ -1745,7 +1745,7 @@ remote VNC server</label>
     </object>
     <object class="wxDialog" name="ID_DIALOG_IMAGE_VNC" subclass="VncImageSettingsDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
-        <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
+        <exstyle>wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP</exstyle>
         <title>VNC Image Settings - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -1839,7 +1839,7 @@ remote VNC server</label>
     </object>
     <object class="wxDialog" name="ID_DIALOG_IMAGE_RDP" subclass="RdpImageSettingsDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
-        <exstyle>wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS</exstyle>
+        <exstyle>wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP</exstyle>
         <title>RDP Image Settings - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -2010,7 +2010,7 @@ remote VNC server</label>
     </object>
     <object class="wxDialog" name="ID_DIALOG_IMAGE_X11" subclass="UnixImageSettingsDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
-        <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
+        <exstyle>wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP</exstyle>
         <title>Unix Image Settings - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -2172,7 +2172,7 @@ remote VNC server</label>
     </object>
     <object class="wxDialog" name="ID_DIALOG_SHARE_ADD" subclass="ShareProperties">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
-        <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
+        <exstyle>wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP</exstyle>
         <title>New shared resource - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -2709,7 +2709,7 @@ this share.</label>
         </object>
     </object>
     <object class="wxWizard" name="ID_WIZARD" subclass="MyWizard">
-        <style>wxDEFAULT_DIALOG_STYLE|wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
+        <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
         <title>Connection Wizard - OpenNX</title>
         <bitmap>memory:memrsc#zip:res/wizard.png</bitmap>
@@ -3308,7 +3308,7 @@ this share.</label>
     </object>
     <object class="wxDialog" name="ID_KEYDIALOG" subclass="KeyDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
-        <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
+        <exstyle>wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP</exstyle>
         <title>Key Management - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -3608,7 +3608,7 @@ this share.</label>
     </object>
     <object class="wxDialog" name="ID_USBFILTERDETAILSDIALOG" subclass="UsbFilterDetailsDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxTAB_TRAVERSAL</style>
-        <exstyle>wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS</exstyle>
+        <exstyle>wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP</exstyle>
         <title>USB Filter Details - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -3888,7 +3888,7 @@ enter the filter specification directly.</label>
     </object>
     <object class="wxDialog" name="ID_PROXYPROPERTYDIALOG" subclass="ProxyPropertyDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxTAB_TRAVERSAL</style>
-        <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
+        <exstyle>wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP</exstyle>
         <title>Proxy settings</title>
         <centered>1</centered>
         <object class="wxBoxSizer">

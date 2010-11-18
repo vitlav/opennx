@@ -38,13 +38,15 @@
 #include "wx/wx.h"
 #endif
 
-#include <wx/config.h>
-
 ////@begin includes
 ////@end includes
 
 #include "KeyDialog.h"
 #include "Icon.h"
+#include "opennxApp.h"
+
+#include <wx/config.h>
+#include <wx/cshelp.h>
 
 ////@begin XPM images
 ////@end XPM images
@@ -72,6 +74,8 @@ BEGIN_EVENT_TABLE( KeyDialog, wxDialog )
 
 ////@end KeyDialog event table entries
 
+    EVT_MENU(wxID_CONTEXT_HELP, KeyDialog::OnContextHelp)
+
 END_EVENT_TABLE()
 
 /*!
@@ -96,7 +100,7 @@ KeyDialog::KeyDialog( wxWindow* parent, wxWindowID id, const wxString& caption, 
 bool KeyDialog::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
 ////@begin KeyDialog creation
-    SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
+    SetExtraStyle(wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP);
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));
@@ -111,6 +115,7 @@ bool KeyDialog::Create( wxWindow* parent, wxWindowID id, const wxString& caption
     wxUnusedVar(pos);
     wxUnusedVar(caption);
     wxUnusedVar(id);
+    ::wxGetApp().EnableContextHelp(this);
     return true;
 }
 
@@ -121,7 +126,7 @@ bool KeyDialog::Create( wxWindow* parent, wxWindowID id, const wxString& caption
 void KeyDialog::Init()
 {
 ////@begin KeyDialog member initialisation
-    m_sSshKey = wxEmptyString;
+    m_sSshKey = wxT("");
     m_pCtrlSshKey = NULL;
     m_pCtrlSave = NULL;
 ////@end KeyDialog member initialisation
@@ -181,6 +186,11 @@ wxIcon KeyDialog::GetIconResource( const wxString& name )
 void KeyDialog::CheckChanged()
 {
     m_pCtrlSave->Enable(m_pCtrlSshKey->GetValue() != m_sSshKey);
+}
+
+void KeyDialog::OnContextHelp(wxCommandEvent &)
+{
+    wxContextHelp contextHelp(this);
 }
 
 /*!

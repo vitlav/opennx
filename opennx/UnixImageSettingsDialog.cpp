@@ -40,6 +40,9 @@
 #include "UnixImageSettingsDialog.h"
 #include "MyXmlConfig.h"
 #include "Icon.h"
+#include "opennxApp.h"
+
+#include <wx/cshelp.h>
 
 ////@begin XPM images
 ////@end XPM images
@@ -60,6 +63,8 @@ BEGIN_EVENT_TABLE( UnixImageSettingsDialog, wxDialog )
     EVT_BUTTON( wxID_OK, UnixImageSettingsDialog::OnOKClick )
 
 ////@end UnixImageSettingsDialog event table entries
+
+    EVT_MENU(wxID_CONTEXT_HELP, UnixImageSettingsDialog::OnContextHelp)
 
 END_EVENT_TABLE()
 
@@ -109,7 +114,7 @@ bool UnixImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id),
     }
 
 ////@begin UnixImageSettingsDialog creation
-    SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
+    SetExtraStyle(wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP);
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));
@@ -119,6 +124,7 @@ bool UnixImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id),
     }
     Centre();
 ////@end UnixImageSettingsDialog creation
+    ::wxGetApp().EnableContextHelp(this);
     return TRUE;
 }
 
@@ -189,6 +195,11 @@ wxIcon UnixImageSettingsDialog::GetIconResource( const wxString& name )
 {
     // Icon retrieval
     return CreateIconFromFile(name);
+}
+
+void UnixImageSettingsDialog::OnContextHelp(wxCommandEvent &)
+{
+    wxContextHelp contextHelp(this);
 }
 
 /*!

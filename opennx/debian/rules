@@ -33,6 +33,18 @@ endif
 ifneq "$(wildcard /usr/share/misc/config.guess)" ""
 	cp -f /usr/share/misc/config.guess config.guess
 endif
+	chmod a+x \
+		configure nxssh/configure nxssh/mkinstalldirs nxssh/opensshd.init.in \
+		nxssh/install-sh nxssh/config.sub nxssh/fixpaths nxssh/fixprogs \
+		nxssh/config.guess nxssh/regress/runtests.sh \
+		nxssh/contrib/aix/buildbff.sh nxssh/contrib/aix/inventory.sh \
+		nxssh/contrib/redhat/sshd.init.old nxssh/contrib/redhat/sshd.init \
+		nxssh/contrib/caldera/ssh-host-keygen nxssh/contrib/caldera/sshd.init \
+		nxproxy/configure nxproxy/mkinstalldirs nxproxy/install-sh \
+		nxesd/nxesddsp.in nxesd/configure nxesd/missing nxesd/depcomp \
+		nxesd/compile nxesd/install-sh nxesd/test-script nxesd/config.sub \
+		nxesd/esddsp.in nxesd/config.guess nxcomp/configure \
+		nxcomp/mkinstalldirs nxcomp/install-sh
 	./configure $(CROSS) --prefix=$(prefix) --datarootdir=/usr/share/opennx
 	cd nxcomp && ./configure --prefix=$(prefix)
 	cd nxesd && ./configure --prefix=$(prefix)

@@ -7,6 +7,14 @@ AC_CONFIG_AUX_DIR([conf])
 AC_CONFIG_SRCDIR([opennxApp.cpp])
 AC_CONFIG_HEADERS([config.h])
 AC_CANONICAL_TARGET
+preferred_cc="gcc cc"
+preferred_cxx="g++ c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC"
+case $target_os in
+    darwin10*)
+	preferred_cc="gcc-4.0 $preferred_cc"
+	preferred_cxx="g++-4.0 $preferred_cxx"
+	;;
+esac
 AM_INIT_AUTOMAKE([foreign no-installinfo no-installman])
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
@@ -45,38 +53,41 @@ esac
 AC_SUBST(PLATFORM_SUBDIRS)
 
 # Checks for programs.
+AC_PROG_CXX([$preferred_cxx])
+AC_PROG_CC([$preferred_cc])
 AC_DISABLE_SHARED
 AC_PROG_LIBTOOL
-AC_PROG_CXX
-AC_PROG_CC
 AC_PROG_LN_S
 dnl AM_GNU_GETTEXT_VERSION(0.14.5)
 AM_GNU_GETTEXT([external])
 dnl We use objdump on the MinGW target for the
 dnl findrequires.pl script
-AC_CHECK_TARGET_TOOL([OBJDUMP],[objdump],[
-    case $target_os in
-        mingw*)
-            AC_MSG_ERROR([Could not find required tool 'objdump'])
-            ;;
-    esac
-])
+AC_CHECK_TARGET_TOOL([OBJDUMP],[objdump],[no])
+case ${OBJDUMP}-${target_os} in
+    no-mingw*)
+        AC_MSG_ERROR([Could not find required tool 'objdump'])
+        ;;
+esac
 AC_ARG_VAR([OBJDUMP],[Path to objdump binary. (required for win32 builds only)])
 dnl For the same reason (and for building Xming), we require perl
-AC_CHECK_TOOL([PERL],[perl],[
-    case $target_os in
-        mingw*)
-            AC_MSG_ERROR([Could not find required tool 'perl'])
-            ;;
-    esac
-])
-AC_CHECK_TOOL([WGET],[wget],[
-    case $target_os in
-        mingw*|darwin*)
+AC_CHECK_TOOL([PERL],[perl],[no])
+case ${PERL}-${target_os} in
+    no-mingw*)
+        AC_MSG_ERROR([Could not find required tool 'perl'])
+        ;;
+esac
+AC_CHECK_TOOL([WGET],[wget],[no])
+AC_CHECK_TOOL([CURL],[curl],[no])
+if test "$WGET" = "no" -a "$CURL" = "no" ; then
+    case ${WGET}-${CURL}-${target_os} in
+        no-*-mingw*)
             AC_MSG_ERROR([Could not find required tool 'wget'])
             ;;
+        no-no-darwin*)
+            AC_MSG_ERROR([Could not find required tool 'wget' or 'curl'])
+            ;;
     esac
-])
+fi
 AC_ARG_VAR([PERL],[Path to perl binary. (required for win32 builds only)])
 AC_CHECK_TOOL([ZIP],[zip],[AC_MSG_ERROR([Could not find required tool 'zip'])])
 AC_ARG_VAR([ZIP],[Path to zip binary.])
@@ -103,7 +114,7 @@ AC_CHECK_LIB(resolv,res_init,[RESLIB=-lresolv],[
 AC_SUBST(RESLIB)
 
 # Checks for header files.
-AC_CHECK_HEADERS([arpa/inet.h limits.h netinet/in.h sys/types.h sys/socket.h syslog.h])
+AC_CHECK_HEADERS([arpa/inet.h limits.h netinet/in.h sys/types.h sys/socket.h syslog.h pulse/pulseaudio.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
@@ -172,6 +183,7 @@ else
 fi
 
 ac_cv_enable_staticwx=NO
+STATIC_LOCAL_INSTALLDATA_TARGET=
 AC_ARG_ENABLE([staticwx],
 	AS_HELP_STRING([--enable-staticwx],
 		[Link against static wxWidgets libs (Default: NO)]),
@@ -180,10 +192,12 @@ AC_ARG_ENABLE([staticwx],
 if test "$ac_cv_enable_staticwx" = "YES" ; then
     AC_MSG_NOTICE([will link against static wxWidgets libs])
     WXPARAMS="$WXPARAMS --static=yes"
+    STATIC_LOCAL_INSTALLDATA_TARGET=install-wxstdmo-local
 else
     AC_MSG_NOTICE([will link against shared wxWidgets libs])
     WXPARAMS="$WXPARAMS --static=no"
 fi
+AC_SUBST(STATIC_LOCAL_INSTALLDATA_TARGET)
 
 case $target_os in
     mingw*)

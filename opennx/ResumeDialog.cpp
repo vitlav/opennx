@@ -259,36 +259,33 @@ void ResumeDialog::OnListctrlSessionsSelected( wxListEvent& event )
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_TAKEOVER
  */
 
-void ResumeDialog::OnButtonTakeoverClick( wxCommandEvent& event )
+void ResumeDialog::OnButtonTakeoverClick( wxCommandEvent& )
 {
     m_eMode = Takeover;
     EndModal(wxID_OK);
-    event.Skip();
 }
 
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_RESUME
  */
 
-void ResumeDialog::OnButtonResumeClick( wxCommandEvent& event )
+void ResumeDialog::OnButtonResumeClick( wxCommandEvent& )
 {
     m_eMode = Resume;
     EndModal(wxID_OK);
-    event.Skip();
 }
 
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_TERMINATE
  */
 
-void ResumeDialog::OnButtonTerminateClick( wxCommandEvent& event )
+void ResumeDialog::OnButtonTerminateClick( wxCommandEvent& )
 {
     if (wxYES != ::wxMessageBox(_("Do you really want to terminate the selected session?"),
                 _("Terminate session - OpenNX"), wxYES_NO|wxICON_QUESTION, this))
         return;
     m_eMode = Terminate;
     EndModal(wxID_OK);
-    event.Skip();
 }
 
 /*!

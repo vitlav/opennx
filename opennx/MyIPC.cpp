@@ -240,6 +240,12 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
                             }
                             break;
                         }
+                        if (msg.StartsWith(wxT("HELLO NXSERVER - Version "))) {
+                            upevent.SetString(msg.Mid(25).BeforeFirst(wxT(' ')).Strip(wxString::both));
+                            upevent.SetInt(ActionHello);
+                            m_pEvtHandler->AddPendingEvent(upevent);
+                            break;
+                        }
                         if (msg.StartsWith(wxT("Warning: the RSA host key"))) {
                             m_sOutMessage = msg;
                             m_iOutCollect = 4;
@@ -270,6 +276,11 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
                     case 103:
                         // Welcome message
                         upevent.SetInt(ActionWelcome);
+                        m_pEvtHandler->AddPendingEvent(upevent);
+                        break;
+                    case 104:
+                        // NX4 resource list
+                        upevent.SetInt(ActionResList);
                         m_pEvtHandler->AddPendingEvent(upevent);
                         break;
                     case 105:
@@ -375,6 +386,17 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
                         // The authenticity of host ... can't be verified ... (multiline message)
                         m_iOutCollect = 2;
                         m_sOutMessage = msg.Mid(8);
+                        break;
+                    case 250:
+                        // NX4 request username or password
+                        if (msg.Find(wxT("login required")) != wxNOT_FOUND) {
+                            upevent.SetInt(ActionSendUsername);
+                            m_pEvtHandler->AddPendingEvent(upevent);
+                        }
+                        if (msg.Find(wxT("password required")) != wxNOT_FOUND) {
+                            upevent.SetInt(ActionSendPassword);
+                            m_pEvtHandler->AddPendingEvent(upevent);
+                        }
                         break;
                     case 280:
                     case 282:
@@ -503,11 +525,13 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
                         m_pEvtHandler->AddPendingEvent(upevent);
                         break;
                     case 708:
+                        // Subscription
                         upevent.SetString(msg.AfterFirst(wxT(':')).Strip(wxString::both));
                         upevent.SetInt(ActionSetSubscription);
                         m_pEvtHandler->AddPendingEvent(upevent);
                         break;
                     case 709:
+                        // SMB Port
                         upevent.SetString(msg.AfterFirst(wxT(':')).Strip(wxString::both));
                         upevent.SetInt(ActionSetSmbPort);
                         m_pEvtHandler->AddPendingEvent(upevent);
@@ -636,6 +660,7 @@ MyIPC::OnErrReceived(wxCommandEvent &event)
                             break;
                         }
                         if (msg.Contains(wxT("Connection refused")) ||
+                                msg.Contains(wxT("onnection closed")) ||
                                 msg.Contains(wxT("no address associated")) ||
                                 msg.Contains(wxT("failed with error")) ||
                                 msg.Contains(wxT("Smartcard init failed")) ||

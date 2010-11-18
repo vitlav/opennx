@@ -55,6 +55,7 @@
 #include <wx/socket.h>
 #include <wx/regex.h>
 #include <wx/dir.h>
+#include <wx/cshelp.h>
 
 #include "opennxApp.h"
 #include "SessionAdmin.h"
@@ -193,6 +194,18 @@ opennxApp::~opennxApp()
         delete m_pCfg;
     if (m_pSessionCfg)
         delete m_pSessionCfg;
+}
+
+void
+opennxApp::EnableContextHelp(wxWindow *w)
+{
+    if (NULL == w)
+        return;
+    wxAcceleratorEntry entries[1];
+    entries[0].Set(wxACCEL_SHIFT, WXK_F1, wxID_CONTEXT_HELP);
+    wxAcceleratorTable accel(1, entries);
+    w->SetAcceleratorTable(accel);
+    w->SetFocus();
 }
 
     wxString
@@ -503,6 +516,35 @@ opennxApp::preInit()
     setUserDir();
     if (!setSelfPath())
         return false;
+
+    wxString appver;
+    wxString thisver(wxT(PACKAGE_VERSION));
+    thisver.Append(wxT(".")).Append(wxT(SVNREV));
+    wxConfigBase::Get()->Read(wxT("Config/CurrentVersion"), &appver, thisver);
+    if (!thisver.IsSameAs(appver)) {
+        wxFileName fn(GetSelfPath());
+        if (fn.GetDirs().Last().IsSameAs(wxT("bin")))
+            fn.RemoveLastDir();
+        fn.SetFullName(wxEmptyString);
+        wxString thissysdir = fn.GetFullPath();
+        wxString rest;
+        wxString sep = wxFileName::GetPathSeparator();
+        if (thissysdir.EndsWith(sep, &rest))
+            thissysdir = rest;
+        wxString cfgsysdir;
+        if (wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &cfgsysdir)) {
+            if (!thissysdir.IsSameAs(cfgsysdir)) {
+                wxString msg(wxString::Format(_("Your System NX directory setting (%s)\nappears to be incorrect.\nDo you want to change it to the correct default value\n(%s)?"), cfgsysdir.c_str(), thissysdir.c_str()));
+                int response = wxMessageBox(msg, _("Update System NX directory? - OpenNX"), wxYES_NO|wxICON_QUESTION);
+                if (wxYES == response) {
+                    wxConfigBase::Get()->Write(wxT("Config/SystemNxDir"), thissysdir);
+                    wxConfigBase::Get()->Flush();
+                }
+            }
+        }
+    }
+    wxConfigBase::Get()->Write(wxT("Config/CurrentVersion"), thisver);
+    wxConfigBase::Get()->Flush();
 
     wxString tmp;
     if (!wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp)) {
@@ -888,6 +930,7 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
                 // quit (Button: Quit, no signals)
                 m_eMode = MODE_DIALOG_QUIT;
                 return true;
+#ifndef __WXMSW__
             case 5:
                 // pulldown (a toolbar, docked to top-center of wID),
                 // timing out after ~ 6sec. The toolbar has 3 buttons:
@@ -900,6 +943,10 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
                 }
                 m_eMode = MODE_FOREIGN_TOOLBAR;
                 return true;
+#else
+                OnCmdLineError(parser);
+                return false;
+#endif
             case 6:
                 // yesnosuspend (Buttons: Suspend, Terminate and Cancel,
                 // Terminate sends SIGTERM to pPID, Suspend sends SIGHUP to real ppid)
@@ -957,6 +1004,8 @@ bool opennxApp::realInit()
 #ifdef __WXMAC__
     wxFileName::MacRegisterDefaultTypeAndCreator(wxT("nxs"), 'TEXT', 'OPNX');
 #endif
+
+    wxHelpProvider::Set(new wxSimpleHelpProvider);
 
     wxFileSystem::AddHandler(new wxZipFSHandler);
     wxFileSystem::AddHandler(new wxMemoryFSHandler);
@@ -1064,6 +1113,7 @@ bool opennxApp::realInit()
                 return false;
             }
             break;
+#ifndef __WXMSW__
         case MODE_FOREIGN_TOOLBAR:
             {
                 ForeignFrame *ff = new ForeignFrame(NULL);
@@ -1077,6 +1127,7 @@ bool opennxApp::realInit()
                 SetTopWindow(ff);
                 return true;
             }
+#endif
             break;
         case MODE_ADMIN:
             {
@@ -1110,9 +1161,7 @@ bool opennxApp::realInit()
     }
     if ((m_eMode == MODE_CLIENT) && m_sSessionName.IsEmpty()) {
         if (!wxConfigBase::Get()->Read(wxT("Config/LastSession"), &m_sSessionName)) {
-#ifdef __WXMAC__
-            // On MacOSX we might get called via MacOpenFile,
-            // so only run the wizard if there a no session config files.
+            // Only run the wizard if there a no session config files.
             wxString cfgdir;
             wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &cfgdir);
             cfgdir = cfgdir + wxFileName::GetPathSeparator() + wxT("config");
@@ -1120,9 +1169,6 @@ bool opennxApp::realInit()
             wxDir::GetAllFiles(cfgdir, &a, wxT("*.nxs"), wxDIR_FILES);
             if (0 == a.GetCount())
                 m_eMode = MODE_WIZARD;
-#else
-            m_eMode = MODE_WIZARD;
-#endif
         }
     } else {
         if (!m_sSessionName.IsEmpty()) {
@@ -1274,6 +1320,7 @@ bool opennxApp::OnInit()
  */
 int opennxApp::OnExit()
 {
+    delete wxHelpProvider::Set(NULL);
     {
         wxLogNull lognull;
         wxMemoryFSHandler::RemoveFile(wxT("memrsc"));

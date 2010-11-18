@@ -4,7 +4,7 @@ ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = po $(PLATFORM_SUBDIRS)
 DIST_SUBDIRS = po packaging/win32 packaging/MacOSX
 
-noinst_PROGRAMS = bin2hdr $(TESTXAUTH) $(MACTESTKBD)
+noinst_PROGRAMS = bin2hdr pulsetest $(TESTXAUTH) $(MACTESTKBD)
 
 bin2hdr_SOURCES = bin2hdr.cpp
 
@@ -20,11 +20,12 @@ opennx_SOURCES = AboutDialog.cpp AsyncProcess.cpp LibOpenSC.cpp \
 	ForeignFrame.cpp Icon.cpp LogDialog.cpp KeyDialog.cpp LibUSB.cpp \
 	LoginDialog.cpp mylog.cpp md5.c MyIPC.cpp MyDynlib.cpp MySession.cpp \
 	MyValidator.cpp MyWizard.cpp MyXmlConfig.cpp opennxApp.cpp \
-	osdep.c PanicDialog.cpp pwcrypt.cpp ProxyPasswordDialog.cpp QuitDialog.cpp \
-	RdpImageSettingsDialog.cpp RdpPropertyDialog.cpp ResumeDialog.cpp \
-	ProxyPropertyDialog.cpp SessionAdmin.cpp SessionList.cpp \
-	SessionProperties.cpp SimpleXauth.cpp ShareProperties.cpp \
-	TextViewer.cpp UnixImageSettingsDialog.cpp UsbFilterDetailsDialog.cpp \
+	osdep.c PanicDialog.cpp pwcrypt.cpp ProxyPasswordDialog.cpp \
+	PulseAudio.cpp QuitDialog.cpp RdpImageSettingsDialog.cpp \
+	RdpPropertyDialog.cpp ResumeDialog.cpp ProxyPropertyDialog.cpp \
+	SessionAdmin.cpp SessionList.cpp SessionProperties.cpp \
+	SimpleXauth.cpp ShareProperties.cpp TextViewer.cpp \
+	UnixImageSettingsDialog.cpp UsbFilterDetailsDialog.cpp \
 	UsbIp.cpp VncImageSettingsDialog.cpp VncPropertyDialog.cpp \
 	wxprec.cpp WinShare.cpp X11PropertyDialog.cpp xh_richtext.cpp \
 	MacOSX.c WrappedStatic.cpp SupressibleMessageDialog.cpp
@@ -37,10 +38,11 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	LibUSB.h LogDialog.h LogDialog_symbols.h LoginDialog.h mylog.h \
 	LoginDialog_symbols.h md5.h memres.h MyIPC.h MyDynlib.h MySession.h \
 	MyValidator.h MyWizard.h MyWizard_symbols.h MyXmlConfig.h opennxApp.h \
-	osdep.h  PanicDialog.h PanicDialog_symbols.h pwcrypt.h QuitDialog.h \
-	QuitDialog_symbols.h ProxyPasswordDialog.h ProxyPasswordDialog_symbols.h \
-	ProxyPropertyDialog.h ProxyPropertyDialog_symbols.h \
-	RdpImageSettingsDialog.h RdpImageSettingsDialog_symbols.h RdpPropertyDialog.h \
+	osdep.h  PanicDialog.h PanicDialog_symbols.h PulseAudio.h pwcrypt.h \
+	QuitDialog.h QuitDialog_symbols.h ProxyPasswordDialog.h \
+	ProxyPasswordDialog_symbols.h ProxyPropertyDialog.h pulseTest.h \
+	ProxyPropertyDialog_symbols.h RdpImageSettingsDialog.h \
+	RdpImageSettingsDialog_symbols.h RdpPropertyDialog.h \
 	RdpPropertyDialog_symbols.h ResumeDialog.h ResumeDialog_symbols.h \
 	SessionAdmin.h SessionAdmin_symbols.h SessionList.h SimpleXauth.h \
 	SessionProperties.h SessionProperties_symbols.h ShareProperties.h \
@@ -56,6 +58,13 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 
 pconnect_SOURCES = pconnect.c
 pconnect_LDADD = $(WS2LIB) $(RESLIB)
+
+pulsetest_SOURCES = pulseTest.cpp PulseAudio.cpp MyDynlib.cpp mylog.cpp
+pulsetest_LDADD = $(WX_LIBS)
+pulsetest_CPPFLAGS = $(WX_CPPFLAGS) -DAPP_PULSETEST
+pulsetest_CXXFLAGS = $(WX_CXXFLAGS)
+pulsetest_CFLAGS = $(WX_CFLAGS)
+
 
 testxauth_SOURCES = testxauth.cpp SimpleXauth.cpp pwcrypt.cpp md5.c
 testxauth_LDADD = $(WX_LIBS)
@@ -167,6 +176,14 @@ clean-local:
 distclean-local:
 	rm -f po/stamp-po
 
+install-wxstdmo-local:
+	for lang in $(shell cat $(top_srcdir)/po/LINGUAS) ; do \
+		$(INSTALL_DATA) $(WX_PREFIX)/share/locale/$$lang/LC_MESSAGES/wxstd.mo \
+			$(DESTDIR)$(localedir)/$$lang/LC_MESSAGES/ ; \
+	done
+
+install-data-local: $(STATIC_LOCAL_INSTALLDATA_TARGET)
+
 RESDEPS = $(wildcard $(srcdir)/res/*.xrc $(srcdir)/res/*.png \
 		  $(srcdir)/res/*.html $(srcdir)/res/*.xml)
 RESSRC = $(subst $(srcdir)/,,$(RESDEPS))
@@ -195,11 +212,12 @@ CLEANFILES = memres.h tmpres.zip *~ po/*~ *.bak *~ \#.* .\#* OpenNX.app
 MAINTAINERCLEANFILES = ABOUT-NLS Makefile.in configure aclocal.m4 \
 	conf/config.guess conf/config.sub conf/depcomp conf/install-sh \
 	conf/missing conf/mkinstalldirs conf/ltmain.sh conf/config.rpath \
-	m4/*~ m4/gettext.m4 m4/iconv.m4 m4/lib-*.m4 m4/nls.m4 m4/po.m4 \
-	m4/progtest.m4 po/*.sin po/*.sed po/*.header po/Rules-quot \
+	m4/[cgilnpuwx]*.m4 m4/s[it]*.m4 po/*.sin po/*.sed po/*.header po/Rules-quot \
 	po/*.template po/Makefile*.in
 
-DISTCLEANFILES = res/*.prv.*
+DISTCLEANFILES = mingw32-config.cache res/*.prv.*
+
+man_MANS = man/pconnect.1
 
 data_DATA = share/keyboards
 
@@ -257,16 +275,26 @@ dist-hook:
 	find $(distdir) -type d -name .svn | xargs $(RM) -r
 
 # Platform specific special targets
-deb: distcheck
+debprep: distcheck
 	tar xfz $(PACKAGE)-$(VERSION).tar.gz
 	cd $(PACKAGE)-$(VERSION) && ./getnxsrcpkg nxesd nxcomp nxproxy nxssh
 	cd $(PACKAGE)-$(VERSION) && tar xzf nxesd-*.tar.gz
 	cd $(PACKAGE)-$(VERSION) && tar xzf nxcomp-*.tar.gz
 	cd $(PACKAGE)-$(VERSION) && tar xzf nxproxy-*.tar.gz
 	cd $(PACKAGE)-$(VERSION) && tar xzf nxssh-*.tar.gz
-	cd $(PACKAGE)-$(VERSION) && rm -f *.tar.gz
+	$(RM) $(PACKAGE)-$(VERSION)/*.tar.gz
+	$(RM) $(PACKAGE)-$(VERSION)/nxesd/test.wav
+	$(RM) $(PACKAGE)-$(VERSION)/nxssh/scard/Ssh.bin
 	cd $(PACKAGE)-$(VERSION) && perl debian/mkchangelog.pl $(VERSION) \
 		< ChangeLog > debian/changelog
+
+# Create debian source package
+debsrc: debprep
+	ln -snf $(PACKAGE)-$(VERSION).tar.gz $(PACKAGE)_$(VERSION).orig.tar.gz
+	dpkg-source -b -sP $(PACKAGE)-$(VERSION) $(PACKAGE)_$(VERSION).orig.tar.gz
+	echo "Debtransform-Tar: $(PACKAGE)_$(VERSION).orig.tar.gz" >> $(PACKAGE)_$(VERSION)-$(SVNREV).dsc
+
+deb: debprep
 	cd $(PACKAGE)-$(VERSION) && dpkg-buildpackage -us -uc
 	lintian -i $(PACKAGE)_$(VERSION).$(SVNREV)_*.changes
 	$(RM) -r $(PACKAGE)-$(VERSION)
@@ -286,8 +314,8 @@ unknown:
 
 dist-platform: $(PLATFORMDIST)
 
-EXTRA_DIST = conf/mkinstalldirs conf/config.rpath conf/authors.xml \
+EXTRA_DIST = conf/mkinstalldirs  conf/mkinstalldirs  conf/mkinstalldirs  conf/mkinstalldirs  conf/mkinstalldirs  conf/mkinstalldirs conf/config.rpath conf/authors.xml \
 	INSTALL INSTALL.generic COPYING share etc/60-opennx.rules \
 	opennx.pjd opennx.rc tracelog.rc watchreader.rc \
 	opennx.spec patches getnxsrcpkg $(RESDEPS) ChangeLog extres debian \
-	$(wildcard m4/*.m4)
+	$(wildcard m4/*.m4) $(man_MANS)

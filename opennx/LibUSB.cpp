@@ -135,6 +135,10 @@ void USB::adddev(MyDynamicLibrary *dll, struct usb_device *dev, unsigned char dc
     d.m_iDevNum = dev->devnum;
     m_aDevices.Add(d);
     pfnusb_close(udev);
+#else
+    wxUnusedVar(dll);
+    wxUnusedVar(dev);
+    wxUnusedVar(dclass);
 #endif
 }
 
@@ -172,6 +176,8 @@ void USB::usbscan(MyDynamicLibrary *dll)
                 adddev(dll, dev, devclass);
         }
     }
+#else
+    wxUnusedVar(dll);
 #endif
 }
 
