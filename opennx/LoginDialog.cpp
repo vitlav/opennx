@@ -136,15 +136,18 @@ LoginDialog::~LoginDialog()
 
 void LoginDialog::SetInitialFocus()
 {
-    wxString u(m_pCtrlUsername->GetValue());
-    wxString p(m_pCtrlPassword->GetValue());
     if (m_pCtrlUsername->GetValue().IsEmpty()) {
         m_pCtrlUsername->SetFocus();
+        ::myLogTrace(MYTRACETAG, wxT("set initial focus on user name"));
     } else {
-        if (m_pCtrlPassword->GetValue().IsEmpty())
+        wxString p = m_pCtrlPassword->GetValue();
+        if (p.IsEmpty() || p.IsSameAs(wxT("\010\010\010\010\010\010\010\010\010\010\010\010\010\010\010\010"))) {
             m_pCtrlPassword->SetFocus();
-        else
+            ::myLogTrace(MYTRACETAG, wxT("set initial focus on password"));
+        } else {
             m_pCtrlLoginButton->SetFocus();
+            ::myLogTrace(MYTRACETAG, wxT("set initial focus on login button"));
+        }
     }
 }
 
@@ -191,10 +194,12 @@ void LoginDialog::ReadConfigDirectory()
         }
     }
     if (m_pCurrentCfg) {
+        ::myLogTrace(MYTRACETAG, wxT("SS1='%s'"), m_sSessionName.c_str());
         m_pCtrlSessionName->SetStringSelection(m_sSessionName);
         wxCommandEvent event;
         OnComboboxSessionSelected(event);
     } else {
+        ::myLogTrace(MYTRACETAG, wxT("SS2='%s'"), m_sLastSessionFilename.c_str());
         // Last session name might be a plain session name (backward compatibility)
         m_pCtrlSessionName->SetStringSelection(m_sLastSessionFilename);
         wxCommandEvent event;
@@ -439,7 +444,6 @@ void LoginDialog::OnComboboxSessionSelected( wxCommandEvent& event )
                 m_pCtrlUsername->SetValue(cfg.sGetUsername());
                 m_pCtrlPassword->Enable(true);
                 m_pCtrlUsername->Enable(true);
-                SetInitialFocus();
             }
             m_pCtrlUseSmartCard->SetValue(::wxGetApp().NxSmartCardSupport() && cfg.bGetUseSmartCard());
         }
@@ -447,6 +451,8 @@ void LoginDialog::OnComboboxSessionSelected( wxCommandEvent& event )
     m_pCtrlUseSmartCard->Enable(m_pCurrentCfg && m_pCurrentCfg->IsWritable());
     m_pCtrlGuestLogin->Enable(m_pCurrentCfg && m_pCurrentCfg->IsWritable());
     m_pCtrlConfigure->Enable(m_pCurrentCfg && m_pCurrentCfg->IsWritable());
+    if (!m_bGuestLogin)
+        SetInitialFocus();
     event.Skip();
 }
 

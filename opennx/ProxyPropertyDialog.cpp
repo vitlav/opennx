@@ -34,11 +34,14 @@
 #include "wx/wx.h"
 #endif
 
+#include <wx/cshelp.h>
+
 ////@begin includes
 ////@end includes
 
 #include "ProxyPropertyDialog.h"
 #include "MyValidator.h"
+#include "opennxApp.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -62,9 +65,9 @@ BEGIN_EVENT_TABLE( ProxyPropertyDialog, wxDialog )
 
     EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_EXTERNALPROXY"), ProxyPropertyDialog::OnRadiobuttonExternalproxySelected )
 
-    EVT_BUTTON( wxID_OK, ProxyPropertyDialog::OnOkClick )
-
 ////@end ProxyPropertyDialog event table entries
+//
+    EVT_MENU(wxID_CONTEXT_HELP, ProxyPropertyDialog::OnContextHelp)
 
 END_EVENT_TABLE()
 
@@ -101,9 +104,9 @@ bool ProxyPropertyDialog::Create( wxWindow* parent, wxWindowID, const wxString&,
     }
     Centre();
 ////@end ProxyPropertyDialog creation
+    ::wxGetApp().EnableContextHelp(this);
     return true;
 }
-
 
 /*!
  * ProxyPropertyDialog destructor
@@ -135,7 +138,6 @@ void ProxyPropertyDialog::Init()
     m_pCtrlProxyCommand = NULL;
 ////@end ProxyPropertyDialog member initialisation
 }
-
 
 /*!
  * Control creation for ProxyPropertyDialog
@@ -227,10 +229,10 @@ wxIcon ProxyPropertyDialog::GetIconResource( const wxString& name )
 ////@end ProxyPropertyDialog icon retrieval
 }
 
-
-
-
-
+void ProxyPropertyDialog::OnContextHelp(wxCommandEvent &)
+{
+    wxContextHelp contextHelp(this);
+}
 
 /*!
  * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_HTTPPROXY
@@ -247,15 +249,6 @@ void ProxyPropertyDialog::OnRadiobuttonHttpproxySelected( wxCommandEvent& event 
     event.Skip();
 }
 
-
-
-
-
-
-
-
-
-
 /*!
  * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_EXTERNALPROXY
  */
@@ -270,19 +263,3 @@ void ProxyPropertyDialog::OnRadiobuttonExternalproxySelected( wxCommandEvent& ev
     m_pCtrlProxyCommand->Enable(true);
     event.Skip();
 }
-
-
-
-
-/*!
- * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
- */
-
-void ProxyPropertyDialog::OnOkClick( wxCommandEvent& event )
-{
-////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK in ProxyPropertyDialog.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK in ProxyPropertyDialog. 
-}
-

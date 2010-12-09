@@ -2235,6 +2235,7 @@ void SessionProperties::OnButtonProxysettingsClick( wxCommandEvent& )
     d.SetSProxyCommand(m_sProxyCommand);
     d.SetBExternalProxy(m_bExternalProxy);
     d.SetBUseProxy(!m_bExternalProxy);
+    d.UpdateDialogConstraints();
     if (wxID_OK == d.ShowModal()) {
         m_sProxyHost = d.GetSProxyHost();
         m_iProxyPort = d.GetIProxyPort();
