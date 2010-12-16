@@ -120,6 +120,7 @@ BuildRequires: wxGTK-devel >= 2.8.0
 BuildRequires: xorg-x11-proto-devel
 BuildRequires: xorg-x11-xtrans-devel
 BuildRequires: libpulse-devel
+BuildRequires: libcurl-devel
 %endif
 
 %if %{is_mdv}
@@ -128,6 +129,7 @@ BuildRequires: %{lpfx}xmu6-devel
 BuildRequires: x11-proto-devel
 BuildRequires: x11-xtrans-devel
 BuildRequires: libpulseaudio-devel
+BuildRequires: libcurl-devel
 %endif
 
 %if %{is_fc}%{is_rh}%{is_el}
@@ -137,9 +139,11 @@ BuildRequires: pulseaudio-libs-devel
 %else
 %if %{is_el}
 BuildRequires: wxGTK-devel >= 2.8.0
+BuildRequires: curl-devel
 %else
 BuildRequires: wxGTK2-devel >= 2.8.0
 BuildRequires: pulseaudio-libs-devel
+BuildRequires: libcurl-devel
 %endif
 %endif
 BuildRequires: samba-common
