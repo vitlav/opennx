@@ -120,7 +120,7 @@ EXTRA_tracelog_SOURCES = tracelog.rc
 EXTRA_watchreader_SOURCES = watchreader.rc
 
 opennx_LDADD = $(OPENNX_RES) $(WX_LIBS) $(X_LIBS) $(X_PRE_LIBS) \
-	$(X_EXTRA_LIBS) $(APP_LDADD)
+	$(X_EXTRA_LIBS) $(APP_LDADD) $(LIBCURL)
 opennx_DEPENDENCIES = $(OPENNX_RES)
 opennx_CPPFLAGS = $(WX_CPPFLAGS) $(X_CFLAGS) -DAPP_OPENNX
 opennx_CXXFLAGS = $(WX_CXXFLAGS)

@@ -357,6 +357,9 @@ class MyXmlConfig
         static wxString UrlEsc(const wxString &s);
 
     private:
+        static size_t CurlWriteCallback(void *, size_t, size_t, void *);
+
+    private:
         // Disable copy constructor
         MyXmlConfig(const MyXmlConfig &);
 

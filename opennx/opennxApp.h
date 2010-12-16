@@ -40,6 +40,8 @@ class opennxApp : public wxApp
         const wxString &GetResourcePrefix() { return m_sResourcePrefix; }
         const wxString &GetVersion() { return m_sVersion; }
         const wxString &GetSelfPath() { return m_sSelfPath; }
+        const wxString &GetCaCert() { return m_sCaCert; }
+
         wxString LoadFileFromResource(const wxString &loc, bool bUseLocale = true);
 #ifdef __WXMAC__
         // Respond to Apple Event for opening a document
@@ -95,6 +97,7 @@ class opennxApp : public wxApp
         wxString m_sSelfPath;
         wxString m_sDialogCaption;
         wxString m_sDialogMessage;
+        wxString m_sCaCert;
         long m_nNxSshPID;
         long m_nOtherPID;
         long m_nWindowID;

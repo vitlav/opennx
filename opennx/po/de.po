@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-11-15 13:12+0100\n"
-"PO-Revision-Date: 2010-11-15 13:18+0100\n"
+"POT-Creation-Date: 2010-12-16 15:07+0100\n"
+"PO-Revision-Date: 2010-12-16 15:09+0100\n"
 "Last-Translator: Fritz Elfert <fritz@fritz-elfert.de>\n"
 "Language-Team:  <de@li.org>\n"
 "Language: de\n"
@@ -104,7 +104,7 @@ msgstr "Sitzungsprotokoll - OpenNX"
 msgid "Close"
 msgstr "Schließen"
 
-#: LoginDialog.cpp:391 LoginDialog.cpp:494 MyWizard.cpp:1337
+#: LoginDialog.cpp:397 LoginDialog.cpp:501 MyWizard.cpp:1337
 #, c-format
 msgid ""
 "Could not save session to\n"
@@ -114,7 +114,7 @@ msgstr ""
 "%s\n"
 "speichern."
 
-#: LoginDialog.cpp:392 LoginDialog.cpp:495 MyWizard.cpp:1338
+#: LoginDialog.cpp:398 LoginDialog.cpp:502 MyWizard.cpp:1338
 msgid "Error saving - OpenNX"
 msgstr "Fehler beim Speichern - OpenNX"
 
@@ -817,9 +817,23 @@ msgstr "Erstelle Verknüpfung auf dem Schreibtisch"
 msgid "Show the Advanced Configuration dialog"
 msgstr "Erweiterte Einstellungen anzeigen"
 
-#: MyXmlConfig.cpp:564
+#: MyXmlConfig.cpp:571
 msgid "Could not find application window"
 msgstr "Konnte Applikations-Fenster nicht finden"
+
+#: MyXmlConfig.cpp:1171
+#, c-format
+msgid "Error %d while fetching session configuration"
+msgstr "Fehler %d beim Laden der Sitzungskonfiguration"
+
+#: MyXmlConfig.cpp:1176
+#, c-format
+msgid ""
+"Error while fetching session configuration:\n"
+"%s"
+msgstr ""
+"Fehler beim Laden der Sitzungskonfiguration:\n"
+"%s"
 
 #: PanicDialog_symbols.h:22
 msgid "&Terminate"
@@ -1203,7 +1217,7 @@ msgstr "Kein CUPS-Server verfügbar."
 msgid "Select System CUPS daemon"
 msgstr "Wähle System CUPS-Dämon"
 
-#: SessionProperties.cpp:1976 opennxApp.cpp:1234
+#: SessionProperties.cpp:1976 opennxApp.cpp:1237
 msgid "libusb is not available. No USB devices will be exported"
 msgstr "libusb ist nicht verfügbar. USB-Geräte werden nicht exportiert"
 
@@ -1920,58 +1934,63 @@ msgid "Start the session administration tool."
 msgstr "Starte das Sitzungs-Administrations-Werkzeug."
 
 #: opennxApp.cpp:807
-msgid "Secify window title for dialog mode."
-msgstr "Spezifiziere Fenstertitel für Dialog-Modus."
+msgid "Specify alternate CA cert for fetching configuration via https."
+msgstr ""
+"Spezifiziere alternatives CA-Zertifikat zum Laden der Sitzungskonfiguration"
 
 #: opennxApp.cpp:809
-msgid "Secify dialog style for dialog mode."
-msgstr "Spezifiziere Dialog-Stil für Dialog-Modus."
+msgid "Specify window title for dialog mode."
+msgstr "Spezifiziere Fenstertitel für Dialog-Modus."
 
 #: opennxApp.cpp:811
+msgid "Specify dialog style for dialog mode."
+msgstr "Spezifiziere Dialog-Stil für Dialog-Modus."
+
+#: opennxApp.cpp:813
 msgid "Run in dialog mode."
 msgstr "Aktiviere Dialog-Modus."
 
-#: opennxApp.cpp:813
+#: opennxApp.cpp:815
 msgid "Compatibility option for dialog mode (ignored)."
 msgstr "Kompatible Option für Dialog-Modus (ignoriert)."
 
-#: opennxApp.cpp:815
+#: opennxApp.cpp:817
 msgid "Dialog mode proxy."
 msgstr "Proxy des Dialog-Modus."
 
-#: opennxApp.cpp:817
+#: opennxApp.cpp:819
 msgid "Specify message for dialog mode."
 msgstr "Spezifiziere Mitteilungstext für Dialog-Modus."
 
-#: opennxApp.cpp:819
+#: opennxApp.cpp:821
 msgid "Specify parent PID for dialog mode."
 msgstr "Spezifiziere Eltern-PID für Dialog-Modus."
 
-#: opennxApp.cpp:821
+#: opennxApp.cpp:823
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr "Starte eine Sitzung mit den Einstellungen aus FILENAME."
 
-#: opennxApp.cpp:823
+#: opennxApp.cpp:825
 msgid "Specify window-ID for dialog mode."
 msgstr "Spezifiziere Window-ID für Dialog-Modus."
 
-#: opennxApp.cpp:825 watchUsbIpApp.cpp:225
+#: opennxApp.cpp:827 watchUsbIpApp.cpp:225
 msgid "Specify wxWidgets trace mask."
 msgstr "Spezifiziere wxWidgets Trace-Maske."
 
-#: opennxApp.cpp:828
+#: opennxApp.cpp:830
 msgid "Test CardWaiterDialog"
 msgstr "Teste CardWaiterDialog"
 
-#: opennxApp.cpp:831
+#: opennxApp.cpp:833
 msgid "Guide the user through the steps to configure a session."
 msgstr "Führe den Benutzer durch die Schritte zu Konfiguration einer Sitzung."
 
-#: opennxApp.cpp:887 watchReaderApp.cpp:195
+#: opennxApp.cpp:890 watchReaderApp.cpp:195
 msgid "Smart card removed"
 msgstr "Smart Card entfernt"
 
-#: opennxApp.cpp:889 watchReaderApp.cpp:194
+#: opennxApp.cpp:892 watchReaderApp.cpp:194
 msgid ""
 "OpenNX session has been suspended, because\n"
 "the authenticating smart card has been removed."
@@ -1979,16 +1998,16 @@ msgstr ""
 "Die OpenNX Sitzung wurde unterbrochen, weil\n"
 "die authentisierende Smart Card entfernt wurde."
 
-#: opennxApp.cpp:1249
+#: opennxApp.cpp:1252
 msgid "USBIP tunnel registration timeout"
 msgstr "Timeout beim Öffnen des USBIP-Kanals"
 
-#: opennxApp.cpp:1253
+#: opennxApp.cpp:1256
 #, c-format
 msgid "Unable to export USB device %s"
 msgstr "Konnte USB-Gerät %s nicht exportieren"
 
-#: opennxApp.cpp:1259
+#: opennxApp.cpp:1262
 msgid "Could not connect to usbipd2. No USB devices will be exported"
 msgstr "Verbindung zu usbipd2 gescheitert. USB-Ggeräte werden nicht exportiert"
 
@@ -2028,30 +2047,30 @@ msgstr "Eine leere Sitzungs-ID ist nicht erlaubt"
 msgid "Could not load session config file"
 msgstr "Konnte Sitzungs-Konfiguration nicht laden"
 
-#: watchUsbIpApp.cpp:365
+#: watchUsbIpApp.cpp:373
 msgid "Could not register at usbipd2! No hotplugging functionality."
 msgstr ""
 "Anmeldung am uspid2 gescheitert! Hotplugging steht nicht zur Verfügung."
 
-#: watchUsbIpApp.cpp:372
+#: watchUsbIpApp.cpp:380
 msgid "Could not connect to usbipd2! No hotplugging functionality."
 msgstr "Verbindung zu usbipd2 gescheitert. Keine Hotplug-Funktionalität."
 
-#: watchUsbIpApp.cpp:425
+#: watchUsbIpApp.cpp:433
 msgid "Got hotplug event, but device is not available in libusb"
 msgstr ""
 "Hotplug-Ereignis empfangen, aber das zugehörige Gerät ist nicht in libusb "
 "verfügbar"
 
-#: watchUsbIpApp.cpp:433
+#: watchUsbIpApp.cpp:441
 msgid "Could not send hotplug response"
 msgstr "Konnte Hotplug-Ereignis nicht bestätigen"
 
-#: watchUsbIpApp.cpp:489
+#: watchUsbIpApp.cpp:497
 msgid "Could not save session config"
 msgstr "Konnte Sitzungs-Konfiguration nicht speichern."
 
-#: watchUsbIpApp.cpp:498
+#: watchUsbIpApp.cpp:506
 msgid "Could not export USB device"
 msgstr "Konnte USB-Gerät nicht exportieren"
 

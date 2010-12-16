@@ -347,9 +347,17 @@ bool watchUsbIpApp::OnInit()
         ::wxLogError(_("Could not load session config file"));
         return false;
     }
-    if (!m_pSessionCfg->bGetEnableUSBIP())
-        // No need to watch for hotplug events, siletly exit
+    wxFileName tmpfn(m_pSessionCfg->sGetFileName());
+    if (tmpfn.GetName().IsSameAs(m_sSessionID)) {
+        // If the basename of the session config is the sessionID, then
+        // this file is temporary and can be deleted now.
+        ::wxRemoveFile(tmpfn.GetFullPath());   
+    }
+
+    if (!m_pSessionCfg->bGetEnableUSBIP()) {
+        // No need to watch for hotplug events, silently exit
         return false;
+    }
 
     UsbIp *usbip = new UsbIp();
     wxString usock = wxConfigBase::Get()->Read(wxT("Config/UsbipdSocket"),

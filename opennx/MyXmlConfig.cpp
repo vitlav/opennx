@@ -65,6 +65,12 @@ class wxConfigBase;
 #include "pwcrypt.h"
 #include "osdep.h"
 
+#ifdef APP_OPENNX
+# ifdef HAVE_LIBCURL
+#  include <curl/curl.h>
+# endif
+#endif
+
 #include "trace.h"
 ENABLE_TRACE;
 
@@ -319,6 +325,7 @@ MyXmlConfig::MyXmlConfig(const wxString &filename)
 {
     init();
     if (filename.StartsWith(wxT("http://")) ||
+            filename.StartsWith(wxT("https://")) ||
             filename.StartsWith(wxT("ftp://")) ||
             filename.StartsWith(wxT("file://")))
         LoadFromURL(filename);
@@ -1089,9 +1096,87 @@ MyXmlConfig::LoadFromFile(const wxString &filename)
     return false;
 }
 
+size_t MyXmlConfig::CurlWriteCallback(void *buffer, size_t size, size_t nmemb, void *userp)
+{
+#ifdef APP_OPENNX
+# ifdef HAVE_LIBCURL
+    if (userp) {
+        wxMemoryOutputStream *mos = (wxMemoryOutputStream *)userp;
+        return mos->GetOutputStreamBuffer()->Write(buffer, size * nmemb);
+        // return size * nmemb;
+    }
+# endif
+#else
+  wxUnusedVar(buffer);
+  wxUnusedVar(size);
+  wxUnusedVar(nmemb);
+  wxUnusedVar(userp);
+#endif
+    return -1;
+}
+
     bool
 MyXmlConfig::LoadFromURL(const wxString &filename)
 {
+    bool ret = false;
+#ifdef APP_OPENNX
+# ifdef HAVE_LIBCURL
+    wxMemoryOutputStream mos;
+    char ebuf[CURL_ERROR_SIZE];
+    CURL *c = curl_easy_init();
+    // curl_easy_setopt(c, CURLOPT_FAILONERROR, 1);
+    // curl_easy_setopt(c, CURLOPT_VERBOSE, 1);
+    curl_easy_setopt(c, CURLOPT_NOPROGRESS, 1);
+    curl_easy_setopt(c, CURLOPT_NOSIGNAL, 1);
+    curl_easy_setopt(c, CURLOPT_URL, (const char *)filename.mb_str());
+    curl_easy_setopt(c, CURLOPT_FOLLOWLOCATION, 1);
+    curl_easy_setopt(c, CURLOPT_MAXREDIRS, 10);
+    // curl_easy_setopt(c, CURLOPT_COOKIE, "foo=bar");
+    curl_easy_setopt(c, CURLOPT_TIMEOUT, 10);
+    curl_easy_setopt(c, CURLOPT_SSL_VERIFYPEER, 1);
+    curl_easy_setopt(c, CURLOPT_SSL_VERIFYHOST, 2);
+    if (!::wxGetApp().GetCaCert().IsEmpty())
+        curl_easy_setopt(c, CURLOPT_CAINFO, (const char *)::wxGetApp().GetCaCert().mb_str());
+    curl_easy_setopt(c, CURLOPT_WRITEDATA, &mos);
+    curl_easy_setopt(c, CURLOPT_ERRORBUFFER, ebuf);
+    curl_easy_setopt(c, CURLOPT_WRITEFUNCTION, CurlWriteCallback);
+    ::myLogTrace(MYTRACETAG, wxT("Fetching %s"), filename.c_str());
+    CURLcode r = curl_easy_perform(c);
+    if (0 == r) {
+        off_t len = mos.TellO();
+        if (len > 0) {
+            int rcode = 200;
+            if (filename.StartsWith(wxT("http"))) {
+                curl_easy_getinfo(c, CURLINFO_RESPONSE_CODE, &rcode);
+            }
+            if (200 == rcode) {
+                char * const data = new char[len];
+                mos.CopyTo(data, len);
+                wxMemoryInputStream mis(data, len);
+                if (loadFromStream(mis, false)) {
+                    wxURI uri(filename);
+                    m_sName = wxFileName(uri.GetPath()).GetName();
+                    if (0 == uri.GetScheme().CmpNoCase(wxT("file"))) {
+                        m_sFileName = wxFileName(uri.GetPath()).GetFullPath();
+                        m_bWritable = wxFileName::IsFileWritable(m_sFileName);
+                    } else {
+                        wxURL url(filename);
+                        m_sFileName = url.BuildUnescapedURI();
+                        m_bWritable = false;
+                    }
+                    ret = true;
+                }
+                delete data;
+            } else {
+                ::wxLogError(_("Error %d while fetching session configuration"), rcode);
+            }
+        }
+    } else {
+        wxString msg(ebuf, *wxConvCurrent);
+        ::wxLogError(_("Error while fetching session configuration:\n%s"), msg.c_str());
+    }
+    curl_easy_cleanup(c);
+# else
     wxURL url(filename);
     {
         wxLogNull dummy;
@@ -1110,9 +1195,13 @@ MyXmlConfig::LoadFromURL(const wxString &filename)
             m_sFileName = url.BuildUnescapedURI();
             m_bWritable = false;
         }
-        return true;
+        ret = true;
     }
-    return false;
+# endif
+#else
+    wxUnusedVar(filename);
+#endif
+    return ret;
 }
 
     bool
@@ -1754,7 +1843,10 @@ MyXmlConfig::SaveToFile()
     wxString optval;
     size_t i;
 
-    if (m_sFileName.StartsWith(wxT("http://")) || m_sFileName.StartsWith(wxT("ftp://")))
+    if (m_sFileName.StartsWith(wxT("http://"))
+            || m_sFileName.StartsWith(wxT("https://"))
+            || m_sFileName.StartsWith(wxT("ftp://"))
+       )
         return false;
     r = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("NXClientSettings"));
     r->AddProperty(new wxXmlProperty(wxT("application"), wxT("nxclient"), NULL));

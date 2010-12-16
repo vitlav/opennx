@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2010-11-15 13:12+0100\n"
+"POT-Creation-Date: 2010-12-16 15:07+0100\n"
 "PO-Revision-Date: 2010-08-27 12:21+0400\n"
 "Last-Translator: Shakirov Lenar <snejok@altlinux.org>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -106,7 +106,7 @@ msgstr "Лог сессии - OpenNX"
 msgid "Close"
 msgstr "Закрыть"
 
-#: LoginDialog.cpp:391 LoginDialog.cpp:494 MyWizard.cpp:1337
+#: LoginDialog.cpp:397 LoginDialog.cpp:501 MyWizard.cpp:1337
 #, c-format
 msgid ""
 "Could not save session to\n"
@@ -115,7 +115,7 @@ msgstr ""
 "Не удалось сохранить сессию в\n"
 "%s"
 
-#: LoginDialog.cpp:392 LoginDialog.cpp:495 MyWizard.cpp:1338
+#: LoginDialog.cpp:398 LoginDialog.cpp:502 MyWizard.cpp:1338
 msgid "Error saving - OpenNX"
 msgstr "Ошибка при сохранении - OpenNX"
 
@@ -804,9 +804,21 @@ msgstr "Создать ярлык на рабочем столе"
 msgid "Show the Advanced Configuration dialog"
 msgstr "Открыть диалог настройки"
 
-#: MyXmlConfig.cpp:564
+#: MyXmlConfig.cpp:571
 msgid "Could not find application window"
 msgstr "Окно приложения не найдено"
+
+#: MyXmlConfig.cpp:1171
+#, c-format
+msgid "Error %d while fetching session configuration"
+msgstr ""
+
+#: MyXmlConfig.cpp:1176
+#, c-format
+msgid ""
+"Error while fetching session configuration:\n"
+"%s"
+msgstr ""
 
 #: PanicDialog_symbols.h:22
 msgid "&Terminate"
@@ -1190,7 +1202,7 @@ msgstr "Нет доступного сервера CUPS."
 msgid "Select System CUPS daemon"
 msgstr "Выберите системный сервер CUPS"
 
-#: SessionProperties.cpp:1976 opennxApp.cpp:1234
+#: SessionProperties.cpp:1976 opennxApp.cpp:1237
 msgid "libusb is not available. No USB devices will be exported"
 msgstr "libusb не доступна. USB устройства не смогут быть проброшены."
 
@@ -1899,58 +1911,62 @@ msgid "Start the session administration tool."
 msgstr "Запустить утилиту администрирования сессий."
 
 #: opennxApp.cpp:807
-msgid "Secify window title for dialog mode."
-msgstr "Заголовок окна в dialog режиме."
+msgid "Specify alternate CA cert for fetching configuration via https."
+msgstr ""
 
 #: opennxApp.cpp:809
-msgid "Secify dialog style for dialog mode."
-msgstr "Стиль диалога в dialog режиме."
+msgid "Specify window title for dialog mode."
+msgstr "Заголовок окна в dialog режиме."
 
 #: opennxApp.cpp:811
+msgid "Specify dialog style for dialog mode."
+msgstr "Стиль диалога в dialog режиме."
+
+#: opennxApp.cpp:813
 msgid "Run in dialog mode."
 msgstr "Запустить в режиме dialog."
 
-#: opennxApp.cpp:813
+#: opennxApp.cpp:815
 msgid "Compatibility option for dialog mode (ignored)."
 msgstr "Режим совместимости для dialog режима (игнорируется)."
 
-#: opennxApp.cpp:815
+#: opennxApp.cpp:817
 msgid "Dialog mode proxy."
 msgstr "Прокси dialog режима."
 
-#: opennxApp.cpp:817
+#: opennxApp.cpp:819
 msgid "Specify message for dialog mode."
 msgstr "Сообщение для dialog режима."
 
-#: opennxApp.cpp:819
+#: opennxApp.cpp:821
 msgid "Specify parent PID for dialog mode."
 msgstr "PID родительского процесса для dialog режима."
 
-#: opennxApp.cpp:821
+#: opennxApp.cpp:823
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr "Запустить сессию <str>."
 
-#: opennxApp.cpp:823
+#: opennxApp.cpp:825
 msgid "Specify window-ID for dialog mode."
 msgstr "Window-ID для запуска в dialog режиме."
 
-#: opennxApp.cpp:825 watchUsbIpApp.cpp:225
+#: opennxApp.cpp:827 watchUsbIpApp.cpp:225
 msgid "Specify wxWidgets trace mask."
 msgstr "Укажите маску трассировки wxWidgets."
 
-#: opennxApp.cpp:828
+#: opennxApp.cpp:830
 msgid "Test CardWaiterDialog"
 msgstr "Протестировать CardWaiterDialog"
 
-#: opennxApp.cpp:831
+#: opennxApp.cpp:833
 msgid "Guide the user through the steps to configure a session."
 msgstr "Руководит пользователем во время конфигурирования сессии."
 
-#: opennxApp.cpp:887 watchReaderApp.cpp:195
+#: opennxApp.cpp:890 watchReaderApp.cpp:195
 msgid "Smart card removed"
 msgstr "Смарт-карта удалена"
 
-#: opennxApp.cpp:889 watchReaderApp.cpp:194
+#: opennxApp.cpp:892 watchReaderApp.cpp:194
 msgid ""
 "OpenNX session has been suspended, because\n"
 "the authenticating smart card has been removed."
@@ -1958,16 +1974,16 @@ msgstr ""
 "Сессия OpenNX была приостановлена,\n"
 "потому что была вытащена смарт-карта."
 
-#: opennxApp.cpp:1249
+#: opennxApp.cpp:1252
 msgid "USBIP tunnel registration timeout"
 msgstr "Тайм-аут регистрации туннеля USBIP"
 
-#: opennxApp.cpp:1253
+#: opennxApp.cpp:1256
 #, c-format
 msgid "Unable to export USB device %s"
 msgstr "Не удалось экспортировать USB устройство '%s'"
 
-#: opennxApp.cpp:1259
+#: opennxApp.cpp:1262
 msgid "Could not connect to usbipd2. No USB devices will be exported"
 msgstr ""
 "Не удалось подключиться к usbipd2. USB устройства не будут экспортированы"
@@ -2008,27 +2024,27 @@ msgstr "Пустой ID сессии не допускается"
 msgid "Could not load session config file"
 msgstr "Не удалось загрузить конфигурационный файл сессии"
 
-#: watchUsbIpApp.cpp:365
+#: watchUsbIpApp.cpp:373
 msgid "Could not register at usbipd2! No hotplugging functionality."
 msgstr "Не удалось зарегистрироваться на usbipd2! Нет функции автоопределения."
 
-#: watchUsbIpApp.cpp:372
+#: watchUsbIpApp.cpp:380
 msgid "Could not connect to usbipd2! No hotplugging functionality."
 msgstr "Не удалось подключиться к usbipd2! Нет функции автоопределения."
 
-#: watchUsbIpApp.cpp:425
+#: watchUsbIpApp.cpp:433
 msgid "Got hotplug event, but device is not available in libusb"
 msgstr "Получено событие автоопределения, но устройство в libusb отсутствует"
 
-#: watchUsbIpApp.cpp:433
+#: watchUsbIpApp.cpp:441
 msgid "Could not send hotplug response"
 msgstr "Не удалось отправить ответ автоопределения"
 
-#: watchUsbIpApp.cpp:489
+#: watchUsbIpApp.cpp:497
 msgid "Could not save session config"
 msgstr "Не удалось сохранить конфигурацию сессии"
 
-#: watchUsbIpApp.cpp:498
+#: watchUsbIpApp.cpp:506
 msgid "Could not export USB device"
 msgstr "Не удалось экспортировать USB устройство"
 
