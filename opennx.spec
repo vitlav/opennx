@@ -4,7 +4,7 @@
 Summary: An OpenSource NX client
 Name: opennx
 Version: 0.16
-Release: alt12.svn595
+Release: alt13.svn595
 License: LGPL/GPL
 Group: Networking/Remote access
 Url: http://sourceforge.net/projects/opennx
@@ -68,10 +68,10 @@ for f in nxesd nxssh nxservice nxproxy ; do
     ln -s  ../../../bin/$f %buildroot%_libdir/%name/bin/$f
 done
 
-mkdir -p %buildroot%_libdir/%name/lib
+mkdir -p %buildroot%_libdir/%name/%_lib
 
 for lib in libsmbclient.so libcups.so ; do
-    ln -s %_libdir/`readlink %_libdir/$lib` %buildroot%_libdir/%name/lib/$lib
+    ln -s %_libdir/`readlink %_libdir/$lib` %buildroot%_libdir/%name/%_lib/$lib
 done
 
 cp %buildroot%_datadir/%name/applnk/xdg/*.desktop %buildroot%_desktopdir
@@ -118,6 +118,9 @@ install -m 644 etc/*.rules %buildroot%_sysconfdir/udev/rules.d
 %endif
 
 %changelog
+* Tue Feb 15 2011 Lenar Shakirov <snejok@altlinux.ru> 0.16-alt13.svn595
+- lib{smbclient,cups}.so symlinks packaging fixed for x86_64
+
 * Thu Nov 18 2010 Boris Savelev <boris@altlinux.org> 0.16-alt12.svn595
 - update from trunk
 
