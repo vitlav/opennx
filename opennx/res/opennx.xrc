@@ -396,7 +396,7 @@
                                             <border>5</border>
                                             <object class="wxStaticBoxSizer" name="wxID_ANY">
                                                 <orient>wxVERTICAL</orient>
-                                                <label>Display</label>
+                                                <label>Display and Keyboard</label>
                                                 <object class="sizeritem">
                                                     <flag>wxGROW</flag>
                                                     <border>5</border>
@@ -464,15 +464,6 @@
                                                     <object class="wxBoxSizer">
                                                         <orient>wxVERTICAL</orient>
                                                         <object class="sizeritem">
-                                                            <flag>wxGROW|wxALL</flag>
-                                                            <border>5</border>
-                                                            <object class="wxRadioButton" name="ID_RADIOBUTTON_IMG_DEFAULT">
-                                                                <style>wxRB_GROUP</style>
-                                                                <label>Use default image encoding</label>
-                                                                <value>1</value>
-                                                            </object>
-                                                        </object>
-                                                        <object class="sizeritem">
                                                             <flag>wxGROW</flag>
                                                             <border>5</border>
                                                             <object class="wxBoxSizer">
@@ -481,9 +472,9 @@
                                                                     <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                                     <border>5</border>
                                                                     <option>1</option>
-                                                                    <object class="wxRadioButton" name="ID_RADIOBUTTON_IMG_CUSTOM">
+                                                                    <object class="wxCheckBox" name="ID_CHECKBOX_IMG_CUSTOM">
                                                                         <label>Use custom settings</label>
-                                                                        <value>0</value>
+                                                                        <checked>0</checked>
                                                                     </object>
                                                                 </object>
                                                                 <object class="sizeritem">
@@ -497,25 +488,6 @@
                                                         </object>
                                                     </object>
                                                 </object>
-                                            </object>
-                                        </object>
-                                        <object class="sizeritem">
-                                            <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
-                                            <border>5</border>
-                                            <option>1</option>
-                                            <object class="wxStaticBoxSizer" name="wxID_ANY">
-                                                <orient>wxVERTICAL</orient>
-                                                <label>Keyboard</label>
-                                                <object class="sizeritem">
-                                                    <flag>wxGROW|wxALL</flag>
-                                                    <border>5</border>
-                                                    <option>1</option>
-                                                    <object class="wxRadioButton" name="ID_RADIOBUTTON_KBDKEEP">
-                                                        <style>wxRB_GROUP</style>
-                                                        <label>Keep current keyboard settings</label>
-                                                        <value>1</value>
-                                                    </object>
-                                                </object>
                                                 <object class="sizeritem">
                                                     <flag>wxGROW</flag>
                                                     <border>5</border>
@@ -525,9 +497,9 @@
                                                             <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                             <border>5</border>
                                                             <option>1</option>
-                                                            <object class="wxRadioButton" name="ID_RADIOBUTTON_KBDOTHER">
-                                                                <label>Use other layout</label>
-                                                                <value>0</value>
+                                                            <object class="wxCheckBox" name="ID_CHECKBOX_KBDOTHER">
+                                                                <label>Use custom layout</label>
+                                                                <checked>0</checked>
                                                             </object>
                                                         </object>
                                                         <object class="sizeritem">
@@ -1081,6 +1053,7 @@
                                             <border>5</border>
                                             <object class="wxPanel" name="ID_PANEL_USBIP_DAEMON">
                                                 <style>wxTAB_TRAVERSAL</style>
+                                                <hidden>1</hidden>
                                                 <object class="wxStaticBoxSizer" name="wxID_ANY">
                                                     <orient>wxVERTICAL</orient>
                                                     <label>System USBIP daemon</label>

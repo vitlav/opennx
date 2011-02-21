@@ -173,20 +173,14 @@ public:
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_HEIGHT
     void OnSpinctrlHeightTextUpdated( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_IMG_DEFAULT
-    void OnRadiobuttonImgDefaultSelected( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_IMG_CUSTOM
-    void OnRadiobuttonImgCustomSelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_IMG_CUSTOM
+    void OnCheckboxImgCustomClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_IMG_CUSTOM
     void OnButtonImgCustomClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_KBDKEEP
-    void OnRadiobuttonKbdkeepSelected( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_KBDOTHER
-    void OnRadiobuttonKbdotherSelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_KBDOTHER
+    void OnCheckboxKbdotherClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_KBDLAYOUT
     void OnComboboxKbdlayoutSelected( wxCommandEvent& event );
@@ -365,11 +359,9 @@ private:
     wxComboBox* m_pCtrlDisplayType;
     wxSpinCtrl* m_pCtrlDisplayWidth;
     wxSpinCtrl* m_pCtrlDisplayHeight;
-    wxRadioButton* m_pCtrlImageEncDefault;
-    wxRadioButton* m_pCtrlImageEncCustom;
+    wxCheckBox* m_pCtrlImageEncCustom;
     wxButton* m_pCtrlImageSettings;
-    wxRadioButton* m_pCtrlKeyboardCurrent;
-    wxRadioButton* m_pCtrlKeyboardOther;
+    wxCheckBox* m_pCtrlKeyboardOther;
     wxComboBox* m_pCtrlKeyboardLayout;
     wxCheckBox* m_pCtrlEnableSSL;
     wxButton* m_pCtrlProxySettings;
