@@ -241,7 +241,7 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
                             break;
                         }
                         if (msg.StartsWith(wxT("HELLO NXSERVER - Version "))) {
-                            upevent.SetString(msg.Mid(25).BeforeFirst(wxT(' ')).Strip(wxString::both));
+                            upevent.SetString(msg.Mid(25).BeforeFirst(wxT(' ')).Strip(wxString::both).BeforeFirst(wxT('-')));
                             upevent.SetInt(ActionHello);
                             m_pEvtHandler->AddPendingEvent(upevent);
                             break;
