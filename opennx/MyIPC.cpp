@@ -146,7 +146,7 @@ MyIPC::SshProcess(const wxString &cmd, const wxString &dir, wxEvtHandler *h)
     m_sOutMessage.Empty();
     m_sErrMessage.Empty();
     m_pEvtHandler = h;
-    m_pProcess = new AsyncProcess(cmd, dir, this);
+    m_pProcess = new AsyncProcess(cmd, dir, wxT("NX> 105 "), this);
     ret = m_pProcess->Start();
     if (!ret) {
         delete m_pProcess;

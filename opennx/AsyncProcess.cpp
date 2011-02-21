@@ -71,6 +71,17 @@ AsyncProcess::AsyncProcess()
     Redirect();
 }
 
+AsyncProcess::AsyncProcess(const wxString& cmd, const wxString &wdir, const wxString &special, wxEvtHandler *h /* = NULL */)
+    : wxProcess(),
+    wxThreadHelper(),
+    m_pEvtHandler(h),
+    m_sCmd(cmd),
+    m_sDir(wdir),
+    m_sSpecial(special)
+{
+    Redirect();
+}
+
 AsyncProcess::AsyncProcess(const wxString& cmd, const wxString &wdir, wxEvtHandler *h /* = NULL */)
     : wxProcess(),
     wxThreadHelper(),
@@ -134,7 +145,8 @@ AsyncProcess::Entry()
         }
         if (m_pEvtHandler) {
             // If no LF received within a second, send buffer anyway
-            if ((m_cOutWatch.Time() > 1000) && (!m_sOutBuf.IsEmpty())) {
+            if ((m_sSpecial.Len() && m_sOutBuf.StartsWith(m_sSpecial)) ||
+                    ((m_cOutWatch.Time() > 100) && (!m_sOutBuf.IsEmpty()))) {
                 ::myLogTrace(MYTRACETAG, wxT("IoThread outwatch timed out"));
                 wxCommandEvent event(wxEVT_PROCESS_STDOUT, wxID_ANY);
                 event.SetString(m_sOutBuf);
@@ -168,7 +180,8 @@ AsyncProcess::Entry()
         }
         if (m_pEvtHandler) {
             // If no LF received within a second, send buffer anyway
-            if ((m_cErrWatch.Time() > 1000) && (!m_sErrBuf.IsEmpty())) {
+            if ((m_sSpecial.Len() && m_sErrBuf.StartsWith(m_sSpecial)) ||
+                    ((m_cErrWatch.Time() > 100) && (!m_sErrBuf.IsEmpty()))) {
                 ::myLogTrace(MYTRACETAG, wxT("IoThread errwatch timed out"));
                 wxCommandEvent event(wxEVT_PROCESS_STDERR, wxID_ANY);
                 event.SetString(m_sErrBuf);
