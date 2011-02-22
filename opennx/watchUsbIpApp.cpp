@@ -525,3 +525,15 @@ int watchUsbIpApp::OnExit()
     return wxApp::OnExit();
 }
 
+void
+watchUsbIpApp::EnableContextHelp(wxWindow *w)
+{
+    if (NULL == w)
+        return;
+    wxAcceleratorEntry entries[1];
+    entries[0].Set(wxACCEL_SHIFT, WXK_F1, wxID_CONTEXT_HELP);
+    wxAcceleratorTable accel(1, entries);
+    w->SetAcceleratorTable(accel);
+    w->SetFocus();
+}
+

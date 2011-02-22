@@ -94,6 +94,8 @@ public:
     /// Creates the controls and sizers
     void CreateControls();
 
+    void OnContextHelp(wxCommandEvent &);
+
 ////@begin UsbFilterDetailsDialog event handler declarations
 
     /// wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_USBDEVS

@@ -556,6 +556,9 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
 
 #ifdef SUPPORT_USBIP
     m_pCtrlUsbipdDaemon->Show();
+    wxSize sz = GetBestSize();
+    sz.IncBy(0, 35);
+    SetInitialSize(sz);
 #else
     removePage(_("USB"));
     m_pCtrlUsbipdDaemon->Hide();

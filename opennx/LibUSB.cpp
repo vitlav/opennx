@@ -40,6 +40,8 @@
 #include "MyDynlib.h"
 #include "LibUSB.h"
 
+#include <wx/wfstream.h>
+#include <wx/txtstrm.h>
 #include <wx/log.h>
 #include <wx/arrimpl.cpp>
 
@@ -87,6 +89,27 @@ wxString USBDevice::toShortString() {
     return ret;
 }
 
+#ifdef SUPPORT_USBIP
+static wxString readSysfs(int bus, int dev, const wxString &attr)
+{
+    wxLogNull nolog;
+    int i;
+    // Find the device with the specified devnum
+    for (i = 0; i < 16 ; ++i) {
+        wxString path(wxString::Format(wxT("/sys/bus/usb/devices/%d-%d/devnum"), bus, i));
+        wxFileInputStream fis(path);
+        wxTextInputStream tis(fis);
+        if (dev == tis.Read16S())
+            break;
+    }
+    // Read the attribute
+    wxString path(wxString::Format(wxT("/sys/bus/usb/devices/%d-%d/%s"), bus, i, attr.c_str()));
+    wxFileInputStream fis(path);
+    wxTextInputStream tis(fis);
+    return tis.ReadLine();
+}
+#endif
+
 void USB::adddev(MyDynamicLibrary *dll, struct usb_device *dev, unsigned char dclass)
 {
 #ifdef SUPPORT_USBIP
@@ -132,7 +155,23 @@ void USB::adddev(MyDynamicLibrary *dll, struct usb_device *dev, unsigned char dc
     long lval;
     tmp.ToLong(&lval);
     d.m_iBusNum = lval;
-    d.m_iDevNum = dev->devnum;
+    tmp = wxConvUTF8.cMB2WX(dev->filename);
+    tmp.ToLong(&lval);
+    d.m_iDevNum = lval;
+
+    // Try fallback to sysfs, if libusb could not read info due to
+    // permission problems.
+    if (d.m_sVendor.IsEmpty()) {
+        d.m_sVendor = readSysfs(d.m_iBusNum, d.m_iDevNum, wxT("manufacturer"));
+    }
+    if (d.m_sProduct.IsEmpty()) {
+        d.m_sProduct = readSysfs(d.m_iBusNum, d.m_iDevNum, wxT("product"));
+    }
+    if (d.m_sSerial.IsEmpty()) {
+        d.m_sSerial = readSysfs(d.m_iBusNum, d.m_iDevNum, wxT("serial"));
+    }
+
+    ::myLogTrace(MYTRACETAG, wxT("Device found: %s"), d.toString().c_str());
     m_aDevices.Add(d);
     pfnusb_close(udev);
 #else
@@ -220,7 +259,7 @@ ArrayOfUSBDevices USB::GetDevices() {
 }
 
 bool USB::IsAvailable() {
-    myLogTrace(MYTRACETAG, wxT("USB::IsAvailable() = %s"), m_bAvailable ? wxT("true") : wxT("false"));
+    ::myLogTrace(MYTRACETAG, wxT("USB::IsAvailable() = %s"), m_bAvailable ? wxT("true") : wxT("false"));
     return m_bAvailable;
 }
 
