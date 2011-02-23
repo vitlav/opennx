@@ -901,12 +901,14 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     }
                     break;
                 case STATE_START_SESSION:
+                    m_pDlg->SetStatusText(_("Starting session"));
                     scmd = wxT("startsession");
                     scmd << m_pCfg->sGetSessionParams(m_lProtocolVersion, true, m_sClearPassword);
                     printSsh(scmd);
                     m_eConnectState = STATE_FINISH;
                     break;
                 case STATE_ATTACH_SESSION:
+                    m_pDlg->SetStatusText(_("Attaching to session"));
                     scmd = wxT("attachsession");
                     scmd << m_pCfg->sGetSessionParams(m_lProtocolVersion, true, m_sClearPassword)
                         << wxT(" --display=\"") << m_sResumePort
@@ -917,6 +919,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     m_eConnectState = STATE_FINISH;
                     break;
                 case STATE_RESUME_SESSION:
+                    m_pDlg->SetStatusText(_("Resuming session"));
                     scmd = wxT("restoresession");
                     scmd << m_pCfg->sGetSessionParams(m_lProtocolVersion, false, m_sClearPassword)
                         << wxT(" --session=\"") << m_sResumeName

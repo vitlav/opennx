@@ -194,15 +194,6 @@ ResumeDialog::AddSession(const wxString& name, const wxString& state, const wxSt
     m_pCtrlSessions->SetItemData(idx, lPort);
     for (int i = 0; i < m_pCtrlSessions->GetColumnCount(); i++)
         m_pCtrlSessions->SetColumnWidth(i, wxLIST_AUTOSIZE);
-#if 0
-    if (m_pCtrlSssessions->GetItemCount() == 1) {
-        ::myLogTrace(MYTRACETAG, wxT("autoselect idx0"));
-        m_sSelectedPort = port;
-        m_sSelectedName = name;
-        m_sSelectedType = type;
-        m_sSelectedId = id;
-    }
-#endif
     if ((m_lActiveSession < 0) || (name == m_sPreferredSession)) {
         ::myLogTrace(MYTRACETAG, wxT("autoselect preferred=%d"), idx);
         wxListItem info;
