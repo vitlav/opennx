@@ -256,12 +256,12 @@ cd ..
 %install
 make DESTDIR=%{buildroot} install
 make DESTDIR=%{buildroot} prefix=/usr install-man
-%{__install} -d -m 755 %{buildroot}%{_prefix}/lib
-%{__install} -m 755 nxcomp/libXcomp.so.*.*.* %{buildroot}%{_prefix}/lib
+%{__install} -d -m 755 %{buildroot}%{nxlib}
+%{__install} -m 755 nxcomp/libXcomp.so.*.*.* %{buildroot}%{nxlib}
 %{__install} -m 755 nxesd/nxesd %{buildroot}%{_prefix}/bin
 %{__install} -m 755 nxssh/nxssh %{buildroot}%{_prefix}/bin
 %{__install} -m 755 nxproxy/nxproxy %{buildroot}%{_prefix}/bin
-/sbin/ldconfig -n %{buildroot}%{_prefix}/lib
+/sbin/ldconfig -n %{buildroot}%{nxlib}
 %{__install} -d -m 755 %{buildroot}/usr/bin
 ln -s %{_prefix}/bin/opennx %{buildroot}/usr/bin/nxclient
 %if %{with_usbip}
