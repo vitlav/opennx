@@ -66,6 +66,7 @@ public:
         ActionSetSslTunneling,
         ActionSetSubscription,
         ActionSetSmbPort,
+        ActionSetShadowGeometry,
         ActionExit,
         ActionStartProxy,
         ActionSessionRunning,

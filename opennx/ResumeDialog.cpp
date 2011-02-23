@@ -45,6 +45,11 @@
 #include "ResumeDialog.h"
 #include "Icon.h"
 
+#include "opennxApp.h"
+
+#include "trace.h"
+ENABLE_TRACE;
+
 ////@begin XPM images
 ////@end XPM images
 
@@ -62,6 +67,8 @@ BEGIN_EVENT_TABLE( ResumeDialog, wxDialog )
 
 ////@begin ResumeDialog event table entries
     EVT_LIST_ITEM_SELECTED( XRCID("ID_LISTCTRL_SESSIONS"), ResumeDialog::OnListctrlSessionsSelected )
+
+    EVT_BUTTON( wxID_REFRESH, ResumeDialog::OnRefreshClick )
 
     EVT_BUTTON( XRCID("ID_BUTTON_TERMINATE"), ResumeDialog::OnButtonTerminateClick )
 
@@ -122,6 +129,7 @@ void ResumeDialog::Init()
     m_lActiveSession = -1;
     m_eMode = New;
     m_bShadow = false;
+    m_iColOffset = 0;
     m_pCtrlSessions = NULL;
     m_pCtrlTerminate = NULL;
     m_pCtrlTakeover = NULL;
@@ -163,32 +171,47 @@ void ResumeDialog::CreateControls()
 void
 ResumeDialog::AddSession(const wxString& name, const wxString& state, const wxString& type,
         const wxString& size, const wxString& colors,
-        const wxString& port, const wxString& opts, const wxString& id)
+        const wxString& port, const wxString& opts, const wxString& id, const wxString& user /* = wxT("") */)
 {
+    if ((0 == m_iColOffset) && !user.IsEmpty()) {
+        m_pCtrlSessions->InsertColumn(1, _("User"));
+        m_iColOffset = 1;
+    }
     long idx = m_pCtrlSessions->InsertItem(0, name, 0);
-    m_pCtrlSessions->SetItem(idx, 1, state);
-    m_pCtrlSessions->SetItem(idx, 2, type);
+    if (1 == m_iColOffset)
+        m_pCtrlSessions->SetItem(idx, 1, user);
+    m_pCtrlSessions->SetItem(idx, 1 + m_iColOffset, state);
+    m_pCtrlSessions->SetItem(idx, 2 + m_iColOffset, type);
     if (size.IsSameAs(wxT("N/A")) && colors.IsSameAs(wxT("N/A")))
-        m_pCtrlSessions->SetItem(idx, 3, colors);
+        m_pCtrlSessions->SetItem(idx, 3 + m_iColOffset, colors);
     else
-        m_pCtrlSessions->SetItem(idx, 3, size + wxT("x") + colors);
-    m_pCtrlSessions->SetItem(idx, 4, port);
-    m_pCtrlSessions->SetItem(idx, 5, opts);
-    m_pCtrlSessions->SetItem(idx, 6, id);
+        m_pCtrlSessions->SetItem(idx, 3 + m_iColOffset, size + wxT("x") + colors);
+    m_pCtrlSessions->SetItem(idx, 4 + m_iColOffset, port);
+    m_pCtrlSessions->SetItem(idx, 5 + m_iColOffset, opts);
+    m_pCtrlSessions->SetItem(idx, 6 + m_iColOffset, id);
     long lPort;
     port.ToLong(&lPort);
     m_pCtrlSessions->SetItemData(idx, lPort);
     for (int i = 0; i < m_pCtrlSessions->GetColumnCount(); i++)
         m_pCtrlSessions->SetColumnWidth(i, wxLIST_AUTOSIZE);
+#if 0
+    if (m_pCtrlSssessions->GetItemCount() == 1) {
+        ::myLogTrace(MYTRACETAG, wxT("autoselect idx0"));
+        m_sSelectedPort = port;
+        m_sSelectedName = name;
+        m_sSelectedType = type;
+        m_sSelectedId = id;
+    }
+#endif
     if ((m_lActiveSession < 0) || (name == m_sPreferredSession)) {
+        ::myLogTrace(MYTRACETAG, wxT("autoselect preferred=%d"), idx);
         wxListItem info;
         info.m_itemId = idx;
         info.m_mask = wxLIST_MASK_STATE;
         info.m_state = wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED;
         info.m_stateMask = wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED;
         m_pCtrlSessions->SetItem(info);
-    }
-    if (0 == idx) {
+        m_sSelectedPort = port;
         m_sSelectedName = name;
         m_sSelectedType = type;
         m_sSelectedId = id;
@@ -215,9 +238,10 @@ ResumeDialog::SetAttachMode(bool b)
 void ResumeDialog::OnListctrlSessionsSelected( wxListEvent& event )
 {
     m_lActiveSession = event.GetIndex();
+    ::myLogTrace(MYTRACETAG, wxT("clickselect=%d"), m_lActiveSession);
     wxListItem info;
     info.m_itemId = m_lActiveSession;
-    info.m_col = 1;
+    info.m_col = 1 + m_iColOffset;
     m_pCtrlSessions->GetItem(info);
     if (m_bShadow) {
         if (info.m_text == wxT("Suspended")) {
@@ -243,16 +267,26 @@ void ResumeDialog::OnListctrlSessionsSelected( wxListEvent& event )
     info.m_col = 0;
     m_pCtrlSessions->GetItem(info);
     m_sSelectedName = info.m_text;
-    info.m_col = 2;
+    info.m_col = 2 + m_iColOffset;
     m_pCtrlSessions->GetItem(info);
     m_sSelectedType = info.m_text;
-    info.m_col = 4;
+    info.m_col = 4 + m_iColOffset;
     m_pCtrlSessions->GetItem(info);
     m_sSelectedPort = info.m_text;
-    info.m_col = 6;
+    info.m_col = 6 + m_iColOffset;
     m_pCtrlSessions->GetItem(info);
     m_sSelectedId = info.m_text;
     event.Skip();
+}
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_REFRESH
+ */
+
+void ResumeDialog::OnRefreshClick( wxCommandEvent& event )
+{
+    m_eMode = Refresh;
+    EndModal(wxID_OK);
 }
 
 /*!
@@ -316,4 +350,3 @@ wxIcon ResumeDialog::GetIconResource( const wxString& name )
     // Icon retrieval
     return CreateIconFromFile(name);
 }
-

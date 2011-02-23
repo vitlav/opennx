@@ -563,11 +563,24 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
                         break;
                     case 720:
                         // CUPS printer: running
+                        upevent.SetString(msg.Mid(8));
+                        upevent.SetInt(ActionStatus);
+                        m_pEvtHandler->AddPendingEvent(upevent);
+                        break;
                     case 725:
                         // Shadow: Geometry 1024x768x24
+                        upevent.SetString(msg.Mid(25).Strip(wxString::both));
+                        upevent.SetInt(ActionSetShadowGeometry);
+                        m_pEvtHandler->AddPendingEvent(upevent);
                         break;
                     case 726:
                         // Asking user for authorization to attach to session
+                        upevent.SetString(msg.Mid(8));
+                        upevent.SetInt(ActionStatus);
+                        m_pEvtHandler->AddPendingEvent(upevent);
+                        break;
+                    case 728:
+                        // Session caption: NX - felfert@nx3-test.id-testlab.str.topalis:1008 - nx3-test
                         upevent.SetString(msg.Mid(8));
                         upevent.SetInt(ActionStatus);
                         m_pEvtHandler->AddPendingEvent(upevent);
