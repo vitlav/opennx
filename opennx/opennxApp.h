@@ -59,6 +59,7 @@ class opennxApp : public wxApp
         bool LibUSBAvailable() { return m_bLibUSBAvailable; }
         bool NxProxyAvailable() { return m_bNxProxyAvailable; }
         bool AutoLogin() { return m_bAutoLogin; }
+        bool AutoResume() { return m_bAutoResume; }
 
         void SetRequireWatchReader(bool b) { m_bRequireWatchReader = b; }
         void SetRequireStartUsbIp(bool b) { m_bRequireStartUsbIp = b; }
@@ -112,6 +113,7 @@ class opennxApp : public wxApp
         bool m_bTestCardWaiter;
         bool m_bNxProxyAvailable;
         bool m_bAutoLogin;
+        bool m_bAutoResume;
         bool m_bKillErrors;
         LoginDialog *m_pLoginDialog;
 

@@ -103,6 +103,7 @@ IMPLEMENT_APP(opennxApp);
     ,m_bRequireStartUsbIp(false)
     ,m_bTestCardWaiter(false)
     ,m_bAutoLogin(false)
+    ,m_bAutoResume(false)
     ,m_bKillErrors(false)
     ,m_pLoginDialog(NULL)
 {
@@ -799,6 +800,8 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
 
     parser.AddSwitch(wxEmptyString, wxT("autologin"),
             _("Automatically login to the specified session."));
+    parser.AddSwitch(wxEmptyString, wxT("autoresume"),
+            _("Automatically resume/takeover a session with the same name."));
     parser.AddSwitch(wxEmptyString, wxT("killerrors"),
             _("Automatically destroy error dialogs at termination."));
     parser.AddSwitch(wxEmptyString, wxT("admin"),
@@ -966,6 +969,8 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
         m_eMode = MODE_WIZARD;
     if (parser.Found(wxT("autologin")))
         m_bAutoLogin = true;
+    if (parser.Found(wxT("autoresume")))
+        m_bAutoResume = true;
     if (parser.Found(wxT("killerrors")))
         m_bKillErrors = true;
     if (parser.Found(wxT("waittest")))

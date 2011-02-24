@@ -1001,9 +1001,9 @@ MySession::OnSshEvent(wxCommandEvent &event)
             m_sSmbPort = msg;
             break;
         case MyIPC::ActionExit:
-            if (m_eConnectState == STATE_ABORT)
+            if (m_eConnectState == STATE_ABORT) {
                 m_bAbort = true;
-            else {
+            } else {
                 if (m_eConnectState == STATE_FINISH) {
                     m_pDlg->SetStatusText(_("Starting session"));
                     msg = wxT("NX> 299 Switch connection to: ");
@@ -1199,7 +1199,13 @@ MySession::parseSessions(bool moreAllowed)
     }
     if (bFound) {
         d.EnableNew(moreAllowed);
-        if (m_bIsShadow || (iSessionCount > 1) || (!sName.IsSameAs(m_pCfg->sGetName()))) {
+        if ((!m_bIsShadow) && wxGetApp().AutoResume() && (iSessionCount == 1) && (sName.IsSameAs(m_pCfg->sGetName()))) {
+            ::wxLogInfo(wxT("RESUME"));
+            m_sResumeName = sName;
+            m_sResumeType = d.GetSelectedType();
+            m_sResumeId = d.GetSelectedId();
+            m_eConnectState = STATE_RESUME_SESSION;
+        } else {
             switch (d.ShowModal()) {
                 case wxID_OK:
                     ::myLogTrace(MYTRACETAG, wxT("ResumeDialog returned OK"));
@@ -1241,16 +1247,9 @@ MySession::parseSessions(bool moreAllowed)
                 case wxID_CANCEL:
                     ::myLogTrace(MYTRACETAG, wxT("ResumeDialog returned CANCEL"));
                     printSsh(wxT("bye"));
-                    if (m_bIsShadow)
-                        m_eConnectState = STATE_ABORT;
+                    m_eConnectState = STATE_ABORT;
                     break;
             }
-        } else {
-            ::wxLogInfo(wxT("RESUME"));
-            m_sResumeName = d.GetSelectedName();
-            m_sResumeType = d.GetSelectedType();
-            m_sResumeId = d.GetSelectedId();
-            m_eConnectState = STATE_RESUME_SESSION;
         }
     } else {
         if (m_bIsShadow) {
