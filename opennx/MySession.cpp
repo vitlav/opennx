@@ -921,7 +921,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                 case STATE_RESUME_SESSION:
                     m_pDlg->SetStatusText(_("Resuming session"));
                     scmd = wxT("restoresession");
-                    scmd << m_pCfg->sGetSessionParams(m_lProtocolVersion, false, m_sClearPassword)
+                    scmd << m_pCfg->sGetSessionParams(m_lProtocolVersion, true, m_sClearPassword)
                         << wxT(" --session=\"") << m_sResumeName
                         << wxT("\" --type=\"") << m_sResumeType
                         << wxT("\" --id=\"") << m_sResumeId << wxT("\"");
