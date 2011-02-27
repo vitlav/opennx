@@ -1560,8 +1560,16 @@ MySession::startProxy()
     popts << m_pCfg->sGetProxyParams(m_lProtocolVersion);
     if (!m_sSubscription.IsEmpty())
         popts << wxT(",product=") << m_sSubscription;
-    if (!m_sSmbPort.IsEmpty())
-        popts << wxT(",samba=") << m_sSmbPort;
+    if (m_pCfg->bGetEnableSmbSharing()) {
+        SmbClient sc;
+        if (sc.IsAvailable()) {
+            if (m_sSmbPort.IsEmpty()) {
+                popts << wxT(",samba=") << m_pCfg->iGetSmbPort();
+            } else {
+                popts << wxT(",samba=") << m_sSmbPort;
+            }
+        }
+    }
     if ((getActiveCupsPrinters().GetCount() > 0) && (isCupsRunning()))
         popts << wxT(",cups=") << cupsport;
 #ifdef SUPPORT_USBIP

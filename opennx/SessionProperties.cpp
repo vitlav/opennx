@@ -202,6 +202,9 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
 
     EVT_CHECKBOX( XRCID("ID_CHECKBOX_SMB"), SessionProperties::OnCheckboxSmbClick )
 
+    EVT_SPINCTRL( XRCID("ID_SPINCTRL_SMBPORT"), SessionProperties::OnSpinctrlSmbportUpdated )
+    EVT_TEXT( XRCID("ID_SPINCTRL_SMBPORT"), SessionProperties::OnSpinctrlSmbportTextUpdated )
+
     EVT_CHECKBOX( XRCID("ID_CHECKBOX_CUPSENABLE"), SessionProperties::OnCheckboxCupsenableClick )
 
     EVT_SPINCTRL( XRCID("ID_SPINCTRL_CUPSPORT"), SessionProperties::OnSpinctrlCupsportUpdated )
@@ -367,6 +370,7 @@ SessionProperties::CheckChanged()
         m_pCfg->bSetEnableMultimedia(m_bEnableMultimedia);
         m_pCfg->bSetUseCups(m_bUseCups);
         m_pCfg->iSetCupsPort(m_iCupsPort);
+        m_pCfg->iSetSmbPort(m_iSmbPort);
 
 #ifdef SUPPORT_USBIP
         // variables on the 'USB' tab
@@ -412,6 +416,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_bDisableDeferredUpdates = false;
     m_bResetMessageBoxes = false;
     m_bSavedResetMessageBoxes = false;
+    m_iSmbPort = 445;
     m_pNoteBook = NULL;
     m_pCtrlHostname = NULL;
     m_pCtrlPort = NULL;
@@ -429,6 +434,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlEnableSSL = NULL;
     m_pCtrlProxySettings = NULL;
     m_pCtrlSmbEnable = NULL;
+    m_pCtrlSmbPort = NULL;
     m_pCtrlCupsEnable = NULL;
     m_pCtrlCupsPort = NULL;
     m_pCtrlSmbShares = NULL;
@@ -511,6 +517,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
         m_bUseCups = false;
 #endif
         m_iCupsPort = m_pCfg->iGetCupsPort();
+        m_iSmbPort = m_pCfg->iGetSmbPort();
 
         // variables on 'USB' tab
 #ifdef SUPPORT_USBIP
@@ -917,6 +924,7 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
     m_pCtrlShareAdd->Enable(bTmp);
     m_pCtrlShareDelete->Enable(bTmp && (m_pCtrlSmbShares->GetSelectedItemCount() > 0));
     m_pCtrlShareModify->Enable(bTmp && (m_pCtrlSmbShares->GetSelectedItemCount() > 0));
+    m_pCtrlSmbPort->Enable(m_bEnableSmbSharing);
     m_pCtrlCupsPort->Enable(m_bUseCups);
 
 #ifdef SUPPORT_USBIP
@@ -960,6 +968,7 @@ void SessionProperties::CreateControls()
     m_pCtrlEnableSSL = XRCCTRL(*this, "ID_CHECKBOX_ENABLESSL", wxCheckBox);
     m_pCtrlProxySettings = XRCCTRL(*this, "ID_BUTTON_PROXYSETTINGS", wxButton);
     m_pCtrlSmbEnable = XRCCTRL(*this, "ID_CHECKBOX_SMB", wxCheckBox);
+    m_pCtrlSmbPort = XRCCTRL(*this, "ID_SPINCTRL_SMBPORT", wxSpinCtrl);
     m_pCtrlCupsEnable = XRCCTRL(*this, "ID_CHECKBOX_CUPSENABLE", wxCheckBox);
     m_pCtrlCupsPort = XRCCTRL(*this, "ID_SPINCTRL_CUPSPORT", wxSpinCtrl);
     m_pCtrlSmbShares = XRCCTRL(*this, "ID_LISTCTRL_SMB_SHARES", wxListCtrl);
@@ -1033,6 +1042,8 @@ void SessionProperties::CreateControls()
         FindWindow(XRCID("ID_COMBOBOX_CACHEDISK"))->SetValidator( wxGenericValidator(& m_iCacheDisk) );
     if (FindWindow(XRCID("ID_CHECKBOX_SMB")))
         FindWindow(XRCID("ID_CHECKBOX_SMB"))->SetValidator( wxGenericValidator(& m_bEnableSmbSharing) );
+    if (FindWindow(XRCID("ID_SPINCTRL_SMBPORT")))
+        FindWindow(XRCID("ID_SPINCTRL_SMBPORT"))->SetValidator( MyValidator(MyValidator::MYVAL_NUMERIC, & m_iSmbPort) );
     if (FindWindow(XRCID("ID_CHECKBOX_CUPSENABLE")))
         FindWindow(XRCID("ID_CHECKBOX_CUPSENABLE"))->SetValidator( wxGenericValidator(& m_bUseCups) );
     if (FindWindow(XRCID("ID_SPINCTRL_CUPSPORT")))
@@ -1873,6 +1884,27 @@ void SessionProperties::OnSpinctrlHeightTextUpdated( wxCommandEvent& event )
 }
 
 /*!
+ * wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINCTRL_SMBPORT
+ */
+
+void SessionProperties::OnSpinctrlSmbportUpdated( wxSpinEvent& event )
+{
+    wxUnusedVar(event);
+    CheckChanged();
+}
+
+/*!
+ * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_SMBPORT
+ */
+
+void SessionProperties::OnSpinctrlSmbportTextUpdated( wxCommandEvent& event )
+{
+    wxUnusedVar(event);
+    if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlSmbPort))
+        CheckChanged();
+}
+
+/*!
  * wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINCTRL_CUPSPORT
  */
 
@@ -1890,7 +1922,8 @@ void SessionProperties::OnSpinctrlCupsportTextUpdated( wxCommandEvent& event )
 {
     wxUnusedVar(event);
     if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlCupsPort))
-        m_pCtrlApplyButton->Enable(true);
+        CheckChanged();
+        //m_pCtrlApplyButton->Enable(true);
 }
 
 /*!

@@ -225,6 +225,12 @@ public:
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_SMB
     void OnCheckboxSmbClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINCTRL_SMBPORT
+    void OnSpinctrlSmbportUpdated( wxSpinEvent& event );
+
+    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_SMBPORT
+    void OnSpinctrlSmbportTextUpdated( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_CUPSENABLE
     void OnCheckboxCupsenableClick( wxCommandEvent& event );
 
@@ -366,6 +372,7 @@ private:
     wxCheckBox* m_pCtrlEnableSSL;
     wxButton* m_pCtrlProxySettings;
     wxCheckBox* m_pCtrlSmbEnable;
+    wxSpinCtrl* m_pCtrlSmbPort;
     wxCheckBox* m_pCtrlCupsEnable;
     wxSpinCtrl* m_pCtrlCupsPort;
     wxListCtrl* m_pCtrlSmbShares;
@@ -440,6 +447,7 @@ private:
     bool m_bDisableDeferredUpdates;
     bool m_bResetMessageBoxes;
     bool m_bSavedResetMessageBoxes;
+    int m_iSmbPort;
 ////@end SessionProperties member variables
 
     bool readKbdLayouts();

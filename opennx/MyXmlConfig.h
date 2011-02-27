@@ -229,6 +229,7 @@ class MyXmlConfig
         int iGetRdpColors() { return m_iRdpColors; }
         int iGetRdpImageCompression() { return m_iRdpImageCompression; }
         int iGetServerPort() { return m_iServerPort; }
+        int iGetSmbPort() { return m_iSmbPort; }
         int iGetUsedShareGroups() { return m_iUsedShareGroups; }
         int iGetVncDisplayNumber() { return m_iVncDisplayNumber; }
         int iGetVncImageEncoding() { return m_iVncImageEncoding; }
@@ -323,6 +324,7 @@ class MyXmlConfig
         void iSetRdpColors(int i) { m_iRdpColors = i; }
         void iSetRdpImageCompression(int i) { m_iRdpImageCompression = i; }
         void iSetServerPort(int i) { m_iServerPort = i; }
+        void iSetSmbPort(int i) { m_iSmbPort = i; }
         void iSetUsedShareGroups(int i) { m_iUsedShareGroups = i; }
         void iSetVncDisplayNumber(int i) { m_iVncDisplayNumber = i; }
         void iSetVncImageEncoding(int i) { m_iVncImageEncoding = i; }
@@ -436,6 +438,7 @@ class MyXmlConfig
         int m_iRdpColors;
         int m_iRdpImageCompression;
         int m_iServerPort;
+        int m_iSmbPort;
         int m_iUsedShareGroups;
         int m_iVncDisplayNumber;
         int m_iVncImageEncoding;
