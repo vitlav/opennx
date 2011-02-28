@@ -4,13 +4,15 @@
 Summary: An OpenSource NX client
 Name: opennx
 Version: 0.16
-Release: alt13.svn595
+Release: alt14.svn595
 License: LGPL/GPL
 Group: Networking/Remote access
 Url: http://sourceforge.net/projects/opennx
 Packager: Boris Savelev <boris@altlinux.org>
 
 Source: %name-%version.tar
+
+Patch: %name-0.16-disable-opensc.patch
 
 %if %with_usbip
 Requires: usbip2-nxclient
@@ -26,6 +28,8 @@ opennx is an OSS replacement for Nomachine's NX client.
 
 %prep
 %setup
+
+%patch0 -p1
 
 test -d conf || mkdir conf
 #Convince gettextize not to modify EXTRA_DIST
@@ -118,6 +122,9 @@ install -m 644 etc/*.rules %buildroot%_sysconfdir/udev/rules.d
 %endif
 
 %changelog
+* Mon Feb 28 2011 Lenar Shakirov <snejok@altlinux.ru> 0.16-alt14.svn595
+- build fixed: disable opensc support by default
+
 * Tue Feb 15 2011 Lenar Shakirov <snejok@altlinux.ru> 0.16-alt13.svn595
 - lib{smbclient,cups}.so symlinks packaging fixed for x86_64
 
