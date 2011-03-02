@@ -146,7 +146,7 @@ MyIPC::SshProcess(const wxString &cmd, const wxString &dir, wxEvtHandler *h)
     m_sOutMessage.Empty();
     m_sErrMessage.Empty();
     m_pEvtHandler = h;
-    m_pProcess = new AsyncProcess(cmd, dir, this);
+    m_pProcess = new AsyncProcess(cmd, dir, wxT("NX> 105 "), this);
     ret = m_pProcess->Start();
     if (!ret) {
         delete m_pProcess;
@@ -241,7 +241,7 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
                             break;
                         }
                         if (msg.StartsWith(wxT("HELLO NXSERVER - Version "))) {
-                            upevent.SetString(msg.Mid(25).BeforeFirst(wxT(' ')).Strip(wxString::both));
+                            upevent.SetString(msg.Mid(25).BeforeFirst(wxT(' ')).Strip(wxString::both).BeforeFirst(wxT('-')));
                             upevent.SetInt(ActionHello);
                             m_pEvtHandler->AddPendingEvent(upevent);
                             break;
@@ -563,11 +563,24 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
                         break;
                     case 720:
                         // CUPS printer: running
+                        upevent.SetString(msg.Mid(8));
+                        upevent.SetInt(ActionStatus);
+                        m_pEvtHandler->AddPendingEvent(upevent);
+                        break;
                     case 725:
                         // Shadow: Geometry 1024x768x24
+                        upevent.SetString(msg.Mid(25).Strip(wxString::both));
+                        upevent.SetInt(ActionSetShadowGeometry);
+                        m_pEvtHandler->AddPendingEvent(upevent);
                         break;
                     case 726:
                         // Asking user for authorization to attach to session
+                        upevent.SetString(msg.Mid(8));
+                        upevent.SetInt(ActionStatus);
+                        m_pEvtHandler->AddPendingEvent(upevent);
+                        break;
+                    case 728:
+                        // Session caption: NX - felfert@nx3-test.id-testlab.str.topalis:1008 - nx3-test
                         upevent.SetString(msg.Mid(8));
                         upevent.SetInt(ActionStatus);
                         m_pEvtHandler->AddPendingEvent(upevent);

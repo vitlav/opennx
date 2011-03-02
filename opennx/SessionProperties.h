@@ -173,20 +173,14 @@ public:
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_HEIGHT
     void OnSpinctrlHeightTextUpdated( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_IMG_DEFAULT
-    void OnRadiobuttonImgDefaultSelected( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_IMG_CUSTOM
-    void OnRadiobuttonImgCustomSelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_IMG_CUSTOM
+    void OnCheckboxImgCustomClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_IMG_CUSTOM
     void OnButtonImgCustomClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_KBDKEEP
-    void OnRadiobuttonKbdkeepSelected( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_KBDOTHER
-    void OnRadiobuttonKbdotherSelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_KBDOTHER
+    void OnCheckboxKbdotherClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_KBDLAYOUT
     void OnComboboxKbdlayoutSelected( wxCommandEvent& event );
@@ -230,6 +224,12 @@ public:
 
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_SMB
     void OnCheckboxSmbClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINCTRL_SMBPORT
+    void OnSpinctrlSmbportUpdated( wxSpinEvent& event );
+
+    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_SMBPORT
+    void OnSpinctrlSmbportTextUpdated( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_CUPSENABLE
     void OnCheckboxCupsenableClick( wxCommandEvent& event );
@@ -365,15 +365,14 @@ private:
     wxComboBox* m_pCtrlDisplayType;
     wxSpinCtrl* m_pCtrlDisplayWidth;
     wxSpinCtrl* m_pCtrlDisplayHeight;
-    wxRadioButton* m_pCtrlImageEncDefault;
-    wxRadioButton* m_pCtrlImageEncCustom;
+    wxCheckBox* m_pCtrlImageEncCustom;
     wxButton* m_pCtrlImageSettings;
-    wxRadioButton* m_pCtrlKeyboardCurrent;
-    wxRadioButton* m_pCtrlKeyboardOther;
+    wxCheckBox* m_pCtrlKeyboardOther;
     wxComboBox* m_pCtrlKeyboardLayout;
     wxCheckBox* m_pCtrlEnableSSL;
     wxButton* m_pCtrlProxySettings;
     wxCheckBox* m_pCtrlSmbEnable;
+    wxSpinCtrl* m_pCtrlSmbPort;
     wxCheckBox* m_pCtrlCupsEnable;
     wxSpinCtrl* m_pCtrlCupsPort;
     wxListCtrl* m_pCtrlSmbShares;
@@ -448,6 +447,7 @@ private:
     bool m_bDisableDeferredUpdates;
     bool m_bResetMessageBoxes;
     bool m_bSavedResetMessageBoxes;
+    int m_iSmbPort;
 ////@end SessionProperties member variables
 
     bool readKbdLayouts();

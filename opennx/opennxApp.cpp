@@ -103,6 +103,7 @@ IMPLEMENT_APP(opennxApp);
     ,m_bRequireStartUsbIp(false)
     ,m_bTestCardWaiter(false)
     ,m_bAutoLogin(false)
+    ,m_bAutoResume(false)
     ,m_bKillErrors(false)
     ,m_pLoginDialog(NULL)
 {
@@ -799,14 +800,18 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
 
     parser.AddSwitch(wxEmptyString, wxT("autologin"),
             _("Automatically login to the specified session."));
+    parser.AddSwitch(wxEmptyString, wxT("autoresume"),
+            _("Automatically resume/takeover a session with the same name."));
     parser.AddSwitch(wxEmptyString, wxT("killerrors"),
             _("Automatically destroy error dialogs at termination."));
     parser.AddSwitch(wxEmptyString, wxT("admin"),
             _("Start the session administration tool."));
+    parser.AddOption(wxEmptyString, wxT("cacert"),
+            _("Specify alternate CA cert for fetching configuration via https."));
     parser.AddOption(wxEmptyString, wxT("caption"),
-            _("Secify window title for dialog mode."));
+            _("Specify window title for dialog mode."));
     parser.AddOption(wxEmptyString, wxT("style"),
-            _("Secify dialog style for dialog mode."));
+            _("Specify dialog style for dialog mode."));
     parser.AddOption(wxEmptyString, wxT("dialog"),
             _("Run in dialog mode."));
     parser.AddOption(wxEmptyString, wxT("display"),
@@ -835,10 +840,10 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
     // between option and option-value. The original however
     // *requires* the separator to be a space instead.
 #ifdef __WXMSW__
-    wxRegEx re(wxT("^--((caption)|(style)|(dialog)|(display)|(message)|(parent)|(session)|(window)|(trace))$"));
+    wxRegEx re(wxT("^--((cacert)|(caption)|(style)|(dialog)|(display)|(message)|(parent)|(session)|(window)|(trace))$"));
 #else
     // On Unix, --display is a toolkit option
-    wxRegEx re(wxT("^--((caption)|(style)|(dialog)|(message)|(parent)|(session)|(window)|(trace))$"));
+    wxRegEx re(wxT("^--((cacert)|(caption)|(style)|(dialog)|(message)|(parent)|(session)|(window)|(trace))$"));
 #endif
     wxArrayString as(argc, (const wxChar **)argv);
     for (i = 1; i < as.GetCount(); i++) {
@@ -876,6 +881,7 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
     wxString sDlgType;
 
     m_eMode = MODE_CLIENT;
+    (void)parser.Found(wxT("cacert"), &m_sCaCert);
     if (parser.Found(wxT("dialog"), &sDlgType)) {
         wxString tmp;
         m_iDialogStyle = wxICON_WARNING;
@@ -963,6 +969,8 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
         m_eMode = MODE_WIZARD;
     if (parser.Found(wxT("autologin")))
         m_bAutoLogin = true;
+    if (parser.Found(wxT("autoresume")))
+        m_bAutoResume = true;
     if (parser.Found(wxT("killerrors")))
         m_bKillErrors = true;
     if (parser.Found(wxT("waittest")))
@@ -1272,9 +1280,21 @@ bool opennxApp::OnInit()
         fn.SetName(wxT("watchusbip"));
 #endif
         wxString watchcmd = fn.GetShortPath();
-        ::myLogTrace(MYTRACETAG, wxT("cfgfile='%s'"), m_pSessionCfg->sGetFileName().c_str());
+        wxString cfgname(m_pSessionCfg->sGetFileName());
+        if (cfgname.StartsWith(wxT("http://")) ||
+                cfgname.StartsWith(wxT("https://")) ||
+                cfgname.StartsWith(wxT("ftp://"))) {
+            // If config was loaded from network, make a local copy for
+            // watchusbip. watchusbip will delete it after reading.
+            wxConfigBase::Get()->Read(_T("Config/UserNxDir"), &cfgname);
+            cfgname += wxFileName::GetPathSeparator() + _T("temp");
+            cfgname += wxFileName::GetPathSeparator() + m_sSessionID + _T(".nxs");
+            m_pSessionCfg->sSetFileName(cfgname);
+            m_pSessionCfg->SaveToFile();
+        }
+        ::myLogTrace(MYTRACETAG, wxT("cfgfile='%s'"), cfgname.c_str());
         watchcmd << wxT(" -s ") << m_sSessionID << wxT(" -p ")
-            << m_nNxSshPID << wxT(" -c \"") << m_pSessionCfg->sGetFileName() << wxT("\"");
+            << m_nNxSshPID << wxT(" -c \"") << cfgname << wxT("\"");
 #ifdef __WXDEBUG__
         watchcmd << wxT(" --trace=UsbIp,watchUsbIpApp");
 #endif

@@ -89,6 +89,8 @@ public:
 
     void UpdateDialogConstraints();
 
+    void OnContextHelp(wxCommandEvent &);
+
 ////@begin ProxyPropertyDialog event handler declarations
 
     /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_HTTPPROXY
@@ -96,9 +98,6 @@ public:
 
     /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_EXTERNALPROXY
     void OnRadiobuttonExternalproxySelected( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
-    void OnOkClick( wxCommandEvent& event );
 
 ////@end ProxyPropertyDialog event handler declarations
 

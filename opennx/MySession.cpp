@@ -901,22 +901,27 @@ MySession::OnSshEvent(wxCommandEvent &event)
                     }
                     break;
                 case STATE_START_SESSION:
+                    m_pDlg->SetStatusText(_("Starting session"));
                     scmd = wxT("startsession");
                     scmd << m_pCfg->sGetSessionParams(m_lProtocolVersion, true, m_sClearPassword);
                     printSsh(scmd);
                     m_eConnectState = STATE_FINISH;
                     break;
                 case STATE_ATTACH_SESSION:
+                    m_pDlg->SetStatusText(_("Attaching to session"));
                     scmd = wxT("attachsession");
                     scmd << m_pCfg->sGetSessionParams(m_lProtocolVersion, true, m_sClearPassword)
                         << wxT(" --display=\"") << m_sResumePort
-                        << wxT("\" --id=\"") << m_sResumeId << wxT("\"");
+                        << wxT("\" --id=\"") << m_sResumeId << wxT("\"")
+                        // TODO: Check, since which version this is supported
+                        << wxT(" --resize=\"1\"");
                     printSsh(scmd);
                     m_eConnectState = STATE_FINISH;
                     break;
                 case STATE_RESUME_SESSION:
+                    m_pDlg->SetStatusText(_("Resuming session"));
                     scmd = wxT("restoresession");
-                    scmd << m_pCfg->sGetSessionParams(m_lProtocolVersion, false, m_sClearPassword)
+                    scmd << m_pCfg->sGetSessionParams(m_lProtocolVersion, true, m_sClearPassword)
                         << wxT(" --session=\"") << m_sResumeName
                         << wxT("\" --type=\"") << m_sResumeType
                         << wxT("\" --id=\"") << m_sResumeId << wxT("\"");
@@ -950,6 +955,10 @@ MySession::OnSshEvent(wxCommandEvent &event)
                 m_bGotError = true;
             }
             printSsh(scmd, false);
+            break;
+        case MyIPC::ActionSetShadowGeometry:
+            m_pDlg->SetStatusText(_("Negotiating session parameter"));
+            m_sShadowGeometry = msg;
             break;
         case MyIPC::ActionSetSessionID:
             m_pDlg->SetStatusText(_("Negotiating session parameter"));
@@ -992,9 +1001,9 @@ MySession::OnSshEvent(wxCommandEvent &event)
             m_sSmbPort = msg;
             break;
         case MyIPC::ActionExit:
-            if (m_eConnectState == STATE_ABORT)
+            if (m_eConnectState == STATE_ABORT) {
                 m_bAbort = true;
-            else {
+            } else {
                 if (m_eConnectState == STATE_FINISH) {
                     m_pDlg->SetStatusText(_("Starting session"));
                     msg = wxT("NX> 299 Switch connection to: ");
@@ -1128,11 +1137,11 @@ MySession::parseSessions(bool moreAllowed)
     size_t n = m_aParseBuffer.GetCount();
     ::myLogTrace(MYTRACETAG, wxT("parseSessions: Got %d lines to parse"), n);
     wxRegEx re(
-            wxT("^(\\d+)\\s+([\\w-]+)\\s+([0-9A-F]{32})\\s+([A-Z-]{8})\\s+(\\d+)\\s+(\\d+x\\d+)\\s+(\\w+)\\s+(\\w+)\\s*"),
+            wxT("^(\\d+)\\s+([\\w-]+)\\s+([0-9A-F]{32})\\s+([A-Z-]{8})\\s+(\\d+)\\s+(\\d+x\\d+)\\s+(\\w+)\\s+([\\w-]+)\\s*(\\w*)"),
             wxRE_ADVANCED);
     wxASSERT(re.IsValid());
     wxRegEx re2(
-            wxT("^(\\d+)\\s+([\\w-]+)\\s+([0-9A-F]{32})\\s+([A-Z-]{8})\\s+(N/A)\\s+(N/A)\\s+(\\w+)\\s+(\\w+\\s\\w+)\\s*"),
+            wxT("^(\\d+)\\s+([\\w-]+)\\s+([0-9A-F]{32})\\s+([A-Z-]{8})\\s+(N/A)\\s+(N/A)\\s+(\\w+)\\s+(\\w+\\s\\w+)\\s*(\\w*)"),
             wxRE_ADVANCED);
     wxASSERT(re2.IsValid());
     ResumeDialog d(NULL);
@@ -1145,7 +1154,8 @@ MySession::parseSessions(bool moreAllowed)
         d.SetPreferredSession(m_pCfg->sGetName());
     for (size_t i = 0; i < n; i++) {
         wxString line = m_aParseBuffer[i];
-        if (re.Matches(line) && (re.GetMatchCount() == 9)) {
+        ::myLogTrace(MYTRACETAG, wxT("parseSessions: line='%s'"), line.c_str());
+        if (re.Matches(line) && (re.GetMatchCount() >= 9)) {
             wxString sPort(re.GetMatch(line, 1));
             wxString sType(re.GetMatch(line, 2));
             wxString sId(re.GetMatch(line, 3));
@@ -1154,14 +1164,17 @@ MySession::parseSessions(bool moreAllowed)
             wxString sSize(re.GetMatch(line, 6));
             wxString sState(re.GetMatch(line, 7));
             sName = re.GetMatch(line, 8);
-            d.AddSession(sName, sState, sType, sSize, sColors, sPort, sOpts, sId);
+            if (re.GetMatchCount() > 9) {
+                wxString sUser(re.GetMatch(line, 9));
+                d.AddSession(sName, sState, sType, sSize, sColors, sPort, sOpts, sId, sUser);
+            } else
+                d.AddSession(sName, sState, sType, sSize, sColors, sPort, sOpts, sId);
             bFound = true;
             iSessionCount++;
             ::myLogTrace(MYTRACETAG, wxT("parseSessions: re match"));
             continue;
         }
         if (m_bIsShadow) {
-            ::myLogTrace(MYTRACETAG, wxT("parseSessions: re2 probe"));
             if (re2.Matches(line) /* && (re2.GetMatchCount() == 9)*/) {
                 ::myLogTrace(MYTRACETAG, wxT("parseSessions: re2 match: %d"), re2.GetMatchCount());
                 wxString sPort(re2.GetMatch(line, 1));
@@ -1172,21 +1185,35 @@ MySession::parseSessions(bool moreAllowed)
                 wxString sSize(re2.GetMatch(line, 6));
                 wxString sState(re2.GetMatch(line, 7));
                 sName = re2.GetMatch(line, 8);
-                d.AddSession(sName, sState, sType, sSize, sColors, sPort, sOpts, sId);
+                if (re.GetMatchCount() > 9) {
+                    wxString sUser(re.GetMatch(line, 9));
+                    d.AddSession(sName, sState, sType, sSize, sColors, sPort, sOpts, sId, sUser);
+                } else
+                    d.AddSession(sName, sState, sType, sSize, sColors, sPort, sOpts, sId);
                 bFound = true;
                 iSessionCount++;
                 continue;
             }
         }
-        ::myLogTrace(MYTRACETAG, wxT("parseSessions: NO match on '%s'"), line.c_str());
+        ::myLogTrace(MYTRACETAG, wxT("parseSessions: NO match"));
     }
     if (bFound) {
         d.EnableNew(moreAllowed);
-        if (m_bIsShadow || (iSessionCount > 1) || (!sName.IsSameAs(m_pCfg->sGetName()))) {
+        if ((!m_bIsShadow) && wxGetApp().AutoResume() && (iSessionCount == 1) && (sName.IsSameAs(m_pCfg->sGetName()))) {
+            ::wxLogInfo(wxT("RESUME"));
+            m_sResumeName = sName;
+            m_sResumeType = d.GetSelectedType();
+            m_sResumeId = d.GetSelectedId();
+            m_eConnectState = STATE_RESUME_SESSION;
+        } else {
             switch (d.ShowModal()) {
                 case wxID_OK:
                     ::myLogTrace(MYTRACETAG, wxT("ResumeDialog returned OK"));
                     switch (d.GetMode()) {
+                        case ResumeDialog::Refresh:
+                            ::wxLogInfo(wxT("REFRESH"));
+                            m_eConnectState = STATE_LIST_SESSIONS;
+                            break;
                         case ResumeDialog::Terminate:
                             ::wxLogInfo(wxT("TERMINATE"));
                             m_sKillId = d.GetSelectedId();
@@ -1220,16 +1247,9 @@ MySession::parseSessions(bool moreAllowed)
                 case wxID_CANCEL:
                     ::myLogTrace(MYTRACETAG, wxT("ResumeDialog returned CANCEL"));
                     printSsh(wxT("bye"));
-                    if (m_bIsShadow)
-                        m_eConnectState = STATE_ABORT;
+                    m_eConnectState = STATE_ABORT;
                     break;
             }
-        } else {
-            ::wxLogInfo(wxT("RESUME"));
-            m_sResumeName = d.GetSelectedName();
-            m_sResumeType = d.GetSelectedType();
-            m_sResumeId = d.GetSelectedId();
-            m_eConnectState = STATE_RESUME_SESSION;
         }
     } else {
         if (m_bIsShadow) {
@@ -1540,8 +1560,16 @@ MySession::startProxy()
     popts << m_pCfg->sGetProxyParams(m_lProtocolVersion);
     if (!m_sSubscription.IsEmpty())
         popts << wxT(",product=") << m_sSubscription;
-    if (!m_sSmbPort.IsEmpty())
-        popts << wxT(",samba=") << m_sSmbPort;
+    if (m_pCfg->bGetEnableSmbSharing()) {
+        SmbClient sc;
+        if (sc.IsAvailable()) {
+            if (m_sSmbPort.IsEmpty()) {
+                popts << wxT(",samba=") << m_pCfg->iGetSmbPort();
+            } else {
+                popts << wxT(",samba=") << m_sSmbPort;
+            }
+        }
+    }
     if ((getActiveCupsPrinters().GetCount() > 0) && (isCupsRunning()))
         popts << wxT(",cups=") << cupsport;
 #ifdef SUPPORT_USBIP

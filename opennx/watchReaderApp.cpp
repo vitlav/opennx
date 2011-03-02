@@ -39,6 +39,8 @@
 #include <wx/config.h>
 #include <wx/wfstream.h>
 #include <wx/sysopt.h>
+#include <wx/tokenzr.h>
+#include <wx/regex.h>
 
 #include "watchReaderApp.h"
 #include "LibOpenSC.h"
@@ -110,10 +112,48 @@ void watchReaderApp::OnInitCmdLine(wxCmdLineParser& parser)
 {
     // Init standard options (--help, --verbose);
     wxApp::OnInitCmdLine(parser);
+
+    // tags will be appended to the last switch/option
+    wxString tags;
+    allTraceTags.Sort();
+    size_t i;
+    for (i = 0; i < allTraceTags.GetCount(); i++) {
+        if (!tags.IsEmpty())
+            tags += wxT(" ");
+        tags += allTraceTags.Item(i);
+    }
+    tags.Prepend(_("\n\nSupported trace tags: "));
+
     parser.AddOption(wxT("r"), wxT("reader"), _("Number of smart card reader to watch for."),
             wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_OPTION_MANDATORY);
-    parser.AddOption(wxT("p"), wxT("pid"), _("Process ID of the nxssh process."),
+    parser.AddOption(wxT("p"), wxT("pid"), _("Process ID of the nxssh process.") + tags,
             wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_OPTION_MANDATORY);
+    parser.AddOption(wxEmptyString, wxT("trace"),
+            _("Specify wxWidgets trace mask."));
+    // Workaround for commandline compatibility:
+    // Despite of the doc (specifying space, colon and '='),
+    // wxCmdLineParser insists on having a '=' as separator
+    // between option and option-value. The original however
+    // *requires* the separator to be a space instead.
+#ifdef __WXMSW__
+    wxRegEx re(wxT("^--((reader)|(pid)|(trace))$"));
+#else
+    // On Unix, --display is a toolkit option
+    wxRegEx re(wxT("^--((reader)|(pid)|(trace))$"));
+#endif
+    wxArrayString as(argc, (const wxChar **)argv);
+    for (i = 1; i < as.GetCount(); i++) {
+        if (re.Matches(as[i])) {
+            if ((i + 1) < as.GetCount()) {
+                as[i].Append(wxT("=")).Append(as[i+1]);
+                as.RemoveAt(i+1);
+            }
+        }
+    }
+    wxChar **xargv = new wxChar* [as.GetCount()];
+    for (i = 0; i < as.GetCount(); i++)
+        xargv[i] = wxStrdup(as[i].c_str());
+    parser.SetCmdLine(as.GetCount(), xargv);
 }
 
 bool watchReaderApp::OnCmdLineParsed(wxCmdLineParser& parser)
@@ -125,6 +165,19 @@ bool watchReaderApp::OnCmdLineParsed(wxCmdLineParser& parser)
         m_iReader = tmp;
     if (parser.Found(wxT("p"), &tmp))
         m_lSshPid = tmp;
+    wxString traceTags;
+    if (parser.Found(wxT("trace"), &traceTags)) {
+        wxStringTokenizer t(traceTags, wxT(","));
+        while (t.HasMoreTokens()) {
+            wxString tag = t.GetNextToken();
+            if (allTraceTags.Index(tag) == wxNOT_FOUND) {
+                OnCmdLineError(parser);
+                return false;
+            }
+            ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
+            wxLog::AddTraceMask(tag);
+        }
+    }
     return true;
 }
 
@@ -179,6 +232,17 @@ bool watchReaderApp::OnInit()
 
     if (!wxApp::OnInit())
         return false;
+
+    if (::wxGetEnv(wxT("WXTRACE"), &tmp)) {
+        wxStringTokenizer t(tmp, wxT(",:"));
+        while (t.HasMoreTokens()) {
+            wxString tag = t.GetNextToken();
+            if (allTraceTags.Index(tag) != wxNOT_FOUND) {
+                ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
+                wxLog::AddTraceMask(tag);
+            }
+        }
+    }
 
     LibOpenSC opensc;
     if (opensc.WatchHotRemove(m_iReader, m_lSshPid)) {

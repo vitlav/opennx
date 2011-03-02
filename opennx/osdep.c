@@ -27,6 +27,17 @@
  */
 #include <wx/platform.h>
 
+#ifdef APP_OPENNX
+# ifdef HAVE_LIBCURL
+#  include <curl/curl.h>
+static void __attribute__ ((constructor))
+initcurl()
+{
+    curl_global_init(CURL_GLOBAL_ALL);
+}
+# endif
+#endif
+
 int inKdeSession = 0;
 
 #ifdef __WXMSW__

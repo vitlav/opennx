@@ -40,6 +40,8 @@ class opennxApp : public wxApp
         const wxString &GetResourcePrefix() { return m_sResourcePrefix; }
         const wxString &GetVersion() { return m_sVersion; }
         const wxString &GetSelfPath() { return m_sSelfPath; }
+        const wxString &GetCaCert() { return m_sCaCert; }
+
         wxString LoadFileFromResource(const wxString &loc, bool bUseLocale = true);
 #ifdef __WXMAC__
         // Respond to Apple Event for opening a document
@@ -57,6 +59,7 @@ class opennxApp : public wxApp
         bool LibUSBAvailable() { return m_bLibUSBAvailable; }
         bool NxProxyAvailable() { return m_bNxProxyAvailable; }
         bool AutoLogin() { return m_bAutoLogin; }
+        bool AutoResume() { return m_bAutoResume; }
 
         void SetRequireWatchReader(bool b) { m_bRequireWatchReader = b; }
         void SetRequireStartUsbIp(bool b) { m_bRequireStartUsbIp = b; }
@@ -95,6 +98,7 @@ class opennxApp : public wxApp
         wxString m_sSelfPath;
         wxString m_sDialogCaption;
         wxString m_sDialogMessage;
+        wxString m_sCaCert;
         long m_nNxSshPID;
         long m_nOtherPID;
         long m_nWindowID;
@@ -109,6 +113,7 @@ class opennxApp : public wxApp
         bool m_bTestCardWaiter;
         bool m_bNxProxyAvailable;
         bool m_bAutoLogin;
+        bool m_bAutoResume;
         bool m_bKillErrors;
         LoginDialog *m_pLoginDialog;
 

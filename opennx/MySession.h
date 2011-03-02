@@ -181,6 +181,7 @@ private:
     wxString m_sKillId;
     wxString m_sTempDir;
     wxString m_sProtocolVersion;
+    wxString m_sShadowGeometry;
     wxWindow *m_pParent;
     SessionWatch *m_pSessionWatch;
 

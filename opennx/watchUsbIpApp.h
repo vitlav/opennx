@@ -49,6 +49,7 @@ class watchUsbIpApp: public wxApp
         void OnSshDied(wxCommandEvent &);
         void SendHotplugResponse(int, wxString);
         void Terminate();
+        void EnableContextHelp(wxWindow *w);
 
     private:
         MyXmlConfig *m_pSessionCfg;

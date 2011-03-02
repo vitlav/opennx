@@ -77,6 +77,7 @@ class ResumeDialog: public wxDialog
 
 public:
     typedef enum {
+        Refresh,
         New,
         Resume,
         Takeover,
@@ -99,7 +100,7 @@ public:
     void EnableNew(bool);
     void SetPreferredSession(const wxString &name) { m_sPreferredSession = name; };
     void AddSession(const wxString&, const wxString&, const wxString&, const wxString&,
-            const wxString&, const wxString&, const wxString&, const wxString&);
+            const wxString&, const wxString&, const wxString&, const wxString&, const wxString& user = wxT(""));
     void SetAttachMode(bool);
 
 private:
@@ -108,6 +109,9 @@ private:
 
     /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRL_SESSIONS
     void OnListctrlSessionsSelected( wxListEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_REFRESH
+    void OnRefreshClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_TERMINATE
     void OnButtonTerminateClick( wxCommandEvent& event );
@@ -163,6 +167,7 @@ private:
     wxString m_sSelectedType;
     wxString m_sSelectedPort;
     bool m_bShadow;
+    int m_iColOffset;
 ////@end ResumeDialog member variables
 
     wxString m_sPreferredSession;

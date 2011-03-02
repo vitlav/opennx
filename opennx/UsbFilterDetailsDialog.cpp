@@ -44,10 +44,16 @@
 #include "UsbFilterDetailsDialog.h"
 #include "MyValidator.h"
 #include "Icon.h"
-#include "watchUsbIpApp.h"
+#ifdef APP_OPENNX
+# include "opennxApp.h"
+#endif
+#ifdef APP_WATCHUSBIP
+# include "watchUsbIpApp.h"
+#endif
 #include "LibUSB.h"
 
 #include <wx/config.h>
+#include <wx/cshelp.h>
 
 #include "trace.h"
 
@@ -72,6 +78,8 @@ BEGIN_EVENT_TABLE( UsbFilterDetailsDialog, wxDialog )
     EVT_COMBOBOX( XRCID("ID_COMBOBOX_USBDEVS"), UsbFilterDetailsDialog::OnComboboxUsbdevsSelected )
 
     ////@end UsbFilterDetailsDialog event table entries
+
+    EVT_MENU(wxID_CONTEXT_HELP, UsbFilterDetailsDialog::OnContextHelp)
 
 END_EVENT_TABLE()
 
@@ -114,9 +122,14 @@ bool UsbFilterDetailsDialog::Create( wxWindow* parent, wxWindowID id, const wxSt
     }
     Centre();
     ////@end UsbFilterDetailsDialog creation
+    ::wxGetApp().EnableContextHelp(this);
     return true;
 }
 
+void UsbFilterDetailsDialog::OnContextHelp(wxCommandEvent &)
+{
+    wxContextHelp contextHelp(this);
+}
 
 /*!
  * UsbFilterDetailsDialog destructor

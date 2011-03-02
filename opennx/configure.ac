@@ -391,6 +391,8 @@ AC_ARG_WITH([dllpath],
                            [Specify path for DLLs (mingw32 crossbuild only)]),
 	[ac_cv_dllpath=$withval])
 
+LIBCURL_CHECK_CONFIG
+
 NXBUILD=nx
 CYGBINS=
 BUILDXMING=yes

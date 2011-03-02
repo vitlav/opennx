@@ -41,6 +41,7 @@ class AsyncProcess : public wxProcess, wxThreadHelper
 
     public:
         AsyncProcess();
+        AsyncProcess(const wxString& cmd, const wxString &wdir, const wxString &special, wxEvtHandler *h = NULL);
         AsyncProcess(const wxString& cmd, const wxString &wdir, wxEvtHandler *h = NULL);
         AsyncProcess(const wxString& cmd, wxEvtHandler *h = NULL);
 
@@ -64,6 +65,7 @@ class AsyncProcess : public wxProcess, wxThreadHelper
         wxString m_sErrBuf;
         wxString m_sCmd;
         wxString m_sDir;
+        wxString m_sSpecial;
         wxStopWatch m_cOutWatch;
         wxStopWatch m_cErrWatch;
 };

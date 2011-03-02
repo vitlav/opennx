@@ -166,15 +166,11 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
     EVT_SPINCTRL( XRCID("ID_SPINCTRL_HEIGHT"), SessionProperties::OnSpinctrlHeightUpdated )
     EVT_TEXT( XRCID("ID_SPINCTRL_HEIGHT"), SessionProperties::OnSpinctrlHeightTextUpdated )
 
-    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_IMG_DEFAULT"), SessionProperties::OnRadiobuttonImgDefaultSelected )
-
-    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_IMG_CUSTOM"), SessionProperties::OnRadiobuttonImgCustomSelected )
+    EVT_CHECKBOX( XRCID("ID_CHECKBOX_IMG_CUSTOM"), SessionProperties::OnCheckboxImgCustomClick )
 
     EVT_BUTTON( XRCID("ID_BUTTON_IMG_CUSTOM"), SessionProperties::OnButtonImgCustomClick )
 
-    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_KBDKEEP"), SessionProperties::OnRadiobuttonKbdkeepSelected )
-
-    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_KBDOTHER"), SessionProperties::OnRadiobuttonKbdotherSelected )
+    EVT_CHECKBOX( XRCID("ID_CHECKBOX_KBDOTHER"), SessionProperties::OnCheckboxKbdotherClick )
 
     EVT_COMBOBOX( XRCID("ID_COMBOBOX_KBDLAYOUT"), SessionProperties::OnComboboxKbdlayoutSelected )
 
@@ -205,6 +201,9 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
     EVT_BUTTON( XRCID("ID_BUTTON_CACHECLEAN"), SessionProperties::OnButtonCachecleanClick )
 
     EVT_CHECKBOX( XRCID("ID_CHECKBOX_SMB"), SessionProperties::OnCheckboxSmbClick )
+
+    EVT_SPINCTRL( XRCID("ID_SPINCTRL_SMBPORT"), SessionProperties::OnSpinctrlSmbportUpdated )
+    EVT_TEXT( XRCID("ID_SPINCTRL_SMBPORT"), SessionProperties::OnSpinctrlSmbportTextUpdated )
 
     EVT_CHECKBOX( XRCID("ID_CHECKBOX_CUPSENABLE"), SessionProperties::OnCheckboxCupsenableClick )
 
@@ -371,6 +370,7 @@ SessionProperties::CheckChanged()
         m_pCfg->bSetEnableMultimedia(m_bEnableMultimedia);
         m_pCfg->bSetUseCups(m_bUseCups);
         m_pCfg->iSetCupsPort(m_iCupsPort);
+        m_pCfg->iSetSmbPort(m_iSmbPort);
 
 #ifdef SUPPORT_USBIP
         // variables on the 'USB' tab
@@ -416,6 +416,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_bDisableDeferredUpdates = false;
     m_bResetMessageBoxes = false;
     m_bSavedResetMessageBoxes = false;
+    m_iSmbPort = 445;
     m_pNoteBook = NULL;
     m_pCtrlHostname = NULL;
     m_pCtrlPort = NULL;
@@ -426,15 +427,14 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_pCtrlDisplayType = NULL;
     m_pCtrlDisplayWidth = NULL;
     m_pCtrlDisplayHeight = NULL;
-    m_pCtrlImageEncDefault = NULL;
     m_pCtrlImageEncCustom = NULL;
     m_pCtrlImageSettings = NULL;
-    m_pCtrlKeyboardCurrent = NULL;
     m_pCtrlKeyboardOther = NULL;
     m_pCtrlKeyboardLayout = NULL;
     m_pCtrlEnableSSL = NULL;
     m_pCtrlProxySettings = NULL;
     m_pCtrlSmbEnable = NULL;
+    m_pCtrlSmbPort = NULL;
     m_pCtrlCupsEnable = NULL;
     m_pCtrlCupsPort = NULL;
     m_pCtrlSmbShares = NULL;
@@ -517,6 +517,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
         m_bUseCups = false;
 #endif
         m_iCupsPort = m_pCfg->iGetCupsPort();
+        m_iSmbPort = m_pCfg->iGetSmbPort();
 
         // variables on 'USB' tab
 #ifdef SUPPORT_USBIP
@@ -560,7 +561,12 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     Centre();
     ////@end SessionProperties creation
 
-#ifndef SUPPORT_USBIP
+#ifdef SUPPORT_USBIP
+    m_pCtrlUsbipdDaemon->Show();
+    wxSize sz = GetBestSize();
+    sz.IncBy(0, 35);
+    SetInitialSize(sz);
+#else
     removePage(_("USB"));
     m_pCtrlUsbipdDaemon->Hide();
 #endif
@@ -918,6 +924,7 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
     m_pCtrlShareAdd->Enable(bTmp);
     m_pCtrlShareDelete->Enable(bTmp && (m_pCtrlSmbShares->GetSelectedItemCount() > 0));
     m_pCtrlShareModify->Enable(bTmp && (m_pCtrlSmbShares->GetSelectedItemCount() > 0));
+    m_pCtrlSmbPort->Enable(m_bEnableSmbSharing);
     m_pCtrlCupsPort->Enable(m_bUseCups);
 
 #ifdef SUPPORT_USBIP
@@ -954,15 +961,14 @@ void SessionProperties::CreateControls()
     m_pCtrlDisplayType = XRCCTRL(*this, "ID_COMBOBOX_DISPTYPE", wxComboBox);
     m_pCtrlDisplayWidth = XRCCTRL(*this, "ID_SPINCTRL_WIDTH", wxSpinCtrl);
     m_pCtrlDisplayHeight = XRCCTRL(*this, "ID_SPINCTRL_HEIGHT", wxSpinCtrl);
-    m_pCtrlImageEncDefault = XRCCTRL(*this, "ID_RADIOBUTTON_IMG_DEFAULT", wxRadioButton);
-    m_pCtrlImageEncCustom = XRCCTRL(*this, "ID_RADIOBUTTON_IMG_CUSTOM", wxRadioButton);
+    m_pCtrlImageEncCustom = XRCCTRL(*this, "ID_CHECKBOX_IMG_CUSTOM", wxCheckBox);
     m_pCtrlImageSettings = XRCCTRL(*this, "ID_BUTTON_IMG_CUSTOM", wxButton);
-    m_pCtrlKeyboardCurrent = XRCCTRL(*this, "ID_RADIOBUTTON_KBDKEEP", wxRadioButton);
-    m_pCtrlKeyboardOther = XRCCTRL(*this, "ID_RADIOBUTTON_KBDOTHER", wxRadioButton);
+    m_pCtrlKeyboardOther = XRCCTRL(*this, "ID_CHECKBOX_KBDOTHER", wxCheckBox);
     m_pCtrlKeyboardLayout = XRCCTRL(*this, "ID_COMBOBOX_KBDLAYOUT", wxComboBox);
     m_pCtrlEnableSSL = XRCCTRL(*this, "ID_CHECKBOX_ENABLESSL", wxCheckBox);
     m_pCtrlProxySettings = XRCCTRL(*this, "ID_BUTTON_PROXYSETTINGS", wxButton);
     m_pCtrlSmbEnable = XRCCTRL(*this, "ID_CHECKBOX_SMB", wxCheckBox);
+    m_pCtrlSmbPort = XRCCTRL(*this, "ID_SPINCTRL_SMBPORT", wxSpinCtrl);
     m_pCtrlCupsEnable = XRCCTRL(*this, "ID_CHECKBOX_CUPSENABLE", wxCheckBox);
     m_pCtrlCupsPort = XRCCTRL(*this, "ID_SPINCTRL_CUPSPORT", wxSpinCtrl);
     m_pCtrlSmbShares = XRCCTRL(*this, "ID_LISTCTRL_SMB_SHARES", wxListCtrl);
@@ -1008,10 +1014,10 @@ void SessionProperties::CreateControls()
         FindWindow(XRCID("ID_SPINCTRL_WIDTH"))->SetValidator( MyValidator(MyValidator::MYVAL_NUMERIC, & m_iDisplayWidth) );
     if (FindWindow(XRCID("ID_SPINCTRL_HEIGHT")))
         FindWindow(XRCID("ID_SPINCTRL_HEIGHT"))->SetValidator( MyValidator(MyValidator::MYVAL_NUMERIC, & m_iDisplayHeight) );
-    if (FindWindow(XRCID("ID_RADIOBUTTON_IMG_CUSTOM")))
-        FindWindow(XRCID("ID_RADIOBUTTON_IMG_CUSTOM"))->SetValidator( wxGenericValidator(& m_bUseCustomImageEncoding) );
-    if (FindWindow(XRCID("ID_RADIOBUTTON_KBDOTHER")))
-        FindWindow(XRCID("ID_RADIOBUTTON_KBDOTHER"))->SetValidator( wxGenericValidator(& m_bKbdLayoutOther) );
+    if (FindWindow(XRCID("ID_CHECKBOX_IMG_CUSTOM")))
+        FindWindow(XRCID("ID_CHECKBOX_IMG_CUSTOM"))->SetValidator( wxGenericValidator(& m_bUseCustomImageEncoding) );
+    if (FindWindow(XRCID("ID_CHECKBOX_KBDOTHER")))
+        FindWindow(XRCID("ID_CHECKBOX_KBDOTHER"))->SetValidator( wxGenericValidator(& m_bKbdLayoutOther) );
     if (FindWindow(XRCID("ID_CHECKBOX_DISABLETCPNODEL")))
         FindWindow(XRCID("ID_CHECKBOX_DISABLETCPNODEL"))->SetValidator( wxGenericValidator(& m_bDisableTcpNoDelay) );
     if (FindWindow(XRCID("ID_CHECKBOX_DISABLEZCOMP")))
@@ -1036,6 +1042,8 @@ void SessionProperties::CreateControls()
         FindWindow(XRCID("ID_COMBOBOX_CACHEDISK"))->SetValidator( wxGenericValidator(& m_iCacheDisk) );
     if (FindWindow(XRCID("ID_CHECKBOX_SMB")))
         FindWindow(XRCID("ID_CHECKBOX_SMB"))->SetValidator( wxGenericValidator(& m_bEnableSmbSharing) );
+    if (FindWindow(XRCID("ID_SPINCTRL_SMBPORT")))
+        FindWindow(XRCID("ID_SPINCTRL_SMBPORT"))->SetValidator( MyValidator(MyValidator::MYVAL_NUMERIC, & m_iSmbPort) );
     if (FindWindow(XRCID("ID_CHECKBOX_CUPSENABLE")))
         FindWindow(XRCID("ID_CHECKBOX_CUPSENABLE"))->SetValidator( wxGenericValidator(& m_bUseCups) );
     if (FindWindow(XRCID("ID_SPINCTRL_CUPSPORT")))
@@ -1268,28 +1276,6 @@ void SessionProperties::OnButtonDsettingsClick( wxCommandEvent& event )
 }
 
 /*!
- * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_IMG_DEFAULT
- */
-
-void SessionProperties::OnRadiobuttonImgDefaultSelected( wxCommandEvent& event )
-{
-    wxUnusedVar(event);
-    UpdateDialogConstraints(true);
-    CheckChanged();
-}
-
-/*!
- * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_IMG_CUSTOM
- */
-
-void SessionProperties::OnRadiobuttonImgCustomSelected( wxCommandEvent& event )
-{
-    wxUnusedVar(event);
-    UpdateDialogConstraints(true);
-    CheckChanged();
-}
-
-/*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_IMG_CUSTOM
  */
 
@@ -1348,28 +1334,6 @@ void SessionProperties::OnButtonCachecleanClick( wxCommandEvent& event )
             }
         }
     }
-}
-
-/*!
- * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_KBDKEEP
- */
-
-void SessionProperties::OnRadiobuttonKbdkeepSelected( wxCommandEvent& event )
-{
-    wxUnusedVar(event);
-    UpdateDialogConstraints(true);
-    CheckChanged();
-}
-
-/*!
- * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_KBDOTHER
- */
-
-void SessionProperties::OnRadiobuttonKbdotherSelected( wxCommandEvent& event )
-{
-    wxUnusedVar(event);
-    UpdateDialogConstraints(true);
-    CheckChanged();
 }
 
 /*!
@@ -1920,6 +1884,27 @@ void SessionProperties::OnSpinctrlHeightTextUpdated( wxCommandEvent& event )
 }
 
 /*!
+ * wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINCTRL_SMBPORT
+ */
+
+void SessionProperties::OnSpinctrlSmbportUpdated( wxSpinEvent& event )
+{
+    wxUnusedVar(event);
+    CheckChanged();
+}
+
+/*!
+ * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL_SMBPORT
+ */
+
+void SessionProperties::OnSpinctrlSmbportTextUpdated( wxCommandEvent& event )
+{
+    wxUnusedVar(event);
+    if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlSmbPort))
+        CheckChanged();
+}
+
+/*!
  * wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINCTRL_CUPSPORT
  */
 
@@ -1937,7 +1922,8 @@ void SessionProperties::OnSpinctrlCupsportTextUpdated( wxCommandEvent& event )
 {
     wxUnusedVar(event);
     if (m_bKeyTyped && (wxWindow::FindFocus() == (wxWindow *)m_pCtrlCupsPort))
-        m_pCtrlApplyButton->Enable(true);
+        CheckChanged();
+        //m_pCtrlApplyButton->Enable(true);
 }
 
 /*!
@@ -2235,6 +2221,7 @@ void SessionProperties::OnButtonProxysettingsClick( wxCommandEvent& )
     d.SetSProxyCommand(m_sProxyCommand);
     d.SetBExternalProxy(m_bExternalProxy);
     d.SetBUseProxy(!m_bExternalProxy);
+    d.UpdateDialogConstraints();
     if (wxID_OK == d.ShowModal()) {
         m_sProxyHost = d.GetSProxyHost();
         m_iProxyPort = d.GetIProxyPort();
@@ -2292,6 +2279,30 @@ void SessionProperties::OnCheckboxNodeferredClick( wxCommandEvent& event )
 void SessionProperties::OnCheckboxResetmsgboxesClick( wxCommandEvent& event )
 {
     wxUnusedVar(event);
+    CheckChanged();
+}
+
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_KBDOTHER
+ */
+
+void SessionProperties::OnCheckboxKbdotherClick( wxCommandEvent& event )
+{
+    wxUnusedVar(event);
+    UpdateDialogConstraints(true);
+    CheckChanged();
+}
+
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_IMG_CUSTOM
+ */
+
+void SessionProperties::OnCheckboxImgCustomClick( wxCommandEvent& event )
+{
+    wxUnusedVar(event);
+    UpdateDialogConstraints(true);
     CheckChanged();
 }
 
