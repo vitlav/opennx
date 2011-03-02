@@ -4,7 +4,7 @@
 Summary: An OpenSource NX client
 Name: opennx
 Version: 0.16
-Release: alt14.svn595
+Release: alt15.svn611
 License: LGPL/GPL
 Group: Networking/Remote access
 Url: http://sourceforge.net/projects/opennx
@@ -122,6 +122,9 @@ install -m 644 etc/*.rules %buildroot%_sysconfdir/udev/rules.d
 %endif
 
 %changelog
+* Wed Mar 02 2011 Boris Savelev <boris@altlinux.org> 0.16-alt15.svn611
+- update from trunk
+
 * Mon Feb 28 2011 Lenar Shakirov <snejok@altlinux.ru> 0.16-alt14.svn595
 - build fixed: disable opensc support by default
 
