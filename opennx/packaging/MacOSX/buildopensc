@@ -44,6 +44,8 @@ else
         	--enable-pcsc \
         	--sysconfdir=/Library/OpenSC/etc \
         	--disable-static \
+        	--disable-iconv \
+        	--disable-readline \
         	--disable-dependency-tracking
 	make
 	rm -rf $D/dist
@@ -51,6 +53,6 @@ else
 	make DESTDIR=$D/dist install
 	cd $D
 	mkdir -p $CACHEDIR
-	tar czf $CACHEDBUILD dist
+	tar czf $CACHEDBUILD opensc-$V dist
 fi
 mkdir -p $LIBDEST
