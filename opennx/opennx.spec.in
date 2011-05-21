@@ -195,9 +195,11 @@ for pkg in %{nxpkgsall} ; do
     tar xzf ${pkg}-*.tar.gz
 done
 ncver=`ls nxcomp-*.tar.gz|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxcomp-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
+never=`ls nxesd-*.tar.gz|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxesd-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
 %else
 %setup -q -a 100 -a 101 -a 102 -a 103
 ncver=`basename %{SOURCE100}|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxcomp-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
+never=`basename %{SOURCE101}|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxesd-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
 %endif
 
 # Apply openssh askPIN patch (see https://bugzilla.mindrot.org/show_bug.cgi?id=608)
@@ -205,6 +207,10 @@ cd nxssh && patch -p1 < ../patches/openssh-scard-pin.patch
 cd ..
 if test $ncver -lt 03040006 ;then
     patch -p0 < patches/nxcomp-gcc44.patch
+fi
+if test $never -ge 03050000 ;then
+    patch -p0 < patches/nxesd-3.5-autotools.patch
+    touch nxesd/.run_autoreconf
 fi
 # Make nxssh load libopensc dynamically
 patch -p0 < patches/nxssh-dynopensc.patch
@@ -229,7 +235,9 @@ patch -p0 < patches/nxssh-dynopensc.patch
 
 make
 for pkg in %{nxpkgs} ; do
-	cd $pkg && ./configure --prefix=%{_prefix} && make
+    cd $pkg
+    test -f .run_autoreconf && autoreconf -f -i || :
+	./configure --prefix=%{_prefix} && make
     cd ..
 done
 %if %{is_fc}%{is_el}
