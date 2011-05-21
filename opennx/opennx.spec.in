@@ -116,7 +116,13 @@ BuildRequires: openssl-devel
 %if %{is_suse}
 # Workaround for https://bugzilla.novell.com/show_bug.cgi?id=436992
 BuildRequires: -post-build-checks
+%if %{suse_version} >= 1140
+BuildRequires: wxWidgets-devel
+%define _use_internal_dependency_generator 0
+%define __find_requires %wx_requires
+%else
 BuildRequires: wxGTK-devel >= 2.8.0
+%endif
 BuildRequires: xorg-x11-proto-devel
 BuildRequires: xorg-x11-xtrans-devel
 BuildRequires: libpulse-devel
