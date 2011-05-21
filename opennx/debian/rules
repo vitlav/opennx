@@ -47,6 +47,7 @@ endif
 		nxcomp/mkinstalldirs nxcomp/install-sh
 	./configure $(CROSS) --prefix=$(prefix) --datarootdir=/usr/share/opennx
 	cd nxcomp && ./configure --prefix=$(prefix)
+	grep -q 'nxesd-3.5' nxesd/CHANGELOG && patch -p0 < patches/nxesd-3.5-autotools.patch || true
 	cd nxesd && ./configure --prefix=$(prefix)
 	cd nxproxy && ./configure --prefix=$(prefix)
 	cd nxssh && patch -p1 < ../patches/openssh-scard-pin.patch
