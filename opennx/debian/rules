@@ -47,7 +47,7 @@ endif
 		nxcomp/mkinstalldirs nxcomp/install-sh
 	./configure $(CROSS) --prefix=$(prefix) --datarootdir=/usr/share/opennx
 	cd nxcomp && ./configure --prefix=$(prefix)
-	cd nxesd && grep -q 'nxesd-3.5' CHANGELOG && patch -p0 < patches/nxesd-3.5-autotools.patch || true
+	cd nxesd && grep -q 'nxesd-3.5' CHANGELOG && patch -p1 < ../patches/nxesd-3.5-autotools.patch || true
 	cd nxesd && grep -q 'nxesd-3.5' CHANGELOG && autoreconf -f -i || true
 	cd nxesd && ./configure --prefix=$(prefix)
 	cd nxproxy && ./configure --prefix=$(prefix)
