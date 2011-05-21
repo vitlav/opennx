@@ -234,10 +234,11 @@ patch -p0 < patches/nxssh-dynopensc.patch
 # keep this comment line!!
 
 make
+CFG_nxesd=--disable-shared
 for pkg in %{nxpkgs} ; do
     cd $pkg
     test -f .run_autoreconf && autoreconf -f -i || :
-	./configure --prefix=%{_prefix} && make
+	./configure --prefix=%{_prefix} `eval echo '$CFG_'$pkg` && make
     cd ..
 done
 %if %{is_fc}%{is_el}
@@ -266,7 +267,10 @@ make DESTDIR=%{buildroot} install
 make DESTDIR=%{buildroot} prefix=/usr install-man
 %{__install} -d -m 755 %{buildroot}%{nxlib}
 %{__install} -m 755 nxcomp/libXcomp.so.*.*.* %{buildroot}%{nxlib}
-%{__install} -m 755 nxesd/nxesd %{buildroot}%{_prefix}/bin
+mkdir -p nxesd_dist
+make -C nxesd DESTDIR=%{_builddir}/%{name}-%{version}/nxesd_dist install
+%{__install} -m 755 nxesd_dist/%{_prefix}/bin/nxesd %{buildroot}%{_prefix}/bin
+rm -rf nxesd_dist
 %{__install} -m 755 nxssh/nxssh %{buildroot}%{_prefix}/bin
 %{__install} -m 755 nxproxy/nxproxy %{buildroot}%{_prefix}/bin
 /sbin/ldconfig -n %{buildroot}%{nxlib}

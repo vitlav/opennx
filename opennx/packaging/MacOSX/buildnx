@@ -80,12 +80,16 @@ if [ $NEEDREBUILD = yes ] ; then
     		cd $pkg
     		for p in $TOPSRC/patches/${pkg}-*.patch ; do
         		bn=`basename $p`
-        		if [ $bn = nxcomp-gcc44.patch -a $ncver -ge 03040006 ] ; then
+			if [ $bn = nxesd-3.5-autotools.patch ] ; then
             			echo === Skipping $bn in $pkg
-        		else
-            			echo === Applying $bn in $pkg
-            			patch -p1 < $p
-        		fi
+			else
+				if [ $bn = nxcomp-gcc44.patch -a $ncver -ge 03040006 ] ; then
+            				echo === Skipping $bn in $pkg
+        			else
+            				echo === Applying $bn in $pkg
+            				patch -p1 < $p
+        			fi
+			fi
     		done
     		autoreconf -f -i
     		cargs=
