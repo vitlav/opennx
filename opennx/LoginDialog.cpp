@@ -158,7 +158,8 @@ void LoginDialog::ReadConfigDirectory()
     cfgdir = cfgdir + wxFileName::GetPathSeparator() + wxT("config");
     m_aConfigFiles.Empty();
 
-    wxDir::GetAllFiles(cfgdir, &m_aConfigFiles, wxT("*.nxs"), wxDIR_FILES);
+    wxString wanted(wxT("*.nxs"));
+    wxDir::GetAllFiles(cfgdir, &m_aConfigFiles, wanted, wxDIR_FILES);
     size_t i;
     m_sSessionName.Empty();
     if (m_pCurrentCfg)
