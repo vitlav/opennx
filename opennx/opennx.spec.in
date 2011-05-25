@@ -103,7 +103,6 @@ BuildRequires: libtool
 BuildRequires: automake >= 1.10
 BuildRequires: audiofile-devel
 BuildRequires: cups-devel
-BuildRequires: opensc-devel
 BuildRequires: libusb-devel
 BuildRequires: libsmbclient-devel
 BuildRequires: gcc-c++
@@ -247,24 +246,12 @@ for pkg in %{nxpkgs} ; do
 	./configure --prefix=%{_prefix} `eval echo '$CFG_'$pkg` && make
     cd ..
 done
-%if %{is_fc}%{is_el}
-# On FC10, opensc-config is currently broken. It returns "-I" when
-# called with the --cflags option, breaking ./configure. Therefore
-# we provide a wrapper here.
+export PATH=`pwd`/opensc:$PATH
 cd nxssh
-cat<<"EOF">opensc-config
-#!/bin/sh
-/usr/bin/opensc-config "$@"|perl -pe 's/-I\s//g'
-EOF
-chmod a+x opensc-config
-export PATH=.:$PATH
 %if %{is_el}
 LIBS=-lresolv ./configure --prefix=%{_prefix} --with-opensc --enable-opensc-dynamic && make
 %else
 ./configure --prefix=%{_prefix} --with-opensc --enable-opensc-dynamic && make
-%endif
-%else
-cd nxssh && ./configure --prefix=%{_prefix} --with-opensc --enable-opensc-dynamic && make
 %endif
 cd ..
 

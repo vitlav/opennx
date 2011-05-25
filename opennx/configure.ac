@@ -368,23 +368,6 @@ else
     esac
 fi
 
-ac_cv_opensc=
-AC_ARG_WITH([opensc],
-            AS_HELP_STRING([--with-opensc=DIR],
-                           [Specify path to opensc installation]),
-	[ac_cv_opensc=$withval])
-if test -n "$ac_cv_opensc" ; then
-    CPPFLAGS="$CPPFLAGS -I$ac_cv_opensc/include"
-    LDFLAGS="$LDFLAGS -L$ac_cv_opensc/lib"
-else
-    case $target_os in
-        darwin*)
-            CPPFLAGS="$CPPFLAGS -I/Library/OpenSC/include"
-            LDFLAGS="$LDFLAGS -L/Library/OpenSC/lib"
-            ;;
-    esac
-fi
-
 ac_cv_dllpath=
 AC_ARG_WITH([dllpath],
             AS_HELP_STRING([--with-dllpath=PATH],
@@ -415,7 +398,7 @@ FE_SVNREV([SVNREV])
 AC_DEFINE_UNQUOTED(SVNREV,"$SVNREV",[SVN revision])
 FE_RCVERSION
 
-AC_CHECK_HEADERS([cups/cups.h cups.h libsmbclient.h opensc/opensc.h usb.h])
+AC_CHECK_HEADERS([cups/cups.h cups.h libsmbclient.h usb.h])
 case $target_os in
     mingw*)
         ;;
@@ -429,9 +412,6 @@ case $target_os in
         ;;
 esac
 
-if test "$ac_cv_header_opensc_opensc_h" != "yes"; then
-    AC_MSG_ERROR([Need opensc/opensc.h])
-fi
 if test "$ac_cv_enable_usbip" = "YES" -a "$ac_cv_header_usb_h" != "yes"; then
     AC_MSG_ERROR([Need usb.h when compiling with usbip support])
 fi
@@ -527,4 +507,5 @@ AC_CONFIG_FILES([Makefile opennx.spec res/opennx.rc
     packaging/win32/pulse/Makefile packaging/MacOSX/Makefile
     packaging/MacOSX/opennx.plist packaging/MacOSX/opennx-main.plist
     packaging/MacOSX/pkg.plist po/Makefile.in])
+AC_CONFIG_FILES([opensc/opensc-config],[chmod +x opensc/opensc-config])
 AC_OUTPUT
