@@ -503,25 +503,29 @@ tty_readpass( const char *prompt, char *buf, size_t size )
 {
     int tty, ret;
 
+    if (0 >= size)
+        return -1;				/* no room */
     tty = open(TTY_NAME, O_RDWR);
-    if ( tty < 0 ) {
+    if (0 > tty) {
         error("Unable to open %s\n", TTY_NAME);
         return -1;				/* can't open tty */
     }
-    if ( size <= 0 )
-        return -1;				/* no room */
-    if (write(tty, prompt, strlen(prompt)) != (int)strlen(prompt))
+    if (write(tty, prompt, strlen(prompt)) != (int)strlen(prompt)) {
+        close(tty);
         return -1;
+    }
     buf[0] = '\0';
     tty_change_echo(tty, 0);			/* disable echo */
     ret = read(tty,buf, size-1);
     tty_change_echo(tty, 1);			/* restore */
-    if (write(tty, "\n", 1) != 1)			/* new line */
+    if (write(tty, "\n", 1) != 1) {			/* new line */
+        close(tty);
         return -1;
+    }
     close(tty);
-    if ( strchr(buf,'\n') == NULL  )
+    if (NULL == strchr(buf,'\n'))
         return -1;
-    if ( 0 < ret )
+    if (0 <= ret)
         buf[ret] = '\0';
     return ret;
 }
@@ -1125,14 +1129,16 @@ readpass( const char* prompt, ...)
         sprintf(cmd, "%s \"%s\"", askpass, buf);
         fp = popen(cmd, "r");
         free(cmd);
-        if ( fp == NULL )
+        if (NULL == fp)
             return NULL;			/* fail */
         buf[0] = '\0';
-        if (fgets(buf, sizeof(buf), fp) == NULL)
+        if (NULL == fgets(buf, sizeof(buf), fp)) {
+            fclose(fp);
             return NULL;			/* fail */
+        }
         fclose(fp);
     } else {
-        tty_readpass( buf, buf, sizeof(buf));
+        tty_readpass(buf, buf, sizeof(buf));
     }
     buf[strcspn(buf, "\r\n")] = '\0';
     return buf;
