@@ -399,18 +399,6 @@ AC_DEFINE_UNQUOTED(SVNREV,"$SVNREV",[SVN revision])
 FE_RCVERSION
 
 AC_CHECK_HEADERS([cups/cups.h cups.h libsmbclient.h usb.h])
-case $target_os in
-    mingw*)
-        ;;
-    *)
-        if test "$ac_cv_header_libsmbclient_h" != "yes" ; then
-            AC_MSG_ERROR([Need libsmbclient.h for compiling on Unix])
-        fi
-        if test "$ac_cv_header_cups_cups_h" != "yes" -a "$ac_cv_header_cups_h" != "yes" ; then
-            AC_MSG_ERROR([Need cups.h for compiling on Unix])
-        fi
-        ;;
-esac
 
 if test "$ac_cv_enable_usbip" = "YES" -a "$ac_cv_header_usb_h" != "yes"; then
     AC_MSG_ERROR([Need usb.h when compiling with usbip support])

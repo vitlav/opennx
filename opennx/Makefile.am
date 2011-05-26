@@ -55,7 +55,8 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	X11PropertyDialog.h X11PropertyDialog_symbols.h trace.h tracelogApp.h \
 	watchReaderApp.h watchUsbIpApp.h xh_richtext.h MacUninstallApp.h \
 	WrappedStatic.h SupressibleMessageDialog.h SupressibleMessageDialog_symbols.h \
-	opensc/errors.h opensc/opensc.h opensc/scconf.h opensc/types.h opensc/pkcs15.h
+	opensc/errors.h opensc/opensc.h opensc/scconf.h opensc/types.h opensc/pkcs15.h \
+	libsmbclient.h
 
 pconnect_SOURCES = pconnect.c
 pconnect_LDADD = $(WS2LIB) $(RESLIB)

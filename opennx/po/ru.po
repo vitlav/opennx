@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2011-02-27 15:51+0100\n"
+"POT-Creation-Date: 2011-05-26 15:52+0200\n"
 "PO-Revision-Date: 2010-08-27 12:21+0400\n"
 "Last-Translator: Shakirov Lenar <snejok@altlinux.org>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -106,7 +106,7 @@ msgstr "Лог сессии - OpenNX"
 msgid "Close"
 msgstr "Закрыть"
 
-#: LoginDialog.cpp:397 LoginDialog.cpp:501 MyWizard.cpp:1337
+#: LoginDialog.cpp:398 LoginDialog.cpp:502 MyWizard.cpp:1337
 #, c-format
 msgid ""
 "Could not save session to\n"
@@ -115,7 +115,7 @@ msgstr ""
 "Не удалось сохранить сессию в\n"
 "%s"
 
-#: LoginDialog.cpp:398 LoginDialog.cpp:502 MyWizard.cpp:1338
+#: LoginDialog.cpp:399 LoginDialog.cpp:503 MyWizard.cpp:1338
 msgid "Error saving - OpenNX"
 msgstr "Ошибка при сохранении - OpenNX"
 

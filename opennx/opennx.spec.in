@@ -102,9 +102,7 @@ Provides: nxclient
 BuildRequires: libtool
 BuildRequires: automake >= 1.10
 BuildRequires: audiofile-devel
-BuildRequires: cups-devel
 BuildRequires: libusb-devel
-BuildRequires: libsmbclient-devel
 BuildRequires: gcc-c++
 BuildRequires: zip
 BuildRequires: libpng-devel
