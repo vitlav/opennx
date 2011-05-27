@@ -816,6 +816,8 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
             _("Run in dialog mode."));
     parser.AddOption(wxEmptyString, wxT("display"),
             _("Compatibility option for dialog mode (ignored)."));
+    parser.AddOption(wxEmptyString, wxT("exportres"),
+            _("Export builtin GUI resources to zip file and exit."));
     parser.AddSwitch(wxEmptyString, wxT("local"),
             _("Dialog mode proxy."));
     parser.AddOption(wxEmptyString, wxT("message"),
@@ -840,10 +842,10 @@ void opennxApp::OnInitCmdLine(wxCmdLineParser& parser)
     // between option and option-value. The original however
     // *requires* the separator to be a space instead.
 #ifdef __WXMSW__
-    wxRegEx re(wxT("^--((cacert)|(caption)|(style)|(dialog)|(display)|(message)|(parent)|(session)|(window)|(trace))$"));
+    wxRegEx re(wxT("^--((exportres)|(cacert)|(caption)|(style)|(dialog)|(display)|(message)|(parent)|(session)|(window)|(trace))$"));
 #else
     // On Unix, --display is a toolkit option
-    wxRegEx re(wxT("^--((cacert)|(caption)|(style)|(dialog)|(message)|(parent)|(session)|(window)|(trace))$"));
+    wxRegEx re(wxT("^--((exportres)|(cacert)|(caption)|(style)|(dialog)|(message)|(parent)|(session)|(window)|(trace))$"));
 #endif
     wxArrayString as(argc, (const wxChar **)argv);
     for (i = 1; i < as.GetCount(); i++) {
@@ -967,6 +969,9 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
         m_eMode = MODE_ADMIN;
     if (parser.Found(wxT("wizard")))
         m_eMode = MODE_WIZARD;
+    if (parser.Found(wxT("exportres"), &m_sExportFile)) {
+        m_eMode = MODE_EXPORTRES;
+    }
     if (parser.Found(wxT("autologin")))
         m_bAutoLogin = true;
     if (parser.Found(wxT("autoresume")))
@@ -1071,6 +1076,19 @@ bool opennxApp::realInit()
         return false;
 
     switch (m_eMode) {
+        case MODE_EXPORTRES:
+            {
+                if (!m_sExportFile.IsEmpty()) {
+                    wxFileOutputStream os(m_sExportFile);
+                    wxFileSystem fs;
+                    wxFSFile *f = fs.OpenFile(wxT("memory:memrsc"));
+                    if (NULL != f) {
+                        wxInputStream *is = f->GetStream();
+                        is->Read(os);
+                    }
+                }
+                return false;
+            }
         case MODE_CLIENT:
         case MODE_WIZARD:
             break;

@@ -78,6 +78,7 @@ class opennxApp : public wxApp
     private:
         enum mode {
             MODE_CLIENT,
+            MODE_EXPORTRES,
             MODE_ADMIN,
             MODE_WIZARD,
             MODE_DIALOG_OK,
@@ -99,6 +100,7 @@ class opennxApp : public wxApp
         wxString m_sDialogCaption;
         wxString m_sDialogMessage;
         wxString m_sCaCert;
+        wxString m_sExportFile;
         long m_nNxSshPID;
         long m_nOtherPID;
         long m_nWindowID;
