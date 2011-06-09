@@ -1215,7 +1215,19 @@ bool opennxApp::realInit()
     d.SetLastSessionFilename(m_sSessionName);
     d.Create(NULL);
     m_pLoginDialog = &d;
+#ifdef __WXMAC__
+    // In order to enable the Quit menu item on OSX,
+    // we have to perform a *non*-modal show.
+    d.Show();
+    while (d.IsShown()) {
+        wxLog::FlushActive();
+        Yield(true);
+        wxThread::Sleep(500);
+    }
+    int result = d.GetReturnCode();
+#else
     int result = d.ShowModal();
+#endif
     m_pLoginDialog = NULL;
     if (result == wxID_OK) {
         m_sSessionName = d.GetLastSessionFilename();
