@@ -101,7 +101,7 @@ tracelog_CFLAGS = $(WX_CFLAGS)
 
 macfindreader_SOURCES = macfindreader.c
 macfindreader_CFLAGS = $(UNIFLAGS)
-macfindreader_LDADD = -lopensc
+macfindreader_LDADD = -ldl
 
 macuninstall_SOURCES = MacUninstallApp.cpp MacOSX.c
 macuninstall_LDADD = $(WX_LIBS)
@@ -214,8 +214,8 @@ CLEANFILES = memres.h tmpres.zip *~ po/*~ *.bak *~ \#.* .\#* OpenNX.app
 MAINTAINERCLEANFILES = ABOUT-NLS Makefile.in configure aclocal.m4 \
 	conf/config.guess conf/config.sub conf/depcomp conf/install-sh \
 	conf/missing conf/mkinstalldirs conf/ltmain.sh conf/config.rpath \
-	m4/[cgilnpuwx]*.m4 m4/s[it]*.m4 po/*.sin po/*.sed po/*.header po/Rules-quot \
-	po/*.template po/Makefile*.in
+	m4/*~ m4/[cgilnpuwx]*.m4 m4/s[it]*.m4 \
+	po/*.sin po/*.sed po/*.header po/Rules-quot po/*.template po/Makefile*.in
 
 DISTCLEANFILES = mingw32-config.cache res/*.prv.*
 

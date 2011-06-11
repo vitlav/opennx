@@ -644,10 +644,14 @@ opennxApp::preInit()
         ldpath += wxT(":");
     ldpath += tmp + wxFileName::GetPathSeparator() + archlib;
 # ifdef __WXMAC__
-    ldpath += wxT(":/Library/OpenSC/lib");
-# endif
+    ldpath += wxT(":/Library/OpenSC/lib:/usr/lib/samba");
+# else
     // If libjpeg-turbo is installed, prepend it's path in
     // order to speed-up image compression.
+    // Don't do this for Mac OSX, as libjpeg-turbo breaks
+    // Apple's ImageIO framework (which is used, when launching
+    // an external browser).
+    // On OSX, this path is added only before starting nxssh or nxproxy.
     wxFileName tjpeg;
     tjpeg.AssignDir(wxT("/usr"));
     tjpeg.AppendDir(archlib);
@@ -661,6 +665,7 @@ opennxApp::preInit()
             ldpath = ldpath.Prepend(tjpeg.GetPath().Append(wxT(":")));
         }
     }
+# endif
     ::myLogDebug(wxT("LD_LIBRARY_PATH='%s'"), ldpath.c_str());
     if (!::wxSetEnv(LD_LIBRARY_PATH, ldpath)) {
         ::wxLogSysError(wxT("Cannot set LD_LIBRARY_PATH"));

@@ -108,6 +108,7 @@ private:
     wxString getXauthPath(tXarch = XARCH_XMING);
     wxString formatOptFilename();
     unsigned short getFirstFreePort(unsigned short);
+    void setTurboPath(bool enable);
     void checkXarch();
     void startProxy();
     void startSharing();

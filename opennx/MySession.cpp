@@ -1649,7 +1649,9 @@ MySession::startProxy()
                 if (m_iXserverPID)
                     AllowSetForegroundWindow(m_iXserverPID);
 #else
+                setTurboPath(true);
                 ::wxExecute(pcmd, wxEXEC_ASYNC);
+                setTurboPath(false);
 #endif
             }
         } else {
@@ -1872,6 +1874,73 @@ MySession::prepareCups()
         return false;
     wxThread::Sleep(500);
     return isCupsRunning();
+}
+
+    void
+MySession::setTurboPath(bool enable)
+{
+#ifdef __WXMAC__
+    wxString ldpath;
+    bool isset = ::wxGetEnv(wxT("DYLD_LIBRARY_PATH"), &ldpath);
+    bool contains = isset && (ldpath.Find(wxT("libjpeg-turbo")) != wxNOT_FOUND);
+    if (enable) {
+        if (!contains) {
+# if defined(__x86_64) || defined(__IA64__)
+            wxString archlib = wxT("lib64");
+# else
+            wxString archlib = wxT("lib");
+# endif
+            wxString turbopath;
+            wxFileName tjpeg;
+            tjpeg.AssignDir(wxT("/usr"));
+            tjpeg.AppendDir(archlib);
+            tjpeg.AppendDir(wxT("libjpeg-turbo"));
+            if (tjpeg.DirExists()) {
+                turbopath = tjpeg.GetPath();
+                ldpath = ldpath.Prepend(tjpeg.GetPath().Append(wxT(":")));
+            } else {
+                tjpeg.AssignDir(wxT("/opt/libjpeg-turbo"));
+                tjpeg.AppendDir(archlib);
+                if (tjpeg.DirExists()) {
+                    turbopath = tjpeg.GetPath();
+                    ldpath = ldpath.Prepend(tjpeg.GetPath().Append(wxT(":")));
+                }
+            }
+            if (!turbopath.IsEmpty()) {
+                if (!ldpath.IsEmpty())
+                    ldpath = ldpath.Prepend(wxT(":"));
+                ldpath = ldpath.Prepend(turbopath);
+            }
+            ::myLogDebug(wxT("DYLD_LIBRARY_PATH='%s'"), ldpath.c_str());
+            if (!::wxSetEnv(wxT("DYLD_LIBRARY_PATH"), ldpath)) {
+                ::wxLogSysError(wxT("Cannot set DYLD_LIBRARY_PATH"));
+            }
+        }
+    } else {
+        if (contains) {
+            wxString newpath;
+            wxStringTokenizer t(ldpath, wxT(":"));
+            while (t.HasMoreTokens()) {
+                wxString fragment = t.GetNextToken();
+                if ((!fragment.IsEmpty()) && (fragment.Find(wxT("libjpeg-turbo")) == wxNOT_FOUND)) {
+                    if (!newpath.IsEmpty())
+                        newpath = newpath.Append(wxT(":"));
+                    newpath = newpath.Append(fragment);
+                }
+            }
+            if (newpath.IsEmpty()) {
+                ::wxUnsetEnv(wxT("DYLD_LIBRARY_PATH"));
+            } else {
+                ::myLogDebug(wxT("DYLD_LIBRARY_PATH='%s'"), newpath.c_str());
+                if (!::wxSetEnv(wxT("DYLD_LIBRARY_PATH"), newpath)) {
+                    ::wxLogSysError(wxT("Cannot set DYLD_LIBRARY_PATH"));
+                }
+            }
+        }
+    }
+#else
+    wxUnusedVar(enable);
+#endif
 }
 
     void
@@ -2200,7 +2269,9 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
         do {
             m_bRemoveKey = false;
             m_sOffendingKey = wxEmptyString;
+            setTurboPath(true);
             if (nxssh.SshProcess(nxsshcmd, fn.GetShortPath(), this)) {
+                setTurboPath(false);
                 m_bGotError = false;
                 m_eConnectState = STATE_INIT;
                 while (!(dlg.bGetAbort() || m_bGotError || m_bAbort ||
@@ -2237,6 +2308,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
                     AllowSetForegroundWindow(m_iXserverPID);
 #endif
             } else {
+                setTurboPath(false);
                 ::wxLogError(_("Called command was: ") + nxsshcmd);
                 ::wxLogError(_("Could not start nxssh."));
 #ifdef __WXMSW__

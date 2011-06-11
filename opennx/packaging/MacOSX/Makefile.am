@@ -36,12 +36,6 @@ createpkgroot:
 	    $(srcdir)/opennx.plist "" --dialog ok --style info --caption CARDREMOVED --message CARDREMOVED
 
 pkgdir: createpkgroot
-	rm -rf scbuild
-	mkdir scbuild
-	(cd scbuild ; CC=$(CC) CXX=$(CXX) $(abs_srcdir)/buildopensc $(prefix) $(abs_builddir)/pkgroot$(libdir))
-	sed -e "s!_PREFIX_!$(abs_builddir)/scbuild/dist/$(prefix)!" \
-	    < $(srcdir)/opensc-config.tmpl > scbuild/dist$(prefix)/bin/opensc-config
-	chmod a+x scbuild/dist$(prefix)/bin/opensc-config
 	rm -rf nxbuild
 	mkdir nxbuild
 	(cd nxbuild ; DEST=$(abs_builddir)/pkgroot PFX=$(prefix) CC=$(CC) CXX=$(CXX) $(abs_srcdir)/buildnx)
@@ -50,8 +44,6 @@ pkgdir: createpkgroot
 		$(INSTALL_DATA) $(WX_PREFIX)/share/locale/$$lang/LC_MESSAGES/wxstd.mo \
 			pkgroot/$(localedir)/$$lang/LC_MESSAGES/ ; \
 	done
-	CC=$(CC) CXX=$(CXX) $(srcdir)/buildsmbclient $(prefix) \
-	    $(abs_builddir)/pkgroot$(libdir)
 	touch $@
 
 pkg: pkgdir
@@ -68,4 +60,4 @@ MAINTAINERCLEANFILES = Makefile.in
 CLEANFILES = -rf pkg pkgdir dmg dmgroot pkgroot nxbuild OpenNX.pkg scbuild
 EXTRA_DIST = Description.plist OpenSC.webloc buildnx buildopensc \
 	buildsmbclient fileopts folderbg.jpg mkbundle mkdmg \
-	opensc-config.tmpl pkgResources libsmbclient.h volicon.icns volicon.png
+	pkgResources libsmbclient.h volicon.icns volicon.png

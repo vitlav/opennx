@@ -30,6 +30,8 @@
 #include <wx/xml/xml.h>
 #include <wx/arrstr.h>
 #include <wx/dir.h>
+#include <wx/mstream.h>
+#include <wx/wfstream.h>
 #include <Security/Authorization.h>
 #include <Security/AuthorizationTags.h>
 #include <unistd.h>
@@ -41,6 +43,7 @@
 
 static unsigned long failed_files;
 static unsigned long failed_dirs;
+static bool newreceipt;
 
 class RmRfTraverser : public wxDirTraverser
 {
@@ -233,6 +236,7 @@ wxVariant MacUninstallApp::GetPlistValue(
         const wxXmlDocument &doc, const wxString &docname, const wxString &keyname)
 {
     wxVariant ret;
+    ret.Clear();
     if (doc.GetRoot()->GetName() != wxT("plist")) {
         ::wxLogError(_("Not an XML plist: %s"), docname.c_str());
         return ret;
@@ -312,33 +316,72 @@ wxVariant MacUninstallApp::GetPlistValue(
         needkey = (!needkey);
         child = child->GetNext();
     }
-    if (!found)
-        ::wxLogError(_("Could not find requested key '%s' in receipt %s"),
-                keyname.c_str(), docname.c_str());
     return ret;
 }
 
 wxString MacUninstallApp::GetInstalledPath(const wxString &rcpt)
 {
-    wxXmlDocument doc(rcpt);
+    wxXmlDocument doc;
+
+    // Test for binary plist and convert it to xml if necessary.
+    wxFileInputStream fis(rcpt);
+    if (fis.IsOk()) {
+        char buf[8];
+        memset(buf, 0, 8);
+        fis.Read(&buf, 7);
+        if (0 == memcmp(buf, "bplist0", 7)) {
+            wxString cmd(wxT("plutil -convert xml1 -o - "));
+            cmd << rcpt;
+            wxArrayString lines;
+            if (0 == ::wxExecute(cmd, lines)) {
+                size_t i;
+                wxString fbuf;
+                for (i = 0; i < lines.GetCount(); i++) {
+                    fbuf.Append(lines[i]).Append(wxT("\n"));
+                }
+                wxMemoryInputStream mis(fbuf.c_str(), fbuf.Length());
+                doc.Load(mis);
+            }
+        } else {
+            doc.Load(rcpt);
+        }
+    }
+
     if (doc.IsOk()) {
-        wxVariant v = GetPlistValue(doc, rcpt, wxT("IFPkgFlagRelocatable"));
-        wxString t = v.GetType();
-        if (t != wxT("bool")) {
-            ::wxLogError(_("Unexpected type '%s' of 'IFPkgFlagRelocatable' in receipt %s"),
-                    t.c_str(), rcpt.c_str());
-            return wxEmptyString;
+        wxVariant v = GetPlistValue(doc, rcpt, wxT("InstallPrefixPath"));
+        if (v.IsNull()) {
+            // Old variant
+            v = GetPlistValue(doc, rcpt, wxT("IFPkgFlagRelocatable"));
+            if (v.IsNull()) {
+                ::wxLogError(_("Could not find requested key 'IFPkgFlagRelocatable' in receipt %s"),
+                        rcpt.c_str());
+                return wxEmptyString;
+            }
+            wxString t = v.GetType();
+            if (t != wxT("bool")) {
+                ::wxLogError(_("Unexpected type '%s' of 'IFPkgFlagRelocatable' in receipt %s"),
+                        t.c_str(), rcpt.c_str());
+                return wxEmptyString;
+            }
+            wxString pkey = (v.GetBool() ?
+                    wxT("IFPkgRelocatedPath") : wxT("IFPkgFlagDefaultLocation"));
+            v = GetPlistValue(doc, rcpt, pkey);
+            if (v.IsNull()) {
+                ::wxLogError(_("Could not find requested key '%s' in receipt %s"),
+                        pkey.c_str(), rcpt.c_str());
+                return wxEmptyString;
+            }
+            t = v.GetType();
+            if (t != wxT("string")) {
+                ::wxLogError(_("Unexpected type '%s' of '%s' in receipt %s"),
+                        t.c_str(), pkey.c_str(), rcpt.c_str());
+                return wxEmptyString;
+            }
+            return v.GetString();
+        } else {
+            // New variant
+            return v.GetString().Append(wxT("/"));
         }
-        wxString pkey = (v.GetBool() ?
-                wxT("IFPkgRelocatedPath") : wxT("IFPkgFlagDefaultLocation"));
-        v = GetPlistValue(doc, rcpt, pkey);
-        t = v.GetType();
-        if (t != wxT("string")) {
-            ::wxLogError(_("Unexpected type '%s' of '%s' in receipt %s"),
-                    t.c_str(), pkey.c_str(), rcpt.c_str());
-            return wxEmptyString;
-        }
-        return v.GetString();
     } else
         ::wxLogError(_("Could not read package receipt %s"), rcpt.c_str());
     return wxEmptyString;
@@ -383,6 +426,8 @@ bool MacUninstallApp::FetchBOM(const wxString &bom,
 
 bool MacUninstallApp::TestReceipt(const wxString &pkg)
 {
+    bool newReceipt = false;
+
     wxString rpath = wxT("/Library/Receipts/");
     rpath.Append(pkg).Append(wxT(".pkg"));
     if (!wxFileName::DirExists(rpath)) {
