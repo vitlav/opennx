@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2011-05-26 15:52+0200\n"
+"POT-Creation-Date: 2011-06-12 05:54+0200\n"
 "PO-Revision-Date: 2010-08-27 12:21+0400\n"
 "Last-Translator: Shakirov Lenar <snejok@altlinux.org>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -106,7 +106,7 @@ msgstr "Лог сессии - OpenNX"
 msgid "Close"
 msgstr "Закрыть"
 
-#: LoginDialog.cpp:398 LoginDialog.cpp:502 MyWizard.cpp:1337
+#: LoginDialog.cpp:397 LoginDialog.cpp:501 MyWizard.cpp:1363
 #, c-format
 msgid ""
 "Could not save session to\n"
@@ -115,7 +115,7 @@ msgstr ""
 "Не удалось сохранить сессию в\n"
 "%s"
 
-#: LoginDialog.cpp:399 LoginDialog.cpp:503 MyWizard.cpp:1338
+#: LoginDialog.cpp:398 LoginDialog.cpp:502 MyWizard.cpp:1364
 msgid "Error saving - OpenNX"
 msgstr "Ошибка при сохранении - OpenNX"
 
@@ -154,78 +154,78 @@ msgstr "Настройка..."
 msgid "L&ogin"
 msgstr "Подключиться"
 
-#: MacUninstallApp.cpp:58 MacUninstallApp.cpp:435
+#: MacUninstallApp.cpp:61 MacUninstallApp.cpp:480
 #, c-format
 msgid "TEST: Would delete file: %s"
 msgstr "ТЕСТ: Будет удален файл %s"
 
-#: MacUninstallApp.cpp:61 MacUninstallApp.cpp:439
+#: MacUninstallApp.cpp:64 MacUninstallApp.cpp:484
 #, c-format
 msgid "Deleted file: %s"
 msgstr "Удаленный файл: %s"
 
-#: MacUninstallApp.cpp:64 MacUninstallApp.cpp:442
+#: MacUninstallApp.cpp:67 MacUninstallApp.cpp:487
 #, c-format
 msgid "Could not delete file %s"
 msgstr "Не удалось удалить файл %s"
 
-#: MacUninstallApp.cpp:72
+#: MacUninstallApp.cpp:75
 #, c-format
 msgid "TEST: Would delete diretory %s"
 msgstr "ТЕСТ: Будет удалена директория %s"
 
-#: MacUninstallApp.cpp:75
+#: MacUninstallApp.cpp:78
 #, c-format
 msgid "Deleted diretory %s"
 msgstr "Удаленная директория: %s"
 
-#: MacUninstallApp.cpp:78 MacUninstallApp.cpp:473 MacUninstallApp.cpp:491
+#: MacUninstallApp.cpp:81 MacUninstallApp.cpp:518 MacUninstallApp.cpp:536
 #, c-format
 msgid "Could not delete directory %s"
 msgstr "Не удалось удалить директорию %s"
 
-#: MacUninstallApp.cpp:126
+#: MacUninstallApp.cpp:129
 msgid "Test mode. Just create log file reporting what would happen."
 msgstr "Тестовый режим. Просто создастся отчет о том, что произойдет."
 
-#: MacUninstallApp.cpp:128
+#: MacUninstallApp.cpp:131
 msgid "Uninstall without asking the user (needs admin rights)."
 msgstr ""
 "Деинсталлировать без спроса пользователя (требуются права Администратора)."
 
-#: MacUninstallApp.cpp:164
+#: MacUninstallApp.cpp:167
 msgid "Batch uninstall needs to be started as root."
 msgstr "Пакетная деинсталляция требует прав супер-пользователя."
 
-#: MacUninstallApp.cpp:165 MacUninstallApp.cpp:191
+#: MacUninstallApp.cpp:168 MacUninstallApp.cpp:194
 #, c-format
 msgid "Uninstall %s"
 msgstr "Удаление %s"
 
-#: MacUninstallApp.cpp:172
+#: MacUninstallApp.cpp:175
 #, c-format
 msgid "Uninstall finished at %s"
 msgstr "Деинсталляция завершена в %s"
 
-#: MacUninstallApp.cpp:173
+#: MacUninstallApp.cpp:176
 #, c-format
 msgid "Status: %s, failed files: %lu, failed dirs: %lu"
 msgstr "Статус: %s, не удачные файлы: %lu, не удачные каталоги: %lu"
 
-#: MacUninstallApp.cpp:174
+#: MacUninstallApp.cpp:177
 msgid "OK"
 msgstr "&OK"
 
-#: MacUninstallApp.cpp:174
+#: MacUninstallApp.cpp:177
 msgid "FAILED"
 msgstr "ОШИБКА"
 
-#: MacUninstallApp.cpp:181
+#: MacUninstallApp.cpp:184
 #, c-format
 msgid "Reporting result to elevation wrapper %s"
 msgstr "Отправка результатов в %s"
 
-#: MacUninstallApp.cpp:189
+#: MacUninstallApp.cpp:192
 #, c-format
 msgid ""
 "This operation can not be undone!\n"
@@ -234,16 +234,16 @@ msgstr ""
 "Эта операция не может быть отменена!\n"
 "Вы действительно хотите удалить %s?"
 
-#: MacUninstallApp.cpp:203
+#: MacUninstallApp.cpp:206
 #, c-format
 msgid "%s has been removed successfully."
 msgstr "%s был успешно удален."
 
-#: MacUninstallApp.cpp:205
+#: MacUninstallApp.cpp:208
 msgid "Uninstallation complete"
 msgstr "Деинсталляция завершена"
 
-#: MacUninstallApp.cpp:209
+#: MacUninstallApp.cpp:212
 #, c-format
 msgid ""
 "%s could not be removed completely.\n"
@@ -258,11 +258,11 @@ msgstr ""
 "%s\n"
 "."
 
-#: MacUninstallApp.cpp:211
+#: MacUninstallApp.cpp:214
 msgid "Uninstallation incomplete"
 msgstr "Деинсталляция завершена"
 
-#: MacUninstallApp.cpp:217
+#: MacUninstallApp.cpp:220
 #, c-format
 msgid ""
 "Uninstallation has failed.\n"
@@ -273,121 +273,126 @@ msgstr ""
 "Причина должна быть указана в файле\n"
 "%s"
 
-#: MacUninstallApp.cpp:219
+#: MacUninstallApp.cpp:222
 msgid "Uninstallation failed"
 msgstr "Деинсталляция не удалась"
 
-#: MacUninstallApp.cpp:237
+#: MacUninstallApp.cpp:241
 #, c-format
 msgid "Not an XML plist: %s"
 msgstr "Не XML plist: %s"
 
-#: MacUninstallApp.cpp:243
+#: MacUninstallApp.cpp:247
 #, c-format
 msgid "Invalid plist (missing toplevel <dict> in %s"
 msgstr "Некорректный plist (отсутствует корневой <dict> в %s"
 
-#: MacUninstallApp.cpp:254
+#: MacUninstallApp.cpp:258
 #, c-format
 msgid "Invalid plist (expected a key) in %s"
 msgstr "Не корректный plist (ожидается ключ) в %s"
 
-#: MacUninstallApp.cpp:264
+#: MacUninstallApp.cpp:268
 #, c-format
 msgid "Unsupported type array in %s"
 msgstr "Неподдерживаемый тип массива в %s"
 
-#: MacUninstallApp.cpp:271
+#: MacUninstallApp.cpp:275
 #, c-format
 msgid "Invalid plist (invalid real value %s) in %s"
 msgstr "Некорректный plist (некорректное вещественное значение %s) в %s"
 
-#: MacUninstallApp.cpp:281
+#: MacUninstallApp.cpp:285
 #, c-format
 msgid "Invalid plist (invalid integer value %s) in %s"
 msgstr "Некорректный plist (некорректное целое значение %s) в %s"
 
-#: MacUninstallApp.cpp:300
+#: MacUninstallApp.cpp:304
 #, c-format
 msgid "Invalid plist (invalid date value %s) in %s"
 msgstr "Некорректный plist (некорректное значение даты %s) в %s"
 
-#: MacUninstallApp.cpp:307
+#: MacUninstallApp.cpp:311
 #, c-format
 msgid "Invalid plist (unexpected type %s) in %s"
 msgstr "Некорректный plist (неожиданный тип %s) в %s"
 
-#: MacUninstallApp.cpp:316
-#, c-format
-msgid "Could not find requested key '%s' in receipt %s"
+#: MacUninstallApp.cpp:356
+#, fuzzy, c-format
+msgid "Could not find requested key 'IFPkgFlagRelocatable' in receipt %s"
 msgstr "Не удается найти запрошенный ключ '%s' в спецификации %s"
 
-#: MacUninstallApp.cpp:328
+#: MacUninstallApp.cpp:362
 #, c-format
 msgid "Unexpected type '%s' of 'IFPkgFlagRelocatable' in receipt %s"
 msgstr "Неожиданный тип '%s' значения 'IFPkgFlagRelocatable' в спецификации %s"
 
-#: MacUninstallApp.cpp:337
+#: MacUninstallApp.cpp:370
+#, c-format
+msgid "Could not find requested key '%s' in receipt %s"
+msgstr "Не удается найти запрошенный ключ '%s' в спецификации %s"
+
+#: MacUninstallApp.cpp:376
 #, c-format
 msgid "Unexpected type '%s' of '%s' in receipt %s"
 msgstr "Неожиданный тип '%s' значения '%s' в спецификации %s"
 
-#: MacUninstallApp.cpp:343
+#: MacUninstallApp.cpp:386
 #, c-format
 msgid "Could not read package receipt %s"
 msgstr "Не удается прочитать спецификацию пакета %s"
 
-#: MacUninstallApp.cpp:352
+#: MacUninstallApp.cpp:395
 #, c-format
 msgid "Missing BOM (Bill Of Materials) '%s'. Already unistalled?"
 msgstr "Отсутствует BOM (Список материалов) '%s'. Уже удален?"
 
-#: MacUninstallApp.cpp:360 MacUninstallApp.cpp:373
+#: MacUninstallApp.cpp:403 MacUninstallApp.cpp:416
 #, c-format
 msgid "Could not list BOM (Bill Of Materials) '%s'. Already unistalled?"
 msgstr "Нет списка BOM (Список материалов) '%s'. Уже удален?"
 
-#: MacUninstallApp.cpp:365 MacUninstallApp.cpp:378
+#: MacUninstallApp.cpp:408 MacUninstallApp.cpp:421
 #, c-format
 msgid "Invalid BOM (Bill Of Materials) '%s'. Already unistalled?"
 msgstr "Не корректный BOM (Список материалов) '%s'. Уже удален?"
 
-#: MacUninstallApp.cpp:390
+#: MacUninstallApp.cpp:435
 msgid "The package receipt does not exist. Already unistalled?"
 msgstr "Спецификация пакета отсутствует. Уже удалена?"
 
-#: MacUninstallApp.cpp:398
+#: MacUninstallApp.cpp:443
 msgid "The package install path does not exist. Already unistalled?"
 msgstr "Каталог пакета отсутствует. Уже удален?"
 
-#: MacUninstallApp.cpp:413
+#: MacUninstallApp.cpp:458
 #, c-format
 msgid "Uninstall started at %s"
 msgstr "Деинсталляция начата в %s"
 
-#: MacUninstallApp.cpp:424
+#: MacUninstallApp.cpp:469
 msgid "Deleting package content"
 msgstr "Удаление содержимого пакета"
 
-#: MacUninstallApp.cpp:460 MacUninstallApp.cpp:485
+#: MacUninstallApp.cpp:505 MacUninstallApp.cpp:530
 #, c-format
 msgid "TEST: Would delete directory: %s"
 msgstr "ТЕСТ: Будет удалена директория %s"
 
-#: MacUninstallApp.cpp:464 MacUninstallApp.cpp:488
+#: MacUninstallApp.cpp:509 MacUninstallApp.cpp:533
 #, c-format
 msgid "Deleted directory: %s"
 msgstr "Удаленная директория: %s"
 
-#: MacUninstallApp.cpp:478
+#: MacUninstallApp.cpp:523
 msgid "Deleting receipt"
 msgstr "Спецификация удалена"
 
-#: MacUninstallApp.cpp:495
+#: MacUninstallApp.cpp:540
 msgid "Receipt NOT deleted, because package files have been left."
 msgstr "Спецификация НЕ удалена, т.к. остались файлы пакета"
 
-#: MacUninstallApp.cpp:509
+#: MacUninstallApp.cpp:554
 #, c-format
 msgid ""
 "In order to uninstall %s, administrative rights are required.\n"
@@ -396,12 +401,12 @@ msgstr ""
 "Нужны права администратора чтобы удалить %s.\n"
 "\n"
 
-#: MacUninstallApp.cpp:524
+#: MacUninstallApp.cpp:569
 #, c-format
 msgid "Authorization could not be created: %s"
 msgstr "Авторизация не может быть произведена: %s"
 
-#: MacUninstallApp.cpp:550
+#: MacUninstallApp.cpp:595
 #, c-format
 msgid ""
 "Could not execute with administrative rights:\n"
@@ -410,7 +415,7 @@ msgstr ""
 "Не удалось выполнить с правами администратора:\n"
 "%s"
 
-#: MacUninstallApp.cpp:555
+#: MacUninstallApp.cpp:600
 #, c-format
 msgid "Authorization failed: %s"
 msgstr "Ошибка авторизации: %s"
@@ -559,7 +564,7 @@ msgstr ""
 "Не удалось создать директорию для сессий\n"
 "%s\n"
 
-#: MySession.cpp:1656
+#: MySession.cpp:1658
 #, c-format
 msgid ""
 "Could not write session options\n"
@@ -568,78 +573,78 @@ msgstr ""
 "Не удалось сохранить опции сессии в\n"
 "%s\n"
 
-#: MySession.cpp:1746 MySession.cpp:1760
+#: MySession.cpp:1748 MySession.cpp:1762
 msgid "Could not assign a free port for CUPS printing"
 msgstr "Не удалось назначить свободный порт для CUPS"
 
-#: MySession.cpp:2026
+#: MySession.cpp:2095
 #, c-format
 msgid "Could not write %s"
 msgstr "Не удалось записать %s"
 
-#: MySession.cpp:2098
+#: MySession.cpp:2167
 msgid "Could not start local X server"
 msgstr "Не удалось запустить локальный X сервер"
 
-#: MySession.cpp:2114 MySession.cpp:2178 MySession.cpp:2192
+#: MySession.cpp:2183 MySession.cpp:2247 MySession.cpp:2261
 #, c-format
 msgid "Connecting to %s ..."
 msgstr "Соединение с %s ..."
 
-#: MySession.cpp:2118
+#: MySession.cpp:2187
 msgid "Preparing multimedia service ..."
 msgstr "Подготовка мультимедиа сервисов ..."
 
-#: MySession.cpp:2132 MySession.cpp:2175
+#: MySession.cpp:2201 MySession.cpp:2244
 msgid "Could not assign a free port for multimedia support"
 msgstr "Не удалось назначить свободный порт для мультимедиа сервисов"
 
-#: MySession.cpp:2173
+#: MySession.cpp:2242
 msgid "Could not start multimedia support"
 msgstr "Не удалось запустить мультимедиа сервисы"
 
-#: MySession.cpp:2189
+#: MySession.cpp:2258
 msgid "Preparing CUPS service ..."
 msgstr "Подготовка CUPS ..."
 
-#: MySession.cpp:2191
+#: MySession.cpp:2260
 msgid "Could not start CUPS printing"
 msgstr "Не удалось запустить CUPS"
 
-#: MySession.cpp:2240
+#: MySession.cpp:2312
 msgid "Called command was: "
 msgstr "Комманда: "
 
-#: MySession.cpp:2241
+#: MySession.cpp:2313
 msgid "Could not start nxssh."
 msgstr "Не удалось запустить nxssh."
 
-#: MyWizard.cpp:411
+#: MyWizard.cpp:437
 msgid "New Session"
 msgstr "Новая сессия"
 
-#: MyWizard.cpp:414
+#: MyWizard.cpp:440
 #, c-format
 msgid "New Session %d"
 msgstr "Новая сессия %d"
 
-#: MyWizard.cpp:671 SessionProperties.cpp:829
+#: MyWizard.cpp:697 SessionProperties.cpp:829
 msgid "RDP"
 msgstr "RDP"
 
-#: MyWizard.cpp:689 SessionProperties.cpp:855
+#: MyWizard.cpp:715 SessionProperties.cpp:855
 msgid "RFB"
 msgstr "RFB"
 
-#: MyWizard.cpp:707 SessionProperties.cpp:882
+#: MyWizard.cpp:733 SessionProperties.cpp:882
 msgid "Any"
 msgstr "Любой"
 
-#: MyWizard.cpp:714 SessionProperties.cpp:889
+#: MyWizard.cpp:740 SessionProperties.cpp:889
 msgid "As on server"
 msgstr "Как на сервере"
 
-#: MyWizard.cpp:1165
+#: MyWizard.cpp:1191
 #, c-format
 msgid ""
 "Congratulations. The connection to '%s' will be saved as '%s'. You may "
@@ -1216,7 +1221,7 @@ msgstr "Нет доступного сервера CUPS."
 msgid "Select System CUPS daemon"
 msgstr "Выберите системный сервер CUPS"
 
-#: SessionProperties.cpp:1962 opennxApp.cpp:1242
+#: SessionProperties.cpp:1962 opennxApp.cpp:1277
 msgid "libusb is not available. No USB devices will be exported"
 msgstr "libusb не доступна. USB устройства не смогут быть проброшены."
 
@@ -1897,7 +1902,7 @@ msgstr ""
 "Не найдено ни одного исполняемого файла демона CUPS.\n"
 "Вы должны установить cups, чтобы печатать через службу CUPS."
 
-#: opennxApp.cpp:799 watchReaderApp.cpp:125 watchUsbIpApp.cpp:216
+#: opennxApp.cpp:804 watchReaderApp.cpp:125 watchUsbIpApp.cpp:216
 msgid ""
 "\n"
 "\n"
@@ -1907,79 +1912,83 @@ msgstr ""
 "\n"
 "Поддерживаемые тэги трассировки: "
 
-#: opennxApp.cpp:802
+#: opennxApp.cpp:807
 msgid "Automatically login to the specified session."
 msgstr "Автоматически входить в указанную сессию"
 
-#: opennxApp.cpp:804
+#: opennxApp.cpp:809
 msgid "Automatically resume/takeover a session with the same name."
 msgstr ""
 
-#: opennxApp.cpp:806
+#: opennxApp.cpp:811
 msgid "Automatically destroy error dialogs at termination."
 msgstr "Автоматически закрыть диалоги об ошибках при завершении."
 
-#: opennxApp.cpp:808
+#: opennxApp.cpp:813
 msgid "Start the session administration tool."
 msgstr "Запустить утилиту администрирования сессий."
 
-#: opennxApp.cpp:810
+#: opennxApp.cpp:815
 msgid "Specify alternate CA cert for fetching configuration via https."
 msgstr ""
 
-#: opennxApp.cpp:812
+#: opennxApp.cpp:817
 msgid "Specify window title for dialog mode."
 msgstr "Заголовок окна в dialog режиме."
 
-#: opennxApp.cpp:814
+#: opennxApp.cpp:819
 msgid "Specify dialog style for dialog mode."
 msgstr "Стиль диалога в dialog режиме."
 
-#: opennxApp.cpp:816
+#: opennxApp.cpp:821
 msgid "Run in dialog mode."
 msgstr "Запустить в режиме dialog."
 
-#: opennxApp.cpp:818
+#: opennxApp.cpp:823
 msgid "Compatibility option for dialog mode (ignored)."
 msgstr "Режим совместимости для dialog режима (игнорируется)."
 
-#: opennxApp.cpp:820
+#: opennxApp.cpp:825
+msgid "Export builtin GUI resources to zip file and exit."
+msgstr ""
+
+#: opennxApp.cpp:827
 msgid "Dialog mode proxy."
 msgstr "Прокси dialog режима."
 
-#: opennxApp.cpp:822
+#: opennxApp.cpp:829
 msgid "Specify message for dialog mode."
 msgstr "Сообщение для dialog режима."
 
-#: opennxApp.cpp:824
+#: opennxApp.cpp:831
 msgid "Specify parent PID for dialog mode."
 msgstr "PID родительского процесса для dialog режима."
 
-#: opennxApp.cpp:826
+#: opennxApp.cpp:833
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr "Запустить сессию <str>."
 
-#: opennxApp.cpp:828
+#: opennxApp.cpp:835
 msgid "Specify window-ID for dialog mode."
 msgstr "Window-ID для запуска в dialog режиме."
 
-#: opennxApp.cpp:830 watchReaderApp.cpp:132 watchUsbIpApp.cpp:225
+#: opennxApp.cpp:837 watchReaderApp.cpp:132 watchUsbIpApp.cpp:225
 msgid "Specify wxWidgets trace mask."
 msgstr "Укажите маску трассировки wxWidgets."
 
-#: opennxApp.cpp:833
+#: opennxApp.cpp:840
 msgid "Test CardWaiterDialog"
 msgstr "Протестировать CardWaiterDialog"
 
-#: opennxApp.cpp:836
+#: opennxApp.cpp:843
 msgid "Guide the user through the steps to configure a session."
 msgstr "Руководит пользователем во время конфигурирования сессии."
 
-#: opennxApp.cpp:893 watchReaderApp.cpp:259
+#: opennxApp.cpp:900 watchReaderApp.cpp:259
 msgid "Smart card removed"
 msgstr "Смарт-карта удалена"
 
-#: opennxApp.cpp:895 watchReaderApp.cpp:258
+#: opennxApp.cpp:902 watchReaderApp.cpp:258
 msgid ""
 "OpenNX session has been suspended, because\n"
 "the authenticating smart card has been removed."
@@ -1987,16 +1996,16 @@ msgstr ""
 "Сессия OpenNX была приостановлена,\n"
 "потому что была вытащена смарт-карта."
 
-#: opennxApp.cpp:1257
+#: opennxApp.cpp:1292
 msgid "USBIP tunnel registration timeout"
 msgstr "Тайм-аут регистрации туннеля USBIP"
 
-#: opennxApp.cpp:1261
+#: opennxApp.cpp:1296
 #, c-format
 msgid "Unable to export USB device %s"
 msgstr "Не удалось экспортировать USB устройство '%s'"
 
-#: opennxApp.cpp:1267
+#: opennxApp.cpp:1302
 msgid "Could not connect to usbipd2. No USB devices will be exported"
 msgstr ""
 "Не удалось подключиться к usbipd2. USB устройства не будут экспортированы"
