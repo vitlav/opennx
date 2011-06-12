@@ -154,6 +154,7 @@ bool MacUninstallApp::OnInit()
     m_cLocale.Init();
     m_cLocale.AddCatalog(wxT("opennx"));
     wxString targetPkg = wxT("OpenNX");
+    wxString targetPkgId = wxT("org.opennx.OpenNX");
 
     // Call to base class needed for initializing command line processing
     if (!wxApp::OnInit())
@@ -161,7 +162,7 @@ bool MacUninstallApp::OnInit()
 
     wxInitAllImageHandlers();
     wxBitmap::InitStandardHandlers();
-    m_sLogName << wxT("/tmp/uninstall-") << targetPkg << wxT(".log");
+    m_sLogName << wxT("/tmp/uninstall-") << targetPkgId << wxT(".log");
     if (m_bBatchMode) {
         if ((!m_bTestMode) && (0 != geteuid())) {
             ::wxMessageBox(_("Batch uninstall needs to be started as root."),
@@ -171,7 +172,7 @@ bool MacUninstallApp::OnInit()
                 Dispatch();
             return false;
         }
-        bool ok = DoUninstall(targetPkg);
+        bool ok = DoUninstall(targetPkg, targetPkgId);
         ::wxLogMessage(_("Uninstall finished at %s"), wxDateTime::Now().Format().c_str());
         ::wxLogMessage(_("Status: %s, failed files: %lu, failed dirs: %lu"),
             (ok ? _("OK") : _("FAILED")), failed_files, failed_dirs);
@@ -194,12 +195,12 @@ bool MacUninstallApp::OnInit()
                 wxString::Format(_("Uninstall %s"), targetPkg.c_str()),
                 wxYES_NO|wxNO_DEFAULT|wxICON_EXCLAMATION);
         if (wxYES == r) {
-            if (!TestReceipt(targetPkg)) {
+            if (!TestReceipt(targetPkg, targetPkgId)) {
                 while (Pending())
                     Dispatch();
                 return false;
             }
-            if (ElevatedUninstall(targetPkg)) {
+            if (ElevatedUninstall(targetPkg, targetPkgId)) {
                 if (!m_bCancelled) {
                     if (0 == (failed_files + failed_dirs)) {
                         ::wxMessageBox(
@@ -336,10 +337,11 @@ wxString MacUninstallApp::GetInstalledPath(const wxString &rcpt)
             if (0 == ::wxExecute(cmd, lines)) {
                 size_t i;
                 wxString fbuf;
-                for (i = 0; i < lines.GetCount(); i++) {
+                for (i = 0; i < lines.GetCount(); ++i) {
+                    // ::wxLogMessage(_("RLINE: %s"), lines[i].c_str());
                     fbuf.Append(lines[i]).Append(wxT("\n"));
                 }
-                wxMemoryInputStream mis(fbuf.c_str(), fbuf.Length());
+                wxMemoryInputStream mis(fbuf.mb_str(), fbuf.Length());
                 doc.Load(mis);
             }
         } else {
@@ -424,18 +426,28 @@ bool MacUninstallApp::FetchBOM(const wxString &bom,
     return true;
 }
 
-bool MacUninstallApp::TestReceipt(const wxString &pkg)
+bool MacUninstallApp::TestReceipt(const wxString &pkg, const wxString &pkgid)
 {
-    bool newReceipt = false;
-
     wxString rpath = wxT("/Library/Receipts/");
+    wxString proot;
+    wxString bompath;
     rpath.Append(pkg).Append(wxT(".pkg"));
-    if (!wxFileName::DirExists(rpath)) {
-        ::wxLogWarning(
-                _("The package receipt does not exist. Already unistalled?"));
-        return false;
+    if (wxFileName::DirExists(rpath)) {
+        proot = GetInstalledPath(rpath + wxT("/Contents/Info.plist"));
+        bompath = rpath + wxT("/Contents/Archive.bom");
+    } else {
+        rpath = wxT("/var/db/receipts/");
+        bompath = rpath;
+        rpath.Append(pkgid).Append(wxT(".plist"));
+        if (wxFileName::FileExists(rpath)) {
+            proot = GetInstalledPath(rpath);
+            bompath.Append(pkgid).Append(wxT(".bom"));
+        } else {
+            ::wxLogWarning(
+                    _("The package receipt does not exist. Already unistalled?"));
+            return false;
+        }
     }
-    wxString proot = GetInstalledPath(rpath + wxT("/Contents/Info.plist"));
     if (proot.IsEmpty())
         return false;
     if (!wxFileName::DirExists(proot)) {
@@ -445,25 +457,38 @@ bool MacUninstallApp::TestReceipt(const wxString &pkg)
     }
     wxArrayString d;
     wxArrayString f;
-    if (!FetchBOM(rpath + wxT("/Contents/Archive.bom"), d, f))
+    if (!FetchBOM(bompath, d, f))
         return false;
     return true;
 }
 
-bool MacUninstallApp::DoUninstall(const wxString &pkg)
+bool MacUninstallApp::DoUninstall(const wxString &pkg, const wxString &pkgid)
 {
     std::ofstream *log = new std::ofstream();
     log->open(m_sLogName.mb_str());
     delete wxLog::SetActiveTarget(new wxLogStream(log));
     ::wxLogMessage(_("Uninstall started at %s"), wxDateTime::Now().Format().c_str());
     wxString rpath = wxT("/Library/Receipts/");
+    wxString proot;
+    wxString bompath;
+    bool oldreceipt = true;
     rpath.Append(pkg).Append(wxT(".pkg"));
-    wxString proot = GetInstalledPath(rpath + wxT("/Contents/Info.plist"));
+    if (wxFileName::DirExists(rpath)) {
+        proot = GetInstalledPath(rpath + wxT("/Contents/Info.plist"));
+        bompath = rpath + wxT("/Contents/Archive.bom");
+    } else {
+        rpath = wxT("/var/db/receipts/");
+        bompath = rpath;
+        rpath.Append(pkgid).Append(wxT(".plist"));
+        proot = GetInstalledPath(rpath);
+        bompath.Append(pkgid).Append(wxT(".bom"));
+        oldreceipt = false;
+    }
     if (proot.IsEmpty())
         return false;
     wxArrayString d;
     wxArrayString f;
-    if (!FetchBOM(rpath + wxT("/Contents/Archive.bom"), d, f))
+    if (!FetchBOM(bompath, d, f))
         return false;
     size_t i;
     ::wxLogMessage(_("Deleting package content"));
@@ -521,19 +546,37 @@ bool MacUninstallApp::DoUninstall(const wxString &pkg)
     if (0 == (d.GetCount() + f.GetCount())) {
         // Finally delete the receipe itself
         ::wxLogMessage(_("Deleting receipt"));
-        {
-            wxDir d(rpath);
-            RmRfTraverser t(m_bTestMode);
-            d.Traverse(t);
-        }
-        if (m_bTestMode) {
-            ::wxLogMessage(_("TEST: Would delete directory: %s"), rpath.c_str());
+        if (oldreceipt) {
+            {
+                wxDir d(rpath);
+                RmRfTraverser t(m_bTestMode);
+                d.Traverse(t);
+            }
+            if (m_bTestMode) {
+                ::wxLogMessage(_("TEST: Would delete directory: %s"), rpath.c_str());
+            } else {
+                if (::wxRmdir(rpath))
+                    ::wxLogMessage(_("Deleted directory: %s"), rpath.c_str());
+                else {
+                    failed_dirs++;
+                    ::wxLogWarning(_("Could not delete directory %s"), rpath.c_str());
+                }
+            }
         } else {
-            if (::wxRmdir(rpath))
-                ::wxLogMessage(_("Deleted directory: %s"), rpath.c_str());
-            else {
-                failed_dirs++;
-                ::wxLogWarning(_("Could not delete directory %s"), rpath.c_str());
+            if (m_bTestMode) {
+                ::wxLogMessage(_("TEST: Would delete receipt: %s"), rpath.c_str());
+                ::wxLogMessage(_("TEST: Would delete BOM: %s"), bompath.c_str());
+            } else {
+                if (::wxRemoveFile(rpath)) {
+                    ::wxLogMessage(_("Deleted receipt: %s"), rpath.c_str());
+                } else {
+                    ::wxLogWarning(_("Could not delete receipt %s"), rpath.c_str());
+                }
+                if (::wxRemoveFile(bompath)) {
+                    ::wxLogMessage(_("Deleted BOM: %s"), bompath.c_str());
+                } else {
+                    ::wxLogWarning(_("Could not delete BOM %s"), bompath.c_str());
+                }
             }
         }
     } else
@@ -544,11 +587,11 @@ bool MacUninstallApp::DoUninstall(const wxString &pkg)
 /**
  * Execute with administrative rights.
  */
-bool MacUninstallApp::ElevatedUninstall(const wxString &pkg)
+bool MacUninstallApp::ElevatedUninstall(const wxString &pkg, const wxString &pkgid)
 {
     // If we are already root, do the uninstall directly
     if (geteuid() == 0)
-        return DoUninstall(pkg);
+        return DoUninstall(pkg, pkgid);
 
     wxString msg = wxString::Format(
             _("In order to uninstall %s, administrative rights are required.\n\n"),

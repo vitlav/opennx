@@ -35,9 +35,9 @@ class MacUninstallApp: public wxApp
 
     private:
         wxVariant GetPlistValue(const wxXmlDocument &doc, const wxString &docname, const wxString &keyname);
-        bool ElevatedUninstall(const wxString &);
-        bool DoUninstall(const wxString &);
-        bool TestReceipt(const wxString &);
+        bool ElevatedUninstall(const wxString &, const wxString &);
+        bool DoUninstall(const wxString &, const wxString &);
+        bool TestReceipt(const wxString &, const wxString &);
         bool FetchBOM(const wxString &, wxArrayString &, wxArrayString &);
         wxString GetInstalledPath(const wxString &);
         wxString MacAuthError(long);

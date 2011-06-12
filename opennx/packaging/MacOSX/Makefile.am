@@ -48,6 +48,8 @@ pkgdir: createpkgroot
 
 pkg: pkgdir
 	sudo chown -R root:admin pkgroot
+	sudo chmod ug=rwx,o=rx pkgroot/Applications
+	sudo chmod ug=rwx,o=rx,+t pkgroot/Library
 	rm -rf OpenNX.pkg
 	cd $(builddir) && $(PACKAGEMAKER) -build -p OpenNX.pkg -f pkgroot -v \
 	    -r $(srcdir)/pkgResources \

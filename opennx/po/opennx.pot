@@ -8,11 +8,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opennx 0.16\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2011-06-12 05:54+0200\n"
+"POT-Creation-Date: 2011-06-12 07:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -147,17 +146,17 @@ msgstr ""
 msgid "L&ogin"
 msgstr ""
 
-#: MacUninstallApp.cpp:61 MacUninstallApp.cpp:480
+#: MacUninstallApp.cpp:61 MacUninstallApp.cpp:505
 #, c-format
 msgid "TEST: Would delete file: %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:64 MacUninstallApp.cpp:484
+#: MacUninstallApp.cpp:64 MacUninstallApp.cpp:509
 #, c-format
 msgid "Deleted file: %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:67 MacUninstallApp.cpp:487
+#: MacUninstallApp.cpp:67 MacUninstallApp.cpp:512
 #, c-format
 msgid "Could not delete file %s"
 msgstr ""
@@ -172,7 +171,7 @@ msgstr ""
 msgid "Deleted diretory %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:81 MacUninstallApp.cpp:518 MacUninstallApp.cpp:536
+#: MacUninstallApp.cpp:81 MacUninstallApp.cpp:543 MacUninstallApp.cpp:562
 #, c-format
 msgid "Could not delete directory %s"
 msgstr ""
@@ -185,55 +184,55 @@ msgstr ""
 msgid "Uninstall without asking the user (needs admin rights)."
 msgstr ""
 
-#: MacUninstallApp.cpp:167
+#: MacUninstallApp.cpp:168
 msgid "Batch uninstall needs to be started as root."
 msgstr ""
 
-#: MacUninstallApp.cpp:168 MacUninstallApp.cpp:194
+#: MacUninstallApp.cpp:169 MacUninstallApp.cpp:195
 #, c-format
 msgid "Uninstall %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:175
+#: MacUninstallApp.cpp:176
 #, c-format
 msgid "Uninstall finished at %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:176
+#: MacUninstallApp.cpp:177
 #, c-format
 msgid "Status: %s, failed files: %lu, failed dirs: %lu"
 msgstr ""
 
-#: MacUninstallApp.cpp:177
+#: MacUninstallApp.cpp:178
 msgid "OK"
 msgstr ""
 
-#: MacUninstallApp.cpp:177
+#: MacUninstallApp.cpp:178
 msgid "FAILED"
 msgstr ""
 
-#: MacUninstallApp.cpp:184
+#: MacUninstallApp.cpp:185
 #, c-format
 msgid "Reporting result to elevation wrapper %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:192
+#: MacUninstallApp.cpp:193
 #, c-format
 msgid ""
 "This operation can not be undone!\n"
 "Do you really want to uninstall %s?"
 msgstr ""
 
-#: MacUninstallApp.cpp:206
+#: MacUninstallApp.cpp:207
 #, c-format
 msgid "%s has been removed successfully."
 msgstr ""
 
-#: MacUninstallApp.cpp:208
+#: MacUninstallApp.cpp:209
 msgid "Uninstallation complete"
 msgstr ""
 
-#: MacUninstallApp.cpp:212
+#: MacUninstallApp.cpp:213
 #, c-format
 msgid ""
 "%s could not be removed completely.\n"
@@ -243,11 +242,11 @@ msgid ""
 " for more information."
 msgstr ""
 
-#: MacUninstallApp.cpp:214
+#: MacUninstallApp.cpp:215
 msgid "Uninstallation incomplete"
 msgstr ""
 
-#: MacUninstallApp.cpp:220
+#: MacUninstallApp.cpp:221
 #, c-format
 msgid ""
 "Uninstallation has failed.\n"
@@ -255,145 +254,175 @@ msgid ""
 "%s"
 msgstr ""
 
-#: MacUninstallApp.cpp:222
+#: MacUninstallApp.cpp:223
 msgid "Uninstallation failed"
 msgstr ""
 
-#: MacUninstallApp.cpp:241
+#: MacUninstallApp.cpp:242
 #, c-format
 msgid "Not an XML plist: %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:247
+#: MacUninstallApp.cpp:248
 #, c-format
 msgid "Invalid plist (missing toplevel <dict> in %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:258
+#: MacUninstallApp.cpp:259
 #, c-format
 msgid "Invalid plist (expected a key) in %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:268
+#: MacUninstallApp.cpp:269
 #, c-format
 msgid "Unsupported type array in %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:275
+#: MacUninstallApp.cpp:276
 #, c-format
 msgid "Invalid plist (invalid real value %s) in %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:285
+#: MacUninstallApp.cpp:286
 #, c-format
 msgid "Invalid plist (invalid integer value %s) in %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:304
+#: MacUninstallApp.cpp:305
 #, c-format
 msgid "Invalid plist (invalid date value %s) in %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:311
+#: MacUninstallApp.cpp:312
 #, c-format
 msgid "Invalid plist (unexpected type %s) in %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:356
+#: MacUninstallApp.cpp:358
 #, c-format
 msgid "Could not find requested key 'IFPkgFlagRelocatable' in receipt %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:362
+#: MacUninstallApp.cpp:364
 #, c-format
 msgid "Unexpected type '%s' of 'IFPkgFlagRelocatable' in receipt %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:370
+#: MacUninstallApp.cpp:372
 #, c-format
 msgid "Could not find requested key '%s' in receipt %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:376
+#: MacUninstallApp.cpp:378
 #, c-format
 msgid "Unexpected type '%s' of '%s' in receipt %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:386
+#: MacUninstallApp.cpp:388
 #, c-format
 msgid "Could not read package receipt %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:395
+#: MacUninstallApp.cpp:397
 #, c-format
 msgid "Missing BOM (Bill Of Materials) '%s'. Already unistalled?"
 msgstr ""
 
-#: MacUninstallApp.cpp:403 MacUninstallApp.cpp:416
+#: MacUninstallApp.cpp:405 MacUninstallApp.cpp:418
 #, c-format
 msgid "Could not list BOM (Bill Of Materials) '%s'. Already unistalled?"
 msgstr ""
 
-#: MacUninstallApp.cpp:408 MacUninstallApp.cpp:421
+#: MacUninstallApp.cpp:410 MacUninstallApp.cpp:423
 #, c-format
 msgid "Invalid BOM (Bill Of Materials) '%s'. Already unistalled?"
 msgstr ""
 
-#: MacUninstallApp.cpp:435
+#: MacUninstallApp.cpp:447
 msgid "The package receipt does not exist. Already unistalled?"
 msgstr ""
 
-#: MacUninstallApp.cpp:443
+#: MacUninstallApp.cpp:455
 msgid "The package install path does not exist. Already unistalled?"
 msgstr ""
 
-#: MacUninstallApp.cpp:458
+#: MacUninstallApp.cpp:470
 #, c-format
 msgid "Uninstall started at %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:469
+#: MacUninstallApp.cpp:494
 msgid "Deleting package content"
 msgstr ""
 
-#: MacUninstallApp.cpp:505 MacUninstallApp.cpp:530
+#: MacUninstallApp.cpp:530 MacUninstallApp.cpp:556
 #, c-format
 msgid "TEST: Would delete directory: %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:509 MacUninstallApp.cpp:533
+#: MacUninstallApp.cpp:534 MacUninstallApp.cpp:559
 #, c-format
 msgid "Deleted directory: %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:523
+#: MacUninstallApp.cpp:548
 msgid "Deleting receipt"
 msgstr ""
 
-#: MacUninstallApp.cpp:540
+#: MacUninstallApp.cpp:567
+#, c-format
+msgid "TEST: Would delete receipt: %s"
+msgstr ""
+
+#: MacUninstallApp.cpp:568
+#, c-format
+msgid "TEST: Would delete BOM: %s"
+msgstr ""
+
+#: MacUninstallApp.cpp:571
+#, c-format
+msgid "Deleted receipt: %s"
+msgstr ""
+
+#: MacUninstallApp.cpp:573
+#, c-format
+msgid "Could not delete receipt %s"
+msgstr ""
+
+#: MacUninstallApp.cpp:576
+#, c-format
+msgid "Deleted BOM: %s"
+msgstr ""
+
+#: MacUninstallApp.cpp:578
+#, c-format
+msgid "Could not delete BOM %s"
+msgstr ""
+
+#: MacUninstallApp.cpp:583
 msgid "Receipt NOT deleted, because package files have been left."
 msgstr ""
 
-#: MacUninstallApp.cpp:554
+#: MacUninstallApp.cpp:597
 #, c-format
 msgid ""
 "In order to uninstall %s, administrative rights are required.\n"
 "\n"
 msgstr ""
 
-#: MacUninstallApp.cpp:569
+#: MacUninstallApp.cpp:612
 #, c-format
 msgid "Authorization could not be created: %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:595
+#: MacUninstallApp.cpp:638
 #, c-format
 msgid ""
 "Could not execute with administrative rights:\n"
 "%s"
 msgstr ""
 
-#: MacUninstallApp.cpp:600
+#: MacUninstallApp.cpp:643
 #, c-format
 msgid "Authorization failed: %s"
 msgstr ""
