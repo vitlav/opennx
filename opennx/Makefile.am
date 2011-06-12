@@ -112,8 +112,8 @@ macuninstall_CFLAGS = $(WX_CFLAGS)
 
 mactestkbd_SOURCES = mactestkbd.c MacOSX.c
 mactestkbd_LDADD = $(WX_LIBS)
-mactextkbd_CPPFLAGS = $(WX_CPPFLAGS)
-mactestkbd_CFLAGS = $(WX_CFLAGS)
+mactextkbd_CPPFLAGS = $(WX_CPPFLAGS) -DAPP_MACTESTKBD
+mactestkbd_CFLAGS = $(WX_CFLAGS) -DAPP_MACTESTKBD
 
 EXTRA_HEADERS = res/opennx.rc
 

@@ -49,6 +49,17 @@ extern std::vector<std::string> *_allTraceTags;
            wxString tag(i->c_str(), wxConvUTF8); \
            allTraceTags.Add(wxFileName::FileName(tag).GetName()); \
        } \
+    } \
+    static void CheckAllTrace(wxString &params) { \
+        if (params.IsSameAs(wxT("all"))) { \
+            params.Clear(); \
+            size_t i; \
+            for (i = 0; i < allTraceTags.GetCount(); ++i) { \
+                if (!params.IsEmpty()) \
+                    params.Append(wxT(",")); \
+                params.Append(allTraceTags[i]); \
+            } \
+        } \
     }
 
 #endif

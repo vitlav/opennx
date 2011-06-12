@@ -181,20 +181,7 @@ bool MyWizard::RunWizard(wxWizardPage *firstPage)
 
     // can't return false here because there is no old page
     (void)ShowPage(firstPage, true /* forward */);
-
-#ifdef __WXMAC__
-    // In order to enable the Quit menu item on OSX,
-    // we have to perform a *non*-modal show.
-    Show();
-    while (IsShown()) {
-        wxLog::FlushActive();
-        ::wxSafeYield(this, true);
-        wxThread::Sleep(500);
-    }
-    int result = GetReturnCode();
-#else
     int result = ShowModal();
-#endif
     return (result == wxID_OK);
 }
 

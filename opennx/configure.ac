@@ -265,7 +265,7 @@ case $target_os in
         MACTESTKBD='mactestkbd$(EXEEXT)'
         BUNDLE=bundle
         OSRESDEPS='$(top_srcdir)/extres/*.icns'
-        APP_LDADD="-lX11 -lXmu"
+        APP_LDADD="-lX11 -lXmu -lXau"
         # Automatically build universal binary, if wxWidgets is a universal binary
         if test -n "`echo -- $WX_LIBS|grep -- '-arch ppc'`" ; then
             UNIFLAGS="-arch ppc"
@@ -279,7 +279,7 @@ case $target_os in
         fi
         ;;
     *)
-        APP_LDADD="-lstdc++ -lX11 -lXmu"
+        APP_LDADD="-lstdc++ -lX11 -lXmu -lXau"
         WATCHREADER='watchreader$(EXEEXT)'
         if test "$ac_cv_enable_usbip" = "YES" ; then
             WATCHUSBIP='watchusbip$(EXEEXT)'

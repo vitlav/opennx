@@ -14,7 +14,7 @@ dmg: pkg
 	touch $@
 
 createpkgroot:
-	rm -rf pkgroot
+	sudo rm -rf pkgroot
 	mkdir -p pkgroot/Applications/OpenNX
 	mkdir -p pkgroot$(prefix)
 	$(srcdir)/mkbundle pkgroot/Applications/OpenNX/OpenNX.app OpenNXapp \
@@ -58,8 +58,11 @@ pkg: pkgdir
 	sudo chown -R $(BUILDUSR) pkgroot
 	touch $@
 
+clean-local:
+	sudo rm -rf pkgroot
+
 MAINTAINERCLEANFILES = Makefile.in
-CLEANFILES = -rf pkg pkgdir dmg dmgroot pkgroot nxbuild OpenNX.pkg scbuild
+CLEANFILES = -rf pkg pkgdir dmg dmgroot nxbuild OpenNX.pkg scbuild
 EXTRA_DIST = Description.plist OpenSC.webloc buildnx buildopensc \
 	buildsmbclient fileopts folderbg.jpg mkbundle mkdmg \
 	pkgResources libsmbclient.h volicon.icns volicon.png

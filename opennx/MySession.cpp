@@ -77,6 +77,10 @@
 # include <grp.h>
 #endif
 
+#ifdef __UNIX__
+# include <X11/Xauth.h>
+#endif
+
 #include "trace.h"
 ENABLE_TRACE;
 
@@ -573,9 +577,8 @@ MySession::bGetPidFromFile()
         wxString line = text.ReadLine();
         int idx = line.Find(wxT("pid"));
 
-        if (idx != -1 &&
-                line.Find(wxT("NXAGENT")) == -1 &&
-                line.Find(wxT("Agent")) == -1)
+        if (idx != wxNOT_FOUND &&
+                (!(line.Contains(wxT("NXAGENT")) || line.Contains(wxT("Agent")))))
         {
             line = line.Mid(idx + 4);
             if (m_rePID.Matches(line))
@@ -648,26 +651,30 @@ MySession::getXauthCookie(int display /* = 0 */, wxString proto)
 
 #ifdef __UNIX__
     wxString dpy;
+    wxString ret;
     if (wxGetEnv(wxT("DISPLAY"), &dpy) && (!dpy.IsEmpty())) {
-        wxString cmd = wxT("xauth list :");
-        cmd << dpy.AfterFirst(wxT(':'));
-        wxArrayString clines;
-        if (::wxExecute(cmd, clines) == 0) {
-            size_t count = clines.GetCount();
-            for (size_t i = 0; i < count; i++) {
-                wxString line = clines[i];
-                if (line.Contains(wxT("MIT-MAGIC-COOKIE-1"))) {
-                    wxStringTokenizer t(line, wxT("\t "));
-                    int ecount = 0;
-                    while (t.HasMoreTokens()) {
-                        wxString tok = t.GetNextToken();
-                        if (++ecount == 3)
-                            return tok;
+        wxString dpyNr = dpy.AfterFirst(wxT(':'));
+        const char *fn = XauFileName();
+        FILE *f = fopen(fn, "r");
+        if (f) {
+            Xauth *auth = NULL;
+            // Fetch the first entry of FamilyLocal and a matching display number
+            while (ret.IsEmpty() && (NULL != (auth = XauReadAuth(f)))) {
+                if (FamilyLocal == auth->family) {
+                    wxString edpy((const char *)auth->number, *wxConvCurrent, auth->number_length);
+                    if (edpy.IsSameAs(dpyNr)) {
+                        int i;
+                        for (i = 0; i < auth->data_length; ++i) {
+                            ret.Append(wxString::Format(wxT("%02x"), auth->data[i] & 0xff));
+                        }
                     }
                 }
+                XauDisposeAuth(auth);
             }
         }
+        fclose(f);
     }
+    return ret;
 #endif
 #ifdef __WXMSW__
     // On windows we *create* the cookie instead
@@ -684,26 +691,13 @@ MySession::getXauthCookie(int display /* = 0 */, wxString proto)
     wxString
 MySession::getXauthPath(tXarch xarch)
 {
-    wxFileName fn;
 #ifdef __UNIX__
     wxUnusedVar(xarch);
-    wxString cmd = wxT("xauth info");
-    wxArrayString clines;
-    if (::wxExecute(cmd, clines) == 0) {
-        size_t count = clines.GetCount();
-        for (size_t i = 0; i < count; i++) {
-            wxString line = clines[i];
-            if (line.StartsWith(wxT("Authority file:"))) {
-                return line.AfterFirst(wxT(':')).Strip(wxString::both);
-            }
-        }
-    }
-    // Fallback: $HOME/.Xauthority
-    fn.AssignHomeDir();
-    fn.SetName(wxT(".Xauthority"));
-    return fn.GetFullPath();
+    const char *xafn = XauFileName(); // static in libXau, DO NOT free() !!
+    return wxString(xafn, *wxConvCurrent);
 #endif
 #ifdef __WXMSW__
+    wxFileName fn;
     switch (xarch) {
         case XARCH_CYGWIN:
             return cygPath(m_sUserDir, wxT(".Xauthority"));
@@ -1414,7 +1408,7 @@ MySession::unhideNXWin()
             wxString wclass;
             int r = GetClassName(h, wclass.GetWriteBuf(40), 38);
             wclass.UngetWriteBuf();
-            if ((r > 0) && (wxNOT_FOUND != wclass.Find(wxT("cygwin/xfree86")))) {
+            if ((r > 0) && wclass.Contains(wxT("cygwin/xfree86"))) {
                 DWORD pid;
                 GetWindowThreadProcessId(h, &pid);
                 if ((int)pid == m_iXserverPID) {
@@ -1880,9 +1874,10 @@ MySession::prepareCups()
 MySession::setTurboPath(bool enable)
 {
 #ifdef __WXMAC__
+    return;
     wxString ldpath;
     bool isset = ::wxGetEnv(wxT("DYLD_LIBRARY_PATH"), &ldpath);
-    bool contains = isset && (ldpath.Find(wxT("libjpeg-turbo")) != wxNOT_FOUND);
+    bool contains = isset && ldpath.Contains(wxT("libjpeg-turbo"));
     if (enable) {
         if (!contains) {
 # if defined(__x86_64) || defined(__IA64__)
@@ -1897,19 +1892,19 @@ MySession::setTurboPath(bool enable)
             tjpeg.AppendDir(wxT("libjpeg-turbo"));
             if (tjpeg.DirExists()) {
                 turbopath = tjpeg.GetPath();
-                ldpath = ldpath.Prepend(tjpeg.GetPath().Append(wxT(":")));
+                ldpath.Prepend(tjpeg.GetPath().Append(wxT(":")));
             } else {
                 tjpeg.AssignDir(wxT("/opt/libjpeg-turbo"));
                 tjpeg.AppendDir(archlib);
                 if (tjpeg.DirExists()) {
                     turbopath = tjpeg.GetPath();
-                    ldpath = ldpath.Prepend(tjpeg.GetPath().Append(wxT(":")));
+                    ldpath.Prepend(tjpeg.GetPath().Append(wxT(":")));
                 }
             }
             if (!turbopath.IsEmpty()) {
                 if (!ldpath.IsEmpty())
-                    ldpath = ldpath.Prepend(wxT(":"));
-                ldpath = ldpath.Prepend(turbopath);
+                    ldpath.Prepend(wxT(":"));
+                ldpath.Prepend(turbopath);
             }
             ::myLogDebug(wxT("DYLD_LIBRARY_PATH='%s'"), ldpath.c_str());
             if (!::wxSetEnv(wxT("DYLD_LIBRARY_PATH"), ldpath)) {
@@ -1922,10 +1917,10 @@ MySession::setTurboPath(bool enable)
             wxStringTokenizer t(ldpath, wxT(":"));
             while (t.HasMoreTokens()) {
                 wxString fragment = t.GetNextToken();
-                if ((!fragment.IsEmpty()) && (fragment.Find(wxT("libjpeg-turbo")) == wxNOT_FOUND)) {
+                if ((!fragment.IsEmpty()) && (!fragment.Contains(wxT("libjpeg-turbo")))) {
                     if (!newpath.IsEmpty())
-                        newpath = newpath.Append(wxT(":"));
-                    newpath = newpath.Append(fragment);
+                        newpath.Append(wxT(":"));
+                    newpath.Append(fragment);
                 }
             }
             if (newpath.IsEmpty()) {
@@ -2131,6 +2126,9 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
         m_sHost = m_pCfg->sGetServerHost();
 
         fn.Assign(wxFileName::GetHomeDir());
+        wxString stmp;
+        ::wxGetEnv(wxT("PATH"), &stmp);
+        ::wxLogInfo(wxT("env: PATH='%s'"), stmp.c_str());
         ::wxSetEnv(wxT("NX_HOME"), cygPath(fn.GetFullPath()));
         ::wxLogInfo(wxT("env: NX_HOME='%s'"), cygPath(fn.GetFullPath()).c_str());
         ::wxSetEnv(wxT("NX_ROOT"), cygPath(m_sUserDir));
@@ -2146,7 +2144,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
 #ifdef __UNIX__
         // NX needs TEMP or NX_TEMP to be set to the same dir
         // where .X11-unix resides (typically /tmp)
-        wxString stmp = wxConvLocal.cMB2WX(x11_socket_path);
+        stmp = wxConvLocal.cMB2WX(x11_socket_path);
         if (!stmp.IsEmpty()) {
             fn.Assign(stmp);
             fn.RemoveLastDir();

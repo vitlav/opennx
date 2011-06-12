@@ -644,7 +644,10 @@ opennxApp::preInit()
         ldpath += wxT(":");
     ldpath += tmp + wxFileName::GetPathSeparator() + archlib;
 # ifdef __WXMAC__
-    ldpath += wxT(":/Library/OpenSC/lib:/usr/lib/samba");
+    if (wxFileName::DirExists(wxT("/Library/OpenSC/lib")))
+            ldpath.Append(wxT(":/Library/OpenSC/lib"));
+    if (wxFileName::DirExists(wxT("/usr/lib/samba")))
+            ldpath.Append(wxT(":/usr/lib/samba"));
 # else
     // If libjpeg-turbo is installed, prepend it's path in
     // order to speed-up image compression.
@@ -666,7 +669,7 @@ opennxApp::preInit()
         }
     }
 # endif
-    ::myLogDebug(wxT("LD_LIBRARY_PATH='%s'"), ldpath.c_str());
+    ::myLogDebug(wxT("%s='%s'"), LD_LIBRARY_PATH, ldpath.c_str());
     if (!::wxSetEnv(LD_LIBRARY_PATH, ldpath)) {
         ::wxLogSysError(wxT("Cannot set LD_LIBRARY_PATH"));
         return false;
@@ -674,6 +677,7 @@ opennxApp::preInit()
 #endif
 
     if (::wxGetEnv(wxT("WXTRACE"), &tmp)) {
+        CheckAllTrace(tmp);
         wxStringTokenizer t(tmp, wxT(",:"));
         while (t.HasMoreTokens()) {
             wxString tag = t.GetNextToken();
@@ -988,6 +992,7 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
     (void)parser.Found(wxT("session"), &m_sSessionName);
     wxString traceTags;
     if (parser.Found(wxT("trace"), &traceTags)) {
+        CheckAllTrace(traceTags);
         wxStringTokenizer t(traceTags, wxT(","));
         while (t.HasMoreTokens()) {
             wxString tag = t.GetNextToken();
@@ -1220,19 +1225,7 @@ bool opennxApp::realInit()
     d.SetLastSessionFilename(m_sSessionName);
     d.Create(NULL);
     m_pLoginDialog = &d;
-#ifdef __WXMAC__
-    // In order to enable the Quit menu item on OSX,
-    // we have to perform a *non*-modal show.
-    d.Show();
-    while (d.IsShown()) {
-        wxLog::FlushActive();
-        Yield(true);
-        wxThread::Sleep(500);
-    }
-    int result = d.GetReturnCode();
-#else
     int result = d.ShowModal();
-#endif
     m_pLoginDialog = NULL;
     if (result == wxID_OK) {
         m_sSessionName = d.GetLastSessionFilename();

@@ -42,6 +42,7 @@ static void __attribute__ ((constructor))
     }
 }
 
+#ifdef APP_MACTESTKBD
 #include <Carbon/Carbon.h>
 void getMacKeyboard() {
 	KeyboardLayoutRef klr;
@@ -56,4 +57,6 @@ void getMacKeyboard() {
 		}
 	}
 }
+#endif
+
 #endif
