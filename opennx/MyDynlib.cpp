@@ -64,13 +64,13 @@ bool MyDynamicLibrary::Load(const wxString& name, int flags /* = wxDL_DEFAULT */
         wxStringTokenizer t(ldpath, wxT(":"));
         while (t.HasMoreTokens()) {
             wxString abslib = t.GetNextToken() + wxFileName::GetPathSeparator() + name;
-            ::myLogTrace(MYTRACETAG, wxT("Trying to load(%s 0x%0xi)"), abslib.c_str(), flags);
+            ::myLogTrace(MYTRACETAG, wxT("Trying to load(%s 0x%0x)"), abslib.c_str(), flags);
             if (wxDynamicLibrary::Load(abslib, flags))
                 return true;
 #ifdef __WXMAC__
             if (!abslib.EndsWith(wxT(".dylib"))) {
                 abslib += wxT(".dylib");
-                ::myLogTrace(MYTRACETAG, wxT("Trying to load(%s, 0x%0x)"), abslib.c_str(), flags);
+                ::myLogTrace(MYTRACETAG, wxT("Trying to load(%s, 0x%0x)"), abslib.c_str(), flags|wxDL_VERBATIM);
                 if (wxDynamicLibrary::Load(abslib, flags|wxDL_VERBATIM))
                     return true;
             }
@@ -78,6 +78,17 @@ bool MyDynamicLibrary::Load(const wxString& name, int flags /* = wxDL_DEFAULT */
         }
     }
     ::myLogTrace(MYTRACETAG, wxT("Falling back to default load"));
-    return wxDynamicLibrary::Load(name, flags);
+    if (wxDynamicLibrary::Load(name, flags))
+        return true;
+#ifdef __WXMAC__
+    if (!name.EndsWith(wxT(".dylib"))) {
+        wxString dlib(name);
+        dlib.Append(wxT(".dylib"));
+        ::myLogTrace(MYTRACETAG, wxT("Trying to load(%s, 0x%0x)"), dlib.c_str(), flags|wxDL_VERBATIM);
+        if (wxDynamicLibrary::Load(dlib, flags|wxDL_VERBATIM))
+            return true;
+    }
+#endif
+    return false;
 #endif
 }
