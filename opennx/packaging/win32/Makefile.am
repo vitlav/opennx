@@ -28,6 +28,11 @@ FNT2URL = ftp://ftp.gwdg.de/pub/x11/x.org/pub/X11R7.5/src/font/$(FNT2BALL)
 	$(INSTALL_PROGRAM) $(NXBUILD)/dist/bin/*.dll setupdir/bin
 	$(INSTALL_PROGRAM) $(NXBUILD)/dist/lib/*.dll setupdir/bin
 	test $(BUILDXMING) = yes || cp -r $(NXBUILD)/dist/share/* setupdir/share
+	$(MAKE) -C pulse tmpinstall
+	$(INSTALL_PROGRAM) pulse/dist/bin/*.exe setupdir/bin
+	$(INSTALL_PROGRAM) pulse/dist/bin/*.dll setupdir/bin
+	cp -av pulse/dist/etc setupdir
+	cp -av pulse/dist/lib setupdir
 	perl findrequires.pl "$(DLLPATH)" setupdir/bin/*.exe|xargs cp -t setupdir/bin
 	$(RM) -rf setupdir/share/icons setupdir/share/applnk
 	$(STRIP) --strip-unneeded setupdir/bin/*.exe `ls setupdir/bin/*.dll|grep -v cyg`

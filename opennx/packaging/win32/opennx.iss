@@ -38,7 +38,13 @@ SolidCompression=yes
 SetupLogging=yes
 WizardImageFile=compiler:wizmodernimage-IS.bmp
 WizardSmallImageFile=compiler:wizmodernsmallimage-IS.bmp
-;SetupIconFile=compiler:Examples\Setup.ico
+; The following breaks in older wine versions, so we
+; check the wine version in the invoking script and
+; define BADWINE, if we are crossbuilding and have a
+; broken wine version.
+#ifndef BADWINE
+SetupIconFile=compiler:Examples\Setup.ico
+#endif
 UninstallDisplayIcon={app}\bin\opennx.exe
 LicenseFile=lgpl.rtf
 
