@@ -41,6 +41,9 @@
 ////@begin includes
 ////@end includes
 #include <wx/config.h>
+#ifdef __WXMAC__
+# include <wx/utils.h>
+#endif
 
 #include "MyWizard.h"
 #include "MyXmlConfig.h"
@@ -170,6 +173,16 @@ void MyWizard::CreateControls()
                 minH = h;
         }
     }
+}
+
+bool MyWizard::RunWizard(wxWizardPage *firstPage)
+{
+    wxCHECK_MSG( firstPage, false, wxT("can't run empty wizard") );
+
+    // can't return false here because there is no old page
+    (void)ShowPage(firstPage, true /* forward */);
+    int result = ShowModal();
+    return (result == wxID_OK);
 }
 
 void MyWizard::EnableNext(bool enable)

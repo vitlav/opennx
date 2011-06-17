@@ -1,6 +1,6 @@
 diff -urwN jpeg-6b-orig/aclocal.m4 jpeg-6b/aclocal.m4
 --- jpeg-6b-orig/aclocal.m4	1970-01-01 01:00:00.000000000 +0100
-+++ jpeg-6b/aclocal.m4	2010-05-13 04:32:11.000000000 +0200
++++ jpeg-6b/aclocal.m4	2011-06-11 05:09:02.000000000 +0200
 @@ -0,0 +1,7966 @@
 +# libtool.m4 - Configure libtool for the host system. -*-Autoconf-*-
 +#
@@ -7970,7 +7970,7 @@ diff -urwN jpeg-6b-orig/aclocal.m4 jpeg-6b/aclocal.m4
 +m4_ifndef([_LT_AC_FILE_LTDLL_C],	[AC_DEFUN([_LT_AC_FILE_LTDLL_C])])
 diff -urwN jpeg-6b-orig/config.guess jpeg-6b/config.guess
 --- jpeg-6b-orig/config.guess	1998-03-25 16:25:38.000000000 +0100
-+++ jpeg-6b/config.guess	2010-05-13 04:32:11.000000000 +0200
++++ jpeg-6b/config.guess	2011-06-11 05:09:02.000000000 +0200
 @@ -1,7 +1,11 @@
  #! /bin/sh
  # Attempt to guess a canonical system name.
@@ -9786,7 +9786,7 @@ diff -urwN jpeg-6b-orig/config.guess jpeg-6b/config.guess
 +# End:
 diff -urwN jpeg-6b-orig/config.sub jpeg-6b/config.sub
 --- jpeg-6b-orig/config.sub	1998-03-25 16:25:39.000000000 +0100
-+++ jpeg-6b/config.sub	2010-05-13 04:32:11.000000000 +0200
++++ jpeg-6b/config.sub	2011-06-11 05:09:02.000000000 +0200
 @@ -1,6 +1,11 @@
  #! /bin/sh
 -# Configuration validation subroutine script, version 1.1.
@@ -11247,7 +11247,7 @@ diff -urwN jpeg-6b-orig/config.sub jpeg-6b/config.sub
 +# End:
 diff -urwN jpeg-6b-orig/configure jpeg-6b/configure
 --- jpeg-6b-orig/configure	1998-03-21 20:08:57.000000000 +0100
-+++ jpeg-6b/configure	2010-05-13 04:32:11.000000000 +0200
++++ jpeg-6b/configure	2011-06-11 05:09:02.000000000 +0200
 @@ -1,2011 +1,14784 @@
  #! /bin/sh
 -
@@ -27816,7 +27816,7 @@ diff -urwN jpeg-6b-orig/configure jpeg-6b/configure
  
 diff -urwN jpeg-6b-orig/configure.in jpeg-6b/configure.in
 --- jpeg-6b-orig/configure.in	1970-01-01 01:00:00.000000000 +0100
-+++ jpeg-6b/configure.in	2010-05-13 04:32:11.000000000 +0200
++++ jpeg-6b/configure.in	2011-06-11 05:09:02.000000000 +0200
 @@ -0,0 +1,346 @@
 +dnl IJG auto-configuration source file.
 +dnl Process this file with autoconf to produce a configure script.
@@ -28166,7 +28166,7 @@ diff -urwN jpeg-6b-orig/configure.in jpeg-6b/configure.in
 +AC_OUTPUT(Makefile:makefile.cfg)
 diff -urwN jpeg-6b-orig/jconfig.cfg jpeg-6b/jconfig.cfg
 --- jpeg-6b-orig/jconfig.cfg	1994-12-06 17:43:15.000000000 +0100
-+++ jpeg-6b/jconfig.cfg	2010-05-13 04:32:11.000000000 +0200
++++ jpeg-6b/jconfig.cfg	2011-06-11 05:09:02.000000000 +0200
 @@ -28,11 +28,16 @@
  
  #ifdef JPEG_CJPEG_DJPEG
@@ -28191,7 +28191,7 @@ diff -urwN jpeg-6b-orig/jconfig.cfg jpeg-6b/jconfig.cfg
  #undef NEED_SIGNAL_CATCHER
 diff -urwN jpeg-6b-orig/jpeglib.h jpeg-6b/jpeglib.h
 --- jpeg-6b-orig/jpeglib.h	1998-02-21 20:48:14.000000000 +0100
-+++ jpeg-6b/jpeglib.h	2010-05-13 04:32:11.000000000 +0200
++++ jpeg-6b/jpeglib.h	2011-06-11 05:09:02.000000000 +0200
 @@ -13,6 +13,10 @@
  #ifndef JPEGLIB_H
  #define JPEGLIB_H
@@ -29730,7 +29730,7 @@ diff -urwN jpeg-6b-orig/ltconfig jpeg-6b/ltconfig
 -# End:
 diff -urwN jpeg-6b-orig/ltmain.sh jpeg-6b/ltmain.sh
 --- jpeg-6b-orig/ltmain.sh	1998-03-25 16:25:39.000000000 +0100
-+++ jpeg-6b/ltmain.sh	2010-05-13 04:32:11.000000000 +0200
++++ jpeg-6b/ltmain.sh	2011-06-11 05:09:02.000000000 +0200
 @@ -1,1186 +1,6908 @@
 -# ltmain.sh - Provide generalized library-building support services.
 -# NOTE: Changing this file will not affect anything until you rerun ltconfig.
@@ -40009,7 +40009,16 @@ diff -urwN jpeg-6b-orig/ltmain.sh jpeg-6b/ltmain.sh
 +
 diff -urwN jpeg-6b-orig/makefile.cfg jpeg-6b/makefile.cfg
 --- jpeg-6b-orig/makefile.cfg	1998-03-21 20:08:57.000000000 +0100
-+++ jpeg-6b/makefile.cfg	2010-05-13 04:36:30.000000000 +0200
++++ jpeg-6b/makefile.cfg	2011-06-11 05:09:38.000000000 +0200
+@@ -12,7 +12,7 @@
+ prefix = @prefix@
+ exec_prefix = @exec_prefix@
+ bindir = $(exec_prefix)/bin
+-libdir = $(exec_prefix)/lib
++libdir = @libdir@
+ includedir = $(prefix)/include
+ binprefix =
+ manprefix =
 @@ -54,7 +54,7 @@
  # miscellaneous OS-dependent stuff
  SHELL= /bin/sh
@@ -40082,7 +40091,7 @@ diff -urwN jpeg-6b-orig/makefile.cfg jpeg-6b/makefile.cfg
  	$(RM) *.o *.lo libjpeg.a libjpeg.la
 diff -urwN jpeg-6b-orig/wrjpgcom.c jpeg-6b/wrjpgcom.c
 --- jpeg-6b-orig/wrjpgcom.c	1997-10-23 06:47:03.000000000 +0200
-+++ jpeg-6b/wrjpgcom.c	2010-05-13 04:32:11.000000000 +0200
++++ jpeg-6b/wrjpgcom.c	2011-06-11 05:09:02.000000000 +0200
 @@ -446,6 +446,8 @@
      } else if (keymatch(arg, "comment", 1)) {
        if (++argn >= argc) usage();

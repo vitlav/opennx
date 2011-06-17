@@ -93,6 +93,10 @@ BEGIN_EVENT_TABLE( LoginDialog, wxDialog )
     ////@end LoginDialog event table entries
 
     EVT_MENU(wxID_CONTEXT_HELP, LoginDialog::OnContextHelp)
+#ifdef __WXMAC__
+    EVT_MENU(wxID_EXIT, LoginDialog::OnMenuExit)
+#endif
+
 #ifdef SINGLE_SESSION
     EVT_TIMER(NXSSH_TIMER, LoginDialog::OnTimer)
 #endif
@@ -507,6 +511,17 @@ void LoginDialog::OnOkClick(wxCommandEvent& event)
     }
     event.Skip();
 }
+
+#ifdef __WXMAC__
+/*!
+ * Handle quit event on Mac OSX
+ */
+void LoginDialog::OnMenuExit(wxCommandEvent& event)
+{
+    EndModal(wxID_CANCEL);
+    event.Skip();
+}
+#endif
 
 /*!
  * Handle events from AutoLoginTimer

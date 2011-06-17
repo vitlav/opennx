@@ -102,10 +102,7 @@ Provides: nxclient
 BuildRequires: libtool
 BuildRequires: automake >= 1.10
 BuildRequires: audiofile-devel
-BuildRequires: cups-devel
-BuildRequires: opensc-devel
 BuildRequires: libusb-devel
-BuildRequires: libsmbclient-devel
 BuildRequires: gcc-c++
 BuildRequires: zip
 BuildRequires: libpng-devel
@@ -116,7 +113,13 @@ BuildRequires: openssl-devel
 %if %{is_suse}
 # Workaround for https://bugzilla.novell.com/show_bug.cgi?id=436992
 BuildRequires: -post-build-checks
+%if %{suse_version} >= 1140
+BuildRequires: wxWidgets-wxcontainer-devel
+%define _use_internal_dependency_generator 0
+%define __find_requires %wx_requires
+%else
 BuildRequires: wxGTK-devel >= 2.8.0
+%endif
 BuildRequires: xorg-x11-proto-devel
 BuildRequires: xorg-x11-xtrans-devel
 BuildRequires: libpulse-devel
@@ -195,9 +198,11 @@ for pkg in %{nxpkgsall} ; do
     tar xzf ${pkg}-*.tar.gz
 done
 ncver=`ls nxcomp-*.tar.gz|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxcomp-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
+never=`ls nxesd-*.tar.gz|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxesd-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
 %else
 %setup -q -a 100 -a 101 -a 102 -a 103
 ncver=`basename %{SOURCE100}|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxcomp-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
+never=`basename %{SOURCE101}|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxesd-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
 %endif
 
 # Apply openssh askPIN patch (see https://bugzilla.mindrot.org/show_bug.cgi?id=608)
@@ -205,6 +210,10 @@ cd nxssh && patch -p1 < ../patches/openssh-scard-pin.patch
 cd ..
 if test $ncver -lt 03040006 ;then
     patch -p0 < patches/nxcomp-gcc44.patch
+fi
+if test $never -ge 03050000 ;then
+    patch -p0 < patches/nxesd-3.5-autotools.patch
+    touch nxesd/.run_autoreconf
 fi
 # Make nxssh load libopensc dynamically
 patch -p0 < patches/nxssh-dynopensc.patch
@@ -228,28 +237,19 @@ patch -p0 < patches/nxssh-dynopensc.patch
 # keep this comment line!!
 
 make
+CFG_nxesd=--disable-shared
 for pkg in %{nxpkgs} ; do
-	cd $pkg && ./configure --prefix=%{_prefix} && make
+    cd $pkg
+    test -f .run_autoreconf && autoreconf -f -i || :
+	./configure --prefix=%{_prefix} `eval echo '$CFG_'$pkg` && make
     cd ..
 done
-%if %{is_fc}%{is_el}
-# On FC10, opensc-config is currently broken. It returns "-I" when
-# called with the --cflags option, breaking ./configure. Therefore
-# we provide a wrapper here.
+export PATH=`pwd`/opensc:$PATH
 cd nxssh
-cat<<"EOF">opensc-config
-#!/bin/sh
-/usr/bin/opensc-config "$@"|perl -pe 's/-I\s//g'
-EOF
-chmod a+x opensc-config
-export PATH=.:$PATH
 %if %{is_el}
 LIBS=-lresolv ./configure --prefix=%{_prefix} --with-opensc --enable-opensc-dynamic && make
 %else
 ./configure --prefix=%{_prefix} --with-opensc --enable-opensc-dynamic && make
-%endif
-%else
-cd nxssh && ./configure --prefix=%{_prefix} --with-opensc --enable-opensc-dynamic && make
 %endif
 cd ..
 
@@ -258,7 +258,10 @@ make DESTDIR=%{buildroot} install
 make DESTDIR=%{buildroot} prefix=/usr install-man
 %{__install} -d -m 755 %{buildroot}%{nxlib}
 %{__install} -m 755 nxcomp/libXcomp.so.*.*.* %{buildroot}%{nxlib}
-%{__install} -m 755 nxesd/nxesd %{buildroot}%{_prefix}/bin
+mkdir -p nxesd_dist
+make -C nxesd DESTDIR=%{_builddir}/%{name}-%{version}/nxesd_dist install
+%{__install} -m 755 nxesd_dist/%{_prefix}/bin/nxesd %{buildroot}%{_prefix}/bin
+rm -rf nxesd_dist
 %{__install} -m 755 nxssh/nxssh %{buildroot}%{_prefix}/bin
 %{__install} -m 755 nxproxy/nxproxy %{buildroot}%{_prefix}/bin
 /sbin/ldconfig -n %{buildroot}%{nxlib}

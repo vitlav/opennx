@@ -8,8 +8,13 @@ CNT=0
 MAX=5
 
 EOUT=isccerr.$$
+WINE_VERSION=`wine --version|sed -e 's/wine-//'|tr . 0`
+BADWINE=
+if [ $WINE_VERSION -lt 103021 ] ; then
+    BADWINE=-dBADWINE=1
+fi
 while test $CNT -lt $MAX ; do
-    @WINE@ "@ISCC@" "$@" 2>$EOUT
+    @WINE@ "@ISCC@" "$@" $BADWINE 2>$EOUT
     R=$?
     case $R in
         0)

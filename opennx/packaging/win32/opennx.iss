@@ -6,7 +6,7 @@
 #define APPNAME "OpenNX"
 ; Automatically get version from executable resp. dll
 #define APPEXE "setupdir\bin\opennx.exe"
-#include <version.iss>
+#include "version.iss"
 
 #define MSWU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
 #define APPIDSTR "{56D797D7-543C-408F-BBEB-B56787873D2F}"
@@ -38,7 +38,13 @@ SolidCompression=yes
 SetupLogging=yes
 WizardImageFile=compiler:wizmodernimage-IS.bmp
 WizardSmallImageFile=compiler:wizmodernsmallimage-IS.bmp
-;SetupIconFile=compiler:Examples\Setup.ico
+; The following breaks in older wine versions, so we
+; check the wine version in the invoking script and
+; define BADWINE, if we are crossbuilding and have a
+; broken wine version.
+#ifndef BADWINE
+SetupIconFile=setupdir\bin\nx.ico
+#endif
 UninstallDisplayIcon={app}\bin\opennx.exe
 LicenseFile=lgpl.rtf
 

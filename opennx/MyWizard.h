@@ -99,6 +99,10 @@ public:
     /// Creates the controls and sizers
     void CreateControls();
 
+    // Local implementation handles modality
+    // on OSX differently.
+    virtual bool RunWizard(wxWizardPage *firstPage);
+
     virtual wxSize GetPageSize() const;
 
     void EnableNext(bool enable = true);

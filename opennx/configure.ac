@@ -265,7 +265,7 @@ case $target_os in
         MACTESTKBD='mactestkbd$(EXEEXT)'
         BUNDLE=bundle
         OSRESDEPS='$(top_srcdir)/extres/*.icns'
-        APP_LDADD="-lX11 -lXmu"
+        APP_LDADD="-lX11 -lXmu -lXau"
         # Automatically build universal binary, if wxWidgets is a universal binary
         if test -n "`echo -- $WX_LIBS|grep -- '-arch ppc'`" ; then
             UNIFLAGS="-arch ppc"
@@ -279,7 +279,7 @@ case $target_os in
         fi
         ;;
     *)
-        APP_LDADD="-lstdc++ -lX11 -lXmu"
+        APP_LDADD="-lstdc++ -lX11 -lXmu -lXau"
         WATCHREADER='watchreader$(EXEEXT)'
         if test "$ac_cv_enable_usbip" = "YES" ; then
             WATCHUSBIP='watchusbip$(EXEEXT)'
@@ -368,23 +368,6 @@ else
     esac
 fi
 
-ac_cv_opensc=
-AC_ARG_WITH([opensc],
-            AS_HELP_STRING([--with-opensc=DIR],
-                           [Specify path to opensc installation]),
-	[ac_cv_opensc=$withval])
-if test -n "$ac_cv_opensc" ; then
-    CPPFLAGS="$CPPFLAGS -I$ac_cv_opensc/include"
-    LDFLAGS="$LDFLAGS -L$ac_cv_opensc/lib"
-else
-    case $target_os in
-        darwin*)
-            CPPFLAGS="$CPPFLAGS -I/Library/OpenSC/include"
-            LDFLAGS="$LDFLAGS -L/Library/OpenSC/lib"
-            ;;
-    esac
-fi
-
 ac_cv_dllpath=
 AC_ARG_WITH([dllpath],
             AS_HELP_STRING([--with-dllpath=PATH],
@@ -415,23 +398,8 @@ FE_SVNREV([SVNREV])
 AC_DEFINE_UNQUOTED(SVNREV,"$SVNREV",[SVN revision])
 FE_RCVERSION
 
-AC_CHECK_HEADERS([cups/cups.h cups.h libsmbclient.h opensc/opensc.h usb.h])
-case $target_os in
-    mingw*)
-        ;;
-    *)
-        if test "$ac_cv_header_libsmbclient_h" != "yes" ; then
-            AC_MSG_ERROR([Need libsmbclient.h for compiling on Unix])
-        fi
-        if test "$ac_cv_header_cups_cups_h" != "yes" -a "$ac_cv_header_cups_h" != "yes" ; then
-            AC_MSG_ERROR([Need cups.h for compiling on Unix])
-        fi
-        ;;
-esac
+AC_CHECK_HEADERS([cups/cups.h cups.h libsmbclient.h usb.h])
 
-if test "$ac_cv_header_opensc_opensc_h" != "yes"; then
-    AC_MSG_ERROR([Need opensc/opensc.h])
-fi
 if test "$ac_cv_enable_usbip" = "YES" -a "$ac_cv_header_usb_h" != "yes"; then
     AC_MSG_ERROR([Need usb.h when compiling with usbip support])
 fi
@@ -527,4 +495,5 @@ AC_CONFIG_FILES([Makefile opennx.spec res/opennx.rc
     packaging/win32/pulse/Makefile packaging/MacOSX/Makefile
     packaging/MacOSX/opennx.plist packaging/MacOSX/opennx-main.plist
     packaging/MacOSX/pkg.plist po/Makefile.in])
+AC_CONFIG_FILES([opensc/opensc-config],[chmod +x opensc/opensc-config])
 AC_OUTPUT

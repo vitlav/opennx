@@ -54,7 +54,9 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	VncPropertyDialog.h VncPropertyDialog_symbols.h WinShare.h \
 	X11PropertyDialog.h X11PropertyDialog_symbols.h trace.h tracelogApp.h \
 	watchReaderApp.h watchUsbIpApp.h xh_richtext.h MacUninstallApp.h \
-	WrappedStatic.h SupressibleMessageDialog.h SupressibleMessageDialog_symbols.h 
+	WrappedStatic.h SupressibleMessageDialog.h SupressibleMessageDialog_symbols.h \
+	opensc/errors.h opensc/opensc.h opensc/scconf.h opensc/types.h opensc/pkcs15.h \
+	libsmbclient.h
 
 pconnect_SOURCES = pconnect.c
 pconnect_LDADD = $(WS2LIB) $(RESLIB)
@@ -99,7 +101,7 @@ tracelog_CFLAGS = $(WX_CFLAGS)
 
 macfindreader_SOURCES = macfindreader.c
 macfindreader_CFLAGS = $(UNIFLAGS)
-macfindreader_LDADD = -lopensc
+macfindreader_LDADD = -ldl
 
 macuninstall_SOURCES = MacUninstallApp.cpp MacOSX.c
 macuninstall_LDADD = $(WX_LIBS)
@@ -110,8 +112,8 @@ macuninstall_CFLAGS = $(WX_CFLAGS)
 
 mactestkbd_SOURCES = mactestkbd.c MacOSX.c
 mactestkbd_LDADD = $(WX_LIBS)
-mactextkbd_CPPFLAGS = $(WX_CPPFLAGS)
-mactestkbd_CFLAGS = $(WX_CFLAGS)
+mactextkbd_CPPFLAGS = $(WX_CPPFLAGS) -DAPP_MACTESTKBD
+mactestkbd_CFLAGS = $(WX_CFLAGS) -DAPP_MACTESTKBD
 
 EXTRA_HEADERS = res/opennx.rc
 
@@ -212,8 +214,8 @@ CLEANFILES = memres.h tmpres.zip *~ po/*~ *.bak *~ \#.* .\#* OpenNX.app
 MAINTAINERCLEANFILES = ABOUT-NLS Makefile.in configure aclocal.m4 \
 	conf/config.guess conf/config.sub conf/depcomp conf/install-sh \
 	conf/missing conf/mkinstalldirs conf/ltmain.sh conf/config.rpath \
-	m4/[cgilnpuwx]*.m4 m4/s[it]*.m4 po/*.sin po/*.sed po/*.header po/Rules-quot \
-	po/*.template po/Makefile*.in
+	m4/*~ m4/[cgilnpuwx]*.m4 m4/s[it]*.m4 \
+	po/*.sin po/*.sed po/*.header po/Rules-quot po/*.template po/Makefile*.in
 
 DISTCLEANFILES = mingw32-config.cache res/*.prv.*
 

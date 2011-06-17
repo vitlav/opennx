@@ -53,8 +53,8 @@ if [ $NEEDREBUILD = yes ] ; then
 	cd jpeg-6b
 	patch -p1 < $TOPSRC/patches/jpeg-autoconf.patch
 	CFLAGS="-arch ppc -arch i386" CXXFLAGS="-arch ppc -arch i386" LDFLAGS="-arch ppc -arch i386" ./configure \
-        	--prefix=$PFX --disable-static --enable-shared
-	mkdir -p $DEST$PFX/{include,lib}
+        	--prefix=$PFX --libdir=$PFX/lib/private --disable-static --enable-shared
+	mkdir -p $DEST$PFX/include $DEST$PFX/lib/private
 	make DESTDIR=$DEST install-lib
 	cd ..
 	# Prerequisite: libpng
@@ -80,18 +80,24 @@ if [ $NEEDREBUILD = yes ] ; then
     		cd $pkg
     		for p in $TOPSRC/patches/${pkg}-*.patch ; do
         		bn=`basename $p`
-        		if [ $bn = nxcomp-gcc44.patch -a $ncver -ge 03040006 ] ; then
+			if [ $bn = nxesd-3.5-autotools.patch ] ; then
             			echo === Skipping $bn in $pkg
-        		else
-            			echo === Applying $bn in $pkg
-            			patch -p1 < $p
-        		fi
+			else
+				if [ $bn = nxcomp-gcc44.patch -a $ncver -ge 03040006 ] ; then
+            				echo === Skipping $bn in $pkg
+        			else
+            				echo === Applying $bn in $pkg
+            				patch -p1 < $p
+        			fi
+			fi
     		done
     		autoreconf -f -i
     		cargs=
+    		cenv=
     		margs=
     		case $pkg in
         		nxcomp)
+                        cenv="LDFLAGS=-L$DEST$PFX/lib/private"
             			cargs="--with-libjpeg=$DEST$PFX --with-libpng=$DEST$PFX"
             			;;
         		nxesd)
@@ -99,7 +105,7 @@ if [ $NEEDREBUILD = yes ] ; then
             			margs="AUDIOFILE_CFLAGS=\"-I$DEST$PFX/include\" LDFLAGS=\"-L$DEST$PFX/lib\" LIBS=-laudiofile"
             			;;
     		esac
-    		./configure --prefix=$PFX $cargs
+    		eval $cenv ./configure --prefix=$PFX $cargs
     		echo make $margs
     		make $margs
     		make DESTDIR=$DEST $margs install
@@ -119,7 +125,8 @@ if [ $NEEDREBUILD = yes ] ; then
 			;;
 	esac
 	LIBS="$R" \
-	LDFLAGS="-L$DEST$PFX/lib" \
+	LDFLAGS="-L$DEST$PFX/lib -L$DEST$PFX/lib/private" \
+	CPPFLAGS="-I$TOPSRC" \
 	./configure --prefix=$PFX \
   		--with-opensc=$BUILDDIR/../scbuild/dist$PFX \
   		--enable-opensc-dynamic \
@@ -131,7 +138,7 @@ if [ $NEEDREBUILD = yes ] ; then
     mkdir -p $CACHEDIR
 	tar czf $CACHEDBUILD .
 else
-	mkdir -p $DEST$PFX/{include,lib}
+	mkdir -p $DEST$PFX/include $DEST$PFX/lib/private
 	make -C jpeg-6b DESTDIR=$DEST install-lib
 	make -C libpng-1.2.44 DESTDIR=$DEST install
 	make -C audiofile-0.2.6 DESTDIR=$DEST install

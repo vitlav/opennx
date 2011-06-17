@@ -91,6 +91,9 @@ private:
     void CreateControls();
 
     void OnContextHelp(wxCommandEvent &);
+#ifdef __WXMAC__
+    void OnMenuExit(wxCommandEvent &);
+#endif
 #ifdef SINGLE_SESSION
     // Event handler for events from nxssh watch timer
     void OnTimer(wxTimerEvent& event);

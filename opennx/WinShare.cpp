@@ -58,6 +58,25 @@ WX_DEFINE_OBJARRAY(ArrayOfShares);
 #else
 # ifdef HAVE_CUPS_H
 #  include <cups.h>
+# else
+// No CUPS headers. Just define required types
+// locally - The API has not changed since CUPS 1.1 up
+// to 1.5, so it is unlikely to change in the near future
+//
+typedef struct cups_option_s		/**** Printer Options ****/
+{
+  char		*name;			/* Name of option */
+  char		*value;			/* Value of option */
+} cups_option_t;
+
+typedef struct cups_dest_s		/**** Destination ****/
+{
+  char		*name,			/* Printer or class name */
+		*instance;		/* Local instance name or NULL */
+  int		is_default;		/* Is this printer the default? */
+  int		num_options;		/* Number of options */
+  cups_option_t	*options;		/* Options */
+} cups_dest_t;
 # endif
 #endif
 #include <libsmbclient.h>
@@ -224,24 +243,26 @@ ArrayOfShares DllData::GetShares()
 #ifdef __UNIX__
     if (isSMBC) {
         // Unix, use libsmbclient
-        if (C_init(smbc_auth_fn, 0) == 0) {
-            int d = C_opendir("smb://127.0.0.1/");
-            if (d >= 0) {
-                struct smbc_dirent *e;
-                while ((e = C_readdir(d))) {
-                    SharedResource r;
-                    switch (e->smbc_type) {
-                        case SMBC_FILE_SHARE:
-                        case SMBC_PRINTER_SHARE:
-                            r.name = wxConvLocal.cMB2WX(e->name);
-                            r.description = wxConvLocal.cMB2WX(e->comment);
-                            r.sharetype = (e->smbc_type == SMBC_FILE_SHARE) ?
-                                SharedResource::SHARE_SMB_DISK : SharedResource::SHARE_SMB_PRINTER;
-                            sa.Add(r);
-                            break;
+        if ((NULL != C_init) && (NULL != C_opendir) && (NULL != C_readdir) && (NULL != C_closedir)) {
+            if (C_init(smbc_auth_fn, 0) == 0) {
+                int d = C_opendir("smb://127.0.0.1/");
+                if (d >= 0) {
+                    struct smbc_dirent *e;
+                    while ((e = C_readdir(d))) {
+                        SharedResource r;
+                        switch (e->smbc_type) {
+                            case SMBC_FILE_SHARE:
+                            case SMBC_PRINTER_SHARE:
+                                r.name = wxConvLocal.cMB2WX(e->name);
+                                r.description = wxConvLocal.cMB2WX(e->comment);
+                                r.sharetype = (e->smbc_type == SMBC_FILE_SHARE) ?
+                                    SharedResource::SHARE_SMB_DISK : SharedResource::SHARE_SMB_PRINTER;
+                                sa.Add(r);
+                                break;
+                        }
                     }
+                    C_closedir(d);
                 }
-                C_closedir(d);
             }
         }
     } else {
@@ -341,15 +362,18 @@ bool DllData::IsAvailable()
     if (handle) {
         if (isSMBC) {
             // Probe Samba
-            if (C_init(smbc_auth_fn, 0) == 0) {
-                ::myLogTrace(MYTRACETAG, wxT("C_init success"));
-                int d = C_opendir("smb://127.0.0.1/");
-                if (d >= 0) {
-                    ret = true;
-                    C_closedir(d);
-                }
-            } else
-                ::myLogTrace(MYTRACETAG, wxT("C_init returned error"));
+            if ((NULL != C_init) && (NULL != C_opendir) && (NULL != C_readdir) && (NULL != C_closedir)) {
+                if (C_init(smbc_auth_fn, 0) == 0) {
+                    ::myLogTrace(MYTRACETAG, wxT("C_init success"));
+                    int d = C_opendir("smb://127.0.0.1/");
+                    if (d >= 0) {
+                        ret = true;
+                        C_closedir(d);
+                    }
+                } else
+                    ::myLogTrace(MYTRACETAG, wxT("C_init returned error"));
+            }
+            ::myLogTrace(MYTRACETAG, wxT("libsmbclient functions not available"));
         } else {
             // Probe Cups
             return (cupsServer() != NULL);

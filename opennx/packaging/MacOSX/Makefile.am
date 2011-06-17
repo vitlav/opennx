@@ -14,7 +14,7 @@ dmg: pkg
 	touch $@
 
 createpkgroot:
-	rm -rf pkgroot
+	sudo rm -rf pkgroot
 	mkdir -p pkgroot/Applications/OpenNX
 	mkdir -p pkgroot$(prefix)
 	$(srcdir)/mkbundle pkgroot/Applications/OpenNX/OpenNX.app OpenNXapp \
@@ -36,12 +36,6 @@ createpkgroot:
 	    $(srcdir)/opennx.plist "" --dialog ok --style info --caption CARDREMOVED --message CARDREMOVED
 
 pkgdir: createpkgroot
-	rm -rf scbuild
-	mkdir scbuild
-	(cd scbuild ; CC=$(CC) CXX=$(CXX) $(abs_srcdir)/buildopensc $(prefix) $(abs_builddir)/pkgroot$(libdir))
-	sed -e "s!_PREFIX_!$(abs_builddir)/scbuild/dist/$(prefix)!" \
-	    < $(srcdir)/opensc-config.tmpl > scbuild/dist$(prefix)/bin/opensc-config
-	chmod a+x scbuild/dist$(prefix)/bin/opensc-config
 	rm -rf nxbuild
 	mkdir nxbuild
 	(cd nxbuild ; DEST=$(abs_builddir)/pkgroot PFX=$(prefix) CC=$(CC) CXX=$(CXX) $(abs_srcdir)/buildnx)
@@ -50,12 +44,12 @@ pkgdir: createpkgroot
 		$(INSTALL_DATA) $(WX_PREFIX)/share/locale/$$lang/LC_MESSAGES/wxstd.mo \
 			pkgroot/$(localedir)/$$lang/LC_MESSAGES/ ; \
 	done
-	CC=$(CC) CXX=$(CXX) $(srcdir)/buildsmbclient $(prefix) \
-	    $(abs_builddir)/pkgroot$(libdir)
 	touch $@
 
 pkg: pkgdir
 	sudo chown -R root:admin pkgroot
+	sudo chmod ug=rwx,o=rx pkgroot/Applications
+	sudo chmod ug=rwx,o=rx,+t pkgroot/Library
 	rm -rf OpenNX.pkg
 	cd $(builddir) && $(PACKAGEMAKER) -build -p OpenNX.pkg -f pkgroot -v \
 	    -r $(srcdir)/pkgResources \
@@ -64,8 +58,11 @@ pkg: pkgdir
 	sudo chown -R $(BUILDUSR) pkgroot
 	touch $@
 
+clean-local:
+	sudo rm -rf pkgroot
+
 MAINTAINERCLEANFILES = Makefile.in
-CLEANFILES = -rf pkg pkgdir dmg dmgroot pkgroot nxbuild OpenNX.pkg scbuild
+CLEANFILES = -rf pkg pkgdir dmg dmgroot nxbuild OpenNX.pkg scbuild
 EXTRA_DIST = Description.plist OpenSC.webloc buildnx buildopensc \
 	buildsmbclient fileopts folderbg.jpg mkbundle mkdmg \
-	opensc-config.tmpl pkgResources libsmbclient.h volicon.icns volicon.png
+	pkgResources libsmbclient.h volicon.icns volicon.png

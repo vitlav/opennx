@@ -72,12 +72,14 @@ sub imgsize($) {
     my $w = -1;
     my $h = -1;
     if ($imgfile ne '') {
-        open(P, "anytopnm $imgfile 2>/dev/null | pamfile 2>/dev/null |");
+        open(P, "sips -g pixelHeight -g pixelWidth $imgfile 2>/dev/null |");
         while (<P>) {
 	    chomp;
-            if (/^stdin:.*,\s(\d+)\s+by\s+(\d+)/) {
+            if (/\s*pixelHeight:\s*(\d+)/) {
+                $windowsize{'h'} = int($1);
+            }
+            if (/\s*pixelWidth:\s*(\d+)/) {
                 $windowsize{'w'} = int($1);
-                $windowsize{'h'} = int($2);
             }
         }
         close P;
