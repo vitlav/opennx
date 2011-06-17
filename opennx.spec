@@ -4,7 +4,7 @@
 Summary: An OpenSource NX client
 Name: opennx
 Version: 0.16
-Release: alt15.svn611
+Release: alt16.svn634
 License: LGPL/GPL
 Group: Networking/Remote access
 Url: http://sourceforge.net/projects/opennx
@@ -29,7 +29,7 @@ opennx is an OSS replacement for Nomachine's NX client.
 %prep
 %setup
 
-%patch0 -p1
+#patch0 -p1
 
 test -d conf || mkdir conf
 #Convince gettextize not to modify EXTRA_DIST
@@ -122,6 +122,9 @@ install -m 644 etc/*.rules %buildroot%_sysconfdir/udev/rules.d
 %endif
 
 %changelog
+* Fri Jun 17 2011 Boris Savelev <boris@altlinux.org> 0.16-alt16.svn634
+- update from trunk
+
 * Wed Mar 02 2011 Boris Savelev <boris@altlinux.org> 0.16-alt15.svn611
 - update from trunk
 
