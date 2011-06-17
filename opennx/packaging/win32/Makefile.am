@@ -40,6 +40,7 @@ FNT2URL = ftp://ftp.gwdg.de/pub/x11/x.org/pub/X11R7.5/src/font/$(FNT2BALL)
 		$(INSTALL_DATA) $(localedir)/$$lang/LC_MESSAGES/wxstd.mo \
 			setupdir/share/locale/$$lang/LC_MESSAGES/ ; \
 	done
+	$(INSTALL_DATA) $(top_srcdir)/extres/nx.ico setupdir/bin/
 	touch $@
 
 nativesetup: .setupdir
