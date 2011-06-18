@@ -107,6 +107,7 @@ Root: HKCU; Subkey: "Software\Classes\OpenNX.session\shell\open\command"; ValueT
 ; Allow nxssh, nxesd and Xming in Windows firewall 
 Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bin\nxssh.exe"" ""OpenNX nxssh"" ENABLE"; StatusMsg: {cm:fwadd}; Flags: runhidden skipifdoesntexist
 Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bin\nxesd.exe"" ""OpenNX nxesd"" ENABLE"; StatusMsg: {cm:fwadd}; Flags: runhidden skipifdoesntexist
+Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bin\pulseaudio.exe"" ""OpenNX pulseaudio"" ENABLE"; StatusMsg: {cm:fwadd}; Flags: runhidden skipifdoesntexist
 #if BUILDXMING == "yes"
 Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bin\Xming.exe"" ""OpenNX Xming"" ENABLE"; StatusMsg: {cm:fwadd}; Flags: runhidden skipifdoesntexist
 #else

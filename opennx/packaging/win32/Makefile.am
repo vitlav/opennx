@@ -33,7 +33,7 @@ FNT2URL = ftp://ftp.gwdg.de/pub/x11/x.org/pub/X11R7.5/src/font/$(FNT2BALL)
 	$(INSTALL_PROGRAM) pulse/dist/bin/*.dll setupdir/bin
 	cp -av pulse/dist/etc setupdir
 	cp -av pulse/dist/lib setupdir
-	perl findrequires.pl "$(DLLPATH)" setupdir/bin/*.exe|xargs cp -t setupdir/bin
+	perl findrequires.pl "$(DLLPATH)" setupdir/bin/*.{exe,dll}|xargs cp -t setupdir/bin
 	$(RM) -rf setupdir/share/icons setupdir/share/applnk
 	$(STRIP) --strip-unneeded setupdir/bin/*.exe `ls setupdir/bin/*.dll|grep -v cyg`
 	for lang in $(shell cat $(top_srcdir)/po/LINGUAS) ; do \
