@@ -444,7 +444,9 @@ bool PulseAudio::ActivateEsound(int port)
             laddr = reListen.GetMatch(ma, 1);
             ::myLogTrace(MYTRACETAG, wxT("matched listen arg a=%s"), laddr.c_str());
         }
-        if ((mport == port) && (laddr.IsSameAs(wxT("0.0.0.0")) || laddr.IsSameAs(wxT("127.0.0.1"))))
+        // Must disable cookie auth here, because esddsp runs on the NX server
+        // and we don't have access to the user's ~/.esd_auth on that machine.
+        if (ma.Contains(wxT("auth-anonymous=1")) && (mport == port) && (laddr.IsSameAs(wxT("0.0.0.0")) || laddr.IsSameAs(wxT("127.0.0.1"))))
             return true;
         ::myLogTrace(MYTRACETAG, wxT("unloading"));
         if (!pa->unloadmodule(mi))
@@ -452,7 +454,7 @@ bool PulseAudio::ActivateEsound(int port)
     }
     ::myLogTrace(MYTRACETAG, wxT("loading"));
     return pa->loadmodule(wxT("module-esound-protocol-tcp"),
-            wxString::Format(wxT("port=%d listen=127.0.0.1"), port));
+            wxString::Format(wxT("auth-anonymous=1 port=%d listen=127.0.0.1"), port));
 #else
     wxUnusedVar(port);
     return false;
