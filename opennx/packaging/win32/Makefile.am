@@ -7,7 +7,7 @@ FNT2DIR = font-misc-misc-1.1.0
 FNT2BALL = $(FNT2DIR).tar.bz2
 FNT2URL = ftp://ftp.gwdg.de/pub/x11/x.org/pub/X11R7.5/src/font/$(FNT2BALL)
 
-.setupdir: findrequires.pl $(FNT1DIR) .miscfonts
+.setupdir: $(FNT1DIR) .miscfonts
 	$(RM) -rf setupdir
 	$(MAKE) -C $(top_builddir) DESTDIR=$(abs_builddir)/setupdir \
 		transform= prefix=/ bindir=/bin datadir=/share install
@@ -33,9 +33,6 @@ FNT2URL = ftp://ftp.gwdg.de/pub/x11/x.org/pub/X11R7.5/src/font/$(FNT2BALL)
 	$(INSTALL_PROGRAM) pulse/dist/bin/*.dll setupdir/bin
 	cp -av pulse/dist/etc setupdir
 	cp -av pulse/dist/lib setupdir
-	perl findrequires.pl "$(DLLPATH)" setupdir/bin/*.{exe,dll}|xargs cp -t setupdir/bin
-	$(RM) -rf setupdir/share/icons setupdir/share/applnk
-	$(STRIP) --strip-unneeded setupdir/bin/*.exe `ls setupdir/bin/*.dll|grep -v cyg`
 	for lang in $(shell cat $(top_srcdir)/po/LINGUAS) ; do \
 		$(INSTALL_DATA) $(localedir)/$$lang/LC_MESSAGES/wxstd.mo \
 			setupdir/share/locale/$$lang/LC_MESSAGES/ ; \
@@ -43,13 +40,22 @@ FNT2URL = ftp://ftp.gwdg.de/pub/x11/x.org/pub/X11R7.5/src/font/$(FNT2BALL)
 	$(INSTALL_DATA) $(top_srcdir)/extres/nx.ico setupdir/bin/
 	touch $@
 
-nativesetup: .setupdir
+.dlldeps: .setupdir findrequires.pl
+	env DEPDEBUG=1 perl findrequires.pl "$(DLLPATH)" setupdir/bin/*.{exe,dll} 2>$@|xargs cp -t setupdir/bin
+	touch $@
+
+.stripsetup: .setupdir
+	$(RM) -rf setupdir/share/icons setupdir/share/applnk
+	$(STRIP) --strip-unneeded setupdir/bin/*.exe `ls setupdir/bin/*.dll|grep -v cyg`
+	touch $@
+
+nativesetup: .setupdir .dlldeps .stripsetup
 	"$(ISCC)" "$(srcdir)/opennx.iss" -dBUILDXMING=$(BUILDXMING)
 
-crosssetup: .setupdir isccwrap.sh
+crosssetup: .setupdir .dlldeps .stripsetup isccwrap.sh
 	sh isccwrap.sh "$(srcdir)/opennx.iss" -dBUILDXMING=$(BUILDXMING)
 
-setup: .setupdir  $(SETUP)
+setup: $(SETUP)
 
 $(FNT1BALL):
 	@echo downloading tarball $(FNT1BALL)
@@ -73,4 +79,4 @@ $(FNT2DIR): $(FNT2BALL)
 
 EXTRA_DIST = opennx.iss
 MAINTAINERCLEANFILES = Makefile.in $(FNT1BALL) $(FNT2BALL)
-CLEANFILES = -r .setupdir setupdir $(FNT1DIR) $(FNT2DIR)
+CLEANFILES = -r .setupdir .dlldeps .stripsetup setupdir $(FNT1DIR) $(FNT2DIR)

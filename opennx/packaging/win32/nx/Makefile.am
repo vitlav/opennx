@@ -3,12 +3,8 @@ NXCOMP            = nxcomp
 NXPROXY           = nxproxy
 AUDIOFILE         = audiofile
 AUDIOFILE_VERSION = 0.2.6
-LIBPNG            = libpng
-LIBPNG_VERSION    = 1.2.40
 LIBJPEG           = libjpeg
-LIBJPEG_VERSION   = turbo-1.0.1
-#LIBJPEG           = jpeg
-#LIBJPEG_VERSION   = 6b
+LIBJPEG_VERSION   = turbo-1.1.1
 TMPDIST           = $(abs_builddir)/dist
 
 CFG_GENERIC = \
@@ -33,12 +29,12 @@ ENV_GENERIC = CPPFLAGS="-I$(TMPDIST)/include" LDFLAGS="-L$(TMPDIST)/lib"
 ENV_audiofile =
 ENV_libpng =
 ENV_jpeg =
-ENV_nxproxy = env $(ENV_GENERIC)
+ENV_nxproxy = env $(ENV_GENERIC) 
 ENV_nxcomp = env $(ENV_GENERIC)
 ENV_nxesd = env $(ENV_GENERIC) LIBS=-laudiofile
 
 EXTRA_DIST = urls.txt patches $(AUDIOFILE).md5sum $(NXESD).md5sum \
-	$(NXCOMP).md5sum $(LIBJPEG).md5sum $(LIBPNG).md5sum
+	$(NXCOMP).md5sum $(LIBJPEG).md5sum
 
 CLEANFILES = -r $(TMPDIST) \
 	$(AUDIOFILE)-$(AUDIOFILE_VERSION) $(AUDIOFILE)-build-$(NX_BTYPE) \
@@ -46,12 +42,10 @@ CLEANFILES = -r $(TMPDIST) \
 	$(NXESD) $(NXESD)-build-$(NX_BTYPE) $(NXESD)-srcdir $(NXESD)-checkarchive \
 	$(NXCOMP) $(NXCOMP)-build-$(NX_BTYPE) $(NXCOMP)-srcdir $(NXCOMP)-checkarchive \
 	$(NXPROXY) $(NXPROXY)-build-$(NX_BTYPE) $(NXPROXY)-srcdir $(NXPROXY)-checkarchive \
-	$(LIBPNG)-$(LIBPNG_VERSION) $(LIBPNG)-build-$(NX_BTYPE) $(LIBPNG)-srcdir $(LIBPNG)-checkarchive \
 	$(LIBJPEG)-$(LIBJPEG_VERSION) $(LIBJPEG)-build-$(NX_BTYPE) $(LIBJPEG)-srcdir $(LIBJPEG)-checkarchive
 
 DISTCLEANFILES = -r $(CLEANFILES) \
 	$(LIBJPEG)-$(LIBJPEG_VERSION).tar.gz \
-	$(LIBPNG)-$(LIBPNG_VERSION).tar.gz \
 	$(AUDIOFILE)-$(AUDIOFILE_VERSION).tar.gz \
 	$(NXESD)*.tar.gz \
 	$(NXCOMP)*.tar.gz \
@@ -61,12 +55,17 @@ MAINTAINERCLEANFILES = Makefile.in
 
 tmpinstall:
 	mkdir -p $(TMPDIST)/man/man1
-	$(MAKE) subtarget=$(LIBPNG) subsrc=$(LIBPNG)-$(LIBPNG_VERSION) build-$(NX_BTYPE)
 	$(MAKE) subtarget=$(LIBJPEG) subsrc=$(LIBJPEG)-$(LIBJPEG_VERSION) build-$(NX_BTYPE)
 	$(MAKE) subtarget=$(AUDIOFILE) subsrc=$(AUDIOFILE)-$(AUDIOFILE_VERSION) build-$(NX_BTYPE)
 	$(MAKE) subtarget=$(NXESD) subsrc=$(NXESD) build-$(NX_BTYPE)
 	$(MAKE) subtarget=$(NXCOMP) subsrc=$(NXCOMP) build-$(NX_BTYPE)
 	$(MAKE) subtarget=$(NXPROXY) subsrc=$(NXPROXY) build-$(NX_BTYPE)
+	rm -f \
+		$(TMPDIST)/bin/esd{cat,ctl,filt,loop,mon,play,rec,sample}.exe \
+		$(TMPDIST)/bin/[cd]jpeg.exe $(TMPDIST)/bin/jpegtran.exe \
+		$(TMPDIST)/bin/jpgtest.exe $(TMPDIST)/bin/libturbojpeg.dll \
+		$(TMPDIST)/bin/rdjpgcom.exe $(TMPDIST)/bin/sfconvert.exe \
+		$(TMPDIST)/bin/sfinfo.exe $(TMPDIST)/bin/wrjpgcom.exe
 
 build-cross: $(subtarget)-build-cross
 
