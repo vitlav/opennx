@@ -17,23 +17,17 @@ TMPDIST = $(abs_builddir)/dist
 EXTRA_DIST = urls.txt patches $(LIBSNDFILE).md5sum $(SPEEX).md5sum $(JSONC).md5sum \
 	$(LIBSAMPLERATE).md5sum $(PULSEAUDIO).md5sum
 
-CLEANFILES = -r $(TMPDIST) pkg-config \
-	$(LIBSAMPLERATE) $(LIBSAMPLERATE)-$(LIBSAMPLERATE_VERSION) $(LIBSAMPLERATE)-build \
-	$(LIBSAMPLERATE)-srcdir $(LIBSAMPLERATE)-checkarchive \
-	$(LIBSNDFILE) $(LIBSNDFILE)-$(LIBSNDFILE_VERSION) $(LIBSNDFILE)-build \
-	$(LIBSNDFILE)-srcdir $(LIBSNDFILE)-checkarchive \
-	$(JSONC) $(JSONC)-$(JSONC_VERSION) $(JSONC)-build \
-	$(JSONC)-srcdir $(JSONC)-checkarchive \
-	$(PALIBTOOL) $(PALIBTOOL)-$(PALIBTOOL_VERSION) $(PALIBTOOL)-build \
-	$(PALIBTOOL)-srcdir $(PALIBTOOL)-checkarchive \
-	$(SPEEX) $(SPEEX)-$(SPEEX_VERSION) $(SPEEX)-build \
-	$(SPEEX)-srcdir $(SPEEX)-checkarchive \
-	$(PULSEAUDIO) $(PULSEAUDIO)-$(PULSEAUDIO_VERSION) $(PULSEAUDIO)-build \
-	$(PULSEAUDIO)-srcdir $(PULSEAUDIO)-checkarchive
+CLEANFILES = -r $(TMPDIST) pkg-config tmpinstall *-build *-srcdir *-checkarchive *-lipo \
+	$(LIBSAMPLERATE) $(LIBSAMPLERATE)-$(LIBSAMPLERATE_VERSION) \
+	$(LIBSNDFILE) $(LIBSNDFILE)-$(LIBSNDFILE_VERSION) \
+	$(JSONC) $(JSONC)-$(JSONC_VERSION) \
+	$(PALIBTOOL) $(PALIBTOOL)-$(PALIBTOOL_VERSION) \
+	$(SPEEX) $(SPEEX)-$(SPEEX_VERSION) \
+	$(PULSEAUDIO) $(PULSEAUDIO)-$(PULSEAUDIO_VERSION)
 
-MAINTAINERCLEANFILES = Makefile.in \
-	$(LIBSNDFILE)-$(LIBSNDFILE_VERSION).tar.gz $(LIBSAMPLERATE)-$(LIBSAMPLERATE_VERSION).tar.gz \
-	$(SPEEX)-$(SPEEX_VERSION).tar.gz $(JSONC)-$(JSONC_VERSION).tar.gz
+DISTCLEANFILES = *.tar.gz
+
+MAINTAINERCLEANFILES = Makefile.in
 
 CFG_GENERIC = --prefix=$(prefix) --enable-shared --disable-static --disable-dependency-tracking
 
@@ -99,6 +93,9 @@ ENV_pulseaudioBE = env $(MACENV_PPC) \
 	LIBSPEEX_CFLAGS="-I." LIBSPEEX_LIBS="-lspeex -lspeexdsp" \
 	PATH="$(abs_builddir):$(PATH)"
 
+upinstall: tmpinstall
+	cp -av $(TMPDIST)/ $(PKGROOT)/
+
 tmpinstall:
 	$(MAKE) ecfg= subtarget=$(PALIBTOOL) subvar=$(PALIBTOOL) subsrc=$(PALIBTOOL)-$(PALIBTOOL_VERSION) tbuild
 	$(MAKE) ecfg= subtarget=$(JSONC) subvar=jsonc subsrc=$(JSONC)-$(JSONC_VERSION) tbuild
@@ -124,7 +121,6 @@ tmpinstall:
 	$(MAKE) ecfg=LE subtarget=$(PULSEAUDIO) subvar=$(PULSEAUDIO) subsrc=$(PULSEAUDIO)-$(PULSEAUDIO_VERSION) tbuild
 	$(MAKE) -C $(PULSEAUDIO)-$(PULSEAUDIO_VERSION) distclean
 	rm -f $(PULSEAUDIO)-build
-	mv $(TMPDIST)$(libdir)/pulse-$(PULSEAUDIO_SVER)/modules/*.dylib $(TMPDIST)$(libdir)/
 	$(MAKE) ecfg=BE subtarget=$(PULSEAUDIO) subvar=$(PULSEAUDIO) subsrc=$(PULSEAUDIO)-$(PULSEAUDIO_VERSION) tbuild
 	mv $(TMPDIST)$(libdir)/ppc/pulse-$(PULSEAUDIO_SVER)/modules/*.dylib $(TMPDIST)$(libdir)/ppc/
 	$(MAKE) subtarget=$(PULSEAUDIO) modsub=/pulse-$(PULSEAUDIO_SVER)/modules tlipo
@@ -132,22 +128,24 @@ tmpinstall:
 	rm -rf $(TMPDIST)$(prefix)/{share,libexec,include} $(TMPDIST)${libdir}/pkgconfig
 	find $(TMPDIST) -name "*.la" -o -name "*.a"|xargs rm -f
 	rm -f $(TMPDIST)$(bindir)/sndfile-* $(TMPDIST)$(bindir)/libtool*
+	cp cfg/* $(TMPDIST)/etc/pulse/
+	touch $@
 
 tbuild: $(subtarget)-build
 
 tlipo: $(subtarget)-lipo
 
-$(subtarget)-lipo:
+$(subtarget)-lipo: $(subtarget)-build
 	@echo Merging $(subtarget) to universal
-	for f in $(TMPDIST)$(libdir)/ppc/*.dylib ; do \
+	@for f in $(TMPDIST)$(libdir)/ppc/*.dylib ; do \
 		bn=`basename $$f` ; \
 		test -L $$f || mv $(TMPDIST)$(libdir)/$$bn $(TMPDIST)$(libdir)/i386-$$bn ; \
 		test -L $$f || lipo -create -output $(TMPDIST)$(libdir)/$$bn $$f $(TMPDIST)$(libdir)/i386-$$bn ; \
 		rm -f $(TMPDIST)$(libdir)/i386-$$bn ; \
 	done
-	if test -n "$(modsub)" ; then \
+	@if test -n "$(modsub)" ; then \
 		echo Merging $(subtarget) modules to universal ; \
-		for f in $(TMPDIST)$(libdir)/ppc$(modsub)/*.so ; do \
+		for f in $(TMPDIST)$(libdir)/ppc$(modsub)/*.{dylib,so} ; do \
 			bn=`basename $$f` ; \
 			mv $(TMPDIST)$(libdir)$(modsub)/$$bn $(TMPDIST)$(libdir)$(modsub)/i386-$$bn ; \
 			lipo -create -output $(TMPDIST)$(libdir)$(modsub)/$$bn \
@@ -162,7 +160,8 @@ $(subtarget)-lipo:
 			rm -f $$f $(TMPDIST)$(bindir)/$$bn.ppc ; \
 		done ; \
 	fi
-	rm -rf $(TMPDIST)$(libdir)/ppc/*
+	@rm -rf $(TMPDIST)$(libdir)/ppc/*
+	@touch $@
 
 $(subtarget)-build: $(subtarget)-srcdir
 	@echo Configuring $(subtarget)
@@ -193,5 +192,5 @@ $(subtarget)-checkarchive: $(subsrc).tar.gz
 
 $(subsrc).tar.gz: $(srcdir)/urls.txt
 	@echo Downloading $(subtarget)
-	@test -f $@ || $(CURL) -O $(shell grep $(subsrc).tar.gz $(srcdir)/urls.txt)
+	@test -f $@ || $(CURL) -f -L -o $(subsrc).tar.gz $(shell grep $(subsrc).tar.gz $(srcdir)/urls.txt)
 	@touch $@
