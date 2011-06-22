@@ -144,9 +144,7 @@ bootstrap:
 #	YES, i've read them at least a dozen times and now, i REALLY
 #	don't want to hit RETURN anymore!
 	test -n "$(GETTEXTIZE)" && \
-		sed -e 's@/dev/tty@/dev/null@' "$(GETTEXTIZE)" > gettextize.local
-	test -f gettextize.local && sh gettextize.local -f --no-changelog
-	rm -f gettextize.local
+		sed -e 's@/dev/tty@/dev/null@' "$(GETTEXTIZE)" | bash -s -- -f --no-changelog
 	test -e conf/mkinstalldirs || touch conf/mkinstalldirs
 	autoreconf -if
 

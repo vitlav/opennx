@@ -9,7 +9,7 @@ JSONC_VERSION		  = 0.9
 SPEEX                 = speex
 SPEEX_VERSION         = 1.2rc1
 PULSEAUDIO            = pulseaudio
-PULSEAUDIO_VERSION    = 1.0-fe-20110619
+PULSEAUDIO_VERSION    = 1.0-fe-20110622
 PULSEAUDIO_SVER       = 1.0
 
 TMPDIST = $(abs_builddir)/dist
@@ -17,7 +17,7 @@ TMPDIST = $(abs_builddir)/dist
 EXTRA_DIST = urls.txt patches $(LIBSNDFILE).md5sum $(SPEEX).md5sum $(JSONC).md5sum \
 	$(LIBSAMPLERATE).md5sum $(PULSEAUDIO).md5sum
 
-CLEANFILES = -r $(TMPDIST) pkg-config tmpinstall *-build *-srcdir *-checkarchive *-lipo \
+CLEANFILES = -r $(TMPDIST) pkg-config tmpinstall .*-build .*-srcdir .*-checkarchive .*-lipo \
 	$(LIBSAMPLERATE) $(LIBSAMPLERATE)-$(LIBSAMPLERATE_VERSION) \
 	$(LIBSNDFILE) $(LIBSNDFILE)-$(LIBSNDFILE_VERSION) \
 	$(JSONC) $(JSONC)-$(JSONC_VERSION) \
@@ -102,40 +102,39 @@ tmpinstall:
 	mkdir -p $(TMPDIST)$(libdir)/ppc
 	$(MAKE) ecfg=LE subtarget=$(SPEEX) subvar=$(SPEEX) subsrc=$(SPEEX)-$(SPEEX_VERSION) tbuild
 	$(MAKE) -C $(SPEEX)-$(SPEEX_VERSION) distclean
-	rm -f $(SPEEX)-build
+	rm -f .$(SPEEX)-build
 	$(MAKE) ecfg=BE subtarget=$(SPEEX) subvar=$(SPEEX) subsrc=$(SPEEX)-$(SPEEX_VERSION) tbuild
-	$(MAKE) subtarget=$(SPEEX) tlipo
+	$(MAKE) ecfg=BE subtarget=$(SPEEX) subvar=$(SPEEX) subsrc=$(SPEEX)-$(SPEEX_VERSION) tlipo
 	$(MAKE) ecfg=LE subtarget=$(LIBSNDFILE) subvar=$(LIBSNDFILE) subsrc=$(LIBSNDFILE)-$(LIBSNDFILE_VERSION) tbuild
 	$(MAKE) -C $(LIBSNDFILE)-$(LIBSNDFILE_VERSION) distclean
-	rm -f $(LIBSNDFILE)-build
+	rm -f .$(LIBSNDFILE)-build
 	$(MAKE) ecfg=BE subtarget=$(LIBSNDFILE) subvar=$(LIBSNDFILE) subsrc=$(LIBSNDFILE)-$(LIBSNDFILE_VERSION) tbuild
-	$(MAKE) subtarget=$(LIBSNDFILE) tlipo
+	$(MAKE) ecfg=BE subtarget=$(LIBSNDFILE) subvar=$(LIBSNDFILE) subsrc=$(LIBSNDFILE)-$(LIBSNDFILE_VERSION) tlipo
 	$(MAKE) ecfg=LE subtarget=$(LIBSAMPLERATE) subvar=$(LIBSAMPLERATE) subsrc=$(LIBSAMPLERATE)-$(LIBSAMPLERATE_VERSION) tbuild
 	$(MAKE) -C $(LIBSAMPLERATE)-$(LIBSAMPLERATE_VERSION) distclean
-	rm -f $(LIBSAMPLERATE)-build
+	rm -f .$(LIBSAMPLERATE)-build
 	$(MAKE) ecfg=BE subtarget=$(LIBSAMPLERATE) subvar=$(LIBSAMPLERATE) subsrc=$(LIBSAMPLERATE)-$(LIBSAMPLERATE_VERSION) tbuild
-	$(MAKE) subtarget=$(LIBSAMPLERATE) tlipo
+	$(MAKE) ecfg=BE subtarget=$(LIBSAMPLERATE) subvar=$(LIBSAMPLERATE) subsrc=$(LIBSAMPLERATE)-$(LIBSAMPLERATE_VERSION) tlipo
 	@echo "#!/bin/sh" > pkg-config; \
 		echo "case \$$* in *--exists*) exit 1 ;; *) exit 0 ;; esac" >> pkg-config; \
 		chmod a+x pkg-config || true
 	$(MAKE) ecfg=LE subtarget=$(PULSEAUDIO) subvar=$(PULSEAUDIO) subsrc=$(PULSEAUDIO)-$(PULSEAUDIO_VERSION) tbuild
 	$(MAKE) -C $(PULSEAUDIO)-$(PULSEAUDIO_VERSION) distclean
-	rm -f $(PULSEAUDIO)-build
+	rm -f .$(PULSEAUDIO)-build
 	$(MAKE) ecfg=BE subtarget=$(PULSEAUDIO) subvar=$(PULSEAUDIO) subsrc=$(PULSEAUDIO)-$(PULSEAUDIO_VERSION) tbuild
-	mv $(TMPDIST)$(libdir)/ppc/pulse-$(PULSEAUDIO_SVER)/modules/*.dylib $(TMPDIST)$(libdir)/ppc/
-	$(MAKE) subtarget=$(PULSEAUDIO) modsub=/pulse-$(PULSEAUDIO_SVER)/modules tlipo
+	$(MAKE) ecfg=BE subtarget=$(PULSEAUDIO) subvar=$(PULSEAUDIO) subsrc=$(PULSEAUDIO)-$(PULSEAUDIO_VERSION) modsub=/pulse-$(PULSEAUDIO_SVER)/modules tlipo
 	rmdir $(TMPDIST)$(libdir)/ppc
 	rm -rf $(TMPDIST)$(prefix)/{share,libexec,include} $(TMPDIST)${libdir}/pkgconfig
 	find $(TMPDIST) -name "*.la" -o -name "*.a"|xargs rm -f
 	rm -f $(TMPDIST)$(bindir)/sndfile-* $(TMPDIST)$(bindir)/libtool*
-	cp cfg/* $(TMPDIST)/etc/pulse/
+	cp $(srcdir)/cfg/* $(TMPDIST)$(prefix)/etc/pulse/
 	touch $@
 
-tbuild: $(subtarget)-build
+tbuild: .$(subtarget)-build
 
-tlipo: $(subtarget)-lipo
+tlipo: .$(subtarget)-lipo
 
-$(subtarget)-lipo: $(subtarget)-build
+.$(subtarget)-lipo: .$(subtarget)-build
 	@echo Merging $(subtarget) to universal
 	@for f in $(TMPDIST)$(libdir)/ppc/*.dylib ; do \
 		bn=`basename $$f` ; \
@@ -163,7 +162,7 @@ $(subtarget)-lipo: $(subtarget)-build
 	@rm -rf $(TMPDIST)$(libdir)/ppc/*
 	@touch $@
 
-$(subtarget)-build: $(subtarget)-srcdir
+.$(subtarget)-build: .$(subtarget)-srcdir
 	@echo Configuring $(subtarget)
 	@cd $(subsrc) && $(PRECFG_$(subvar)) && $(ENV_$(subvar)$(ecfg)) ./configure $(CFG_GENERIC) $(CFG_$(subvar)$(ecfg))
 	@$(POSTCFG_$(subvar))
@@ -171,21 +170,21 @@ $(subtarget)-build: $(subtarget)-srcdir
 	@$(MAKE) V=$(V) DESTDIR=$(TMPDIST) -C $(subsrc) install
 	@touch $@
 
-$(subtarget)-patch:
+.$(subtarget)-patch:
 	@echo Applying patches for $(subtarget)
 	@shopt -s nullglob; for p in $(srcdir)/patches/$(subvar)-*.patch ; do \
 		test $(V) = 0 || echo Applying `basename $$p`; \
 		patch -p0 < $$p ; \
 	done
 
-$(subtarget)-srcdir: $(subtarget)-checkarchive
+.$(subtarget)-srcdir: .$(subtarget)-checkarchive
 	@$(RM) -rf $(subsrc)
 	@echo Unpacking $(subtarget)
 	@tar xzf $(subsrc).tar.gz
-	@test -n "$(NOPATCH_$(subtarget))" || $(MAKE) $(subtarget)-patch
+	@test -n "$(NOPATCH_$(subtarget))" || $(MAKE) .$(subtarget)-patch
 	@touch $@
 
-$(subtarget)-checkarchive: $(subsrc).tar.gz
+.$(subtarget)-checkarchive: $(subsrc).tar.gz
 	@echo Verifying $(subtarget)
 	@test -n "$(NOCHECK_$(subtarget))" || shasum --status -c $(srcdir)/$(subtarget).shasum
 	@touch $@

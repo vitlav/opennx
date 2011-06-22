@@ -492,7 +492,8 @@ AC_CONFIG_FILES([Makefile opennx.spec res/opennx.rc
     packaging/win32/Makefile packaging/win32/findrequires.pl
     packaging/win32/isccwrap.sh packaging/win32/xming/Makefile
     packaging/win32/nx/Makefile packaging/win32/cygnx/Makefile
-    packaging/win32/pulse/Makefile packaging/MacOSX/Makefile
+    packaging/win32/pulse/Makefile
+    packaging/MacOSX/Makefile packaging/MacOSX/pulse/Makefile
     packaging/MacOSX/opennx.plist packaging/MacOSX/opennx-main.plist
     packaging/MacOSX/pkg.plist po/Makefile.in])
 AC_CONFIG_FILES([opensc/opensc-config],[chmod +x opensc/opensc-config])
