@@ -44,7 +44,7 @@ foreach (@urls) {
     if ($do_fetch) {
         print "Fetching $fn ...";
 if ($have_wget) {
-        system("wget -q $_");
+        system("wget -q -nc $_");
 } else {
 	my $of = $_;
 	$of =~ s/.*\///;

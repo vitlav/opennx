@@ -7,8 +7,7 @@ JSONC_VERSION		  = 0.9
 SPEEX                 = speex
 SPEEX_VERSION         = 1.2rc1
 PULSEAUDIO            = pulseaudio
-PULSEAUDIO_VERSION    = 1.0-fe-20110619
-#PULSEAUDIO_VERSION    = 1.0-dev-366-g7d918
+PULSEAUDIO_VERSION    = 1.0-fe-20110622
 
 TMPDIST = $(abs_builddir)/dist
 
@@ -29,7 +28,8 @@ CLEANFILES = -r $(TMPDIST) pkg-config \
 
 MAINTAINERCLEANFILES = Makefile.in \
 	$(LIBSNDFILE)-$(LIBSNDFILE_VERSION).tar.gz $(LIBSAMPLERATE)-$(LIBSAMPLERATE_VERSION).tar.gz \
-	$(SPEEX)-$(SPEEX_VERSION).tar.gz $(JSONC)-$(JSONC_VERSION).tar.gz
+	$(SPEEX)-$(SPEEX_VERSION).tar.gz $(JSONC)-$(JSONC_VERSION).tar.gz \
+	$(PULSEAUDIO)-$(PULSEAUDIO_VERSION).tar.gz
 
 CFG_GENERIC = --prefix=$(TMPDIST) --libdir=$(TMPDIST)/lib --bindir=$(TMPDIST)/bin \
 			 --mandir=$(TMPDIST)/share/man --includedir=$(TMPDIST)/include \
@@ -47,7 +47,6 @@ PRECFG_jsonc = autoreconf -f -i
 PRECFG_libsndfile = true
 PRECFG_libsamplerate = true
 PRECFG_pulseaudio = true
-#autoreconf -f -i
 
 POSTCFG_speex = true
 POSTCFG_jsonc = true
@@ -99,6 +98,7 @@ tmpinstall:
 	rm -rf  $(TMPDIST)/lib/pulse-1.0/bin  $(TMPDIST)/bin/esdcompat
 	find $(TMPDIST) -name "*.la" -o -name "*.a"|xargs rm -f
 	rm -f $(TMPDIST)/bin/*-sndfile-*.exe $(TMPDIST)/bin/speex*.exe
+	cp -av cfg/* $(TMPDIST)/etc/pulse/
 
 build-cross: $(subtarget)-build-cross
 
