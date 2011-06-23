@@ -42,6 +42,7 @@ pkgdir: createpkgroot
 	(cd nxbuild ; DEST=$(abs_builddir)/pkgroot PFX=$(prefix) CC=$(CC) CXX=$(CXX) $(abs_srcdir)/buildnx)
 	$(MAKE) -C pulse PKGROOT=$(abs_builddir)/pkgroot upinstall
 	$(MAKE) -C $(top_builddir) DESTDIR=$(abs_builddir)/pkgroot install
+	$(MAKE) -C $(top_builddir) DESTDIR=$(abs_builddir)/pkgroot prefix=/usr install-man
 	for lang in $(shell cat $(top_srcdir)/po/LINGUAS) ; do \
 		$(INSTALL_DATA) $(WX_PREFIX)/share/locale/$$lang/LC_MESSAGES/wxstd.mo \
 			pkgroot/$(localedir)/$$lang/LC_MESSAGES/ ; \
