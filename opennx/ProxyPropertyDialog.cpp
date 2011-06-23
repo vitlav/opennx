@@ -19,6 +19,10 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
 #pragma implementation "ProxyPropertyDialog.h"
 #endif
@@ -35,6 +39,7 @@
 #endif
 
 #include <wx/cshelp.h>
+#include <wx/config.h>
 
 ////@begin includes
 ////@end includes
