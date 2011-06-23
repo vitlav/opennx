@@ -36,6 +36,7 @@
 #include "wx/valgen.h"
 #include "wx/spinctrl.h"
 #include "wx/valtext.h"
+#include "wx/hyperlink.h"
 #include "wx/statline.h"
 ////@end includes
 
@@ -45,6 +46,7 @@
 
 ////@begin forward declarations
 class wxSpinCtrl;
+class wxHyperlinkCtrl;
 ////@end forward declarations
 
 /*!
@@ -144,6 +146,7 @@ public:
     wxTextCtrl* m_pCtrlProxyPass;
     wxCheckBox* m_pCtrlProxyPassRemember;
     wxTextCtrl* m_pCtrlProxyCommand;
+    wxHyperlinkCtrl* m_pProxyCmdHelp;
 private:
     bool m_bUseProxy;
     wxString m_sProxyHost;

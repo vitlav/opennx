@@ -105,6 +105,12 @@ bool ProxyPropertyDialog::Create( wxWindow* parent, wxWindowID, const wxString&,
     Centre();
 ////@end ProxyPropertyDialog creation
     ::wxGetApp().EnableContextHelp(this);
+    wxString d;
+    wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &d);
+    wxFileName hfile(d, wxT("pconnect.html"));
+    hfile.AppendDir(wxT("share"));
+    hfile.MakeAbsolute();
+    m_pProxyCmdHelp->SetURL(hfile.GetFullPath().Prepend(wxT("file://")));
     return true;
 }
 
@@ -136,6 +142,7 @@ void ProxyPropertyDialog::Init()
     m_pCtrlProxyPass = NULL;
     m_pCtrlProxyPassRemember = NULL;
     m_pCtrlProxyCommand = NULL;
+    m_pProxyCmdHelp = NULL;
 ////@end ProxyPropertyDialog member initialisation
 }
 
@@ -154,6 +161,7 @@ void ProxyPropertyDialog::CreateControls()
     m_pCtrlProxyPass = XRCCTRL(*this, "ID_TEXTCTRL_PROXYPASS", wxTextCtrl);
     m_pCtrlProxyPassRemember = XRCCTRL(*this, "ID_CHECKBOX_PROXYPASS_REMEMBER", wxCheckBox);
     m_pCtrlProxyCommand = XRCCTRL(*this, "ID_TEXTCTRL_PROXYCOMMAND", wxTextCtrl);
+    m_pProxyCmdHelp = XRCCTRL(*this, "ID_HYPERLINKCTRL", wxHyperlinkCtrl);
     // Set validators
     if (FindWindow(XRCID("ID_RADIOBUTTON_HTTPPROXY")))
         FindWindow(XRCID("ID_RADIOBUTTON_HTTPPROXY"))->SetValidator( wxGenericValidator(& m_bUseProxy) );
@@ -263,3 +271,6 @@ void ProxyPropertyDialog::OnRadiobuttonExternalproxySelected( wxCommandEvent& ev
     m_pCtrlProxyCommand->Enable(true);
     event.Skip();
 }
+
+
+

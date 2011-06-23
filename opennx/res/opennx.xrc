@@ -4036,7 +4036,7 @@ enter the filter specification directly.</label>
                 <flag>wxGROW</flag>
                 <border>5</border>
                 <object class="wxFlexGridSizer">
-                    <cols>3</cols>
+                    <cols>4</cols>
                     <rows>1</rows>
                     <vgap>0</vgap>
                     <hgap>0</hgap>
@@ -4058,6 +4058,14 @@ enter the filter specification directly.</label>
                         <border>5</border>
                         <object class="wxTextCtrl" name="ID_TEXTCTRL_PROXYCOMMAND">
                             <enabled>0</enabled>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxBOTTOM</flag>
+                        <border>5</border>
+                        <object class="wxHyperlinkCtrl" name="ID_HYPERLINKCTRL">
+                            <style>wxHL_DEFAULT_STYLE</style>
+                            <label>?</label>
                         </object>
                     </object>
                 </object>
