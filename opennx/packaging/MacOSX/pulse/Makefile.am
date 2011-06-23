@@ -14,8 +14,8 @@ PULSEAUDIO_SVER       = 1.0
 
 TMPDIST = $(abs_builddir)/dist
 
-EXTRA_DIST = urls.txt patches $(LIBSNDFILE).md5sum $(SPEEX).md5sum $(JSONC).md5sum \
-	$(LIBSAMPLERATE).md5sum $(PULSEAUDIO).md5sum
+EXTRA_DIST = urls.txt cfg patches $(LIBSNDFILE).shasum $(SPEEX).shasum $(JSONC).shasum \
+	$(LIBSAMPLERATE).shasum $(PULSEAUDIO).shasum
 
 CLEANFILES = -r $(TMPDIST) pkg-config tmpinstall .*-build .*-srcdir .*-checkarchive .*-lipo \
 	$(LIBSAMPLERATE) $(LIBSAMPLERATE)-$(LIBSAMPLERATE_VERSION) \

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2011-06-20 00:03+0200\n"
+"POT-Creation-Date: 2011-06-23 02:26+0200\n"
 "PO-Revision-Date: 2010-08-27 12:21+0400\n"
 "Last-Translator: Shakirov Lenar <snejok@altlinux.org>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -450,7 +450,7 @@ msgstr ""
 msgid "Authorization failed: %s"
 msgstr "Ошибка авторизации: %s"
 
-#: MyIPC.cpp:365
+#: MyIPC.cpp:361
 msgid "Authentication failed"
 msgstr "Ошибка аутентификации"
 
@@ -487,11 +487,11 @@ msgstr "Клиент"
 msgid "Unknown"
 msgstr "Неизвестный"
 
-#: MySession.cpp:787 MySession.cpp:799 MySession.cpp:813
+#: MySession.cpp:777 MySession.cpp:789 MySession.cpp:803
 msgid "Warning - OpenNX"
 msgstr "Предупреждение - OpenNX"
 
-#: MySession.cpp:811
+#: MySession.cpp:801
 msgid ""
 "\n"
 "Do you want to delete the key and retry ?"
@@ -499,98 +499,93 @@ msgstr ""
 "\n"
 "Удалить ключ и попробовать еще раз ? "
 
-#: MySession.cpp:831
+#: MySession.cpp:821
 msgid "Sending username"
 msgstr "Отправка имени пользователя"
 
-#: MySession.cpp:835 MySession.cpp:864
+#: MySession.cpp:825 MySession.cpp:854
 msgid "Authenticating"
 msgstr "Аутентификация"
 
-#: MySession.cpp:842
+#: MySession.cpp:832
 msgid "Authentication successful"
 msgstr "Аутентификация завершена"
 
-#: MySession.cpp:880
+#: MySession.cpp:870
 #, fuzzy
 msgid "Query server-side features"
 msgstr "Запрос сессий"
 
-#: MySession.cpp:892
+#: MySession.cpp:882
 msgid "Query server-side sessions"
 msgstr "Запрос сессий"
 
-#: MySession.cpp:909
-#, fuzzy
-msgid "Query server-side capabilities"
-msgstr "Запрос сессий"
-
-#: MySession.cpp:923 MySession.cpp:1027 MySession.cpp:1056
+#: MySession.cpp:898 MySession.cpp:1002 MySession.cpp:1031
 msgid "Starting session"
 msgstr "Начало сессии"
 
-#: MySession.cpp:930
+#: MySession.cpp:905
 #, fuzzy
 msgid "Attaching to session"
 msgstr "Начало сессии"
 
-#: MySession.cpp:941
+#: MySession.cpp:916
 #, fuzzy
 msgid "Resuming session"
 msgstr "Удалить сессию"
 
-#: MySession.cpp:966
+#: MySession.cpp:941
 msgid "Enter PIN for Smart Card access."
 msgstr "Введите PIN для смарт-карты."
 
-#: MySession.cpp:966
+#: MySession.cpp:941
 msgid "Smart Card PIN"
 msgstr "PIN Смарт-карты"
 
-#: MySession.cpp:971
+#: MySession.cpp:946
 msgid "Enter passphrase"
 msgstr "Введите секретный код"
 
-#: MySession.cpp:973
+#: MySession.cpp:948
 msgid "Empty passphrase"
 msgstr "Пустой секретный код"
 
-#: MySession.cpp:979 MySession.cpp:983 MySession.cpp:987 MySession.cpp:991
-#: MySession.cpp:995 MySession.cpp:999 MySession.cpp:1003 MySession.cpp:1007
-#: MySession.cpp:1011 MySession.cpp:1015 MySession.cpp:1019
+#: MySession.cpp:954 MySession.cpp:958 MySession.cpp:962 MySession.cpp:966
+#: MySession.cpp:970 MySession.cpp:974 MySession.cpp:978 MySession.cpp:982
+#: MySession.cpp:986 MySession.cpp:990 MySession.cpp:994
 msgid "Negotiating session parameter"
 msgstr "Передача параметров сессии"
 
-#: MySession.cpp:1049
+#: MySession.cpp:1024
 msgid "Unexpected termination of nxssh"
 msgstr "Неожиданное завершение nxssh"
 
-#: MySession.cpp:1277
+#: MySession.cpp:1252
 msgid "There are no sessions which can be attached to."
 msgstr "Нет сессий, к которым можно подключиться."
 
-#: MySession.cpp:1278 MySession.cpp:1289
+#: MySession.cpp:1253 MySession.cpp:1264
 msgid "Error - OpenNX"
 msgstr "Ошибка - OpenNX"
 
-#: MySession.cpp:1288
+#: MySession.cpp:1263
 msgid "You have reached your session limit. No more sessions allowed"
 msgstr "Вы достигли предела на лимит сессий. Новая сессия не разрешена"
 
-#: MySession.cpp:1480 MySession.cpp:1524
+#: MySession.cpp:1455 MySession.cpp:1499
 msgid "Could not create X11 authentication cookie"
 msgstr "Не удалось создать X11 авторизацию"
 
-#: MySession.cpp:1549
+#: MySession.cpp:1524
 msgid "No X server found."
 msgstr "Не найден X-сервер"
 
-#: MySession.cpp:1557
+#: MySession.cpp:1532
 #, c-format
 msgid "Could not execute %s: %s\n"
 msgstr "Не удалось запустить %s: %s\n"
 
-#: MySession.cpp:1647
+#: MySession.cpp:1622
 #, c-format
 msgid ""
 "Could not create session directory\n"
@@ -599,7 +594,7 @@ msgstr ""
 "Не удалось создать директорию для сессий\n"
 "%s\n"
 
-#: MySession.cpp:1677
+#: MySession.cpp:1652
 #, c-format
 msgid ""
 "Could not write session options\n"
@@ -608,49 +603,49 @@ msgstr ""
 "Не удалось сохранить опции сессии в\n"
 "%s\n"
 
-#: MySession.cpp:1767 MySession.cpp:1781
+#: MySession.cpp:1742 MySession.cpp:1756
 msgid "Could not assign a free port for CUPS printing"
 msgstr "Не удалось назначить свободный порт для CUPS"
 
-#: MySession.cpp:2115
+#: MySession.cpp:2090
 #, c-format
 msgid "Could not write %s"
 msgstr "Не удалось записать %s"
 
-#: MySession.cpp:2190
+#: MySession.cpp:2165
 msgid "Could not start local X server"
 msgstr "Не удалось запустить локальный X сервер"
 
-#: MySession.cpp:2206 MySession.cpp:2270 MySession.cpp:2284
+#: MySession.cpp:2181 MySession.cpp:2245 MySession.cpp:2259
 #, c-format
 msgid "Connecting to %s ..."
 msgstr "Соединение с %s ..."
 
-#: MySession.cpp:2210
+#: MySession.cpp:2185
 msgid "Preparing multimedia service ..."
 msgstr "Подготовка мультимедиа сервисов ..."
 
-#: MySession.cpp:2224 MySession.cpp:2267
+#: MySession.cpp:2199 MySession.cpp:2242
 msgid "Could not assign a free port for multimedia support"
 msgstr "Не удалось назначить свободный порт для мультимедиа сервисов"
 
-#: MySession.cpp:2265
+#: MySession.cpp:2240
 msgid "Could not start multimedia support"
 msgstr "Не удалось запустить мультимедиа сервисы"
 
-#: MySession.cpp:2281
+#: MySession.cpp:2256
 msgid "Preparing CUPS service ..."
 msgstr "Подготовка CUPS ..."
 
-#: MySession.cpp:2283
+#: MySession.cpp:2258
 msgid "Could not start CUPS printing"
 msgstr "Не удалось запустить CUPS"
 
-#: MySession.cpp:2335
+#: MySession.cpp:2310
 msgid "Called command was: "
 msgstr "Комманда: "
 
-#: MySession.cpp:2336
+#: MySession.cpp:2311
 msgid "Could not start nxssh."
 msgstr "Не удалось запустить nxssh."
 
@@ -2104,6 +2099,10 @@ msgstr "Не удалось сохранить конфигурацию сесс
 #: watchUsbIpApp.cpp:506
 msgid "Could not export USB device"
 msgstr "Не удалось экспортировать USB устройство"
+
+#, fuzzy
+#~ msgid "Query server-side capabilities"
+#~ msgstr "Запрос сессий"
 
 #~ msgid "Enable SMB printer and file sharing"
 #~ msgstr "Включить проброс SMB ресурсов"

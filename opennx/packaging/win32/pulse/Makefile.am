@@ -11,7 +11,7 @@ PULSEAUDIO_VERSION    = 1.0-fe-20110622
 
 TMPDIST = $(abs_builddir)/dist
 
-EXTRA_DIST = urls.txt patches $(LIBSNDFILE).md5sum $(SPEEX).md5sum $(JSONC).md5sum \
+EXTRA_DIST = urls.txt cfg patches $(LIBSNDFILE).md5sum $(SPEEX).md5sum $(JSONC).md5sum \
 	$(LIBSAMPLERATE).md5sum $(PULSEAUDIO).md5sum
 
 CLEANFILES = -r $(TMPDIST) pkg-config \
