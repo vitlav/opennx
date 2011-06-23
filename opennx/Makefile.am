@@ -1,8 +1,8 @@
 AM_LIBTOOLFLAGS = --silent
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = po $(PLATFORM_SUBDIRS)
-DIST_SUBDIRS = po packaging/win32 packaging/MacOSX
+SUBDIRS = po $(PLATFORM_SUBDIRS) man
+DIST_SUBDIRS = po packaging/win32 packaging/MacOSX man
 
 noinst_PROGRAMS = bin2hdr pulsetest $(TESTXAUTH) $(MACTESTKBD)
 
@@ -217,8 +217,6 @@ MAINTAINERCLEANFILES = ABOUT-NLS Makefile.in configure aclocal.m4 \
 
 DISTCLEANFILES = mingw32-config.cache res/*.prv.*
 
-man_MANS = man/pconnect.1
-
 data_DATA = share/keyboards
 
 keydir = $(datadir)/keys
@@ -318,4 +316,4 @@ EXTRA_DIST = conf/mkinstalldirs  conf/mkinstalldirs  conf/mkinstalldirs  conf/mk
 	INSTALL INSTALL.generic COPYING share etc/60-opennx.rules \
 	opennx.pjd opennx.rc tracelog.rc watchreader.rc \
 	opennx.spec patches getnxsrcpkg $(RESDEPS) ChangeLog extres debian \
-	$(wildcard m4/*.m4) $(man_MANS)
+	$(wildcard m4/*.m4)

@@ -17,8 +17,8 @@ AppName={#=APPNAME}
 AppVersion={#=APPFULLVER}
 AppVerName={#=APPFULLVERNAME}
 AppPublisher=The OpenNX Team
-AppPublisherURL=http://www.sf.net/projects/opennx
-AppCopyright=(C) 2010 The OpenNX Team
+AppPublisherURL=http://opennx.net
+AppCopyright=(C) 2011 The OpenNX Team
 VersionInfoVersion={#=APPFULLVER}
 DefaultDirName={pf}\{#=APPNAME}
 DefaultGroupName={#=APPNAME}
@@ -62,6 +62,7 @@ cwizard=OpenNX Connection Wizard
 sadmin=OpenNX Session Administrator
 uninst_opennx=Uninstall OpenNX
 fwadd=Adding firewall rules
+doc_pconnect=Pconnect Manual
 
 de.dticon=Desktop-Verknüpfung &anlegen
 de.dticon_group=Zusätzliche Verknüpfungen:
@@ -69,6 +70,7 @@ de.cwizard=OpenNX Verbindungs-Assistent
 de.sadmin=OpenNX Sitzungsverwaltung
 de.uninst_opennx=Deinstalliere OpenNX
 de.fwadd=Erstelle Firewall-Regeln
+de.doc_pconnect=Pconnect Handbuch
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:dticon}"; GroupDescription: "{cm:dticon_group}";
@@ -83,6 +85,7 @@ Source: setupdir\bin\opennx.exe; DestDir: {app}; DestName: nxclient.exe; Flags: 
 Name: "{group}\OpenNX"; Filename: "{app}\bin\opennx.exe";
 Name: "{group}\{cm:cwizard}"; Filename: "{app}\bin\opennx.exe"; Parameters: "--wizard"; IconFilename: "{app}\bin\opennx.exe"; IconIndex: 2;
 Name: "{group}\{cm:sadmin}"; Filename: "{app}\bin\opennx.exe"; Parameters: "--admin"; IconFilename: "{app}\bin\opennx.exe"; IconIndex: 3
+Name: "{group}\{cm:doc_pconnect}"; Filename: "{app}\share\pconnect.html";
 Name: "{group}\{cm:uninst_opennx}"; Filename: "{uninstallexe}";
 Name: "{commondesktop}\OpenNX"; Filename: "{app}\bin\opennx.exe"; Tasks: "desktopicon";
 
