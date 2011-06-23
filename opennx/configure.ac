@@ -488,7 +488,7 @@ AC_SUBST(NX_BTYPE)
 AC_SUBST(XMING_BTYPE)
 AC_SUBST(XMING_PLATFORM_PATCHES)
 
-AC_CONFIG_FILES([Makefile man/Makefile opennx.spec res/opennx.rc
+AC_CONFIG_FILES([Makefile docs/Makefile opennx.spec res/opennx.rc
     packaging/win32/Makefile packaging/win32/findrequires.pl
     packaging/win32/isccwrap.sh packaging/win32/xming/Makefile
     packaging/win32/nx/Makefile packaging/win32/cygnx/Makefile
