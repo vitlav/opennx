@@ -14,6 +14,11 @@ PULSEAUDIO_SVER       = 1.0
 
 TMPDIST = $(abs_builddir)/dist
 
+# For caching pre-built binaries on the build slave
+CACHE_FLAG = $(HOME)/.docache_pulse
+CACHE_DIR = $(HOME)/savebuild
+CACHE_TGZ = $(CACHE_DIR)/pulse.tgz
+
 EXTRA_DIST = urls.txt cfg patches $(LIBSNDFILE).shasum $(SPEEX).shasum $(JSONC).shasum \
 	$(LIBSAMPLERATE).shasum $(PULSEAUDIO).shasum
 
@@ -93,7 +98,9 @@ ENV_pulseaudioBE = env $(MACENV_PPC) \
 	LIBSPEEX_CFLAGS="-I." LIBSPEEX_LIBS="-lspeex -lspeexdsp" \
 	PATH="$(abs_builddir):$(PATH)"
 
-upinstall: tmpinstall
+upinstall:
+	test -f $(CACHE_TGZ) && tar xzf $(CACHE_TGZ) || true
+	test -f $(CACHE_TGZ) || $(MAKE) tmpinstall
 	cp -av $(TMPDIST)/ $(PKGROOT)/
 
 tmpinstall:
@@ -128,6 +135,7 @@ tmpinstall:
 	find $(TMPDIST) -name "*.la" -o -name "*.a"|xargs rm -f
 	rm -f $(TMPDIST)$(bindir)/sndfile-* $(TMPDIST)$(bindir)/libtool*
 	cp $(srcdir)/cfg/* $(TMPDIST)$(prefix)/etc/pulse/
+	test -f $(CACHE_FLAG) && tar czf $(CACHE_TGZ) dist || true
 	touch $@
 
 tbuild: .$(subtarget)-build

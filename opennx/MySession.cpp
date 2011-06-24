@@ -2097,7 +2097,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
         if (m_pCfg->bGetUseProxy()) {
             if (m_pCfg->bGetExternalProxy()) {
                 if (!m_pCfg->sGetProxyCommand().IsEmpty())
-                    nxsshcmd << wxT(" -o 'ProxyCommand ") << cygPath(m_pCfg->sGetProxyCommand()) << wxT("'");
+                    nxsshcmd << wxT(" -o 'ProxyCommand ") << m_pCfg->sGetProxyCommand() << wxT("'");
             } else {
 
                 if (!m_pCfg->sGetProxyHost().IsEmpty()) {
@@ -2125,10 +2125,20 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
         nxsshcmd << wxT(" -E") << wxT(" nx@") << m_pCfg->sGetServerHost();
         m_sHost = m_pCfg->sGetServerHost();
 
-        fn.Assign(wxFileName::GetHomeDir());
         wxString stmp;
         ::wxGetEnv(wxT("PATH"), &stmp);
+        // Prepend our system directory, so that pconnect can be found by nxssh (if necessary)
+        fn.Assign(m_sSysDir, wxT("bin"));
+        if (!stmp.Contains(fn.GetFullPath())) {
+#ifdef __WXMSW__
+            stmp.Prepend(wxT(";")).Prepend(fn.GetFullPath());
+#else
+            stmp.Prepend(wxT(":")).Prepend(fn.GetFullPath());
+#endif
+            ::wxSetEnv(wxT("PATH"), stmp);
+        }
         ::wxLogInfo(wxT("env: PATH='%s'"), stmp.c_str());
+        fn.Assign(wxFileName::GetHomeDir());
         ::wxSetEnv(wxT("NX_HOME"), cygPath(fn.GetFullPath()));
         ::wxLogInfo(wxT("env: NX_HOME='%s'"), cygPath(fn.GetFullPath()).c_str());
         ::wxSetEnv(wxT("NX_ROOT"), cygPath(m_sUserDir));
