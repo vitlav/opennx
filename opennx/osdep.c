@@ -608,6 +608,10 @@ static Display *launchX11() {
 }
 # endif /* __WXMAC__ */
 
+#ifdef __WXMAC__
+extern const char *getMacKeyboard();
+#endif
+
     static void __attribute__ ((constructor))
 getx11socket()
 {
@@ -670,6 +674,11 @@ getx11socket()
         }
         XCloseDisplay(dpy);
     }
+#ifdef __WXMAC__
+    if ((_kbd[0] == '\0') || strstr(_kbd, "empty")) {
+        strncpy(_kbd, getMacKeyboard(), sizeof(_kbd));
+    }
+#endif
 }
 #endif /* !__WXMSW__ */
 

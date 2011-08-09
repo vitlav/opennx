@@ -42,21 +42,26 @@ static void __attribute__ ((constructor))
     }
 }
 
-#ifdef APP_MACTESTKBD
+/*
+ * 10.4 compatibility. Hence the use of deprecated keyboard services.
+ */
 #include <Carbon/Carbon.h>
-void getMacKeyboard() {
+const char *getMacKeyboard() {
+    static char ret[256];
 	KeyboardLayoutRef klr;
+    memset(ret, 0, sizeof(ret));
 	if (noErr == KLGetCurrentKeyboardLayout(&klr)) {
-		uint32 pt = kKLName;
+		uint32 pt = kKLLanguageCode;
 		const void *oValue;
 		if (noErr == KLGetKeyboardLayoutProperty(klr, pt, &oValue)) {
-			char buf[1024];
+			char buf[128];
 			if (CFStringGetCString((CFStringRef)oValue, buf, sizeof(buf), kCFStringEncodingISOLatin1)) {
-				fprintf(stderr, "kbdlayout='%s'\n", buf); fflush(stderr);
+                const char *ktype = "pc105";
+                snprintf(ret, sizeof(ret), "%s/%s", ktype, buf);
 			}
 		}
 	}
+    return ret;
 }
-#endif
 
 #endif
