@@ -1616,8 +1616,8 @@
           <string name="variable-31">"m_bEnableUSBIP|bool|||2|0|"</string>
           <string name="variable-32">"m_sProxyCommand|wxString|||2|0|"</string>
           <string name="variable-33">"m_bExternalProxy|bool|||2|0|"</string>
-          <string name="variable-34">"m_iUsbLocalPort|int||3240|2|0|"</string>
-          <string name="variable-35">"m_sUsbipdSocket|wxString|||2|0|Local control socket for usbipd2"</string>
+          <string name="variable-34">"m_iUsbLocalPort|int|UsbLocalPort|3240|2|0|"</string>
+          <string name="variable-35">"m_sUsbipdSocket|wxString|UsbipdSocket||2|0|Local control socket for usbipd2"</string>
           <string name="variable-36">"m_iSavedUsbLocalPort|int|||2|0|"</string>
           <string name="variable-37">"m_iPseudoDesktopTypeIndex|int||-1|2|0|"</string>
           <string name="variable-38">"m_iPseudoDisplayTypeIndex|int||-1|2|0|"</string>

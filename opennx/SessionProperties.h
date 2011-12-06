@@ -334,6 +334,12 @@ public:
     wxString GetsSystemNxDir() const { return m_sSystemNxDir ; }
     void SetsSystemNxDir(wxString value) { m_sSystemNxDir = value ; }
 
+    int GetUsbLocalPort() const { return m_iUsbLocalPort ; }
+    void SetUsbLocalPort(int value) { m_iUsbLocalPort = value ; }
+
+    wxString GetUsbipdSocket() const { return m_sUsbipdSocket ; }
+    void SetUsbipdSocket(wxString value) { m_sUsbipdSocket = value ; }
+
     bool GetbCreateDesktopIcon() const { return m_bCreateDesktopIcon ; }
     void SetbCreateDesktopIcon(bool value) { m_bCreateDesktopIcon = value ; }
 
