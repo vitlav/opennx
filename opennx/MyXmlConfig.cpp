@@ -1793,6 +1793,19 @@ MyXmlConfig::sGetSessionPassword()
     }
     return ret;
 }
+
+    void
+MyXmlConfig::sSetUsername(const wxString &s)
+{
+    bool b;
+    wxConfigBase::Get()->Read(wxT("Config/LowercaseLogin"), &b, false);
+    if (b) {
+        m_sUsername = s.Lower();
+    } else {
+        m_sUsername = s;
+    }
+}
+
     void 
 MyXmlConfig::bAddOption(wxXmlNode *group, const wxString &name, const bool val)
 {

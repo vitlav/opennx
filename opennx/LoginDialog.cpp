@@ -494,6 +494,11 @@ void LoginDialog::OnOkClick(wxCommandEvent& event)
         bool b = s.Create(*m_pCurrentCfg, m_sPassword, this);
         Enable();
         if (!b) {
+            // Clear password after failure or abort.
+            if (!m_bGuestLogin) {
+                m_pCtrlPassword->SetValue(wxEmptyString);
+                m_pCtrlPassword->SetFocus();
+            }
 #ifdef SINGLE_SESSION
             m_cNxSshWatchTimer.Start(1000);
             ::myLogTrace(MYTRACETAG, wxT("Starting nxssh watch timer"));

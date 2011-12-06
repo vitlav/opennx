@@ -674,7 +674,7 @@ getx11socket()
         }
         XCloseDisplay(dpy);
     }
-#ifdef __WXMAC__
+#if 0 // ifdef __WXMAC__
     if ((_kbd[0] == '\0') || strstr(_kbd, "empty")) {
         strncpy(_kbd, getMacKeyboard(), sizeof(_kbd));
     }

@@ -1162,6 +1162,14 @@
                                                         <checked>0</checked>
                                                     </object>
                                                 </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_CHECKBOX_LOWERCASE_LOGIN">
+                                                        <label>Always use lowercase login name</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
                                             </object>
                                         </object>
                                     </object>

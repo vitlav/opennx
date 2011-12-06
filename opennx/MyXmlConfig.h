@@ -348,13 +348,14 @@ class MyXmlConfig
         void sSetRdpUsername(const wxString &s) { m_sRdpUsername = s; }
         void sSetServerHost(const wxString &s) { m_sServerHost = s; }
         void sSetSshKey(const wxString &s) { m_sSshKey = s; }
-        void sSetUsername(const wxString &s) { m_sUsername = s; }
         void sSetVncHostName(const wxString &s) { m_sVncHostName = s; }
         void sSetVncPassword(const wxString &s) { m_sVncPassword = s; }
 
         void aSetShareGroups(const ArrayOfShareGroups &a) { m_aShareGroups = a; }
         void aSetUsedShareGroups(const wxArrayString &a) { m_aUsedShareGroups = a; }
         void aSetUsbForwards(const ArrayOfUsbForwards &a) { m_aUsbForwards = a; }
+
+        void sSetUsername(const wxString &s);
 
         static wxString UrlEsc(const wxString &s);
 

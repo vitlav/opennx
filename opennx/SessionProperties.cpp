@@ -257,6 +257,8 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
 
     EVT_CHECKBOX( XRCID("ID_CHECKBOX_RESETMSGBOXES"), SessionProperties::OnCheckboxResetmsgboxesClick )
 
+    EVT_CHECKBOX( XRCID("ID_CHECKBOX_LOWERCASE_LOGIN"), SessionProperties::OnCheckboxLowercaseLoginClick )
+
     EVT_BUTTON( wxID_DELETE, SessionProperties::OnDeleteClick )
 
     EVT_BUTTON( wxID_APPLY, SessionProperties::OnApplyClick )
@@ -389,6 +391,7 @@ SessionProperties::CheckChanged()
         changed |= (m_iSavedUsbLocalPort != m_iUsbLocalPort);
         changed |= (m_bSavedCreateDesktopIcon != m_bCreateDesktopIcon);
         changed |= (m_bSavedResetMessageBoxes != m_bResetMessageBoxes);
+        changed |= (m_bSavedLowercaseLogin != m_bLowercaseLogin);
         CheckCfgChanges(changed);
     }
 }
@@ -417,6 +420,8 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_bResetMessageBoxes = false;
     m_bSavedResetMessageBoxes = false;
     m_iSmbPort = 445;
+    m_bLowercaseLogin = false;
+    m_bSavedLowercaseLogin = false;
     m_pNoteBook = NULL;
     m_pCtrlHostname = NULL;
     m_pCtrlPort = NULL;
@@ -537,6 +542,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     // Global config
     wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &m_sUserNxDir);
     wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &m_sSystemNxDir);
+    wxConfigBase::Get()->Read(wxT("Config/LowercaseLogin"), &m_bLowercaseLogin, false);
 #ifdef SUPPORT_USBIP
     wxConfigBase::Get()->Read(wxT("Config/UsbipdSocket"), &m_sUsbipdSocket);
     wxConfigBase::Get()->Read(wxT("Config/UsbipPort"), &m_iUsbLocalPort);
@@ -544,7 +550,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_sUsbipdSocket = wxEmptyString;
 #endif
     // This setting can be used by an admin to disable storing passwords
-    // It has to be set amnually in the global config file.
+    // It has to be set manually in the global config file.
     wxConfigBase::Get()->Read(wxT("Config/StorePasswords"), &m_bStorePasswords, true);
     if (!m_bStorePasswords)
         m_bRememberPassword = false;
@@ -1068,6 +1074,8 @@ void SessionProperties::CreateControls()
         FindWindow(XRCID("ID_CHECKBOX_CREATEICON"))->SetValidator( wxGenericValidator(& m_bCreateDesktopIcon) );
     if (FindWindow(XRCID("ID_CHECKBOX_RESETMSGBOXES")))
         FindWindow(XRCID("ID_CHECKBOX_RESETMSGBOXES"))->SetValidator( wxGenericValidator(& m_bResetMessageBoxes) );
+    if (FindWindow(XRCID("ID_CHECKBOX_LOWERCASE_LOGIN")))
+        FindWindow(XRCID("ID_CHECKBOX_LOWERCASE_LOGIN"))->SetValidator( wxGenericValidator(& m_bLowercaseLogin) );
     ////@end SessionProperties content construction
 
     if ((!m_bStorePasswords) && FindWindow(XRCID("ID_CHECKBOX_PWSAVE")))
@@ -1232,6 +1240,7 @@ void SessionProperties::SaveState()
     m_sSavedUsbipdSocket = m_sUsbipdSocket;
     m_iSavedUsbLocalPort = m_iUsbLocalPort;
     m_bSavedCreateDesktopIcon = m_bCreateDesktopIcon;
+    m_bSavedLowercaseLogin = m_bLowercaseLogin;
     m_bSavedResetMessageBoxes = m_bResetMessageBoxes = false;
 }
 
@@ -1533,6 +1542,7 @@ void SessionProperties::OnApplyClick( wxCommandEvent& event )
     wxUnusedVar(event);
     wxConfigBase::Get()->Write(wxT("Config/UserNxDir"), m_sUserNxDir);
     wxConfigBase::Get()->Write(wxT("Config/SystemNxDir"), m_sSystemNxDir);
+    wxConfigBase::Get()->Write(wxT("Config/LowercaseLogin"), m_bLowercaseLogin);
 #ifdef SUPPORT_USBIP
     wxConfigBase::Get()->Write(wxT("Config/UsbipdSocket"), m_sUsbipdSocket);
     wxConfigBase::Get()->Write(wxT("Config/UsbipPort"), m_iUsbLocalPort);
@@ -2303,6 +2313,17 @@ void SessionProperties::OnCheckboxImgCustomClick( wxCommandEvent& event )
 {
     wxUnusedVar(event);
     UpdateDialogConstraints(true);
+    CheckChanged();
+}
+
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_LOWERCASE_LOGIN
+ */
+
+void SessionProperties::OnCheckboxLowercaseLoginClick( wxCommandEvent& event )
+{
+    wxUnusedVar(event);
     CheckChanged();
 }
 
