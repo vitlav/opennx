@@ -720,6 +720,12 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
         case CACHEMEM_32MB:
             ret << wxT("32M\"");
             break;
+        case CACHEMEM_64MB:
+            ret << wxT("64M\"");
+            break;
+        case CACHEMEM_128MB:
+            ret << wxT("128M\"");
+            break;
     }
     ret << wxT(" --images=\"");
     switch (m_eCacheDisk) {
@@ -743,6 +749,12 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
             break;
         case CACHEDISK_128MB:
             ret << wxT("128M\"");
+            break;
+        case CACHEDISK_256MB:
+            ret << wxT("256M\"");
+            break;
+        case CACHEDISK_512MB:
+            ret << wxT("512M\"");
             break;
     }
     ret << wxT(" --link=\"");
@@ -1252,6 +1264,12 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                             case 32:
                                 m_eCacheMemory = CACHEMEM_32MB;
                                 break;
+                            case 64:
+                                m_eCacheMemory = CACHEMEM_64MB;
+                                break;
+                            case 128:
+                                m_eCacheMemory = CACHEMEM_128MB;
+                                break;
                         }
                         itmp = getLong(opt, wxT("Cache size on disk"), -1);
                         switch (itmp) {
@@ -1275,6 +1293,12 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                                 break;
                             case 128:
                                 m_eCacheDisk = CACHEDISK_128MB;
+                                break;
+                            case 256:
+                                m_eCacheDisk = CACHEDISK_256MB;
+                                break;
+                            case 512:
+                                m_eCacheDisk = CACHEDISK_512MB;
                                 break;
                         }
 #if 0
@@ -2087,6 +2111,12 @@ MyXmlConfig::SaveToFile()
         case CACHEMEM_32MB:
             optval = wxT("32");
             break;
+        case CACHEMEM_64MB:
+            optval = wxT("64");
+            break;
+        case CACHEMEM_128MB:
+            optval = wxT("128");
+            break;
     }
     sAddOption(g, wxT("Cache size"), optval);
     switch (m_eCacheDisk) {
@@ -2110,6 +2140,12 @@ MyXmlConfig::SaveToFile()
             break;
         case CACHEDISK_128MB:
             optval = wxT("128");
+            break;
+        case CACHEDISK_256MB:
+            optval = wxT("256");
+            break;
+        case CACHEDISK_512MB:
+            optval = wxT("512");
             break;
     }
     sAddOption(g, wxT("Cache size on disk"), optval);

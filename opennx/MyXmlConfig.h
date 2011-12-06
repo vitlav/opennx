@@ -134,6 +134,8 @@ class MyXmlConfig
             CACHEMEM_8MB,
             CACHEMEM_16MB,
             CACHEMEM_32MB,
+            CACHEMEM_64MB,
+            CACHEMEM_128MB,
         } CacheMemory;
 
         typedef enum CacheDisk {
@@ -144,6 +146,8 @@ class MyXmlConfig
             CACHEDISK_32MB,
             CACHEDISK_64MB,
             CACHEDISK_128MB,
+            CACHEDISK_256MB,
+            CACHEDISK_512MB,
         } CacheDisk;
 
         MyXmlConfig();

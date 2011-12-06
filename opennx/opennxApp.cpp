@@ -65,6 +65,7 @@
 #include "MyIPC.h"
 #include "MyXmlConfig.h"
 #include "PanicDialog.h"
+#include "ResumeDialog.h"
 #include "QuitDialog.h"
 #include "ForeignFrame.h"
 #include "Icon.h"
