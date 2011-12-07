@@ -280,6 +280,9 @@ MyXmlConfig::init()
     m_iUsedShareGroups = 0;
     m_iVncDisplayNumber = 0;
     m_iVncImageEncoding = 0;
+    m_iXdmBroadcastPort = 177;
+    m_iXdmListPort = 177;
+    m_iXdmQueryPort = 177;
 
     m_eCacheDisk = CACHEDISK_32MB;
     m_eCacheMemory = CACHEMEM_8MB;
@@ -287,6 +290,7 @@ MyXmlConfig::init()
     m_eDesktopType = DTYPE_KDE;
     m_eDisplayType = DPTYPE_AVAILABLE;
     m_eSessionType = STYPE_UNIX;
+    m_eXdmMode = XDM_MODE_SERVER;
 
     m_sCommandLine = wxEmptyString;
     wxConfigBase::Get()->Read(wxT("Config/CupsPath"), &m_sCupsPath);
@@ -312,6 +316,8 @@ MyXmlConfig::init()
     m_sUsername = wxEmptyString;
     m_sVncHostName = wxEmptyString;
     m_sVncPassword = wxEmptyString;
+    m_sXdmListHost = wxT("localhost");
+    m_sXdmQueryHost = wxT("localhost");
 
     m_pMd5Password = NULL;
     m_pClrPassword = NULL;
@@ -408,6 +414,9 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
     m_iUsedShareGroups = other.m_iUsedShareGroups;
     m_iVncDisplayNumber = other.m_iVncDisplayNumber;
     m_iVncImageEncoding = other.m_iVncImageEncoding;
+    m_iXdmBroadcastPort = other.m_iXdmBroadcastPort;
+    m_iXdmListPort = other.m_iXdmListPort;
+    m_iXdmQueryPort = other.m_iXdmQueryPort;
 
     m_eCacheDisk = other.m_eCacheDisk;
     m_eCacheMemory = other.m_eCacheMemory;
@@ -415,6 +424,7 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
     m_eDesktopType = other.m_eDesktopType;
     m_eDisplayType = other.m_eDisplayType;
     m_eSessionType = other.m_eSessionType;
+    m_eXdmMode = other.m_eXdmMode;
 
     m_sCommandLine = other.m_sCommandLine;
     m_sCupsPath = other.m_sCupsPath;
@@ -436,6 +446,8 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
     m_sUsername = other.m_sUsername;
     m_sVncHostName = other.m_sVncHostName;
     m_sVncPassword = other.m_sVncPassword;
+    m_sXdmListHost = other.m_sXdmListHost;
+    m_sXdmQueryHost = other.m_sXdmQueryHost;
 
     m_aShareGroups = other.m_aShareGroups;
     m_aUsedShareGroups = other.m_aUsedShareGroups;
@@ -511,6 +523,9 @@ MyXmlConfig::sGetListParams(const long protocolVersion)
                     break;
                 case DTYPE_XFCE:
                     ret << wxT("xfce\"");
+                    break;
+                case DTYPE_XDM:
+                    ret << wxT("xdm\"");
                     break;
                 case DTYPE_CUSTOM:
                     if (m_bRunConsole)
@@ -622,6 +637,28 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
                         break;
                     case DTYPE_XFCE:
                         ret << wxT("xfce\"");
+                        break;
+                    case DTYPE_XDM:
+                        ret << wxT("xdm\"");
+                        switch (m_eXdmMode) {
+                            case XDM_MODE_SERVER:
+                                ret << wxT(" --xdm_port=\"-1\"");
+                                break;
+                            case XDM_MODE_QUERY:
+                                ret << wxT(" --xdm_type=\"query\"")
+                                    << wxT(" --xdm_host=\"") << m_sXdmQueryHost << wxT("\"")
+                                    << wxT(" --xdm_port=\"") << m_iXdmQueryPort << wxT("\"");
+                                break;
+                            case XDM_MODE_BROADCAST:
+                                ret << wxT(" --xdm_type=\"broadcast\"")
+                                    << wxT(" --xdm_port=\"") << m_iXdmBroadcastPort << wxT("\"");
+                                break;
+                            case XDM_MODE_LIST:
+                                ret << wxT(" --xdm_type=\"list\"")
+                                    << wxT(" --xdm_host=\"") << m_sXdmListHost << wxT("\"")
+                                    << wxT(" --xdm_port=\"") << m_iXdmListPort << wxT("\"");
+                                break;
+                        }
                         break;
                     case DTYPE_CUSTOM:
                         if (m_bRunConsole)
@@ -1043,6 +1080,9 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
     if (m_iUsedShareGroups != other.m_iUsedShareGroups) return false;
     if (m_iVncDisplayNumber != other.m_iVncDisplayNumber) return false;
     if (m_iVncImageEncoding != other.m_iVncImageEncoding) return false;
+    if (m_iXdmBroadcastPort != other.m_iXdmBroadcastPort) return false;
+    if (m_iXdmListPort != other.m_iXdmListPort) return false;
+    if (m_iXdmQueryPort != other.m_iXdmQueryPort) return false;
 
     if (m_eCacheDisk != other.m_eCacheDisk) return false;
     if (m_eCacheMemory != other.m_eCacheMemory) return false;
@@ -1050,6 +1090,7 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
     if (m_eDesktopType != other.m_eDesktopType) return false;
     if (m_eDisplayType != other.m_eDisplayType) return false;
     if (m_eSessionType != other.m_eSessionType) return false;
+    if (m_eXdmMode != other.m_eXdmMode) return false;
 
     if (m_sCommandLine != other.m_sCommandLine) return false;
     if (m_sCupsPath != other.m_sCupsPath) return false;
@@ -1071,6 +1112,8 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
     if (m_sUsername != other.m_sUsername) return false;
     if (m_sVncHostName != other.m_sVncHostName) return false;
     if (m_sVncPassword != other.m_sVncPassword) return false;
+    if (m_sXdmListHost != other.m_sXdmListHost) return false;
+    if (m_sXdmQueryHost != other.m_sXdmQueryHost) return false;
 
     if (cmpUsedShareGroups(m_aUsedShareGroups, other.m_aUsedShareGroups)) return false;
     if (cmpShareGroups(m_aShareGroups, other.m_aShareGroups)) return false;
@@ -1122,10 +1165,10 @@ size_t MyXmlConfig::CurlWriteCallback(void *buffer, size_t size, size_t nmemb, v
     }
 # endif
 #else
-  wxUnusedVar(buffer);
-  wxUnusedVar(size);
-  wxUnusedVar(nmemb);
-  wxUnusedVar(userp);
+    wxUnusedVar(buffer);
+    wxUnusedVar(size);
+    wxUnusedVar(nmemb);
+    wxUnusedVar(userp);
 #endif
     return -1;
 }
@@ -1390,6 +1433,8 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                             m_eDesktopType = DTYPE_CDE;
                         if (tmp.CmpNoCase(wxT("XFCE")) == 0)
                             m_eDesktopType = DTYPE_XFCE;
+                        if (tmp.CmpNoCase(wxT("XDM")) == 0)
+                            m_eDesktopType = DTYPE_XDM;
                         if (tmp.CmpNoCase(wxT("Console")) == 0)
                             m_eDesktopType = DTYPE_CUSTOM;
                         m_bDisableShmem = getBool(opt, wxT("Disable SHM"), m_bDisableShmem);
@@ -1464,10 +1509,28 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                         m_bDisableXagent = !getBool(opt, wxT("XAgent encoding"),
                                 !m_bDisableXagent);
                         // displaySaveOnExit  = true
-                        // xdm broadcast port = 177
-                        // xdm mode = "server_decide"
-                        // xdm query host = "localhost"
-                        // xdm query port = 177
+
+                        tmp = getString(opt, wxT("xdm mode"));
+                        if (tmp.CmpNoCase(wxT("server decide")) == 0) {
+                            m_eXdmMode = XDM_MODE_SERVER;
+                        }
+                        if (tmp.CmpNoCase(wxT("server_decide")) == 0) {
+                            m_eXdmMode = XDM_MODE_SERVER;
+                        }
+                        if (tmp.CmpNoCase(wxT("query")) == 0) {
+                            m_eXdmMode = XDM_MODE_QUERY;
+                        }
+                        if (tmp.CmpNoCase(wxT("broadcast")) == 0) {
+                            m_eXdmMode = XDM_MODE_BROADCAST;
+                        }
+                        if (tmp.CmpNoCase(wxT("list")) == 0) {
+                            m_eXdmMode = XDM_MODE_LIST;
+                        }
+                        m_sXdmListHost = getString(opt, wxT("xdm list host"), m_sXdmListHost);
+                        m_sXdmQueryHost = getString(opt, wxT("xdm query host"), m_sXdmQueryHost);
+                        m_iXdmBroadcastPort = getLong(opt, wxT("xdm broadcast port"), m_iXdmBroadcastPort);
+                        m_iXdmListPort = getLong(opt, wxT("xdm list port"), m_iXdmListPort);
+                        m_iXdmQueryPort = getLong(opt, wxT("xdm query port"), m_iXdmQueryPort);
 
                         opt = opt->GetNext();
                     }
@@ -1926,6 +1989,9 @@ MyXmlConfig::SaveToFile()
         case DTYPE_XFCE:
             optval = wxT("xfce");
             break;
+        case DTYPE_XDM:
+            optval = wxT("xdm");
+            break;
         case DTYPE_CUSTOM:
             optval = wxT("console");
             break;
@@ -2002,12 +2068,26 @@ MyXmlConfig::SaveToFile()
     bAddOption(g, wxT("Virtual desktop"), m_bVirtualDesktop);
     bAddOption(g, wxT("XAgent encoding"), !m_bDisableXagent);
     bAddOption(g, wxT("displaySaveOnExit"), true); // Not in original GUI but in config ?!
-    iAddOption(g, wxT("xdm broadcast port"), 177); // Not in original GUI but in config ?!
-    sAddOption(g, wxT("xdm list host"), wxT("localhost")); // Not in original GUI but in config ?!
-    iAddOption(g, wxT("xdm list port"), 177); // Not in original GUI but in config ?!
-    sAddOption(g, wxT("xdm mode"), wxT("server_decide")); // Not in original GUI but in config ?!
-    sAddOption(g, wxT("xdm query host"), wxT("localhost")); // Not in original GUI but in config ?!
-    iAddOption(g, wxT("xdm query port"), 177); // Not in original GUI but in config ?!
+    iAddOption(g, wxT("xdm broadcast port"), m_iXdmBroadcastPort);
+    sAddOption(g, wxT("xdm list host"), m_sXdmListHost);
+    iAddOption(g, wxT("xdm list port"), m_iXdmListPort);
+    switch (m_eXdmMode) {
+        case XDM_MODE_SERVER:
+            optval = wxT("server decide");
+            break;
+        case XDM_MODE_QUERY:
+            optval = wxT("query");
+            break;
+        case XDM_MODE_BROADCAST:
+            optval = wxT("broadcast");
+            break;
+        case XDM_MODE_LIST:
+            optval = wxT("list");
+            break;
+    }
+    sAddOption(g, wxT("xdm mode"), optval);
+    sAddOption(g, wxT("xdm query host"), m_sXdmQueryHost);
+    iAddOption(g, wxT("xdm query port"), m_iXdmQueryPort);
     bAddOption(g, wxT("Use smartcard"), m_bUseSmartCard); // Not in original
 
     // == UnixImageSettingsDialog, RdpImageSettingsDialog, VncImageSettingsDialog

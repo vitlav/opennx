@@ -64,6 +64,8 @@ VncPropertyDialog.h
 VncPropertyDialog_symbols.h
 X11PropertyDialog.h
 X11PropertyDialog_symbols.h
+XdmPropertyDialog.h
+XdmPropertyDialog_symbols.h
 opennxApp.cpp
 tracelogApp.cpp
 watchReaderApp.cpp

@@ -57,6 +57,7 @@
 #include "RdpImageSettingsDialog.h"
 #include "VncImageSettingsDialog.h"
 #include "X11PropertyDialog.h"
+#include "XdmPropertyDialog.h"
 #include "RdpPropertyDialog.h"
 #include "VncPropertyDialog.h"
 #include "AboutDialog.h"
@@ -814,7 +815,9 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
             }
             m_pCtrlDesktopType->SetSelection(m_iDesktopTypeDialog);
             m_pCtrlDesktopType->Enable(true);
-            m_pCtrlDesktopSettings->Enable(m_iDesktopTypeDialog == MyXmlConfig::DTYPE_CUSTOM);
+            m_pCtrlDesktopSettings->Enable(
+                    (m_iDesktopTypeDialog == MyXmlConfig::DTYPE_XDM) ||
+                    (m_iDesktopTypeDialog == MyXmlConfig::DTYPE_CUSTOM));
             if (m_iPseudoDisplayTypeIndex != -1) {
                 m_pCtrlDisplayType->Delete(m_iPseudoDisplayTypeIndex);
                 if (m_iDisplayType >= m_iPseudoDisplayTypeIndex)
@@ -1255,7 +1258,13 @@ void SessionProperties::OnButtonDsettingsClick( wxCommandEvent& event )
     wxUnusedVar(event);
     switch (m_iSessionType) {
         case MyXmlConfig::STYPE_UNIX:
-            {
+            if (MyXmlConfig::DTYPE_XDM == m_iUnixDesktopType) {
+                XdmPropertyDialog d;
+                d.SetConfig(m_pCfg);
+                d.Create(this);
+                d.ShowModal();
+                CheckCfgChanges(false);
+            } else {
                 X11PropertyDialog d;
                 d.SetConfig(m_pCfg);
                 d.Create(this);

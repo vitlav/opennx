@@ -113,6 +113,7 @@ class MyXmlConfig
             DTYPE_GNOME,
             DTYPE_CDE,
             DTYPE_XFCE,
+            DTYPE_XDM,
             DTYPE_CUSTOM,
         } DesktopType;
 
@@ -149,6 +150,13 @@ class MyXmlConfig
             CACHEDISK_256MB,
             CACHEDISK_512MB,
         } CacheDisk;
+
+        typedef enum XdmMode {
+            XDM_MODE_SERVER,
+            XDM_MODE_QUERY,
+            XDM_MODE_BROADCAST,
+            XDM_MODE_LIST,
+        } XdmMode;
 
         MyXmlConfig();
         MyXmlConfig(const wxString &);
@@ -223,6 +231,7 @@ class MyXmlConfig
         MyXmlConfig::SessionType eGetSessionType() { return m_eSessionType; }
         MyXmlConfig::CacheMemory eGetCacheMemory() { return m_eCacheMemory; }
         MyXmlConfig::CacheDisk eGetCacheDisk() { return m_eCacheDisk; }
+        MyXmlConfig::XdmMode eGetXdmMode() { return m_eXdmMode; }
 
         int iGetCupsPort() { return m_iCupsPort; }
         int iGetDisplayHeight() { return m_iDisplayHeight; }
@@ -237,6 +246,9 @@ class MyXmlConfig
         int iGetUsedShareGroups() { return m_iUsedShareGroups; }
         int iGetVncDisplayNumber() { return m_iVncDisplayNumber; }
         int iGetVncImageEncoding() { return m_iVncImageEncoding; }
+        int iGetXdmBroadcastPort() { return m_iXdmBroadcastPort; }
+        int iGetXdmListPort() { return m_iXdmListPort; }
+        int iGetXdmQueryPort() { return m_iXdmQueryPort; }
 
         wxString sGetCommandLine() { return m_sCommandLine; }
         wxString sGetCupsPath() { return m_sCupsPath; }
@@ -260,6 +272,8 @@ class MyXmlConfig
         wxString sGetUsername() { return m_sUsername; }
         wxString sGetVncHostName() { return m_sVncHostName; }
         wxString sGetVncPassword() { return m_sVncPassword; }
+        wxString sGetXdmListHost() { return m_sXdmListHost; }
+        wxString sGetXdmQueryHost() { return m_sXdmQueryHost; }
 
         // For use by MySession
         wxString sGetSessionUser();
@@ -318,6 +332,7 @@ class MyXmlConfig
         void eSetDesktopType(MyXmlConfig::DesktopType e) { m_eDesktopType = e; }
         void eSetDisplayType(MyXmlConfig::DisplayType e) { m_eDisplayType = e; }
         void eSetSessionType(MyXmlConfig::SessionType e) { m_eSessionType = e; }
+        void eSetXdmMode(MyXmlConfig::XdmMode e) { m_eXdmMode = e; }
 
         void iSetCupsPort(int i) { m_iCupsPort = i; }
         void iSetDisplayHeight(int i) { m_iDisplayHeight = i; }
@@ -332,6 +347,9 @@ class MyXmlConfig
         void iSetUsedShareGroups(int i) { m_iUsedShareGroups = i; }
         void iSetVncDisplayNumber(int i) { m_iVncDisplayNumber = i; }
         void iSetVncImageEncoding(int i) { m_iVncImageEncoding = i; }
+        void iSetXdmBroadcastPort(int i) { m_iXdmBroadcastPort = i; }
+        void iSetXdmListPort(int i) { m_iXdmListPort = i; }
+        void iSetXdmQueryPort(int i) { m_iXdmQueryPort = i; }
 
         void sSetCommandLine(const wxString &s) { m_sCommandLine = s; }
         void sSetCupsPath(const wxString &s) { m_sCupsPath = s; }
@@ -354,6 +372,8 @@ class MyXmlConfig
         void sSetSshKey(const wxString &s) { m_sSshKey = s; }
         void sSetVncHostName(const wxString &s) { m_sVncHostName = s; }
         void sSetVncPassword(const wxString &s) { m_sVncPassword = s; }
+        void sSetXdmListHost(const wxString &s) { m_sXdmListHost = s; }
+        void sSetXdmQueryHost(const wxString &s) { m_sXdmQueryHost = s; }
 
         void aSetShareGroups(const ArrayOfShareGroups &a) { m_aShareGroups = a; }
         void aSetUsedShareGroups(const wxArrayString &a) { m_aUsedShareGroups = a; }
@@ -447,6 +467,9 @@ class MyXmlConfig
         int m_iUsedShareGroups;
         int m_iVncDisplayNumber;
         int m_iVncImageEncoding;
+        int m_iXdmBroadcastPort;
+        int m_iXdmListPort;
+        int m_iXdmQueryPort;
 
         wxString m_sCommandLine;
         wxString m_sCupsPath;
@@ -470,6 +493,8 @@ class MyXmlConfig
         wxString m_sUsername;
         wxString m_sVncHostName;
         wxString m_sVncPassword;
+        wxString m_sXdmListHost;
+        wxString m_sXdmQueryHost;
 
         ConnectionSpeed m_eConnectionSpeed;
         DesktopType m_eDesktopType;
@@ -477,6 +502,7 @@ class MyXmlConfig
         SessionType m_eSessionType;
         CacheMemory m_eCacheMemory;
         CacheDisk m_eCacheDisk;
+        XdmMode m_eXdmMode;
 
         ArrayOfShareGroups m_aShareGroups;
         wxArrayString m_aUsedShareGroups;

@@ -28,7 +28,8 @@ opennx_SOURCES = AboutDialog.cpp AsyncProcess.cpp LibOpenSC.cpp \
 	UnixImageSettingsDialog.cpp UsbFilterDetailsDialog.cpp \
 	UsbIp.cpp VncImageSettingsDialog.cpp VncPropertyDialog.cpp \
 	wxprec.cpp WinShare.cpp X11PropertyDialog.cpp xh_richtext.cpp \
-	MacOSX.c WrappedStatic.cpp SupressibleMessageDialog.cpp
+	MacOSX.c WrappedStatic.cpp SupressibleMessageDialog.cpp \
+	XdmPropertyDialog.cpp
 
 noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	LibOpenSC.h CardWaiterDialog.h CardWaiterDialog_symbols.h \
@@ -56,7 +57,8 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	watchReaderApp.h watchUsbIpApp.h xh_richtext.h MacUninstallApp.h \
 	WrappedStatic.h SupressibleMessageDialog.h SupressibleMessageDialog_symbols.h \
 	opensc/errors.h opensc/opensc.h opensc/scconf.h opensc/types.h opensc/pkcs15.h \
-	libsmbclient.h
+	libsmbclient.h \
+	XdmPropertyDialog.h XdmPropertyDialog_symbols.h
 
 pconnect_SOURCES = pconnect.c
 pconnect_LDADD = $(WS2LIB) $(RESLIB)
