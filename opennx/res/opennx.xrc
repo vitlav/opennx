@@ -304,7 +304,7 @@
                                                                     <item>GNOME</item>
                                                                     <item>CDE</item>
                                                                     <item>XFCE</item>
-                                                                    <item>XDM</item>
+                                                                    <item>XDMCP</item>
                                                                     <item>Custom</item>
                                                                 </content>
                                                             </object>
@@ -2939,6 +2939,7 @@ this share.</label>
                                     <item>GNOME</item>
                                     <item>CDE</item>
                                     <item>XFCE</item>
+                                    <item>XDMCP</item>
                                     <item>Custom</item>
                                 </content>
                             </object>

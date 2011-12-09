@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2011-12-07 16:37+0100\n"
-"PO-Revision-Date: 2011-12-07 16:38+0100\n"
+"POT-Creation-Date: 2011-12-09 21:37+0100\n"
+"PO-Revision-Date: 2011-12-09 21:40+0100\n"
 "Last-Translator: Fritz Elfert <fritz@fritz-elfert.de>\n"
 "Language-Team:  <de@li.org>\n"
 "Language: de\n"
@@ -95,8 +95,8 @@ msgid "Select key to import"
 msgstr "Schlüssel zum Import wählen"
 
 #: KeyDialog.cpp:209
-msgid "SSh key files (*.key;*.pub)|*.key;*.pub"
-msgstr "SSh Schlüsseldateien (*.key;*.pub)|*.key;*.pub"
+msgid "SSh key files (*.key)|*.key|All files (*)|*"
+msgstr "SSh Schlüsseldateien (*.key)|*.key|Alle Dateien (*)|*"
 
 #: KeyDialog.h:54
 #: KeyDialog_symbols.h:22
@@ -131,7 +131,7 @@ msgstr "Schließen"
 
 #: LoginDialog.cpp:401
 #: LoginDialog.cpp:510
-#: MyWizard.cpp:1350
+#: MyWizard.cpp:1357
 #, c-format
 msgid ""
 "Could not save session to\n"
@@ -143,7 +143,7 @@ msgstr ""
 
 #: LoginDialog.cpp:402
 #: LoginDialog.cpp:511
-#: MyWizard.cpp:1351
+#: MyWizard.cpp:1358
 msgid "Error saving - OpenNX"
 msgstr "Fehler beim Speichern - OpenNX"
 
@@ -172,7 +172,7 @@ msgid "Session"
 msgstr "Sitzung"
 
 #: LoginDialog_symbols.h:26
-#: MyWizard_symbols.h:55
+#: MyWizard_symbols.h:56
 #: SessionProperties_symbols.h:29
 msgid "Use SmartCard"
 msgstr "Verwende SmartCard"
@@ -682,8 +682,8 @@ msgid "Could not start local X server"
 msgstr "Konnte lokalen X-Server nicht starten"
 
 #: MySession.cpp:2191
-#: MySession.cpp:2255
-#: MySession.cpp:2269
+#: MySession.cpp:2260
+#: MySession.cpp:2274
 #, c-format
 msgid "Connecting to %s ..."
 msgstr "Verbinde mit %s ..."
@@ -693,60 +693,61 @@ msgid "Preparing multimedia service ..."
 msgstr "Multimedia Dienst vorbereiten ..."
 
 #: MySession.cpp:2209
-#: MySession.cpp:2252
-msgid "Could not assign a free port for multimedia support"
-msgstr "Konnte keinen Port für Multimedia Unterstützung zuweisen"
-
-#: MySession.cpp:2250
+#: MySession.cpp:2254
 msgid "Could not start multimedia support"
 msgstr "Konnte Multimedia Unterstützung nicht starten"
 
-#: MySession.cpp:2266
+#: MySession.cpp:2212
+#: MySession.cpp:2256
+msgid "Could not assign a free port for multimedia support"
+msgstr "Konnte keinen Port für Multimedia Unterstützung zuweisen"
+
+#: MySession.cpp:2271
 msgid "Preparing CUPS service ..."
 msgstr "CUPS Dienst vorbereiten ..."
 
-#: MySession.cpp:2268
+#: MySession.cpp:2273
 msgid "Could not start CUPS printing"
 msgstr "Konnte CUPS Druckdienst nicht starten"
 
-#: MySession.cpp:2320
+#: MySession.cpp:2325
 msgid "Called command was: "
 msgstr "Aufgerufenes Kommando war:"
 
-#: MySession.cpp:2321
+#: MySession.cpp:2326
 msgid "Could not start nxssh."
 msgstr "Konnte nxssh nicht starten."
 
-#: MyWizard.cpp:424
+#: MyWizard.cpp:425
 msgid "New Session"
 msgstr "Neue Sitzung"
 
-#: MyWizard.cpp:427
+#: MyWizard.cpp:428
 #, c-format
 msgid "New Session %d"
 msgstr "Neue Sitzung %d"
 
-#: MyWizard.cpp:684
+#: MyWizard.cpp:687
 #: SessionProperties.cpp:838
 msgid "RDP"
 msgstr "RDP"
 
-#: MyWizard.cpp:702
+#: MyWizard.cpp:705
 #: SessionProperties.cpp:864
 msgid "RFB"
 msgstr "RFB"
 
-#: MyWizard.cpp:720
+#: MyWizard.cpp:723
 #: SessionProperties.cpp:891
 msgid "Any"
 msgstr "Beliebig"
 
-#: MyWizard.cpp:727
+#: MyWizard.cpp:730
 #: SessionProperties.cpp:898
 msgid "As on server"
 msgstr "Wie auf server"
 
-#: MyWizard.cpp:1178
+#: MyWizard.cpp:1181
 #, c-format
 msgid "Congratulations. The connection to '%s' will be saved as '%s'. You may further configure your session by running the Advanced Configuration dialog."
 msgstr "Glückwunsch. Die Verbindung zu '%s' wird unter dem Namen '%s' gespeichert. Sie können Ihre Sitzung weitergehend konfigurieren, indem Sie die erweiterten Einstellungen anzeigen lassen."
@@ -858,72 +859,77 @@ msgid "XFCE"
 msgstr "XFCE"
 
 #: MyWizard_symbols.h:44
+#: SessionProperties_symbols.h:39
+msgid "XDMCP"
+msgstr "XDMCP"
+
+#: MyWizard_symbols.h:45
 #: SessionProperties_symbols.h:40
 msgid "Custom"
 msgstr "Benutzerdefiniert"
 
-#: MyWizard_symbols.h:45
+#: MyWizard_symbols.h:46
 #: SessionProperties_symbols.h:41
 msgid "Settings..."
 msgstr "Einstellungen..."
 
-#: MyWizard_symbols.h:46
+#: MyWizard_symbols.h:47
 msgid "Select the size of your remote desktop."
 msgstr "Wählen Sie die Größe des entfernten Desktops.."
 
-#: MyWizard_symbols.h:47
+#: MyWizard_symbols.h:48
 #: SessionProperties_symbols.h:48
 msgid "640x480"
 msgstr "640x480"
 
-#: MyWizard_symbols.h:48
+#: MyWizard_symbols.h:49
 #: SessionProperties_symbols.h:49
 msgid "800x600"
 msgstr "800x600"
 
-#: MyWizard_symbols.h:49
+#: MyWizard_symbols.h:50
 #: SessionProperties_symbols.h:50
 msgid "1024x768"
 msgstr "1024x768"
 
-#: MyWizard_symbols.h:50
+#: MyWizard_symbols.h:51
 #: SessionProperties_symbols.h:51
 msgid "Available Area"
 msgstr "Verfügbare Fläche"
 
-#: MyWizard_symbols.h:51
+#: MyWizard_symbols.h:52
 #: SessionProperties_symbols.h:52
 msgid "Fullscreen"
 msgstr "Vollbild"
 
-#: MyWizard_symbols.h:52
+#: MyWizard_symbols.h:53
 #: SessionProperties_symbols.h:53
 msgid "W"
 msgstr "B"
 
-#: MyWizard_symbols.h:53
+#: MyWizard_symbols.h:54
 #: SessionProperties_symbols.h:54
 msgid "H"
 msgstr "H"
 
-#: MyWizard_symbols.h:54
+#: MyWizard_symbols.h:55
 msgid "OpenNX Client supports authentication using a variety of USB SmartCard tokens. Enable this option if you intend to use such a token."
 msgstr "Der OpenNX Client unterstützt Authentisierung mit Hilfe verschiedener USB SmartCard Tokens. Aktivieren Sie dies, wenn sie ein solches Token verwenden wollen."
 
-#: MyWizard_symbols.h:56
+#: MyWizard_symbols.h:57
 msgid "Authorization credentials are always encrypted while establishing a connection. For increased security, you can enable the following option."
 msgstr "Zugangsdaten werden stets verschlüsselt übertragen. Für erhöhte Sicherheit können Sie die folgende Option aktivieren."
 
-#: MyWizard_symbols.h:57
+#: MyWizard_symbols.h:58
 #: SessionProperties_symbols.h:62
 msgid "Enable SSL encryption of all traffic"
 msgstr "Aktiviere SSL Verschlüsselung der Verbindung"
 
-#: MyWizard_symbols.h:58
+#: MyWizard_symbols.h:59
 msgid "Create shortcut on desktop"
 msgstr "Erstelle Verknüpfung auf dem Schreibtisch"
 
-#: MyWizard_symbols.h:59
+#: MyWizard_symbols.h:60
 msgid "Show the Advanced Configuration dialog"
 msgstr "Erweiterte Einstellungen anzeigen"
 
@@ -986,7 +992,7 @@ msgstr "Kommando"
 
 #: ProxyPropertyDialog_symbols.h:31
 msgid "?"
-msgstr ""
+msgstr "?"
 
 #: QuitDialog_symbols.h:22
 msgid "&Quit"
@@ -1384,10 +1390,6 @@ msgstr "Schlüssel..."
 #: SessionProperties_symbols.h:30
 msgid "Desktop"
 msgstr "Arbeitsfläche"
-
-#: SessionProperties_symbols.h:39
-msgid "XDM"
-msgstr "XDM"
 
 #: SessionProperties_symbols.h:47
 msgid "Display and Keyboard"
@@ -2258,6 +2260,9 @@ msgstr "Konnte Sitzungs-Konfiguration nicht speichern."
 #: watchUsbIpApp.cpp:506
 msgid "Could not export USB device"
 msgstr "Konnte USB-Gerät nicht exportieren"
+
+#~ msgid "XDM"
+#~ msgstr "XDM"
 
 #~ msgid "XDM Session Settings"
 #~ msgstr "XDM Sitzungs-Einstellungen"
