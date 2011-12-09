@@ -240,7 +240,7 @@ void KeyDialog::OnSAVEClick( wxCommandEvent& event )
 {
     TransferDataFromWindow();
     CheckChanged();
-    event.Skip();
+    EndModal(wxID_OK);
 }
 
 
