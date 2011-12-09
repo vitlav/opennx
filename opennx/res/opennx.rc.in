@@ -31,7 +31,7 @@ BEGIN
             VALUE "FileDescription", "opennx\0"
             VALUE "FileVersion", @RC_VERSION_STR@
             VALUE "InternalName", "opennx\0"
-            VALUE "LegalCopyright", "Copyright © 2009 InnoviData GmbH\0"
+            VALUE "LegalCopyright", "Copyright © 2011 InnoviData GmbH\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "opennx.exe\0"
             VALUE "PrivateBuild", "\0"

@@ -42,6 +42,8 @@ class PulseAudio {
         bool ActivateEsound(int port);
 
     private:
+        bool AutoSpawn();
+
         pawrapper *pa;
         MyDynamicLibrary *dll;
         bool m_bPulseAvailable;

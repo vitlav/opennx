@@ -2195,19 +2195,23 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
             dlg.SetStatusText(_("Preparing multimedia service ..."));
             PulseAudio pa;
             if (pa.IsAvailable()) {
+                ::wxLogInfo(wxT("using existing pulseaudio"));
                 m_lEsdPort = wxConfigBase::Get()->Read(wxT("State/nxesdPort"), -1);
                 if (m_lEsdPort < 0)
                     m_lEsdPort = getFirstFreePort(6000);
                 if (0 < m_lEsdPort) {
+                    ::wxLogInfo(wxT("Activating ESD Module in pulseaudio on port %ld"), m_lEsdPort);
                     if (pa.ActivateEsound(m_lEsdPort)) {
-                        ::wxLogInfo(wxT("using existing pulseaudio"));
                         m_bEsdRunning = true;
                         wxConfigBase::Get()->Write(wxT("State/nxesdPort"), m_lEsdPort);
                         wxConfigBase::Get()->Write(wxT("State/nxesdPID"), -1);
+                    } else {
+                        ::wxLogWarning(_("Could not start multimedia support"));
                     }
                 } else
                     ::wxLogWarning(_("Could not assign a free port for multimedia support"));
             }
+#ifndef __WXMSW__
             if (!m_bEsdRunning) {
                 // Fallback: original old nxesd
                 long esdpid = wxConfigBase::Get()->Read(wxT("State/nxesdPID"), -1);
@@ -2252,6 +2256,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
                         ::wxLogWarning(_("Could not assign a free port for multimedia support"));
                 }
             }
+#endif
             dlg.SetStatusText(wxString::Format(_("Connecting to %s ..."),
                         m_pCfg->sGetServerHost().c_str()));
         }

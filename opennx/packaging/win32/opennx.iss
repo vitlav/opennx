@@ -107,23 +107,38 @@ Root: HKCU; Subkey: "Software\Classes\OpenNX.session\DefaultIcon"; ValueType: no
 Root: HKCU; Subkey: "Software\Classes\OpenNX.session\shell\open\command"; ValueType: none; Flags: deletekey deletevalue
 
 [Run]
-; Allow nxssh, nxesd and Xming in Windows firewall 
+; Allow nxssh, nxesd, pulseaudio, Xming and NXWin in Windows firewall
+#if FileExists("setupdir\bin\nxssh.exe")
 Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bin\nxssh.exe"" ""OpenNX nxssh"" ENABLE"; StatusMsg: {cm:fwadd}; Flags: runhidden skipifdoesntexist
+#endif
+#if FileExists("setupdir\bin\nxesd.exe")
 Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bin\nxesd.exe"" ""OpenNX nxesd"" ENABLE"; StatusMsg: {cm:fwadd}; Flags: runhidden skipifdoesntexist
+#endif
+#if FileExists("setupdir\bin\pulseaudio.exe")
 Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bin\pulseaudio.exe"" ""OpenNX pulseaudio"" ENABLE"; StatusMsg: {cm:fwadd}; Flags: runhidden skipifdoesntexist
-#if BUILDXMING == "yes"
+#endif
+#if FileExists("setupdir\bin\Xming.exe")
 Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bin\Xming.exe"" ""OpenNX Xming"" ENABLE"; StatusMsg: {cm:fwadd}; Flags: runhidden skipifdoesntexist
-#else
-Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bin\NXWin.exe"" ""OpenNX Xming"" ENABLE"; StatusMsg: {cm:fwadd}; Flags: runhidden skipifdoesntexist
+#endif
+#if FileExists("setupdir\bin\NXWin.exe")
+Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bin\NXWin.exe"" ""OpenNX NXWin"" ENABLE"; StatusMsg: {cm:fwadd}; Flags: runhidden skipifdoesntexist
 #endif
 
 [UninstallRun]
 ; Remove firewall exceptions
+#if FileExists("setupdir\bin\nxssh.exe")
 Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\nxssh.exe"" ALL"; Flags: runhidden skipifdoesntexist; RunOnceId: fwdelnxssh
+#endif
+#if FileExists("setupdir\bin\nxesd.exe")
 Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\nxesd.exe"" ALL"; Flags: runhidden skipifdoesntexist; RunOnceId: fwdelnxesd
-#if BUILDXMING == "yes"
+#endif
+#if FileExists("setupdir\bin\pulseaudio.exe")
+Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\pulseaudio.exe"" ALL"; Flags: runhidden skipifdoesntexist; RunOnceId: fwdelnxesd
+#endif
+#if FileExists("setupdir\bin\Xming.exe")
 Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\Xming.exe"" ALL"; Flags: runhidden skipifdoesntexist; RunOnceId: fwdelxming
-#else
+#endif
+#if FileExists("setupdir\bin\NXWin.exe")
 Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\NXWin.exe"" ALL"; Flags: runhidden skipifdoesntexist; RunOnceId: fwdelnxwin
 #endif
 

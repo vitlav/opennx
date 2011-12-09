@@ -37,6 +37,9 @@ case $build_os in
 esac
 
 PLATFORM_SUBDIRS=
+PLATFORM_INCLUDES=
+PLATFORM_DEPENDENCIES=
+PULSEHEADERS=
 case $target_os in
     darwin*)
         am_dependency_tracking=no
@@ -48,9 +51,14 @@ case $target_os in
         ;;
     mingw*)
         PLATFORM_SUBDIRS=packaging/win32
+        PLATFORM_INCLUDES="-Ipackaging/win32/pulse/dist/include"
+        PULSEHEADERS=pulseheaders
         ;;
 esac
 AC_SUBST(PLATFORM_SUBDIRS)
+AC_SUBST(PLATFORM_INCLUDES)
+AC_SUBST(PLATFORM_DEPENDENCIES)
+AC_SUBST(PULSEHEADERS)
 
 # Checks for programs.
 AC_PROG_CXX([$preferred_cxx])
@@ -381,10 +389,10 @@ CYGBINS=
 BUILDXMING=yes
 AC_ARG_WITH([orignx],
             AS_HELP_STRING([--with-orignx],
-                           [Put original nxssh, nxesd and nxauth into installer (mingw32 build only)]),
+                           [Put original nxssh and nxauth into installer (mingw32 build only)]),
             [test "${withval}" = "yes" && NXBUILD=cygnx])
 AC_SUBST(NXBUILD)
-[test "$NXBUILD" = "cygnx" && CYGBINS="nxssh nxesd nxauth"]
+[test "$NXBUILD" = "cygnx" && CYGBINS="nxssh nxauth"]
 
 AC_ARG_WITH([nxwin],
             AS_HELP_STRING([--with-nxwin],

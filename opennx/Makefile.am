@@ -63,9 +63,10 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 pconnect_SOURCES = pconnect.c
 pconnect_LDADD = $(WS2LIB) $(RESLIB)
 
-pulsetest_SOURCES = pulseTest.cpp PulseAudio.cpp MyDynlib.cpp mylog.cpp
+pulsetest_SOURCES = pulseTest.cpp PulseAudio.cpp MyDynlib.cpp mylog.cpp osdep.c
 pulsetest_LDADD = $(WX_LIBS)
-pulsetest_CPPFLAGS = $(WX_CPPFLAGS) -DAPP_PULSETEST
+pulsetest_CPPFLAGS = $(WX_CPPFLAGS) $(PLATFORM_INCLUDES) -DAPP_PULSETEST
+pulsetest_DEPENDENCIES = $(OPENNX_RES) $(PLATFORM_DEPENDENCIES)
 pulsetest_CXXFLAGS = $(WX_CXXFLAGS)
 pulsetest_CFLAGS = $(WX_CFLAGS)
 
@@ -125,8 +126,8 @@ EXTRA_watchreader_SOURCES = watchreader.rc
 
 opennx_LDADD = $(OPENNX_RES) $(WX_LIBS) $(X_LIBS) $(X_PRE_LIBS) \
 	$(X_EXTRA_LIBS) $(APP_LDADD) $(LIBCURL)
-opennx_DEPENDENCIES = $(OPENNX_RES)
-opennx_CPPFLAGS = $(WX_CPPFLAGS) $(X_CFLAGS) -DAPP_OPENNX
+opennx_DEPENDENCIES = $(OPENNX_RES) $(PLATFORM_DEPENDENCIES)
+opennx_CPPFLAGS = $(WX_CPPFLAGS) $(PLATFORM_INCLUDES) $(X_CFLAGS) -DAPP_OPENNX
 opennx_CXXFLAGS = $(WX_CXXFLAGS)
 opennx_CFLAGS = $(WX_CFLAGS)
 
@@ -203,6 +204,8 @@ opennxApp.cpp: memres.h
 tracelogApp.cpp: memres.h
 
 watchUsbIpApp.cpp: memres.h
+
+PulseAudio.cpp: $(PULSEHEADERS)
 
 SUFFIXES = .rc
 
@@ -315,6 +318,11 @@ unknown:
 	@exit 1
 
 dist-platform: $(PLATFORMDIST)
+
+pulseheaders: packaging/win32/pulse/dist/include//pulse/pulseaudio.h
+
+packaging/win32/pulse/dist/include//pulse/pulseaudio.h:
+	$(MAKE) -C packaging/win32/pulse tmpinstall
 
 EXTRA_DIST = conf/mkinstalldirs  conf/mkinstalldirs  conf/mkinstalldirs  conf/mkinstalldirs  conf/mkinstalldirs  conf/mkinstalldirs conf/config.rpath conf/authors.xml \
 	INSTALL INSTALL.generic COPYING share etc/60-opennx.rules \

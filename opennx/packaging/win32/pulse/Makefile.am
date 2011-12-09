@@ -7,7 +7,7 @@ JSONC_VERSION		  = 0.9
 SPEEX                 = speex
 SPEEX_VERSION         = 1.2rc1
 PULSEAUDIO            = pulseaudio
-PULSEAUDIO_VERSION    = 1.0-fe-20110622
+PULSEAUDIO_VERSION    = 1.0-fe-20111209
 
 TMPDIST = $(abs_builddir)/dist
 
@@ -24,7 +24,7 @@ CLEANFILES = -r $(TMPDIST) pkg-config \
 	$(SPEEX) $(SPEEX)-$(SPEEX_VERSION) $(SPEEX)-build-$(PULSE_BTYPE) \
 	$(SPEEX)-srcdir $(SPEEX)-checkarchive \
 	$(PULSEAUDIO) $(PULSEAUDIO)-$(PULSEAUDIO_VERSION) $(PULSEAUDIO)-build-$(PULSE_BTYPE) \
-	$(PULSEAUDIO)-srcdir $(PULSEAUDIO)-checkarchive
+	$(PULSEAUDIO)-srcdir $(PULSEAUDIO)-checkarchive .tmpinstall
 
 MAINTAINERCLEANFILES = Makefile.in \
 	$(LIBSNDFILE)-$(LIBSNDFILE_VERSION).tar.gz $(LIBSAMPLERATE)-$(LIBSAMPLERATE_VERSION).tar.gz \
@@ -93,9 +93,15 @@ tmpinstall:
 		echo "case \$$* in *--exists*) exit 1 ;; *) exit 0 ;; esac" >> pkg-config; \
 		chmod a+x pkg-config || true
 	$(MAKE) subtarget=$(PULSEAUDIO) subvar=$(PULSEAUDIO) subsrc=$(PULSEAUDIO)-$(PULSEAUDIO_VERSION) build-$(PULSE_BTYPE)
+
+.tmpinstall:
+	$(MAKE) tmpinstall
+	touch $@
+
+tmpdist: .tmpinstall
 	rm -rf $(TMPDIST)/share  $(TMPDIST)/libexec $(TMPDIST)/include $(TMPDIST)/lib/pkgconfig
 	-mv $(TMPDIST)/lib/pulse-1.0/bin/*.dll $(TMPDIST)/bin
-	rm -rf  $(TMPDIST)/lib/pulse-1.0/bin  $(TMPDIST)/bin/esdcompat
+	rm -rf $(TMPDIST)/lib/pulse-1.0/bin $(TMPDIST)/lib/pulse-1.0/lib/cmake $(TMPDIST)/bin/esdcompat
 	find $(TMPDIST) -name "*.la" -o -name "*.a"|xargs rm -f
 	rm -f $(TMPDIST)/bin/*-sndfile-*.exe $(TMPDIST)/bin/speex*.exe
 	cp -av cfg/* $(TMPDIST)/etc/pulse/
