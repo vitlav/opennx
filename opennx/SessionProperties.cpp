@@ -195,6 +195,10 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
 
     EVT_CHECKBOX( XRCID("ID_CHECKBOX_NODEFERRED"), SessionProperties::OnCheckboxNodeferredClick )
 
+#if defined(__WXMSW__)
+    EVT_COMBOBOX( XRCID("ID_COMBOBOX_CLIPFILTER"), SessionProperties::OnComboboxClipfilterSelected )
+#endif
+
     EVT_COMBOBOX( XRCID("ID_COMBOBOX_CACHEMEM"), SessionProperties::OnComboboxCachememSelected )
 
     EVT_COMBOBOX( XRCID("ID_COMBOBOX_CACHEDISK"), SessionProperties::OnComboboxCachediskSelected )
@@ -367,6 +371,7 @@ SessionProperties::CheckChanged()
         m_pCfg->bSetGrabKeyboard(m_bGrabKeyboard);
         m_pCfg->bSetDisableDirectDraw(m_bDisableDirectDraw);
         m_pCfg->bSetDisableDeferredUpdates(m_bDisableDeferredUpdates);
+        m_pCfg->iSetClipFilter(m_iClipFilter);
 
         // variables on 'Services' tab
         m_pCfg->bSetEnableSmbSharing(m_bEnableSmbSharing);
@@ -423,6 +428,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_iSmbPort = 445;
     m_bLowercaseLogin = false;
     m_bSavedLowercaseLogin = false;
+    m_iClipFilter = 2;
     m_pNoteBook = NULL;
     m_pCtrlHostname = NULL;
     m_pCtrlPort = NULL;
@@ -503,6 +509,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
         m_sProxyPass = m_pCfg->sGetProxyPass();
         m_bProxyPassRemember = m_pCfg->bGetProxyPassRemember();
         m_sProxyCommand = m_pCfg->sGetProxyCommand();
+        m_iClipFilter = m_pCfg->iGetClipFilter();
 
         // variables on 'Services' tab
         m_bEnableSmbSharing = m_pCfg->bGetEnableSmbSharing();
@@ -1045,6 +1052,10 @@ void SessionProperties::CreateControls()
 #endif
     if (FindWindow(XRCID("ID_CHECKBOX_NODEFERRED")))
         FindWindow(XRCID("ID_CHECKBOX_NODEFERRED"))->SetValidator( wxGenericValidator(& m_bDisableDeferredUpdates) );
+#if defined(__WXMSW__)
+    if (FindWindow(XRCID("ID_COMBOBOX_CLIPFILTER")))
+        FindWindow(XRCID("ID_COMBOBOX_CLIPFILTER"))->SetValidator( wxGenericValidator(& m_iClipFilter) );
+#endif
     if (FindWindow(XRCID("ID_COMBOBOX_CACHEMEM")))
         FindWindow(XRCID("ID_COMBOBOX_CACHEMEM"))->SetValidator( wxGenericValidator(& m_iCacheMem) );
     if (FindWindow(XRCID("ID_COMBOBOX_CACHEDISK")))
@@ -2335,4 +2346,17 @@ void SessionProperties::OnCheckboxLowercaseLoginClick( wxCommandEvent& event )
     wxUnusedVar(event);
     CheckChanged();
 }
+
+#if defined(__WXMSW__)
+
+/*!
+ * wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_CLIPFILTER
+ */
+
+void SessionProperties::OnComboboxClipfilterSelected( wxCommandEvent& event )
+{
+    wxUnusedVar(event);
+    CheckChanged();
+}
+#endif
 

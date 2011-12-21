@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opennx 0.16\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2011-12-09 21:37+0100\n"
+"POT-Creation-Date: 2011-12-15 13:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: AboutDialog.cpp:113 SessionProperties.cpp:1101
+#: AboutDialog.cpp:113 SessionProperties.cpp:1112
 msgid "Version"
 msgstr ""
 
@@ -27,7 +27,7 @@ msgstr ""
 
 #: AboutDialog_symbols.h:23 ProxyPasswordDialog_symbols.h:25
 #: ProxyPropertyDialog_symbols.h:32 RdpImageSettingsDialog_symbols.h:35
-#: RdpPropertyDialog_symbols.h:35 SessionProperties_symbols.h:108
+#: RdpPropertyDialog_symbols.h:35 SessionProperties_symbols.h:112
 #: ShareProperties_symbols.h:51 UnixImageSettingsDialog_symbols.h:34
 #: UsbFilterDetailsDialog_symbols.h:35 VncImageSettingsDialog_symbols.h:27
 #: VncPropertyDialog_symbols.h:31 X11PropertyDialog_symbols.h:32
@@ -47,7 +47,7 @@ msgstr ""
 #: KeyDialog_symbols.h:26 LoginDialog_symbols.h:30 PanicDialog_symbols.h:23
 #: ProxyPasswordDialog_symbols.h:26 ProxyPropertyDialog_symbols.h:33
 #: RdpImageSettingsDialog_symbols.h:36 RdpPropertyDialog_symbols.h:36
-#: ResumeDialog_symbols.h:29 SessionProperties_symbols.h:109
+#: ResumeDialog_symbols.h:29 SessionProperties_symbols.h:113
 #: ShareProperties_symbols.h:52 UnixImageSettingsDialog_symbols.h:35
 #: UsbFilterDetailsDialog_symbols.h:36 VncImageSettingsDialog_symbols.h:28
 #: VncPropertyDialog_symbols.h:32 X11PropertyDialog_symbols.h:33
@@ -551,72 +551,72 @@ msgstr ""
 msgid "Could not create X11 authentication cookie"
 msgstr ""
 
-#: MySession.cpp:1524
+#: MySession.cpp:1535
 msgid "No X server found."
 msgstr ""
 
-#: MySession.cpp:1532
+#: MySession.cpp:1543
 #, c-format
 msgid "Could not execute %s: %s\n"
 msgstr ""
 
-#: MySession.cpp:1622
+#: MySession.cpp:1633
 #, c-format
 msgid ""
 "Could not create session directory\n"
 "%s\n"
 msgstr ""
 
-#: MySession.cpp:1652
+#: MySession.cpp:1663
 #, c-format
 msgid ""
 "Could not write session options\n"
 "%s\n"
 msgstr ""
 
-#: MySession.cpp:1742 MySession.cpp:1756
+#: MySession.cpp:1753 MySession.cpp:1767
 msgid "Could not assign a free port for CUPS printing"
 msgstr ""
 
-#: MySession.cpp:2090
+#: MySession.cpp:2101
 #, c-format
 msgid "Could not write %s"
 msgstr ""
 
-#: MySession.cpp:2175
+#: MySession.cpp:2186
 msgid "Could not start local X server"
 msgstr ""
 
-#: MySession.cpp:2191 MySession.cpp:2260 MySession.cpp:2274
+#: MySession.cpp:2207 MySession.cpp:2276 MySession.cpp:2290
 #, c-format
 msgid "Connecting to %s ..."
 msgstr ""
 
-#: MySession.cpp:2195
+#: MySession.cpp:2211
 msgid "Preparing multimedia service ..."
 msgstr ""
 
-#: MySession.cpp:2209 MySession.cpp:2254
+#: MySession.cpp:2225 MySession.cpp:2270
 msgid "Could not start multimedia support"
 msgstr ""
 
-#: MySession.cpp:2212 MySession.cpp:2256
+#: MySession.cpp:2228 MySession.cpp:2272
 msgid "Could not assign a free port for multimedia support"
 msgstr ""
 
-#: MySession.cpp:2271
+#: MySession.cpp:2287
 msgid "Preparing CUPS service ..."
 msgstr ""
 
-#: MySession.cpp:2273
+#: MySession.cpp:2289
 msgid "Could not start CUPS printing"
 msgstr ""
 
-#: MySession.cpp:2325
+#: MySession.cpp:2341
 msgid "Called command was: "
 msgstr ""
 
-#: MySession.cpp:2326
+#: MySession.cpp:2342
 msgid "Could not start nxssh."
 msgstr ""
 
@@ -629,19 +629,19 @@ msgstr ""
 msgid "New Session %d"
 msgstr ""
 
-#: MyWizard.cpp:687 SessionProperties.cpp:838
+#: MyWizard.cpp:687 SessionProperties.cpp:845
 msgid "RDP"
 msgstr ""
 
-#: MyWizard.cpp:705 SessionProperties.cpp:864
+#: MyWizard.cpp:705 SessionProperties.cpp:871
 msgid "RFB"
 msgstr ""
 
-#: MyWizard.cpp:723 SessionProperties.cpp:891
+#: MyWizard.cpp:723 SessionProperties.cpp:898
 msgid "Any"
 msgstr ""
 
-#: MyWizard.cpp:730 SessionProperties.cpp:898
+#: MyWizard.cpp:730 SessionProperties.cpp:905
 msgid "As on server"
 msgstr ""
 
@@ -815,16 +815,16 @@ msgstr ""
 msgid "Show the Advanced Configuration dialog"
 msgstr ""
 
-#: MyXmlConfig.cpp:588
+#: MyXmlConfig.cpp:590
 msgid "Could not find application window"
 msgstr ""
 
-#: MyXmlConfig.cpp:1229
+#: MyXmlConfig.cpp:1232
 #, c-format
 msgid "Error %d while fetching session configuration"
 msgstr ""
 
-#: MyXmlConfig.cpp:1234
+#: MyXmlConfig.cpp:1237
 #, c-format
 msgid ""
 "Error while fetching session configuration:\n"
@@ -920,7 +920,7 @@ msgstr ""
 msgid "Use plain X bitmaps"
 msgstr ""
 
-#: RdpImageSettingsDialog_symbols.h:33 SessionProperties_symbols.h:68
+#: RdpImageSettingsDialog_symbols.h:33 SessionProperties_symbols.h:72
 msgid "Cache"
 msgstr ""
 
@@ -973,7 +973,7 @@ msgstr ""
 msgid "Run application"
 msgstr ""
 
-#: ResumeDialog.cpp:160 SessionProperties.cpp:676
+#: ResumeDialog.cpp:160 SessionProperties.cpp:683
 msgid "Name"
 msgstr ""
 
@@ -1128,106 +1128,106 @@ msgstr ""
 msgid "New NX session"
 msgstr ""
 
-#: SessionProperties.cpp:577 SessionProperties_symbols.h:91
+#: SessionProperties.cpp:584 SessionProperties_symbols.h:95
 msgid "USB"
 msgstr ""
 
-#: SessionProperties.cpp:614 ShareProperties_symbols.h:24
+#: SessionProperties.cpp:621 ShareProperties_symbols.h:24
 msgid "Share"
 msgstr ""
 
-#: SessionProperties.cpp:615 ShareProperties_symbols.h:50
+#: SessionProperties.cpp:622 ShareProperties_symbols.h:50
 msgid "Mount on"
 msgstr ""
 
-#: SessionProperties.cpp:616
+#: SessionProperties.cpp:623
 msgid "Comment"
 msgstr ""
 
-#: SessionProperties.cpp:628 SessionProperties.cpp:1396
+#: SessionProperties.cpp:635 SessionProperties.cpp:1407
 msgid "Currently not available"
 msgstr ""
 
-#: SessionProperties.cpp:673
+#: SessionProperties.cpp:680
 msgid "VendorID"
 msgstr ""
 
-#: SessionProperties.cpp:674
+#: SessionProperties.cpp:681
 msgid "ProductID"
 msgstr ""
 
-#: SessionProperties.cpp:675
+#: SessionProperties.cpp:682
 msgid "Class"
 msgstr ""
 
-#: SessionProperties.cpp:677
+#: SessionProperties.cpp:684
 msgid "Serial"
 msgstr ""
 
-#: SessionProperties.cpp:1199
+#: SessionProperties.cpp:1210
 msgid "Error while reading keyboard table"
 msgstr ""
 
-#: SessionProperties.cpp:1228
+#: SessionProperties.cpp:1239
 #, c-format
 msgid "Invalid line='%s'"
 msgstr ""
 
-#: SessionProperties.cpp:1229
+#: SessionProperties.cpp:1240
 #, c-format
 msgid "Invalid entry in %s"
 msgstr ""
 
-#: SessionProperties.cpp:1342
+#: SessionProperties.cpp:1353
 msgid "Do you really want to delete all cache directories?"
 msgstr ""
 
-#: SessionProperties.cpp:1343
+#: SessionProperties.cpp:1354
 msgid "Clean cache - OpenNX"
 msgstr ""
 
-#: SessionProperties.cpp:1369
+#: SessionProperties.cpp:1380
 msgid "No local samba server is running."
 msgstr ""
 
-#: SessionProperties.cpp:1425
+#: SessionProperties.cpp:1436
 msgid "No sharable resources found"
 msgstr ""
 
-#: SessionProperties.cpp:1502
+#: SessionProperties.cpp:1513
 msgid "Select User NX directory"
 msgstr ""
 
-#: SessionProperties.cpp:1518
+#: SessionProperties.cpp:1529
 msgid "Select System NX directory"
 msgstr ""
 
-#: SessionProperties.cpp:1535
+#: SessionProperties.cpp:1546
 #, c-format
 msgid "Really delete Session '%s' ?"
 msgstr ""
 
-#: SessionProperties.cpp:1536
+#: SessionProperties.cpp:1547
 msgid "Delete Session"
 msgstr ""
 
-#: SessionProperties.cpp:1808
+#: SessionProperties.cpp:1819
 msgid "No cups server available."
 msgstr ""
 
-#: SessionProperties.cpp:1823
+#: SessionProperties.cpp:1834
 msgid "Select System CUPS daemon"
 msgstr ""
 
-#: SessionProperties.cpp:1981 opennxApp.cpp:1271
+#: SessionProperties.cpp:1992 opennxApp.cpp:1271
 msgid "libusb is not available. No USB devices will be exported"
 msgstr ""
 
-#: SessionProperties.cpp:1986
+#: SessionProperties.cpp:1997
 msgid "No USB devices available."
 msgstr ""
 
-#: SessionProperties.cpp:2198
+#: SessionProperties.cpp:2209
 msgid "Select path of USBIPD socket"
 msgstr ""
 
@@ -1299,155 +1299,171 @@ msgstr ""
 msgid "Disable deferred screen updates"
 msgstr ""
 
+#: SessionProperties_symbols.h:68
+msgid "Clipboard filter"
+msgstr ""
+
 #: SessionProperties_symbols.h:69
-msgid "In memory"
+msgid "Use PRIMARY selection"
 msgstr ""
 
 #: SessionProperties_symbols.h:70
-msgid "0 Mb"
+msgid "Use CLIPBOARD selection"
 msgstr ""
 
 #: SessionProperties_symbols.h:71
-msgid "1 Mb"
-msgstr ""
-
-#: SessionProperties_symbols.h:72
-msgid "2 Mb"
+msgid "Use both"
 msgstr ""
 
 #: SessionProperties_symbols.h:73
-msgid "4 Mb"
+msgid "In memory"
 msgstr ""
 
 #: SessionProperties_symbols.h:74
-msgid "8 Mb"
+msgid "0 Mb"
 msgstr ""
 
 #: SessionProperties_symbols.h:75
-msgid "16 Mb"
+msgid "1 Mb"
 msgstr ""
 
 #: SessionProperties_symbols.h:76
-msgid "32 Mb"
+msgid "2 Mb"
 msgstr ""
 
 #: SessionProperties_symbols.h:77
-msgid "64 Mb"
+msgid "4 Mb"
 msgstr ""
 
 #: SessionProperties_symbols.h:78
-msgid "128 Mb"
+msgid "8 Mb"
 msgstr ""
 
 #: SessionProperties_symbols.h:79
-msgid "On disk"
+msgid "16 Mb"
 msgstr ""
 
 #: SessionProperties_symbols.h:80
-msgid "256 Mb"
+msgid "32 Mb"
 msgstr ""
 
 #: SessionProperties_symbols.h:81
-msgid "512 Mb"
+msgid "64 Mb"
 msgstr ""
 
 #: SessionProperties_symbols.h:82
-msgid "Clean all cache files"
+msgid "128 Mb"
 msgstr ""
 
 #: SessionProperties_symbols.h:83
-msgid "Services"
+msgid "On disk"
 msgstr ""
 
 #: SessionProperties_symbols.h:84
-msgid "Enable SMB sharing"
+msgid "256 Mb"
 msgstr ""
 
 #: SessionProperties_symbols.h:85
-msgid "Default port"
+msgid "512 Mb"
 msgstr ""
 
 #: SessionProperties_symbols.h:86
-msgid "Enable CUPS printing"
+msgid "Clean all cache files"
 msgstr ""
 
 #: SessionProperties_symbols.h:87
-msgid "Add"
+msgid "Services"
 msgstr ""
 
 #: SessionProperties_symbols.h:88
-msgid "Modify"
+msgid "Enable SMB sharing"
 msgstr ""
 
 #: SessionProperties_symbols.h:89
-msgid "Delete"
+msgid "Default port"
 msgstr ""
 
 #: SessionProperties_symbols.h:90
-msgid "Enable multimedia support"
+msgid "Enable CUPS printing"
+msgstr ""
+
+#: SessionProperties_symbols.h:91
+msgid "Add"
 msgstr ""
 
 #: SessionProperties_symbols.h:92
-msgid "Enable USB forwarding"
+msgid "Modify"
 msgstr ""
 
 #: SessionProperties_symbols.h:93
-msgid "Environment"
+msgid "Delete"
 msgstr ""
 
 #: SessionProperties_symbols.h:94
-msgid "User NX directory"
-msgstr ""
-
-#: SessionProperties_symbols.h:95
-msgid "..."
+msgid "Enable multimedia support"
 msgstr ""
 
 #: SessionProperties_symbols.h:96
-msgid "Remove old session files"
+msgid "Enable USB forwarding"
 msgstr ""
 
 #: SessionProperties_symbols.h:97
-msgid "System NX directory"
+msgid "Environment"
 msgstr ""
 
 #: SessionProperties_symbols.h:98
-msgid "System CUPS daemon"
+msgid "User NX directory"
 msgstr ""
 
 #: SessionProperties_symbols.h:99
-msgid "System USBIP daemon"
+msgid "..."
 msgstr ""
 
 #: SessionProperties_symbols.h:100
-msgid "Local command socket path"
+msgid "Remove old session files"
 msgstr ""
 
 #: SessionProperties_symbols.h:101
-msgid "Local port"
+msgid "System NX directory"
 msgstr ""
 
 #: SessionProperties_symbols.h:102
-msgid "Create a desktop icon for this session"
+msgid "System CUPS daemon"
 msgstr ""
 
 #: SessionProperties_symbols.h:103
-msgid "Reset hidden messages"
+msgid "System USBIP daemon"
 msgstr ""
 
 #: SessionProperties_symbols.h:104
-msgid "Always use lowercase login name"
+msgid "Local command socket path"
 msgstr ""
 
 #: SessionProperties_symbols.h:105
-msgid "About"
+msgid "Local port"
 msgstr ""
 
 #: SessionProperties_symbols.h:106
-msgid "&Delete"
+msgid "Create a desktop icon for this session"
 msgstr ""
 
 #: SessionProperties_symbols.h:107
+msgid "Reset hidden messages"
+msgstr ""
+
+#: SessionProperties_symbols.h:108
+msgid "Always use lowercase login name"
+msgstr ""
+
+#: SessionProperties_symbols.h:109
+msgid "About"
+msgstr ""
+
+#: SessionProperties_symbols.h:110
+msgid "&Delete"
+msgstr ""
+
+#: SessionProperties_symbols.h:111
 msgid "&Apply"
 msgstr ""
 

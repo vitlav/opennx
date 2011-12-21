@@ -213,6 +213,11 @@ public:
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_NODEFERRED
     void OnCheckboxNodeferredClick( wxCommandEvent& event );
 
+#if defined(__WXMSW__)
+    /// wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_CLIPFILTER
+    void OnComboboxClipfilterSelected( wxCommandEvent& event );
+
+#endif
     /// wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_CACHEMEM
     void OnComboboxCachememSelected( wxCommandEvent& event );
 
@@ -450,6 +455,7 @@ private:
     int m_iSmbPort;
     bool m_bLowercaseLogin;
     bool m_bSavedLowercaseLogin;
+    int m_iClipFilter;
 ////@end SessionProperties member variables
 
     bool readKbdLayouts();

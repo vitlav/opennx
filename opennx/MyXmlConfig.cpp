@@ -267,6 +267,7 @@ MyXmlConfig::init()
     m_bDisableDeferredUpdates = false;
     m_bGrabKeyboard = false;
 
+    m_iClipFilter = 2;
     m_iCupsPort = 631;
     m_iDisplayHeight = 480;
     m_iDisplayWidth = 640;
@@ -400,6 +401,7 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
     m_bDisableDeferredUpdates = other.m_bDisableDeferredUpdates;
     m_bGrabKeyboard = other.m_bGrabKeyboard;
 
+    m_iClipFilter = other.m_iClipFilter;
     m_iCupsPort = other.m_iCupsPort;
     m_iDisplayHeight = other.m_iDisplayHeight;
     m_iDisplayWidth = other.m_iDisplayWidth;
@@ -1067,6 +1069,7 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
     if (m_bDisableDeferredUpdates != other.m_bDisableDeferredUpdates) return false;
     if (m_bGrabKeyboard != other.m_bGrabKeyboard) return false;
 
+    if (m_iClipFilter != other.m_iClipFilter) return false;
     if (m_iCupsPort != other.m_iCupsPort) return false;
     if (m_iDisplayHeight != other.m_iDisplayHeight) return false;
     if (m_iDisplayWidth != other.m_iDisplayWidth) return false;
@@ -1363,6 +1366,21 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                                 m_bDisableDirectDraw);
                         m_bDisableDeferredUpdates = getBool(opt, wxT("Disable deferred updates"),
                                 m_bDisableDeferredUpdates);
+
+                        tmp = getString(opt, wxT("Clipboard filter"), wxEmptyString);
+                        if (!tmp.IsEmpty()) {
+                            ::myLogTrace(MYTRACETAG, wxT("read: Clipboard filter '%s'"), tmp.c_str());
+                            if (tmp.CmpNoCase(wxT("primary")) == 0) {
+                                m_iClipFilter = 0;
+                            }
+                            if (tmp.CmpNoCase(wxT("clipboard")) == 0) {
+                                m_iClipFilter = 1;
+                            }
+                            if (tmp.CmpNoCase(wxT("both")) == 0) {
+                                m_iClipFilter = 2;
+                            }
+                            ::myLogTrace(MYTRACETAG, wxT("read: m_iClipFilter=%d"), m_iClipFilter);
+                        }
                         m_bUseProxy = getBool(opt, wxT("Enable HTTP proxy"), m_bUseProxy);
                         m_bExternalProxy = getBool(opt, wxT("Enable external proxy"), m_bExternalProxy);
                         m_bEnableSSL = getBool(opt, wxT("Enable SSL encryption"), m_bEnableSSL);
@@ -2234,6 +2252,18 @@ MyXmlConfig::SaveToFile()
     bAddOption(g, wxT("Disable TCP no-delay"), m_bDisableTcpNoDelay);
     bAddOption(g, wxT("Disable ZLIB stream compression"), m_bDisableZlibCompression);
     bAddOption(g, wxT("Enable SSL encryption"), m_bEnableSSL);
+    switch (m_iClipFilter) {
+        case 0:
+            optval = wxT("primary");
+            break;
+        case 1:
+            optval = wxT("clipboard");
+            break;
+        default:
+            optval = wxT("both");
+            break;
+    }
+    sAddOption(g, wxT("Clipboard filter"), optval);
     bAddOption(g, wxT("Enable HTTP proxy"), m_bUseProxy);
     bAddOption(g, wxT("Enable external proxy"), m_bExternalProxy);
     bAddOption(g, wxT("Enable USBIP"), m_bEnableUSBIP);

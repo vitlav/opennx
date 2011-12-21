@@ -233,6 +233,7 @@ class MyXmlConfig
         MyXmlConfig::CacheDisk eGetCacheDisk() { return m_eCacheDisk; }
         MyXmlConfig::XdmMode eGetXdmMode() { return m_eXdmMode; }
 
+        int iGetClipFilter() { return m_iClipFilter; }
         int iGetCupsPort() { return m_iCupsPort; }
         int iGetDisplayHeight() { return m_iDisplayHeight; }
         int iGetDisplayWidth() { return m_iDisplayWidth; }
@@ -334,6 +335,7 @@ class MyXmlConfig
         void eSetSessionType(MyXmlConfig::SessionType e) { m_eSessionType = e; }
         void eSetXdmMode(MyXmlConfig::XdmMode e) { m_eXdmMode = e; }
 
+        void iSetClipFilter(int i) { m_iClipFilter = i; }
         void iSetCupsPort(int i) { m_iCupsPort = i; }
         void iSetDisplayHeight(int i) { m_iDisplayHeight = i; }
         void iSetDisplayWidth(int i) { m_iDisplayWidth = i; }
@@ -470,6 +472,7 @@ class MyXmlConfig
         int m_iXdmBroadcastPort;
         int m_iXdmListPort;
         int m_iXdmQueryPort;
+        int m_iClipFilter;
 
         wxString m_sCommandLine;
         wxString m_sCupsPath;

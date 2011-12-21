@@ -1505,7 +1505,18 @@ MySession::startXserver()
             wxWinCmd << wxT(" -logfile \"") << fn.GetFullPath() << wxT("\"");
             wxWinCmd << wxT(" -br");
             wxWinCmd << wxT(" -nowinkill");
-            wxWinCmd << wxT(" -clipboard");
+            wxWinCmd << wxT(" -clipboard ");
+            switch (m_pCfg->iGetClipFilter()) {
+                case 0:
+                    wxWinCmd << wxT("primary");
+                    break;
+                case 1:
+                    wxWinCmd << wxT("clipboard");
+                    break;
+                case 2:
+                    wxWinCmd << wxT("both");
+                    break;
+            }
             wxWinCmd << wxT(" -notrayicon");
             wxWinCmd << getXfontPath(m_eXarch);
             wxWinCmd << wxT(" -silent-dup-error");
@@ -2180,6 +2191,11 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
             // again, but this time in cygwin notation (for nxssh).
             ::wxSetEnv(wxT("XAUTHORITY"), getXauthPath(XARCH_CYGWIN));
             ::wxLogInfo(wxT("env: XAUTHORITY='%s'"), getXauthPath(XARCH_CYGWIN).c_str());
+            // Configure XMing's special clipboard filter
+            HWND clpWnd = FindWindow(NULL ,wxT("OpenNXWinClip"));
+            if (NULL != clpWnd) {
+                PostMessage(clpWnd, WM_USER + 1004, m_pCfg->iGetClipFilter() + 1, 0);
+            }
         }
 #endif
 
