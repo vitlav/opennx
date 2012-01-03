@@ -234,6 +234,21 @@ Please reconfigure wxWidgets using the option --enable-std_iostreams
 AC_LANG_POP
 CPPFLAGS="$save_CPPFLAGS"
 
+# Check, if wxRE_ADVANCED is available.
+save_CPPFLAGS="$CPPFLAGS"
+CPPFLAGS="$WX_CPPFLAGS $CPPFLAGS"
+AC_LANG_PUSH([C++])
+AC_MSG_CHECKING([for advanced wxRegEx])
+AC_COMPILE_IFELSE([[#include <wx/regex.h>
+wxRegEx re(wxT("\d+"), wxRE_ADVANCED);]],[AC_MSG_RESULT([ok])],[AC_MSG_ERROR([[
+Your wxWidgets does not provide the required advanced wxRegEx.
+Please reconfigure wxWidgets enabling the builtin regex feature .
+]])])
+AC_LANG_POP
+CPPFLAGS="$save_CPPFLAGS"
+
+
+
 APP_LDADD=
 OPENNX_RES=
 TRACELOG=
