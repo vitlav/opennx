@@ -122,11 +122,7 @@ SessionList::SessionList(wxString dir, wxEvtHandler* h)
     if (m_re->Compile(wxT("(([TF])-)?([SC])-(.*)-([[:digit:]]+)-([[:xdigit:]]{32})$"), wxRE_ADVANCED))
         m_reValid = true;
     if (m_reValid && (!m_dirName.IsEmpty())) {
-        Create(
-#ifdef __OPENBSD__
-                32768
-#endif
-              );
+        Create();
         m_thread->Run();
     }
 }
