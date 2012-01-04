@@ -501,7 +501,7 @@ bool PulseAudio::ActivateEsound(int port)
         return false;
 #ifdef WITH_PULSEAUDIO
     wxString ma;
-    unsigned int mi;
+    unsigned int mi = -1;
     if (pa->findmodule(wxT("module-esound-protocol-tcp"), ma, mi)) {
         ::myLogTrace(MYTRACETAG, wxT("found esdmod, idx=%u args='%s'"), mi, ma.c_str());
         long mport = 16001;

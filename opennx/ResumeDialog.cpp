@@ -276,6 +276,7 @@ void ResumeDialog::OnListctrlSessionsSelected( wxListEvent& event )
 
 void ResumeDialog::OnRefreshClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     m_eMode = Refresh;
     EndModal(wxID_OK);
 }

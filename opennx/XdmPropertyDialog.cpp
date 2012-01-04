@@ -110,6 +110,11 @@ void XdmPropertyDialog::SetConfig(MyXmlConfig *cfg)
 
 bool XdmPropertyDialog::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
+    wxUnusedVar(id);
+    wxUnusedVar(caption);
+    wxUnusedVar(pos);
+    wxUnusedVar(size);
+    wxUnusedVar(style);
     ////@begin XdmPropertyDialog creation
     SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);

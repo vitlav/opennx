@@ -238,6 +238,7 @@ void KeyDialog::OnDEFAULTClick( wxCommandEvent& event )
 
 void KeyDialog::OnSAVEClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     TransferDataFromWindow();
     CheckChanged();
     EndModal(wxID_OK);
