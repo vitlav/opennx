@@ -573,7 +573,7 @@ opennxApp::preInit()
         tmp = findExecutable(wxT("cupsd"));
         if (tmp.IsEmpty()) {
             const wxChar* candidates[] = {
-                wxT("/sbin/cupsd"), wxT("/usr/sbin/cupsd"), wxT("usr/local/sbin/cupsd"),
+                wxT("/sbin/cupsd"), wxT("/usr/sbin/cupsd"), wxT("/usr/local/sbin/cupsd"),
                 NULL
             };
             int i;
