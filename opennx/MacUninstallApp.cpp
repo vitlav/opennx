@@ -119,6 +119,7 @@ MacUninstallApp::MacUninstallApp()
     m_nodelete.insert(wxT("."));
     m_nodelete.insert(wxT("./Applications"));
     m_nodelete.insert(wxT("./Library"));
+    m_nodelete.insert(wxT("./usr/share/man/man1"));
 }
 
 void MacUninstallApp::OnInitCmdLine(wxCmdLineParser& parser)
