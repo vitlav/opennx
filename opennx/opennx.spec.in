@@ -109,6 +109,7 @@ BuildRequires: libpng-devel
 BuildRequires: libjpeg-devel
 BuildRequires: zlib-devel
 BuildRequires: openssl-devel
+BuildRequires: libcurl-devel
 
 %if %{is_suse}
 # Workaround for https://bugzilla.novell.com/show_bug.cgi?id=436992

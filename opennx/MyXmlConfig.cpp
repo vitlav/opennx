@@ -1211,6 +1211,7 @@ MyXmlConfig::LoadFromURL(const wxString &filename)
                 curl_easy_getinfo(c, CURLINFO_RESPONSE_CODE, &rcode);
             }
             if (200 == rcode) {
+                ::myLogTrace(MYTRACETAG, wxT("Fetching %s"), filename.c_str());
                 char * const data = new char[len];
                 mos.CopyTo(data, len);
                 wxMemoryInputStream mis(data, len);
