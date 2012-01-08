@@ -418,7 +418,11 @@ bool PulseAudio::AutoSpawn()
     // On windows, we do our own autospawn
     wxString pidfile = ::wxGetHomeDir() + wxFileName::GetPathSeparator()
         + wxT(".pulse")  + wxFileName::GetPathSeparator()
+#ifdef __WXWIN__
+        + ::wxGetHostName().Lower() + wxT("-runtime")
+#else
         + ::wxGetFullHostName().Lower() + wxT("-runtime")
+#endif
         + wxFileName::GetPathSeparator() + wxT("pid");
     do {
         ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: checking '%s'"), pidfile.c_str());

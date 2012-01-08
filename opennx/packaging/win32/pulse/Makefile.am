@@ -10,11 +10,12 @@ PULSEAUDIO            = pulseaudio
 PULSEAUDIO_VERSION    = 1.0-fe-20111209
 
 TMPDIST = $(abs_builddir)/dist
+TMPHDR = $(abs_builddir)/include
 
 EXTRA_DIST = urls.txt cfg patches $(LIBSNDFILE).md5sum $(SPEEX).md5sum $(JSONC).md5sum \
 	$(LIBSAMPLERATE).md5sum $(PULSEAUDIO).md5sum
 
-CLEANFILES = -r $(TMPDIST) pkg-config \
+CLEANFILES = -r $(TMPDIST) $(TMPHDR) pkg-config \
 	$(LIBSAMPLERATE) $(LIBSAMPLERATE)-$(LIBSAMPLERATE_VERSION) $(LIBSAMPLERATE)-build-$(PULSE_BTYPE) \
 	$(LIBSAMPLERATE)-srcdir $(LIBSAMPLERATE)-checkarchive \
 	$(LIBSNDFILE) $(LIBSNDFILE)-$(LIBSNDFILE_VERSION) $(LIBSNDFILE)-build-$(PULSE_BTYPE) \
@@ -62,7 +63,7 @@ ENV_pulseaudio = env LIBSNDFILE_CFLAGS="-I$(TMPDIST)/include" LIBSNDFILE_LIBS="-
 	LIBSAMPLERATE_CFLAGS="-I$(TMPDIST)/include" LIBSAMPLERATE_LIBS="-L$(TMPDIST)/lib -lsamplerate" \
 	LIBJSON_CFLAGS="-I$(TMPDIST)/include/json" LIBJSON_LIBS="-L$(TMPDIST)/lib -ljson" \
 	LIBSPEEX_CFLAGS="-I$(TMPDIST)/include" LIBSPEEX_LIBS="-L$(TMPDIST)/lib -lspeex -lspeexdsp" \
-	CPPFLAGS="-I$(TMPDIST)/include" PATH="$(abs_builddir):$(PATH)"
+	CPPFLAGS="-I$(TMPDIST)/include" PATH="$(abs_builddir):$(PATH)" LDFLAGS="$(LDFLAGS) -mwindows"
 
 # custom silent rules
 vcfg = $(vcfg_$(V))
@@ -93,6 +94,8 @@ tmpinstall:
 		echo "case \$$* in *--exists*) exit 1 ;; *) exit 0 ;; esac" >> pkg-config; \
 		chmod a+x pkg-config || true
 	$(MAKE) subtarget=$(PULSEAUDIO) subvar=$(PULSEAUDIO) subsrc=$(PULSEAUDIO)-$(PULSEAUDIO_VERSION) build-$(PULSE_BTYPE)
+	mkdir -p $(TMPHDR)
+	cp -a $(TMPDIST)/include/* $(TMPHDR)
 
 .tmpinstall:
 	$(MAKE) tmpinstall

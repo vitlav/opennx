@@ -39,7 +39,7 @@ esac
 PLATFORM_SUBDIRS=
 PLATFORM_INCLUDES=
 PLATFORM_DEPENDENCIES=
-PULSEHEADERS=
+PAHEADER=
 case $target_os in
     darwin*)
         am_dependency_tracking=no
@@ -49,18 +49,18 @@ case $target_os in
         fi
         PLATFORM_SUBDIRS=packaging/MacOSX
         PLATFORM_INCLUDES="-Ipackaging/MacOSX/pulse/include"
-        PULSEHEADERS=pulseheadersmac
+        PAHEADER=packaging/MacOSX/pulse/include/pulse/pulseaudio.h
         ;;
     mingw*)
         PLATFORM_SUBDIRS=packaging/win32
-        PLATFORM_INCLUDES="-Ipackaging/win32/pulse/dist/include"
-        PULSEHEADERS=pulseheaders
+        PLATFORM_INCLUDES="-Ipackaging/win32/pulse/include"
+        PAHEADER=packaging/win32/pulse/include/pulse/pulseaudio.h
         ;;
 esac
 AC_SUBST(PLATFORM_SUBDIRS)
 AC_SUBST(PLATFORM_INCLUDES)
 AC_SUBST(PLATFORM_DEPENDENCIES)
-AC_SUBST(PULSEHEADERS)
+AC_SUBST(PAHEADER)
 
 # Checks for programs.
 AC_PROG_CXX([$preferred_cxx])
@@ -334,13 +334,14 @@ AC_ARG_ENABLE([warn],
 		[Enable additional warnings (Default: NO)]),
 	[
 		AC_MSG_NOTICE([will enable additional warnings])
+        fe_CHECK_FLAG([C],[CFLAGS],[-Wimplicit])
+        CFLAGS="$CFLAGS $ac_checked_CFLAGS"
         fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wall])
         fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wextra])
         fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wchar-subscripts])
         fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wcomment])
         fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wformat])
         fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wformat-security])
-        fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wimplicit])
         fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wmissing-braces])
         fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wparentheses])
         fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wreturn-type])

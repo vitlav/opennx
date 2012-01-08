@@ -205,7 +205,7 @@ tracelogApp.cpp: memres.h
 
 watchUsbIpApp.cpp: memres.h
 
-PulseAudio.cpp: $(PULSEHEADERS)
+PulseAudio.cpp: $(PAHEADER)
 
 SUFFIXES = .rc
 
@@ -319,14 +319,10 @@ unknown:
 
 dist-platform: $(PLATFORMDIST)
 
-pulseheaders: packaging/win32/pulse/dist/include/pulse/pulseaudio.h
-
-pulseheadersmac: packaging/MacOSX/pulse/include/pulse/pulseaudio.h
-
 packaging/MacOSX/pulse/include/pulse/pulseaudio.h:
 	$(MAKE) -C packaging/MacOSX/pulse cachedinstall
 
-packaging/win32/pulse/dist/include//pulse/pulseaudio.h:
+packaging/win32/pulse/include/pulse/pulseaudio.h:
 	$(MAKE) -C packaging/win32/pulse tmpinstall
 
 EXTRA_DIST = conf/mkinstalldirs  conf/mkinstalldirs  conf/mkinstalldirs  conf/mkinstalldirs  conf/mkinstalldirs  conf/mkinstalldirs conf/config.rpath conf/authors.xml \
