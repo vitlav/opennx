@@ -12,7 +12,7 @@ fi
 if test -z "$PFX" ; then
     PFX=/Library/OpenNX
 fi
-ALLPKG="nxcomp nxproxy nxesd nxssh"
+ALLPKG="nxcomp nxproxy nxssh"
 CACHEDIR=$HOME/savebuild
 CACHEDBUILD=$CACHEDIR/nx-prebuild.tgz
 
@@ -80,15 +80,6 @@ if [ $NEEDREBUILD = yes ] ; then
         	--prefix=$PFX --enable-static --disable-shared --disable-dependency-tracking
 	make DESTDIR=$DEST install
 	cd ..
-	# Prerequisite: libaudiofile
-	test -f audiofile-0.2.6.tar.gz || fetch http://www.68k.org/~michael/audiofile/audiofile-0.2.6.tar.gz
-	tar xzf audiofile-0.2.6.tar.gz
-	cd audiofile-0.2.6
-	autoreconf -f -i
-	CFLAGS="-arch i386 -arch ppc" LDFLAGS="-arch i386 -arch ppc" ./configure \
-        --prefix=$PFX --disable-static --disable-dependency-tracking
-	make DESTDIR=$DEST install
-	cd ..
 
 	ncver=`ls nxcomp-*.tar.gz|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxcomp-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
 	for pkg in nxcomp nxproxy ; do
@@ -154,7 +145,6 @@ else
             -output $DEST$PFX/lib/private/libjpeg.62.dylib
     rm -rf $DEST$PFX/lib/private/ppc $DEST$PFX/lib/private/i386
 	make -C libpng-1.2.44 DESTDIR=$DEST install
-	make -C audiofile-0.2.6 DESTDIR=$DEST install
 	make -C nxcomp DESTDIR=$DEST install
 	make -C nxproxy DESTDIR=$DEST install
 	cp nxssh/nxssh $DEST$PFX/bin/nxssh
