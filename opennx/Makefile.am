@@ -319,7 +319,12 @@ unknown:
 
 dist-platform: $(PLATFORMDIST)
 
-pulseheaders: packaging/win32/pulse/dist/include//pulse/pulseaudio.h
+pulseheaders: packaging/win32/pulse/dist/include/pulse/pulseaudio.h
+
+pulseheadersmac: packaging/MacOSX/pulse/include/pulse/pulseaudio.h
+
+packaging/MacOSX/pulse/include/pulse/pulseaudio.h:
+	$(MAKE) -C packaging/MacOSX/pulse cachedinstall
 
 packaging/win32/pulse/dist/include//pulse/pulseaudio.h:
 	$(MAKE) -C packaging/win32/pulse tmpinstall

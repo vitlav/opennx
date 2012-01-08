@@ -249,7 +249,7 @@ opennxApp::LoadFileFromResource(const wxString &loc, bool bUseLocale /* = true *
     return ret;
 }
 
-#ifndef __WXMSW__
+#if (!(defined(__WXMSW__) || defined(__WXMAC__)))
 static const wxChar *desktopDirs[] = {
     wxT("Desktop"), wxT("KDesktop"), wxT(".gnome-desktop"), NULL
 };
@@ -1102,6 +1102,7 @@ bool opennxApp::realInit()
             }
         case MODE_CLIENT:
         case MODE_WIZARD:
+        case MODE_MAC_WAITOPEN:
             break;
         case MODE_DIALOG_YESNO:
             {
@@ -1197,15 +1198,31 @@ bool opennxApp::realInit()
             m_sSessionName = fn.GetFullPath();
     }
     if ((m_eMode == MODE_CLIENT) && m_sSessionName.IsEmpty()) {
-        if (!wxConfigBase::Get()->Read(wxT("Config/LastSession"), &m_sSessionName)) {
-            // Only run the wizard if there a no session config files.
-            wxString cfgdir;
-            wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &cfgdir);
-            cfgdir = cfgdir + wxFileName::GetPathSeparator() + wxT("config");
-            wxArrayString a;
-            wxDir::GetAllFiles(cfgdir, &a, wxT("*.nxs"), wxDIR_FILES);
-            if (0 == a.GetCount())
-                m_eMode = MODE_WIZARD;
+#ifdef __WXMAC__
+        // On OSX, opening of session files uses MacOpen().
+        // Therefore, we have to introduce a special mode
+        // where we wait up to 3 secs for an MacOpen event.
+        m_eMode = MODE_MAC_WAITOPEN;
+        time_t start = time(NULL) + 3;
+        while (MODE_MAC_WAITOPEN == m_eMode) {
+            ::wxYield();
+            if (time(NULL) > start)
+                break;
+        }
+        m_eMode = MODE_CLIENT;
+#endif
+        if (m_sSessionName.IsEmpty()) {
+            // Second check is necessary, because above wait mode.
+            if (!wxConfigBase::Get()->Read(wxT("Config/LastSession"), &m_sSessionName)) {
+                // Only run the wizard if there a no session config files.
+                wxString cfgdir;
+                wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &cfgdir);
+                cfgdir = cfgdir + wxFileName::GetPathSeparator() + wxT("config");
+                wxArrayString a;
+                wxDir::GetAllFiles(cfgdir, &a, wxT("*.nxs"), wxDIR_FILES);
+                if (0 == a.GetCount())
+                    m_eMode = MODE_WIZARD;
+            }
         }
     } else {
         if (!m_sSessionName.IsEmpty()) {
@@ -1388,12 +1405,16 @@ void opennxApp::SetSessionCfg(MyXmlConfig &cfg)
 /// Respond to Apple Event for opening a document
 void opennxApp::MacOpenFile(const wxString& filename)
 {
+    ::myLogTrace(MYTRACETAG, wxT("MacOpen '%s'"), filename.c_str());
+    m_sSessionName = filename;
+    if (MODE_MAC_WAITOPEN == m_eMode) {
+        ::myLogTrace(MYTRACETAG, wxT("MacOpen finishing wait"));
+        m_eMode = MODE_CLIENT;
+        return;
+    }
     if (NULL != m_pLoginDialog) {
-        m_sSessionName = filename;
-        MyXmlConfig cfg(m_sSessionName);
-        if (cfg.IsValid())
-            m_pLoginDialog->SelectSession(cfg.sGetName());
+        ::myLogTrace(MYTRACETAG, wxT("MacOpen modifying selection in LoginDialog"));
+        m_pLoginDialog->SelectSession(m_sSessionName);
     }
 }
 #endif
-

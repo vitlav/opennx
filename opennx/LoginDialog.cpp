@@ -217,9 +217,13 @@ void LoginDialog::ReadConfigDirectory()
 #ifdef __WXMAC__
 void LoginDialog::SelectSession(wxString name)
 {
-    m_pCtrlSessionName->SetStringSelection(name);
-    wxCommandEvent event;
-    OnComboboxSessionSelected(event);
+    MyXmlConfig cfg(name);
+    if (cfg.IsValid()) {
+        m_pCtrlSessionName->Append(cfg.sGetName(), (void *)name.c_str());
+        m_pCtrlSessionName->SetStringSelection(cfg.sGetName());
+        wxCommandEvent event;
+        OnComboboxSessionSelected(event);
+    }
 }
 #endif
 

@@ -48,6 +48,8 @@ case $target_os in
             prefix=/Library/OpenNX
         fi
         PLATFORM_SUBDIRS=packaging/MacOSX
+        PLATFORM_INCLUDES="-Ipackaging/MacOSX/pulse/include"
+        PULSEHEADERS=pulseheadersmac
         ;;
     mingw*)
         PLATFORM_SUBDIRS=packaging/win32
@@ -345,7 +347,14 @@ AC_ARG_ENABLE([warn],
         fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wswitch])
         fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wuninitialized])
         CPPFLAGS="$CPPFLAGS $ac_checked_CPPFLAGS"
-        fe_CHECK_FLAG([C++],[CXXFLAGS],[-Wctor-dtor-privacy])
+        # Apple's gcc complains too much about wxWidgets headers
+        case $target_os in
+            darwin*)
+                ;;
+            *)
+                fe_CHECK_FLAG([C++],[CXXFLAGS],[-Wctor-dtor-privacy])
+                ;;
+        esac
         fe_CHECK_FLAG([C++],[CXXFLAGS],[-Wnon-virtual-dtor])
         fe_CHECK_FLAG([C++],[CXXFLAGS],[-Woverloaded-virtual])
         CXXFLAGS="$CXXFLAGS $ac_checked_CXXFLAGS"

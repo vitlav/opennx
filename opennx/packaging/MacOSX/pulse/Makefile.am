@@ -13,6 +13,7 @@ PULSEAUDIO_VERSION    = 1.0-fe-20110622
 PULSEAUDIO_SVER       = 1.0
 
 TMPDIST = $(abs_builddir)/dist
+TMPHDR = $(abs_builddir)/include
 
 # For caching pre-built binaries on the build slave
 CACHE_FLAG = $(HOME)/.docache_pulse
@@ -22,7 +23,7 @@ CACHE_TGZ = $(CACHE_DIR)/pulse.tgz
 EXTRA_DIST = urls.txt cfg patches $(LIBSNDFILE).shasum $(SPEEX).shasum $(JSONC).shasum \
 	$(LIBSAMPLERATE).shasum $(PULSEAUDIO).shasum
 
-CLEANFILES = -r $(TMPDIST) pkg-config tmpinstall .*-build .*-srcdir .*-checkarchive .*-lipo \
+CLEANFILES = -r $(TMPDIST) $(TMPHDR) pkg-config tmpinstall .*-build .*-srcdir .*-checkarchive .*-lipo \
 	$(LIBSAMPLERATE) $(LIBSAMPLERATE)-$(LIBSAMPLERATE_VERSION) \
 	$(LIBSNDFILE) $(LIBSNDFILE)-$(LIBSNDFILE_VERSION) \
 	$(JSONC) $(JSONC)-$(JSONC_VERSION) \
@@ -98,10 +99,12 @@ ENV_pulseaudioBE = env $(MACENV_PPC) \
 	LIBSPEEX_CFLAGS="-I." LIBSPEEX_LIBS="-lspeex -lspeexdsp" \
 	PATH="$(abs_builddir):$(PATH)"
 
-upinstall:
+upinstall: cachedinstall
+	cp -av $(TMPDIST)/ $(PKGROOT)/
+
+cachedinstall:
 	test -f $(CACHE_TGZ) && tar xzf $(CACHE_TGZ) || true
 	test -f $(CACHE_TGZ) || $(MAKE) tmpinstall
-	cp -av $(TMPDIST)/ $(PKGROOT)/
 
 tmpinstall:
 	$(MAKE) ecfg= subtarget=$(PALIBTOOL) subvar=$(PALIBTOOL) subsrc=$(PALIBTOOL)-$(PALIBTOOL_VERSION) tbuild
@@ -131,6 +134,8 @@ tmpinstall:
 	$(MAKE) ecfg=BE subtarget=$(PULSEAUDIO) subvar=$(PULSEAUDIO) subsrc=$(PULSEAUDIO)-$(PULSEAUDIO_VERSION) tbuild
 	$(MAKE) ecfg=BE subtarget=$(PULSEAUDIO) subvar=$(PULSEAUDIO) subsrc=$(PULSEAUDIO)-$(PULSEAUDIO_VERSION) modsub=/pulse-$(PULSEAUDIO_SVER)/modules tlipo
 	rmdir $(TMPDIST)$(libdir)/ppc
+	mkdir -p $(TMPHDR)
+	cp -a $(TMPDIST)$(prefix)/include/* $(TMPHDR)
 	rm -rf $(TMPDIST)$(prefix)/{share,libexec,include} $(TMPDIST)${libdir}/pkgconfig
 	find $(TMPDIST) -name "*.la" -o -name "*.a"|xargs rm -f
 	rm -f $(TMPDIST)$(bindir)/sndfile-* $(TMPDIST)$(bindir)/libtool*

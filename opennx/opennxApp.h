@@ -81,6 +81,7 @@ class opennxApp : public wxApp
             MODE_EXPORTRES,
             MODE_ADMIN,
             MODE_WIZARD,
+            MODE_MAC_WAITOPEN,
             MODE_DIALOG_OK,
             MODE_DIALOG_YESNO,
             MODE_DIALOG_ERROR,
