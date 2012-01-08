@@ -47,16 +47,31 @@ if [ $NEEDREBUILD = yes ] ; then
     		tar xzf ${pkg}-*.tar.gz
 	done
 
-	# Prerequisite: libjpeg
+    # Prerequisite: libjpeg (for x86: libjpeg-turbo)
+    test -f libjpeg-turbo-1.1.90.tar.gz || fetch http://downloads.sourceforge.net/project/libjpeg-turbo/1.1.1/libjpeg-turbo-1.1.1.tar.gz
+    tar xzf libjpeg-turbo-1.1.1.tar.gz
+    cd libjpeg-turbo-1.1.1
+    CFLAGS="-O3 -m32" CXXFLAGS="-O3 -m32" LDFLAGS="-m32" ./configure \
+            --prefix=$PFX --libdir=$PFX/lib/private --disable-static --enable-shared
+	mkdir -p $DEST$PFX/include $DEST$PFX/lib/private/{ppc,i386}
+	make && make DESTDIR=$DEST install-libLTLIBRARIES
+    mv $DEST$PFX/lib/private/libjpeg.62.0.0.dylib $DEST$PFX/lib/private/i386/libjpeg.62.dylib
+    rm -f $DEST$PFX/lib/private/*.dylib $DEST$PFX/lib/private/libturbojpeg.la
+	cd ..
+    # Prerequisite: libjpeg (for PPC: the original)
 	test -f jpegsrc.v6b.tar.gz || fetch http://downloads.sourceforge.net/project/libjpeg/libjpeg/6b/jpegsrc.v6b.tar.gz
 	tar xzf jpegsrc.v6b.tar.gz
 	cd jpeg-6b
 	patch -p1 < $TOPSRC/patches/jpeg-autoconf.patch
-	CFLAGS="-arch ppc -arch i386" CXXFLAGS="-arch ppc -arch i386" LDFLAGS="-arch ppc -arch i386" ./configure \
+	./configure \
         	--prefix=$PFX --libdir=$PFX/lib/private --disable-static --enable-shared
-	mkdir -p $DEST$PFX/include $DEST$PFX/lib/private
-	make DESTDIR=$DEST install-lib
+	make CFLAGS="-arch ppc" CXXFLAGS="-arch ppc" LDFLAGS="-arch ppc" DESTDIR=$DEST install-lib
+    mv $DEST$PFX/lib/private/libjpeg.62.dylib $DEST$PFX/lib/private/ppc/
 	cd ..
+    # Create universal libjpeg
+    lipo -create -arch i386 $DEST$PFX/lib/private/i386/* -arch ppc $DEST$PFX/lib/private/ppc/* \
+            -output $DEST$PFX/lib/private/libjpeg.62.dylib
+    rm -rf $DEST$PFX/lib/private/ppc $DEST$PFX/lib/private/i386
 	# Prerequisite: libpng
 	test -f libpng-1.2.44.tar.gz || fetch 'http://prdownloads.sourceforge.net/libpng/libpng-1.2.44.tar.gz?download'
 	tar xzf libpng-1.2.44.tar.gz
@@ -76,20 +91,16 @@ if [ $NEEDREBUILD = yes ] ; then
 	cd ..
 
 	ncver=`ls nxcomp-*.tar.gz|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxcomp-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
-	for pkg in nxcomp nxproxy nxesd ; do
+	for pkg in nxcomp nxproxy ; do
     		cd $pkg
     		for p in $TOPSRC/patches/${pkg}-*.patch ; do
         		bn=`basename $p`
-			if [ $bn = nxesd-3.5-autotools.patch ] ; then
-            			echo === Skipping $bn in $pkg
-			else
 				if [ $bn = nxcomp-gcc44.patch -a $ncver -ge 03040006 ] ; then
-            				echo === Skipping $bn in $pkg
-        			else
-            				echo === Applying $bn in $pkg
-            				patch -p1 < $p
-        			fi
-			fi
+            			echo === Skipping $bn in $pkg
+        		else
+            			echo === Applying $bn in $pkg
+            			patch -p1 < $p
+        		fi
     		done
     		autoreconf -f -i
     		cargs=
@@ -99,10 +110,6 @@ if [ $NEEDREBUILD = yes ] ; then
         		nxcomp)
                         cenv="LDFLAGS=-L$DEST$PFX/lib/private"
             			cargs="--with-libjpeg=$DEST$PFX --with-libpng=$DEST$PFX"
-            			;;
-        		nxesd)
-            			cargs="--disable-audiofiletest --with-audiofile=yes"
-            			margs="AUDIOFILE_CFLAGS=\"-I$DEST$PFX/include\" LDFLAGS=\"-L$DEST$PFX/lib\" LIBS=-laudiofile"
             			;;
     		esac
     		eval $cenv ./configure --prefix=$PFX $cargs
@@ -138,13 +145,18 @@ if [ $NEEDREBUILD = yes ] ; then
     mkdir -p $CACHEDIR
 	tar czf $CACHEDBUILD .
 else
-	mkdir -p $DEST$PFX/include $DEST$PFX/lib/private
+	mkdir -p $DEST$PFX/include $DEST$PFX/lib/private/{ppc,i386}
+    make -C libjpeg-turbo-1.1.1 install-libLTLIBRARIES
+    mv $DEST$PFX/lib/private/libjpeg.62.0.0.dylib $DEST$PFX/lib/private/i386/libjpeg.62.dylib
+    rm -f $DEST$PFX/lib/private/*.dylib $DEST$PFX/lib/private/libturbojpeg.la
 	make -C jpeg-6b DESTDIR=$DEST install-lib
+    lipo -create -arch i386 $DEST$PFX/lib/private/i386/* -arch ppc $DEST$PFX/lib/private/ppc/* \
+            -output $DEST$PFX/lib/private/libjpeg.62.dylib
+    rm -rf $DEST$PFX/lib/private/ppc $DEST$PFX/lib/private/i386
 	make -C libpng-1.2.44 DESTDIR=$DEST install
 	make -C audiofile-0.2.6 DESTDIR=$DEST install
 	make -C nxcomp DESTDIR=$DEST install
 	make -C nxproxy DESTDIR=$DEST install
-	make -C nxesd DESTDIR=$DEST install
 	cp nxssh/nxssh $DEST$PFX/bin/nxssh
 fi
 
