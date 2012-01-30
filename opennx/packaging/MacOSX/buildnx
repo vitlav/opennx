@@ -65,7 +65,7 @@ if [ $NEEDREBUILD = yes ] ; then
 	patch -p1 < $TOPSRC/patches/jpeg-autoconf.patch
 	./configure \
         	--prefix=$PFX --libdir=$PFX/lib/private --disable-static --enable-shared
-	make CFLAGS="-arch ppc" CXXFLAGS="-arch ppc" LDFLAGS="-arch ppc" DESTDIR=$DEST install-lib
+	make CFLAGS="-arch ppc $OSX_SDKFLAGS" CXXFLAGS="-arch ppc $OSX_SDKFLAGS" LDFLAGS="-arch ppc" DESTDIR=$DEST install-lib
     mv $DEST$PFX/lib/private/libjpeg.62.dylib $DEST$PFX/lib/private/ppc/
 	cd ..
     # Create universal libjpeg
@@ -76,7 +76,7 @@ if [ $NEEDREBUILD = yes ] ; then
 	test -f libpng-1.2.44.tar.gz || fetch 'http://prdownloads.sourceforge.net/libpng/libpng-1.2.44.tar.gz?download'
 	tar xzf libpng-1.2.44.tar.gz
 	cd libpng-1.2.44
-	CFLAGS="-arch i386 -arch ppc" LDFLAGS="-arch i386 -arch ppc" ./configure \
+	CFLAGS="-arch i386 -arch ppc $OSX_SDKFLAGS" LDFLAGS="-arch i386 -arch ppc" ./configure \
         	--prefix=$PFX --enable-static --disable-shared --disable-dependency-tracking
 	make DESTDIR=$DEST install
 	cd ..
@@ -95,11 +95,11 @@ if [ $NEEDREBUILD = yes ] ; then
     		done
     		autoreconf -f -i
     		cargs=
-    		cenv=
+    		cenv="CFLAGS=\"$OSX_SDKFLAGS\" CXXFLAGS=\"$OSX_SDKFLAGS\""
     		margs=
     		case $pkg in
         		nxcomp)
-                        cenv="LDFLAGS=-L$DEST$PFX/lib/private"
+                        cenv="CFLAGS=\"$OSX_SDKFLAGS\" CXXFLAGS=\"$OSX_SDKFLAGS\" LDFLAGS=-L$DEST$PFX/lib/private"
             			cargs="--with-libjpeg=$DEST$PFX --with-libpng=$DEST$PFX"
             			;;
     		esac
@@ -128,8 +128,8 @@ if [ $NEEDREBUILD = yes ] ; then
 	./configure --prefix=$PFX \
   		--with-opensc=$BUILDDIR/../scbuild/dist$PFX \
   		--enable-opensc-dynamic \
-  		--with-cflags="-arch i386 -arch ppc" \
-  		--with-ldflags="-arch i386 -arch ppc"
+  		--with-cflags="-arch i386 -arch ppc $OSX_SDKFLAGS" \
+  		--with-ldflags="-arch i386 -arch ppc $OSX_SDKFLAGS"
 	make
 	cp nxssh $DEST$PFX/bin/nxssh
 	cd ..
@@ -137,10 +137,11 @@ if [ $NEEDREBUILD = yes ] ; then
 	tar czf $CACHEDBUILD .
 else
 	mkdir -p $DEST$PFX/include $DEST$PFX/lib/private/{ppc,i386}
-    make -C libjpeg-turbo-1.1.1 install-libLTLIBRARIES
+    make -C libjpeg-turbo-1.1.1 DESTDIR=$DEST install-libLTLIBRARIES
     mv $DEST$PFX/lib/private/libjpeg.62.0.0.dylib $DEST$PFX/lib/private/i386/libjpeg.62.dylib
     rm -f $DEST$PFX/lib/private/*.dylib $DEST$PFX/lib/private/libturbojpeg.la
 	make -C jpeg-6b DESTDIR=$DEST install-lib
+    mv $DEST$PFX/lib/private/libjpeg.62.dylib $DEST$PFX/lib/private/ppc/
     lipo -create -arch i386 $DEST$PFX/lib/private/i386/* -arch ppc $DEST$PFX/lib/private/ppc/* \
             -output $DEST$PFX/lib/private/libjpeg.62.dylib
     rm -rf $DEST$PFX/lib/private/ppc $DEST$PFX/lib/private/i386

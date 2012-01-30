@@ -63,7 +63,7 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 pconnect_SOURCES = pconnect.c
 pconnect_LDADD = $(WS2LIB) $(RESLIB)
 
-pulsetest_SOURCES = pulseTest.cpp PulseAudio.cpp MyDynlib.cpp mylog.cpp osdep.c
+pulsetest_SOURCES = pulseTest.cpp PulseAudio.cpp MyDynlib.cpp mylog.cpp osdep.c MacOSX.c
 pulsetest_LDADD = $(WX_LIBS) $(X_LIBS) $(X_PRE_LIBS) $(X_EXTRA_LIBS) $(APP_LDADD)
 pulsetest_CPPFLAGS = $(WX_CPPFLAGS) $(PLATFORM_INCLUDES) -DAPP_PULSETEST
 pulsetest_DEPENDENCIES = $(OPENNX_RES) $(PLATFORM_DEPENDENCIES)
@@ -103,7 +103,7 @@ tracelog_CXXFLAGS = $(WX_CXXFLAGS)
 tracelog_CFLAGS = $(WX_CFLAGS)
 
 macfindreader_SOURCES = macfindreader.c
-macfindreader_CFLAGS = $(UNIFLAGS)
+macfindreader_CFLAGS = $(UNIFLAGS) $(OSX_SDKFLAGS)
 macfindreader_LDADD = -ldl
 
 macuninstall_SOURCES = MacUninstallApp.cpp MacOSX.c
@@ -181,6 +181,7 @@ distclean-local:
 
 install-wxstdmo-local:
 	for lang in $(shell cat $(top_srcdir)/po/LINGUAS) ; do \
+		$(INSTALL) -d $(DESTDIR)$(localedir)/$$lang/LC_MESSAGES ; \
 		$(INSTALL_DATA) $(WX_PREFIX)/share/locale/$$lang/LC_MESSAGES/wxstd.mo \
 			$(DESTDIR)$(localedir)/$$lang/LC_MESSAGES/ ; \
 	done

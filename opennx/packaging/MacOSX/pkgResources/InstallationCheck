@@ -57,10 +57,13 @@ while (<P>) {
     $apprunning = 1 if (/nxssh$/);
     $apprunning = 1 if (/opennx$/);
     $apprunning = 1 if (/watchreader$/);
-    # nxesd is special:
+    # nxesd and pulseaudio are special:
     # If it is running AND none of the other
-    # programs are running, then it simply can be killed
+    # programs are running, then they simply can be killed
     if (/^(\d+)\s+.+nxesd$/) {
+        push(@nxesdpids, $1);
+    }
+    if (/^(\d+)\s+.+pulseaudio$/) {
         push(@nxesdpids, $1);
     }
 }

@@ -408,22 +408,34 @@ class pawrapper {
 
 };
 
+# if defined(__WXMSW__) || defined(__WXMAC__)
+#  ifdef __WXMAC__
+extern "C" {
+    extern const char *getMacMachineID();
+};
+#  endif
+
+static wxString MachineID() {
+#  ifdef __WXWIN__
+        return ::wxGetHostName().Lower();
+#  else
+        return wxString(getMacMachineID(), wxConvUTF8);
+#  endif
+}
+# endif // defined(__WXMSW__) || defined(__WXMAC__)
 #endif // WITH_PULSEAUDIO
 
 bool PulseAudio::AutoSpawn()
 {
-#if defined(__WXMSW__) || defined(__WXMAC__)
+#ifdef WITH_PULSEAUDIO
+# if defined(__WXMSW__) || defined(__WXMAC__)
     int papid;
     int retry = 3;
-    // On windows, we do our own autospawn
-    wxString pidfile = ::wxGetHomeDir() + wxFileName::GetPathSeparator()
-        + wxT(".pulse")  + wxFileName::GetPathSeparator()
-#ifdef __WXWIN__
-        + ::wxGetHostName().Lower() + wxT("-runtime")
-#else
-        + ::wxGetFullHostName().Lower() + wxT("-runtime")
-#endif
-        + wxFileName::GetPathSeparator() + wxT("pid");
+    // On windows and mac, we do our own autospawn
+    wxString piddir = ::wxGetHomeDir() + wxFileName::GetPathSeparator()
+        + wxT(".pulse") + wxFileName::GetPathSeparator()
+        + MachineID() + wxT("-runtime");
+    wxString pidfile = piddir + wxFileName::GetPathSeparator() + wxT("pid");
     do {
         ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: checking '%s'"), pidfile.c_str());
         wxFileInputStream sPid(pidfile);
@@ -442,25 +454,28 @@ bool PulseAudio::AutoSpawn()
         wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &pacmd);
         pacmd << wxFileName::GetPathSeparator() << wxT("bin")
             << wxFileName::GetPathSeparator() << wxT("pulseaudio");
-#ifdef __WXWIN__
+#  ifdef __WXWIN__
         pacmd << wxT(".exe");
-#endif
+#  endif
         ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: trying to start '%s'"), pacmd.c_str());
-#ifdef __WXWIN__
+#  ifdef __WXWIN__
         CreateDetachedProcess((const char *)pacmd.mb_str());
         // Don't report an error here, as CreateDetachedProcess may
         // fail if pulseaudio is already running
-#else
+#  else
         ::wxExecute(pacmd, wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
-#endif
+#  endif
         wxThread::Sleep(500);
     } while (retry-- > 0);
     ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: spawn failed"));
     return false;
-#else
+# else
     ::myLogTrace(MYTRACETAG, wxT("Not spawning pulseaudio on this platform"));
     return true;
-#endif
+# endif // defined(__WXMSW__) || defined(__WXMAC__)
+#else
+    return true;
+#endif // WITH_PULSEAUDIO
 }
 
     PulseAudio::PulseAudio()
@@ -502,6 +517,7 @@ PulseAudio::~PulseAudio()
 
 bool PulseAudio::IsAvailable()
 {
+    ::myLogTrace(MYTRACETAG, wxT("IsAvailable:%s"), m_bPulseAvailable ? wxT("true") : wxT("false"));
     return m_bPulseAvailable;
 }
 

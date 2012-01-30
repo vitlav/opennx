@@ -63,9 +63,6 @@ load-module module-console-kit
 ### Enable positioned event sounds
 load-module module-position-event-sounds
 
-### Cork music streams when a phone stream is active
-load-module module-cork-music-on-phone
-
 ### Make some devices default
 #set-default-sink output
 #set-default-source input

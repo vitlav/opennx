@@ -64,4 +64,18 @@ const char *getMacKeyboard() {
     return ret;
 }
 
+#include <IOKit/IOKitLib.h>
+const char *getMacMachineID()
+{
+    static char ret[256];
+    io_registry_entry_t ioRegistryRoot =
+        IORegistryEntryFromPath(kIOMasterPortDefault, "IOService:/");
+    CFStringRef uuidCf =
+        (CFStringRef)IORegistryEntryCreateCFProperty(ioRegistryRoot, CFSTR(kIOPlatformUUIDKey), kCFAllocatorDefault, 0);
+    IOObjectRelease(ioRegistryRoot);
+    CFStringGetCString(uuidCf, ret, sizeof(ret), kCFStringEncodingMacRoman);
+    CFRelease(uuidCf);
+    return ret;
+}
+
 #endif

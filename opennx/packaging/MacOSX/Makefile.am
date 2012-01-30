@@ -39,7 +39,7 @@ createpkgroot:
 pkgdir: createpkgroot
 	rm -rf nxbuild
 	mkdir nxbuild
-	(cd nxbuild ; DEST=$(abs_builddir)/pkgroot PFX=$(prefix) CC=$(CC) CXX=$(CXX) $(abs_srcdir)/buildnx)
+	(cd nxbuild ; DEST=$(abs_builddir)/pkgroot PFX=$(prefix) CC=$(CC) CXX=$(CXX) OSX_SDKFLAGS="$(OSX_SDKFLAGS)" $(abs_srcdir)/buildnx)
 	$(MAKE) -C pulse PKGROOT=$(abs_builddir)/pkgroot upinstall
 	$(MAKE) -C $(top_builddir) DESTDIR=$(abs_builddir)/pkgroot install
 	$(MAKE) -C $(top_builddir) DESTDIR=$(abs_builddir)/pkgroot prefix=/usr install-man
@@ -50,9 +50,12 @@ pkgdir: createpkgroot
 	touch $@
 
 pkg: pkgdir
-	sudo chown -R root:admin pkgroot
+	sudo chown -R -h root:admin pkgroot
+	sudo chown -R root:wheel pkgroot/usr
+	sudo chown -R root:admin pkgroot/usr/share/man/man1/*
+	sudo chown root:wheel pkgroot/Library
 	sudo chmod ug=rwx,o=rx pkgroot/Applications
-	sudo chmod ug=rwx,o=rx,+t pkgroot/Library
+	sudo chmod u=rwx,go=rx pkgroot/Library
 	rm -rf OpenNX.pkg
 	cd $(builddir) && $(PACKAGEMAKER) -build -p OpenNX.pkg -f pkgroot -v \
 	    -r $(srcdir)/pkgResources \

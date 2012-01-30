@@ -9,7 +9,7 @@ JSONC_VERSION		  = 0.9
 SPEEX                 = speex
 SPEEX_VERSION         = 1.2rc1
 PULSEAUDIO            = pulseaudio
-PULSEAUDIO_VERSION    = 1.0-fe-20110622
+PULSEAUDIO_VERSION    = 1.0-fe-20111209
 PULSEAUDIO_SVER       = 1.0
 
 TMPDIST = $(abs_builddir)/dist
@@ -46,9 +46,9 @@ CFG_libsndfileBE = --disable-external-libs --libdir=$(libdir)/ppc --host ppc-app
 CFG_libsamplerateLE =
 CFG_libsamplerateBE = --libdir=$(libdir)/ppc --host ppc-apple-darwin10
 CFG_pulseaudioLE = --disable-glib2 --disable-openssl --disable-nls --with-udev-rules-dir=$(prefix)/lib \
-	--with-mac-version-min=10.4 --program-suffix=.i386
+	--with-mac-version-min=$(OSX_MINVER) --with-mac-sysroot=$(OSX_SYSROOT) --program-suffix=.i386
 CFG_pulseaudioBE = --disable-glib2 --disable-openssl --disable-nls --with-udev-rules-dir=$(prefix)/lib \
-	--with-mac-version-min=10.4 --libdir=$(libdir)/ppc --host ppc-apple-darwin10 --program-suffix=.ppc
+	--with-mac-version-min=$(OSX_MINVER) --with-mac-sysroot=$(OSX_SYSROOT) --libdir=$(libdir)/ppc --host ppc-apple-darwin10 --program-suffix=.ppc
 
 PRECFG_libtool = true
 PRECFG_speex = true
@@ -64,15 +64,15 @@ POSTCFG_libsndfile = true
 POSTCFG_libsamplerate = true
 POSTCFG_pulseaudio = true
 
-MACENV_UNIVERSAL = CC="$($CC)" CXX="$(CXX)" LD="$(LD)" \
-	 CFLAGS="$(UNIFLAGS) -mmacosx-version-min=10.4 -I$(TMPDIST)/include" \
-	 CXXFLAGS="$(UNIFLAGS) -mmacosx-version-min=10.4" CPPFLAGS="-I$(TMPDIST)$(includedir)"
-MACENV_INTEL = CC="$($CC)" CXX="$(CXX)" LD="$(LD)" \
-	 CFLAGS="-arch i386 -mmacosx-version-min=10.4" \
-	 CXXFLAGS="-arch i386 -mmacosx-version-min=10.4" CPPFLAGS="-I$(TMPDIST)$(includedir)"
-MACENV_PPC = CC="$($CC)" CXX="$(CXX)" LD="$(LD)" \
-	 CFLAGS="-arch ppc -mmacosx-version-min=10.4" \
-	 CXXFLAGS="-arch ppc -mmacosx-version-min=10.4" CPPFLAGS="-I$(TMPDIST)$(includedir)"
+MACENV_UNIVERSAL = CC="$(CC)" CXX="$(CXX)" LD="$(LD)" \
+	 CFLAGS="$(UNIFLAGS) $(OSX_SDKFLAGS) -I$(TMPDIST)/include" \
+	 CXXFLAGS="$(UNIFLAGS) $(OSX_SDKFLAGS)" CPPFLAGS="-I$(TMPDIST)$(includedir)"
+MACENV_INTEL = CC="$(CC)" CXX="$(CXX)" LD="$(LD)" \
+	 CFLAGS="-arch i386 $(OSX_SDKFLAGS)" \
+	 CXXFLAGS="-arch i386 $(OSX_SDKFLAGS)" CPPFLAGS="-I$(TMPDIST)$(includedir)"
+MACENV_PPC = CC="$(CC)" CXX="$(CXX)" LD="$(LD)" \
+	 CFLAGS="-arch ppc $(OSX_SDKFLAGS)" \
+	 CXXFLAGS="-arch ppc $(OSX_SDKFLAGS)" CPPFLAGS="-I$(TMPDIST)$(includedir)"
 
 ENV_libtool = env $(MACENV_UNIVERSAL)
 ENV_speexLE = env $(MACENV_INTEL)
@@ -84,14 +84,14 @@ ENV_libsamplerateLE = env $(MACENV_INTEL) \
 	SNDFILE_CFLAGS="-I$(TMPDIST)$(includedir)" SNDFILE_LIBS="-L$(TMPDIST)$(libdir) -lsndfile"
 ENV_libsamplerateBE = env $(MACENV_PPC) \
 	SNDFILE_CFLAGS="-I$(TMPDIST)$(includedir)" SNDFILE_LIBS="-L$(TMPDIST)$(libdir) -lsndfile"
-ENV_pulseaudioLE = env $(MACENV_INTEL) \
+ENV_pulseaudioLE = env $(MACENV_INTEL) CC="gcc-4.2" CXX="g++-4.2" \
 	LDFLAGS="-L$(TMPDIST)$(libdir)" \
 	LIBSNDFILE_CFLAGS="-I." LIBSNDFILE_LIBS="-lsndfile" \
 	LIBSAMPLERATE_CFLAGS="-I." LIBSAMPLERATE_LIBS="-lsamplerate" \
 	LIBJSON_CFLAGS="-I$(TMPDIST)$(includedir)/json" LIBJSON_LIBS="-ljson" \
 	LIBSPEEX_CFLAGS="-I." LIBSPEEX_LIBS="-lspeex -lspeexdsp" \
 	PATH="$(abs_builddir):$(PATH)"
-ENV_pulseaudioBE = env $(MACENV_PPC) \
+ENV_pulseaudioBE = env $(MACENV_PPC) CC="gcc-4.2" CXX="g++-4.2" \
 	LDFLAGS="-L$(TMPDIST)$(libdir)" \
 	LIBSNDFILE_CFLAGS="-I." LIBSNDFILE_LIBS="-lsndfile" \
 	LIBSAMPLERATE_CFLAGS="-I." LIBSAMPLERATE_LIBS="-lsamplerate" \
@@ -136,7 +136,7 @@ tmpinstall:
 	rmdir $(TMPDIST)$(libdir)/ppc
 	mkdir -p $(TMPHDR)
 	cp -a $(TMPDIST)$(prefix)/include/* $(TMPHDR)
-	rm -rf $(TMPDIST)$(prefix)/{share,libexec,include} $(TMPDIST)${libdir}/pkgconfig
+	rm -rf $(TMPDIST)$(prefix)/{share,libexec,include} $(TMPDIST)${libdir}/pkgconfig $(TMPDIST)${libdir}/cmake
 	find $(TMPDIST) -name "*.la" -o -name "*.a"|xargs rm -f
 	rm -f $(TMPDIST)$(bindir)/sndfile-* $(TMPDIST)$(bindir)/libtool*
 	cp $(srcdir)/cfg/* $(TMPDIST)$(prefix)/etc/pulse/
@@ -177,7 +177,7 @@ tlipo: .$(subtarget)-lipo
 
 .$(subtarget)-build: .$(subtarget)-srcdir
 	@echo Configuring $(subtarget)
-	@cd $(subsrc) && $(PRECFG_$(subvar)) && $(ENV_$(subvar)$(ecfg)) ./configure $(CFG_GENERIC) $(CFG_$(subvar)$(ecfg))
+	cd $(subsrc) && $(PRECFG_$(subvar)) && $(ENV_$(subvar)$(ecfg)) ./configure $(CFG_GENERIC) $(CFG_$(subvar)$(ecfg))
 	@$(POSTCFG_$(subvar))
 	@echo building $(subtarget)
 	@$(MAKE) V=$(V) DESTDIR=$(TMPDIST) -C $(subsrc) install
@@ -187,7 +187,7 @@ tlipo: .$(subtarget)-lipo
 	@echo Applying patches for $(subtarget)
 	@shopt -s nullglob; for p in $(srcdir)/patches/$(subvar)-*.patch ; do \
 		test $(V) = 0 || echo Applying `basename $$p`; \
-		patch -p0 < $$p ; \
+		( cd $(subsrc) && patch -p1 < ../$$p ) ; \
 	done
 
 .$(subtarget)-srcdir: .$(subtarget)-checkarchive

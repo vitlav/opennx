@@ -9,10 +9,16 @@ AC_CONFIG_HEADERS([config.h])
 AC_CANONICAL_TARGET
 preferred_cc="gcc cc"
 preferred_cxx="g++ c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC"
+OSX_SDKFLAGS=
+OSX_SYSROOT=
+OSX_MINVER=
 case $target_os in
-    darwin10*)
+    darwin*)
 	preferred_cc="gcc-4.0 $preferred_cc"
 	preferred_cxx="g++-4.0 $preferred_cxx"
+    OSX_MINVER=10.5
+    OSX_SYSROOT=/Developer/SDKs/MacOSX10.5.sdk
+    OSX_SDKFLAGS="-isysroot $OSX_SYSROOT -mmacosx-version-min=$OSX_MINVER"
 	;;
 esac
 AM_INIT_AUTOMAKE([foreign no-installinfo no-installman])
@@ -36,6 +42,9 @@ case $build_os in
         ;;
 esac
 
+AC_SUBST(OSX_SDKFLAGS)
+AC_SUBST(OSX_SYSROOT)
+AC_SUBST(OSX_MINVER)
 PLATFORM_SUBDIRS=
 PLATFORM_INCLUDES=
 PLATFORM_DEPENDENCIES=
@@ -222,10 +231,14 @@ AM_PATH_WXCONFIG(2.8.0,wxWidgets=1,wxWidgets=0,[$_wx_required], $WXPARAMS)
 test ${wxWidgets} = 0 && AC_MSG_ERROR(Could not find wxWidgets library)
 WX_PREFIX=`$WX_CONFIG_WITH_ARGS --prefix`
 AC_SUBST(WX_PREFIX)
+WX_CFLAGS="$OSX_SDKFLAGS $WX_CFLAGS"
+WX_CXXFLAGS="$OSX_SDKFLAGS $WX_CXXFLAGS"
 
 # Check, if wxLogStream is available
 save_CPPFLAGS="$CPPFLAGS"
+save_CXXFLAGS="$CXXFLAGS"
 CPPFLAGS="$WX_CPPFLAGS $CPPFLAGS"
+CXXFLAGS="$WX_CXXFLAGS $CXXFLAGS"
 AC_LANG_PUSH([C++])
 AC_MSG_CHECKING([for wxLogStream])
 AC_COMPILE_IFELSE([[#include <wx/log.h>
@@ -235,10 +248,13 @@ Please reconfigure wxWidgets using the option --enable-std_iostreams
 ]])])
 AC_LANG_POP
 CPPFLAGS="$save_CPPFLAGS"
+CXXFLAGS="$save_CXXFLAGS"
 
 # Check, if wxRE_ADVANCED is available.
 save_CPPFLAGS="$CPPFLAGS"
+save_CXXFLAGS="$CXXFLAGS"
 CPPFLAGS="$WX_CPPFLAGS $CPPFLAGS"
+CXXFLAGS="$WX_CXXFLAGS $CXXFLAGS"
 AC_LANG_PUSH([C++])
 AC_MSG_CHECKING([for advanced wxRegEx])
 AC_COMPILE_IFELSE([[
@@ -251,6 +267,7 @@ Please reconfigure wxWidgets enabling the builtin regex feature .
 ]])])
 AC_LANG_POP
 CPPFLAGS="$save_CPPFLAGS"
+CXXFLAGS="$save_CXXFLAGS"
 
 
 
