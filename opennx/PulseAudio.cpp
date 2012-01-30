@@ -416,7 +416,7 @@ extern "C" {
 #  endif
 
 static wxString MachineID() {
-#  ifdef __WXWIN__
+#  ifdef __WXMSW__
         return ::wxGetHostName().Lower();
 #  else
         return wxString(getMacMachineID(), wxConvUTF8);
@@ -454,11 +454,11 @@ bool PulseAudio::AutoSpawn()
         wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &pacmd);
         pacmd << wxFileName::GetPathSeparator() << wxT("bin")
             << wxFileName::GetPathSeparator() << wxT("pulseaudio");
-#  ifdef __WXWIN__
+#  ifdef __WXMSW__
         pacmd << wxT(".exe");
 #  endif
         ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: trying to start '%s'"), pacmd.c_str());
-#  ifdef __WXWIN__
+#  ifdef __WXMSW__
         CreateDetachedProcess((const char *)pacmd.mb_str());
         // Don't report an error here, as CreateDetachedProcess may
         // fail if pulseaudio is already running
