@@ -140,7 +140,7 @@ tmpinstall:
 	find $(TMPDIST) -name "*.la" -o -name "*.a"|xargs rm -f
 	rm -f $(TMPDIST)$(bindir)/sndfile-* $(TMPDIST)$(bindir)/libtool*
 	cp $(srcdir)/cfg/* $(TMPDIST)$(prefix)/etc/pulse/
-	test -f $(CACHE_FLAG) && tar czf $(CACHE_TGZ) dist || true
+	test -f $(CACHE_FLAG) && tar czf $(CACHE_TGZ) dist include || true
 	touch $@
 
 tbuild: .$(subtarget)-build

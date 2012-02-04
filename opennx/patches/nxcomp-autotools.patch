@@ -18463,7 +18463,7 @@ diff -urwN nxcomp-orig/configure.ac nxcomp/configure.ac
 +# Process this file with autoconf to produce a configure script.
 +
 +AC_PREREQ(2.61)
-+AC_INIT([nxcomp],[3.3.0],[fritz@fritz-elfert.de])
++AC_INIT([nxcomp],[3.5.0],[fritz@fritz-elfert.de])
 +AC_CONFIG_AUX_DIR([conf])
 +AC_CONFIG_SRCDIR([ActionCache.cpp])
 +AC_CANONICAL_TARGET

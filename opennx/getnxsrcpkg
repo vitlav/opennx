@@ -1,27 +1,40 @@
 #!/usr/bin/perl
 
+use File::Basename;
+
 my @urls;
 my $do_fetch = 1;
+my $do_vlist = 0;
 
-if ($#ARGV ge 0) {
-	if ($ARGV[0] eq '-l') {
-		$do_fetch = 0;
-		shift(@ARGV);
-	}
-}
-
-my $have_wget = (`which wget` ne '');
-
-if ($have_wget) {
-	open(P, "wget -q -O - http://www.nomachine.com/sources.php|") || die "Can't run wget: $!\n";
-} else {
-	open(P, "curl -f -L http://www.nomachine.com/sources.php|") || die "Can't run wget: $!\n";
-}
-while (<P>) {
-        chomp;
-        if (/A\s+HREF="([^"]+)"\s+class=link2/) {
-                push @urls, $1;
+while ($#ARGV ge 0) {
+    if ($ARGV[0] =~ m/^-/) {
+        $opt = $ARGV[0];
+        shift(@ARGV);
+        if ($opt eq '-l') {
+            $do_fetch = 0;
+            next;
         }
+        if ($opt eq '-v') {
+            $do_vlist = 1;
+            $do_fetch = 0;
+            next;
+        }
+    } else {
+        last;
+    }
+}
+
+my $getcmd = 'curl -f -L -s -o ';
+if (`which wget` ne '') {
+    $getcmd = 'wget -q -O ';
+}
+
+open(P, $getcmd . "- http://www.nomachine.com/sources.php|") || die "Can't fetch http://www.nomachine.com/sources.php: $!\n";
+while (<P>) {
+    chomp;
+    if (/A\s+HREF="([^"]+)"\s+class=link2/) {
+        push @urls, $1;
+    }
 }
 close P;
 
@@ -32,8 +45,7 @@ if ($#urls eq 0) {
 
 foreach (@urls) {
     my $skipit = 0;
-    my $fn = $_;
-    $fn =~ s/.*\///;
+    my $fn = basename($_);
     if ($#ARGV ge 0) {
         $skipit = 1;
         foreach $req (@ARGV) {
@@ -43,15 +55,18 @@ foreach (@urls) {
     }
     if ($do_fetch) {
         print "Fetching $fn ...";
-if ($have_wget) {
-        system("wget -q -nc $_");
-} else {
-	my $of = $_;
-	$of =~ s/.*\///;
-        system("curl -f -L -o $of $_");
-}
+        system($getcmd . $fn . ' ' . $_);
         print " done\n";
     } else {
-        print "$fn\n";
+        if ($do_vlist) {
+            my $v = $fn;
+            $v =~ s/.*?-([\d\.\-]+)/\1/;
+            $v = basename($v, '.tar.gz', '.tar', '.gz');
+            my $pkg = $fn;
+            $pkg =~ s/(.*?)-[\-\d\.]+.*/\1/;
+            print $pkg . ' ' . $v . ' ' . $_ ."\n";
+        } else {
+            print "$fn\n";
+        }
     }
 }

@@ -167,11 +167,17 @@ class pawrapper {
             m_pApi = Ppa_threaded_mainloop_get_api(m_pLoop);
             m_pContext = Ppa_context_new(m_pApi, "OpenNX");
             Ppa_context_set_state_callback(m_pContext, context_state_callback_if, this);
-            if (0 <= Ppa_context_connect(m_pContext, NULL /* server */, PA_CONTEXT_NOAUTOSPAWN, NULL)) {
-                Ppa_threaded_mainloop_start(m_pLoop);
-                while (!(m_bConnected || m_bError))
-                    ::wxGetApp().Yield(true);
-            }
+            int retry = 3;
+            do {
+                m_bError = false;
+                if (0 <= Ppa_context_connect(m_pContext, NULL /* server */, PA_CONTEXT_NOAUTOSPAWN, NULL)) {
+                    Ppa_threaded_mainloop_start(m_pLoop);
+                    while (!(m_bConnected || m_bError))
+                        ::wxGetApp().Yield(true);
+                }
+                if (m_bConnected)
+                    break;
+            } while (retry-- > 0);
         }
 
         ~pawrapper()
@@ -194,8 +200,8 @@ class pawrapper {
             Ppa_operation_unref(Ppa_context_get_module_info_list(m_pContext, get_module_info_callback_if, this));
             bool ret = waitcmd();
             if (ret && m_bFound) {
-               args = m_sStr;
-               index = m_iIndex;
+                args = m_sStr;
+                index = m_iIndex;
             }
             return ret && m_bFound;
         }
@@ -417,9 +423,9 @@ extern "C" {
 
 static wxString MachineID() {
 #  ifdef __WXMSW__
-        return ::wxGetHostName().Lower();
+    return ::wxGetHostName().Lower();
 #  else
-        return wxString(getMacMachineID(), wxConvUTF8);
+    return wxString(getMacMachineID(), wxConvUTF8);
 #  endif
 }
 # endif // defined(__WXMSW__) || defined(__WXMAC__)
