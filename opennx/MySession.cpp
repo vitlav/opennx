@@ -1131,25 +1131,27 @@ MySession::parseSessions(bool moreAllowed)
     size_t n = m_aParseBuffer.GetCount();
     ::myLogTrace(MYTRACETAG, wxT("parseSessions: Got %d lines to parse"), n);
     wxRegEx re(
-            wxT("^(\\d+)\\s+([\\w-]+)\\s+([0-9A-F]{32})\\s+([A-Z-]{8})\\s+(\\d+)\\s+(\\d+x\\d+)\\s+(\\w+)\\s+([\\w-]+)\\s*(\\w*)"),
+            wxT("^(\\d+)\\s+([\\w-]+)\\s+([0-9A-F]{32})\\s+([A-Z-]{8})\\s+(\\d+)\\s+(\\d+x\\d+)\\s+(\\w+)\\s+([^\\s].*)$"),
             wxRE_ADVANCED);
     wxASSERT(re.IsValid());
     wxRegEx re2(
-            wxT("^(\\d+)\\s+([\\w-]+)\\s+([0-9A-F]{32})\\s+([A-Z-]{8})\\s+(N/A)\\s+(N/A)\\s+(\\w+)\\s+(\\w+\\s\\w+)\\s*(\\w*)"),
+            wxT("^(\\d+)\\s+([\\w-]+)\\s+([0-9A-F]{32})\\s+([A-Z-]{8})\\s+(N/A)\\s+(N/A)\\s+(\\w+)\\s+([^\\s].*)$"),
             wxRE_ADVANCED);
     wxASSERT(re2.IsValid());
     ResumeDialog d(NULL);
     bool bFound = false;
     int iSessionCount = 0;
     wxString sName;
-    if (m_pCfg->eGetSessionType() == MyXmlConfig::STYPE_SHADOW)
+    wxString sUser(m_pCfg->sGetSessionUser());
+    if (m_bIsShadow) {
         d.SetAttachMode(true);
-    else
+    } else {
         d.SetPreferredSession(m_pCfg->sGetName());
+    }
     for (size_t i = 0; i < n; i++) {
-        wxString line = m_aParseBuffer[i];
+        wxString line = m_aParseBuffer[i].Trim();
         ::myLogTrace(MYTRACETAG, wxT("parseSessions: line='%s'"), line.c_str());
-        if (re.Matches(line) && (re.GetMatchCount() >= 9)) {
+        if (re.Matches(line)) {
             wxString sPort(re.GetMatch(line, 1));
             wxString sType(re.GetMatch(line, 2));
             wxString sId(re.GetMatch(line, 3));
@@ -1158,36 +1160,38 @@ MySession::parseSessions(bool moreAllowed)
             wxString sSize(re.GetMatch(line, 6));
             wxString sState(re.GetMatch(line, 7));
             sName = re.GetMatch(line, 8);
-            if (re.GetMatchCount() > 9) {
-                wxString sUser(re.GetMatch(line, 9));
-                d.AddSession(sName, sState, sType, sSize, sColors, sPort, sOpts, sId, sUser);
-            } else
-                d.AddSession(sName, sState, sType, sSize, sColors, sPort, sOpts, sId);
+            if (m_bIsShadow) {
+                // In shadow session mode, a username follows the session name.
+                // Our RE matches both in sName, so we have to split off the usernam.
+                sUser = sName.AfterLast(wxT(' '));
+                sName = sName.BeforeLast(wxT(' ')).Trim();
+            }
+            d.AddSession(sName, sState, sType, sSize, sColors, sPort, sOpts, sId, sUser);
             bFound = true;
             iSessionCount++;
             ::myLogTrace(MYTRACETAG, wxT("parseSessions: re match"));
             continue;
         }
-        if (m_bIsShadow) {
-            if (re2.Matches(line) /* && (re2.GetMatchCount() == 9)*/) {
-                ::myLogTrace(MYTRACETAG, wxT("parseSessions: re2 match: %d"), re2.GetMatchCount());
-                wxString sPort(re2.GetMatch(line, 1));
-                wxString sType(re2.GetMatch(line, 2));
-                wxString sId(re2.GetMatch(line, 3));
-                wxString sOpts(re2.GetMatch(line, 4));
-                wxString sColors(re2.GetMatch(line, 5));
-                wxString sSize(re2.GetMatch(line, 6));
-                wxString sState(re2.GetMatch(line, 7));
-                sName = re2.GetMatch(line, 8);
-                if (re.GetMatchCount() > 9) {
-                    wxString sUser(re.GetMatch(line, 9));
-                    d.AddSession(sName, sState, sType, sSize, sColors, sPort, sOpts, sId, sUser);
-                } else
-                    d.AddSession(sName, sState, sType, sSize, sColors, sPort, sOpts, sId);
-                bFound = true;
-                iSessionCount++;
-                continue;
+        if (re2.Matches(line)) {
+            ::myLogTrace(MYTRACETAG, wxT("parseSessions: re2 match"));
+            wxString sPort(re2.GetMatch(line, 1));
+            wxString sType(re2.GetMatch(line, 2));
+            wxString sId(re2.GetMatch(line, 3));
+            wxString sOpts(re2.GetMatch(line, 4));
+            wxString sColors(re2.GetMatch(line, 5));
+            wxString sSize(re2.GetMatch(line, 6));
+            wxString sState(re2.GetMatch(line, 7));
+            sName = re2.GetMatch(line, 8);
+            if (m_bIsShadow) {
+                // In shadow session mode, a username follows the session name.
+                // Our RE matches both in sName, so we have to split off the usernam.
+                sUser = sName.AfterLast(wxT(' '));
+                sName = sName.BeforeLast(wxT(' ')).Trim();
             }
+            d.AddSession(sName, sState, sType, sSize, sColors, sPort, sOpts, sId, sUser);
+            bFound = true;
+            iSessionCount++;
+            continue;
         }
         ::myLogTrace(MYTRACETAG, wxT("parseSessions: NO match"));
     }

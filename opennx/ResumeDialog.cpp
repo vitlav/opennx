@@ -173,34 +173,38 @@ ResumeDialog::AddSession(const wxString& name, const wxString& state, const wxSt
         const wxString& size, const wxString& colors,
         const wxString& port, const wxString& opts, const wxString& id, const wxString& user /* = wxT("") */)
 {
-    long idx = m_pCtrlSessions->InsertItem(0, name, 0);
-    m_pCtrlSessions->SetItem(idx, 1, user);
-    m_pCtrlSessions->SetItem(idx, 2, state);
-    m_pCtrlSessions->SetItem(idx, 3, type);
-    if (size.IsSameAs(wxT("N/A")) && colors.IsSameAs(wxT("N/A")))
-        m_pCtrlSessions->SetItem(idx, 4, colors);
-    else
-        m_pCtrlSessions->SetItem(idx, 4, size + wxT("x") + colors);
-    m_pCtrlSessions->SetItem(idx, 5, port);
-    m_pCtrlSessions->SetItem(idx, 6, opts);
-    m_pCtrlSessions->SetItem(idx, 7, id);
-    long lPort;
-    port.ToLong(&lPort);
-    m_pCtrlSessions->SetItemData(idx, lPort);
-    for (int i = 0; i < m_pCtrlSessions->GetColumnCount(); i++)
-        m_pCtrlSessions->SetColumnWidth(i, wxLIST_AUTOSIZE);
-    if ((m_lActiveSession < 0) || (name == m_sPreferredSession)) {
-        ::myLogTrace(MYTRACETAG, wxT("autoselect preferred=%d"), idx);
-        wxListItem info;
-        info.m_itemId = idx;
-        info.m_mask = wxLIST_MASK_STATE;
-        info.m_state = wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED;
-        info.m_stateMask = wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED;
-        m_pCtrlSessions->SetItem(info);
-        m_sSelectedPort = port;
-        m_sSelectedName = name;
-        m_sSelectedType = type;
-        m_sSelectedId = id;
+    long idx = m_pCtrlSessions->InsertItem(m_pCtrlSessions->GetItemCount(), name, 0);
+    if (0 <= idx) {
+        m_pCtrlSessions->SetItem(idx, 1, user);
+        m_pCtrlSessions->SetItem(idx, 2, state);
+        m_pCtrlSessions->SetItem(idx, 3, type);
+        if (size.IsSameAs(wxT("N/A")) && colors.IsSameAs(wxT("N/A")))
+            m_pCtrlSessions->SetItem(idx, 4, colors);
+        else
+            m_pCtrlSessions->SetItem(idx, 4, size + wxT("x") + colors);
+        m_pCtrlSessions->SetItem(idx, 5, port);
+        m_pCtrlSessions->SetItem(idx, 6, opts);
+        m_pCtrlSessions->SetItem(idx, 7, id);
+        //long lPort;
+        //port.ToLong(&lPort);
+        //m_pCtrlSessions->SetItemData(idx, lPort);
+        for (int i = 0; i < m_pCtrlSessions->GetColumnCount(); i++)
+            m_pCtrlSessions->SetColumnWidth(i, wxLIST_AUTOSIZE);
+        if ((m_lActiveSession < 0) || (name == m_sPreferredSession)) {
+            ::myLogTrace(MYTRACETAG, wxT("autoselect preferred=%d"), idx);
+            wxListItem info;
+            info.m_itemId = idx;
+            info.m_mask = wxLIST_MASK_STATE;
+            info.m_state = wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED;
+            info.m_stateMask = wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED;
+            m_pCtrlSessions->SetItem(info);
+            m_sSelectedPort = port;
+            m_sSelectedName = name;
+            m_sSelectedType = type;
+            m_sSelectedId = id;
+        }
+    } else {
+        ::wxLogError(_("Could not add session list item"));
     }
 }
 
