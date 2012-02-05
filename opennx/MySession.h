@@ -143,6 +143,7 @@ private:
     bool m_bCollectConfig;
     bool m_bCollectResources;
     bool m_bIsShadow;
+    bool m_bInParseSessions;
     bool m_bCupsRunning;
     bool m_bRemoveKey;
     bool m_bNextCmd;

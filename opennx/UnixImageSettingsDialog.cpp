@@ -222,7 +222,7 @@ void UnixImageSettingsDialog::CreateControls()
 
     ////@begin UnixImageSettingsDialog content initialisation
     ////@end UnixImageSettingsDialog content initialisation
-    UpdateDialogConstraints();
+    UpdateDialogConstraints(false);
 }
 
 /*!
@@ -259,9 +259,10 @@ void UnixImageSettingsDialog::OnContextHelp(wxCommandEvent &)
     wxContextHelp contextHelp(this);
 }
 
-void UnixImageSettingsDialog::UpdateDialogConstraints()
+void UnixImageSettingsDialog::UpdateDialogConstraints(bool fromWindow /* = true */)
 {
-    TransferDataFromWindow();
+    if (fromWindow)
+        TransferDataFromWindow();
     if (m_bImageEncodingBoth || m_bImageEncodingJpeg) {
         m_pCtrlUseJpegQuality->Enable();
         m_pCtrlJpegQuality->Enable(m_bUseJpegQuality);

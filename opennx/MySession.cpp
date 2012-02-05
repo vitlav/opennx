@@ -881,6 +881,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                 case STATE_LIST_SESSIONS:
                     m_pDlg->SetStatusText(_("Query server-side sessions"));
                     scmd = wxT("listsession") + m_pCfg->sGetListParams(m_lProtocolVersion);
+                    m_bInParseSessions = false;
                     printSsh(scmd);
                     m_eConnectState = STATE_PARSE_SESSIONS;
                     m_bNextCmd = false;
@@ -1052,7 +1053,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
             // Server has sent list of running & suspended sessions
             m_bCollectSessions = false;
             ::wxLogInfo(wxT("received end of session list"));
-            parseSessions(event.GetExtraLong() == 148);
+            parseSessions((event.GetExtraLong() == 148) && (!m_bIsShadow));
             break;
         case MyIPC::ActionResList:
             // NX4: Server starts sending resource info
@@ -1128,6 +1129,9 @@ MySession::parseResources()
     void
 MySession::parseSessions(bool moreAllowed)
 {
+    if (m_bInParseSessions)
+        return;
+    m_bInParseSessions = true;
     size_t n = m_aParseBuffer.GetCount();
     ::myLogTrace(MYTRACETAG, wxT("parseSessions: Got %d lines to parse"), n);
     wxRegEx re(
@@ -1138,6 +1142,10 @@ MySession::parseSessions(bool moreAllowed)
             wxT("^(\\d+)\\s+([\\w-]+)\\s+([0-9A-F]{32})\\s+([A-Z-]{8})\\s+(N/A)\\s+(N/A)\\s+(\\w+)\\s+([^\\s].*)$"),
             wxRE_ADVANCED);
     wxASSERT(re2.IsValid());
+    wxRegEx re3(
+            wxT("^(\\d+)\\s+(shadow)\\s+([0-9A-F]{32})\\s+([A-Z-]{8})\\s+(\\w+)\\s+([^\\s].*)$"),
+            wxRE_ADVANCED);
+    wxASSERT(re3.IsValid());
     ResumeDialog d(NULL);
     bool bFound = false;
     int iSessionCount = 0;
@@ -1152,6 +1160,7 @@ MySession::parseSessions(bool moreAllowed)
         wxString line = m_aParseBuffer[i].Trim();
         ::myLogTrace(MYTRACETAG, wxT("parseSessions: line='%s'"), line.c_str());
         if (re.Matches(line)) {
+            ::myLogTrace(MYTRACETAG, wxT("parseSessions: re match"));
             wxString sPort(re.GetMatch(line, 1));
             wxString sType(re.GetMatch(line, 2));
             wxString sId(re.GetMatch(line, 3));
@@ -1169,7 +1178,6 @@ MySession::parseSessions(bool moreAllowed)
             d.AddSession(sName, sState, sType, sSize, sColors, sPort, sOpts, sId, sUser);
             bFound = true;
             iSessionCount++;
-            ::myLogTrace(MYTRACETAG, wxT("parseSessions: re match"));
             continue;
         }
         if (re2.Matches(line)) {
@@ -1188,6 +1196,22 @@ MySession::parseSessions(bool moreAllowed)
                 sUser = sName.AfterLast(wxT(' '));
                 sName = sName.BeforeLast(wxT(' ')).Trim();
             }
+            d.AddSession(sName, sState, sType, sSize, sColors, sPort, sOpts, sId, sUser);
+            bFound = true;
+            iSessionCount++;
+            continue;
+        }
+        if (m_bIsShadow && re3.Matches(line)) {
+            ::myLogTrace(MYTRACETAG, wxT("parseSessions: re3 match"));
+            wxString sPort(re3.GetMatch(line, 1));
+            wxString sType(re3.GetMatch(line, 2));
+            wxString sId(re3.GetMatch(line, 3));
+            wxString sOpts(re3.GetMatch(line, 4));
+            wxString sColors;
+            wxString sSize;
+            wxString sState(re3.GetMatch(line, 5));
+            sName = re3.GetMatch(line, 6);
+            sUser = wxT("");
             d.AddSession(sName, sState, sType, sSize, sColors, sPort, sOpts, sId, sUser);
             bFound = true;
             iSessionCount++;
@@ -1251,13 +1275,15 @@ MySession::parseSessions(bool moreAllowed)
         }
     } else {
         if (m_bIsShadow) {
+            m_eConnectState = STATE_ABORT;
+            m_bGotError = true;
+            m_bAbort = true;
             printSsh(wxT("bye"));
             wxMessageDialog d(m_pParent,
                     _("There are no sessions which can be attached to."),
                     _("Error - OpenNX"), wxOK);
             d.SetIcon(CreateIconFromFile(wxT("res/nx.png")));
             d.ShowModal();
-            m_bGotError = true;
         } else {
             if (moreAllowed)
                 m_eConnectState = STATE_START_SESSION;

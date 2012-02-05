@@ -203,7 +203,7 @@ void VncImageSettingsDialog::CreateControls()
 
 ////@begin VncImageSettingsDialog content initialisation
 ////@end VncImageSettingsDialog content initialisation
-    UpdateDialogConstraints();
+    UpdateDialogConstraints(false);
 }
 
 /*!
@@ -240,9 +240,10 @@ void VncImageSettingsDialog::OnContextHelp(wxCommandEvent &)
     wxContextHelp contextHelp(this);
 }
 
-void VncImageSettingsDialog::UpdateDialogConstraints()
+void VncImageSettingsDialog::UpdateDialogConstraints(bool fromWindow /* = true */)
 {
-    TransferDataFromWindow();
+    if (fromWindow)
+        TransferDataFromWindow();
     if (m_bImageEncodingBoth || m_bImageEncodingJpeg) {
         m_pCtrlUseJpegQuality->Enable();
         m_pCtrlJpegQuality->Enable(m_bUseJpegQuality);

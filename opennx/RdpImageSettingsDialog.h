@@ -127,7 +127,7 @@ private:
     /// Should we show tooltips?
     static bool ShowToolTips();
 
-    void UpdateDialogConstraints();
+    void UpdateDialogConstraints(bool fromWindow = true);
 
 ////@begin RdpImageSettingsDialog member variables
     wxCheckBox* m_pCtrlUseJpegQuality;

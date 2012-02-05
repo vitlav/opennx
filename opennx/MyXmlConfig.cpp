@@ -611,6 +611,11 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
         switch (m_eSessionType) {
             case STYPE_SHADOW:
                 ret << wxT("shadow\"");
+                if (m_bUseCustomImageEncoding) {
+                    ret << wxT(" --imagecompressionmethod=\"") << m_iImageEncoding << wxT("\"")
+                        << wxT(" --imagecompressionlevel=\"")
+                        << (((-1 == m_iImageEncoding) || (4 == m_iImageEncoding)) ? m_iJpegQuality : -1) << wxT("\"");
+                }
                 break;
             case STYPE_UNIX:
                 ret << wxT("unix-");

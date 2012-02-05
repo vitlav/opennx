@@ -216,7 +216,7 @@ void RdpImageSettingsDialog::CreateControls()
 
 ////@begin RdpImageSettingsDialog content initialisation
 ////@end RdpImageSettingsDialog content initialisation
-    UpdateDialogConstraints();
+    UpdateDialogConstraints(false);
 }
 
 /*!
@@ -253,9 +253,10 @@ void RdpImageSettingsDialog::OnContextHelp(wxCommandEvent &)
     wxContextHelp contextHelp(this);
 }
 
-void RdpImageSettingsDialog::UpdateDialogConstraints()
+void RdpImageSettingsDialog::UpdateDialogConstraints(bool fromWindow /* = true */)
 {
-    TransferDataFromWindow();
+    if (fromWindow)
+        TransferDataFromWindow();
     if (m_bImageEncodingBoth || m_bImageEncodingJpeg) {
         m_pCtrlUseJpegQuality->Enable();
         m_pCtrlJpegQuality->Enable(m_bUseJpegQuality);

@@ -124,7 +124,7 @@ private:
     /// Should we show tooltips?
     static bool ShowToolTips();
 
-    void UpdateDialogConstraints();
+    void UpdateDialogConstraints(bool fromWindow = true);
 
 ////@begin VncImageSettingsDialog member variables
     wxCheckBox* m_pCtrlUseJpegQuality;
