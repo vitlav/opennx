@@ -1,6 +1,6 @@
 // $Id$
 //
-// Copyright (C) 2011 The OpenNX team
+// Copyright (C) 2009 The OpenNX team
 // Author: Fritz Elfert
 //
 // This program is free software; you can redistribute it and/or modify
@@ -19,12 +19,9 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
-#define ID_DIALOG_IMAGE_VNC_SYMBOL_0 _("VNC Image Settings - OpenNX")
-#define ID_DIALOG_IMAGE_VNC_SYMBOL_1 _("Encoding")
-#define ID_DIALOG_IMAGE_VNC_SYMBOL_2 _("Use JPEG and RGB image compression")
-#define ID_DIALOG_IMAGE_VNC_SYMBOL_3 _("Use JPEG image compression only")
-#define ID_DIALOG_IMAGE_VNC_SYMBOL_4 _("Use RGB image compression only")
-#define ID_DIALOG_IMAGE_VNC_SYMBOL_5 _("Use plain X bitmaps")
-#define ID_DIALOG_IMAGE_VNC_SYMBOL_6 _("Use custom image quality")
-#define ID_DIALOG_IMAGE_VNC_SYMBOL_7 _("&OK")
-#define ID_DIALOG_IMAGE_VNC_SYMBOL_8 _("&Cancel")
+
+#define ID_TRACELOGREMOTE_SYMBOL_0 _("Activate remote logging")
+#define ID_TRACELOGREMOTE_SYMBOL_1 _("Port")
+#define ID_TRACELOGREMOTE_SYMBOL_2 _("Client IP regex")
+#define ID_TRACELOGREMOTE_SYMBOL_3 _("Cancel")
+#define ID_TRACELOGREMOTE_SYMBOL_4 _("OK")

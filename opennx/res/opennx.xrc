@@ -3,6 +3,7 @@
     <object class="wxDialog" name="ID_DIALOG_LOGIN" subclass="LoginDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP</exstyle>
+        <size>200,150d</size>
         <title>Login - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -1219,7 +1220,7 @@
                                         <growablecols>0</growablecols>
                                         <growablerows>0</growablerows>
                                         <object class="sizeritem">
-                                            <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                            <flag>wxGROW|wxGROW|wxALL</flag>
                                             <border>5</border>
                                             <object class="wxHtmlWindow" name="ID_HTMLWINDOW_ABOUT" subclass="extHtmlWindow">
                                                 <style>wxHW_SCROLLBAR_NEVER</style>
@@ -1273,6 +1274,7 @@
     <object class="wxDialog" name="ID_DIALOG_SETTINGS_VNC" subclass="VncPropertyDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP</exstyle>
+        <size>200,150d</size>
         <title>VNC Session Settings - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -1416,6 +1418,7 @@ remote VNC server</label>
     <object class="wxDialog" name="ID_DIALOG_SETTINGS_RDP" subclass="RdpPropertyDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP</exstyle>
+        <size>200,150d</size>
         <title>RDP Session Settings - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -1781,30 +1784,44 @@ remote VNC server</label>
         <title>VNC Image Settings - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
-        <object class="wxBitmapButton" name="ID_BITMAPBUTTON_DUMMY0">
-            <pos>0,0d</pos>
-        </object>
         <object class="wxBoxSizer">
             <orient>wxVERTICAL</orient>
             <object class="sizeritem">
-                <flag>wxALIGN_CENTER_HORIZONTAL|wxLEFT|wxRIGHT|wxTOP</flag>
-                <border>20</border>
-                <object class="wxBoxSizer">
+                <flag>wxGROW|wxALL</flag>
+                <border>5</border>
+                <object class="wxStaticBoxSizer" name="wxID_ANY">
                     <orient>wxVERTICAL</orient>
+                    <label>Encoding</label>
                     <object class="sizeritem">
                         <flag>wxGROW|wxALL</flag>
                         <border>5</border>
-                        <object class="wxRadioButton" name="ID_RADIOBUTTON_VNC_HEXTILE">
+                        <object class="wxRadioButton" name="ID_RADIOBUTTON_VNC_JPEG_AND_RGB">
                             <style>wxRB_GROUP</style>
-                            <label>Use RFB Hextile encoding</label>
+                            <label>Use JPEG and RGB image compression</label>
                             <value>0</value>
                         </object>
                     </object>
                     <object class="sizeritem">
                         <flag>wxGROW|wxALL</flag>
                         <border>5</border>
-                        <object class="wxRadioButton" name="ID_RADIOBUTTON_VNC_TIGHT">
-                            <label>Use RFB Tight encoding</label>
+                        <object class="wxRadioButton" name="ID_RADIOBUTTON_VNC_JPEG">
+                            <label>Use JPEG image compression only</label>
+                            <value>0</value>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxGROW|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxRadioButton" name="ID_RADIOBUTTON_VNC_PNG">
+                            <label>Use RGB image compression only</label>
+                            <value>0</value>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxGROW|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxRadioButton" name="ID_RADIOBUTTON_VNC_PLAIN">
+                            <label>Use plain X bitmaps</label>
                             <value>0</value>
                         </object>
                     </object>
@@ -1816,24 +1833,40 @@ remote VNC server</label>
                             <object class="spacer">
                                 <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                 <border>5</border>
-                                <size>2,2d</size>
+                                <size>1,1d</size>
                             </object>
                             <object class="sizeritem">
-                                <flag>wxALIGN_CENTER_VERTICAL</flag>
+                                <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                 <border>5</border>
-                                <object class="wxCheckBox" name="ID_CHECKBOX_VNC_JPEG">
-                                    <label>Enable JPEG encoding</label>
+                                <object class="wxCheckBox" name="ID_CHECKBOX_X11_JPEG_CUSTOMQUALITY">
+                                    <label>Use custom image quality</label>
                                     <checked>0</checked>
                                 </object>
                             </object>
                         </object>
                     </object>
                     <object class="sizeritem">
-                        <flag>wxGROW|wxALL</flag>
+                        <flag>wxGROW|wxLEFT|wxRIGHT</flag>
                         <border>5</border>
-                        <object class="wxRadioButton" name="ID_RADIOBUTTON_VNC_PLAINX">
-                            <label>Use plain X bitmaps</label>
-                            <value>0</value>
+                        <object class="wxBoxSizer">
+                            <orient>wxHORIZONTAL</orient>
+                            <object class="spacer">
+                                <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                <border>5</border>
+                                <size>1,1d</size>
+                            </object>
+                            <object class="sizeritem">
+                                <flag>wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxBOTTOM</flag>
+                                <border>5</border>
+                                <option>1</option>
+                                <object class="wxSlider" name="ID_SLIDER_X11_JPEG_QALITY">
+                                    <style>wxSL_HORIZONTAL|wxSL_AUTOTICKS</style>
+                                    <enabled>0</enabled>
+                                    <value>6</value>
+                                    <min>0</min>
+                                    <max>9</max>
+                                </object>
+                            </object>
                         </object>
                     </object>
                 </object>
@@ -1949,9 +1982,33 @@ remote VNC server</label>
                     <object class="sizeritem">
                         <flag>wxGROW|wxALL</flag>
                         <border>5</border>
-                        <object class="wxRadioButton" name="ID_RADIOBUTTON_RDP_IMGRDP">
+                        <object class="wxRadioButton" name="ID_RADIOBUTTON_RDP_JPEG_AND_RGB">
                             <style>wxRB_GROUP</style>
-                            <label>Use RDP image encoding</label>
+                            <label>Use JPEG and RGB image compression</label>
+                            <value>0</value>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxGROW|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxRadioButton" name="ID_RADIOBUTTON_RDP_JPEG">
+                            <label>Use JPEG image compression only</label>
+                            <value>0</value>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxGROW|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxRadioButton" name="ID_RADIOBUTTON_RDP_PNG">
+                            <label>Use RGB image compression only</label>
+                            <value>0</value>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxGROW|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxRadioButton" name="ID_RADIOBUTTON_RDP_PLAIN">
+                            <label>Use plain X bitmaps</label>
                             <value>0</value>
                         </object>
                     </object>
@@ -1963,32 +2020,40 @@ remote VNC server</label>
                             <object class="spacer">
                                 <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                 <border>5</border>
-                                <size>2,2d</size>
+                                <size>1,1d</size>
                             </object>
                             <object class="sizeritem">
-                                <flag>wxALIGN_CENTER_VERTICAL</flag>
+                                <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                 <border>5</border>
-                                <object class="wxCheckBox" name="ID_CHECKBOX_RDP_IMGRDPCOMP">
-                                    <label>Use compressed RDP bitmaps</label>
+                                <object class="wxCheckBox" name="ID_CHECKBOX_X11_JPEG_CUSTOMQUALITY">
+                                    <label>Use custom image quality</label>
                                     <checked>0</checked>
                                 </object>
                             </object>
                         </object>
                     </object>
                     <object class="sizeritem">
-                        <flag>wxGROW|wxALL</flag>
+                        <flag>wxGROW|wxLEFT|wxRIGHT</flag>
                         <border>5</border>
-                        <object class="wxRadioButton" name="ID_RADIOBUTTON_RDP_IMGRGB">
-                            <label>Use RGB image encoding</label>
-                            <value>0</value>
-                        </object>
-                    </object>
-                    <object class="sizeritem">
-                        <flag>wxGROW|wxALL</flag>
-                        <border>5</border>
-                        <object class="wxRadioButton" name="ID_RADIOBUTTON_RDP_IMGPLAINX">
-                            <label>Use plain X bitmaps</label>
-                            <value>0</value>
+                        <object class="wxBoxSizer">
+                            <orient>wxHORIZONTAL</orient>
+                            <object class="spacer">
+                                <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                <border>5</border>
+                                <size>1,1d</size>
+                            </object>
+                            <object class="sizeritem">
+                                <flag>wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxBOTTOM</flag>
+                                <border>5</border>
+                                <option>1</option>
+                                <object class="wxSlider" name="ID_SLIDER_X11_JPEG_QALITY">
+                                    <style>wxSL_HORIZONTAL|wxSL_AUTOTICKS</style>
+                                    <enabled>0</enabled>
+                                    <value>6</value>
+                                    <min>0</min>
+                                    <max>9</max>
+                                </object>
+                            </object>
                         </object>
                     </object>
                 </object>
@@ -2043,6 +2108,7 @@ remote VNC server</label>
     <object class="wxDialog" name="ID_DIALOG_IMAGE_X11" subclass="UnixImageSettingsDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP</exstyle>
+        <size>114,75d</size>
         <title>Unix Image Settings - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -2057,9 +2123,25 @@ remote VNC server</label>
                     <object class="sizeritem">
                         <flag>wxGROW|wxALL</flag>
                         <border>5</border>
-                        <object class="wxRadioButton" name="ID_RADIOBUTTON_X11_PNG">
+                        <object class="wxRadioButton" name="ID_RADIOBUTTON_X11_JPEG_AND_RGB">
                             <style>wxRB_GROUP</style>
-                            <label>Use PNG image compression</label>
+                            <label>Use JPEG and RGB image compression</label>
+                            <value>0</value>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxGROW|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxRadioButton" name="ID_RADIOBUTTON_X11_JPEG">
+                            <label>Use JPEG image compression only</label>
+                            <value>0</value>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxGROW|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxRadioButton" name="ID_RADIOBUTTON_X11_PNG">
+                            <label>Use RGB image compression only</label>
                             <value>0</value>
                         </object>
                     </object>
@@ -2068,14 +2150,6 @@ remote VNC server</label>
                         <border>5</border>
                         <object class="wxRadioButton" name="ID_RADIOBUTTON_X11_PLAIN">
                             <label>Use plain X bitmaps</label>
-                            <value>0</value>
-                        </object>
-                    </object>
-                    <object class="sizeritem">
-                        <flag>wxGROW|wxALL</flag>
-                        <border>5</border>
-                        <object class="wxRadioButton" name="ID_RADIOBUTTON_X11_JPEG">
-                            <label>Use JPEG image compression</label>
                             <value>0</value>
                         </object>
                     </object>
@@ -2115,7 +2189,8 @@ remote VNC server</label>
                                 <option>1</option>
                                 <object class="wxSlider" name="ID_SLIDER_X11_JPEG_QALITY">
                                     <style>wxSL_HORIZONTAL|wxSL_AUTOTICKS</style>
-                                    <value>0</value>
+                                    <enabled>0</enabled>
+                                    <value>6</value>
                                     <min>0</min>
                                     <max>9</max>
                                 </object>
@@ -2205,6 +2280,7 @@ remote VNC server</label>
     <object class="wxDialog" name="ID_DIALOG_SHARE_ADD" subclass="ShareProperties">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP</exstyle>
+        <size>114,75d</size>
         <title>New shared resource - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -3190,6 +3266,7 @@ this share.</label>
     <object class="wxDialog" name="ID_DIALOG_LOG" subclass="LogDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxMAXIMIZE_BOX|wxMINIMIZE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
+        <size>200,150d</size>
         <title>Session Log - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -3253,6 +3330,7 @@ this share.</label>
     <object class="wxDialog" name="ID_DIALOG_CONNECT" subclass="ConnectDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
+        <size>200,150d</size>
         <title>Connecting - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -3342,6 +3420,7 @@ this share.</label>
     <object class="wxDialog" name="ID_KEYDIALOG" subclass="KeyDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP</exstyle>
+        <size>400,300d</size>
         <title>Key Management - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -3409,6 +3488,7 @@ this share.</label>
     <object class="wxDialog" name="ID_RESUMEDIALOG" subclass="ResumeDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
+        <size>400,300d</size>
         <title>Select session - OpenNX</title>
         <centered>1</centered>
         <object class="wxBoxSizer">
@@ -3500,6 +3580,7 @@ this share.</label>
     <object class="wxDialog" name="ID_PANICDIALOG" subclass="PanicDialog">
         <style>wxCAPTION|wxSYSTEM_MENU|wxSTAY_ON_TOP|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
+        <size>400,300d</size>
         <icon>memory:memrsc#zip:res/nx.png</icon>
         <object class="wxBoxSizer">
             <orient>wxVERTICAL</orient>
@@ -3551,6 +3632,7 @@ this share.</label>
     <object class="wxDialog" name="ID_QUITDIALOG" subclass="QuitDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxSTAY_ON_TOP|wxCLOSE_BOX</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
+        <size>400,300d</size>
         <icon>memory:memrsc#zip:res/nx.png</icon>
         <object class="wxBoxSizer">
             <orient>wxVERTICAL</orient>
@@ -3611,6 +3693,7 @@ this share.</label>
     <object class="wxDialog" name="ID_CARDWAITERDIALOG" subclass="CardWaiterDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxTAB_TRAVERSAL</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
+        <size>400,300d</size>
         <title>Insert card - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -3656,6 +3739,7 @@ this share.</label>
     <object class="wxDialog" name="ID_USBFILTERDETAILSDIALOG" subclass="UsbFilterDetailsDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxTAB_TRAVERSAL</style>
         <exstyle>wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP</exstyle>
+        <size>400,300d</size>
         <title>USB Filter Details - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -3860,6 +3944,7 @@ enter the filter specification directly.</label>
     <object class="wxDialog" name="ID_PROXYPASSWORDDIALOG" subclass="ProxyPasswordDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxSTAY_ON_TOP|wxCLOSE_BOX|wxTAB_TRAVERSAL</style>
         <exstyle>wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS</exstyle>
+        <size>400,300d</size>
         <title>HTTP proxy password - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -3936,6 +4021,7 @@ enter the filter specification directly.</label>
     <object class="wxDialog" name="ID_PROXYPROPERTYDIALOG" subclass="ProxyPropertyDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxTAB_TRAVERSAL</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP</exstyle>
+        <size>400,300d</size>
         <title>Proxy settings - OpenNX</title>
         <centered>1</centered>
         <object class="wxBoxSizer">
@@ -4146,6 +4232,7 @@ enter the filter specification directly.</label>
     <object class="wxDialog" name="ID_SUPRESSIBLEMESSAGEDIALOG" subclass="SupressibleMessageDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxTAB_TRAVERSAL</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
+        <size>400,300d</size>
         <title>SupressibleMessageDialog</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
@@ -4185,6 +4272,7 @@ enter the filter specification directly.</label>
     <object class="wxDialog" name="ID_XDMPROPERTYDIALOG" subclass="XdmPropertyDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxTAB_TRAVERSAL</style>
         <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
+        <size>400,300d</size>
         <title>XDM Session Settings - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>

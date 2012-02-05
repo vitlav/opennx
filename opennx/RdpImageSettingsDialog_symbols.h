@@ -1,6 +1,6 @@
 // $Id$
 //
-// Copyright (C) 2010 The OpenNX team
+// Copyright (C) 2011 The OpenNX team
 // Author: Fritz Elfert
 //
 // This program is free software; you can redistribute it and/or modify
@@ -26,11 +26,12 @@
 #define ID_DIALOG_IMAGE_RDP_SYMBOL_4 _("64K")
 #define ID_DIALOG_IMAGE_RDP_SYMBOL_5 _("16M")
 #define ID_DIALOG_IMAGE_RDP_SYMBOL_6 _("Encoding")
-#define ID_DIALOG_IMAGE_RDP_SYMBOL_7 _("Use RDP image encoding")
-#define ID_DIALOG_IMAGE_RDP_SYMBOL_8 _("Use compressed RDP bitmaps")
-#define ID_DIALOG_IMAGE_RDP_SYMBOL_9 _("Use RGB image encoding")
+#define ID_DIALOG_IMAGE_RDP_SYMBOL_7 _("Use JPEG and RGB image compression")
+#define ID_DIALOG_IMAGE_RDP_SYMBOL_8 _("Use JPEG image compression only")
+#define ID_DIALOG_IMAGE_RDP_SYMBOL_9 _("Use RGB image compression only")
 #define ID_DIALOG_IMAGE_RDP_SYMBOL_10 _("Use plain X bitmaps")
-#define ID_DIALOG_IMAGE_RDP_SYMBOL_11 _("Cache")
-#define ID_DIALOG_IMAGE_RDP_SYMBOL_12 _("Enable RDP image cache")
-#define ID_DIALOG_IMAGE_RDP_SYMBOL_13 _("&OK")
-#define ID_DIALOG_IMAGE_RDP_SYMBOL_14 _("&Cancel")
+#define ID_DIALOG_IMAGE_RDP_SYMBOL_11 _("Use custom image quality")
+#define ID_DIALOG_IMAGE_RDP_SYMBOL_12 _("Cache")
+#define ID_DIALOG_IMAGE_RDP_SYMBOL_13 _("Enable RDP image cache")
+#define ID_DIALOG_IMAGE_RDP_SYMBOL_14 _("&OK")
+#define ID_DIALOG_IMAGE_RDP_SYMBOL_15 _("&Cancel")

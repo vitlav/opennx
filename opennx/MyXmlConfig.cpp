@@ -224,12 +224,9 @@ MyXmlConfig::init()
     saved = NULL;
     m_bDisableBackingstore = false;
     m_bDisableComposite = false;
-    m_bDisableImageCompression = false;
-    m_bDisableJpeg = false;
     m_bDisableRender = false;
     m_bDisableShmem = false;
     m_bDisableShpix = false;
-    m_bDisableStreaming = false;
     m_bDisableTaint = false;
     m_bDisableTcpNoDelay = false;
     m_bDisableXagent = false;
@@ -240,10 +237,8 @@ MyXmlConfig::init()
     m_bEnableUSBIP = false;
     m_bExternalProxy = false;
     m_bGuestMode = false;
-    m_bImageEncodingJpeg = true;
-    m_bImageEncodingPlainX = false;
-    m_bImageEncodingPNG = false;
     m_bKbdLayoutOther = false;
+    m_bOldConfig = false;
     m_bProxyPassRemember = false;
     m_bRdpCache = true;
     m_bRdpRememberPassword = false;
@@ -254,10 +249,8 @@ MyXmlConfig::init()
     m_bRunXclients = false;
     m_bUseCups = false;
     m_bUseCustomImageEncoding = false;
-    m_bUseJpegQuality = false;
     m_bUseProxy = false;
     m_bUseSmartCard = false;
-    m_bUseTightJpeg = false;
     m_bValid = false;
     m_bWritable = true;
     m_bVirtualDesktop = false;
@@ -271,16 +264,19 @@ MyXmlConfig::init()
     m_iCupsPort = 631;
     m_iDisplayHeight = 480;
     m_iDisplayWidth = 640;
+    m_iImageEncoding = 3;
     m_iJpegQuality = 6;
     m_iProxyPort = 3128;
     m_iRdpAuthType = 1;
     m_iRdpColors = 8;
-    m_iRdpImageCompression = 1;
+    m_iRdpImageEncoding = 3;
+    m_iRdpJpegQuality = 6;
     m_iServerPort = 22;
     m_iSmbPort = 445;
     m_iUsedShareGroups = 0;
     m_iVncDisplayNumber = 0;
-    m_iVncImageEncoding = 0;
+    m_iVncImageEncoding = 3;
+    m_iVncJpegQuality = 6;
     m_iXdmBroadcastPort = 177;
     m_iXdmListPort = 177;
     m_iXdmQueryPort = 177;
@@ -358,12 +354,9 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
 
     m_bDisableBackingstore = other.m_bDisableBackingstore;
     m_bDisableComposite = other.m_bDisableComposite;
-    m_bDisableImageCompression = other.m_bDisableImageCompression;
-    m_bDisableJpeg = other.m_bDisableJpeg;
     m_bDisableRender = other.m_bDisableRender;
     m_bDisableShmem = other.m_bDisableShmem;
     m_bDisableShpix = other.m_bDisableShpix;
-    m_bDisableStreaming = other.m_bDisableStreaming;
     m_bDisableTaint = other.m_bDisableTaint;
     m_bDisableTcpNoDelay = other.m_bDisableTcpNoDelay;
     m_bDisableXagent = other.m_bDisableXagent;
@@ -374,9 +367,6 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
     m_bEnableUSBIP = other.m_bEnableUSBIP;
     m_bExternalProxy = other.m_bExternalProxy;
     m_bGuestMode = other.m_bGuestMode;
-    m_bImageEncodingJpeg = other.m_bImageEncodingJpeg;
-    m_bImageEncodingPlainX = other.m_bImageEncodingPlainX;
-    m_bImageEncodingPNG = other.m_bImageEncodingPNG;
     m_bKbdLayoutOther = other.m_bKbdLayoutOther;
     m_bProxyPassRemember = other.m_bProxyPassRemember;
     m_bRdpCache = other.m_bRdpCache;
@@ -388,10 +378,8 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
     m_bRunXclients = other.m_bRunXclients;
     m_bUseCups = other.m_bUseCups;
     m_bUseCustomImageEncoding = other.m_bUseCustomImageEncoding;
-    m_bUseJpegQuality = other.m_bUseJpegQuality;
     m_bUseProxy = other.m_bUseProxy;
     m_bUseSmartCard = other.m_bUseSmartCard;
-    m_bUseTightJpeg = other.m_bUseTightJpeg;
     m_bValid = other.m_bValid;
     // Don't copy readonly flag
     m_bVirtualDesktop = other.m_bVirtualDesktop;
@@ -405,17 +393,20 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
     m_iCupsPort = other.m_iCupsPort;
     m_iDisplayHeight = other.m_iDisplayHeight;
     m_iDisplayWidth = other.m_iDisplayWidth;
+    m_iImageEncoding = other.m_iImageEncoding;
     m_iJpegQuality = other.m_iJpegQuality;
     m_sKbdLayoutLanguage = other.m_sKbdLayoutLanguage;
     m_iProxyPort = other.m_iProxyPort;
     m_iRdpAuthType = other.m_iRdpAuthType;
     m_iRdpColors = other.m_iRdpColors;
-    m_iRdpImageCompression = other.m_iRdpImageCompression;
+    m_iRdpImageEncoding = other.m_iRdpImageEncoding;
+    m_iRdpJpegQuality = other.m_iRdpJpegQuality;
     m_iServerPort = other.m_iServerPort;
     m_iSmbPort = other.m_iSmbPort;
     m_iUsedShareGroups = other.m_iUsedShareGroups;
     m_iVncDisplayNumber = other.m_iVncDisplayNumber;
     m_iVncImageEncoding = other.m_iVncImageEncoding;
+    m_iVncJpegQuality = other.m_iVncJpegQuality;
     m_iXdmBroadcastPort = other.m_iXdmBroadcastPort;
     m_iXdmListPort = other.m_iXdmListPort;
     m_iXdmQueryPort = other.m_iXdmQueryPort;
@@ -570,7 +561,7 @@ MyXmlConfig::UrlEsc(const wxString &s)
             case wxT('`'):
             case wxT('\''):
             case wxT('\\'):
-                ret << wxString::Format(wxT("%%%02x"), s[i]);
+                ret << wxString::Format(wxT("%%%02X"), s[i]);
                 break;
             default:
                 ret << s[i];
@@ -679,6 +670,11 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
                         }
                         break;
                 }
+                if (m_bUseCustomImageEncoding) {
+                    ret << wxT(" --imagecompressionmethod=\"") << m_iImageEncoding << wxT("\"")
+                        << wxT(" --imagecompressionlevel=\"")
+                        << (((-1 == m_iImageEncoding) || (4 == m_iImageEncoding)) ? m_iJpegQuality : -1) << wxT("\"");
+                }
                 break;
             case STYPE_WINDOWS:
                 ret << wxT("windows\"")
@@ -723,16 +719,23 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
                             break;
                     }
                     ret << wxT(" --rdpcache=\"") << (m_bRdpCache ? 1 : 0) << wxT("\"")
-                        << wxT(" --imagecompressionmethod=\"") << m_iRdpImageCompression << wxT("\"");
+                        << wxT(" --imagecompressionmethod=\"") << m_iRdpImageEncoding << wxT("\"")
+                        << wxT(" --imagecompressionlevel=\"")
+                        << (((-1 == m_iRdpImageEncoding) || (4 == m_iRdpImageEncoding)) ? m_iRdpJpegQuality : -1)
+                        << wxT("\"");
                 }
                 break;
             case STYPE_VNC:
                 ret << wxT("vnc\"")
                     << wxT(" --agent_server=\"")
-                    << UrlEsc(m_sVncHostName) << wxT("%3a") << m_iVncDisplayNumber
+                    << UrlEsc(m_sVncHostName) << wxT("%3A") << m_iVncDisplayNumber
                     << wxT("\" --agent_password=\"") << UrlEsc(m_sVncPassword) << wxT("\"");
-                if (m_bUseCustomImageEncoding)
-                    ret << wxT(" --imagecompressionmethod=\"") << ((m_iVncImageEncoding + 1) % 3) << wxT("\"");
+                if (m_bUseCustomImageEncoding) {
+                    ret << wxT(" --imagecompressionmethod=\"") << m_iVncImageEncoding << wxT("\"")
+                        << wxT(" --imagecompressionlevel=\"")
+                        << (((-1 == m_iVncImageEncoding) || (4 == m_iVncImageEncoding)) ? m_iVncJpegQuality : -1)
+                        << wxT("\"");
+                }
                 break;
         }
     }
@@ -866,10 +869,11 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
         << wxT(" --encryption=\"")
         << (m_bEnableSSL ? 1 : 0)
         << wxT("\"")
+        << wxT(" --render=\"") << (m_bDisableRender ? 0 : 1) << wxT("\"")
         << wxT(" --composite=\"") << (m_bDisableComposite ? 0 : 1) << wxT("\"")
         << wxT(" --shmem=\"") << (m_bDisableShmem ? 0 : 1) << wxT("\"")
         << wxT(" --shpix=\"") << (m_bDisableShpix ? 0 : 1) << wxT("\"")
-        << wxT(" --streaming=\"") << (m_bDisableStreaming ? 0 : 1) << wxT("\"")
+        // deprecated << wxT(" --streaming=\"") << (m_bDisableStreaming ? 0 : 1) << wxT("\"")
         << wxT(" --samba=\"") << (m_bEnableSmbSharing ? 1 : 0) << wxT("\"")
         << wxT(" --cups=\"") << (m_bUseCups ? 1 : 0) << wxT("\"")
         << wxT(" --nodelay=\"") << (m_bDisableTcpNoDelay ? 0 : 1) << wxT("\"")
@@ -889,7 +893,7 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
     if (m_bEnableMultimedia) {
         ret << wxT(" --mediahelper=\"esd\"");
     }
-    // FIXME: Add real settings
+    // Original always uses those?!
     ret << wxT(" --strict=\"0\" --aux=\"1\"");
     return ret;
 }
@@ -1026,12 +1030,9 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
 {
     if (m_bDisableBackingstore != other.m_bDisableBackingstore) return false;
     if (m_bDisableComposite != other.m_bDisableComposite) return false;
-    if (m_bDisableImageCompression != other.m_bDisableImageCompression) return false;
-    if (m_bDisableJpeg != other.m_bDisableJpeg) return false;
     if (m_bDisableRender != other.m_bDisableRender) return false;
     if (m_bDisableShmem != other.m_bDisableShmem) return false;
     if (m_bDisableShpix != other.m_bDisableShpix) return false;
-    if (m_bDisableStreaming != other.m_bDisableStreaming) return false;
     if (m_bDisableTaint != other.m_bDisableTaint) return false;
     if (m_bDisableTcpNoDelay != other.m_bDisableTcpNoDelay) return false;
     if (m_bDisableXagent != other.m_bDisableXagent) return false;
@@ -1042,9 +1043,6 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
     if (m_bEnableUSBIP != other.m_bEnableUSBIP) return false;
     if (m_bExternalProxy != other.m_bExternalProxy) return false;
     if (m_bGuestMode != other.m_bGuestMode) return false;
-    if (m_bImageEncodingJpeg != other.m_bImageEncodingJpeg) return false;
-    if (m_bImageEncodingPlainX != other.m_bImageEncodingPlainX) return false;
-    if (m_bImageEncodingPNG != other.m_bImageEncodingPNG) return false;
     if (m_bKbdLayoutOther != other.m_bKbdLayoutOther) return false;
     if (m_bProxyPassRemember != other.m_bProxyPassRemember) return false;
     if (m_bRdpCache != other.m_bRdpCache) return false;
@@ -1056,10 +1054,8 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
     if (m_bRunXclients != other.m_bRunXclients) return false;
     if (m_bUseCups != other.m_bUseCups) return false;
     if (m_bUseCustomImageEncoding != other.m_bUseCustomImageEncoding) return false;
-    if (m_bUseJpegQuality != other.m_bUseJpegQuality) return false;
     if (m_bUseProxy != other.m_bUseProxy) return false;
     if (m_bUseSmartCard != other.m_bUseSmartCard) return false;
-    if (m_bUseTightJpeg != other.m_bUseTightJpeg) return false;
     if (m_bValid != other.m_bValid) return false;
     // Don't compare readonly flag
     if (m_bVirtualDesktop != other.m_bVirtualDesktop) return false;
@@ -1073,16 +1069,19 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
     if (m_iCupsPort != other.m_iCupsPort) return false;
     if (m_iDisplayHeight != other.m_iDisplayHeight) return false;
     if (m_iDisplayWidth != other.m_iDisplayWidth) return false;
+    if (m_iImageEncoding != other.m_iImageEncoding) return false;
     if (m_iJpegQuality != other.m_iJpegQuality) return false;
     if (m_iProxyPort != other.m_iProxyPort) return false;
     if (m_iRdpAuthType != other.m_iRdpAuthType) return false;
     if (m_iRdpColors != other.m_iRdpColors) return false;
-    if (m_iRdpImageCompression != other.m_iRdpImageCompression) return false;
+    if (m_iRdpImageEncoding != other.m_iRdpImageEncoding) return false;
+    if (m_iRdpJpegQuality != other.m_iRdpJpegQuality) return false;
     if (m_iServerPort != other.m_iServerPort) return false;
     if (m_iSmbPort != other.m_iSmbPort) return false;
     if (m_iUsedShareGroups != other.m_iUsedShareGroups) return false;
     if (m_iVncDisplayNumber != other.m_iVncDisplayNumber) return false;
     if (m_iVncImageEncoding != other.m_iVncImageEncoding) return false;
+    if (m_iVncJpegQuality != other.m_iVncJpegQuality) return false;
     if (m_iXdmBroadcastPort != other.m_iXdmBroadcastPort) return false;
     if (m_iXdmListPort != other.m_iXdmListPort) return false;
     if (m_iXdmQueryPort != other.m_iXdmQueryPort) return false;
@@ -1559,51 +1558,82 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
 
                 // Sub-Dialog Custom image compresion
                 if (cfgnode->GetPropVal(wxT("name"), wxEmptyString) == wxT("Images")) {
+                    // First, determine, if we have an old (pre 0.16.173) config file
                     wxXmlNode *opt = cfgnode->GetChildren();
+                    m_bOldConfig = false;
                     while (opt) {
-                        m_bDisableJpeg = getLongBool(opt, wxT("Disable JPEG Compression"),
-                                m_bDisableJpeg);
-                        m_bDisableImageCompression = getBool(opt,
-                                wxT("Disable all image optimisations"),
-                                m_bDisableImageCompression);
+                        wxString key = opt->GetPropVal(wxT("key"), wxEmptyString);
+                        if (key == wxT("Windows Image Compression")) {
+                            m_bOldConfig = true;
+                            break;
+                        }
+                        opt = opt->GetNext();
+                    }
+                    opt = cfgnode->GetChildren();
+                    while (opt) {
                         m_bDisableBackingstore = getBool(opt, wxT("Disable backingstore"),
                                 m_bDisableBackingstore);
                         m_bDisableComposite = getBool(opt, wxT("Disable coposite"),
                                 m_bDisableComposite);
-                        m_bDisableStreaming = getBool(opt, wxT("Disable image streaming"),
-                                m_bDisableStreaming);
 
-                        itmp = getLong(opt, wxT("Image Compression Type"), -1);
-                        switch (itmp) {
-                            case 0:
-                                m_bImageEncodingJpeg = true;
-                                m_bUseJpegQuality = false;
-                                m_bImageEncodingPlainX = false;
-                                break;
-                            case 1:
-                                m_bImageEncodingJpeg = true;
-                                m_bUseJpegQuality = true;
-                                m_bImageEncodingPlainX = false;
-                                break;
-                            case 2:
-                                m_bImageEncodingJpeg = false;
-                                m_bUseJpegQuality = false;
-                        }
-                        m_bUseTightJpeg = getBool(opt, wxT("Image JPEG Encoding"),
-                                m_bUseTightJpeg);
+                        m_iImageEncoding = getLong(opt, wxT("Image Compression Type"), m_iImageEncoding);
                         m_iJpegQuality = getLong(opt, wxT("JPEG Quality"), m_iJpegQuality);
                         // RDP optimization for low-bandwidth link = false
                         // Reduce colors to = ""
-                        m_bImageEncodingPNG = getBool(opt, wxT("Use PNG Compression"),
-                                m_bImageEncodingPNG);
-                        m_iVncImageEncoding = getLong(opt, wxT("Image Encoding Type"),
+                        m_iVncImageEncoding = getLong(opt, wxT("VNC images compression"),
                                 m_iVncImageEncoding);
-                        m_iRdpImageCompression = getLong(opt, wxT("Windows Image Compression"),
-                                m_iRdpImageCompression);
-
+                        m_iVncJpegQuality = getLong(opt, wxT("VNC JPEG Quality"), m_iVncJpegQuality);
+                        m_iRdpImageEncoding = getLong(opt, wxT("RDP Image Encoding"),
+                                m_iRdpImageEncoding);
+                        m_iRdpJpegQuality = getLong(opt, wxT("RDP JPEG Quality"), m_iRdpJpegQuality);
                         opt = opt->GetNext();
-                        if (!opt)
-                            m_bImageEncodingPlainX = !m_bImageEncodingPNG;
+                    }
+                    if (m_bOldConfig) {
+                        if (m_bUseCustomImageEncoding) {
+                            // Convert from old settings format
+                            switch (m_iImageEncoding) {
+                                case 0:
+                                    m_iImageEncoding = 3;
+                                    break;
+                                case 1:
+                                    m_iImageEncoding = 4;
+                                    break;
+                                case 2:
+                                    m_iImageEncoding = 2;
+                                    break;
+                            }
+                            m_iRdpJpegQuality = m_iVncJpegQuality = m_iJpegQuality;
+
+                            opt = cfgnode->GetChildren();
+                            int oldvncenc = 0;
+                            int oldrdpenc = 0;
+                            while (opt) {
+                                oldvncenc = getLong(opt, wxT("Image Encoding Type"), oldvncenc);
+                                oldrdpenc = getLong(opt, wxT("Windows Image Compression"), oldrdpenc);
+                                opt = opt->GetNext();
+                            }
+                            m_iVncImageEncoding = (oldvncenc + 1) % 3;
+                            switch (oldrdpenc) {
+                                case 0:
+                                    m_iRdpImageEncoding = 3;
+                                    break;
+                                case 1:
+                                    m_iRdpImageEncoding = 1;
+                                    break;
+                                case 2:
+                                    m_iRdpImageEncoding = 2;
+                                    break;
+                                case 3:
+                                    m_iRdpImageEncoding = 0;
+                                    break;
+                            }
+                        } else {
+                            // Custom settings are disabled, so simply set defaults ...
+                            m_iImageEncoding =  m_iRdpImageEncoding =  m_iVncImageEncoding = 3;
+                            m_iJpegQuality = m_iRdpJpegQuality = m_iVncJpegQuality = 6;
+                            // ... and shut up (no need to bother the user)
+                            m_bOldConfig = false;
+                        }
                     }
                     cfgnode = cfgnode->GetNext();
                     continue;
@@ -2111,26 +2141,44 @@ MyXmlConfig::SaveToFile()
 
     // == UnixImageSettingsDialog, RdpImageSettingsDialog, VncImageSettingsDialog
     g = AddGroup(r, wxT("Images"));
-    iAddOption(g, wxT("Disable JPEG Compression"), m_bDisableJpeg ? 1 : 0);
-    bAddOption(g, wxT("Disable all image optimisations"), m_bDisableImageCompression);
+
+    // deprecated but written by NX client, m_bDisableJpeg
+    iAddOption(g, wxT("Disable JPEG Compression"), 0); 
+
+    // deprecated but written by NX client, m_bDisableImageCompression
+    bAddOption(g, wxT("Disable all image optimisations"), false);
+
     bAddOption(g, wxT("Disable backingstore"), m_bDisableBackingstore);
     bAddOption(g, wxT("Disable coposite"), m_bDisableComposite);
-    bAddOption(g, wxT("Disable image streaming"), m_bDisableStreaming);
-    if ((m_bImageEncodingPlainX || m_bImageEncodingPNG) && (!m_bImageEncodingJpeg))
-        optval = wxT("2");
-    else if (m_bImageEncodingJpeg && m_bUseJpegQuality)
-        optval = wxT("1");
-    else
-        optval = wxT("0");
-    sAddOption(g, wxT("Image Compression Type"), optval);
-    iAddOption(g, wxT("Image Encoding Type"), m_iVncImageEncoding);
-    bAddOption(g, wxT("Image JPEG Encoding"), m_bUseTightJpeg);
+   
+    // deprecated bAddOption(g, wxT("Disable image streaming"), m_bDisableStreaming);
+    
+    iAddOption(g, wxT("Image Compression Type"), m_iImageEncoding);
+
+    // deprecated but written by NX client
+    iAddOption(g, wxT("Image Encoding Type"), 0);
+
+    // deprecated but written by NX client, m_bUseTightJpeg
+    bAddOption(g, wxT("Image JPEG Encoding"), false);
+
     iAddOption(g, wxT("JPEG Quality"), m_iJpegQuality);
-    bAddOption(g, wxT("RDP optimization for low-bandwidth link"), false); // ??
-    sAddOption(g, wxT("Reduce colors to"), wxEmptyString); // ??
-    bAddOption(g, wxT("Use PNG Compression"), m_bImageEncodingPNG);
-    iAddOption(g, wxT("VNC images compression"), 0); // Not in original GUI but in config ?!
-    iAddOption(g, wxT("Windows Image Compression"), m_iRdpImageCompression);
+    iAddOption(g, wxT("RDP Image Encoding"), m_iRdpImageEncoding);
+    iAddOption(g, wxT("RDP JPEG Quality"), m_iRdpJpegQuality);
+
+    // Written by NX client, unknown purpose
+    bAddOption(g, wxT("RDP optimization for low-bandwidth link"), false);
+
+    // Written by NX client, unknown purpose
+    sAddOption(g, wxT("Reduce colors to"), wxEmptyString);
+
+    // deprecated but written by NX client, m_bImageEncodingPNG
+    bAddOption(g, wxT("Use PNG Compression"), true);
+
+    iAddOption(g, wxT("VNC images compression"), m_iVncImageEncoding);
+    iAddOption(g, wxT("VNC JPEG Quality"), m_iVncJpegQuality);
+    
+    // deprecated - If this exists, we consider it an "old" config file during read
+    // iAddOption(g, wxT("Windows Image Compression"), m_iRdpImageCompression);
 
     g = AddGroup(r, wxT("Login"));
     if (m_bRememberPassword) {

@@ -92,14 +92,20 @@ private:
 
 ////@begin VncImageSettingsDialog event handler declarations
 
-    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_VNC_HEXTILE
-    void OnRadiobuttonVncHextileSelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_VNC_JPEG_AND_RGB
+    void OnRadiobuttonVncJpegAndRgbSelected( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_VNC_TIGHT
-    void OnRadiobuttonVncTightSelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_VNC_JPEG
+    void OnRadiobuttonVncJpegSelected( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_VNC_PLAINX
-    void OnRadiobuttonVncPlainxSelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_VNC_PNG
+    void OnRadiobuttonVncPngSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_VNC_PLAIN
+    void OnRadiobuttonVncPlainSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_X11_JPEG_CUSTOMQUALITY
+    void OnCheckboxX11JpegCustomqualityClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
     void OnOkClick( wxCommandEvent& event );
@@ -121,14 +127,15 @@ private:
     void UpdateDialogConstraints();
 
 ////@begin VncImageSettingsDialog member variables
-    wxRadioButton* m_pCtrlUseHextile;
-    wxRadioButton* m_pCtrlUseTight;
-    wxCheckBox* m_pCtrlVncJpeg;
-    wxRadioButton* m_pCtrlUsePlainX;
-    bool m_bUseHextile;
-    bool m_bUsePlainX;
-    bool m_bUseTight;
-    bool m_bUseTightJpeg;
+    wxCheckBox* m_pCtrlUseJpegQuality;
+    wxSlider* m_pCtrlJpegQuality;
+private:
+    bool m_bImageEncodingBoth;
+    bool m_bImageEncodingJpeg;
+    bool m_bImageEncodingPNG;
+    bool m_bImageEncodingPlainX;
+    bool m_bUseJpegQuality;
+    int m_iJpegQuality;
 ////@end VncImageSettingsDialog member variables
 
     MyXmlConfig *m_pCfg;

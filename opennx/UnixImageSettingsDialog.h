@@ -95,12 +95,30 @@ private:
 
 ////@begin UnixImageSettingsDialog event handler declarations
 
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_X11_JPEG_AND_RGB
+    void OnRadiobuttonX11JpegAndRgbSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_X11_JPEG
+    void OnRadiobuttonX11JpegSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_X11_PNG
+    void OnRadiobuttonX11PngSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_X11_PLAIN
+    void OnRadiobuttonX11PlainSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_X11_JPEG_CUSTOMQUALITY
+    void OnCheckboxX11JpegCustomqualityClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
     void OnOKClick( wxCommandEvent& event );
 
 ////@end UnixImageSettingsDialog event handler declarations
 
 ////@begin UnixImageSettingsDialog member function declarations
+
+    bool GetBImageEncodingBoth() const { return m_bImageEncodingBoth ; }
+    void SetBImageEncodingBoth(bool value) { m_bImageEncodingBoth = value ; }
 
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
@@ -112,9 +130,12 @@ private:
     /// Should we show tooltips?
     static bool ShowToolTips();
 
+    void UpdateDialogConstraints();
+
 ////@begin UnixImageSettingsDialog member variables
     wxCheckBox* m_pCtrlUseJpegQuality;
     wxSlider* m_pCtrlJpegQuality;
+    wxCheckBox* m_pCtrlDisableSharedPixmaps;
 private:
     bool m_bImageEncodingPNG;
     bool m_bImageEncodingPlainX;
@@ -126,6 +147,7 @@ private:
     bool m_bDisableComposite;
     bool m_bDisableShmem;
     bool m_bDisableShpix;
+    bool m_bImageEncodingBoth;
 ////@end UnixImageSettingsDialog member variables
 
     MyXmlConfig *m_pCfg;

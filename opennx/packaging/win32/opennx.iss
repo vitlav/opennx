@@ -114,6 +114,9 @@ Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bi
 #if FileExists("setupdir\bin\nxesd.exe")
 Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bin\nxesd.exe"" ""OpenNX nxesd"" ENABLE"; StatusMsg: {cm:fwadd}; Flags: runhidden skipifdoesntexist
 #endif
+#if FileExists("setupdir\bin\tracelog.exe")
+Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bin\tracelog.exe"" ""OpenNX tracelog"" ENABLE"; StatusMsg: {cm:fwadd}; Flags: runhidden skipifdoesntexist
+#endif
 #if FileExists("setupdir\bin\pulseaudio.exe")
 Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bin\pulseaudio.exe"" ""OpenNX pulseaudio"" ENABLE"; StatusMsg: {cm:fwadd}; Flags: runhidden skipifdoesntexist
 #endif
@@ -131,6 +134,9 @@ Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}
 #endif
 #if FileExists("setupdir\bin\nxesd.exe")
 Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\nxesd.exe"" ALL"; Flags: runhidden skipifdoesntexist; RunOnceId: fwdelnxesd
+#endif
+#if FileExists("setupdir\bin\tracelog.exe")
+Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\tracelog.exe"" ALL"; Flags: runhidden skipifdoesntexist; RunOnceId: fwdelnxesd
 #endif
 #if FileExists("setupdir\bin\pulseaudio.exe")
 Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\pulseaudio.exe"" ALL"; Flags: runhidden skipifdoesntexist; RunOnceId: fwdelnxesd

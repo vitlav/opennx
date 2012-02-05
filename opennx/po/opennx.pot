@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opennx 0.16\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2011-12-15 13:17+0100\n"
+"POT-Creation-Date: 2012-02-05 06:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,10 +26,10 @@ msgid "About OpenNX"
 msgstr ""
 
 #: AboutDialog_symbols.h:23 ProxyPasswordDialog_symbols.h:25
-#: ProxyPropertyDialog_symbols.h:32 RdpImageSettingsDialog_symbols.h:35
+#: ProxyPropertyDialog_symbols.h:32 RdpImageSettingsDialog_symbols.h:36
 #: RdpPropertyDialog_symbols.h:35 SessionProperties_symbols.h:112
-#: ShareProperties_symbols.h:51 UnixImageSettingsDialog_symbols.h:34
-#: UsbFilterDetailsDialog_symbols.h:35 VncImageSettingsDialog_symbols.h:27
+#: ShareProperties_symbols.h:51 UnixImageSettingsDialog_symbols.h:35
+#: UsbFilterDetailsDialog_symbols.h:35 VncImageSettingsDialog_symbols.h:29
 #: VncPropertyDialog_symbols.h:31 X11PropertyDialog_symbols.h:32
 #: XdmPropertyDialog_symbols.h:30
 msgid "&OK"
@@ -46,10 +46,10 @@ msgstr ""
 #: CardWaiterDialog_symbols.h:24 ConnectDialog_symbols.h:24
 #: KeyDialog_symbols.h:26 LoginDialog_symbols.h:30 PanicDialog_symbols.h:23
 #: ProxyPasswordDialog_symbols.h:26 ProxyPropertyDialog_symbols.h:33
-#: RdpImageSettingsDialog_symbols.h:36 RdpPropertyDialog_symbols.h:36
+#: RdpImageSettingsDialog_symbols.h:37 RdpPropertyDialog_symbols.h:36
 #: ResumeDialog_symbols.h:29 SessionProperties_symbols.h:113
-#: ShareProperties_symbols.h:52 UnixImageSettingsDialog_symbols.h:35
-#: UsbFilterDetailsDialog_symbols.h:36 VncImageSettingsDialog_symbols.h:28
+#: ShareProperties_symbols.h:52 UnixImageSettingsDialog_symbols.h:36
+#: UsbFilterDetailsDialog_symbols.h:36 VncImageSettingsDialog_symbols.h:30
 #: VncPropertyDialog_symbols.h:32 X11PropertyDialog_symbols.h:33
 #: XdmPropertyDialog_symbols.h:31
 msgid "&Cancel"
@@ -103,15 +103,35 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: LoginDialog.cpp:401 LoginDialog.cpp:510 MyWizard.cpp:1357
+#: LoginDialog.cpp:408 LoginDialog.cpp:530 MyWizard.cpp:1357
 #, c-format
 msgid ""
 "Could not save session to\n"
 "%s"
 msgstr ""
 
-#: LoginDialog.cpp:402 LoginDialog.cpp:511 MyWizard.cpp:1358
+#: LoginDialog.cpp:409 LoginDialog.cpp:531 MyWizard.cpp:1358
 msgid "Error saving - OpenNX"
+msgstr ""
+
+#: LoginDialog.cpp:470
+#, c-format
+msgid ""
+"An old session configuration has been detected.\n"
+"The session '%s' has been converted to the new format.\n"
+"Please verify the custom image compression settings."
+msgstr ""
+
+#: LoginDialog.cpp:472
+#, c-format
+msgid ""
+"An old session configuration has been detected.\n"
+"The session '%s' has been converted but could not be saved.\n"
+"Please verify the custom image compression settings."
+msgstr ""
+
+#: LoginDialog.cpp:476 MySession.cpp:777 MySession.cpp:789 MySession.cpp:803
+msgid "Warning - OpenNX"
 msgstr ""
 
 #: LoginDialog.h:56 LoginDialog_symbols.h:22
@@ -149,17 +169,17 @@ msgstr ""
 msgid "L&ogin"
 msgstr ""
 
-#: MacUninstallApp.cpp:61 MacUninstallApp.cpp:505
+#: MacUninstallApp.cpp:61 MacUninstallApp.cpp:509
 #, c-format
 msgid "TEST: Would delete file: %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:64 MacUninstallApp.cpp:509
+#: MacUninstallApp.cpp:64 MacUninstallApp.cpp:513
 #, c-format
 msgid "Deleted file: %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:67 MacUninstallApp.cpp:512
+#: MacUninstallApp.cpp:67 MacUninstallApp.cpp:516
 #, c-format
 msgid "Could not delete file %s"
 msgstr ""
@@ -174,68 +194,68 @@ msgstr ""
 msgid "Deleted diretory %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:81 MacUninstallApp.cpp:543 MacUninstallApp.cpp:562
+#: MacUninstallApp.cpp:81 MacUninstallApp.cpp:547 MacUninstallApp.cpp:566
 #, c-format
 msgid "Could not delete directory %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:129
+#: MacUninstallApp.cpp:133
 msgid "Test mode. Just create log file reporting what would happen."
 msgstr ""
 
-#: MacUninstallApp.cpp:131
+#: MacUninstallApp.cpp:135
 msgid "Uninstall without asking the user (needs admin rights)."
 msgstr ""
 
-#: MacUninstallApp.cpp:168
+#: MacUninstallApp.cpp:172
 msgid "Batch uninstall needs to be started as root."
 msgstr ""
 
-#: MacUninstallApp.cpp:169 MacUninstallApp.cpp:195
+#: MacUninstallApp.cpp:173 MacUninstallApp.cpp:199
 #, c-format
 msgid "Uninstall %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:176
+#: MacUninstallApp.cpp:180
 #, c-format
 msgid "Uninstall finished at %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:177
+#: MacUninstallApp.cpp:181
 #, c-format
 msgid "Status: %s, failed files: %lu, failed dirs: %lu"
 msgstr ""
 
-#: MacUninstallApp.cpp:178
+#: MacUninstallApp.cpp:182
 msgid "OK"
 msgstr ""
 
-#: MacUninstallApp.cpp:178
+#: MacUninstallApp.cpp:182
 msgid "FAILED"
 msgstr ""
 
-#: MacUninstallApp.cpp:185
+#: MacUninstallApp.cpp:189
 #, c-format
 msgid "Reporting result to elevation wrapper %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:193
+#: MacUninstallApp.cpp:197
 #, c-format
 msgid ""
 "This operation can not be undone!\n"
 "Do you really want to uninstall %s?"
 msgstr ""
 
-#: MacUninstallApp.cpp:207
+#: MacUninstallApp.cpp:211
 #, c-format
 msgid "%s has been removed successfully."
 msgstr ""
 
-#: MacUninstallApp.cpp:209
+#: MacUninstallApp.cpp:213
 msgid "Uninstallation complete"
 msgstr ""
 
-#: MacUninstallApp.cpp:213
+#: MacUninstallApp.cpp:217
 #, c-format
 msgid ""
 "%s could not be removed completely.\n"
@@ -245,11 +265,11 @@ msgid ""
 " for more information."
 msgstr ""
 
-#: MacUninstallApp.cpp:215
+#: MacUninstallApp.cpp:219
 msgid "Uninstallation incomplete"
 msgstr ""
 
-#: MacUninstallApp.cpp:221
+#: MacUninstallApp.cpp:225
 #, c-format
 msgid ""
 "Uninstallation has failed.\n"
@@ -257,175 +277,175 @@ msgid ""
 "%s"
 msgstr ""
 
-#: MacUninstallApp.cpp:223
+#: MacUninstallApp.cpp:227
 msgid "Uninstallation failed"
 msgstr ""
 
-#: MacUninstallApp.cpp:242
+#: MacUninstallApp.cpp:246
 #, c-format
 msgid "Not an XML plist: %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:248
+#: MacUninstallApp.cpp:252
 #, c-format
 msgid "Invalid plist (missing toplevel <dict> in %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:259
+#: MacUninstallApp.cpp:263
 #, c-format
 msgid "Invalid plist (expected a key) in %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:269
+#: MacUninstallApp.cpp:273
 #, c-format
 msgid "Unsupported type array in %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:276
+#: MacUninstallApp.cpp:280
 #, c-format
 msgid "Invalid plist (invalid real value %s) in %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:286
+#: MacUninstallApp.cpp:290
 #, c-format
 msgid "Invalid plist (invalid integer value %s) in %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:305
+#: MacUninstallApp.cpp:309
 #, c-format
 msgid "Invalid plist (invalid date value %s) in %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:312
+#: MacUninstallApp.cpp:316
 #, c-format
 msgid "Invalid plist (unexpected type %s) in %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:358
+#: MacUninstallApp.cpp:362
 #, c-format
 msgid "Could not find requested key 'IFPkgFlagRelocatable' in receipt %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:364
+#: MacUninstallApp.cpp:368
 #, c-format
 msgid "Unexpected type '%s' of 'IFPkgFlagRelocatable' in receipt %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:372
+#: MacUninstallApp.cpp:376
 #, c-format
 msgid "Could not find requested key '%s' in receipt %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:378
+#: MacUninstallApp.cpp:382
 #, c-format
 msgid "Unexpected type '%s' of '%s' in receipt %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:388
+#: MacUninstallApp.cpp:392
 #, c-format
 msgid "Could not read package receipt %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:397
+#: MacUninstallApp.cpp:401
 #, c-format
 msgid "Missing BOM (Bill Of Materials) '%s'. Already unistalled?"
 msgstr ""
 
-#: MacUninstallApp.cpp:405 MacUninstallApp.cpp:418
+#: MacUninstallApp.cpp:409 MacUninstallApp.cpp:422
 #, c-format
 msgid "Could not list BOM (Bill Of Materials) '%s'. Already unistalled?"
 msgstr ""
 
-#: MacUninstallApp.cpp:410 MacUninstallApp.cpp:423
+#: MacUninstallApp.cpp:414 MacUninstallApp.cpp:427
 #, c-format
 msgid "Invalid BOM (Bill Of Materials) '%s'. Already unistalled?"
 msgstr ""
 
-#: MacUninstallApp.cpp:447
+#: MacUninstallApp.cpp:451
 msgid "The package receipt does not exist. Already unistalled?"
 msgstr ""
 
-#: MacUninstallApp.cpp:455
+#: MacUninstallApp.cpp:459
 msgid "The package install path does not exist. Already unistalled?"
 msgstr ""
 
-#: MacUninstallApp.cpp:470
+#: MacUninstallApp.cpp:474
 #, c-format
 msgid "Uninstall started at %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:494
+#: MacUninstallApp.cpp:498
 msgid "Deleting package content"
 msgstr ""
 
-#: MacUninstallApp.cpp:530 MacUninstallApp.cpp:556
+#: MacUninstallApp.cpp:534 MacUninstallApp.cpp:560
 #, c-format
 msgid "TEST: Would delete directory: %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:534 MacUninstallApp.cpp:559
+#: MacUninstallApp.cpp:538 MacUninstallApp.cpp:563
 #, c-format
 msgid "Deleted directory: %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:548
+#: MacUninstallApp.cpp:552
 msgid "Deleting receipt"
-msgstr ""
-
-#: MacUninstallApp.cpp:567
-#, c-format
-msgid "TEST: Would delete receipt: %s"
-msgstr ""
-
-#: MacUninstallApp.cpp:568
-#, c-format
-msgid "TEST: Would delete BOM: %s"
 msgstr ""
 
 #: MacUninstallApp.cpp:571
 #, c-format
+msgid "TEST: Would delete receipt: %s"
+msgstr ""
+
+#: MacUninstallApp.cpp:572
+#, c-format
+msgid "TEST: Would delete BOM: %s"
+msgstr ""
+
+#: MacUninstallApp.cpp:575
+#, c-format
 msgid "Deleted receipt: %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:573
+#: MacUninstallApp.cpp:577
 #, c-format
 msgid "Could not delete receipt %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:576
+#: MacUninstallApp.cpp:580
 #, c-format
 msgid "Deleted BOM: %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:578
+#: MacUninstallApp.cpp:582
 #, c-format
 msgid "Could not delete BOM %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:583
+#: MacUninstallApp.cpp:587
 msgid "Receipt NOT deleted, because package files have been left."
 msgstr ""
 
-#: MacUninstallApp.cpp:597
+#: MacUninstallApp.cpp:601
 #, c-format
 msgid ""
 "In order to uninstall %s, administrative rights are required.\n"
 "\n"
 msgstr ""
 
-#: MacUninstallApp.cpp:612
+#: MacUninstallApp.cpp:616
 #, c-format
 msgid "Authorization could not be created: %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:638
+#: MacUninstallApp.cpp:642
 #, c-format
 msgid ""
 "Could not execute with administrative rights:\n"
 "%s"
 msgstr ""
 
-#: MacUninstallApp.cpp:643
+#: MacUninstallApp.cpp:647
 #, c-format
 msgid "Authorization failed: %s"
 msgstr ""
@@ -465,10 +485,6 @@ msgstr ""
 
 #: MySession.cpp:560 MySession.cpp:563
 msgid "Unknown"
-msgstr ""
-
-#: MySession.cpp:777 MySession.cpp:789 MySession.cpp:803
-msgid "Warning - OpenNX"
 msgstr ""
 
 #: MySession.cpp:801
@@ -578,45 +594,45 @@ msgstr ""
 msgid "Could not assign a free port for CUPS printing"
 msgstr ""
 
-#: MySession.cpp:2101
+#: MySession.cpp:2100
 #, c-format
 msgid "Could not write %s"
 msgstr ""
 
-#: MySession.cpp:2186
+#: MySession.cpp:2185
 msgid "Could not start local X server"
 msgstr ""
 
-#: MySession.cpp:2207 MySession.cpp:2276 MySession.cpp:2290
+#: MySession.cpp:2206 MySession.cpp:2278 MySession.cpp:2292
 #, c-format
 msgid "Connecting to %s ..."
 msgstr ""
 
-#: MySession.cpp:2211
+#: MySession.cpp:2210
 msgid "Preparing multimedia service ..."
 msgstr ""
 
-#: MySession.cpp:2225 MySession.cpp:2270
+#: MySession.cpp:2224 MySession.cpp:2270 MySession.cpp:2274
 msgid "Could not start multimedia support"
 msgstr ""
 
-#: MySession.cpp:2228 MySession.cpp:2272
+#: MySession.cpp:2227 MySession.cpp:2272
 msgid "Could not assign a free port for multimedia support"
 msgstr ""
 
-#: MySession.cpp:2287
+#: MySession.cpp:2289
 msgid "Preparing CUPS service ..."
 msgstr ""
 
-#: MySession.cpp:2289
+#: MySession.cpp:2291
 msgid "Could not start CUPS printing"
 msgstr ""
 
-#: MySession.cpp:2341
+#: MySession.cpp:2343
 msgid "Called command was: "
 msgstr ""
 
-#: MySession.cpp:2342
+#: MySession.cpp:2344
 msgid "Could not start nxssh."
 msgstr ""
 
@@ -815,16 +831,16 @@ msgstr ""
 msgid "Show the Advanced Configuration dialog"
 msgstr ""
 
-#: MyXmlConfig.cpp:590
+#: MyXmlConfig.cpp:581
 msgid "Could not find application window"
 msgstr ""
 
-#: MyXmlConfig.cpp:1232
+#: MyXmlConfig.cpp:1231
 #, c-format
 msgid "Error %d while fetching session configuration"
 msgstr ""
 
-#: MyXmlConfig.cpp:1237
+#: MyXmlConfig.cpp:1236
 #, c-format
 msgid ""
 "Error while fetching session configuration:\n"
@@ -851,7 +867,7 @@ msgstr ""
 msgid "Connect through internal (NoMachine) HTTP proxy"
 msgstr ""
 
-#: ProxyPropertyDialog_symbols.h:26 ResumeDialog.cpp:177
+#: ProxyPropertyDialog_symbols.h:26 ResumeDialog.cpp:160
 msgid "User"
 msgstr ""
 
@@ -900,31 +916,40 @@ msgid "16M"
 msgstr ""
 
 #: RdpImageSettingsDialog_symbols.h:28 UnixImageSettingsDialog_symbols.h:23
+#: VncImageSettingsDialog_symbols.h:23
 msgid "Encoding"
 msgstr ""
 
-#: RdpImageSettingsDialog_symbols.h:29
-msgid "Use RDP image encoding"
+#: RdpImageSettingsDialog_symbols.h:29 UnixImageSettingsDialog_symbols.h:24
+#: VncImageSettingsDialog_symbols.h:24
+msgid "Use JPEG and RGB image compression"
 msgstr ""
 
-#: RdpImageSettingsDialog_symbols.h:30
-msgid "Use compressed RDP bitmaps"
+#: RdpImageSettingsDialog_symbols.h:30 UnixImageSettingsDialog_symbols.h:25
+#: VncImageSettingsDialog_symbols.h:25
+msgid "Use JPEG image compression only"
 msgstr ""
 
-#: RdpImageSettingsDialog_symbols.h:31
-msgid "Use RGB image encoding"
-msgstr ""
-
-#: RdpImageSettingsDialog_symbols.h:32 UnixImageSettingsDialog_symbols.h:25
+#: RdpImageSettingsDialog_symbols.h:31 UnixImageSettingsDialog_symbols.h:26
 #: VncImageSettingsDialog_symbols.h:26
+msgid "Use RGB image compression only"
+msgstr ""
+
+#: RdpImageSettingsDialog_symbols.h:32 UnixImageSettingsDialog_symbols.h:27
+#: VncImageSettingsDialog_symbols.h:27
 msgid "Use plain X bitmaps"
 msgstr ""
 
-#: RdpImageSettingsDialog_symbols.h:33 SessionProperties_symbols.h:72
+#: RdpImageSettingsDialog_symbols.h:33 UnixImageSettingsDialog_symbols.h:28
+#: VncImageSettingsDialog_symbols.h:28
+msgid "Use custom image quality"
+msgstr ""
+
+#: RdpImageSettingsDialog_symbols.h:34 SessionProperties_symbols.h:72
 msgid "Cache"
 msgstr ""
 
-#: RdpImageSettingsDialog_symbols.h:34
+#: RdpImageSettingsDialog_symbols.h:35
 msgid "Enable RDP image cache"
 msgstr ""
 
@@ -973,7 +998,7 @@ msgstr ""
 msgid "Run application"
 msgstr ""
 
-#: ResumeDialog.cpp:160 SessionProperties.cpp:683
+#: ResumeDialog.cpp:159 SessionProperties.cpp:683
 msgid "Name"
 msgstr ""
 
@@ -998,19 +1023,19 @@ msgstr ""
 msgid "Session ID"
 msgstr ""
 
-#: ResumeDialog.cpp:222
+#: ResumeDialog.cpp:217
 msgid "&Attach"
 msgstr ""
 
-#: ResumeDialog.cpp:222 ResumeDialog_symbols.h:27
+#: ResumeDialog.cpp:217 ResumeDialog_symbols.h:27
 msgid "&Resume"
 msgstr ""
 
-#: ResumeDialog.cpp:309
+#: ResumeDialog.cpp:305
 msgid "Do you really want to terminate the selected session?"
 msgstr ""
 
-#: ResumeDialog.cpp:310
+#: ResumeDialog.cpp:306
 msgid "Terminate session - OpenNX"
 msgstr ""
 
@@ -1219,7 +1244,7 @@ msgstr ""
 msgid "Select System CUPS daemon"
 msgstr ""
 
-#: SessionProperties.cpp:1992 opennxApp.cpp:1271
+#: SessionProperties.cpp:1992 opennxApp.cpp:1287
 msgid "libusb is not available. No USB devices will be exported"
 msgstr ""
 
@@ -1659,39 +1684,27 @@ msgstr ""
 msgid "Unix Image Settings - OpenNX"
 msgstr ""
 
-#: UnixImageSettingsDialog_symbols.h:24
-msgid "Use PNG image compression"
-msgstr ""
-
-#: UnixImageSettingsDialog_symbols.h:26
-msgid "Use JPEG image compression"
-msgstr ""
-
-#: UnixImageSettingsDialog_symbols.h:27
-msgid "Use custom image quality"
-msgstr ""
-
-#: UnixImageSettingsDialog_symbols.h:28
+#: UnixImageSettingsDialog_symbols.h:29
 msgid "Performance"
 msgstr ""
 
-#: UnixImageSettingsDialog_symbols.h:29
+#: UnixImageSettingsDialog_symbols.h:30
 msgid "Disable render extension"
 msgstr ""
 
-#: UnixImageSettingsDialog_symbols.h:30
+#: UnixImageSettingsDialog_symbols.h:31
 msgid "Disable backing-store"
 msgstr ""
 
-#: UnixImageSettingsDialog_symbols.h:31
+#: UnixImageSettingsDialog_symbols.h:32
 msgid "Disable composite extension"
 msgstr ""
 
-#: UnixImageSettingsDialog_symbols.h:32
+#: UnixImageSettingsDialog_symbols.h:33
 msgid "Disable shared memory extension"
 msgstr ""
 
-#: UnixImageSettingsDialog_symbols.h:33
+#: UnixImageSettingsDialog_symbols.h:34
 msgid "Disable shared pixmap emulation"
 msgstr ""
 
@@ -1776,18 +1789,6 @@ msgstr ""
 msgid "VNC Image Settings - OpenNX"
 msgstr ""
 
-#: VncImageSettingsDialog_symbols.h:23
-msgid "Use RFB Hextile encoding"
-msgstr ""
-
-#: VncImageSettingsDialog_symbols.h:24
-msgid "Use RFB Tight encoding"
-msgstr ""
-
-#: VncImageSettingsDialog_symbols.h:25
-msgid "Enable JPEG encoding"
-msgstr ""
-
 #: VncPropertyDialog.h:56 VncPropertyDialog_symbols.h:22
 msgid "VNC Session Settings - OpenNX"
 msgstr ""
@@ -1864,34 +1865,34 @@ msgstr ""
 msgid "Get a list of available X desktop managers"
 msgstr ""
 
-#: opennxApp.cpp:270
+#: opennxApp.cpp:269
 msgid "Launch NX Session"
 msgstr ""
 
-#: opennxApp.cpp:337
+#: opennxApp.cpp:336
 msgid "Could not create link on Desktop."
 msgstr ""
 
-#: opennxApp.cpp:439
+#: opennxApp.cpp:438
 msgid "Could not get PATH environment"
 msgstr ""
 
-#: opennxApp.cpp:454
+#: opennxApp.cpp:453
 #, c-format
 msgid "Could not find %s in PATH"
 msgstr ""
 
-#: opennxApp.cpp:464
+#: opennxApp.cpp:463
 #, c-format
 msgid "Could not stat %s"
 msgstr ""
 
-#: opennxApp.cpp:470
+#: opennxApp.cpp:469
 #, c-format
 msgid "Could not read link %s"
 msgstr ""
 
-#: opennxApp.cpp:539
+#: opennxApp.cpp:538
 #, c-format
 msgid ""
 "Your System NX directory setting (%s)\n"
@@ -1900,134 +1901,138 @@ msgid ""
 "(%s)?"
 msgstr ""
 
-#: opennxApp.cpp:540
+#: opennxApp.cpp:539
 msgid "Update System NX directory? - OpenNX"
 msgstr ""
 
-#: opennxApp.cpp:590
+#: opennxApp.cpp:589
 #, c-format
 msgid ""
 "Found a CUPS daemon binary in %s, however it is not executable.\n"
 "In order to use CUPS printing, you need to fix its permissions."
 msgstr ""
 
-#: opennxApp.cpp:595
+#: opennxApp.cpp:594
 msgid ""
 "Could not find any CUPS daemon binary.\n"
 "In order to use CUPS printing, you need to install cups."
 msgstr ""
 
-#: opennxApp.cpp:809 watchReaderApp.cpp:125 watchUsbIpApp.cpp:216
+#: opennxApp.cpp:808 watchReaderApp.cpp:125 watchUsbIpApp.cpp:216
 msgid ""
 "\n"
 "\n"
 "Supported trace tags: "
 msgstr ""
 
-#: opennxApp.cpp:812
+#: opennxApp.cpp:811
 msgid "Automatically login to the specified session."
 msgstr ""
 
-#: opennxApp.cpp:814
+#: opennxApp.cpp:813
 msgid "Automatically resume/takeover a session with the same name."
 msgstr ""
 
-#: opennxApp.cpp:816
+#: opennxApp.cpp:815
 msgid "Automatically destroy error dialogs at termination."
 msgstr ""
 
-#: opennxApp.cpp:818
+#: opennxApp.cpp:817
 msgid "Start the session administration tool."
 msgstr ""
 
-#: opennxApp.cpp:820
+#: opennxApp.cpp:819
 msgid "Specify alternate CA cert for fetching configuration via https."
 msgstr ""
 
-#: opennxApp.cpp:822
+#: opennxApp.cpp:821
 msgid "Specify window title for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:824
+#: opennxApp.cpp:823
 msgid "Specify dialog style for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:826
+#: opennxApp.cpp:825
 msgid "Run in dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:828
+#: opennxApp.cpp:827
 msgid "Compatibility option for dialog mode (ignored)."
 msgstr ""
 
-#: opennxApp.cpp:830
+#: opennxApp.cpp:829
 msgid "Export builtin GUI resources to zip file and exit."
 msgstr ""
 
-#: opennxApp.cpp:832
+#: opennxApp.cpp:831
 msgid "Dialog mode proxy."
 msgstr ""
 
-#: opennxApp.cpp:834
+#: opennxApp.cpp:833
 msgid "Specify message for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:836
+#: opennxApp.cpp:835
 msgid "Specify parent PID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:838
+#: opennxApp.cpp:837
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr ""
 
-#: opennxApp.cpp:840
+#: opennxApp.cpp:839
 msgid "Specify window-ID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:842 watchReaderApp.cpp:132 watchUsbIpApp.cpp:225
+#: opennxApp.cpp:841 watchReaderApp.cpp:132 watchUsbIpApp.cpp:225
 msgid "Specify wxWidgets trace mask."
 msgstr ""
 
-#: opennxApp.cpp:845
+#: opennxApp.cpp:844
 msgid "Test CardWaiterDialog"
 msgstr ""
 
-#: opennxApp.cpp:848
+#: opennxApp.cpp:847
 msgid "Guide the user through the steps to configure a session."
 msgstr ""
 
-#: opennxApp.cpp:905 watchReaderApp.cpp:259
+#: opennxApp.cpp:904 watchReaderApp.cpp:261
 msgid "Smart card removed"
 msgstr ""
 
-#: opennxApp.cpp:907 watchReaderApp.cpp:258
+#: opennxApp.cpp:906 watchReaderApp.cpp:260
 msgid ""
 "OpenNX session has been suspended, because\n"
 "the authenticating smart card has been removed."
 msgstr ""
 
-#: opennxApp.cpp:1286
+#: opennxApp.cpp:1302
 msgid "USBIP tunnel registration timeout"
 msgstr ""
 
-#: opennxApp.cpp:1290
+#: opennxApp.cpp:1306
 #, c-format
 msgid "Unable to export USB device %s"
 msgstr ""
 
-#: opennxApp.cpp:1296
+#: opennxApp.cpp:1312
 msgid "Could not connect to usbipd2. No USB devices will be exported"
 msgstr ""
 
-#: tracelogApp.cpp:75
+#: tracelogApp.cpp:82
 msgid "Show Trace Log"
 msgstr ""
 
-#: tracelogApp.cpp:76
+#: tracelogApp.cpp:83
+msgid "Enable remote debug"
+msgstr ""
+
+#: tracelogApp.cpp:84
 msgid "E&xit"
 msgstr ""
 
-#: tracelogApp.cpp:224
+#: tracelogApp.cpp:249
 msgid "OpenNX"
 msgstr ""
 

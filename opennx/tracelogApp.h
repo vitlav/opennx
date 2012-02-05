@@ -32,6 +32,9 @@
 #include "wx/image.h"
 #include "TraceLogFrame.h"
 ////@end includes
+#include <wx/socket.h>
+#include <wx/regex.h>
+#include <map>
 
 /*!
  * Forward declarations
@@ -50,6 +53,7 @@
 class wxTaskBarIcon;
 class TraceLogFrame;
 class DebugStringGrabber;
+class wxSocketOutputStream;
 
 /*!
  * tracelogApp class declaration
@@ -75,6 +79,14 @@ public:
 
     void Terminate();
     void OnDebugString(wxCommandEvent &event);
+    void OnSocketEvent(wxSocketEvent& event);
+    void OnServerEvent(wxSocketEvent& event);
+
+    void StartSocketServer();
+    void StopSocketServer();
+    bool ServerEnabled() {
+        return (NULL != m_pSocketServer);
+    }
 
 ////@begin tracelogApp event handler declarations
 
@@ -89,9 +101,14 @@ public:
 
 private:
     wxString m_sResourcePrefix;
+    wxString m_sAllowedPeers;
     wxTaskBarIcon *m_pTaskBarIcon;
     TraceLogFrame *m_pLogFrame;
     DebugStringGrabber *m_pGrabber;
+    wxSocketServer *m_pSocketServer;
+    std::map<wxSocketBase *, wxSocketOutputStream *> m_mClients;
+    wxRegEx m_cAllowedPeers;
+    int m_nPort;
 };
 
 /*!

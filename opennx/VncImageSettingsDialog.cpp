@@ -60,11 +60,15 @@ IMPLEMENT_CLASS( VncImageSettingsDialog, wxDialog )
 BEGIN_EVENT_TABLE( VncImageSettingsDialog, wxDialog )
 
 ////@begin VncImageSettingsDialog event table entries
-    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_VNC_HEXTILE"), VncImageSettingsDialog::OnRadiobuttonVncHextileSelected )
+    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_VNC_JPEG_AND_RGB"), VncImageSettingsDialog::OnRadiobuttonVncJpegAndRgbSelected )
 
-    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_VNC_TIGHT"), VncImageSettingsDialog::OnRadiobuttonVncTightSelected )
+    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_VNC_JPEG"), VncImageSettingsDialog::OnRadiobuttonVncJpegSelected )
 
-    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_VNC_PLAINX"), VncImageSettingsDialog::OnRadiobuttonVncPlainxSelected )
+    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_VNC_PNG"), VncImageSettingsDialog::OnRadiobuttonVncPngSelected )
+
+    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_VNC_PLAIN"), VncImageSettingsDialog::OnRadiobuttonVncPlainSelected )
+
+    EVT_CHECKBOX( XRCID("ID_CHECKBOX_X11_JPEG_CUSTOMQUALITY"), VncImageSettingsDialog::OnCheckboxX11JpegCustomqualityClick )
 
     EVT_BUTTON( wxID_OK, VncImageSettingsDialog::OnOkClick )
 
@@ -101,32 +105,57 @@ void VncImageSettingsDialog::SetConfig(MyXmlConfig *cfg)
 bool VncImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxString& WXUNUSED(caption), const wxPoint& WXUNUSED(pos), const wxSize& WXUNUSED(size), long WXUNUSED(style) )
 {
 ////@begin VncImageSettingsDialog member initialisation
-    m_pCtrlUseHextile = NULL;
-    m_pCtrlUseTight = NULL;
-    m_pCtrlVncJpeg = NULL;
-    m_pCtrlUsePlainX = NULL;
+    m_pCtrlUseJpegQuality = NULL;
+    m_pCtrlJpegQuality = NULL;
 ////@end VncImageSettingsDialog member initialisation
 
     wxASSERT_MSG(m_pCfg, _T("VncImageSettingsDialog::Create: No configuration"));
     if (m_pCfg) {
-        m_bUseTightJpeg = m_pCfg->bGetUseTightJpeg();
         switch (m_pCfg->iGetVncImageEncoding()) {
+            case -1:
+                m_bImageEncodingBoth = false;
+                m_bImageEncodingJpeg = true;
+                m_bImageEncodingPNG = false;
+                m_bImageEncodingPlainX = false;
+                m_bUseJpegQuality = true;
+                break;
             case 0:
-                m_bUseHextile = true;
-                m_bUseTight = false;
-                m_bUsePlainX = false;
+                m_bImageEncodingBoth = false;
+                m_bImageEncodingJpeg = false;
+                m_bImageEncodingPNG = false;
+                m_bImageEncodingPlainX = true;
+                m_bUseJpegQuality = false;
                 break;
             case 1:
-                m_bUseHextile = false;
-                m_bUseTight = true;
-                m_bUsePlainX = false;
+                m_bImageEncodingBoth = false;
+                m_bImageEncodingJpeg = true;
+                m_bImageEncodingPNG = false;
+                m_bImageEncodingPlainX = false;
+                m_bUseJpegQuality = false;
                 break;
             case 2:
-                m_bUseHextile = false;
-                m_bUseTight = false;
-                m_bUsePlainX = true;
+                m_bImageEncodingBoth = false;
+                m_bImageEncodingJpeg = false;
+                m_bImageEncodingPNG = true;
+                m_bImageEncodingPlainX = false;
+                m_bUseJpegQuality = false;
+                break;
+            case 3:
+                m_bImageEncodingBoth = true;
+                m_bImageEncodingJpeg = false;
+                m_bImageEncodingPNG = false;
+                m_bImageEncodingPlainX = false;
+                m_bUseJpegQuality = false;
+                break;
+            case 4:
+                m_bImageEncodingBoth = true;
+                m_bImageEncodingJpeg = false;
+                m_bImageEncodingPNG = false;
+                m_bImageEncodingPlainX = false;
+                m_bUseJpegQuality = true;
                 break;
         }
+        m_iJpegQuality = m_pCfg->iGetVncJpegQuality();
     }
 
 ////@begin VncImageSettingsDialog creation
@@ -134,6 +163,10 @@ bool VncImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), 
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));
+    if (GetSizer())
+    {
+        GetSizer()->SetSizeHints(this);
+    }
     Centre();
 ////@end VncImageSettingsDialog creation
     ::wxGetApp().EnableContextHelp(this);
@@ -149,19 +182,21 @@ void VncImageSettingsDialog::CreateControls()
 ////@begin VncImageSettingsDialog content construction
     if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_IMAGE_VNC")))
         wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
-    m_pCtrlUseHextile = XRCCTRL(*this, "ID_RADIOBUTTON_VNC_HEXTILE", wxRadioButton);
-    m_pCtrlUseTight = XRCCTRL(*this, "ID_RADIOBUTTON_VNC_TIGHT", wxRadioButton);
-    m_pCtrlVncJpeg = XRCCTRL(*this, "ID_CHECKBOX_VNC_JPEG", wxCheckBox);
-    m_pCtrlUsePlainX = XRCCTRL(*this, "ID_RADIOBUTTON_VNC_PLAINX", wxRadioButton);
+    m_pCtrlUseJpegQuality = XRCCTRL(*this, "ID_CHECKBOX_X11_JPEG_CUSTOMQUALITY", wxCheckBox);
+    m_pCtrlJpegQuality = XRCCTRL(*this, "ID_SLIDER_X11_JPEG_QALITY", wxSlider);
     // Set validators
-    if (FindWindow(XRCID("ID_RADIOBUTTON_VNC_HEXTILE")))
-        FindWindow(XRCID("ID_RADIOBUTTON_VNC_HEXTILE"))->SetValidator( wxGenericValidator(& m_bUseHextile) );
-    if (FindWindow(XRCID("ID_RADIOBUTTON_VNC_TIGHT")))
-        FindWindow(XRCID("ID_RADIOBUTTON_VNC_TIGHT"))->SetValidator( wxGenericValidator(& m_bUseTight) );
-    if (FindWindow(XRCID("ID_CHECKBOX_VNC_JPEG")))
-        FindWindow(XRCID("ID_CHECKBOX_VNC_JPEG"))->SetValidator( wxGenericValidator(& m_bUseTightJpeg) );
-    if (FindWindow(XRCID("ID_RADIOBUTTON_VNC_PLAINX")))
-        FindWindow(XRCID("ID_RADIOBUTTON_VNC_PLAINX"))->SetValidator( wxGenericValidator(& m_bUsePlainX) );
+    if (FindWindow(XRCID("ID_RADIOBUTTON_VNC_JPEG_AND_RGB")))
+        FindWindow(XRCID("ID_RADIOBUTTON_VNC_JPEG_AND_RGB"))->SetValidator( wxGenericValidator(& m_bImageEncodingBoth) );
+    if (FindWindow(XRCID("ID_RADIOBUTTON_VNC_JPEG")))
+        FindWindow(XRCID("ID_RADIOBUTTON_VNC_JPEG"))->SetValidator( wxGenericValidator(& m_bImageEncodingJpeg) );
+    if (FindWindow(XRCID("ID_RADIOBUTTON_VNC_PNG")))
+        FindWindow(XRCID("ID_RADIOBUTTON_VNC_PNG"))->SetValidator( wxGenericValidator(& m_bImageEncodingPNG) );
+    if (FindWindow(XRCID("ID_RADIOBUTTON_VNC_PLAIN")))
+        FindWindow(XRCID("ID_RADIOBUTTON_VNC_PLAIN"))->SetValidator( wxGenericValidator(& m_bImageEncodingPlainX) );
+    if (FindWindow(XRCID("ID_CHECKBOX_X11_JPEG_CUSTOMQUALITY")))
+        FindWindow(XRCID("ID_CHECKBOX_X11_JPEG_CUSTOMQUALITY"))->SetValidator( wxGenericValidator(& m_bUseJpegQuality) );
+    if (FindWindow(XRCID("ID_SLIDER_X11_JPEG_QALITY")))
+        FindWindow(XRCID("ID_SLIDER_X11_JPEG_QALITY"))->SetValidator( wxGenericValidator(& m_iJpegQuality) );
 ////@end VncImageSettingsDialog content construction
 
     // Create custom windows not generated automatically here.
@@ -205,55 +240,18 @@ void VncImageSettingsDialog::OnContextHelp(wxCommandEvent &)
     wxContextHelp contextHelp(this);
 }
 
-/*!
- * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_VNC_HEXTILE
- */
-
-void VncImageSettingsDialog::OnRadiobuttonVncHextileSelected( wxCommandEvent& event )
-{
-    m_bUseHextile = true;
-    m_bUseTight = false;
-    m_bUsePlainX = false;
-    m_pCtrlUseTight->SetValue(false);
-    m_pCtrlUsePlainX->SetValue(false);
-    UpdateDialogConstraints();
-    event.Skip();
-}
-
-/*!
- * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_VNC_PLAINX
- */
-
-void VncImageSettingsDialog::OnRadiobuttonVncPlainxSelected( wxCommandEvent& event )
-{
-    m_bUseHextile = false;
-    m_bUseTight = false;
-    m_bUsePlainX = true;
-    m_pCtrlUseHextile->SetValue(false);
-    m_pCtrlUseTight->SetValue(false);
-    UpdateDialogConstraints();
-    event.Skip();
-}
-
-/*!
- * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_VNC_TIGHT
- */
-
-void VncImageSettingsDialog::OnRadiobuttonVncTightSelected( wxCommandEvent& event )
-{
-    m_bUseHextile = false;
-    m_bUseTight = true;
-    m_bUsePlainX = false;
-    m_pCtrlUseHextile->SetValue(false);
-    m_pCtrlUsePlainX->SetValue(false);
-    UpdateDialogConstraints();
-    event.Skip();
-}
-
 void VncImageSettingsDialog::UpdateDialogConstraints()
 {
-    m_pCtrlVncJpeg->Enable(m_bUseTight);
+    TransferDataFromWindow();
+    if (m_bImageEncodingBoth || m_bImageEncodingJpeg) {
+        m_pCtrlUseJpegQuality->Enable();
+        m_pCtrlJpegQuality->Enable(m_bUseJpegQuality);
+    } else {
+        m_pCtrlUseJpegQuality->Disable();
+        m_pCtrlJpegQuality->Disable();
+    }
 }
+
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
  */
@@ -263,10 +261,74 @@ void VncImageSettingsDialog::OnOkClick( wxCommandEvent& event )
     wxASSERT_MSG(m_pCfg, _T("VncImageSettingsDialog::OnOkClick: No configuration"));
     if (m_pCfg) {
         TransferDataFromWindow();
-        m_pCfg->iSetVncImageEncoding(m_bUsePlainX ? 2 : (m_bUseTight ? 1 : 0));
-        m_pCfg->bSetUseTightJpeg(m_bUseTightJpeg);
+        int ienc = 3;
+        if (m_bImageEncodingBoth) {
+            ienc = (m_bUseJpegQuality) ? 4 : 3;
+        } else if (m_bImageEncodingJpeg) {
+            ienc = (m_bUseJpegQuality) ? -1 : 1;
+        } else if (m_bImageEncodingPNG) {
+            ienc = 2;
+        } else if (m_bImageEncodingPlainX) {
+            ienc = 0;
+        }
+        m_pCfg->iSetVncImageEncoding(ienc);
+        m_pCfg->iSetVncJpegQuality(m_iJpegQuality);
     }
     event.Skip();
 }
 
+
+/*!
+ * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_VNC_JPEG_AND_RGB
+ */
+
+void VncImageSettingsDialog::OnRadiobuttonVncJpegAndRgbSelected( wxCommandEvent& event )
+{
+    UpdateDialogConstraints();
+    event.Skip();
+}
+
+
+/*!
+ * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_VNC_JPEG
+ */
+
+void VncImageSettingsDialog::OnRadiobuttonVncJpegSelected( wxCommandEvent& event )
+{
+    UpdateDialogConstraints();
+    event.Skip();
+}
+
+
+/*!
+ * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_VNC_PNG
+ */
+
+void VncImageSettingsDialog::OnRadiobuttonVncPngSelected( wxCommandEvent& event )
+{
+    UpdateDialogConstraints();
+    event.Skip();
+}
+
+
+/*!
+ * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_VNC_PLAIN
+ */
+
+void VncImageSettingsDialog::OnRadiobuttonVncPlainSelected( wxCommandEvent& event )
+{
+    UpdateDialogConstraints();
+    event.Skip();
+}
+
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_X11_JPEG_CUSTOMQUALITY
+ */
+
+void VncImageSettingsDialog::OnCheckboxX11JpegCustomqualityClick( wxCommandEvent& event )
+{
+    UpdateDialogConstraints();
+    event.Skip();
+}
 

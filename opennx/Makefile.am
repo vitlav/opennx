@@ -56,6 +56,7 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	X11PropertyDialog.h X11PropertyDialog_symbols.h trace.h tracelogApp.h \
 	watchReaderApp.h watchUsbIpApp.h xh_richtext.h MacUninstallApp.h \
 	WrappedStatic.h SupressibleMessageDialog.h SupressibleMessageDialog_symbols.h \
+	TraceLogRemote_symbols.h TraceLogRemote.h \
 	opensc/errors.h opensc/opensc.h opensc/scconf.h opensc/types.h opensc/pkcs15.h \
 	libsmbclient.h \
 	XdmPropertyDialog.h XdmPropertyDialog_symbols.h
@@ -95,7 +96,7 @@ watchusbip_CXXFLAGS = $(WX_CXXFLAGS)
 watchusbip_CFLAGS = $(WX_CFLAGS)
 
 tracelog_SOURCES = tracelogApp.cpp TraceLogFrame.cpp \
-	DebugStringGrabber.cpp wxprec.cpp Icon.cpp
+	DebugStringGrabber.cpp wxprec.cpp Icon.cpp TraceLogRemote.cpp
 tracelog_LDADD = $(TRACELOG_RES) $(WX_LIBS)
 tracelog_DEPENDENCIES = $(TRACELOG_RES)
 tracelog_CPPFLAGS = $(WX_CPPFLAGS) -DAPP_TRACELOG

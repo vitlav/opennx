@@ -60,6 +60,16 @@ IMPLEMENT_CLASS( UnixImageSettingsDialog, wxDialog )
 BEGIN_EVENT_TABLE( UnixImageSettingsDialog, wxDialog )
 
 ////@begin UnixImageSettingsDialog event table entries
+    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_X11_JPEG_AND_RGB"), UnixImageSettingsDialog::OnRadiobuttonX11JpegAndRgbSelected )
+
+    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_X11_JPEG"), UnixImageSettingsDialog::OnRadiobuttonX11JpegSelected )
+
+    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_X11_PNG"), UnixImageSettingsDialog::OnRadiobuttonX11PngSelected )
+
+    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_X11_PLAIN"), UnixImageSettingsDialog::OnRadiobuttonX11PlainSelected )
+
+    EVT_CHECKBOX( XRCID("ID_CHECKBOX_X11_JPEG_CUSTOMQUALITY"), UnixImageSettingsDialog::OnCheckboxX11JpegCustomqualityClick )
+
     EVT_BUTTON( wxID_OK, UnixImageSettingsDialog::OnOKClick )
 
 ////@end UnixImageSettingsDialog event table entries
@@ -95,25 +105,68 @@ void UnixImageSettingsDialog::SetConfig(MyXmlConfig *cfg)
 bool UnixImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxString& WXUNUSED(caption), const wxPoint& WXUNUSED(pos), const wxSize& WXUNUSED(size), long WXUNUSED(style) )
 {
 ////@begin UnixImageSettingsDialog member initialisation
+    m_bImageEncodingBoth = true;
     m_pCtrlUseJpegQuality = NULL;
     m_pCtrlJpegQuality = NULL;
+    m_pCtrlDisableSharedPixmaps = NULL;
 ////@end UnixImageSettingsDialog member initialisation
 
     wxASSERT_MSG(m_pCfg, _T("UnixImageSettingsDialog::Create: No configuration"));
     if (m_pCfg) {
-        m_bImageEncodingPNG = m_pCfg->bGetImageEncodingPNG();
-        m_bImageEncodingPlainX = m_pCfg->bGetImageEncodingPlainX();
-        m_bImageEncodingJpeg = m_pCfg->bGetImageEncodingJpeg();
-        m_bUseJpegQuality = m_pCfg->bGetUseJpegQuality();
-        m_bDisableRender = m_pCfg->bGetDisableRender();
+        switch (m_pCfg->iGetImageEncoding()) {
+            case -1:
+                m_bImageEncodingBoth = false;
+                m_bImageEncodingJpeg = true;
+                m_bImageEncodingPNG = false;
+                m_bImageEncodingPlainX = false;
+                m_bUseJpegQuality = true;
+                break;
+            case 0:
+                m_bImageEncodingBoth = false;
+                m_bImageEncodingJpeg = false;
+                m_bImageEncodingPNG = false;
+                m_bImageEncodingPlainX = true;
+                m_bUseJpegQuality = false;
+                break;
+            case 1:
+                m_bImageEncodingBoth = false;
+                m_bImageEncodingJpeg = true;
+                m_bImageEncodingPNG = false;
+                m_bImageEncodingPlainX = false;
+                m_bUseJpegQuality = false;
+                break;
+            case 2:
+                m_bImageEncodingBoth = false;
+                m_bImageEncodingJpeg = false;
+                m_bImageEncodingPNG = true;
+                m_bImageEncodingPlainX = false;
+                m_bUseJpegQuality = false;
+                break;
+            case 3:
+                m_bImageEncodingBoth = true;
+                m_bImageEncodingJpeg = false;
+                m_bImageEncodingPNG = false;
+                m_bImageEncodingPlainX = false;
+                m_bUseJpegQuality = false;
+                break;
+            case 4:
+                m_bImageEncodingBoth = true;
+                m_bImageEncodingJpeg = false;
+                m_bImageEncodingPNG = false;
+                m_bImageEncodingPlainX = false;
+                m_bUseJpegQuality = true;
+                break;
+        }
         m_iJpegQuality = m_pCfg->iGetJpegQuality();
+
+        m_bDisableRender = m_pCfg->bGetDisableRender();
         m_bDisableBackingstore = m_pCfg->bGetDisableBackingstore();
         m_bDisableComposite = m_pCfg->bGetDisableComposite();
         m_bDisableShmem = m_pCfg->bGetDisableShmem();
         m_bDisableShpix = m_pCfg->bGetDisableShpix();
     }
 
-////@begin UnixImageSettingsDialog creation
+    ////@begin UnixImageSettingsDialog creation
     SetExtraStyle(wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP);
     SetParent(parent);
     CreateControls();
@@ -123,7 +176,7 @@ bool UnixImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id),
         GetSizer()->SetSizeHints(this);
     }
     Centre();
-////@end UnixImageSettingsDialog creation
+    ////@end UnixImageSettingsDialog creation
     ::wxGetApp().EnableContextHelp(this);
     return TRUE;
 }
@@ -134,18 +187,21 @@ bool UnixImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id),
 
 void UnixImageSettingsDialog::CreateControls()
 {    
-////@begin UnixImageSettingsDialog content construction
+    ////@begin UnixImageSettingsDialog content construction
     if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_IMAGE_X11")))
         wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
     m_pCtrlUseJpegQuality = XRCCTRL(*this, "ID_CHECKBOX_X11_JPEG_CUSTOMQUALITY", wxCheckBox);
     m_pCtrlJpegQuality = XRCCTRL(*this, "ID_SLIDER_X11_JPEG_QALITY", wxSlider);
+    m_pCtrlDisableSharedPixmaps = XRCCTRL(*this, "ID_CHECKBOX_PERF_DISABLESHPIX", wxCheckBox);
     // Set validators
+    if (FindWindow(XRCID("ID_RADIOBUTTON_X11_JPEG_AND_RGB")))
+        FindWindow(XRCID("ID_RADIOBUTTON_X11_JPEG_AND_RGB"))->SetValidator( wxGenericValidator(& m_bImageEncodingBoth) );
+    if (FindWindow(XRCID("ID_RADIOBUTTON_X11_JPEG")))
+        FindWindow(XRCID("ID_RADIOBUTTON_X11_JPEG"))->SetValidator( wxGenericValidator(& m_bImageEncodingJpeg) );
     if (FindWindow(XRCID("ID_RADIOBUTTON_X11_PNG")))
         FindWindow(XRCID("ID_RADIOBUTTON_X11_PNG"))->SetValidator( wxGenericValidator(& m_bImageEncodingPNG) );
     if (FindWindow(XRCID("ID_RADIOBUTTON_X11_PLAIN")))
         FindWindow(XRCID("ID_RADIOBUTTON_X11_PLAIN"))->SetValidator( wxGenericValidator(& m_bImageEncodingPlainX) );
-    if (FindWindow(XRCID("ID_RADIOBUTTON_X11_JPEG")))
-        FindWindow(XRCID("ID_RADIOBUTTON_X11_JPEG"))->SetValidator( wxGenericValidator(& m_bImageEncodingJpeg) );
     if (FindWindow(XRCID("ID_CHECKBOX_X11_JPEG_CUSTOMQUALITY")))
         FindWindow(XRCID("ID_CHECKBOX_X11_JPEG_CUSTOMQUALITY"))->SetValidator( wxGenericValidator(& m_bUseJpegQuality) );
     if (FindWindow(XRCID("ID_SLIDER_X11_JPEG_QALITY")))
@@ -160,12 +216,13 @@ void UnixImageSettingsDialog::CreateControls()
         FindWindow(XRCID("ID_CHECKBOX_PERF_DISABLESHMEM"))->SetValidator( wxGenericValidator(& m_bDisableShmem) );
     if (FindWindow(XRCID("ID_CHECKBOX_PERF_DISABLESHPIX")))
         FindWindow(XRCID("ID_CHECKBOX_PERF_DISABLESHPIX"))->SetValidator( wxGenericValidator(& m_bDisableShpix) );
-////@end UnixImageSettingsDialog content construction
+    ////@end UnixImageSettingsDialog content construction
 
     // Create custom windows not generated automatically here.
 
-////@begin UnixImageSettingsDialog content initialisation
-////@end UnixImageSettingsDialog content initialisation
+    ////@begin UnixImageSettingsDialog content initialisation
+    ////@end UnixImageSettingsDialog content initialisation
+    UpdateDialogConstraints();
 }
 
 /*!
@@ -202,6 +259,24 @@ void UnixImageSettingsDialog::OnContextHelp(wxCommandEvent &)
     wxContextHelp contextHelp(this);
 }
 
+void UnixImageSettingsDialog::UpdateDialogConstraints()
+{
+    TransferDataFromWindow();
+    if (m_bImageEncodingBoth || m_bImageEncodingJpeg) {
+        m_pCtrlUseJpegQuality->Enable();
+        m_pCtrlJpegQuality->Enable(m_bUseJpegQuality);
+    } else {
+        m_pCtrlUseJpegQuality->Disable();
+        m_pCtrlJpegQuality->Disable();
+    }
+    if (m_bDisableShmem) {
+        m_pCtrlDisableSharedPixmaps->SetValue(true);
+        m_pCtrlDisableSharedPixmaps->Disable();
+    } else {
+        m_pCtrlDisableSharedPixmaps->Enable();
+    }
+}
+
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
  */
@@ -211,12 +286,19 @@ void UnixImageSettingsDialog::OnOKClick( wxCommandEvent& event )
     wxASSERT_MSG(m_pCfg, _T("UnixImageSettingsDialog::OnOkClick: No configuration"));
     if (m_pCfg) {
         TransferDataFromWindow();
-        m_pCfg->bSetImageEncodingPNG(m_bImageEncodingPNG);
-        m_pCfg->bSetImageEncodingPlainX(m_bImageEncodingPlainX);
-        m_pCfg->bSetImageEncodingJpeg(m_bImageEncodingJpeg);
-        m_pCfg->bSetUseJpegQuality(m_bUseJpegQuality);
-        m_pCfg->bSetDisableRender(m_bDisableRender);
+        int ienc = 3;
+        if (m_bImageEncodingBoth) {
+            ienc = (m_bUseJpegQuality) ? 4 : 3;
+        } else if (m_bImageEncodingJpeg) {
+            ienc = (m_bUseJpegQuality) ? -1 : 1;
+        } else if (m_bImageEncodingPNG) {
+            ienc = 2;
+        } else if (m_bImageEncodingPlainX) {
+            ienc = 0;
+        }
+        m_pCfg->iSetImageEncoding(ienc);
         m_pCfg->iSetJpegQuality(m_iJpegQuality);
+        m_pCfg->bSetDisableRender(m_bDisableRender);
         m_pCfg->bSetDisableBackingstore(m_bDisableBackingstore);
         m_pCfg->bSetDisableComposite(m_bDisableComposite);
         m_pCfg->bSetDisableShmem(m_bDisableShmem);
@@ -225,4 +307,59 @@ void UnixImageSettingsDialog::OnOKClick( wxCommandEvent& event )
     event.Skip();
 }
 
+
+
+/*!
+ * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_X11_JPEG_AND_RGB
+ */
+
+void UnixImageSettingsDialog::OnRadiobuttonX11JpegAndRgbSelected( wxCommandEvent& event )
+{
+    UpdateDialogConstraints();
+    event.Skip();
+}
+
+
+/*!
+ * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_X11_JPEG
+ */
+
+void UnixImageSettingsDialog::OnRadiobuttonX11JpegSelected( wxCommandEvent& event )
+{
+    UpdateDialogConstraints();
+    event.Skip();
+}
+
+
+/*!
+ * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_X11_PNG
+ */
+
+void UnixImageSettingsDialog::OnRadiobuttonX11PngSelected( wxCommandEvent& event )
+{
+    UpdateDialogConstraints();
+    event.Skip();
+}
+
+
+/*!
+ * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_X11_PLAIN
+ */
+
+void UnixImageSettingsDialog::OnRadiobuttonX11PlainSelected( wxCommandEvent& event )
+{
+    UpdateDialogConstraints();
+    event.Skip();
+}
+
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_X11_JPEG_CUSTOMQUALITY
+ */
+
+void UnixImageSettingsDialog::OnCheckboxX11JpegCustomqualityClick( wxCommandEvent& event )
+{
+    UpdateDialogConstraints();
+    event.Skip();
+}
 

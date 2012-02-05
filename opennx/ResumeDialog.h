@@ -167,7 +167,6 @@ private:
     wxString m_sSelectedType;
     wxString m_sSelectedPort;
     bool m_bShadow;
-    int m_iColOffset;
 ////@end ResumeDialog member variables
 
     wxString m_sPreferredSession;

@@ -95,14 +95,20 @@ private:
     /// wxEVT_SCROLL_THUMBRELEASE event handler for ID_SLIDER_RDP_COLORS
     void OnSliderRdpColorsScrollThumbRelease( wxScrollEvent& event );
 
-    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_IMGRDP
-    void OnRadiobuttonRdpImgrdpSelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_JPEG_AND_RGB
+    void OnRadiobuttonRdpJpegAndRgbSelected( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_IMGRGB
-    void OnRadiobuttonRdpImgrgbSelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_JPEG
+    void OnRadiobuttonRdpJpegSelected( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_IMGPLAINX
-    void OnRadiobuttonRdpImgplainxSelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_PNG
+    void OnRadiobuttonRdpPngSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_PLAIN
+    void OnRadiobuttonRdpPlainSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_X11_JPEG_CUSTOMQUALITY
+    void OnCheckboxX11JpegCustomqualityClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
     void OnOkClick( wxCommandEvent& event );
@@ -124,16 +130,17 @@ private:
     void UpdateDialogConstraints();
 
 ////@begin RdpImageSettingsDialog member variables
-    wxRadioButton* m_pCtrlRdpEncoding;
-    wxCheckBox* m_pCtrlRdpCompressed;
-    wxRadioButton* m_pCtrlPlainX;
+    wxCheckBox* m_pCtrlUseJpegQuality;
+    wxSlider* m_pCtrlJpegQuality;
 private:
-    bool m_bRdpPlainX;
-    bool m_bRdpEncoding;
-    bool m_bRdpCompressed;
-    bool m_bRdpRgb;
     bool m_bRdpCache;
     int m_iRdpColors;
+    bool m_bImageEncodingBoth;
+    bool m_bImageEncodingJpeg;
+    bool m_bImageEncodingPNG;
+    bool m_bImageEncodingPlainX;
+    bool m_bUseJpegQuality;
+    int m_iJpegQuality;
 ////@end RdpImageSettingsDialog member variables
 
     MyXmlConfig *m_pCfg;

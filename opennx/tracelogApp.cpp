@@ -43,18 +43,25 @@
 #include <wx/taskbar.h>
 #include <wx/dynarray.h>
 #include <wx/mimetype.h>
+#include <wx/sckstrm.h>
+#include <wx/txtstrm.h>
 
 #include "tracelogApp.h"
 #include "Icon.h"
 #include "TraceLogFrame.h"
+#include "TraceLogRemote.h"
 #include "DebugStringGrabber.h"
 
 #include "memres.h"
+#include <algorithm>
 
 ////@begin XPM images
 ////@end XPM images
 
 static int TB_SHOWTRACE = ::wxNewId();
+static int TB_REMOTE = ::wxNewId();
+static int SERVER_ID = ::wxNewId();
+static int SOCKET_ID = ::wxNewId();
 
 class DebugEntry {
     public:
@@ -73,12 +80,23 @@ class MyTaskBarIcon : public wxTaskBarIcon {
         virtual wxMenu *CreatePopupMenu() {
             wxMenu *menu = new wxMenu;
             menu->Append(TB_SHOWTRACE, _("Show Trace Log"));
+            menu->AppendCheckItem(TB_REMOTE, _("Enable remote debug"));
             menu->Append(wxID_EXIT, _("E&xit"));
+            menu->Check(TB_REMOTE, ::wxGetApp().ServerEnabled());
             return menu;
         }
 
         void OnMenuShowTrace(wxCommandEvent &evt) {
             ::wxGetApp().GetTopWindow()->Show(true);
+            evt.Skip();
+        }
+
+        void OnMenuRemote(wxCommandEvent &evt) {
+            if (evt.IsChecked()) {
+                ::wxGetApp().StartSocketServer();
+            } else {
+                ::wxGetApp().StopSocketServer();
+            }
             evt.Skip();
         }
 
@@ -93,51 +111,48 @@ class MyTaskBarIcon : public wxTaskBarIcon {
         }
 
         DECLARE_EVENT_TABLE();
-
-    private:
-        // wxDateTime startStamp;
-        // DebugEntryArray m_aDebugEntries;
-        // DebugStringGrabber *m_pGrabber;
-
 };
 
-BEGIN_EVENT_TABLE(MyTaskBarIcon, wxTaskBarIcon)
+    BEGIN_EVENT_TABLE(MyTaskBarIcon, wxTaskBarIcon)
     EVT_MENU(TB_SHOWTRACE, MyTaskBarIcon::OnMenuShowTrace)
+    EVT_MENU(TB_REMOTE, MyTaskBarIcon::OnMenuRemote)
     EVT_MENU(wxID_EXIT, MyTaskBarIcon::OnMenuExit)
     EVT_TASKBAR_LEFT_DCLICK(MyTaskBarIcon::OnShowTrace)
-END_EVENT_TABLE();
+    END_EVENT_TABLE();
 
-/*!
- * Application instance implementation
- */
+    /*!
+     * Application instance implementation
+     */
 
-////@begin implement app
+    ////@begin implement app
 IMPLEMENT_APP( tracelogApp )
-////@end implement app
+    ////@end implement app
 
 
-/*!
- * tracelogApp type definition
- */
+    /*!
+     * tracelogApp type definition
+     */
 
 IMPLEMENT_CLASS( tracelogApp, wxApp )
 
 
-/*!
- * tracelogApp event table definition
- */
+    /*!
+     * tracelogApp event table definition
+     */
 
 BEGIN_EVENT_TABLE(tracelogApp, wxApp)
 
-////@begin tracelogApp event table entries
-////@end tracelogApp event table entries
+    ////@begin tracelogApp event table entries
+    ////@end tracelogApp event table entries
 
+  EVT_SOCKET(SERVER_ID, tracelogApp::OnServerEvent)
+  EVT_SOCKET(SOCKET_ID, tracelogApp::OnSocketEvent)
 END_EVENT_TABLE()
 
 
-/*!
- * Constructor for tracelogApp
- */
+    /*!
+     * Constructor for tracelogApp
+     */
 
 tracelogApp::tracelogApp()
 {
@@ -153,19 +168,29 @@ void tracelogApp::Init()
 {
     m_pTaskBarIcon = NULL;
     m_pGrabber = NULL;
-////@begin tracelogApp member initialisation
-////@end tracelogApp member initialisation
+    m_pSocketServer = NULL;
+    m_sAllowedPeers = wxT("^\\d+\\.\\d+\\.\\d+\\.\\d$");
+    m_nPort = 2020;
+    m_cAllowedPeers.Compile(m_sAllowedPeers, wxRE_ADVANCED);
+    ////@begin tracelogApp member initialisation
+    ////@end tracelogApp member initialisation
 }
 
 
 void tracelogApp::OnDebugString(wxCommandEvent &event)
 {
     m_pLogFrame->AddEntry(wxDateTime::UNow(), event.GetInt(), event.GetString());
+    std::map<wxSocketBase *, wxSocketOutputStream *>::iterator it;
+    for (it = m_mClients.begin() ; it != m_mClients.end(); it++) {
+        wxTextOutputStream s(*(it->second));
+        s << event.GetInt() << wxT("\t") << event.GetString() << endl;
+    }
     event.Skip();
 }
 
 void tracelogApp::Terminate()
 {
+    StopSocketServer();
     if (m_pTaskBarIcon)
         m_pTaskBarIcon->RemoveIcon();
     if (m_pGrabber)
@@ -216,7 +241,7 @@ bool tracelogApp::OnInit()
     m_pGrabber = new DebugStringGrabber();
     if (!m_pGrabber->IsOk())
         return false;
-	m_pLogFrame = new TraceLogFrame(NULL);
+    m_pLogFrame = new TraceLogFrame(NULL);
     SetTopWindow(m_pLogFrame);
     Connect(wxEVT_DEBUGSTRING, wxCommandEventHandler(tracelogApp::OnDebugString));
     m_pGrabber->SetHandler(this);
@@ -233,14 +258,92 @@ bool tracelogApp::OnInit()
 
 int tracelogApp::OnExit()
 {
+    StopSocketServer();
     if (m_pTaskBarIcon)
         m_pTaskBarIcon->RemoveIcon();
     if (m_pGrabber)
         delete m_pGrabber;
     if (m_pLogFrame)
         delete m_pLogFrame;
-////@begin tracelogApp cleanup
-	return wxApp::OnExit();
-////@end tracelogApp cleanup
+    ////@begin tracelogApp cleanup
+    return wxApp::OnExit();
+    ////@end tracelogApp cleanup
 }
 
+void tracelogApp::StartSocketServer()
+{
+    if (NULL == m_pSocketServer) {
+        TraceLogRemote d(NULL);
+        d.SetPort(m_nPort);
+        d.SetCregex(m_sAllowedPeers);
+        if (wxID_OK == d.ShowModal()) {
+            m_nPort = d.GetPort();
+            wxString tmp = d.GetCregex();
+            if (!tmp.IsEmpty()) {
+                wxRegEx testRE;
+                if (testRE.Compile(tmp, wxRE_ADVANCED)) {
+                    m_sAllowedPeers = tmp;
+                }
+            }
+            m_cAllowedPeers.Compile(m_sAllowedPeers, wxRE_ADVANCED);
+            wxIPV4address addr;
+            addr.Service(m_nPort);
+            m_pSocketServer = new wxSocketServer(addr, wxSOCKET_REUSEADDR);
+            if (m_pSocketServer->Ok()) {
+                m_pSocketServer->SetEventHandler(*this, SERVER_ID);
+                m_pSocketServer->SetNotify(wxSOCKET_CONNECTION_FLAG);
+                m_pSocketServer->Notify(true);
+            } else {
+                m_pSocketServer->Destroy();
+                m_pSocketServer = NULL;
+            }
+        }
+    }
+}
+
+void tracelogApp::StopSocketServer()
+{
+    if (NULL != m_pSocketServer) {
+        m_pSocketServer->Destroy();
+        m_pSocketServer = NULL;
+    }
+}
+
+void tracelogApp::OnServerEvent(wxSocketEvent& event)
+{
+    // Accept new connection if there is one in the pending
+    // connections queue, else exit. We use Accept(false) for
+    // non-blocking accept (although if we got here, there
+    // should ALWAYS be a pending connection).
+
+    wxSocketBase *sock = m_pSocketServer->Accept(false);
+    if (sock) {
+        wxIPV4address peer;
+        if (sock->GetPeer(peer)) {
+            if (m_cAllowedPeers.Matches(peer.IPAddress())) {
+                sock->SetEventHandler(*this, SOCKET_ID);
+                sock->SetNotify(wxSOCKET_LOST_FLAG);
+                sock->SetFlags(wxSOCKET_WAITALL);
+                sock->SetTimeout(10);
+                m_mClients[sock] = new wxSocketOutputStream(*sock);
+                sock->Notify(true);
+                return;
+            }
+        }
+        sock->Destroy();
+    }
+}
+
+void tracelogApp::OnSocketEvent(wxSocketEvent& event)
+{
+    wxSocketBase *sock = event.GetSocket();
+    if (wxSOCKET_LOST == event.GetSocketEvent()) {
+        sock->Notify(false);
+        std::map<wxSocketBase *, wxSocketOutputStream *>::iterator it = m_mClients.find(sock);
+        if (m_mClients.end() != it) {
+            delete it->second;
+            m_mClients.erase(it);
+        }
+        sock->Destroy();
+    }
+}

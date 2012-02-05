@@ -133,7 +133,8 @@ AC_CHECK_LIB(resolv,res_init,[RESLIB=-lresolv],[
 AC_SUBST(RESLIB)
 
 # Checks for header files.
-AC_CHECK_HEADERS([arpa/inet.h limits.h netinet/in.h sys/types.h sys/socket.h syslog.h pulse/pulseaudio.h])
+AC_CHECK_HEADERS([arpa/inet.h limits.h netinet/in.h  netinet/ip.h netdb.h stdarg.h sys/ioctl.h sys/types.h sys/socket.h syslog.h pulse/pulseaudio.h termios.h])
+AC_CHECK_HEADERS([shlobj.h winsock2.h ws2tcpip.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
@@ -147,7 +148,7 @@ AC_CHECK_TYPES(socklen_t,,,[AC_INCLUDES_DEFAULT()
 #endif]])
 
 # Checks for library functions.
-AC_CHECK_FUNCS([memchr memset putenv socket strchr strdup strrchr strstr])
+AC_CHECK_FUNCS([memchr memset putenv socket strchr strdup strrchr strstr tcsetattr])
 AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK
 
 WXPARAMS=
@@ -468,6 +469,7 @@ PLATFORMDIST=unknown
 PULSE_BTYPE=unknown
 XMING_BTYPE=unknown
 NX_BTYPE=unknown
+LIBSSH2_BTYPE=native
 XMING_PLATFORM_PATCHES=
 case $target_os in
     linux*)
@@ -488,8 +490,10 @@ case $target_os in
     mingw*)
         PLATFORMDIST=setup
         AC_CHECK_TOOL([UNRAR], [unrar], [])
-        AC_DEFINE_UNQUOTED(_WIN32_WINNT,0x0500,
-                   [Minimum required windows version])
+        AC_DEFINE_UNQUOTED(_WIN32_WINNT,0x0501,
+                   [Minimum required windows version (XP)])
+        AC_DEFINE_UNQUOTED(_WIN32_IE,0x0600,
+                   [Minimum required IE version (XP)])
         if test "$build_os" = "$target_os" ; then
             DLLPATH="$PATH"
             PULSE_BTYPE=native
@@ -529,6 +533,7 @@ case $target_os in
             PULSE_BTYPE=cross
             XMING_BTYPE=cross
             NX_BTYPE=cross
+            LIBSSH2_BTYPE=cross
             XMING_PLATFORM_PATCHES=xming-build-cross.patch
         fi
         ;;
@@ -538,6 +543,7 @@ AC_SUBST(DLLPATH)
 AC_SUBST(PLATFORMDIST)
 AC_SUBST(PULSE_BTYPE)
 AC_SUBST(NX_BTYPE)
+AC_SUBST(LIBSSH2_BTYPE)
 AC_SUBST(XMING_BTYPE)
 AC_SUBST(XMING_PLATFORM_PATCHES)
 

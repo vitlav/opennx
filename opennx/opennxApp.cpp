@@ -32,7 +32,6 @@
 #include "wx/wx.h"
 #endif
 #ifdef __WXMSW__
-#define _WIN32_IE 0x0400
 #include <shlobj.h>
 #endif
 

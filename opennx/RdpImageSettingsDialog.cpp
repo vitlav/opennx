@@ -66,11 +66,15 @@ BEGIN_EVENT_TABLE( RdpImageSettingsDialog, wxDialog )
 ////@begin RdpImageSettingsDialog event table entries
     EVT_COMMAND_SCROLL_THUMBRELEASE( XRCID("ID_SLIDER_RDP_COLORS"), RdpImageSettingsDialog::OnSliderRdpColorsScrollThumbRelease )
 
-    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_RDP_IMGRDP"), RdpImageSettingsDialog::OnRadiobuttonRdpImgrdpSelected )
+    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_RDP_JPEG_AND_RGB"), RdpImageSettingsDialog::OnRadiobuttonRdpJpegAndRgbSelected )
 
-    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_RDP_IMGRGB"), RdpImageSettingsDialog::OnRadiobuttonRdpImgrgbSelected )
+    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_RDP_JPEG"), RdpImageSettingsDialog::OnRadiobuttonRdpJpegSelected )
 
-    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_RDP_IMGPLAINX"), RdpImageSettingsDialog::OnRadiobuttonRdpImgplainxSelected )
+    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_RDP_PNG"), RdpImageSettingsDialog::OnRadiobuttonRdpPngSelected )
+
+    EVT_RADIOBUTTON( XRCID("ID_RADIOBUTTON_RDP_PLAIN"), RdpImageSettingsDialog::OnRadiobuttonRdpPlainSelected )
+
+    EVT_CHECKBOX( XRCID("ID_CHECKBOX_X11_JPEG_CUSTOMQUALITY"), RdpImageSettingsDialog::OnCheckboxX11JpegCustomqualityClick )
 
     EVT_BUTTON( wxID_OK, RdpImageSettingsDialog::OnOkClick )
 
@@ -108,39 +112,57 @@ bool RdpImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), 
 {
 ////@begin RdpImageSettingsDialog member initialisation
     m_iRdpColors = 0;
-    m_pCtrlRdpEncoding = NULL;
-    m_pCtrlRdpCompressed = NULL;
-    m_pCtrlPlainX = NULL;
+    m_pCtrlUseJpegQuality = NULL;
+    m_pCtrlJpegQuality = NULL;
 ////@end RdpImageSettingsDialog member initialisation
 
     wxASSERT_MSG(m_pCfg, _T("RdpImageSettingsDialog::Create: No configuration"));
     if (m_pCfg) {
-        switch (m_pCfg->iGetRdpImageCompression()) {
+        switch (m_pCfg->iGetRdpImageEncoding()) {
+            case -1:
+                m_bImageEncodingBoth = false;
+                m_bImageEncodingJpeg = true;
+                m_bImageEncodingPNG = false;
+                m_bImageEncodingPlainX = false;
+                m_bUseJpegQuality = true;
+                break;
             case 0:
-                m_bRdpEncoding = true;
-                m_bRdpCompressed = false;
-                m_bRdpRgb = true;
-                m_bRdpPlainX = false;
+                m_bImageEncodingBoth = false;
+                m_bImageEncodingJpeg = false;
+                m_bImageEncodingPNG = false;
+                m_bImageEncodingPlainX = true;
+                m_bUseJpegQuality = false;
                 break;
             case 1:
-                m_bRdpEncoding = true;
-                m_bRdpCompressed = true;
-                m_bRdpRgb = false;
-                m_bRdpPlainX = false;
+                m_bImageEncodingBoth = false;
+                m_bImageEncodingJpeg = true;
+                m_bImageEncodingPNG = false;
+                m_bImageEncodingPlainX = false;
+                m_bUseJpegQuality = false;
                 break;
             case 2:
-                m_bRdpEncoding = true;
-                m_bRdpCompressed = false;
-                m_bRdpRgb = false;
-                m_bRdpPlainX = false;
+                m_bImageEncodingBoth = false;
+                m_bImageEncodingJpeg = false;
+                m_bImageEncodingPNG = true;
+                m_bImageEncodingPlainX = false;
+                m_bUseJpegQuality = false;
                 break;
             case 3:
-                m_bRdpEncoding = false;
-                m_bRdpCompressed = false;
-                m_bRdpRgb = false;
-                m_bRdpPlainX = true;
+                m_bImageEncodingBoth = true;
+                m_bImageEncodingJpeg = false;
+                m_bImageEncodingPNG = false;
+                m_bImageEncodingPlainX = false;
+                m_bUseJpegQuality = false;
+                break;
+            case 4:
+                m_bImageEncodingBoth = true;
+                m_bImageEncodingJpeg = false;
+                m_bImageEncodingPNG = false;
+                m_bImageEncodingPlainX = false;
+                m_bUseJpegQuality = true;
                 break;
         }
+        m_iJpegQuality = m_pCfg->iGetRdpJpegQuality();
         m_bRdpCache = m_pCfg->bGetRdpCache();
         m_iRdpColors = m_pCfg->iGetRdpColors();
     }
@@ -156,8 +178,6 @@ bool RdpImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), 
     }
     Centre();
 ////@end RdpImageSettingsDialog creation
-
-    UpdateDialogConstraints();
     ::wxGetApp().EnableContextHelp(this);
     return TRUE;
 }
@@ -171,20 +191,23 @@ void RdpImageSettingsDialog::CreateControls()
 ////@begin RdpImageSettingsDialog content construction
     if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_IMAGE_RDP")))
         wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
-    m_pCtrlRdpEncoding = XRCCTRL(*this, "ID_RADIOBUTTON_RDP_IMGRDP", wxRadioButton);
-    m_pCtrlRdpCompressed = XRCCTRL(*this, "ID_CHECKBOX_RDP_IMGRDPCOMP", wxCheckBox);
-    m_pCtrlPlainX = XRCCTRL(*this, "ID_RADIOBUTTON_RDP_IMGPLAINX", wxRadioButton);
+    m_pCtrlUseJpegQuality = XRCCTRL(*this, "ID_CHECKBOX_X11_JPEG_CUSTOMQUALITY", wxCheckBox);
+    m_pCtrlJpegQuality = XRCCTRL(*this, "ID_SLIDER_X11_JPEG_QALITY", wxSlider);
     // Set validators
     if (FindWindow(XRCID("ID_SLIDER_RDP_COLORS")))
         FindWindow(XRCID("ID_SLIDER_RDP_COLORS"))->SetValidator( wxGenericValidator(& m_iRdpColors) );
-    if (FindWindow(XRCID("ID_RADIOBUTTON_RDP_IMGRDP")))
-        FindWindow(XRCID("ID_RADIOBUTTON_RDP_IMGRDP"))->SetValidator( wxGenericValidator(& m_bRdpEncoding) );
-    if (FindWindow(XRCID("ID_CHECKBOX_RDP_IMGRDPCOMP")))
-        FindWindow(XRCID("ID_CHECKBOX_RDP_IMGRDPCOMP"))->SetValidator( wxGenericValidator(& m_bRdpCompressed) );
-    if (FindWindow(XRCID("ID_RADIOBUTTON_RDP_IMGRGB")))
-        FindWindow(XRCID("ID_RADIOBUTTON_RDP_IMGRGB"))->SetValidator( wxGenericValidator(& m_bRdpRgb) );
-    if (FindWindow(XRCID("ID_RADIOBUTTON_RDP_IMGPLAINX")))
-        FindWindow(XRCID("ID_RADIOBUTTON_RDP_IMGPLAINX"))->SetValidator( wxGenericValidator(& m_bRdpPlainX) );
+    if (FindWindow(XRCID("ID_RADIOBUTTON_RDP_JPEG_AND_RGB")))
+        FindWindow(XRCID("ID_RADIOBUTTON_RDP_JPEG_AND_RGB"))->SetValidator( wxGenericValidator(& m_bImageEncodingBoth) );
+    if (FindWindow(XRCID("ID_RADIOBUTTON_RDP_JPEG")))
+        FindWindow(XRCID("ID_RADIOBUTTON_RDP_JPEG"))->SetValidator( wxGenericValidator(& m_bImageEncodingJpeg) );
+    if (FindWindow(XRCID("ID_RADIOBUTTON_RDP_PNG")))
+        FindWindow(XRCID("ID_RADIOBUTTON_RDP_PNG"))->SetValidator( wxGenericValidator(& m_bImageEncodingPNG) );
+    if (FindWindow(XRCID("ID_RADIOBUTTON_RDP_PLAIN")))
+        FindWindow(XRCID("ID_RADIOBUTTON_RDP_PLAIN"))->SetValidator( wxGenericValidator(& m_bImageEncodingPlainX) );
+    if (FindWindow(XRCID("ID_CHECKBOX_X11_JPEG_CUSTOMQUALITY")))
+        FindWindow(XRCID("ID_CHECKBOX_X11_JPEG_CUSTOMQUALITY"))->SetValidator( wxGenericValidator(& m_bUseJpegQuality) );
+    if (FindWindow(XRCID("ID_SLIDER_X11_JPEG_QALITY")))
+        FindWindow(XRCID("ID_SLIDER_X11_JPEG_QALITY"))->SetValidator( wxGenericValidator(& m_iJpegQuality) );
     if (FindWindow(XRCID("ID_CHECKBOX_RDP_IMGCACHE")))
         FindWindow(XRCID("ID_CHECKBOX_RDP_IMGCACHE"))->SetValidator( wxGenericValidator(& m_bRdpCache) );
 ////@end RdpImageSettingsDialog content construction
@@ -193,6 +216,7 @@ void RdpImageSettingsDialog::CreateControls()
 
 ////@begin RdpImageSettingsDialog content initialisation
 ////@end RdpImageSettingsDialog content initialisation
+    UpdateDialogConstraints();
 }
 
 /*!
@@ -229,51 +253,17 @@ void RdpImageSettingsDialog::OnContextHelp(wxCommandEvent &)
     wxContextHelp contextHelp(this);
 }
 
-/*!
- * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_PLAINX
- */
-
-void RdpImageSettingsDialog::OnRadiobuttonRdpImgplainxSelected( wxCommandEvent& event )
-{
-    m_bRdpPlainX = true;
-    m_bRdpEncoding = false;
-    m_pCtrlRdpEncoding->SetValue(false);
-    UpdateDialogConstraints();
-    event.Skip();
-}
-
-/*!
- * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_ENCODING
- */
-
-void RdpImageSettingsDialog::OnRadiobuttonRdpImgrdpSelected( wxCommandEvent& event )
-{
-    m_bRdpPlainX = false;
-    m_bRdpEncoding = true;
-    m_pCtrlPlainX->SetValue(false);
-    UpdateDialogConstraints();
-    event.Skip();
-}
-
 void RdpImageSettingsDialog::UpdateDialogConstraints()
 {
-    m_pCtrlRdpCompressed->Enable(m_bRdpEncoding);
+    TransferDataFromWindow();
+    if (m_bImageEncodingBoth || m_bImageEncodingJpeg) {
+        m_pCtrlUseJpegQuality->Enable();
+        m_pCtrlJpegQuality->Enable(m_bUseJpegQuality);
+    } else {
+        m_pCtrlUseJpegQuality->Disable();
+        m_pCtrlJpegQuality->Disable();
+    }
 }
-
-/*!
- * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_IMGRGB
- */
-
-void RdpImageSettingsDialog::OnRadiobuttonRdpImgrgbSelected( wxCommandEvent& event )
-{
-    m_bRdpPlainX = false;
-    m_bRdpEncoding = false;
-    m_pCtrlPlainX->SetValue(false);
-    m_pCtrlRdpEncoding->SetValue(false);
-    UpdateDialogConstraints();
-    event.Skip();
-}
-
 
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
@@ -284,10 +274,18 @@ void RdpImageSettingsDialog::OnOkClick( wxCommandEvent& event )
     wxASSERT_MSG(m_pCfg, _T("RdpImageSettingsDialog::OnOkClick: No configuration"));
     if (m_pCfg) {
         TransferDataFromWindow();
-        if (m_bRdpEncoding)
-            m_pCfg->iSetRdpImageCompression(m_bRdpCompressed ? 1 : 2);
-        else
-            m_pCfg->iSetRdpImageCompression(m_bRdpPlainX ? 3 : 0);
+        int ienc = 3;
+        if (m_bImageEncodingBoth) {
+            ienc = (m_bUseJpegQuality) ? 4 : 3;
+        } else if (m_bImageEncodingJpeg) {
+            ienc = (m_bUseJpegQuality) ? -1 : 1;
+        } else if (m_bImageEncodingPNG) {
+            ienc = 2;
+        } else if (m_bImageEncodingPlainX) {
+            ienc = 0;
+        }
+        m_pCfg->iSetRdpImageEncoding(ienc);
+        m_pCfg->iSetRdpJpegQuality(m_iJpegQuality);
         m_pCfg->iSetRdpColors(m_iRdpColors);
         m_pCfg->bSetRdpCache(m_bRdpCache);
     }
@@ -309,4 +307,59 @@ void RdpImageSettingsDialog::OnSliderRdpColorsScrollThumbRelease( wxScrollEvent&
     event.Skip();
 }
 
+
+
+/*!
+ * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_JPEG_AND_RGB
+ */
+
+void RdpImageSettingsDialog::OnRadiobuttonRdpJpegAndRgbSelected( wxCommandEvent& event )
+{
+    UpdateDialogConstraints();
+    event.Skip();
+}
+
+
+/*!
+ * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_JPEG
+ */
+
+void RdpImageSettingsDialog::OnRadiobuttonRdpJpegSelected( wxCommandEvent& event )
+{
+    UpdateDialogConstraints();
+    event.Skip();
+}
+
+
+/*!
+ * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_PNG
+ */
+
+void RdpImageSettingsDialog::OnRadiobuttonRdpPngSelected( wxCommandEvent& event )
+{
+    UpdateDialogConstraints();
+    event.Skip();
+}
+
+
+/*!
+ * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON_RDP_PLAIN
+ */
+
+void RdpImageSettingsDialog::OnRadiobuttonRdpPlainSelected( wxCommandEvent& event )
+{
+    UpdateDialogConstraints();
+    event.Skip();
+}
+
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_X11_JPEG_CUSTOMQUALITY
+ */
+
+void RdpImageSettingsDialog::OnCheckboxX11JpegCustomqualityClick( wxCommandEvent& event )
+{
+    UpdateDialogConstraints();
+    event.Skip();
+}
 

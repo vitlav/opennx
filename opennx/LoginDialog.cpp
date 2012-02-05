@@ -53,6 +53,7 @@
 #include "MySession.h"
 #include "Icon.h"
 #include "opennxApp.h"
+#include "SupressibleMessageDialog.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -462,6 +463,19 @@ void LoginDialog::OnComboboxSessionSelected( wxCommandEvent& event )
     m_pCtrlUseSmartCard->Enable(m_pCurrentCfg && m_pCurrentCfg->IsWritable());
     m_pCtrlGuestLogin->Enable(m_pCurrentCfg && m_pCurrentCfg->IsWritable());
     m_pCtrlConfigure->Enable(m_pCurrentCfg && m_pCurrentCfg->IsWritable());
+    if (m_pCurrentCfg && m_pCurrentCfg->WasOldConfig()) {
+        wxString msg;
+        if (m_pCurrentCfg->IsWritable()) {
+            // m_pCurrentCfg->SaveToFile();
+            msg = _("An old session configuration has been detected.\nThe session '%s' has been converted to the new format.\nPlease verify the custom image compression settings.");
+        } else {
+            msg = _("An old session configuration has been detected.\nThe session '%s' has been converted but could not be saved.\nPlease verify the custom image compression settings.");
+        }
+        wxString cfgid(wxT("oldcfg."));
+        SupressibleMessageDialog d(this, wxString::Format(msg, m_pCurrentCfg->sGetName().c_str()),
+                _("Warning - OpenNX"), wxOK|wxICON_EXCLAMATION);
+        d.ShowConditional(cfgid.Append(msg.Left(15)), wxID_OK);
+    }
     if (!m_bGuestLogin)
         SetInitialFocus();
     event.Skip();
