@@ -43,7 +43,6 @@
 
 static unsigned long failed_files;
 static unsigned long failed_dirs;
-static bool newreceipt;
 
 class RmRfTraverser : public wxDirTraverser
 {

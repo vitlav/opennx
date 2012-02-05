@@ -534,6 +534,8 @@ char *x11_socket_path = _spath;
 char *x11_keyboard_type = _kbd;
 
 #ifdef __WXMAC__
+#include <time.h>
+
 static void fatal(const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);

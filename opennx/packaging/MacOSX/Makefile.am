@@ -14,7 +14,7 @@ dmg: pkg
 	sudo rm -rf dmgroot
 	touch $@
 
-createpkgroot:
+createpkgroot: opennx.plist opennx-main.plist 
 	sudo rm -rf pkgroot
 	mkdir -p pkgroot/Applications/OpenNX
 	mkdir -p pkgroot$(prefix)
@@ -49,7 +49,7 @@ pkgdir: createpkgroot
 	done
 	touch $@
 
-pkg: pkgdir
+pkg: pkgdir pkg.plist
 	sudo chown -R -h root:admin pkgroot
 	sudo chown -R root:wheel pkgroot/usr
 	sudo chown -R root:admin pkgroot/usr/share/man/man1/*

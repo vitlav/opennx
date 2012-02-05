@@ -67,7 +67,7 @@ static int findreader() {
     return -1;
 }
 
-int main(int argc, char **argv) {
+int main() {
     int rid = findreader();
     return (rid < 0) ? 255 : rid;
 }

@@ -1,5 +1,6 @@
 #include <stdio.h>
-int main(int argc, char **argv)
+extern const char *getMacKeyboard();
+int main()
 {
     fprintf(stderr, "%s\n", getMacKeyboard());
 	return 0;
