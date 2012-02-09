@@ -36,6 +36,8 @@ class wxXmlNode;
 
 class ShareGroup : public wxObject
 {
+    DECLARE_DYNAMIC_CLASS(ShareGroup)
+
     public:
         ShareGroup() : wxObject() {m_eType = SharedResource::SHARE_UNKNOWN; }
         virtual ~ShareGroup() {}
@@ -61,6 +63,8 @@ class USBDevice;
 
 class SharedUsbDevice : public wxObject
 {
+    DECLARE_DYNAMIC_CLASS(SharedUsbDevice)
+
     public:
         typedef enum {
             MODE_UNKNOWN = 0,

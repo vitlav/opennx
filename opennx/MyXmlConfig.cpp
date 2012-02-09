@@ -84,6 +84,9 @@ ENABLE_TRACE;
 #define DUMMY_CLR_PASSWORD wxT("\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r")
 #define DEFAULT_GUEST_USER wxT("NX guest user")
 
+IMPLEMENT_DYNAMIC_CLASS(ShareGroup, wxObject);
+IMPLEMENT_DYNAMIC_CLASS(SharedUsbDevice, wxObject);
+
 WX_DEFINE_OBJARRAY(ArrayOfShareGroups);
 WX_DEFINE_OBJARRAY(ArrayOfUsbForwards);
 
