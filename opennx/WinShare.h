@@ -34,6 +34,8 @@ class DllData;
 
 class SharedResource : public wxObject
 {
+    DECLARE_DYNAMIC_CLASS(SharedResource)
+
     public:
         typedef enum {
             SHARE_UNKNOWN,
