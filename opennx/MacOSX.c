@@ -51,7 +51,7 @@ const char *getMacKeyboard() {
 	KeyboardLayoutRef klr;
     memset(ret, 0, sizeof(ret));
 	if (noErr == KLGetCurrentKeyboardLayout(&klr)) {
-		uint32 pt = kKLLanguageCode;
+		unsigned int pt = kKLLanguageCode;
 		const void *oValue;
 		if (noErr == KLGetKeyboardLayoutProperty(klr, pt, &oValue)) {
 			char buf[128];
@@ -65,6 +65,9 @@ const char *getMacKeyboard() {
 }
 
 #include <IOKit/IOKitLib.h>
+#ifndef kIOPlatformUUIDKey
+# define kIOPlatformUUIDKey	"IOPlatformUUID"
+#endif
 const char *getMacMachineID()
 {
     static char ret[256];
