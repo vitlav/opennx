@@ -33,7 +33,7 @@ class MyXmlConfig;
 
 class MySession : public wxEvtHandler
 {
-    DECLARE_CLASS(MySession);
+    DECLARE_DYNAMIC_CLASS(MySession);
     DECLARE_EVENT_TABLE();
 
 public:
@@ -117,7 +117,7 @@ private:
     void initversion(const wxString &s = wxEmptyString);
     bool prepareCups();
     bool isCupsRunning();
-    void printSsh(const wxString &s, bool doLog = true);
+    void printSsh(const wxString &s, bool doLog = true, const wxString &reason = wxT(""));
     void cleanupOldSessions();
     void clearSshKeys(const wxString &);
     ArrayOfShareGroups getActiveCupsPrinters();

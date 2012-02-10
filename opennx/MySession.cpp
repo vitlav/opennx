@@ -400,7 +400,7 @@ class MyHTTP : public wxHTTP {
 
 };
 
-IMPLEMENT_CLASS(MySession, wxEvtHandler);
+IMPLEMENT_DYNAMIC_CLASS(MySession, wxEvtHandler);
 
 BEGIN_EVENT_TABLE(MySession, wxEvtHandler)
     EVT_COMMAND(wxID_ANY, wxEVT_NXSSH, MySession::OnSshEvent)
@@ -932,7 +932,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                 case STATE_FINISH:
                     if (m_bGotError) {
                         m_eConnectState = STATE_ABORT;
-                        printSsh(wxT("bye"));
+                        printSsh(wxT("bye"), true, wxT("Mainloop: Got error, "));
                     }
                     break;
             }
@@ -1087,10 +1087,10 @@ MySession::initversion(const wxString &s /* = wxEmptyString */)
 }
 
     void
-MySession::printSsh(const wxString &s, bool doLog /* = true */)
+MySession::printSsh(const wxString &s, bool doLog /* = true */, const wxString &reason /* = wxT("") */)
 {
     if (m_pNxSsh) {
-        ::myLogTrace(MYTRACETAG, wxT("sending '%s'"), (doLog ? s.c_str() : wxT("********")));
+        ::myLogTrace(MYTRACETAG, wxT("%ssending '%s'"), reason.c_str(), (doLog ? s.c_str() : wxT("********")));
         m_pNxSsh->Print(s, doLog);
     }
 }
@@ -1267,8 +1267,7 @@ MySession::parseSessions(bool moreAllowed)
                     }
                     break;
                 case wxID_CANCEL:
-                    ::myLogTrace(MYTRACETAG, wxT("ResumeDialog returned CANCEL"));
-                    printSsh(wxT("bye"));
+                    printSsh(wxT("bye"), true, wxT("ResumeDialog returned CANCEL, "));
                     m_eConnectState = STATE_ABORT;
                     break;
             }
@@ -1278,7 +1277,7 @@ MySession::parseSessions(bool moreAllowed)
             m_eConnectState = STATE_ABORT;
             m_bGotError = true;
             m_bAbort = true;
-            printSsh(wxT("bye"));
+            printSsh(wxT("bye"), true, wxT("No sessions to attach, "));
             wxMessageDialog d(m_pParent,
                     _("There are no sessions which can be attached to."),
                     _("Error - OpenNX"), wxOK);
@@ -1288,7 +1287,7 @@ MySession::parseSessions(bool moreAllowed)
             if (moreAllowed)
                 m_eConnectState = STATE_START_SESSION;
             else {
-                printSsh(wxT("bye"));
+                printSsh(wxT("bye"), true, wxT("No more sessions allowed, "));
                 wxMessageDialog d(m_pParent,
                         _("You have reached your session limit. No more sessions allowed"),
                         _("Error - OpenNX"), wxOK);
@@ -1676,7 +1675,7 @@ MySession::startProxy()
             pcmd << wxFileName::GetPathSeparator() << wxT("bin")
                 << wxFileName::GetPathSeparator() << wxT("nxproxy -S nx,options=")
                 << cygPath(m_sOptFilename) << wxT(":") << m_sSessionDisplay;
-            printSsh(wxT("bye"));
+            printSsh(wxT("bye"), true, wxT("Options file written, "));
             if ((m_lProtocolVersion <= 0x00020000) || (!m_bSslTunneling)) {
                 ::wxLogInfo(wxT("Executing %s"), pcmd.c_str());
 #ifdef __WXMSW__
@@ -1905,7 +1904,7 @@ MySession::prepareCups()
     wxString cmd = m_pCfg->sGetCupsPath();
     cmd << wxT(" -c ") << sCupsDir << wxT("cupsd.conf");
     ::myLogTrace(MYTRACETAG, wxT("Starting '%s'"), cmd.c_str());
-    if (::wxExecute(cmd, wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER) <= 0)
+    if (::wxExecute(cmd, wxEXEC_ASYNC) <= 0)
         return false;
     wxThread::Sleep(500);
     return isCupsRunning();
@@ -2175,6 +2174,9 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
 #else
             stmp.Prepend(wxT(":")).Prepend(fn.GetFullPath());
 #endif
+#ifdef __WXMAC__
+            stmp.Append(wxT(":/usr/X11R6/bin:/usr/X11/bin"));
+#endif
             ::wxSetEnv(wxT("PATH"), stmp);
         }
         ::wxLogInfo(wxT("env: PATH='%s'"), stmp.c_str());
@@ -2380,6 +2382,8 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
             if (m_bRemoveKey)
                 clearSshKeys(m_sOffendingKey);
         } while (m_bRemoveKey);
+        nxssh.Detach();
+
 #ifdef __WXMSW__
         if (m_iXserverPID)
             AllowSetForegroundWindow(m_iXserverPID);
