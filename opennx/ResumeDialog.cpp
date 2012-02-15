@@ -230,11 +230,12 @@ void ResumeDialog::OnListctrlSessionsSelected( wxListEvent& event )
     m_lActiveSession = event.GetIndex();
     ::myLogTrace(MYTRACETAG, wxT("clickselect=%d"), m_lActiveSession);
     wxListItem info;
-    info.m_itemId = m_lActiveSession;
-    info.m_col = 2;
+    info.SetId(m_lActiveSession);
+    info.SetMask(wxLIST_MASK_TEXT);
+    info.SetColumn(2);
     m_pCtrlSessions->GetItem(info);
     if (m_bShadow) {
-        if (info.m_text == wxT("Suspended")) {
+        if (info.GetText() == wxT("Suspended")) {
             m_pCtrlResume->Enable(false);
             m_pCtrlTakeover->Enable(false);
             m_pCtrlTerminate->Enable(true);
@@ -244,7 +245,7 @@ void ResumeDialog::OnListctrlSessionsSelected( wxListEvent& event )
             m_pCtrlTerminate->Enable(false);
         }
     } else {
-        if (info.m_text == wxT("Suspended")) {
+        if (info.GetText() == wxT("Suspended")) {
             m_pCtrlResume->Enable(true);
             m_pCtrlTakeover->Enable(false);
             m_pCtrlTerminate->Enable(true);
@@ -254,18 +255,19 @@ void ResumeDialog::OnListctrlSessionsSelected( wxListEvent& event )
             m_pCtrlTerminate->Enable(false);
         }
     }
-    info.m_col = 0;
+    info.SetColumn(0);
     m_pCtrlSessions->GetItem(info);
-    m_sSelectedName = info.m_text;
-    info.m_col = 3;
+    m_sSelectedName = info.GetText();
+    info.SetColumn(3);
     m_pCtrlSessions->GetItem(info);
-    m_sSelectedType = info.m_text;
-    info.m_col = 5;
+    m_sSelectedType = info.GetText();
+    info.SetColumn(5);
     m_pCtrlSessions->GetItem(info);
-    m_sSelectedPort = info.m_text;
-    info.m_col = 7;
+    m_sSelectedPort = info.GetText();
+    info.SetColumn(7);
     m_pCtrlSessions->GetItem(info);
-    m_sSelectedId = info.m_text;
+    m_sSelectedId = info.GetText();
+    ::myLogTrace(MYTRACETAG, wxT("Selected session ID=%s"), m_sSelectedId.c_str());
     event.Skip();
 }
 
