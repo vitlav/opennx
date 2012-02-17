@@ -340,7 +340,7 @@ class SessionWatch : public wxThreadHelper
             if (m_pHandler) {
                 wxCommandEvent upevent(wxEVT_SESSION, wxID_ANY);
                 upevent.SetInt(bFound ? 1 : 0);
-                m_pHandler->ProcessEvent(upevent);
+                m_pHandler->AddPendingEvent(upevent);
             }
             return 0;
         }
@@ -512,7 +512,9 @@ MySession::~MySession()
         delete m_pSessionWatch;
         m_pSessionWatch = NULL;
     }
-    delete wxLog::SetActiveTarget(NULL);
+    wxLog *l = wxLog::SetActiveTarget(NULL);
+    if (l)
+        delete l;
 }
 
     wxString

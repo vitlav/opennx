@@ -1098,6 +1098,18 @@ void SessionProperties::CreateControls()
     ////@begin SessionProperties content initialisation
     ////@end SessionProperties content initialisation
 
+#ifdef __WXMSW__
+    // wxSpinCtrl is too small on windows
+    wxSize spin_size = m_pCtrlDisplayWidth->GetMinSize();
+    spin_size.IncBy(8, 0);
+    m_pCtrlDisplayWidth->SetSize(spin_size);
+    m_pCtrlDisplayWidth->SetMinSize(spin_size);
+    m_pCtrlDisplayWidth->SetSizeHints(spin_size);
+    m_pCtrlDisplayHeight->SetSize(spin_size);
+    m_pCtrlDisplayHeight->SetMinSize(spin_size);
+    m_pCtrlDisplayHeight->SetSizeHints(spin_size);
+    Layout();
+#endif
     m_pCtrlUseSmartCard->Enable(::wxGetApp().NxSmartCardSupport());
 
     int fs[7];
