@@ -50,6 +50,7 @@
 ////@end XPM images
 
 #include "trace.h"
+ENABLE_TRACE;
 
 /*!
  * LogDialog type definition
@@ -123,6 +124,10 @@ void LogDialog::CreateControls()
 
 ////@begin LogDialog content initialisation
 ////@end LogDialog content initialisation
+
+    wxFont ff(10, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+    ::myLogTrace(MYTRACETAG, wxT("Font=%s"), ff.GetNativeFontInfoDesc().c_str());
+    m_TextCtrl->SetFont(ff);
 }
 
 void LogDialog::SetFileName(wxString fn)

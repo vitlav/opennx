@@ -328,6 +328,10 @@ void SessionAdmin::OnSessionList(wxCommandEvent& event)
                 m_SessionListCtrl->SetItem(idx, 3, s->sGetCreationTime());
                 m_SessionListCtrl->SetItem(idx, 4, s->sGetPID());
                 m_SessionListCtrl->SetItem(idx, 5, s->sGetSessionStatus());
+                if (m_SessionListCtrl->GetItemState(idx, wxLIST_STATE_SELECTED)) {
+                    bool running = (s->eGetSessionStatus() == MySession::Running);
+                    SessionToolsEnable(true, running);
+                }
             }
             break;
         case SessionList::SessionRemoved:
@@ -337,12 +341,14 @@ void SessionAdmin::OnSessionList(wxCommandEvent& event)
             }
             break;
         case SessionList::UpdateList:
+#ifndef __WXMAC__ // On OSX, this messes up column headers
             {
                 int width = m_SessionListCtrl->GetItemCount() ?
                     wxLIST_AUTOSIZE : wxLIST_AUTOSIZE_USEHEADER;
                 for (int i = 0; i < m_SessionListCtrl->GetColumnCount(); i++) 
                     m_SessionListCtrl->SetColumnWidth(i, width);
             }
+#endif
             m_SessionListCtrl->Update();
             break;
     }

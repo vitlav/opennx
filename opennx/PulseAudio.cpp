@@ -170,6 +170,7 @@ class pawrapper {
             int retry = 3;
             do {
                 m_bError = false;
+                ::myLogTrace(MYTRACETAG, wxT("pa_context_connect try %d"), 4 - retry);
                 if (0 <= Ppa_context_connect(m_pContext, NULL /* server */, PA_CONTEXT_NOAUTOSPAWN, NULL)) {
                     Ppa_threaded_mainloop_start(m_pLoop);
                     while (!(m_bConnected || m_bError))

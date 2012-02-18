@@ -520,12 +520,16 @@ MySession::~MySession()
     wxString
 MySession::sGetCreationTime()
 {
-    if (!m_bValid)
-        return _("unknown");
-    wxDateTime ctime;
-    wxFileName fn(m_sDir, wxT("session"));
-    fn.GetTimes(NULL, NULL, &ctime);
-    return ctime.Format();
+    wxString ret(_("unknown"));
+    if (m_bValid) {
+        wxLogNull l;
+        wxDateTime ctime;
+        wxFileName fn(m_sDir, wxT("session"));
+        if (fn.GetTimes(NULL, NULL, &ctime)) {
+            ret = ctime.Format();
+        }
+    }
+    return ret;
 }
 
     wxString
