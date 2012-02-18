@@ -331,10 +331,8 @@ void SessionAdmin::OnSessionList(wxCommandEvent& event)
             }
             break;
         case SessionList::SessionRemoved:
-            s = wxDynamicCast((void *)event.GetClientData(), MySession);
-            idx = m_SessionListCtrl->FindItem(-1, (long)s);
+            idx = m_SessionListCtrl->FindItem(-1, (long)event.GetClientData());
             if (idx != -1) {
-                m_sessions->RemoveFromList(s->sGetMd5());
                 m_SessionListCtrl->DeleteItem(idx);
             }
             break;
@@ -555,6 +553,7 @@ void SessionAdmin::OnMenuSessionRemoveClick( wxCommandEvent& )
         MySession *s =
             wxDynamicCast((void *)m_SessionListCtrl->GetItemData(item), MySession);
         if (s) {
+            m_SessionListCtrl->DeleteItem(item);
             wxString dir = s->sGetDir();
             m_sessions->CleanupDir(dir);
         }

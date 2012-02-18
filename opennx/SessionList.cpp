@@ -250,8 +250,8 @@ void SessionList::ScanDir()
                     }
                 }
             } else {
-                ::myLogTrace(MYTRACETAG, wxT("Session '%s' disappeared"),
-                        it->second.sGetMd5().c_str());
+                wxString md5 = it->second.sGetMd5();
+                ::myLogTrace(MYTRACETAG, wxT("Session '%s' disappeared"), md5.c_str());
                 finished = false;
                 if (m_pAdminHandler) {
                     wxCommandEvent ev(wxEVT_SESSIONLIST_ACTION, wxID_ANY);
@@ -260,6 +260,7 @@ void SessionList::ScanDir()
                     m_pAdminHandler->AddPendingEvent(ev);
                     changed = true;
                 }
+                RemoveFromList(md5);
                 break;
             }
         }
