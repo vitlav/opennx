@@ -41,15 +41,10 @@ endif
 		nxssh/contrib/redhat/sshd.init.old nxssh/contrib/redhat/sshd.init \
 		nxssh/contrib/caldera/ssh-host-keygen nxssh/contrib/caldera/sshd.init \
 		nxproxy/configure nxproxy/mkinstalldirs nxproxy/install-sh \
-		nxesd/nxesddsp.in nxesd/configure nxesd/missing nxesd/depcomp \
-		nxesd/compile nxesd/install-sh nxesd/test-script nxesd/config.sub \
-		nxesd/esddsp.in nxesd/config.guess nxcomp/configure \
+		nxcomp/configure \
 		nxcomp/mkinstalldirs nxcomp/install-sh
 	./configure $(CROSS) --prefix=$(prefix) --datarootdir=/usr/share/opennx
 	cd nxcomp && ./configure --prefix=$(prefix)
-	cd nxesd && grep -q 'nxesd-3.5' CHANGELOG && patch -p1 < ../patches/nxesd-3.5-autotools.patch || true
-	cd nxesd && grep -q 'nxesd-3.5' CHANGELOG && autoreconf -f -i || true
-	cd nxesd && ./configure --prefix=$(prefix)
 	cd nxproxy && ./configure --prefix=$(prefix)
 	cd nxssh && patch -p1 < ../patches/openssh-scard-pin.patch
 	cd nxssh && patch -p1 < ../patches/nxssh-dynopensc.patch
@@ -62,7 +57,6 @@ build-stamp: config.status
 	dh_testdir
 	$(MAKE)
 	$(MAKE) -C nxcomp
-	$(MAKE) -C nxesd
 	$(MAKE) -C nxproxy
 	$(MAKE) -C nxssh
 	touch $@
@@ -85,7 +79,6 @@ install: build
 	cd debian/opennx/usr/lib/opennx && ln -s ../../share/opennx share
 	cp -a nxcomp/libXcomp.so.3.*.* debian/opennx/usr/lib/opennx/lib
 	cd debian/opennx/usr/lib/opennx/lib && ln -s libXcomp.so.3.*.* libXcomp.so.3
-	cp -a nxesd/nxesd debian/opennx/usr/lib/opennx/bin
 	cp -a nxssh/nxssh debian/opennx/usr/lib/opennx/bin
 	cp -a nxproxy/nxproxy debian/opennx/usr/lib/opennx/bin
 	# USBIP only: cp -a etc/*.rules debian/opennx/etc/udev/rules.d
