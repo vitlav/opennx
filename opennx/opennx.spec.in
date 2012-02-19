@@ -75,8 +75,8 @@
 %endif
 
 %define nxdlurl http://www.nomachine.com/sources.php
-%define nxpkgs nxcomp nxproxy nxesd
-%define nxpkgsall nxcomp nxproxy nxesd nxssh
+%define nxpkgs nxcomp nxproxy
+%define nxpkgsall nxcomp nxproxy nxssh
 
 %define rel %{svnrev}%{ostag}
 
@@ -90,7 +90,6 @@ URL: http://sourceforge.net/projects/opennx
 Source0: opennx-%{version}.tar.gz
 %if !%{with_fetchnx}
 Source100: nxcomp-3.3.0-4.tar.gz
-Source101: nxesd-3.3.0-1.tar.gz
 Source102: nxssh-3.3.0-1.tar.gz
 Source103: nxproxy-3.3.0-2.tar.gz
 %endif
@@ -199,11 +198,9 @@ for pkg in %{nxpkgsall} ; do
     tar xzf ${pkg}-*.tar.gz
 done
 ncver=`ls nxcomp-*.tar.gz|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxcomp-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
-never=`ls nxesd-*.tar.gz|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxesd-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
 %else
 %setup -q -a 100 -a 101 -a 102 -a 103
 ncver=`basename %{SOURCE100}|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxcomp-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
-never=`basename %{SOURCE101}|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxesd-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
 %endif
 
 # Apply openssh askPIN patch (see https://bugzilla.mindrot.org/show_bug.cgi?id=608)
@@ -211,10 +208,6 @@ cd nxssh && patch -p1 < ../patches/openssh-scard-pin.patch
 cd ..
 if test $ncver -lt 03040006 ;then
     patch -p0 < patches/nxcomp-gcc44.patch
-fi
-if test $never -ge 03050000 ;then
-    patch -p0 < patches/nxesd-3.5-autotools.patch
-    touch nxesd/.run_autoreconf
 fi
 # Make nxssh load libopensc dynamically
 patch -p0 < patches/nxssh-dynopensc.patch
@@ -238,7 +231,6 @@ patch -p0 < patches/nxssh-dynopensc.patch
 # keep this comment line!!
 
 make
-CFG_nxesd=--disable-shared
 for pkg in %{nxpkgs} ; do
     cd $pkg
     test -f .run_autoreconf && autoreconf -f -i || :
@@ -259,10 +251,6 @@ make DESTDIR=%{buildroot} install
 make DESTDIR=%{buildroot} prefix=/usr install-man
 %{__install} -d -m 755 %{buildroot}%{nxlib}
 %{__install} -m 755 nxcomp/libXcomp.so.*.*.* %{buildroot}%{nxlib}
-mkdir -p nxesd_dist
-make -C nxesd DESTDIR=%{_builddir}/%{name}-%{version}/nxesd_dist install
-%{__install} -m 755 nxesd_dist/%{_prefix}/bin/nxesd %{buildroot}%{_prefix}/bin
-rm -rf nxesd_dist
 %{__install} -m 755 nxssh/nxssh %{buildroot}%{_prefix}/bin
 %{__install} -m 755 nxproxy/nxproxy %{buildroot}%{_prefix}/bin
 /sbin/ldconfig -n %{buildroot}%{nxlib}

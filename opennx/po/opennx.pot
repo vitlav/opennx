@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opennx 0.16\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2012-02-05 06:18+0100\n"
+"POT-Creation-Date: 2012-02-19 01:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: AboutDialog.cpp:113 SessionProperties.cpp:1112
+#: AboutDialog.cpp:113 SessionProperties.cpp:1124
 msgid "Version"
 msgstr ""
 
@@ -103,14 +103,14 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: LoginDialog.cpp:408 LoginDialog.cpp:530 MyWizard.cpp:1357
+#: LoginDialog.cpp:408 LoginDialog.cpp:530 MyWizard.cpp:1369
 #, c-format
 msgid ""
 "Could not save session to\n"
 "%s"
 msgstr ""
 
-#: LoginDialog.cpp:409 LoginDialog.cpp:531 MyWizard.cpp:1358
+#: LoginDialog.cpp:409 LoginDialog.cpp:531 MyWizard.cpp:1370
 msgid "Error saving - OpenNX"
 msgstr ""
 
@@ -130,7 +130,7 @@ msgid ""
 "Please verify the custom image compression settings."
 msgstr ""
 
-#: LoginDialog.cpp:476 MySession.cpp:777 MySession.cpp:789 MySession.cpp:803
+#: LoginDialog.cpp:476 MySession.cpp:783 MySession.cpp:795 MySession.cpp:809
 msgid "Warning - OpenNX"
 msgstr ""
 
@@ -169,93 +169,93 @@ msgstr ""
 msgid "L&ogin"
 msgstr ""
 
-#: MacUninstallApp.cpp:61 MacUninstallApp.cpp:509
+#: MacUninstallApp.cpp:60 MacUninstallApp.cpp:508
 #, c-format
 msgid "TEST: Would delete file: %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:64 MacUninstallApp.cpp:513
+#: MacUninstallApp.cpp:63 MacUninstallApp.cpp:512
 #, c-format
 msgid "Deleted file: %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:67 MacUninstallApp.cpp:516
+#: MacUninstallApp.cpp:66 MacUninstallApp.cpp:515
 #, c-format
 msgid "Could not delete file %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:75
+#: MacUninstallApp.cpp:74
 #, c-format
 msgid "TEST: Would delete diretory %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:78
+#: MacUninstallApp.cpp:77
 #, c-format
 msgid "Deleted diretory %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:81 MacUninstallApp.cpp:547 MacUninstallApp.cpp:566
+#: MacUninstallApp.cpp:80 MacUninstallApp.cpp:546 MacUninstallApp.cpp:565
 #, c-format
 msgid "Could not delete directory %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:133
+#: MacUninstallApp.cpp:132
 msgid "Test mode. Just create log file reporting what would happen."
 msgstr ""
 
-#: MacUninstallApp.cpp:135
+#: MacUninstallApp.cpp:134
 msgid "Uninstall without asking the user (needs admin rights)."
 msgstr ""
 
-#: MacUninstallApp.cpp:172
+#: MacUninstallApp.cpp:171
 msgid "Batch uninstall needs to be started as root."
 msgstr ""
 
-#: MacUninstallApp.cpp:173 MacUninstallApp.cpp:199
+#: MacUninstallApp.cpp:172 MacUninstallApp.cpp:198
 #, c-format
 msgid "Uninstall %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:180
+#: MacUninstallApp.cpp:179
 #, c-format
 msgid "Uninstall finished at %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:181
+#: MacUninstallApp.cpp:180
 #, c-format
 msgid "Status: %s, failed files: %lu, failed dirs: %lu"
 msgstr ""
 
-#: MacUninstallApp.cpp:182
+#: MacUninstallApp.cpp:181
 msgid "OK"
 msgstr ""
 
-#: MacUninstallApp.cpp:182
+#: MacUninstallApp.cpp:181
 msgid "FAILED"
 msgstr ""
 
-#: MacUninstallApp.cpp:189
+#: MacUninstallApp.cpp:188
 #, c-format
 msgid "Reporting result to elevation wrapper %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:197
+#: MacUninstallApp.cpp:196
 #, c-format
 msgid ""
 "This operation can not be undone!\n"
 "Do you really want to uninstall %s?"
 msgstr ""
 
-#: MacUninstallApp.cpp:211
+#: MacUninstallApp.cpp:210
 #, c-format
 msgid "%s has been removed successfully."
 msgstr ""
 
-#: MacUninstallApp.cpp:213
+#: MacUninstallApp.cpp:212
 msgid "Uninstallation complete"
 msgstr ""
 
-#: MacUninstallApp.cpp:217
+#: MacUninstallApp.cpp:216
 #, c-format
 msgid ""
 "%s could not be removed completely.\n"
@@ -265,11 +265,11 @@ msgid ""
 " for more information."
 msgstr ""
 
-#: MacUninstallApp.cpp:219
+#: MacUninstallApp.cpp:218
 msgid "Uninstallation incomplete"
 msgstr ""
 
-#: MacUninstallApp.cpp:225
+#: MacUninstallApp.cpp:224
 #, c-format
 msgid ""
 "Uninstallation has failed.\n"
@@ -277,362 +277,362 @@ msgid ""
 "%s"
 msgstr ""
 
-#: MacUninstallApp.cpp:227
+#: MacUninstallApp.cpp:226
 msgid "Uninstallation failed"
 msgstr ""
 
-#: MacUninstallApp.cpp:246
+#: MacUninstallApp.cpp:245
 #, c-format
 msgid "Not an XML plist: %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:252
+#: MacUninstallApp.cpp:251
 #, c-format
 msgid "Invalid plist (missing toplevel <dict> in %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:263
+#: MacUninstallApp.cpp:262
 #, c-format
 msgid "Invalid plist (expected a key) in %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:273
+#: MacUninstallApp.cpp:272
 #, c-format
 msgid "Unsupported type array in %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:280
+#: MacUninstallApp.cpp:279
 #, c-format
 msgid "Invalid plist (invalid real value %s) in %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:290
+#: MacUninstallApp.cpp:289
 #, c-format
 msgid "Invalid plist (invalid integer value %s) in %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:309
+#: MacUninstallApp.cpp:308
 #, c-format
 msgid "Invalid plist (invalid date value %s) in %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:316
+#: MacUninstallApp.cpp:315
 #, c-format
 msgid "Invalid plist (unexpected type %s) in %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:362
+#: MacUninstallApp.cpp:361
 #, c-format
 msgid "Could not find requested key 'IFPkgFlagRelocatable' in receipt %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:368
+#: MacUninstallApp.cpp:367
 #, c-format
 msgid "Unexpected type '%s' of 'IFPkgFlagRelocatable' in receipt %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:376
+#: MacUninstallApp.cpp:375
 #, c-format
 msgid "Could not find requested key '%s' in receipt %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:382
+#: MacUninstallApp.cpp:381
 #, c-format
 msgid "Unexpected type '%s' of '%s' in receipt %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:392
+#: MacUninstallApp.cpp:391
 #, c-format
 msgid "Could not read package receipt %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:401
+#: MacUninstallApp.cpp:400
 #, c-format
 msgid "Missing BOM (Bill Of Materials) '%s'. Already unistalled?"
 msgstr ""
 
-#: MacUninstallApp.cpp:409 MacUninstallApp.cpp:422
+#: MacUninstallApp.cpp:408 MacUninstallApp.cpp:421
 #, c-format
 msgid "Could not list BOM (Bill Of Materials) '%s'. Already unistalled?"
 msgstr ""
 
-#: MacUninstallApp.cpp:414 MacUninstallApp.cpp:427
+#: MacUninstallApp.cpp:413 MacUninstallApp.cpp:426
 #, c-format
 msgid "Invalid BOM (Bill Of Materials) '%s'. Already unistalled?"
 msgstr ""
 
-#: MacUninstallApp.cpp:451
+#: MacUninstallApp.cpp:450
 msgid "The package receipt does not exist. Already unistalled?"
 msgstr ""
 
-#: MacUninstallApp.cpp:459
+#: MacUninstallApp.cpp:458
 msgid "The package install path does not exist. Already unistalled?"
 msgstr ""
 
-#: MacUninstallApp.cpp:474
+#: MacUninstallApp.cpp:473
 #, c-format
 msgid "Uninstall started at %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:498
+#: MacUninstallApp.cpp:497
 msgid "Deleting package content"
 msgstr ""
 
-#: MacUninstallApp.cpp:534 MacUninstallApp.cpp:560
+#: MacUninstallApp.cpp:533 MacUninstallApp.cpp:559
 #, c-format
 msgid "TEST: Would delete directory: %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:538 MacUninstallApp.cpp:563
+#: MacUninstallApp.cpp:537 MacUninstallApp.cpp:562
 #, c-format
 msgid "Deleted directory: %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:552
+#: MacUninstallApp.cpp:551
 msgid "Deleting receipt"
 msgstr ""
 
-#: MacUninstallApp.cpp:571
+#: MacUninstallApp.cpp:570
 #, c-format
 msgid "TEST: Would delete receipt: %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:572
+#: MacUninstallApp.cpp:571
 #, c-format
 msgid "TEST: Would delete BOM: %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:575
+#: MacUninstallApp.cpp:574
 #, c-format
 msgid "Deleted receipt: %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:577
+#: MacUninstallApp.cpp:576
 #, c-format
 msgid "Could not delete receipt %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:580
+#: MacUninstallApp.cpp:579
 #, c-format
 msgid "Deleted BOM: %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:582
+#: MacUninstallApp.cpp:581
 #, c-format
 msgid "Could not delete BOM %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:587
+#: MacUninstallApp.cpp:586
 msgid "Receipt NOT deleted, because package files have been left."
 msgstr ""
 
-#: MacUninstallApp.cpp:601
+#: MacUninstallApp.cpp:600
 #, c-format
 msgid ""
 "In order to uninstall %s, administrative rights are required.\n"
 "\n"
 msgstr ""
 
-#: MacUninstallApp.cpp:616
+#: MacUninstallApp.cpp:615
 #, c-format
 msgid "Authorization could not be created: %s"
 msgstr ""
 
-#: MacUninstallApp.cpp:642
+#: MacUninstallApp.cpp:641
 #, c-format
 msgid ""
 "Could not execute with administrative rights:\n"
 "%s"
 msgstr ""
 
-#: MacUninstallApp.cpp:647
+#: MacUninstallApp.cpp:646
 #, c-format
 msgid "Authorization failed: %s"
 msgstr ""
 
-#: MyIPC.cpp:361
+#: MyIPC.cpp:381
 msgid "Authentication failed"
 msgstr ""
 
-#: MySession.cpp:126 MySession.cpp:708
+#: MySession.cpp:126 MySession.cpp:714
 msgid "Invalid X11 server platform"
 msgstr ""
 
-#: MySession.cpp:522 MySession.cpp:543 MySession.cpp:546
+#: MySession.cpp:523 MySession.cpp:549 MySession.cpp:552
 msgid "unknown"
 msgstr ""
 
-#: MySession.cpp:534
+#: MySession.cpp:540
 msgid "terminated"
 msgstr ""
 
-#: MySession.cpp:537
+#: MySession.cpp:543
 msgid "failed"
 msgstr ""
 
-#: MySession.cpp:540
+#: MySession.cpp:546
 msgid "running"
 msgstr ""
 
-#: MySession.cpp:554 RdpPropertyDialog_symbols.h:23 SessionAdmin.cpp:194
+#: MySession.cpp:560 RdpPropertyDialog_symbols.h:23 SessionAdmin.cpp:194
 #: SessionProperties_symbols.h:24 VncPropertyDialog_symbols.h:23
 msgid "Server"
 msgstr ""
 
-#: MySession.cpp:557
+#: MySession.cpp:563
 msgid "Client"
 msgstr ""
 
-#: MySession.cpp:560 MySession.cpp:563
+#: MySession.cpp:566 MySession.cpp:569
 msgid "Unknown"
 msgstr ""
 
-#: MySession.cpp:801
+#: MySession.cpp:807
 msgid ""
 "\n"
 "Do you want to delete the key and retry ?"
 msgstr ""
 
-#: MySession.cpp:821
+#: MySession.cpp:827
 msgid "Sending username"
 msgstr ""
 
-#: MySession.cpp:825 MySession.cpp:854
+#: MySession.cpp:831 MySession.cpp:860
 msgid "Authenticating"
 msgstr ""
 
-#: MySession.cpp:832
+#: MySession.cpp:838
 msgid "Authentication successful"
 msgstr ""
 
-#: MySession.cpp:870
+#: MySession.cpp:876
 msgid "Query server-side features"
 msgstr ""
 
-#: MySession.cpp:882
+#: MySession.cpp:888
 msgid "Query server-side sessions"
 msgstr ""
 
-#: MySession.cpp:898 MySession.cpp:1002 MySession.cpp:1031
+#: MySession.cpp:905 MySession.cpp:1009 MySession.cpp:1038
 msgid "Starting session"
 msgstr ""
 
-#: MySession.cpp:905
+#: MySession.cpp:912
 msgid "Attaching to session"
 msgstr ""
 
-#: MySession.cpp:916
+#: MySession.cpp:923
 msgid "Resuming session"
 msgstr ""
 
-#: MySession.cpp:941
+#: MySession.cpp:948
 msgid "Enter PIN for Smart Card access."
 msgstr ""
 
-#: MySession.cpp:941
+#: MySession.cpp:948
 msgid "Smart Card PIN"
 msgstr ""
 
-#: MySession.cpp:946
+#: MySession.cpp:953
 msgid "Enter passphrase"
 msgstr ""
 
-#: MySession.cpp:948
+#: MySession.cpp:955
 msgid "Empty passphrase"
 msgstr ""
 
-#: MySession.cpp:954 MySession.cpp:958 MySession.cpp:962 MySession.cpp:966
-#: MySession.cpp:970 MySession.cpp:974 MySession.cpp:978 MySession.cpp:982
-#: MySession.cpp:986 MySession.cpp:990 MySession.cpp:994
+#: MySession.cpp:961 MySession.cpp:965 MySession.cpp:969 MySession.cpp:973
+#: MySession.cpp:977 MySession.cpp:981 MySession.cpp:985 MySession.cpp:989
+#: MySession.cpp:993 MySession.cpp:997 MySession.cpp:1001
 msgid "Negotiating session parameter"
 msgstr ""
 
-#: MySession.cpp:1024
+#: MySession.cpp:1031
 msgid "Unexpected termination of nxssh"
 msgstr ""
 
-#: MySession.cpp:1252
+#: MySession.cpp:1288
 msgid "There are no sessions which can be attached to."
 msgstr ""
 
-#: MySession.cpp:1253 MySession.cpp:1264
+#: MySession.cpp:1289 MySession.cpp:1299
 msgid "Error - OpenNX"
 msgstr ""
 
-#: MySession.cpp:1263
+#: MySession.cpp:1298
 msgid "You have reached your session limit. No more sessions allowed"
 msgstr ""
 
-#: MySession.cpp:1455 MySession.cpp:1499
+#: MySession.cpp:1490 MySession.cpp:1534
 msgid "Could not create X11 authentication cookie"
 msgstr ""
 
-#: MySession.cpp:1535
+#: MySession.cpp:1570
 msgid "No X server found."
 msgstr ""
 
-#: MySession.cpp:1543
+#: MySession.cpp:1578
 #, c-format
 msgid "Could not execute %s: %s\n"
 msgstr ""
 
-#: MySession.cpp:1633
+#: MySession.cpp:1668
 #, c-format
 msgid ""
 "Could not create session directory\n"
 "%s\n"
 msgstr ""
 
-#: MySession.cpp:1663
+#: MySession.cpp:1698
 #, c-format
 msgid ""
 "Could not write session options\n"
 "%s\n"
 msgstr ""
 
-#: MySession.cpp:1753 MySession.cpp:1767
+#: MySession.cpp:1788 MySession.cpp:1802
 msgid "Could not assign a free port for CUPS printing"
 msgstr ""
 
-#: MySession.cpp:2100
+#: MySession.cpp:2135
 #, c-format
 msgid "Could not write %s"
 msgstr ""
 
-#: MySession.cpp:2185
+#: MySession.cpp:2223
 msgid "Could not start local X server"
 msgstr ""
 
-#: MySession.cpp:2206 MySession.cpp:2278 MySession.cpp:2292
+#: MySession.cpp:2244 MySession.cpp:2316 MySession.cpp:2330
 #, c-format
 msgid "Connecting to %s ..."
 msgstr ""
 
-#: MySession.cpp:2210
+#: MySession.cpp:2248
 msgid "Preparing multimedia service ..."
 msgstr ""
 
-#: MySession.cpp:2224 MySession.cpp:2270 MySession.cpp:2274
+#: MySession.cpp:2262 MySession.cpp:2308 MySession.cpp:2312
 msgid "Could not start multimedia support"
 msgstr ""
 
-#: MySession.cpp:2227 MySession.cpp:2272
+#: MySession.cpp:2265 MySession.cpp:2310
 msgid "Could not assign a free port for multimedia support"
 msgstr ""
 
-#: MySession.cpp:2289
+#: MySession.cpp:2327
 msgid "Preparing CUPS service ..."
 msgstr ""
 
-#: MySession.cpp:2291
+#: MySession.cpp:2329
 msgid "Could not start CUPS printing"
 msgstr ""
 
-#: MySession.cpp:2343
+#: MySession.cpp:2381
 msgid "Called command was: "
 msgstr ""
 
-#: MySession.cpp:2344
+#: MySession.cpp:2382
 msgid "Could not start nxssh."
 msgstr ""
 
@@ -645,23 +645,23 @@ msgstr ""
 msgid "New Session %d"
 msgstr ""
 
-#: MyWizard.cpp:687 SessionProperties.cpp:845
+#: MyWizard.cpp:699 SessionProperties.cpp:845
 msgid "RDP"
 msgstr ""
 
-#: MyWizard.cpp:705 SessionProperties.cpp:871
+#: MyWizard.cpp:717 SessionProperties.cpp:871
 msgid "RFB"
 msgstr ""
 
-#: MyWizard.cpp:723 SessionProperties.cpp:898
+#: MyWizard.cpp:735 SessionProperties.cpp:898
 msgid "Any"
 msgstr ""
 
-#: MyWizard.cpp:730 SessionProperties.cpp:905
+#: MyWizard.cpp:742 SessionProperties.cpp:905
 msgid "As on server"
 msgstr ""
 
-#: MyWizard.cpp:1181
+#: MyWizard.cpp:1193
 #, c-format
 msgid ""
 "Congratulations. The connection to '%s' will be saved as '%s'. You may "
@@ -831,16 +831,16 @@ msgstr ""
 msgid "Show the Advanced Configuration dialog"
 msgstr ""
 
-#: MyXmlConfig.cpp:581
+#: MyXmlConfig.cpp:584
 msgid "Could not find application window"
 msgstr ""
 
-#: MyXmlConfig.cpp:1231
+#: MyXmlConfig.cpp:1240
 #, c-format
 msgid "Error %d while fetching session configuration"
 msgstr ""
 
-#: MyXmlConfig.cpp:1236
+#: MyXmlConfig.cpp:1245
 #, c-format
 msgid ""
 "Error while fetching session configuration:\n"
@@ -1023,19 +1023,23 @@ msgstr ""
 msgid "Session ID"
 msgstr ""
 
-#: ResumeDialog.cpp:217
+#: ResumeDialog.cpp:207
+msgid "Could not add session list item"
+msgstr ""
+
+#: ResumeDialog.cpp:221
 msgid "&Attach"
 msgstr ""
 
-#: ResumeDialog.cpp:217 ResumeDialog_symbols.h:27
+#: ResumeDialog.cpp:221 ResumeDialog_symbols.h:27
 msgid "&Resume"
 msgstr ""
 
-#: ResumeDialog.cpp:305
+#: ResumeDialog.cpp:311
 msgid "Do you really want to terminate the selected session?"
 msgstr ""
 
-#: ResumeDialog.cpp:306
+#: ResumeDialog.cpp:312
 msgid "Terminate session - OpenNX"
 msgstr ""
 
@@ -1085,7 +1089,7 @@ msgstr ""
 msgid "Partial session statistics - OpenNX"
 msgstr ""
 
-#: SessionAdmin.cpp:368
+#: SessionAdmin.cpp:372
 msgid "Choose new NX session directory."
 msgstr ""
 
@@ -1169,7 +1173,7 @@ msgstr ""
 msgid "Comment"
 msgstr ""
 
-#: SessionProperties.cpp:635 SessionProperties.cpp:1407
+#: SessionProperties.cpp:635 SessionProperties.cpp:1419
 msgid "Currently not available"
 msgstr ""
 
@@ -1189,70 +1193,70 @@ msgstr ""
 msgid "Serial"
 msgstr ""
 
-#: SessionProperties.cpp:1210
+#: SessionProperties.cpp:1222
 msgid "Error while reading keyboard table"
 msgstr ""
 
-#: SessionProperties.cpp:1239
+#: SessionProperties.cpp:1251
 #, c-format
 msgid "Invalid line='%s'"
 msgstr ""
 
-#: SessionProperties.cpp:1240
+#: SessionProperties.cpp:1252
 #, c-format
 msgid "Invalid entry in %s"
 msgstr ""
 
-#: SessionProperties.cpp:1353
+#: SessionProperties.cpp:1365
 msgid "Do you really want to delete all cache directories?"
 msgstr ""
 
-#: SessionProperties.cpp:1354
+#: SessionProperties.cpp:1366
 msgid "Clean cache - OpenNX"
 msgstr ""
 
-#: SessionProperties.cpp:1380
+#: SessionProperties.cpp:1392
 msgid "No local samba server is running."
 msgstr ""
 
-#: SessionProperties.cpp:1436
+#: SessionProperties.cpp:1448
 msgid "No sharable resources found"
 msgstr ""
 
-#: SessionProperties.cpp:1513
+#: SessionProperties.cpp:1525
 msgid "Select User NX directory"
 msgstr ""
 
-#: SessionProperties.cpp:1529
+#: SessionProperties.cpp:1541
 msgid "Select System NX directory"
 msgstr ""
 
-#: SessionProperties.cpp:1546
+#: SessionProperties.cpp:1558
 #, c-format
 msgid "Really delete Session '%s' ?"
 msgstr ""
 
-#: SessionProperties.cpp:1547
+#: SessionProperties.cpp:1559
 msgid "Delete Session"
 msgstr ""
 
-#: SessionProperties.cpp:1819
+#: SessionProperties.cpp:1831
 msgid "No cups server available."
 msgstr ""
 
-#: SessionProperties.cpp:1834
+#: SessionProperties.cpp:1846
 msgid "Select System CUPS daemon"
 msgstr ""
 
-#: SessionProperties.cpp:1992 opennxApp.cpp:1287
+#: SessionProperties.cpp:2004 opennxApp.cpp:1287
 msgid "libusb is not available. No USB devices will be exported"
 msgstr ""
 
-#: SessionProperties.cpp:1997
+#: SessionProperties.cpp:2009
 msgid "No USB devices available."
 msgstr ""
 
-#: SessionProperties.cpp:2209
+#: SessionProperties.cpp:2221
 msgid "Select path of USBIPD socket"
 msgstr ""
 
