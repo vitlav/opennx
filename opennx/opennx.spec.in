@@ -199,7 +199,7 @@ for pkg in %{nxpkgsall} ; do
 done
 ncver=`ls nxcomp-*.tar.gz|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxcomp-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
 %else
-%setup -q -a 100 -a 101 -a 102 -a 103
+%setup -q -a 100 -a 102 -a 103
 ncver=`basename %{SOURCE100}|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)if(/nxcomp-(\d+)\.(\d+)\.(\d+)-(\d+)\.tar.*/);'`
 %endif
 
