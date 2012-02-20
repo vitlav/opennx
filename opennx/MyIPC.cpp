@@ -482,6 +482,8 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
                         // Unknown command
                     case 504:
                         // Session startup failed
+                    case 536:
+                        // User limit exceeded
                     case 537:
                         // Passwords did not match
                     case 542:
