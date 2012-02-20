@@ -323,6 +323,9 @@ public:
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_LOWERCASE_LOGIN
     void OnCheckboxLowercaseLoginClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_CLEAR_PASSONABORT
+    void OnCheckboxClearPassonabortClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_DELETE
     void OnDeleteClick( wxCommandEvent& event );
 
@@ -456,6 +459,8 @@ private:
     bool m_bLowercaseLogin;
     bool m_bSavedLowercaseLogin;
     int m_iClipFilter;
+    bool m_bClearPassOnAbort;
+    bool m_bSavedClearPassOnAbort;
 ////@end SessionProperties member variables
 
     bool readKbdLayouts();

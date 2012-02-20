@@ -516,8 +516,12 @@ void LoginDialog::OnOkClick(wxCommandEvent& event)
         if (!b) {
             // Clear password after failure or abort.
             if (!m_bGuestLogin) {
-                m_pCtrlPassword->SetValue(wxEmptyString);
-                m_pCtrlPassword->SetFocus();
+                bool clpw = true;
+                wxConfigBase::Get()->Read(wxT("Config/ClearPassOnAbort"), &clpw, true);
+                if (clpw) {
+                    m_pCtrlPassword->SetValue(wxEmptyString);
+                    m_pCtrlPassword->SetFocus();
+                }
             }
 #ifdef SINGLE_SESSION
             m_cNxSshWatchTimer.Start(1000);

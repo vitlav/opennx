@@ -264,6 +264,8 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
 
     EVT_CHECKBOX( XRCID("ID_CHECKBOX_LOWERCASE_LOGIN"), SessionProperties::OnCheckboxLowercaseLoginClick )
 
+    EVT_CHECKBOX( XRCID("ID_CHECKBOX_CLEAR_PASSONABORT"), SessionProperties::OnCheckboxClearPassonabortClick )
+
     EVT_BUTTON( wxID_DELETE, SessionProperties::OnDeleteClick )
 
     EVT_BUTTON( wxID_APPLY, SessionProperties::OnApplyClick )
@@ -398,6 +400,7 @@ SessionProperties::CheckChanged()
         changed |= (m_bSavedCreateDesktopIcon != m_bCreateDesktopIcon);
         changed |= (m_bSavedResetMessageBoxes != m_bResetMessageBoxes);
         changed |= (m_bSavedLowercaseLogin != m_bLowercaseLogin);
+        changed |= (m_bSavedClearPassOnAbort != m_bClearPassOnAbort);
         CheckCfgChanges(changed);
     }
 }
@@ -429,6 +432,8 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_bLowercaseLogin = false;
     m_bSavedLowercaseLogin = false;
     m_iClipFilter = 2;
+    m_bClearPassOnAbort = true;
+    m_bSavedClearPassOnAbort = true;
     m_pNoteBook = NULL;
     m_pCtrlHostname = NULL;
     m_pCtrlPort = NULL;
@@ -551,6 +556,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &m_sUserNxDir);
     wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &m_sSystemNxDir);
     wxConfigBase::Get()->Read(wxT("Config/LowercaseLogin"), &m_bLowercaseLogin, false);
+    wxConfigBase::Get()->Read(wxT("Config/ClearPassOnAbort"), &m_bClearPassOnAbort, true);
 #ifdef SUPPORT_USBIP
     wxConfigBase::Get()->Read(wxT("Config/UsbipdSocket"), &m_sUsbipdSocket);
     wxConfigBase::Get()->Read(wxT("Config/UsbipPort"), &m_iUsbLocalPort);
@@ -1090,6 +1096,8 @@ void SessionProperties::CreateControls()
         FindWindow(XRCID("ID_CHECKBOX_RESETMSGBOXES"))->SetValidator( wxGenericValidator(& m_bResetMessageBoxes) );
     if (FindWindow(XRCID("ID_CHECKBOX_LOWERCASE_LOGIN")))
         FindWindow(XRCID("ID_CHECKBOX_LOWERCASE_LOGIN"))->SetValidator( wxGenericValidator(& m_bLowercaseLogin) );
+    if (FindWindow(XRCID("ID_CHECKBOX_CLEAR_PASSONABORT")))
+        FindWindow(XRCID("ID_CHECKBOX_CLEAR_PASSONABORT"))->SetValidator( wxGenericValidator(& m_bClearPassOnAbort) );
     ////@end SessionProperties content construction
 
     if ((!m_bStorePasswords) && FindWindow(XRCID("ID_CHECKBOX_PWSAVE")))
@@ -1267,6 +1275,7 @@ void SessionProperties::SaveState()
     m_iSavedUsbLocalPort = m_iUsbLocalPort;
     m_bSavedCreateDesktopIcon = m_bCreateDesktopIcon;
     m_bSavedLowercaseLogin = m_bLowercaseLogin;
+    m_bSavedClearPassOnAbort = m_bClearPassOnAbort;
     m_bSavedResetMessageBoxes = m_bResetMessageBoxes = false;
 }
 
@@ -1575,6 +1584,7 @@ void SessionProperties::OnApplyClick( wxCommandEvent& event )
     wxConfigBase::Get()->Write(wxT("Config/UserNxDir"), m_sUserNxDir);
     wxConfigBase::Get()->Write(wxT("Config/SystemNxDir"), m_sSystemNxDir);
     wxConfigBase::Get()->Write(wxT("Config/LowercaseLogin"), m_bLowercaseLogin);
+    wxConfigBase::Get()->Write(wxT("Config/ClearPassOnAbort"), m_bClearPassOnAbort);
 #ifdef SUPPORT_USBIP
     wxConfigBase::Get()->Write(wxT("Config/UsbipdSocket"), m_sUsbipdSocket);
     wxConfigBase::Get()->Write(wxT("Config/UsbipPort"), m_iUsbLocalPort);
@@ -2371,4 +2381,15 @@ void SessionProperties::OnComboboxClipfilterSelected( wxCommandEvent& event )
     CheckChanged();
 }
 #endif
+
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_CLEAR_PASSONABORT
+ */
+
+void SessionProperties::OnCheckboxClearPassonabortClick( wxCommandEvent& event )
+{
+    wxUnusedVar(event);
+    CheckChanged();
+}
 

@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2012-02-19 01:07+0100\n"
-"PO-Revision-Date: 2012-02-05 06:49+0100\n"
+"POT-Creation-Date: 2012-02-20 11:30+0100\n"
+"PO-Revision-Date: 2012-02-20 11:33+0100\n"
 "Last-Translator: Fritz Elfert <fritz@fritz-elfert.de>\n"
 "Language-Team:  <de@li.org>\n"
 "Language: de\n"
@@ -20,7 +20,7 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: /usr/share/locale/de/LC_MESSAGES/wxstd.mo\n"
 
-#: AboutDialog.cpp:113 SessionProperties.cpp:1124
+#: AboutDialog.cpp:113 SessionProperties.cpp:1132
 msgid "Version"
 msgstr "Version"
 
@@ -30,7 +30,7 @@ msgstr "Über OpenNX"
 
 #: AboutDialog_symbols.h:23 ProxyPasswordDialog_symbols.h:25
 #: ProxyPropertyDialog_symbols.h:32 RdpImageSettingsDialog_symbols.h:36
-#: RdpPropertyDialog_symbols.h:35 SessionProperties_symbols.h:112
+#: RdpPropertyDialog_symbols.h:35 SessionProperties_symbols.h:113
 #: ShareProperties_symbols.h:51 UnixImageSettingsDialog_symbols.h:35
 #: UsbFilterDetailsDialog_symbols.h:35 VncImageSettingsDialog_symbols.h:29
 #: VncPropertyDialog_symbols.h:31 X11PropertyDialog_symbols.h:32
@@ -50,7 +50,7 @@ msgstr "Bitte stecken Sie Ihre SmartCard ein"
 #: KeyDialog_symbols.h:26 LoginDialog_symbols.h:30 PanicDialog_symbols.h:23
 #: ProxyPasswordDialog_symbols.h:26 ProxyPropertyDialog_symbols.h:33
 #: RdpImageSettingsDialog_symbols.h:37 RdpPropertyDialog_symbols.h:36
-#: ResumeDialog_symbols.h:29 SessionProperties_symbols.h:113
+#: ResumeDialog_symbols.h:29 SessionProperties_symbols.h:114
 #: ShareProperties_symbols.h:52 UnixImageSettingsDialog_symbols.h:36
 #: UsbFilterDetailsDialog_symbols.h:36 VncImageSettingsDialog_symbols.h:30
 #: VncPropertyDialog_symbols.h:32 X11PropertyDialog_symbols.h:33
@@ -106,7 +106,7 @@ msgstr "Sitzungsprotokoll - OpenNX"
 msgid "Close"
 msgstr "Schließen"
 
-#: LoginDialog.cpp:408 LoginDialog.cpp:530 MyWizard.cpp:1369
+#: LoginDialog.cpp:408 LoginDialog.cpp:534 MyWizard.cpp:1369
 #, c-format
 msgid ""
 "Could not save session to\n"
@@ -116,7 +116,7 @@ msgstr ""
 "%s\n"
 "speichern."
 
-#: LoginDialog.cpp:409 LoginDialog.cpp:531 MyWizard.cpp:1370
+#: LoginDialog.cpp:409 LoginDialog.cpp:535 MyWizard.cpp:1370
 msgid "Error saving - OpenNX"
 msgstr "Fehler beim Speichern - OpenNX"
 
@@ -691,19 +691,19 @@ msgstr "Neue Sitzung"
 msgid "New Session %d"
 msgstr "Neue Sitzung %d"
 
-#: MyWizard.cpp:699 SessionProperties.cpp:845
+#: MyWizard.cpp:699 SessionProperties.cpp:851
 msgid "RDP"
 msgstr "RDP"
 
-#: MyWizard.cpp:717 SessionProperties.cpp:871
+#: MyWizard.cpp:717 SessionProperties.cpp:877
 msgid "RFB"
 msgstr "RFB"
 
-#: MyWizard.cpp:735 SessionProperties.cpp:898
+#: MyWizard.cpp:735 SessionProperties.cpp:904
 msgid "Any"
 msgstr "Beliebig"
 
-#: MyWizard.cpp:742 SessionProperties.cpp:905
+#: MyWizard.cpp:742 SessionProperties.cpp:911
 msgid "As on server"
 msgstr "Wie auf server"
 
@@ -1062,7 +1062,7 @@ msgstr "Starte Arbeitsplatz"
 msgid "Run application"
 msgstr "Starte Anwendung"
 
-#: ResumeDialog.cpp:159 SessionProperties.cpp:683
+#: ResumeDialog.cpp:159 SessionProperties.cpp:689
 msgid "Name"
 msgstr "Name"
 
@@ -1088,9 +1088,8 @@ msgid "Session ID"
 msgstr "Sitzungs-ID"
 
 #: ResumeDialog.cpp:207
-#, fuzzy
 msgid "Could not add session list item"
-msgstr "Konnte Sitzungs-Konfiguration nicht laden"
+msgstr "Konnte Sitzungs-Liste nicht erweitern"
 
 #: ResumeDialog.cpp:221
 msgid "&Attach"
@@ -1224,106 +1223,106 @@ msgstr "Über OpenNX..."
 msgid "New NX session"
 msgstr "Neue NX Sitzung"
 
-#: SessionProperties.cpp:584 SessionProperties_symbols.h:95
+#: SessionProperties.cpp:590 SessionProperties_symbols.h:95
 msgid "USB"
 msgstr "USB"
 
-#: SessionProperties.cpp:621 ShareProperties_symbols.h:24
+#: SessionProperties.cpp:627 ShareProperties_symbols.h:24
 msgid "Share"
 msgstr "Freigabe"
 
-#: SessionProperties.cpp:622 ShareProperties_symbols.h:50
+#: SessionProperties.cpp:628 ShareProperties_symbols.h:50
 msgid "Mount on"
 msgstr "Eingehängt unter"
 
-#: SessionProperties.cpp:623
+#: SessionProperties.cpp:629
 msgid "Comment"
 msgstr "Kommentar"
 
-#: SessionProperties.cpp:635 SessionProperties.cpp:1419
+#: SessionProperties.cpp:641 SessionProperties.cpp:1428
 msgid "Currently not available"
 msgstr "Nicht verfügbar"
 
-#: SessionProperties.cpp:680
+#: SessionProperties.cpp:686
 msgid "VendorID"
 msgstr "HerstellerID"
 
-#: SessionProperties.cpp:681
+#: SessionProperties.cpp:687
 msgid "ProductID"
 msgstr "ProduktID"
 
-#: SessionProperties.cpp:682
+#: SessionProperties.cpp:688
 msgid "Class"
 msgstr "Klasse"
 
-#: SessionProperties.cpp:684
+#: SessionProperties.cpp:690
 msgid "Serial"
 msgstr "Seriennr."
 
-#: SessionProperties.cpp:1222
+#: SessionProperties.cpp:1230
 msgid "Error while reading keyboard table"
 msgstr "Fehler beim Lesen der Tastatur-Tabelle"
 
-#: SessionProperties.cpp:1251
+#: SessionProperties.cpp:1259
 #, c-format
 msgid "Invalid line='%s'"
 msgstr "Ungültige Zeile='%s'"
 
-#: SessionProperties.cpp:1252
+#: SessionProperties.cpp:1260
 #, c-format
 msgid "Invalid entry in %s"
 msgstr "Ungültiger Eintrag in %s"
 
-#: SessionProperties.cpp:1365
+#: SessionProperties.cpp:1374
 msgid "Do you really want to delete all cache directories?"
 msgstr "Wollen Sie wirklich sämliche Cache-Verzeichnissse löschen?"
 
-#: SessionProperties.cpp:1366
+#: SessionProperties.cpp:1375
 msgid "Clean cache - OpenNX"
 msgstr "Cache bereinigen - OpenNX"
 
-#: SessionProperties.cpp:1392
+#: SessionProperties.cpp:1401
 msgid "No local samba server is running."
 msgstr "Es läuft kein lokaler Samba-Server."
 
-#: SessionProperties.cpp:1448
+#: SessionProperties.cpp:1457
 msgid "No sharable resources found"
 msgstr "Keine verteilten Ressourcen gefunden"
 
-#: SessionProperties.cpp:1525
+#: SessionProperties.cpp:1534
 msgid "Select User NX directory"
 msgstr "Wähle persönliches NX Verzeichnis"
 
-#: SessionProperties.cpp:1541
+#: SessionProperties.cpp:1550
 msgid "Select System NX directory"
 msgstr "Wähle System NX Verzeichnis"
 
-#: SessionProperties.cpp:1558
+#: SessionProperties.cpp:1567
 #, c-format
 msgid "Really delete Session '%s' ?"
 msgstr "Die Sitzung '%s' wirklich löschen ?"
 
-#: SessionProperties.cpp:1559
+#: SessionProperties.cpp:1568
 msgid "Delete Session"
 msgstr "Lösche Sitzung"
 
-#: SessionProperties.cpp:1831
+#: SessionProperties.cpp:1841
 msgid "No cups server available."
 msgstr "Kein CUPS-Server verfügbar."
 
-#: SessionProperties.cpp:1846
+#: SessionProperties.cpp:1856
 msgid "Select System CUPS daemon"
 msgstr "Wähle System CUPS-Dämon"
 
-#: SessionProperties.cpp:2004 opennxApp.cpp:1287
+#: SessionProperties.cpp:2014 opennxApp.cpp:1287
 msgid "libusb is not available. No USB devices will be exported"
 msgstr "libusb ist nicht verfügbar. USB-Geräte werden nicht exportiert"
 
-#: SessionProperties.cpp:2009
+#: SessionProperties.cpp:2019
 msgid "No USB devices available."
 msgstr "Keine USB-Geräte verfügbar."
 
-#: SessionProperties.cpp:2221
+#: SessionProperties.cpp:2231
 msgid "Select path of USBIPD socket"
 msgstr "Pfad des USBIPD Sockets"
 
@@ -1552,14 +1551,18 @@ msgid "Always use lowercase login name"
 msgstr "Stets kleingeschrieber Login-Name"
 
 #: SessionProperties_symbols.h:109
+msgid "Clear password entry on abort"
+msgstr "Lösche Passwortfeld bei Abbruch"
+
+#: SessionProperties_symbols.h:110
 msgid "About"
 msgstr "Info"
 
-#: SessionProperties_symbols.h:110
+#: SessionProperties_symbols.h:111
 msgid "&Delete"
 msgstr "&Löschen"
 
-#: SessionProperties_symbols.h:111
+#: SessionProperties_symbols.h:112
 msgid "&Apply"
 msgstr "&Anwenden"
 
