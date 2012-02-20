@@ -44,6 +44,10 @@ endif
 		nxcomp/configure \
 		nxcomp/mkinstalldirs nxcomp/install-sh
 	./configure $(CROSS) --prefix=$(prefix) --datarootdir=/usr/share/opennx
+	cd nxcomp && for p in ../patches/nxcomp-*.patch ; do ; \
+		test `basename $$p` != nxcomp-gcc44.patch -o $ncver -lt 03040006 && patch -p1 < $$p ; \
+	done
+	cd nxcomp && rm -f configure.in && autoreconf -f -i
 	cd nxcomp && ./configure --prefix=$(prefix)
 	cd nxproxy && ./configure --prefix=$(prefix)
 	cd nxssh && patch -p1 < ../patches/openssh-scard-pin.patch
@@ -57,6 +61,7 @@ build-stamp: config.status
 	dh_testdir
 	$(MAKE)
 	$(MAKE) -C nxcomp
+	$(MAKE) -C nxcomp DESTDIR=`pwd` libdir=/ install
 	$(MAKE) -C nxproxy
 	$(MAKE) -C nxssh
 	touch $@

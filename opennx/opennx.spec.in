@@ -209,10 +209,16 @@ ncver=`basename %{SOURCE100}|perl -ne 'printf("%02d%02d%02d%02d\n",$1,$2,$3,$4)i
 
 # Apply openssh askPIN patch (see https://bugzilla.mindrot.org/show_bug.cgi?id=608)
 cd nxssh && patch -p1 < ../patches/openssh-scard-pin.patch
+cd ../nxcomp
+for p in ../patches/nxcomp-*.patch ; do
+    bn=`basename $p`
+    if [ $bn != nxcomp-gcc44.patch -o $ncver -lt 03040006 ] ; then
+        patch -p1 < $p
+    fi
+done
+rm -f configure.in
+touch .run_autoreconf
 cd ..
-if test $ncver -lt 03040006 ;then
-    patch -p0 < patches/nxcomp-gcc44.patch
-fi
 # Make nxssh load libopensc dynamically
 patch -p0 < patches/nxssh-dynopensc.patch
 
@@ -238,7 +244,8 @@ make
 for pkg in %{nxpkgs} ; do
     cd $pkg
     test -f .run_autoreconf && autoreconf -f -i || :
-	./configure --prefix=%{_prefix} `eval echo '$CFG_'$pkg` && make
+	./configure --prefix=%{_prefix} && make
+    test $pkg = nxcomp && make DESTDIR=`pwd` libdir=/ install
     cd ..
 done
 export PATH=`pwd`/opensc:$PATH
