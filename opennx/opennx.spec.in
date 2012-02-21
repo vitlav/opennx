@@ -212,9 +212,17 @@ cd nxssh && patch -p1 < ../patches/openssh-scard-pin.patch
 cd ../nxcomp
 for p in ../patches/nxcomp-*.patch ; do
     bn=`basename $p`
-    if [ $bn != nxcomp-gcc44.patch -o $ncver -lt 03040006 ] ; then
-        patch -p1 < $p
-    fi
+    case $bn in
+        nxcomp-gcc44.patch)
+            test $ncver -lt 03040006 && patch -p1 < $p
+            ;;
+        nxcomp-visibility.patch)
+            test $ncver -ge 03050000 && patch -p1 < $p
+            ;;
+        *)
+            patch -p1 < $p
+            ;;
+    esac
 done
 rm -f configure.in
 touch .run_autoreconf
