@@ -516,6 +516,9 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
         m_sProxyCommand = m_pCfg->sGetProxyCommand();
         m_iClipFilter = m_pCfg->iGetClipFilter();
 
+        m_bGrabKeyboard = m_pCfg->bGetGrabKeyboard();
+        m_bDisableDirectDraw = m_pCfg->bGetDisableDirectDraw();
+
         // variables on 'Services' tab
         m_bEnableSmbSharing = m_pCfg->bGetEnableSmbSharing();
 #ifdef HAVE_PULSE_PULSEAUDIO_H

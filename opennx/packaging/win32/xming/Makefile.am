@@ -11,7 +11,7 @@ XMING_GENERIC_PATCHES = xming-build.patch xming-build-subsys.patch \
 	xming-build-xauth.patch xming-build-xset.patch xming-build-nls.patch \
 	xming-envbasedir.patch xming-optionhide.patch xming-mutex.patch \
 	xming-terminate.patch xming-build-fontutils.patch xming-logdebug.patch \
-	xming-clipfilter.patch
+	xming-clipfilter.patch xming-kbhook.patch
 
 buildfromscratch: distclean tmpinstall
 
