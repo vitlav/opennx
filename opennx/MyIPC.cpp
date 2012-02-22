@@ -68,6 +68,7 @@ MyIPC::MyIPC()
     , m_eType(TypeNone)
     , m_iOutCollect(0)
     , m_iErrCollect(0)
+    , m_nLines618(0)
     , m_sOutMessage(wxEmptyString)
     , m_sErrMessage(wxEmptyString)
 {
@@ -497,6 +498,18 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
                         upevent.SetString(msg.Mid(8));
                         upevent.SetInt(ActionError);
                         sendUpEvent(upevent);
+                        break;
+                    case 618:
+                        // Evaluation license expired (commercial NoMachine server) - 3 lines
+                        if (3 > ++m_nLines618) {
+                            m_s618msg.Append(msg.Mid(8)).Append(wxT("\n"));
+                        } else {
+                            m_nLines618 = 0;
+                            m_s618msg.Append(msg.Mid(8));
+                            upevent.SetString(m_s618msg);
+                            upevent.SetInt(ActionError);
+                            sendUpEvent(upevent);
+                        }
                         break;
                     case 700:
                         // Session ID

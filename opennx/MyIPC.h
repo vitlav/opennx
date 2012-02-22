@@ -116,9 +116,11 @@ private:
     int m_iSshPid;
     int m_iOutCollect;
     int m_iErrCollect;
+    int m_nLines618;;
     wxString m_sOutMessage;
     wxString m_sErrMessage;
     wxString m_s595msg;
+    wxString m_s618msg;
 };
 
 #endif
