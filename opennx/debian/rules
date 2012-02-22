@@ -61,7 +61,7 @@ build-stamp: config.status
 	dh_testdir
 	$(MAKE)
 	$(MAKE) -C nxcomp
-	$(MAKE) -C nxcomp DESTDIR=`pwd` libdir=/ install
+	$(MAKE) -C nxcomp DESTDIR=`pwd`/nxcomp libdir=/ install
 	$(MAKE) -C nxproxy
 	$(MAKE) -C nxssh
 	touch $@
