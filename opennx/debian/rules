@@ -45,7 +45,7 @@ endif
 		nxcomp/mkinstalldirs nxcomp/install-sh
 	./configure $(CROSS) --prefix=$(prefix) --datarootdir=/usr/share/opennx
 	cd nxcomp && for p in ../patches/nxcomp-*.patch ; do \
-		case `basename $$p` in nxcomp-gcc44.patch) test $$ncver -lt 03040006 && patch -p1 < $$p; ;; nxcomp-visibility.patch) test $$ncver -ge 03050000 && patch -p1 < $$p; ;; *) patch -p1 < $$p; ;; esac ; \
+		case `basename $$p` in nxcomp-gcc44.patch) ;; *) patch -p1 < $$p; ;; esac ; \
 	done
 	cd nxcomp && rm -f configure.in && autoreconf -f -i
 	cd nxcomp && ./configure --prefix=$(prefix)
