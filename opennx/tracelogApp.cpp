@@ -169,7 +169,7 @@ void tracelogApp::Init()
     m_pTaskBarIcon = NULL;
     m_pGrabber = NULL;
     m_pSocketServer = NULL;
-    m_sAllowedPeers = wxT("^\\d+\\.\\d+\\.\\d+\\.\\d$");
+    m_sAllowedPeers = wxT("^\\d+\\.\\d+\\.\\d+\\.\\d+$");
     m_nPort = 2020;
     m_cAllowedPeers.Compile(m_sAllowedPeers, wxRE_ADVANCED);
     ////@begin tracelogApp member initialisation

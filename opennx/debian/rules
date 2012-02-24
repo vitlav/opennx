@@ -82,8 +82,7 @@ install: build
 	$(MAKE) DESTDIR=$(CURDIR)/debian/opennx install
 	cd debian/opennx/usr/bin && ln -s ../lib/opennx/bin/opennx nxclient
 	cd debian/opennx/usr/lib/opennx && ln -s ../../share/opennx share
-	cp -a nxcomp/libXcomp.so.3.*.* debian/opennx/usr/lib/opennx/lib
-	cd debian/opennx/usr/lib/opennx/lib && ln -s libXcomp.so.3.*.* libXcomp.so.3
+	cp -a nxcomp/libXcomp.so.* debian/opennx/usr/lib/opennx/lib
 	cp -a nxssh/nxssh debian/opennx/usr/lib/opennx/bin
 	cp -a nxproxy/nxproxy debian/opennx/usr/lib/opennx/bin
 	# USBIP only: cp -a etc/*.rules debian/opennx/etc/udev/rules.d
