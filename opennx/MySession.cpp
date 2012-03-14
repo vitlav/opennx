@@ -738,6 +738,19 @@ MySession::OnSessionEvent(wxCommandEvent &event)
 }
 
     void
+MySession::SshLog(const wxChar *fmt, ...)
+{
+    if (m_pSshLog) {
+        va_list args;
+        va_start(args, fmt);
+        wxLog *oldLog = wxLog::SetActiveTarget(m_pSshLog);
+        ::wxVLogMessage(fmt, args);
+        wxLog::SetActiveTarget(oldLog);
+        va_end(args);
+    }
+}
+
+    void
 MySession::OnSshEvent(wxCommandEvent &event)
 {
     MyIPC::tSessionEvents e = wx_static_cast(MyIPC::tSessionEvents, event.GetInt());
@@ -770,11 +783,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                         m_pCfg->SaveToFile();
                 }
             }
-            if (m_pSshLog) {
-                wxLog *oldLog = wxLog::SetActiveTarget(m_pSshLog);
-                ::wxLogMessage(msg);
-                wxLog::SetActiveTarget(oldLog);
-            }
+            SshLog(msg);
             break;
         case MyIPC::ActionWarning:
             {
@@ -911,7 +920,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
                 case STATE_ATTACH_SESSION:
                     m_pDlg->SetStatusText(_("Attaching to session"));
                     scmd = wxT("attachsession");
-                    scmd << m_pCfg->sGetSessionParams(m_lProtocolVersion, true, m_sClearPassword)
+                    scmd << m_pCfg->sGetSessionParams(m_lProtocolVersion, false, m_sClearPassword)
                         << wxT(" --display=\"") << m_sResumePort
                         << wxT("\" --id=\"") << m_sResumeId << wxT("\"")
                         // TODO: Check, since which version this is supported
@@ -1620,18 +1629,21 @@ MySession::startProxy()
         popts << wxT(",media=") << m_lEsdPort;
     popts
         << wxT(",encryption=") << (m_bSslTunneling ? 1 : 0)
-        << wxT(",session=session")
+        << wxT(",session=session");
+    if (m_lProtocolVersion < 0x00030300) {
+        popts
 #ifdef __WXMAC__
-        << wxT(",client=macosx")
+            << wxT(",client=macosx");
 #else
 # ifdef __UNIX__
-        << wxT(",client=linux")
+            << wxT(",client=linux");
 # else
-        //<< wxT(",client=winnt")
-        << wxT(",client=linux")
+            //<< wxT(",client=winnt");
+            << wxT(",client=linux");
 # endif
 #endif
-        << wxT(",id=") << m_sSessionID;
+    }
+    popts << wxT(",id=") << m_sSessionID;
     if (m_bSslTunneling) {
         if (m_lProtocolVersion <= 0x00020000) {
             m_sProxyIP = wxT("127.0.0.1");
@@ -1675,6 +1687,7 @@ MySession::startProxy()
         if (f.Open(m_sOptFilename, wxFile::write, wxS_IRUSR|wxS_IWUSR)) {
             f.Write(popts + wxT("\n"));
             f.Close();
+            ::wxLogInfo(wxT("Option file='%s'\n"), m_sOptFilename.c_str());
             ::wxLogInfo(wxT("Session options='%s'\n"), popts.c_str());
             wxString pcmd;
             wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &pcmd);

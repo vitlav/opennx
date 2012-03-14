@@ -604,148 +604,146 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
 {
     wxUnusedVar(protocolVersion);
     wxString ret = wxEmptyString;
-    bool bNeedGeometry = bNew;
+    bool bNeedGeometry = true;
     int dspw, dsph, clientw, clienth;
 
     getDesktopSize(dspw, dsph, clientw, clienth);
-    if (bNew || (protocolVersion >= 0x00040000)) {
-        ret << wxString::Format(wxT(" --session=\"%s\""), m_sName.c_str());
-        ret << wxT(" --type=\"");
-        switch (m_eSessionType) {
-            case STYPE_SHADOW:
-                ret << wxT("shadow\"");
-                if (m_bUseCustomImageEncoding) {
-                    ret << wxT(" --imagecompressionmethod=\"") << m_iImageEncoding << wxT("\"")
-                        << wxT(" --imagecompressionlevel=\"")
-                        << (((-1 == m_iImageEncoding) || (4 == m_iImageEncoding)) ? m_iJpegQuality : -1) << wxT("\"");
-                }
-                break;
-            case STYPE_UNIX:
-                ret << wxT("unix-");
-                switch (m_eDesktopType) {
-                    case DTYPE_ANY:
-                    case DTYPE_RDP:
-                    case DTYPE_RFB:
-                        break;
-                    case DTYPE_KDE:
-                        ret << wxT("kde\"");
-                        break;
-                    case DTYPE_GNOME:
-                        ret << wxT("gnome\"");
-                        break;
-                    case DTYPE_CDE:
-                        ret << wxT("cde\"");
-                        break;
-                    case DTYPE_XFCE:
-                        ret << wxT("xfce\"");
-                        break;
-                    case DTYPE_XDM:
-                        ret << wxT("xdm\"");
-                        switch (m_eXdmMode) {
-                            case XDM_MODE_SERVER:
-                                ret << wxT(" --xdm_port=\"-1\"");
-                                break;
-                            case XDM_MODE_QUERY:
-                                ret << wxT(" --xdm_type=\"query\"")
-                                    << wxT(" --xdm_host=\"") << m_sXdmQueryHost << wxT("\"")
-                                    << wxT(" --xdm_port=\"") << m_iXdmQueryPort << wxT("\"");
-                                break;
-                            case XDM_MODE_BROADCAST:
-                                ret << wxT(" --xdm_type=\"broadcast\"")
-                                    << wxT(" --xdm_port=\"") << m_iXdmBroadcastPort << wxT("\"");
-                                break;
-                            case XDM_MODE_LIST:
-                                ret << wxT(" --xdm_type=\"list\"")
-                                    << wxT(" --xdm_host=\"") << m_sXdmListHost << wxT("\"")
-                                    << wxT(" --xdm_port=\"") << m_iXdmListPort << wxT("\"");
-                                break;
-                        }
-                        break;
-                    case DTYPE_CUSTOM:
-                        if (m_bRunConsole)
-                            ret << wxT("console\"");
-                        else if (m_bRunXclients)
-                            ret << wxT("default\"");
-                        else {
-                            bNeedGeometry = false;
-                            ret << wxT("application\"");
-                            ret << wxT(" --rootless=\"")
-                                << (m_bVirtualDesktop ? 0 : 1)
-                                << wxT("\" --virtualdesktop=\"")
-                                << (m_bVirtualDesktop ? 1 : 0)
-                                << wxT("\" --application=\"")
-                                << UrlEsc(m_sCommandLine) << wxT("\"");
-                        }
-                        break;
-                }
-                if (m_bUseCustomImageEncoding) {
-                    ret << wxT(" --imagecompressionmethod=\"") << m_iImageEncoding << wxT("\"")
-                        << wxT(" --imagecompressionlevel=\"")
-                        << (((-1 == m_iImageEncoding) || (4 == m_iImageEncoding)) ? m_iJpegQuality : -1) << wxT("\"");
-                }
-                break;
-            case STYPE_WINDOWS:
-                ret << wxT("windows\"")
-                    << wxT(" --agent_server=\"") << UrlEsc(m_sRdpHostName)
-                    << wxT("\" --agent_domain=\"") << UrlEsc(m_sRdpDomain)
-                    << wxT("\"");
-                switch (m_iRdpAuthType) {
-                    case 0:
-                        // use specified user/passwd
-                        ret << wxT(" --agent_user=\"") << UrlEsc(m_sRdpUsername)
-                            << wxT("\" --agent_password=\"") << UrlEsc(m_sRdpPassword)
-                            << wxT("\"");
-                        break;
-                    case 1:
-                        // show winlogon (empty username and password)
-                        break;
-                    case 2:
-                        // use NX credentials
-                        ret << wxT(" --agent_user=\"") << UrlEsc(sGetSessionUser())
-                            << wxT("\" --agent_password=\"")
-                            << UrlEsc(m_bRememberPassword ? sGetSessionPassword() : clrpass)
-                            << wxT("\"");
-                        break;
-                        break;
-                }
-                if (m_bRdpRunApplication)
-                    ret << wxT(" --application=\"") << UrlEsc(m_sRdpApplication) << wxT("\"");
-                if (m_bUseCustomImageEncoding) {
-                    ret << wxT(" --rdpcolors=\"");
-                    switch (m_iRdpColors) {
-                        case 0:
-                            ret << wxT("256\"");
+    ret << wxString::Format(wxT(" --session=\"%s\""), m_sName.c_str());
+    ret << wxT(" --type=\"");
+    switch (m_eSessionType) {
+        case STYPE_SHADOW:
+            ret << wxT("shadow\"");
+            if (m_bUseCustomImageEncoding) {
+                ret << wxT(" --imagecompressionmethod=\"") << m_iImageEncoding << wxT("\"")
+                    << wxT(" --imagecompressionlevel=\"")
+                    << (((-1 == m_iImageEncoding) || (4 == m_iImageEncoding)) ? m_iJpegQuality : -1) << wxT("\"");
+            }
+            break;
+        case STYPE_UNIX:
+            ret << wxT("unix-");
+            switch (m_eDesktopType) {
+                case DTYPE_ANY:
+                case DTYPE_RDP:
+                case DTYPE_RFB:
+                    break;
+                case DTYPE_KDE:
+                    ret << wxT("kde\"");
+                    break;
+                case DTYPE_GNOME:
+                    ret << wxT("gnome\"");
+                    break;
+                case DTYPE_CDE:
+                    ret << wxT("cde\"");
+                    break;
+                case DTYPE_XFCE:
+                    ret << wxT("xfce\"");
+                    break;
+                case DTYPE_XDM:
+                    ret << wxT("xdm\"");
+                    switch (m_eXdmMode) {
+                        case XDM_MODE_SERVER:
+                            ret << wxT(" --xdm_port=\"-1\"");
                             break;
-                        case 1:
-                            ret << wxT("32K\"");
+                        case XDM_MODE_QUERY:
+                            ret << wxT(" --xdm_type=\"query\"")
+                                << wxT(" --xdm_host=\"") << m_sXdmQueryHost << wxT("\"")
+                                << wxT(" --xdm_port=\"") << m_iXdmQueryPort << wxT("\"");
                             break;
-                        case 2:
-                            ret << wxT("64K\"");
+                        case XDM_MODE_BROADCAST:
+                            ret << wxT(" --xdm_type=\"broadcast\"")
+                                << wxT(" --xdm_port=\"") << m_iXdmBroadcastPort << wxT("\"");
                             break;
-                        case 3:
-                            ret << wxT("16M\"");
+                        case XDM_MODE_LIST:
+                            ret << wxT(" --xdm_type=\"list\"")
+                                << wxT(" --xdm_host=\"") << m_sXdmListHost << wxT("\"")
+                                << wxT(" --xdm_port=\"") << m_iXdmListPort << wxT("\"");
                             break;
                     }
-                    ret << wxT(" --rdpcache=\"") << (m_bRdpCache ? 1 : 0) << wxT("\"")
-                        << wxT(" --imagecompressionmethod=\"") << m_iRdpImageEncoding << wxT("\"")
-                        << wxT(" --imagecompressionlevel=\"")
-                        << (((-1 == m_iRdpImageEncoding) || (4 == m_iRdpImageEncoding)) ? m_iRdpJpegQuality : -1)
+                    break;
+                case DTYPE_CUSTOM:
+                    if (m_bRunConsole)
+                        ret << wxT("console\"");
+                    else if (m_bRunXclients)
+                        ret << wxT("default\"");
+                    else {
+                        bNeedGeometry = false;
+                        ret << wxT("application\"");
+                        ret << wxT(" --rootless=\"")
+                            << (m_bVirtualDesktop ? 0 : 1)
+                            << wxT("\" --virtualdesktop=\"")
+                            << (m_bVirtualDesktop ? 1 : 0)
+                            << wxT("\" --application=\"")
+                            << UrlEsc(m_sCommandLine) << wxT("\"");
+                    }
+                    break;
+            }
+            if (m_bUseCustomImageEncoding) {
+                ret << wxT(" --imagecompressionmethod=\"") << m_iImageEncoding << wxT("\"")
+                    << wxT(" --imagecompressionlevel=\"")
+                    << (((-1 == m_iImageEncoding) || (4 == m_iImageEncoding)) ? m_iJpegQuality : -1) << wxT("\"");
+            }
+            break;
+        case STYPE_WINDOWS:
+            ret << wxT("windows\"")
+                << wxT(" --agent_server=\"") << UrlEsc(m_sRdpHostName)
+                << wxT("\" --agent_domain=\"") << UrlEsc(m_sRdpDomain)
+                << wxT("\"");
+            switch (m_iRdpAuthType) {
+                case 0:
+                    // use specified user/passwd
+                    ret << wxT(" --agent_user=\"") << UrlEsc(m_sRdpUsername)
+                        << wxT("\" --agent_password=\"") << UrlEsc(m_sRdpPassword)
                         << wxT("\"");
-                }
-                break;
-            case STYPE_VNC:
-                ret << wxT("vnc\"")
-                    << wxT(" --agent_server=\"")
-                    << UrlEsc(m_sVncHostName) << wxT("%3A") << m_iVncDisplayNumber
-                    << wxT("\" --agent_password=\"") << UrlEsc(m_sVncPassword) << wxT("\"");
-                if (m_bUseCustomImageEncoding) {
-                    ret << wxT(" --imagecompressionmethod=\"") << m_iVncImageEncoding << wxT("\"")
-                        << wxT(" --imagecompressionlevel=\"")
-                        << (((-1 == m_iVncImageEncoding) || (4 == m_iVncImageEncoding)) ? m_iVncJpegQuality : -1)
+                    break;
+                case 1:
+                    // show winlogon (empty username and password)
+                    break;
+                case 2:
+                    // use NX credentials
+                    ret << wxT(" --agent_user=\"") << UrlEsc(sGetSessionUser())
+                        << wxT("\" --agent_password=\"")
+                        << UrlEsc(m_bRememberPassword ? sGetSessionPassword() : clrpass)
                         << wxT("\"");
+                    break;
+                    break;
+            }
+            if (m_bRdpRunApplication)
+                ret << wxT(" --application=\"") << UrlEsc(m_sRdpApplication) << wxT("\"");
+            if (m_bUseCustomImageEncoding) {
+                ret << wxT(" --rdpcolors=\"");
+                switch (m_iRdpColors) {
+                    case 0:
+                        ret << wxT("256\"");
+                        break;
+                    case 1:
+                        ret << wxT("32K\"");
+                        break;
+                    case 2:
+                        ret << wxT("64K\"");
+                        break;
+                    case 3:
+                        ret << wxT("16M\"");
+                        break;
                 }
-                break;
-        }
+                ret << wxT(" --rdpcache=\"") << (m_bRdpCache ? 1 : 0) << wxT("\"")
+                    << wxT(" --imagecompressionmethod=\"") << m_iRdpImageEncoding << wxT("\"")
+                    << wxT(" --imagecompressionlevel=\"")
+                    << (((-1 == m_iRdpImageEncoding) || (4 == m_iRdpImageEncoding)) ? m_iRdpJpegQuality : -1)
+                    << wxT("\"");
+            }
+            break;
+        case STYPE_VNC:
+            ret << wxT("vnc\"")
+                << wxT(" --agent_server=\"")
+                << UrlEsc(m_sVncHostName) << wxT("%3A") << m_iVncDisplayNumber
+                << wxT("\" --agent_password=\"") << UrlEsc(m_sVncPassword) << wxT("\"");
+            if (m_bUseCustomImageEncoding) {
+                ret << wxT(" --imagecompressionmethod=\"") << m_iVncImageEncoding << wxT("\"")
+                    << wxT(" --imagecompressionlevel=\"")
+                    << (((-1 == m_iVncImageEncoding) || (4 == m_iVncImageEncoding)) ? m_iVncJpegQuality : -1)
+                    << wxT("\"");
+            }
+            break;
     }
     ret << wxT(" --cache=\"");
     switch (m_eCacheMemory) {
@@ -871,38 +869,42 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
         ret << kbdLocal;
     }
     ret << wxT("\"")
-        << wxT(" --backingstore=\"")
-        << (m_bDisableBackingstore ? 0 : 1)
-        << wxT("\"")
-        << wxT(" --encryption=\"")
-        << (m_bEnableSSL ? 1 : 0)
-        << wxT("\"")
-        << wxT(" --render=\"") << (m_bDisableRender ? 0 : 1) << wxT("\"")
-        << wxT(" --composite=\"") << (m_bDisableComposite ? 0 : 1) << wxT("\"")
+        << wxT(" --backingstore=\"") << (m_bDisableBackingstore ? 0 : 1) << wxT("\"")
+        << wxT(" --encryption=\"") << (m_bEnableSSL ? 1 : 0) << wxT("\"");
+    if (bNew) {
+        ret << wxT(" --render=\"") << (m_bDisableRender ? 0 : 1) << wxT("\"");
+    }
+    ret << wxT(" --composite=\"") << (m_bDisableComposite ? 0 : 1) << wxT("\"")
         << wxT(" --shmem=\"") << (m_bDisableShmem ? 0 : 1) << wxT("\"")
-        << wxT(" --shpix=\"") << (m_bDisableShpix ? 0 : 1) << wxT("\"")
-        // deprecated << wxT(" --streaming=\"") << (m_bDisableStreaming ? 0 : 1) << wxT("\"")
-        << wxT(" --samba=\"") << (m_bEnableSmbSharing ? 1 : 0) << wxT("\"")
-        << wxT(" --cups=\"") << (m_bUseCups ? 1 : 0) << wxT("\"")
-        << wxT(" --nodelay=\"") << (m_bDisableTcpNoDelay ? 0 : 1) << wxT("\"")
-        << wxT(" --defer=\"") << (m_bDisableDeferredUpdates ? 1 : 0) << wxT("\"")
+        << wxT(" --shpix=\"") << (m_bDisableShpix ? 0 : 1) << wxT("\"");
+    // deprecated << wxT(" --streaming=\"") << (m_bDisableStreaming ? 0 : 1) << wxT("\"")
+    if (bNew) {
+        ret << wxT(" --samba=\"") << (m_bEnableSmbSharing ? 1 : 0) << wxT("\"")
+            << wxT(" --cups=\"") << (m_bUseCups ? 1 : 0) << wxT("\"")
+            << wxT(" --nodelay=\"") << (m_bDisableTcpNoDelay ? 0 : 1) << wxT("\"")
+            << wxT(" --defer=\"") << (m_bDisableDeferredUpdates ? 1 : 0) << wxT("\"");
+    }
 #ifdef __WXMAC__
-        << wxT(" --client=\"macosx\"")
+    ret << wxT(" --client=\"macosx\"");
 #else
 # ifdef __UNIX__
-        << wxT(" --client=\"linux\"")
+    ret << wxT(" --client=\"linux\"");
 # else
-        // << wxT(" --client=\"winnt\"")
-        << wxT(" --client=\"linux\"")
+    // << wxT(" --client=\"winnt\"")
+    ret << wxT(" --client=\"linux\"");
 # endif
 #endif
-        << wxT(" --media=\"") << (m_bEnableMultimedia ? 1 : 0) << wxT("\"")
-        ;
+    ret << wxT(" --media=\"") << (m_bEnableMultimedia ? 1 : 0) << wxT("\"");
     if (m_bEnableMultimedia) {
         ret << wxT(" --mediahelper=\"esd\"");
     }
     // Original always uses those?!
-    ret << wxT(" --strict=\"0\" --aux=\"1\"");
+    ret << wxT(" --strict=\"0\"");
+    if (bNew) {
+        // With this parameter set, attaching to shadow sessions fails, if the server's display base is >= 10000
+        // so we simply leave it out for shadow sessions.
+        ret << wxT(" --aux=\"1\"");
+    }
     return ret;
 }
 
@@ -2158,9 +2160,9 @@ MyXmlConfig::SaveToFile()
 
     bAddOption(g, wxT("Disable backingstore"), m_bDisableBackingstore);
     bAddOption(g, wxT("Disable coposite"), m_bDisableComposite);
-   
+
     // deprecated bAddOption(g, wxT("Disable image streaming"), m_bDisableStreaming);
-    
+
     iAddOption(g, wxT("Image Compression Type"), m_iImageEncoding);
 
     // deprecated but written by NX client
@@ -2184,7 +2186,7 @@ MyXmlConfig::SaveToFile()
 
     iAddOption(g, wxT("VNC images compression"), m_iVncImageEncoding);
     iAddOption(g, wxT("VNC JPEG Quality"), m_iVncJpegQuality);
-    
+
     // deprecated - If this exists, we consider it an "old" config file during read
     // iAddOption(g, wxT("Windows Image Compression"), m_iRdpImageCompression);
 

@@ -123,6 +123,7 @@ private:
     ArrayOfShareGroups getActiveCupsPrinters();
     virtual void OnSshEvent(wxCommandEvent &);
     virtual void OnSessionEvent(wxCommandEvent &);
+    void SshLog(const wxChar *fmt, ...);
 
 #ifdef __WXMSW__
     wxString getXfontPath(tXarch);
