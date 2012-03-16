@@ -2210,6 +2210,17 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
         ::wxLogInfo(wxT("env: NX_CLIENT='%s'"), cygPath(::wxGetApp().GetSelfPath()).c_str());
         ::wxSetEnv(wxT("NX_VERSION"), m_sProtocolVersion);
         ::wxLogInfo(wxT("env: NX_VERSION='%s'"), m_sProtocolVersion.c_str());
+        if (m_pCfg->eGetDisplayType() == MyXmlConfig::DPTYPE_FULLSCREEN) {
+            bool bVal = false;
+            wxConfigBase::Get()->Read(wxT("Config/DisableMagicPixel"), &bVal, false);
+            if (bVal) {
+                int dspw, dsph;
+                ::wxDisplaySize(&dspw, &dsph);
+                wxString w = wxString::Format(wxT("%d"), dspw);
+                ::wxSetEnv(wxT("NX_KIOSK_X"), w);
+                ::wxLogInfo(wxT("env: NX_KIOSK_X='%s'"), w.c_str());
+            }
+        }
         ::wxSetEnv(wxT("XAUTHORITY"), getXauthPath(m_eXarch));
         ::wxLogInfo(wxT("env: XAUTHORITY='%s'"), getXauthPath(m_eXarch).c_str());
 #ifdef __UNIX__

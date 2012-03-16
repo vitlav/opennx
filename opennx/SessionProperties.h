@@ -326,6 +326,9 @@ public:
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_CLEAR_PASSONABORT
     void OnCheckboxClearPassonabortClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_NOMAGICPIXEL
+    void OnCheckboxNomagicpixelClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_DELETE
     void OnDeleteClick( wxCommandEvent& event );
 
@@ -336,20 +339,20 @@ public:
 
 ////@begin SessionProperties member function declarations
 
-    wxString GetsUserNxDir() const { return m_sUserNxDir ; }
-    void SetsUserNxDir(wxString value) { m_sUserNxDir = value ; }
-
-    wxString GetsSystemNxDir() const { return m_sSystemNxDir ; }
-    void SetsSystemNxDir(wxString value) { m_sSystemNxDir = value ; }
+    bool GetbCreateDesktopIcon() const { return m_bCreateDesktopIcon ; }
+    void SetbCreateDesktopIcon(bool value) { m_bCreateDesktopIcon = value ; }
 
     int GetUsbLocalPort() const { return m_iUsbLocalPort ; }
     void SetUsbLocalPort(int value) { m_iUsbLocalPort = value ; }
 
+    wxString GetsSystemNxDir() const { return m_sSystemNxDir ; }
+    void SetsSystemNxDir(wxString value) { m_sSystemNxDir = value ; }
+
     wxString GetUsbipdSocket() const { return m_sUsbipdSocket ; }
     void SetUsbipdSocket(wxString value) { m_sUsbipdSocket = value ; }
 
-    bool GetbCreateDesktopIcon() const { return m_bCreateDesktopIcon ; }
-    void SetbCreateDesktopIcon(bool value) { m_bCreateDesktopIcon = value ; }
+    wxString GetsUserNxDir() const { return m_sUserNxDir ; }
+    void SetsUserNxDir(wxString value) { m_sUserNxDir = value ; }
 
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
@@ -406,61 +409,63 @@ private:
     extHtmlWindow* m_pHtmlWindow;
     wxButton* m_pCtrlApplyButton;
 private:
-    int m_iPort;
-    wxString m_sHostName;
-    int m_iDisplayWidth;
-    int m_iDisplayHeight;
-    bool m_bRememberPassword;
-    bool m_bUseSmartCard;
-    int m_iSessionType;
-    int m_iConnectionSpeed;
-    int m_iDesktopType;
-    int m_iDisplayType;
+    bool m_bClearPassOnAbort;
+    bool m_bCreateDesktopIcon;
+    bool m_bDisableDeferredUpdates;
+    bool m_bDisableDirectDraw;
+    bool m_bDisableMagicPixel;
     bool m_bDisableTcpNoDelay;
     bool m_bDisableZlibCompression;
-    bool m_bEnableSSL;
-    int m_iCacheMem;
-    int m_iCacheDisk;
-    bool m_bKbdLayoutOther;
-    wxString m_sKbdLayoutLanguage;
-    bool m_bEnableSmbSharing;
     bool m_bEnableMultimedia;
-    wxString m_sUserNxDir;
-    wxString m_sSystemNxDir;
-    bool m_bRemoveOldSessionFiles;
-    wxString m_sCupsPath;
-    int m_iCupsPort;
-    bool m_bUseDefaultImageEncoding;
-    bool m_bUseCustomImageEncoding;
-    int m_iDesktopTypeDialog;
-    int m_iProxyPort;
-    wxString m_sProxyHost;
-    bool m_bUseProxy;
-    bool m_bUseCups;
+    bool m_bEnableSSL;
+    bool m_bEnableSmbSharing;
     bool m_bEnableUSBIP;
-    wxString m_sProxyCommand;
     bool m_bExternalProxy;
-    int m_iUsbLocalPort;
-    wxString m_sUsbipdSocket; // Local control socket for usbipd2
-    int m_iSavedUsbLocalPort;
+    bool m_bGrabKeyboard;
+    bool m_bKbdLayoutOther;
+    bool m_bLowercaseLogin;
+    bool m_bProxyPassRemember;
+    bool m_bRememberPassword;
+    bool m_bRemoveOldSessionFiles;
+    bool m_bResetMessageBoxes;
+    bool m_bSavedClearPassOnAbort;
+    bool m_bSavedCreateDesktopIcon;
+    bool m_bSavedDisableMagicPixel;
+    bool m_bSavedLowercaseLogin;
+    bool m_bSavedResetMessageBoxes;
+    bool m_bUseCups;
+    bool m_bUseCustomImageEncoding;
+    bool m_bUseDefaultImageEncoding;
+    bool m_bUseProxy;
+    bool m_bUseSmartCard;
+    int m_iCacheDisk;
+    int m_iCacheMem;
+    int m_iClipFilter;
+    int m_iConnectionSpeed;
+    int m_iCupsPort;
+    int m_iDesktopType;
+    int m_iDesktopTypeDialog;
+    int m_iDisplayHeight;
+    int m_iDisplayType;
+    int m_iDisplayWidth;
+    int m_iPort;
+    int m_iProxyPort;
     int m_iPseudoDesktopTypeIndex;
     int m_iPseudoDisplayTypeIndex;
-    wxString m_sProxyUser;
-    wxString m_sProxyPass;
-    bool m_bProxyPassRemember;
-    bool m_bCreateDesktopIcon;
-    bool m_bSavedCreateDesktopIcon;
-    bool m_bDisableDirectDraw;
-    bool m_bGrabKeyboard;
-    bool m_bDisableDeferredUpdates;
-    bool m_bResetMessageBoxes;
-    bool m_bSavedResetMessageBoxes;
+    int m_iSavedUsbLocalPort;
+    int m_iSessionType;
     int m_iSmbPort;
-    bool m_bLowercaseLogin;
-    bool m_bSavedLowercaseLogin;
-    int m_iClipFilter;
-    bool m_bClearPassOnAbort;
-    bool m_bSavedClearPassOnAbort;
+    int m_iUsbLocalPort;
+    wxString m_sCupsPath;
+    wxString m_sHostName;
+    wxString m_sKbdLayoutLanguage;
+    wxString m_sProxyCommand;
+    wxString m_sProxyHost;
+    wxString m_sProxyPass;
+    wxString m_sProxyUser;
+    wxString m_sSystemNxDir;
+    wxString m_sUsbipdSocket; // Local control socket for usbipd2
+    wxString m_sUserNxDir;
 ////@end SessionProperties member variables
 
     bool readKbdLayouts();

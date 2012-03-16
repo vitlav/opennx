@@ -266,6 +266,8 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
 
     EVT_CHECKBOX( XRCID("ID_CHECKBOX_CLEAR_PASSONABORT"), SessionProperties::OnCheckboxClearPassonabortClick )
 
+    EVT_CHECKBOX( XRCID("ID_CHECKBOX_NOMAGICPIXEL"), SessionProperties::OnCheckboxNomagicpixelClick )
+
     EVT_BUTTON( wxID_DELETE, SessionProperties::OnDeleteClick )
 
     EVT_BUTTON( wxID_APPLY, SessionProperties::OnApplyClick )
@@ -401,6 +403,7 @@ SessionProperties::CheckChanged()
         changed |= (m_bSavedResetMessageBoxes != m_bResetMessageBoxes);
         changed |= (m_bSavedLowercaseLogin != m_bLowercaseLogin);
         changed |= (m_bSavedClearPassOnAbort != m_bClearPassOnAbort);
+        changed |= (m_bSavedDisableMagicPixel != m_bDisableMagicPixel);
         CheckCfgChanges(changed);
     }
 }
@@ -417,23 +420,25 @@ SessionProperties::KeyTyped() {
 bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxString& WXUNUSED(caption), const wxPoint& WXUNUSED(pos), const wxSize& WXUNUSED(size), long WXUNUSED(style) )
 {
     ////@begin SessionProperties member initialisation
-    m_iUsbLocalPort = 3240;
+    m_bClearPassOnAbort = true;
+    m_bCreateDesktopIcon = false;
+    m_bDisableDeferredUpdates = false;
+    m_bDisableDirectDraw = false;
+    m_bDisableMagicPixel = false;
+    m_bGrabKeyboard = false;
+    m_bLowercaseLogin = false;
+    m_bProxyPassRemember = false;
+    m_bResetMessageBoxes = false;
+    m_bSavedClearPassOnAbort = true;
+    m_bSavedCreateDesktopIcon = false;
+    m_bSavedDisableMagicPixel = false;
+    m_bSavedLowercaseLogin = false;
+    m_bSavedResetMessageBoxes = false;
+    m_iClipFilter = 2;
     m_iPseudoDesktopTypeIndex = -1;
     m_iPseudoDisplayTypeIndex = -1;
-    m_bProxyPassRemember = false;
-    m_bCreateDesktopIcon = false;
-    m_bSavedCreateDesktopIcon = false;
-    m_bDisableDirectDraw = false;
-    m_bGrabKeyboard = false;
-    m_bDisableDeferredUpdates = false;
-    m_bResetMessageBoxes = false;
-    m_bSavedResetMessageBoxes = false;
     m_iSmbPort = 445;
-    m_bLowercaseLogin = false;
-    m_bSavedLowercaseLogin = false;
-    m_iClipFilter = 2;
-    m_bClearPassOnAbort = true;
-    m_bSavedClearPassOnAbort = true;
+    m_iUsbLocalPort = 3240;
     m_pNoteBook = NULL;
     m_pCtrlHostname = NULL;
     m_pCtrlPort = NULL;
@@ -560,6 +565,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &m_sSystemNxDir);
     wxConfigBase::Get()->Read(wxT("Config/LowercaseLogin"), &m_bLowercaseLogin, false);
     wxConfigBase::Get()->Read(wxT("Config/ClearPassOnAbort"), &m_bClearPassOnAbort, true);
+    wxConfigBase::Get()->Read(wxT("Config/DisableMagicPixel"), &m_bDisableMagicPixel, false);
 #ifdef SUPPORT_USBIP
     wxConfigBase::Get()->Read(wxT("Config/UsbipdSocket"), &m_sUsbipdSocket);
     wxConfigBase::Get()->Read(wxT("Config/UsbipPort"), &m_iUsbLocalPort);
@@ -1101,6 +1107,8 @@ void SessionProperties::CreateControls()
         FindWindow(XRCID("ID_CHECKBOX_LOWERCASE_LOGIN"))->SetValidator( wxGenericValidator(& m_bLowercaseLogin) );
     if (FindWindow(XRCID("ID_CHECKBOX_CLEAR_PASSONABORT")))
         FindWindow(XRCID("ID_CHECKBOX_CLEAR_PASSONABORT"))->SetValidator( wxGenericValidator(& m_bClearPassOnAbort) );
+    if (FindWindow(XRCID("ID_CHECKBOX_NOMAGICPIXEL")))
+        FindWindow(XRCID("ID_CHECKBOX_NOMAGICPIXEL"))->SetValidator( wxGenericValidator(& m_bDisableMagicPixel) );
     ////@end SessionProperties content construction
 
     if ((!m_bStorePasswords) && FindWindow(XRCID("ID_CHECKBOX_PWSAVE")))
@@ -1280,6 +1288,7 @@ void SessionProperties::SaveState()
     m_bSavedLowercaseLogin = m_bLowercaseLogin;
     m_bSavedClearPassOnAbort = m_bClearPassOnAbort;
     m_bSavedResetMessageBoxes = m_bResetMessageBoxes = false;
+    m_bSavedDisableMagicPixel = m_bDisableMagicPixel;
 }
 
 // ====================== Event handlers ===============================
@@ -1588,6 +1597,7 @@ void SessionProperties::OnApplyClick( wxCommandEvent& event )
     wxConfigBase::Get()->Write(wxT("Config/SystemNxDir"), m_sSystemNxDir);
     wxConfigBase::Get()->Write(wxT("Config/LowercaseLogin"), m_bLowercaseLogin);
     wxConfigBase::Get()->Write(wxT("Config/ClearPassOnAbort"), m_bClearPassOnAbort);
+    wxConfigBase::Get()->Write(wxT("Config/DisableMagicPixel"), m_bDisableMagicPixel);
 #ifdef SUPPORT_USBIP
     wxConfigBase::Get()->Write(wxT("Config/UsbipdSocket"), m_sUsbipdSocket);
     wxConfigBase::Get()->Write(wxT("Config/UsbipPort"), m_iUsbLocalPort);
@@ -2391,6 +2401,17 @@ void SessionProperties::OnComboboxClipfilterSelected( wxCommandEvent& event )
  */
 
 void SessionProperties::OnCheckboxClearPassonabortClick( wxCommandEvent& event )
+{
+    wxUnusedVar(event);
+    CheckChanged();
+}
+
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_NOMAGICPIXEL
+ */
+
+void SessionProperties::OnCheckboxNomagicpixelClick( wxCommandEvent& event )
 {
     wxUnusedVar(event);
     CheckChanged();

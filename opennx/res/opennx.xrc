@@ -1211,6 +1211,14 @@
                                                         <checked>1</checked>
                                                     </object>
                                                 </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_CHECKBOX_NOMAGICPIXEL">
+                                                        <label>Disable magic pixel in fullscreen mode</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
                                             </object>
                                         </object>
                                     </object>
@@ -2847,6 +2855,7 @@ this share.</label>
         </object>
         <object class="wxWizardPageSimple" name="ID_WIZARDPAGE_SESSION" subclass="WizardPageSession">
             <style>wxTAB_TRAVERSAL</style>
+            <exstyle>wxWS_EX_VALIDATE_RECURSIVELY</exstyle>
             <object class="wxFlexGridSizer">
                 <cols>1</cols>
                 <rows>8</rows>
@@ -3003,6 +3012,7 @@ this share.</label>
         </object>
         <object class="wxWizardPageSimple" name="ID_WIZARDPAGE_DESKTOP" subclass="WizardPageDesktop">
             <style>wxTAB_TRAVERSAL</style>
+            <exstyle>wxWS_EX_VALIDATE_RECURSIVELY</exstyle>
             <object class="wxFlexGridSizer">
                 <cols>1</cols>
                 <rows>5</rows>
@@ -3152,6 +3162,7 @@ this share.</label>
         </object>
         <object class="wxWizardPageSimple" name="ID_WIZARDPAGE_SECURITY" subclass="WizardPageSecurity">
             <style>wxTAB_TRAVERSAL</style>
+            <exstyle>wxWS_EX_VALIDATE_RECURSIVELY</exstyle>
             <object class="wxFlexGridSizer">
                 <cols>1</cols>
                 <rows>5</rows>
@@ -3758,6 +3769,7 @@ this share.</label>
                 <border>5</border>
                 <object class="wxPanel" name="ID_PANEL_HOTPLUG">
                     <style>wxTAB_TRAVERSAL</style>
+                    <exstyle>wxWS_EX_VALIDATE_RECURSIVELY</exstyle>
                     <object class="wxBoxSizer">
                         <orient>wxVERTICAL</orient>
                         <object class="sizeritem">
@@ -3787,6 +3799,7 @@ to use it on the remote machine.</label>
                 <border>5</border>
                 <object class="wxPanel" name="ID_PANEL_DEVSELECT">
                     <style>wxTAB_TRAVERSAL</style>
+                    <exstyle>wxWS_EX_VALIDATE_RECURSIVELY</exstyle>
                     <object class="wxBoxSizer">
                         <orient>wxVERTICAL</orient>
                         <object class="sizeritem">
