@@ -2295,7 +2295,7 @@ remote VNC server</label>
     </object>
     <object class="wxDialog" name="ID_DIALOG_SHARE_ADD" subclass="ShareProperties">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
-        <exstyle>wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP</exstyle>
+        <exstyle>wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP</exstyle>
         <size>114,75d</size>
         <title>New shared resource - OpenNX</title>
         <centered>1</centered>
@@ -2342,6 +2342,7 @@ local computer.</label>
                 <border>5</border>
                 <object class="wxPanel" name="ID_PANEL_SMB_PRINTER">
                     <style>wxTAB_TRAVERSAL</style>
+                    <exstyle>wxWS_EX_VALIDATE_RECURSIVELY</exstyle>
                     <hidden>1</hidden>
                     <object class="wxStaticBoxSizer" name="wxID_ANY">
                         <orient>wxVERTICAL</orient>
@@ -2484,6 +2485,7 @@ this share.</label>
                 <border>5</border>
                 <object class="wxPanel" name="ID_PANEL_CUPSOPTIONS">
                     <style>wxTAB_TRAVERSAL</style>
+                    <exstyle>wxWS_EX_VALIDATE_RECURSIVELY</exstyle>
                     <hidden>1</hidden>
                     <object class="wxStaticBoxSizer" name="wxID_ANY">
                         <orient>wxVERTICAL</orient>
@@ -2584,6 +2586,7 @@ this share.</label>
                 <border>5</border>
                 <object class="wxPanel" name="ID_PANEL_SMBOPTIONS">
                     <style>wxTAB_TRAVERSAL</style>
+                    <exstyle>wxWS_EX_VALIDATE_RECURSIVELY</exstyle>
                     <object class="wxStaticBoxSizer" name="wxID_ANY">
                         <orient>wxVERTICAL</orient>
                         <label>SMB options</label>

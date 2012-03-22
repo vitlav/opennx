@@ -122,11 +122,11 @@ void ShareProperties::SetUse(bool useSmb, bool useCups)
 bool ShareProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxString& WXUNUSED(caption), const wxPoint& WXUNUSED(pos), const wxSize& WXUNUSED(size), long WXUNUSED(style) )
 {
     ////@begin ShareProperties member initialisation
-    m_sSmbDiskUsername = ::wxGetUserId();
     m_bCupsPublic = false;
-    m_sCupsDriver = wxT("cups driver");
-    m_sSmbPrintUsername = ::wxGetUserId();
     m_bSmbPublic = false;
+    m_sCupsDriver = wxT("cups driver");
+    m_sSmbDiskUsername = ::wxGetUserId();
+    m_sSmbPrintUsername = ::wxGetUserId();
     m_pCtrlLocalShares = NULL;
     m_pCtrlSmbPrintOptions = NULL;
     m_pCtrlSmbDriver = NULL;
@@ -145,7 +145,7 @@ bool ShareProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const w
     ////@end ShareProperties member initialisation
 
     ////@begin ShareProperties creation
-    SetExtraStyle(wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP);
+    SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP);
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));

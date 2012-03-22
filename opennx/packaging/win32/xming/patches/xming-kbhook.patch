@@ -163,3 +163,23 @@ diff -urw xc-orig/programs/Xserver/hw/xwin/winscrinit.c xc/programs/Xserver/hw/x
    /* Call the engine dependent screen initialization procedure */
    if (!((*pScreenPriv->pwinFinishScreenInit) (index, pScreen, argc, argv)))
      {
+diff -urw xc-orig/programs/Xserver/hw/xwin/InitInput.c xc/programs/Xserver/hw/xwin/InitInput.c
+--- xc-orig/programs/Xserver/hw/xwin/InitInput.c	2012-03-19 16:31:21.080040361 +0100
++++ xc/programs/Xserver/hw/xwin/InitInput.c	2012-03-19 16:33:36.773034311 +0100
+@@ -72,6 +72,7 @@
+ #ifdef XKB
+ void XkbSetExtension(DeviceIntPtr device, ProcessInputProc proc);
+ #endif
++extern Bool			g_fKeyboardHookLL;
+ 
+ static void
+ winRegisterPointerDevice(DeviceIntPtr device)
+@@ -190,6 +191,8 @@
+             SetForegroundWindow(hwnd);
+             LockSetForegroundWindow(LSFW_LOCK);
+             SetFocus(hwnd);
++            if (g_fKeyboardHookLL)
++                g_fKeyboardHookLL = winInstallKeyboardHookLL ();
+         }
+     }
+ }
