@@ -137,17 +137,17 @@ private:
     wxSlider* m_pCtrlJpegQuality;
     wxCheckBox* m_pCtrlDisableSharedPixmaps;
 private:
-    bool m_bImageEncodingPNG;
-    bool m_bImageEncodingPlainX;
-    bool m_bImageEncodingJpeg;
-    bool m_bUseJpegQuality;
-    int m_iJpegQuality;
-    bool m_bDisableRender;
     bool m_bDisableBackingstore;
     bool m_bDisableComposite;
+    bool m_bDisableRender;
     bool m_bDisableShmem;
     bool m_bDisableShpix;
     bool m_bImageEncodingBoth;
+    bool m_bImageEncodingJpeg;
+    bool m_bImageEncodingPNG;
+    bool m_bImageEncodingPlainX;
+    bool m_bUseJpegQuality;
+    int m_iJpegQuality;
 ////@end UnixImageSettingsDialog member variables
 
     MyXmlConfig *m_pCfg;

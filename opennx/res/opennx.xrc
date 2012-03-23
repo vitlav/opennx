@@ -1800,6 +1800,9 @@ remote VNC server</label>
         <title>VNC Image Settings - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
+        <object class="wxBitmapButton" name="ID_BITMAPBUTTON_DUMMY0">
+            <pos>0,0d</pos>
+        </object>
         <object class="wxBoxSizer">
             <orient>wxVERTICAL</orient>
             <object class="sizeritem">
@@ -2123,11 +2126,14 @@ remote VNC server</label>
     </object>
     <object class="wxDialog" name="ID_DIALOG_IMAGE_X11" subclass="UnixImageSettingsDialog">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
-        <exstyle>wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP</exstyle>
+        <exstyle>wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP</exstyle>
         <size>114,75d</size>
         <title>Unix Image Settings - OpenNX</title>
         <centered>1</centered>
         <icon>memory:memrsc#zip:res/nx.png</icon>
+        <object class="wxBitmapButton" name="ID_BITMAPBUTTON_DUMMY0">
+            <pos>0,0d</pos>
+        </object>
         <object class="wxBoxSizer">
             <orient>wxVERTICAL</orient>
             <object class="sizeritem">

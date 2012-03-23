@@ -167,14 +167,10 @@ bool UnixImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id),
     }
 
     ////@begin UnixImageSettingsDialog creation
-    SetExtraStyle(wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP);
+    SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS|wxDIALOG_EX_CONTEXTHELP);
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));
-    if (GetSizer())
-    {
-        GetSizer()->SetSizeHints(this);
-    }
     Centre();
     ////@end UnixImageSettingsDialog creation
     ::wxGetApp().EnableContextHelp(this);

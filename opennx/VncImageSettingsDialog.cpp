@@ -163,10 +163,6 @@ bool VncImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), 
     SetParent(parent);
     CreateControls();
     SetIcon(GetIconResource(wxT("res/nx.png")));
-    if (GetSizer())
-    {
-        GetSizer()->SetSizeHints(this);
-    }
     Centre();
 ////@end VncImageSettingsDialog creation
     ::wxGetApp().EnableContextHelp(this);
