@@ -43,7 +43,6 @@
 
 static unsigned long failed_files;
 static unsigned long failed_dirs;
-static bool newreceipt;
 
 class RmRfTraverser : public wxDirTraverser
 {
@@ -119,6 +118,10 @@ MacUninstallApp::MacUninstallApp()
     m_nodelete.insert(wxT("."));
     m_nodelete.insert(wxT("./Applications"));
     m_nodelete.insert(wxT("./Library"));
+    m_nodelete.insert(wxT("./usr/share/man/man1"));
+    m_nodelete.insert(wxT("./usr/share/man"));
+    m_nodelete.insert(wxT("./usr/share"));
+    m_nodelete.insert(wxT("./usr"));
 }
 
 void MacUninstallApp::OnInitCmdLine(wxCmdLineParser& parser)

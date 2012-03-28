@@ -89,6 +89,7 @@ bool MyDynamicLibrary::Load(const wxString& name, int flags /* = wxDL_DEFAULT */
             return true;
     }
 #endif
+    ::myLogTrace(MYTRACETAG, wxT("Failed to load %s"), name.c_str());
     return false;
 #endif
 }

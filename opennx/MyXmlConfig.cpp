@@ -84,6 +84,9 @@ ENABLE_TRACE;
 #define DUMMY_CLR_PASSWORD wxT("\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r")
 #define DEFAULT_GUEST_USER wxT("NX guest user")
 
+IMPLEMENT_DYNAMIC_CLASS(ShareGroup, wxObject);
+IMPLEMENT_DYNAMIC_CLASS(SharedUsbDevice, wxObject);
+
 WX_DEFINE_OBJARRAY(ArrayOfShareGroups);
 WX_DEFINE_OBJARRAY(ArrayOfUsbForwards);
 
@@ -224,12 +227,9 @@ MyXmlConfig::init()
     saved = NULL;
     m_bDisableBackingstore = false;
     m_bDisableComposite = false;
-    m_bDisableImageCompression = false;
-    m_bDisableJpeg = false;
     m_bDisableRender = false;
     m_bDisableShmem = false;
     m_bDisableShpix = false;
-    m_bDisableStreaming = false;
     m_bDisableTaint = false;
     m_bDisableTcpNoDelay = false;
     m_bDisableXagent = false;
@@ -240,10 +240,8 @@ MyXmlConfig::init()
     m_bEnableUSBIP = false;
     m_bExternalProxy = false;
     m_bGuestMode = false;
-    m_bImageEncodingJpeg = true;
-    m_bImageEncodingPlainX = false;
-    m_bImageEncodingPNG = false;
     m_bKbdLayoutOther = false;
+    m_bOldConfig = false;
     m_bProxyPassRemember = false;
     m_bRdpCache = true;
     m_bRdpRememberPassword = false;
@@ -254,10 +252,8 @@ MyXmlConfig::init()
     m_bRunXclients = false;
     m_bUseCups = false;
     m_bUseCustomImageEncoding = false;
-    m_bUseJpegQuality = false;
     m_bUseProxy = false;
     m_bUseSmartCard = false;
-    m_bUseTightJpeg = false;
     m_bValid = false;
     m_bWritable = true;
     m_bVirtualDesktop = false;
@@ -267,19 +263,26 @@ MyXmlConfig::init()
     m_bDisableDeferredUpdates = false;
     m_bGrabKeyboard = false;
 
+    m_iClipFilter = 2;
     m_iCupsPort = 631;
     m_iDisplayHeight = 480;
     m_iDisplayWidth = 640;
+    m_iImageEncoding = 3;
     m_iJpegQuality = 6;
     m_iProxyPort = 3128;
     m_iRdpAuthType = 1;
     m_iRdpColors = 8;
-    m_iRdpImageCompression = 1;
+    m_iRdpImageEncoding = 3;
+    m_iRdpJpegQuality = 6;
     m_iServerPort = 22;
     m_iSmbPort = 445;
     m_iUsedShareGroups = 0;
     m_iVncDisplayNumber = 0;
-    m_iVncImageEncoding = 0;
+    m_iVncImageEncoding = 3;
+    m_iVncJpegQuality = 6;
+    m_iXdmBroadcastPort = 177;
+    m_iXdmListPort = 177;
+    m_iXdmQueryPort = 177;
 
     m_eCacheDisk = CACHEDISK_32MB;
     m_eCacheMemory = CACHEMEM_8MB;
@@ -287,6 +290,7 @@ MyXmlConfig::init()
     m_eDesktopType = DTYPE_KDE;
     m_eDisplayType = DPTYPE_AVAILABLE;
     m_eSessionType = STYPE_UNIX;
+    m_eXdmMode = XDM_MODE_SERVER;
 
     m_sCommandLine = wxEmptyString;
     wxConfigBase::Get()->Read(wxT("Config/CupsPath"), &m_sCupsPath);
@@ -312,6 +316,8 @@ MyXmlConfig::init()
     m_sUsername = wxEmptyString;
     m_sVncHostName = wxEmptyString;
     m_sVncPassword = wxEmptyString;
+    m_sXdmListHost = wxT("localhost");
+    m_sXdmQueryHost = wxT("localhost");
 
     m_pMd5Password = NULL;
     m_pClrPassword = NULL;
@@ -351,12 +357,9 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
 
     m_bDisableBackingstore = other.m_bDisableBackingstore;
     m_bDisableComposite = other.m_bDisableComposite;
-    m_bDisableImageCompression = other.m_bDisableImageCompression;
-    m_bDisableJpeg = other.m_bDisableJpeg;
     m_bDisableRender = other.m_bDisableRender;
     m_bDisableShmem = other.m_bDisableShmem;
     m_bDisableShpix = other.m_bDisableShpix;
-    m_bDisableStreaming = other.m_bDisableStreaming;
     m_bDisableTaint = other.m_bDisableTaint;
     m_bDisableTcpNoDelay = other.m_bDisableTcpNoDelay;
     m_bDisableXagent = other.m_bDisableXagent;
@@ -367,9 +370,6 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
     m_bEnableUSBIP = other.m_bEnableUSBIP;
     m_bExternalProxy = other.m_bExternalProxy;
     m_bGuestMode = other.m_bGuestMode;
-    m_bImageEncodingJpeg = other.m_bImageEncodingJpeg;
-    m_bImageEncodingPlainX = other.m_bImageEncodingPlainX;
-    m_bImageEncodingPNG = other.m_bImageEncodingPNG;
     m_bKbdLayoutOther = other.m_bKbdLayoutOther;
     m_bProxyPassRemember = other.m_bProxyPassRemember;
     m_bRdpCache = other.m_bRdpCache;
@@ -381,10 +381,8 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
     m_bRunXclients = other.m_bRunXclients;
     m_bUseCups = other.m_bUseCups;
     m_bUseCustomImageEncoding = other.m_bUseCustomImageEncoding;
-    m_bUseJpegQuality = other.m_bUseJpegQuality;
     m_bUseProxy = other.m_bUseProxy;
     m_bUseSmartCard = other.m_bUseSmartCard;
-    m_bUseTightJpeg = other.m_bUseTightJpeg;
     m_bValid = other.m_bValid;
     // Don't copy readonly flag
     m_bVirtualDesktop = other.m_bVirtualDesktop;
@@ -394,20 +392,27 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
     m_bDisableDeferredUpdates = other.m_bDisableDeferredUpdates;
     m_bGrabKeyboard = other.m_bGrabKeyboard;
 
+    m_iClipFilter = other.m_iClipFilter;
     m_iCupsPort = other.m_iCupsPort;
     m_iDisplayHeight = other.m_iDisplayHeight;
     m_iDisplayWidth = other.m_iDisplayWidth;
+    m_iImageEncoding = other.m_iImageEncoding;
     m_iJpegQuality = other.m_iJpegQuality;
     m_sKbdLayoutLanguage = other.m_sKbdLayoutLanguage;
     m_iProxyPort = other.m_iProxyPort;
     m_iRdpAuthType = other.m_iRdpAuthType;
     m_iRdpColors = other.m_iRdpColors;
-    m_iRdpImageCompression = other.m_iRdpImageCompression;
+    m_iRdpImageEncoding = other.m_iRdpImageEncoding;
+    m_iRdpJpegQuality = other.m_iRdpJpegQuality;
     m_iServerPort = other.m_iServerPort;
     m_iSmbPort = other.m_iSmbPort;
     m_iUsedShareGroups = other.m_iUsedShareGroups;
     m_iVncDisplayNumber = other.m_iVncDisplayNumber;
     m_iVncImageEncoding = other.m_iVncImageEncoding;
+    m_iVncJpegQuality = other.m_iVncJpegQuality;
+    m_iXdmBroadcastPort = other.m_iXdmBroadcastPort;
+    m_iXdmListPort = other.m_iXdmListPort;
+    m_iXdmQueryPort = other.m_iXdmQueryPort;
 
     m_eCacheDisk = other.m_eCacheDisk;
     m_eCacheMemory = other.m_eCacheMemory;
@@ -415,6 +420,7 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
     m_eDesktopType = other.m_eDesktopType;
     m_eDisplayType = other.m_eDisplayType;
     m_eSessionType = other.m_eSessionType;
+    m_eXdmMode = other.m_eXdmMode;
 
     m_sCommandLine = other.m_sCommandLine;
     m_sCupsPath = other.m_sCupsPath;
@@ -436,6 +442,8 @@ MyXmlConfig::operator =(const MyXmlConfig &other)
     m_sUsername = other.m_sUsername;
     m_sVncHostName = other.m_sVncHostName;
     m_sVncPassword = other.m_sVncPassword;
+    m_sXdmListHost = other.m_sXdmListHost;
+    m_sXdmQueryHost = other.m_sXdmQueryHost;
 
     m_aShareGroups = other.m_aShareGroups;
     m_aUsedShareGroups = other.m_aUsedShareGroups;
@@ -512,6 +520,9 @@ MyXmlConfig::sGetListParams(const long protocolVersion)
                 case DTYPE_XFCE:
                     ret << wxT("xfce\"");
                     break;
+                case DTYPE_XDM:
+                    ret << wxT("xdm\"");
+                    break;
                 case DTYPE_CUSTOM:
                     if (m_bRunConsole)
                         ret << wxT("console\"");
@@ -553,7 +564,7 @@ MyXmlConfig::UrlEsc(const wxString &s)
             case wxT('`'):
             case wxT('\''):
             case wxT('\\'):
-                ret << wxString::Format(wxT("%%%02x"), s[i]);
+                ret << wxString::Format(wxT("%%%02X"), s[i]);
                 break;
             default:
                 ret << s[i];
@@ -593,109 +604,146 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
 {
     wxUnusedVar(protocolVersion);
     wxString ret = wxEmptyString;
-    bool bNeedGeometry = bNew;
+    bool bNeedGeometry = true;
     int dspw, dsph, clientw, clienth;
 
     getDesktopSize(dspw, dsph, clientw, clienth);
-    if (bNew || (protocolVersion >= 0x00040000)) {
-        ret << wxString::Format(wxT(" --session=\"%s\""), m_sName.c_str());
-        ret << wxT(" --type=\"");
-        switch (m_eSessionType) {
-            case STYPE_SHADOW:
-                ret << wxT("shadow\"");
-                break;
-            case STYPE_UNIX:
-                ret << wxT("unix-");
-                switch (m_eDesktopType) {
-                    case DTYPE_ANY:
-                    case DTYPE_RDP:
-                    case DTYPE_RFB:
-                        break;
-                    case DTYPE_KDE:
-                        ret << wxT("kde\"");
-                        break;
-                    case DTYPE_GNOME:
-                        ret << wxT("gnome\"");
-                        break;
-                    case DTYPE_CDE:
-                        ret << wxT("cde\"");
-                        break;
-                    case DTYPE_XFCE:
-                        ret << wxT("xfce\"");
-                        break;
-                    case DTYPE_CUSTOM:
-                        if (m_bRunConsole)
-                            ret << wxT("console\"");
-                        else if (m_bRunXclients)
-                            ret << wxT("default\"");
-                        else {
-                            bNeedGeometry = false;
-                            ret << wxT("application\"");
-                            ret << wxT(" --rootless=\"")
-                                << (m_bVirtualDesktop ? 0 : 1)
-                                << wxT("\" --virtualdesktop=\"")
-                                << (m_bVirtualDesktop ? 1 : 0)
-                                << wxT("\" --application=\"")
-                                << UrlEsc(m_sCommandLine) << wxT("\"");
-                        }
-                        break;
-                }
-                break;
-            case STYPE_WINDOWS:
-                ret << wxT("windows\"")
-                    << wxT(" --agent_server=\"") << UrlEsc(m_sRdpHostName)
-                    << wxT("\" --agent_domain=\"") << UrlEsc(m_sRdpDomain)
-                    << wxT("\"");
-                switch (m_iRdpAuthType) {
-                    case 0:
-                        // use specified user/passwd
-                        ret << wxT(" --agent_user=\"") << UrlEsc(m_sRdpUsername)
-                            << wxT("\" --agent_password=\"") << UrlEsc(m_sRdpPassword)
-                            << wxT("\"");
-                        break;
-                    case 1:
-                        // show winlogon (empty username and password)
-                        break;
-                    case 2:
-                        // use NX credentials
-                        ret << wxT(" --agent_user=\"") << UrlEsc(sGetSessionUser())
-                            << wxT("\" --agent_password=\"")
-                            << UrlEsc(m_bRememberPassword ? sGetSessionPassword() : clrpass)
-                            << wxT("\"");
-                        break;
-                        break;
-                }
-                if (m_bRdpRunApplication)
-                    ret << wxT(" --application=\"") << UrlEsc(m_sRdpApplication) << wxT("\"");
-                if (m_bUseCustomImageEncoding) {
-                    ret << wxT(" --rdpcolors=\"");
-                    switch (m_iRdpColors) {
-                        case 0:
-                            ret << wxT("256\"");
+    ret << wxString::Format(wxT(" --session=\"%s\""), m_sName.c_str());
+    ret << wxT(" --type=\"");
+    switch (m_eSessionType) {
+        case STYPE_SHADOW:
+            ret << wxT("shadow\"");
+            if (m_bUseCustomImageEncoding) {
+                ret << wxT(" --imagecompressionmethod=\"") << m_iImageEncoding << wxT("\"")
+                    << wxT(" --imagecompressionlevel=\"")
+                    << (((-1 == m_iImageEncoding) || (4 == m_iImageEncoding)) ? m_iJpegQuality : -1) << wxT("\"");
+            }
+            break;
+        case STYPE_UNIX:
+            ret << wxT("unix-");
+            switch (m_eDesktopType) {
+                case DTYPE_ANY:
+                case DTYPE_RDP:
+                case DTYPE_RFB:
+                    break;
+                case DTYPE_KDE:
+                    ret << wxT("kde\"");
+                    break;
+                case DTYPE_GNOME:
+                    ret << wxT("gnome\"");
+                    break;
+                case DTYPE_CDE:
+                    ret << wxT("cde\"");
+                    break;
+                case DTYPE_XFCE:
+                    ret << wxT("xfce\"");
+                    break;
+                case DTYPE_XDM:
+                    ret << wxT("xdm\"");
+                    switch (m_eXdmMode) {
+                        case XDM_MODE_SERVER:
+                            ret << wxT(" --xdm_port=\"-1\"");
                             break;
-                        case 1:
-                            ret << wxT("32K\"");
+                        case XDM_MODE_QUERY:
+                            ret << wxT(" --xdm_type=\"query\"")
+                                << wxT(" --xdm_host=\"") << m_sXdmQueryHost << wxT("\"")
+                                << wxT(" --xdm_port=\"") << m_iXdmQueryPort << wxT("\"");
                             break;
-                        case 2:
-                            ret << wxT("64K\"");
+                        case XDM_MODE_BROADCAST:
+                            ret << wxT(" --xdm_type=\"broadcast\"")
+                                << wxT(" --xdm_port=\"") << m_iXdmBroadcastPort << wxT("\"");
                             break;
-                        case 3:
-                            ret << wxT("16M\"");
+                        case XDM_MODE_LIST:
+                            ret << wxT(" --xdm_type=\"list\"")
+                                << wxT(" --xdm_host=\"") << m_sXdmListHost << wxT("\"")
+                                << wxT(" --xdm_port=\"") << m_iXdmListPort << wxT("\"");
                             break;
                     }
-                    ret << wxT(" --rdpcache=\"") << (m_bRdpCache ? 1 : 0) << wxT("\"")
-                        << wxT(" --imagecompressionmethod=\"") << m_iRdpImageCompression << wxT("\"");
+                    break;
+                case DTYPE_CUSTOM:
+                    if (m_bRunConsole)
+                        ret << wxT("console\"");
+                    else if (m_bRunXclients)
+                        ret << wxT("default\"");
+                    else {
+                        bNeedGeometry = false;
+                        ret << wxT("application\"");
+                        ret << wxT(" --rootless=\"")
+                            << (m_bVirtualDesktop ? 0 : 1)
+                            << wxT("\" --virtualdesktop=\"")
+                            << (m_bVirtualDesktop ? 1 : 0)
+                            << wxT("\" --application=\"")
+                            << UrlEsc(m_sCommandLine) << wxT("\"");
+                    }
+                    break;
+            }
+            if (m_bUseCustomImageEncoding) {
+                ret << wxT(" --imagecompressionmethod=\"") << m_iImageEncoding << wxT("\"")
+                    << wxT(" --imagecompressionlevel=\"")
+                    << (((-1 == m_iImageEncoding) || (4 == m_iImageEncoding)) ? m_iJpegQuality : -1) << wxT("\"");
+            }
+            break;
+        case STYPE_WINDOWS:
+            ret << wxT("windows\"")
+                << wxT(" --agent_server=\"") << UrlEsc(m_sRdpHostName)
+                << wxT("\" --agent_domain=\"") << UrlEsc(m_sRdpDomain)
+                << wxT("\"");
+            switch (m_iRdpAuthType) {
+                case 0:
+                    // use specified user/passwd
+                    ret << wxT(" --agent_user=\"") << UrlEsc(m_sRdpUsername)
+                        << wxT("\" --agent_password=\"") << UrlEsc(m_sRdpPassword)
+                        << wxT("\"");
+                    break;
+                case 1:
+                    // show winlogon (empty username and password)
+                    break;
+                case 2:
+                    // use NX credentials
+                    ret << wxT(" --agent_user=\"") << UrlEsc(sGetSessionUser())
+                        << wxT("\" --agent_password=\"")
+                        << UrlEsc(m_bRememberPassword ? sGetSessionPassword() : clrpass)
+                        << wxT("\"");
+                    break;
+                    break;
+            }
+            if (m_bRdpRunApplication)
+                ret << wxT(" --application=\"") << UrlEsc(m_sRdpApplication) << wxT("\"");
+            if (m_bUseCustomImageEncoding) {
+                ret << wxT(" --rdpcolors=\"");
+                switch (m_iRdpColors) {
+                    case 0:
+                        ret << wxT("256\"");
+                        break;
+                    case 1:
+                        ret << wxT("32K\"");
+                        break;
+                    case 2:
+                        ret << wxT("64K\"");
+                        break;
+                    case 3:
+                        ret << wxT("16M\"");
+                        break;
                 }
-                break;
-            case STYPE_VNC:
-                ret << wxT("vnc\"")
-                    << wxT(" --agent_server=\"")
-                    << UrlEsc(m_sVncHostName) << wxT("%3a") << m_iVncDisplayNumber
-                    << wxT("\" --agent_password=\"") << UrlEsc(m_sVncPassword) << wxT("\"");
-                if (m_bUseCustomImageEncoding)
-                    ret << wxT(" --imagecompressionmethod=\"") << ((m_iVncImageEncoding + 1) % 3) << wxT("\"");
-                break;
-        }
+                ret << wxT(" --rdpcache=\"") << (m_bRdpCache ? 1 : 0) << wxT("\"")
+                    << wxT(" --imagecompressionmethod=\"") << m_iRdpImageEncoding << wxT("\"")
+                    << wxT(" --imagecompressionlevel=\"")
+                    << (((-1 == m_iRdpImageEncoding) || (4 == m_iRdpImageEncoding)) ? m_iRdpJpegQuality : -1)
+                    << wxT("\"");
+            }
+            break;
+        case STYPE_VNC:
+            ret << wxT("vnc\"")
+                << wxT(" --agent_server=\"")
+                << UrlEsc(m_sVncHostName) << wxT("%3A") << m_iVncDisplayNumber
+                << wxT("\" --agent_password=\"") << UrlEsc(m_sVncPassword) << wxT("\"");
+            if (m_bUseCustomImageEncoding) {
+                ret << wxT(" --imagecompressionmethod=\"") << m_iVncImageEncoding << wxT("\"")
+                    << wxT(" --imagecompressionlevel=\"")
+                    << (((-1 == m_iVncImageEncoding) || (4 == m_iVncImageEncoding)) ? m_iVncJpegQuality : -1)
+                    << wxT("\"");
+            }
+            break;
     }
     ret << wxT(" --cache=\"");
     switch (m_eCacheMemory) {
@@ -720,6 +768,12 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
         case CACHEMEM_32MB:
             ret << wxT("32M\"");
             break;
+        case CACHEMEM_64MB:
+            ret << wxT("64M\"");
+            break;
+        case CACHEMEM_128MB:
+            ret << wxT("128M\"");
+            break;
     }
     ret << wxT(" --images=\"");
     switch (m_eCacheDisk) {
@@ -743,6 +797,12 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
             break;
         case CACHEDISK_128MB:
             ret << wxT("128M\"");
+            break;
+        case CACHEDISK_256MB:
+            ret << wxT("256M\"");
+            break;
+        case CACHEDISK_512MB:
+            ret << wxT("512M\"");
             break;
     }
     ret << wxT(" --link=\"");
@@ -809,37 +869,42 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
         ret << kbdLocal;
     }
     ret << wxT("\"")
-        << wxT(" --backingstore=\"")
-        << (m_bDisableBackingstore ? 0 : 1)
-        << wxT("\"")
-        << wxT(" --encryption=\"")
-        << (m_bEnableSSL ? 1 : 0)
-        << wxT("\"")
-        << wxT(" --composite=\"") << (m_bDisableComposite ? 0 : 1) << wxT("\"")
+        << wxT(" --backingstore=\"") << (m_bDisableBackingstore ? 0 : 1) << wxT("\"")
+        << wxT(" --encryption=\"") << (m_bEnableSSL ? 1 : 0) << wxT("\"");
+    if (bNew) {
+        ret << wxT(" --render=\"") << (m_bDisableRender ? 0 : 1) << wxT("\"");
+    }
+    ret << wxT(" --composite=\"") << (m_bDisableComposite ? 0 : 1) << wxT("\"")
         << wxT(" --shmem=\"") << (m_bDisableShmem ? 0 : 1) << wxT("\"")
-        << wxT(" --shpix=\"") << (m_bDisableShpix ? 0 : 1) << wxT("\"")
-        << wxT(" --streaming=\"") << (m_bDisableStreaming ? 0 : 1) << wxT("\"")
-        << wxT(" --samba=\"") << (m_bEnableSmbSharing ? 1 : 0) << wxT("\"")
-        << wxT(" --cups=\"") << (m_bUseCups ? 1 : 0) << wxT("\"")
-        << wxT(" --nodelay=\"") << (m_bDisableTcpNoDelay ? 0 : 1) << wxT("\"")
-        << wxT(" --defer=\"") << (m_bDisableDeferredUpdates ? 1 : 0) << wxT("\"")
+        << wxT(" --shpix=\"") << (m_bDisableShpix ? 0 : 1) << wxT("\"");
+    // deprecated << wxT(" --streaming=\"") << (m_bDisableStreaming ? 0 : 1) << wxT("\"")
+    if (bNew) {
+        ret << wxT(" --samba=\"") << (m_bEnableSmbSharing ? 1 : 0) << wxT("\"")
+            << wxT(" --cups=\"") << (m_bUseCups ? 1 : 0) << wxT("\"")
+            << wxT(" --nodelay=\"") << (m_bDisableTcpNoDelay ? 0 : 1) << wxT("\"")
+            << wxT(" --defer=\"") << (m_bDisableDeferredUpdates ? 1 : 0) << wxT("\"");
+    }
 #ifdef __WXMAC__
-        << wxT(" --client=\"macosx\"")
+    ret << wxT(" --client=\"macosx\"");
 #else
 # ifdef __UNIX__
-        << wxT(" --client=\"linux\"")
+    ret << wxT(" --client=\"linux\"");
 # else
-        // << wxT(" --client=\"winnt\"")
-        << wxT(" --client=\"linux\"")
+    // << wxT(" --client=\"winnt\"")
+    ret << wxT(" --client=\"linux\"");
 # endif
 #endif
-        << wxT(" --media=\"") << (m_bEnableMultimedia ? 1 : 0) << wxT("\"")
-        ;
+    ret << wxT(" --media=\"") << (m_bEnableMultimedia ? 1 : 0) << wxT("\"");
     if (m_bEnableMultimedia) {
         ret << wxT(" --mediahelper=\"esd\"");
     }
-    // FIXME: Add real settings
-    ret << wxT(" --strict=\"0\" --aux=\"1\"");
+    // Original always uses those?!
+    ret << wxT(" --strict=\"0\"");
+    if (bNew) {
+        // With this parameter set, attaching to shadow sessions fails, if the server's display base is >= 10000
+        // so we simply leave it out for shadow sessions.
+        ret << wxT(" --aux=\"1\"");
+    }
     return ret;
 }
 
@@ -975,12 +1040,9 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
 {
     if (m_bDisableBackingstore != other.m_bDisableBackingstore) return false;
     if (m_bDisableComposite != other.m_bDisableComposite) return false;
-    if (m_bDisableImageCompression != other.m_bDisableImageCompression) return false;
-    if (m_bDisableJpeg != other.m_bDisableJpeg) return false;
     if (m_bDisableRender != other.m_bDisableRender) return false;
     if (m_bDisableShmem != other.m_bDisableShmem) return false;
     if (m_bDisableShpix != other.m_bDisableShpix) return false;
-    if (m_bDisableStreaming != other.m_bDisableStreaming) return false;
     if (m_bDisableTaint != other.m_bDisableTaint) return false;
     if (m_bDisableTcpNoDelay != other.m_bDisableTcpNoDelay) return false;
     if (m_bDisableXagent != other.m_bDisableXagent) return false;
@@ -991,9 +1053,6 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
     if (m_bEnableUSBIP != other.m_bEnableUSBIP) return false;
     if (m_bExternalProxy != other.m_bExternalProxy) return false;
     if (m_bGuestMode != other.m_bGuestMode) return false;
-    if (m_bImageEncodingJpeg != other.m_bImageEncodingJpeg) return false;
-    if (m_bImageEncodingPlainX != other.m_bImageEncodingPlainX) return false;
-    if (m_bImageEncodingPNG != other.m_bImageEncodingPNG) return false;
     if (m_bKbdLayoutOther != other.m_bKbdLayoutOther) return false;
     if (m_bProxyPassRemember != other.m_bProxyPassRemember) return false;
     if (m_bRdpCache != other.m_bRdpCache) return false;
@@ -1005,10 +1064,8 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
     if (m_bRunXclients != other.m_bRunXclients) return false;
     if (m_bUseCups != other.m_bUseCups) return false;
     if (m_bUseCustomImageEncoding != other.m_bUseCustomImageEncoding) return false;
-    if (m_bUseJpegQuality != other.m_bUseJpegQuality) return false;
     if (m_bUseProxy != other.m_bUseProxy) return false;
     if (m_bUseSmartCard != other.m_bUseSmartCard) return false;
-    if (m_bUseTightJpeg != other.m_bUseTightJpeg) return false;
     if (m_bValid != other.m_bValid) return false;
     // Don't compare readonly flag
     if (m_bVirtualDesktop != other.m_bVirtualDesktop) return false;
@@ -1018,19 +1075,26 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
     if (m_bDisableDeferredUpdates != other.m_bDisableDeferredUpdates) return false;
     if (m_bGrabKeyboard != other.m_bGrabKeyboard) return false;
 
+    if (m_iClipFilter != other.m_iClipFilter) return false;
     if (m_iCupsPort != other.m_iCupsPort) return false;
     if (m_iDisplayHeight != other.m_iDisplayHeight) return false;
     if (m_iDisplayWidth != other.m_iDisplayWidth) return false;
+    if (m_iImageEncoding != other.m_iImageEncoding) return false;
     if (m_iJpegQuality != other.m_iJpegQuality) return false;
     if (m_iProxyPort != other.m_iProxyPort) return false;
     if (m_iRdpAuthType != other.m_iRdpAuthType) return false;
     if (m_iRdpColors != other.m_iRdpColors) return false;
-    if (m_iRdpImageCompression != other.m_iRdpImageCompression) return false;
+    if (m_iRdpImageEncoding != other.m_iRdpImageEncoding) return false;
+    if (m_iRdpJpegQuality != other.m_iRdpJpegQuality) return false;
     if (m_iServerPort != other.m_iServerPort) return false;
     if (m_iSmbPort != other.m_iSmbPort) return false;
     if (m_iUsedShareGroups != other.m_iUsedShareGroups) return false;
     if (m_iVncDisplayNumber != other.m_iVncDisplayNumber) return false;
     if (m_iVncImageEncoding != other.m_iVncImageEncoding) return false;
+    if (m_iVncJpegQuality != other.m_iVncJpegQuality) return false;
+    if (m_iXdmBroadcastPort != other.m_iXdmBroadcastPort) return false;
+    if (m_iXdmListPort != other.m_iXdmListPort) return false;
+    if (m_iXdmQueryPort != other.m_iXdmQueryPort) return false;
 
     if (m_eCacheDisk != other.m_eCacheDisk) return false;
     if (m_eCacheMemory != other.m_eCacheMemory) return false;
@@ -1038,6 +1102,7 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
     if (m_eDesktopType != other.m_eDesktopType) return false;
     if (m_eDisplayType != other.m_eDisplayType) return false;
     if (m_eSessionType != other.m_eSessionType) return false;
+    if (m_eXdmMode != other.m_eXdmMode) return false;
 
     if (m_sCommandLine != other.m_sCommandLine) return false;
     if (m_sCupsPath != other.m_sCupsPath) return false;
@@ -1059,6 +1124,8 @@ MyXmlConfig::operator ==(const MyXmlConfig &other)
     if (m_sUsername != other.m_sUsername) return false;
     if (m_sVncHostName != other.m_sVncHostName) return false;
     if (m_sVncPassword != other.m_sVncPassword) return false;
+    if (m_sXdmListHost != other.m_sXdmListHost) return false;
+    if (m_sXdmQueryHost != other.m_sXdmQueryHost) return false;
 
     if (cmpUsedShareGroups(m_aUsedShareGroups, other.m_aUsedShareGroups)) return false;
     if (cmpShareGroups(m_aShareGroups, other.m_aShareGroups)) return false;
@@ -1110,10 +1177,10 @@ size_t MyXmlConfig::CurlWriteCallback(void *buffer, size_t size, size_t nmemb, v
     }
 # endif
 #else
-  wxUnusedVar(buffer);
-  wxUnusedVar(size);
-  wxUnusedVar(nmemb);
-  wxUnusedVar(userp);
+    wxUnusedVar(buffer);
+    wxUnusedVar(size);
+    wxUnusedVar(nmemb);
+    wxUnusedVar(userp);
 #endif
     return -1;
 }
@@ -1153,6 +1220,7 @@ MyXmlConfig::LoadFromURL(const wxString &filename)
                 curl_easy_getinfo(c, CURLINFO_RESPONSE_CODE, &rcode);
             }
             if (200 == rcode) {
+                ::myLogTrace(MYTRACETAG, wxT("Fetching %s"), filename.c_str());
                 char * const data = new char[len];
                 mos.CopyTo(data, len);
                 wxMemoryInputStream mis(data, len);
@@ -1252,6 +1320,12 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                             case 32:
                                 m_eCacheMemory = CACHEMEM_32MB;
                                 break;
+                            case 64:
+                                m_eCacheMemory = CACHEMEM_64MB;
+                                break;
+                            case 128:
+                                m_eCacheMemory = CACHEMEM_128MB;
+                                break;
                         }
                         itmp = getLong(opt, wxT("Cache size on disk"), -1);
                         switch (itmp) {
@@ -1276,6 +1350,12 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                             case 128:
                                 m_eCacheDisk = CACHEDISK_128MB;
                                 break;
+                            case 256:
+                                m_eCacheDisk = CACHEDISK_256MB;
+                                break;
+                            case 512:
+                                m_eCacheDisk = CACHEDISK_512MB;
+                                break;
                         }
 #if 0
                         if (wxGetEnv(wxT("THINCLIENT"), NULL))
@@ -1296,6 +1376,21 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                                 m_bDisableDirectDraw);
                         m_bDisableDeferredUpdates = getBool(opt, wxT("Disable deferred updates"),
                                 m_bDisableDeferredUpdates);
+
+                        tmp = getString(opt, wxT("Clipboard filter"), wxEmptyString);
+                        if (!tmp.IsEmpty()) {
+                            ::myLogTrace(MYTRACETAG, wxT("read: Clipboard filter '%s'"), tmp.c_str());
+                            if (tmp.CmpNoCase(wxT("primary")) == 0) {
+                                m_iClipFilter = 0;
+                            }
+                            if (tmp.CmpNoCase(wxT("clipboard")) == 0) {
+                                m_iClipFilter = 1;
+                            }
+                            if (tmp.CmpNoCase(wxT("both")) == 0) {
+                                m_iClipFilter = 2;
+                            }
+                            ::myLogTrace(MYTRACETAG, wxT("read: m_iClipFilter=%d"), m_iClipFilter);
+                        }
                         m_bUseProxy = getBool(opt, wxT("Enable HTTP proxy"), m_bUseProxy);
                         m_bExternalProxy = getBool(opt, wxT("Enable external proxy"), m_bExternalProxy);
                         m_bEnableSSL = getBool(opt, wxT("Enable SSL encryption"), m_bEnableSSL);
@@ -1366,6 +1461,8 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                             m_eDesktopType = DTYPE_CDE;
                         if (tmp.CmpNoCase(wxT("XFCE")) == 0)
                             m_eDesktopType = DTYPE_XFCE;
+                        if (tmp.CmpNoCase(wxT("XDM")) == 0)
+                            m_eDesktopType = DTYPE_XDM;
                         if (tmp.CmpNoCase(wxT("Console")) == 0)
                             m_eDesktopType = DTYPE_CUSTOM;
                         m_bDisableShmem = getBool(opt, wxT("Disable SHM"), m_bDisableShmem);
@@ -1440,10 +1537,28 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
                         m_bDisableXagent = !getBool(opt, wxT("XAgent encoding"),
                                 !m_bDisableXagent);
                         // displaySaveOnExit  = true
-                        // xdm broadcast port = 177
-                        // xdm mode = "server_decide"
-                        // xdm query host = "localhost"
-                        // xdm query port = 177
+
+                        tmp = getString(opt, wxT("xdm mode"));
+                        if (tmp.CmpNoCase(wxT("server decide")) == 0) {
+                            m_eXdmMode = XDM_MODE_SERVER;
+                        }
+                        if (tmp.CmpNoCase(wxT("server_decide")) == 0) {
+                            m_eXdmMode = XDM_MODE_SERVER;
+                        }
+                        if (tmp.CmpNoCase(wxT("query")) == 0) {
+                            m_eXdmMode = XDM_MODE_QUERY;
+                        }
+                        if (tmp.CmpNoCase(wxT("broadcast")) == 0) {
+                            m_eXdmMode = XDM_MODE_BROADCAST;
+                        }
+                        if (tmp.CmpNoCase(wxT("list")) == 0) {
+                            m_eXdmMode = XDM_MODE_LIST;
+                        }
+                        m_sXdmListHost = getString(opt, wxT("xdm list host"), m_sXdmListHost);
+                        m_sXdmQueryHost = getString(opt, wxT("xdm query host"), m_sXdmQueryHost);
+                        m_iXdmBroadcastPort = getLong(opt, wxT("xdm broadcast port"), m_iXdmBroadcastPort);
+                        m_iXdmListPort = getLong(opt, wxT("xdm list port"), m_iXdmListPort);
+                        m_iXdmQueryPort = getLong(opt, wxT("xdm query port"), m_iXdmQueryPort);
 
                         opt = opt->GetNext();
                     }
@@ -1453,51 +1568,82 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
 
                 // Sub-Dialog Custom image compresion
                 if (cfgnode->GetPropVal(wxT("name"), wxEmptyString) == wxT("Images")) {
+                    // First, determine, if we have an old (pre 0.16.173) config file
                     wxXmlNode *opt = cfgnode->GetChildren();
+                    m_bOldConfig = false;
                     while (opt) {
-                        m_bDisableJpeg = getLongBool(opt, wxT("Disable JPEG Compression"),
-                                m_bDisableJpeg);
-                        m_bDisableImageCompression = getBool(opt,
-                                wxT("Disable all image optimisations"),
-                                m_bDisableImageCompression);
+                        wxString key = opt->GetPropVal(wxT("key"), wxEmptyString);
+                        if (key == wxT("Windows Image Compression")) {
+                            m_bOldConfig = true;
+                            break;
+                        }
+                        opt = opt->GetNext();
+                    }
+                    opt = cfgnode->GetChildren();
+                    while (opt) {
                         m_bDisableBackingstore = getBool(opt, wxT("Disable backingstore"),
                                 m_bDisableBackingstore);
                         m_bDisableComposite = getBool(opt, wxT("Disable coposite"),
                                 m_bDisableComposite);
-                        m_bDisableStreaming = getBool(opt, wxT("Disable image streaming"),
-                                m_bDisableStreaming);
 
-                        itmp = getLong(opt, wxT("Image Compression Type"), -1);
-                        switch (itmp) {
-                            case 0:
-                                m_bImageEncodingJpeg = true;
-                                m_bUseJpegQuality = false;
-                                m_bImageEncodingPlainX = false;
-                                break;
-                            case 1:
-                                m_bImageEncodingJpeg = true;
-                                m_bUseJpegQuality = true;
-                                m_bImageEncodingPlainX = false;
-                                break;
-                            case 2:
-                                m_bImageEncodingJpeg = false;
-                                m_bUseJpegQuality = false;
-                        }
-                        m_bUseTightJpeg = getBool(opt, wxT("Image JPEG Encoding"),
-                                m_bUseTightJpeg);
+                        m_iImageEncoding = getLong(opt, wxT("Image Compression Type"), m_iImageEncoding);
                         m_iJpegQuality = getLong(opt, wxT("JPEG Quality"), m_iJpegQuality);
                         // RDP optimization for low-bandwidth link = false
                         // Reduce colors to = ""
-                        m_bImageEncodingPNG = getBool(opt, wxT("Use PNG Compression"),
-                                m_bImageEncodingPNG);
-                        m_iVncImageEncoding = getLong(opt, wxT("Image Encoding Type"),
+                        m_iVncImageEncoding = getLong(opt, wxT("VNC images compression"),
                                 m_iVncImageEncoding);
-                        m_iRdpImageCompression = getLong(opt, wxT("Windows Image Compression"),
-                                m_iRdpImageCompression);
-
+                        m_iVncJpegQuality = getLong(opt, wxT("VNC JPEG Quality"), m_iVncJpegQuality);
+                        m_iRdpImageEncoding = getLong(opt, wxT("RDP Image Encoding"),
+                                m_iRdpImageEncoding);
+                        m_iRdpJpegQuality = getLong(opt, wxT("RDP JPEG Quality"), m_iRdpJpegQuality);
                         opt = opt->GetNext();
-                        if (!opt)
-                            m_bImageEncodingPlainX = !m_bImageEncodingPNG;
+                    }
+                    if (m_bOldConfig) {
+                        if (m_bUseCustomImageEncoding) {
+                            // Convert from old settings format
+                            switch (m_iImageEncoding) {
+                                case 0:
+                                    m_iImageEncoding = 3;
+                                    break;
+                                case 1:
+                                    m_iImageEncoding = 4;
+                                    break;
+                                case 2:
+                                    m_iImageEncoding = 2;
+                                    break;
+                            }
+                            m_iRdpJpegQuality = m_iVncJpegQuality = m_iJpegQuality;
+
+                            opt = cfgnode->GetChildren();
+                            int oldvncenc = 0;
+                            int oldrdpenc = 0;
+                            while (opt) {
+                                oldvncenc = getLong(opt, wxT("Image Encoding Type"), oldvncenc);
+                                oldrdpenc = getLong(opt, wxT("Windows Image Compression"), oldrdpenc);
+                                opt = opt->GetNext();
+                            }
+                            m_iVncImageEncoding = (oldvncenc + 1) % 3;
+                            switch (oldrdpenc) {
+                                case 0:
+                                    m_iRdpImageEncoding = 3;
+                                    break;
+                                case 1:
+                                    m_iRdpImageEncoding = 1;
+                                    break;
+                                case 2:
+                                    m_iRdpImageEncoding = 2;
+                                    break;
+                                case 3:
+                                    m_iRdpImageEncoding = 0;
+                                    break;
+                            }
+                        } else {
+                            // Custom settings are disabled, so simply set defaults ...
+                            m_iImageEncoding =  m_iRdpImageEncoding =  m_iVncImageEncoding = 3;
+                            m_iJpegQuality = m_iRdpJpegQuality = m_iVncJpegQuality = 6;
+                            // ... and shut up (no need to bother the user)
+                            m_bOldConfig = false;
+                        }
                     }
                     cfgnode = cfgnode->GetNext();
                     continue;
@@ -1793,6 +1939,19 @@ MyXmlConfig::sGetSessionPassword()
     }
     return ret;
 }
+
+    void
+MyXmlConfig::sSetUsername(const wxString &s)
+{
+    bool b;
+    wxConfigBase::Get()->Read(wxT("Config/LowercaseLogin"), &b, false);
+    if (b) {
+        m_sUsername = s.Lower();
+    } else {
+        m_sUsername = s;
+    }
+}
+
     void 
 MyXmlConfig::bAddOption(wxXmlNode *group, const wxString &name, const bool val)
 {
@@ -1889,6 +2048,9 @@ MyXmlConfig::SaveToFile()
         case DTYPE_XFCE:
             optval = wxT("xfce");
             break;
+        case DTYPE_XDM:
+            optval = wxT("xdm");
+            break;
         case DTYPE_CUSTOM:
             optval = wxT("console");
             break;
@@ -1965,36 +2127,68 @@ MyXmlConfig::SaveToFile()
     bAddOption(g, wxT("Virtual desktop"), m_bVirtualDesktop);
     bAddOption(g, wxT("XAgent encoding"), !m_bDisableXagent);
     bAddOption(g, wxT("displaySaveOnExit"), true); // Not in original GUI but in config ?!
-    iAddOption(g, wxT("xdm broadcast port"), 177); // Not in original GUI but in config ?!
-    sAddOption(g, wxT("xdm list host"), wxT("localhost")); // Not in original GUI but in config ?!
-    iAddOption(g, wxT("xdm list port"), 177); // Not in original GUI but in config ?!
-    sAddOption(g, wxT("xdm mode"), wxT("server_decide")); // Not in original GUI but in config ?!
-    sAddOption(g, wxT("xdm query host"), wxT("localhost")); // Not in original GUI but in config ?!
-    iAddOption(g, wxT("xdm query port"), 177); // Not in original GUI but in config ?!
+    iAddOption(g, wxT("xdm broadcast port"), m_iXdmBroadcastPort);
+    sAddOption(g, wxT("xdm list host"), m_sXdmListHost);
+    iAddOption(g, wxT("xdm list port"), m_iXdmListPort);
+    switch (m_eXdmMode) {
+        case XDM_MODE_SERVER:
+            optval = wxT("server decide");
+            break;
+        case XDM_MODE_QUERY:
+            optval = wxT("query");
+            break;
+        case XDM_MODE_BROADCAST:
+            optval = wxT("broadcast");
+            break;
+        case XDM_MODE_LIST:
+            optval = wxT("list");
+            break;
+    }
+    sAddOption(g, wxT("xdm mode"), optval);
+    sAddOption(g, wxT("xdm query host"), m_sXdmQueryHost);
+    iAddOption(g, wxT("xdm query port"), m_iXdmQueryPort);
     bAddOption(g, wxT("Use smartcard"), m_bUseSmartCard); // Not in original
 
     // == UnixImageSettingsDialog, RdpImageSettingsDialog, VncImageSettingsDialog
     g = AddGroup(r, wxT("Images"));
-    iAddOption(g, wxT("Disable JPEG Compression"), m_bDisableJpeg ? 1 : 0);
-    bAddOption(g, wxT("Disable all image optimisations"), m_bDisableImageCompression);
+
+    // deprecated but written by NX client, m_bDisableJpeg
+    iAddOption(g, wxT("Disable JPEG Compression"), 0); 
+
+    // deprecated but written by NX client, m_bDisableImageCompression
+    bAddOption(g, wxT("Disable all image optimisations"), false);
+
     bAddOption(g, wxT("Disable backingstore"), m_bDisableBackingstore);
     bAddOption(g, wxT("Disable coposite"), m_bDisableComposite);
-    bAddOption(g, wxT("Disable image streaming"), m_bDisableStreaming);
-    if ((m_bImageEncodingPlainX || m_bImageEncodingPNG) && (!m_bImageEncodingJpeg))
-        optval = wxT("2");
-    else if (m_bImageEncodingJpeg && m_bUseJpegQuality)
-        optval = wxT("1");
-    else
-        optval = wxT("0");
-    sAddOption(g, wxT("Image Compression Type"), optval);
-    iAddOption(g, wxT("Image Encoding Type"), m_iVncImageEncoding);
-    bAddOption(g, wxT("Image JPEG Encoding"), m_bUseTightJpeg);
+
+    // deprecated bAddOption(g, wxT("Disable image streaming"), m_bDisableStreaming);
+
+    iAddOption(g, wxT("Image Compression Type"), m_iImageEncoding);
+
+    // deprecated but written by NX client
+    iAddOption(g, wxT("Image Encoding Type"), 0);
+
+    // deprecated but written by NX client, m_bUseTightJpeg
+    bAddOption(g, wxT("Image JPEG Encoding"), false);
+
     iAddOption(g, wxT("JPEG Quality"), m_iJpegQuality);
-    bAddOption(g, wxT("RDP optimization for low-bandwidth link"), false); // ??
-    sAddOption(g, wxT("Reduce colors to"), wxEmptyString); // ??
-    bAddOption(g, wxT("Use PNG Compression"), m_bImageEncodingPNG);
-    iAddOption(g, wxT("VNC images compression"), 0); // Not in original GUI but in config ?!
-    iAddOption(g, wxT("Windows Image Compression"), m_iRdpImageCompression);
+    iAddOption(g, wxT("RDP Image Encoding"), m_iRdpImageEncoding);
+    iAddOption(g, wxT("RDP JPEG Quality"), m_iRdpJpegQuality);
+
+    // Written by NX client, unknown purpose
+    bAddOption(g, wxT("RDP optimization for low-bandwidth link"), false);
+
+    // Written by NX client, unknown purpose
+    sAddOption(g, wxT("Reduce colors to"), wxEmptyString);
+
+    // deprecated but written by NX client, m_bImageEncodingPNG
+    bAddOption(g, wxT("Use PNG Compression"), true);
+
+    iAddOption(g, wxT("VNC images compression"), m_iVncImageEncoding);
+    iAddOption(g, wxT("VNC JPEG Quality"), m_iVncJpegQuality);
+
+    // deprecated - If this exists, we consider it an "old" config file during read
+    // iAddOption(g, wxT("Windows Image Compression"), m_iRdpImageCompression);
 
     g = AddGroup(r, wxT("Login"));
     if (m_bRememberPassword) {
@@ -2074,6 +2268,12 @@ MyXmlConfig::SaveToFile()
         case CACHEMEM_32MB:
             optval = wxT("32");
             break;
+        case CACHEMEM_64MB:
+            optval = wxT("64");
+            break;
+        case CACHEMEM_128MB:
+            optval = wxT("128");
+            break;
     }
     sAddOption(g, wxT("Cache size"), optval);
     switch (m_eCacheDisk) {
@@ -2098,6 +2298,12 @@ MyXmlConfig::SaveToFile()
         case CACHEDISK_128MB:
             optval = wxT("128");
             break;
+        case CACHEDISK_256MB:
+            optval = wxT("256");
+            break;
+        case CACHEDISK_512MB:
+            optval = wxT("512");
+            break;
     }
     sAddOption(g, wxT("Cache size on disk"), optval);
     bAddOption(g, wxT("Current keyboard"), !m_bKbdLayoutOther);
@@ -2105,6 +2311,18 @@ MyXmlConfig::SaveToFile()
     bAddOption(g, wxT("Disable TCP no-delay"), m_bDisableTcpNoDelay);
     bAddOption(g, wxT("Disable ZLIB stream compression"), m_bDisableZlibCompression);
     bAddOption(g, wxT("Enable SSL encryption"), m_bEnableSSL);
+    switch (m_iClipFilter) {
+        case 0:
+            optval = wxT("primary");
+            break;
+        case 1:
+            optval = wxT("clipboard");
+            break;
+        default:
+            optval = wxT("both");
+            break;
+    }
+    sAddOption(g, wxT("Clipboard filter"), optval);
     bAddOption(g, wxT("Enable HTTP proxy"), m_bUseProxy);
     bAddOption(g, wxT("Enable external proxy"), m_bExternalProxy);
     bAddOption(g, wxT("Enable USBIP"), m_bEnableUSBIP);

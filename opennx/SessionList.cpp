@@ -122,11 +122,7 @@ SessionList::SessionList(wxString dir, wxEvtHandler* h)
     if (m_re->Compile(wxT("(([TF])-)?([SC])-(.*)-([[:digit:]]+)-([[:xdigit:]]{32})$"), wxRE_ADVANCED))
         m_reValid = true;
     if (m_reValid && (!m_dirName.IsEmpty())) {
-        Create(
-#ifdef __OPENBSD__
-                32768
-#endif
-              );
+        Create();
         m_thread->Run();
     }
 }
@@ -254,8 +250,8 @@ void SessionList::ScanDir()
                     }
                 }
             } else {
-                ::myLogTrace(MYTRACETAG, wxT("Session '%s' disappeared"),
-                        it->second.sGetMd5().c_str());
+                wxString md5 = it->second.sGetMd5();
+                ::myLogTrace(MYTRACETAG, wxT("Session '%s' disappeared"), md5.c_str());
                 finished = false;
                 if (m_pAdminHandler) {
                     wxCommandEvent ev(wxEVT_SESSIONLIST_ACTION, wxID_ANY);
@@ -264,6 +260,7 @@ void SessionList::ScanDir()
                     m_pAdminHandler->AddPendingEvent(ev);
                     changed = true;
                 }
+                RemoveFromList(md5);
                 break;
             }
         }

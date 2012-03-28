@@ -167,6 +167,7 @@ bool watchReaderApp::OnCmdLineParsed(wxCmdLineParser& parser)
         m_lSshPid = tmp;
     wxString traceTags;
     if (parser.Found(wxT("trace"), &traceTags)) {
+        CheckAllTrace(traceTags);
         wxStringTokenizer t(traceTags, wxT(","));
         while (t.HasMoreTokens()) {
             wxString tag = t.GetNextToken();
@@ -234,6 +235,7 @@ bool watchReaderApp::OnInit()
         return false;
 
     if (::wxGetEnv(wxT("WXTRACE"), &tmp)) {
+        CheckAllTrace(tmp);
         wxStringTokenizer t(tmp, wxT(",:"));
         while (t.HasMoreTokens()) {
             wxString tag = t.GetNextToken();

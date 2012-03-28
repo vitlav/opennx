@@ -36,6 +36,8 @@ class wxXmlNode;
 
 class ShareGroup : public wxObject
 {
+    DECLARE_DYNAMIC_CLASS(ShareGroup)
+
     public:
         ShareGroup() : wxObject() {m_eType = SharedResource::SHARE_UNKNOWN; }
         virtual ~ShareGroup() {}
@@ -61,6 +63,8 @@ class USBDevice;
 
 class SharedUsbDevice : public wxObject
 {
+    DECLARE_DYNAMIC_CLASS(SharedUsbDevice)
+
     public:
         typedef enum {
             MODE_UNKNOWN = 0,
@@ -113,6 +117,7 @@ class MyXmlConfig
             DTYPE_GNOME,
             DTYPE_CDE,
             DTYPE_XFCE,
+            DTYPE_XDM,
             DTYPE_CUSTOM,
         } DesktopType;
 
@@ -134,6 +139,8 @@ class MyXmlConfig
             CACHEMEM_8MB,
             CACHEMEM_16MB,
             CACHEMEM_32MB,
+            CACHEMEM_64MB,
+            CACHEMEM_128MB,
         } CacheMemory;
 
         typedef enum CacheDisk {
@@ -144,7 +151,16 @@ class MyXmlConfig
             CACHEDISK_32MB,
             CACHEDISK_64MB,
             CACHEDISK_128MB,
+            CACHEDISK_256MB,
+            CACHEDISK_512MB,
         } CacheDisk;
+
+        typedef enum XdmMode {
+            XDM_MODE_SERVER,
+            XDM_MODE_QUERY,
+            XDM_MODE_BROADCAST,
+            XDM_MODE_LIST,
+        } XdmMode;
 
         MyXmlConfig();
         MyXmlConfig(const wxString &);
@@ -169,15 +185,13 @@ class MyXmlConfig
 
         bool IsValid() { return m_bValid; }
         bool IsWritable() { return m_bWritable; }
+        bool WasOldConfig() { return m_bOldConfig; }
 
         bool bGetDisableBackingstore() { return m_bDisableBackingstore; }
         bool bGetDisableComposite() { return m_bDisableComposite; }
-        bool bGetDisableImageCompression() { return m_bDisableImageCompression; }
-        bool bGetDisableJpeg() { return m_bDisableJpeg; }
         bool bGetDisableRender() { return m_bDisableRender; }
         bool bGetDisableShmem() { return m_bDisableShmem; }
         bool bGetDisableShpix() { return m_bDisableShpix; }
-        bool bGetDisableStreaming() { return m_bDisableStreaming; }
         bool bGetDisableTaint() { return m_bDisableTaint; }
         bool bGetDisableTcpNoDelay() { return m_bDisableTcpNoDelay; }
         bool bGetDisableXagent() { return m_bDisableXagent; }
@@ -198,13 +212,8 @@ class MyXmlConfig
         bool bGetRunXclients() { return m_bRunXclients; }
         bool bGetUseCups() { return m_bUseCups; }
         bool bGetUseCustomImageEncoding() { return m_bUseCustomImageEncoding; }
-        bool bGetImageEncodingJpeg() { return m_bImageEncodingJpeg; }
-        bool bGetUseJpegQuality() { return m_bUseJpegQuality; }
-        bool bGetImageEncodingPlainX() { return m_bImageEncodingPlainX; }
-        bool bGetImageEncodingPNG() { return m_bImageEncodingPNG; }
         bool bGetUseProxy() { return m_bUseProxy; }
         bool bGetUseSmartCard() { return m_bUseSmartCard; }
-        bool bGetUseTightJpeg() { return m_bUseTightJpeg; }
         bool bGetVirtualDesktop() { return m_bVirtualDesktop; }
         bool bGetVncRememberPassword() { return m_bVncRememberPassword; }
         bool bGetVncUseNxAuth() { return m_bVncUseNxAuth; }
@@ -219,20 +228,28 @@ class MyXmlConfig
         MyXmlConfig::SessionType eGetSessionType() { return m_eSessionType; }
         MyXmlConfig::CacheMemory eGetCacheMemory() { return m_eCacheMemory; }
         MyXmlConfig::CacheDisk eGetCacheDisk() { return m_eCacheDisk; }
+        MyXmlConfig::XdmMode eGetXdmMode() { return m_eXdmMode; }
 
+        int iGetClipFilter() { return m_iClipFilter; }
         int iGetCupsPort() { return m_iCupsPort; }
         int iGetDisplayHeight() { return m_iDisplayHeight; }
         int iGetDisplayWidth() { return m_iDisplayWidth; }
+        int iGetImageEncoding() { return m_iImageEncoding; }
         int iGetJpegQuality() { return m_iJpegQuality; }
         int iGetProxyPort() { return m_iProxyPort; }
         int iGetRdpAuthType() { return m_iRdpAuthType; }
         int iGetRdpColors() { return m_iRdpColors; }
-        int iGetRdpImageCompression() { return m_iRdpImageCompression; }
+        int iGetRdpImageEncoding() { return m_iRdpImageEncoding; }
+        int iGetRdpJpegQuality() { return m_iRdpJpegQuality; }
         int iGetServerPort() { return m_iServerPort; }
         int iGetSmbPort() { return m_iSmbPort; }
         int iGetUsedShareGroups() { return m_iUsedShareGroups; }
         int iGetVncDisplayNumber() { return m_iVncDisplayNumber; }
         int iGetVncImageEncoding() { return m_iVncImageEncoding; }
+        int iGetVncJpegQuality() { return m_iVncJpegQuality; }
+        int iGetXdmBroadcastPort() { return m_iXdmBroadcastPort; }
+        int iGetXdmListPort() { return m_iXdmListPort; }
+        int iGetXdmQueryPort() { return m_iXdmQueryPort; }
 
         wxString sGetCommandLine() { return m_sCommandLine; }
         wxString sGetCupsPath() { return m_sCupsPath; }
@@ -256,6 +273,8 @@ class MyXmlConfig
         wxString sGetUsername() { return m_sUsername; }
         wxString sGetVncHostName() { return m_sVncHostName; }
         wxString sGetVncPassword() { return m_sVncPassword; }
+        wxString sGetXdmListHost() { return m_sXdmListHost; }
+        wxString sGetXdmQueryHost() { return m_sXdmQueryHost; }
 
         // For use by MySession
         wxString sGetSessionUser();
@@ -267,46 +286,38 @@ class MyXmlConfig
 
         void bSetDisableBackingstore(const bool b) { m_bDisableBackingstore = b; }
         void bSetDisableComposite(const bool b) { m_bDisableComposite = b; }
-        void bSetDisableImageCompression(const bool b) { m_bDisableImageCompression = b; }
-        void bSetDisableJpeg(const bool b) { m_bDisableJpeg = b; }
-        void bSetDisableRender(bool b) { m_bDisableRender = b; }
+        void bSetDisableRender(const bool b) { m_bDisableRender = b; }
         void bSetDisableShmem(const bool b) { m_bDisableShmem = b; }
         void bSetDisableShpix(const bool b) { m_bDisableShpix = b; }
-        void bSetDisableStreaming(const bool b) { m_bDisableStreaming = b; }
-        void bSetDisableTaint(bool b) { m_bDisableTaint = b; }
-        void bSetDisableTcpNoDelay(bool b) { m_bDisableTcpNoDelay = b; }
+        void bSetDisableTaint(const bool b) { m_bDisableTaint = b; }
+        void bSetDisableTcpNoDelay(const bool b) { m_bDisableTcpNoDelay = b; }
         void bSetDisableXagent(const bool b) { m_bDisableXagent = b; }
-        void bSetDisableZlibCompression(bool b) { m_bDisableZlibCompression = b; }
-        void bSetEnableMultimedia(bool b) { m_bEnableMultimedia = b; }
-        void bSetEnableSmbSharing(bool b) { m_bEnableSmbSharing = b; }
-        void bSetEnableSSL(bool b) { m_bEnableSSL = b; }
-        void bSetExternalProxy(bool b) { m_bExternalProxy = b; }
-        void bSetGuestMode(bool b) { m_bGuestMode = b; }
-        void bSetKbdLayoutOther(bool b) { m_bKbdLayoutOther = b; }
-        void bSetProxyPassRemember(bool b) { m_bProxyPassRemember = b; }
-        void bSetRdpCache(bool b) { m_bRdpCache = b; }
-        void bSetRdpRememberPassword(bool b) { m_bRdpRememberPassword = b; }
-        void bSetRdpRunApplication(bool b) { m_bRdpRunApplication = b; }
-        void bSetRememberPassword(bool b) { m_bRememberPassword = b; }
-        void bSetRemoveOldSessionFiles(bool b) { m_bRemoveOldSessionFiles = b; }
-        void bSetRunConsole(bool b) { m_bRunConsole = b; }
-        void bSetRunXclients(bool b) { m_bRunXclients = b; }
-        void bSetUseCups(bool b) { m_bUseCups = b; }
-        void bSetUseCustomImageEncoding(bool b) { m_bUseCustomImageEncoding = b; }
-        void bSetImageEncodingJpeg(bool b) { m_bImageEncodingJpeg = b; }
-        void bSetUseJpegQuality(bool b) { m_bUseJpegQuality = b; }
-        void bSetImageEncodingPlainX(bool b) { m_bImageEncodingPlainX = b; }
-        void bSetImageEncodingPNG(bool b) { m_bImageEncodingPNG = b; }
-        void bSetUseProxy(bool b) { m_bUseProxy = b; }
-        void bSetUseSmartCard(bool b) { m_bUseSmartCard = b; }
-        void bSetUseTightJpeg(bool b) { m_bUseTightJpeg = b; }
-        void bSetVirtualDesktop(bool b) { m_bVirtualDesktop = b; }
-        void bSetVncRememberPassword(bool b) { m_bVncRememberPassword = b; }
-        void bSetVncUseNxAuth(bool b) { m_bVncUseNxAuth = b; }
-        void bSetEnableUSBIP(bool b) { m_bEnableUSBIP = b; }
-        void bSetDisableDirectDraw(bool b) { m_bDisableDirectDraw = b; }
-        void bSetDisableDeferredUpdates(bool b) { m_bDisableDeferredUpdates = b; }
-        void bSetGrabKeyboard(bool b) { m_bGrabKeyboard = b; }
+        void bSetDisableZlibCompression(const bool b) { m_bDisableZlibCompression = b; }
+        void bSetEnableMultimedia(const bool b) { m_bEnableMultimedia = b; }
+        void bSetEnableSmbSharing(const bool b) { m_bEnableSmbSharing = b; }
+        void bSetEnableSSL(const bool b) { m_bEnableSSL = b; }
+        void bSetExternalProxy(const bool b) { m_bExternalProxy = b; }
+        void bSetGuestMode(const bool b) { m_bGuestMode = b; }
+        void bSetKbdLayoutOther(const bool b) { m_bKbdLayoutOther = b; }
+        void bSetProxyPassRemember(const bool b) { m_bProxyPassRemember = b; }
+        void bSetRdpCache(const bool b) { m_bRdpCache = b; }
+        void bSetRdpRememberPassword(const bool b) { m_bRdpRememberPassword = b; }
+        void bSetRdpRunApplication(const bool b) { m_bRdpRunApplication = b; }
+        void bSetRememberPassword(const bool b) { m_bRememberPassword = b; }
+        void bSetRemoveOldSessionFiles(const bool b) { m_bRemoveOldSessionFiles = b; }
+        void bSetRunConsole(const bool b) { m_bRunConsole = b; }
+        void bSetRunXclients(const bool b) { m_bRunXclients = b; }
+        void bSetUseCups(const bool b) { m_bUseCups = b; }
+        void bSetUseCustomImageEncoding(const bool b) { m_bUseCustomImageEncoding = b; }
+        void bSetUseProxy(const bool b) { m_bUseProxy = b; }
+        void bSetUseSmartCard(const bool b) { m_bUseSmartCard = b; }
+        void bSetVirtualDesktop(const bool b) { m_bVirtualDesktop = b; }
+        void bSetVncRememberPassword(const bool b) { m_bVncRememberPassword = b; }
+        void bSetVncUseNxAuth(const bool b) { m_bVncUseNxAuth = b; }
+        void bSetEnableUSBIP(const bool b) { m_bEnableUSBIP = b; }
+        void bSetDisableDirectDraw(const bool b) { m_bDisableDirectDraw = b; }
+        void bSetDisableDeferredUpdates(const bool b) { m_bDisableDeferredUpdates = b; }
+        void bSetGrabKeyboard(const bool b) { m_bGrabKeyboard = b; }
 
         void eSetCacheDisk(MyXmlConfig::CacheDisk e) { m_eCacheDisk = e; }
         void eSetCacheMemory(MyXmlConfig::CacheMemory e) { m_eCacheMemory = e; }
@@ -314,20 +325,28 @@ class MyXmlConfig
         void eSetDesktopType(MyXmlConfig::DesktopType e) { m_eDesktopType = e; }
         void eSetDisplayType(MyXmlConfig::DisplayType e) { m_eDisplayType = e; }
         void eSetSessionType(MyXmlConfig::SessionType e) { m_eSessionType = e; }
+        void eSetXdmMode(MyXmlConfig::XdmMode e) { m_eXdmMode = e; }
 
+        void iSetClipFilter(int i) { m_iClipFilter = i; }
         void iSetCupsPort(int i) { m_iCupsPort = i; }
         void iSetDisplayHeight(int i) { m_iDisplayHeight = i; }
         void iSetDisplayWidth(int i) { m_iDisplayWidth = i; }
+        void iSetImageEncoding(int i) { m_iImageEncoding = i; }
         void iSetJpegQuality(int i) { m_iJpegQuality = i; }
         void iSetProxyPort(int i) { m_iProxyPort = i; }
         void iSetRdpAuthType(int i) { m_iRdpAuthType = i; }
         void iSetRdpColors(int i) { m_iRdpColors = i; }
-        void iSetRdpImageCompression(int i) { m_iRdpImageCompression = i; }
+        void iSetRdpImageEncoding(int i) { m_iRdpImageEncoding = i; }
+        void iSetRdpJpegQuality(int i) { m_iRdpJpegQuality = i; }
         void iSetServerPort(int i) { m_iServerPort = i; }
         void iSetSmbPort(int i) { m_iSmbPort = i; }
         void iSetUsedShareGroups(int i) { m_iUsedShareGroups = i; }
         void iSetVncDisplayNumber(int i) { m_iVncDisplayNumber = i; }
         void iSetVncImageEncoding(int i) { m_iVncImageEncoding = i; }
+        void iSetVncJpegQuality(int i) { m_iVncJpegQuality = i; }
+        void iSetXdmBroadcastPort(int i) { m_iXdmBroadcastPort = i; }
+        void iSetXdmListPort(int i) { m_iXdmListPort = i; }
+        void iSetXdmQueryPort(int i) { m_iXdmQueryPort = i; }
 
         void sSetCommandLine(const wxString &s) { m_sCommandLine = s; }
         void sSetCupsPath(const wxString &s) { m_sCupsPath = s; }
@@ -348,13 +367,16 @@ class MyXmlConfig
         void sSetRdpUsername(const wxString &s) { m_sRdpUsername = s; }
         void sSetServerHost(const wxString &s) { m_sServerHost = s; }
         void sSetSshKey(const wxString &s) { m_sSshKey = s; }
-        void sSetUsername(const wxString &s) { m_sUsername = s; }
         void sSetVncHostName(const wxString &s) { m_sVncHostName = s; }
         void sSetVncPassword(const wxString &s) { m_sVncPassword = s; }
+        void sSetXdmListHost(const wxString &s) { m_sXdmListHost = s; }
+        void sSetXdmQueryHost(const wxString &s) { m_sXdmQueryHost = s; }
 
         void aSetShareGroups(const ArrayOfShareGroups &a) { m_aShareGroups = a; }
         void aSetUsedShareGroups(const wxArrayString &a) { m_aUsedShareGroups = a; }
         void aSetUsbForwards(const ArrayOfUsbForwards &a) { m_aUsbForwards = a; }
+
+        void sSetUsername(const wxString &s);
 
         static wxString UrlEsc(const wxString &s);
 
@@ -384,14 +406,16 @@ class MyXmlConfig
         bool loadFromStream(wxInputStream &is, bool);
         void getDesktopSize(int &dw, int &dh, int &ww, int &wh);
 
+        // Special: This gets set, if a pre 0.16.173 "Images" section was detected
+        // during reading. If this is set, we inform the user, suggesting a re-check
+        // of his image settings.
+        bool m_bOldConfig;
+
         bool m_bDisableBackingstore;
         bool m_bDisableComposite;
-        bool m_bDisableImageCompression;
-        bool m_bDisableJpeg;
         bool m_bDisableRender;
         bool m_bDisableShmem;
         bool m_bDisableShpix;
-        bool m_bDisableStreaming;
         bool m_bDisableTaint;
         bool m_bDisableTcpNoDelay;
         bool m_bDisableXagent;
@@ -402,9 +426,6 @@ class MyXmlConfig
         bool m_bEnableUSBIP;
         bool m_bExternalProxy;
         bool m_bGuestMode;
-        bool m_bImageEncodingJpeg;
-        bool m_bImageEncodingPlainX;
-        bool m_bImageEncodingPNG;
         bool m_bKbdLayoutOther;
         bool m_bProxyPassRemember;
         bool m_bRdpCache;
@@ -417,10 +438,8 @@ class MyXmlConfig
         bool m_bRunXclients;
         bool m_bUseCups;
         bool m_bUseCustomImageEncoding;
-        bool m_bUseJpegQuality;
         bool m_bUseProxy;
         bool m_bUseSmartCard;
-        bool m_bUseTightJpeg;
         bool m_bValid;
         bool m_bVirtualDesktop;
         bool m_bVncRememberPassword;
@@ -432,16 +451,23 @@ class MyXmlConfig
         int m_iCupsPort;
         int m_iDisplayHeight;
         int m_iDisplayWidth;
+        int m_iImageEncoding;
         int m_iJpegQuality;
         int m_iProxyPort;
         int m_iRdpAuthType;
         int m_iRdpColors;
-        int m_iRdpImageCompression;
+        int m_iRdpImageEncoding;
+        int m_iRdpJpegQuality;
         int m_iServerPort;
         int m_iSmbPort;
         int m_iUsedShareGroups;
         int m_iVncDisplayNumber;
         int m_iVncImageEncoding;
+        int m_iVncJpegQuality;
+        int m_iXdmBroadcastPort;
+        int m_iXdmListPort;
+        int m_iXdmQueryPort;
+        int m_iClipFilter;
 
         wxString m_sCommandLine;
         wxString m_sCupsPath;
@@ -465,6 +491,8 @@ class MyXmlConfig
         wxString m_sUsername;
         wxString m_sVncHostName;
         wxString m_sVncPassword;
+        wxString m_sXdmListHost;
+        wxString m_sXdmQueryHost;
 
         ConnectionSpeed m_eConnectionSpeed;
         DesktopType m_eDesktopType;
@@ -472,6 +500,7 @@ class MyXmlConfig
         SessionType m_eSessionType;
         CacheMemory m_eCacheMemory;
         CacheDisk m_eCacheDisk;
+        XdmMode m_eXdmMode;
 
         ArrayOfShareGroups m_aShareGroups;
         wxArrayString m_aUsedShareGroups;

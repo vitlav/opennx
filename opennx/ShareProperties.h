@@ -142,15 +142,15 @@ private:
     wxTextCtrl* m_pCtrlUsername;
     wxTextCtrl* m_pCtrlPassword;
 private:
-    wxString m_sMountPoint;
-    wxString m_sSmbDiskUsername;
-    wxString m_sSmbDiskPassword;
     bool m_bCupsPublic;
-    wxString m_sCupsDriver;
-    wxString m_sSmbDriver;
-    wxString m_sSmbPrintUsername;
-    wxString m_sSmbPrintPassword;
     bool m_bSmbPublic;
+    wxString m_sCupsDriver;
+    wxString m_sMountPoint;
+    wxString m_sSmbDiskPassword;
+    wxString m_sSmbDiskUsername;
+    wxString m_sSmbDriver;
+    wxString m_sSmbPrintPassword;
+    wxString m_sSmbPrintUsername;
 ////@end ShareProperties member variables
 
     int m_iCurrentShare;

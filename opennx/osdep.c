@@ -534,6 +534,8 @@ char *x11_socket_path = _spath;
 char *x11_keyboard_type = _kbd;
 
 #ifdef __WXMAC__
+#include <time.h>
+
 static void fatal(const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
@@ -608,6 +610,10 @@ static Display *launchX11() {
 }
 # endif /* __WXMAC__ */
 
+#ifdef __WXMAC__
+extern const char *getMacKeyboard();
+#endif
+
     static void __attribute__ ((constructor))
 getx11socket()
 {
@@ -670,6 +676,11 @@ getx11socket()
         }
         XCloseDisplay(dpy);
     }
+#if 0 // ifdef __WXMAC__
+    if ((_kbd[0] == '\0') || strstr(_kbd, "empty")) {
+        strncpy(_kbd, getMacKeyboard(), sizeof(_kbd));
+    }
+#endif
 }
 #endif /* !__WXMSW__ */
 

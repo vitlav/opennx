@@ -9,10 +9,16 @@ AC_CONFIG_HEADERS([config.h])
 AC_CANONICAL_TARGET
 preferred_cc="gcc cc"
 preferred_cxx="g++ c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC"
+OSX_SDKFLAGS=
+OSX_SYSROOT=
+OSX_MINVER=
 case $target_os in
-    darwin10*)
+    darwin*)
 	preferred_cc="gcc-4.0 $preferred_cc"
 	preferred_cxx="g++-4.0 $preferred_cxx"
+    OSX_MINVER=10.5
+    OSX_SYSROOT=/Developer/SDKs/MacOSX10.5.sdk
+    OSX_SDKFLAGS="-isysroot $OSX_SYSROOT -mmacosx-version-min=$OSX_MINVER"
 	;;
 esac
 AM_INIT_AUTOMAKE([foreign no-installinfo no-installman])
@@ -36,7 +42,13 @@ case $build_os in
         ;;
 esac
 
+AC_SUBST(OSX_SDKFLAGS)
+AC_SUBST(OSX_SYSROOT)
+AC_SUBST(OSX_MINVER)
 PLATFORM_SUBDIRS=
+PLATFORM_INCLUDES=
+PLATFORM_DEPENDENCIES=
+PAHEADER=
 case $target_os in
     darwin*)
         am_dependency_tracking=no
@@ -45,12 +57,19 @@ case $target_os in
             prefix=/Library/OpenNX
         fi
         PLATFORM_SUBDIRS=packaging/MacOSX
+        PLATFORM_INCLUDES="-Ipackaging/MacOSX/pulse/include"
+        PAHEADER=packaging/MacOSX/pulse/include/pulse/pulseaudio.h
         ;;
     mingw*)
         PLATFORM_SUBDIRS=packaging/win32
+        PLATFORM_INCLUDES="-Ipackaging/win32/pulse/include"
+        PAHEADER=packaging/win32/pulse/include/pulse/pulseaudio.h
         ;;
 esac
 AC_SUBST(PLATFORM_SUBDIRS)
+AC_SUBST(PLATFORM_INCLUDES)
+AC_SUBST(PLATFORM_DEPENDENCIES)
+AC_SUBST(PAHEADER)
 
 # Checks for programs.
 AC_PROG_CXX([$preferred_cxx])
@@ -114,7 +133,8 @@ AC_CHECK_LIB(resolv,res_init,[RESLIB=-lresolv],[
 AC_SUBST(RESLIB)
 
 # Checks for header files.
-AC_CHECK_HEADERS([arpa/inet.h limits.h netinet/in.h sys/types.h sys/socket.h syslog.h pulse/pulseaudio.h])
+AC_CHECK_HEADERS([arpa/inet.h limits.h netinet/in.h  netinet/ip.h netdb.h stdarg.h sys/ioctl.h sys/types.h sys/socket.h syslog.h pulse/pulseaudio.h termios.h])
+AC_CHECK_HEADERS([shlobj.h winsock2.h ws2tcpip.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
@@ -128,7 +148,7 @@ AC_CHECK_TYPES(socklen_t,,,[AC_INCLUDES_DEFAULT()
 #endif]])
 
 # Checks for library functions.
-AC_CHECK_FUNCS([memchr memset putenv socket strchr strdup strrchr strstr])
+AC_CHECK_FUNCS([memchr memset putenv socket strchr strdup strrchr strstr tcsetattr])
 AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK
 
 WXPARAMS=
@@ -212,10 +232,14 @@ AM_PATH_WXCONFIG(2.8.0,wxWidgets=1,wxWidgets=0,[$_wx_required], $WXPARAMS)
 test ${wxWidgets} = 0 && AC_MSG_ERROR(Could not find wxWidgets library)
 WX_PREFIX=`$WX_CONFIG_WITH_ARGS --prefix`
 AC_SUBST(WX_PREFIX)
+WX_CFLAGS="$OSX_SDKFLAGS $WX_CFLAGS"
+WX_CXXFLAGS="$OSX_SDKFLAGS $WX_CXXFLAGS"
 
 # Check, if wxLogStream is available
 save_CPPFLAGS="$CPPFLAGS"
+save_CXXFLAGS="$CXXFLAGS"
 CPPFLAGS="$WX_CPPFLAGS $CPPFLAGS"
+CXXFLAGS="$WX_CXXFLAGS $CXXFLAGS"
 AC_LANG_PUSH([C++])
 AC_MSG_CHECKING([for wxLogStream])
 AC_COMPILE_IFELSE([[#include <wx/log.h>
@@ -225,6 +249,28 @@ Please reconfigure wxWidgets using the option --enable-std_iostreams
 ]])])
 AC_LANG_POP
 CPPFLAGS="$save_CPPFLAGS"
+CXXFLAGS="$save_CXXFLAGS"
+
+# Check, if wxRE_ADVANCED is available.
+save_CPPFLAGS="$CPPFLAGS"
+save_CXXFLAGS="$CXXFLAGS"
+CPPFLAGS="$WX_CPPFLAGS $CPPFLAGS"
+CXXFLAGS="$WX_CXXFLAGS $CXXFLAGS"
+AC_LANG_PUSH([C++])
+AC_MSG_CHECKING([for advanced wxRegEx])
+AC_COMPILE_IFELSE([[
+#include <wx/string.h>
+#include <wx/regex.h>
+wxRegEx re(wxT("\\\\d+"), wxRE_ADVANCED);
+]],[AC_MSG_RESULT([ok])],[AC_MSG_ERROR([[
+Your wxWidgets does not provide the required advanced wxRegEx.
+Please reconfigure wxWidgets enabling the builtin regex feature .
+]])])
+AC_LANG_POP
+CPPFLAGS="$save_CPPFLAGS"
+CXXFLAGS="$save_CXXFLAGS"
+
+
 
 APP_LDADD=
 OPENNX_RES=
@@ -306,20 +352,28 @@ AC_ARG_ENABLE([warn],
 		[Enable additional warnings (Default: NO)]),
 	[
 		AC_MSG_NOTICE([will enable additional warnings])
+        fe_CHECK_FLAG([C],[CFLAGS],[-Wimplicit])
+        CFLAGS="$CFLAGS $ac_checked_CFLAGS"
         fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wall])
         fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wextra])
         fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wchar-subscripts])
         fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wcomment])
         fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wformat])
         fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wformat-security])
-        fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wimplicit])
         fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wmissing-braces])
         fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wparentheses])
         fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wreturn-type])
         fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wswitch])
         fe_CHECK_FLAG([C++],[CPPFLAGS],[-Wuninitialized])
         CPPFLAGS="$CPPFLAGS $ac_checked_CPPFLAGS"
-        fe_CHECK_FLAG([C++],[CXXFLAGS],[-Wctor-dtor-privacy])
+        # Apple's gcc complains too much about wxWidgets headers
+        case $target_os in
+            darwin*)
+                ;;
+            *)
+                fe_CHECK_FLAG([C++],[CXXFLAGS],[-Wctor-dtor-privacy])
+                ;;
+        esac
         fe_CHECK_FLAG([C++],[CXXFLAGS],[-Wnon-virtual-dtor])
         fe_CHECK_FLAG([C++],[CXXFLAGS],[-Woverloaded-virtual])
         CXXFLAGS="$CXXFLAGS $ac_checked_CXXFLAGS"
@@ -381,10 +435,10 @@ CYGBINS=
 BUILDXMING=yes
 AC_ARG_WITH([orignx],
             AS_HELP_STRING([--with-orignx],
-                           [Put original nxssh, nxesd and nxauth into installer (mingw32 build only)]),
+                           [Put original nxssh and nxauth into installer (mingw32 build only)]),
             [test "${withval}" = "yes" && NXBUILD=cygnx])
 AC_SUBST(NXBUILD)
-[test "$NXBUILD" = "cygnx" && CYGBINS="nxssh nxesd nxauth"]
+[test "$NXBUILD" = "cygnx" && CYGBINS="nxssh nxauth"]
 
 AC_ARG_WITH([nxwin],
             AS_HELP_STRING([--with-nxwin],
@@ -415,6 +469,7 @@ PLATFORMDIST=unknown
 PULSE_BTYPE=unknown
 XMING_BTYPE=unknown
 NX_BTYPE=unknown
+LIBSSH2_BTYPE=native
 XMING_PLATFORM_PATCHES=
 case $target_os in
     linux*)
@@ -435,8 +490,10 @@ case $target_os in
     mingw*)
         PLATFORMDIST=setup
         AC_CHECK_TOOL([UNRAR], [unrar], [])
-        AC_DEFINE_UNQUOTED(_WIN32_WINNT,0x0500,
-                   [Minimum required windows version])
+        AC_DEFINE_UNQUOTED(_WIN32_WINNT,0x0501,
+                   [Minimum required windows version (XP)])
+        AC_DEFINE_UNQUOTED(_WIN32_IE,0x0600,
+                   [Minimum required IE version (XP)])
         if test "$build_os" = "$target_os" ; then
             DLLPATH="$PATH"
             PULSE_BTYPE=native
@@ -476,6 +533,7 @@ case $target_os in
             PULSE_BTYPE=cross
             XMING_BTYPE=cross
             NX_BTYPE=cross
+            LIBSSH2_BTYPE=cross
             XMING_PLATFORM_PATCHES=xming-build-cross.patch
         fi
         ;;
@@ -485,14 +543,16 @@ AC_SUBST(DLLPATH)
 AC_SUBST(PLATFORMDIST)
 AC_SUBST(PULSE_BTYPE)
 AC_SUBST(NX_BTYPE)
+AC_SUBST(LIBSSH2_BTYPE)
 AC_SUBST(XMING_BTYPE)
 AC_SUBST(XMING_PLATFORM_PATCHES)
 
-AC_CONFIG_FILES([Makefile opennx.spec res/opennx.rc
+AC_CONFIG_FILES([Makefile docs/Makefile opennx.spec res/opennx.rc
     packaging/win32/Makefile packaging/win32/findrequires.pl
     packaging/win32/isccwrap.sh packaging/win32/xming/Makefile
     packaging/win32/nx/Makefile packaging/win32/cygnx/Makefile
-    packaging/win32/pulse/Makefile packaging/MacOSX/Makefile
+    packaging/win32/pulse/Makefile
+    packaging/MacOSX/Makefile packaging/MacOSX/pulse/Makefile
     packaging/MacOSX/opennx.plist packaging/MacOSX/opennx-main.plist
     packaging/MacOSX/pkg.plist po/Makefile.in])
 AC_CONFIG_FILES([opensc/opensc-config],[chmod +x opensc/opensc-config])

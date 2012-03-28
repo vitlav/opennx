@@ -3,6 +3,8 @@
 use strict;
 use File::Basename;
 
+my $DEBUG = $ENV{'DEPDEBUG'};
+
 my @sysdlls = (
     'acledit', 'aclui', 'activeds', 'actxprxy', 'advapi32', 'advpack', 'amstream',
     'atl', 'authz', 'avicap32', 'avifil32', 'browseui', 'cabinet', 'capi2032', 'cards',
@@ -40,7 +42,12 @@ my @sysdlls = (
 die "Usage: findrequires <syspath> binary1 binary2 ...\n" unless ($#ARGV > 0);
 my $dllpath = shift(@ARGV);
 my %required;
+my %examined;
 my $dstdir;
+
+sub dbg {
+    print STDERR @_ if ($DEBUG);
+}
 
 sub finddeps($$);
 
@@ -48,6 +55,10 @@ sub finddeps($$) {
     my $target = shift;
     my $lvl = shift;
     my %lreq;
+    my $indent = sprintf("%*s", $lvl, "");
+    return if ($examined{$target});
+    $examined{$target} = 1;
+    dbg $indent, "Examining ", $target, "\n";
     foreach (sort keys %required) {
         return if ($required{$_} eq $target);
     }
@@ -57,7 +68,7 @@ sub finddeps($$) {
         $dstdir = dirname($target) if (!$lvl);
     }
     $lvl++;
-    open (P, "@OBJDUMP@ -p $target|") || die "Can't run @OBJDUMP@ -p $target: $!\n";
+    open (P, "@OBJDUMP@ -p $target|sort -u|") || die "Can't run @OBJDUMP@ -p $target: $!\n";
     while (<P>) {
         chomp;
         if (/^\s*DLL\s+Name:\s+(\S+)/) {
@@ -66,6 +77,7 @@ sub finddeps($$) {
             $cdll =~ s/\.dll$//;
             $cdll =~ s/\.drv$//;
             next if grep { $cdll eq $_ } @sysdlls;
+            dbg $indent, " Depends on ", $dll, "\n";
             next if (-f ($dstdir ."/" . $dll));
             my $absdll = '';
             foreach my $dir (split(/:/, $dllpath)) {
@@ -75,6 +87,7 @@ sub finddeps($$) {
                 }
             }
             if ($absdll ne '') {
+                dbg $indent, " $dll found in dllpath\n";
                 $lreq{$cdll} = $absdll;
             } else {
                 die "Can't find required DLL $dll\n";

@@ -171,6 +171,7 @@ private:
 
 void WrappedStaticText::Wrap(int width)
 {
+    wxUnusedVar(width);
     inWrap = true;
     MinLabelWrapper wrapper;
     wrapper.WrapLabel(this, 300);

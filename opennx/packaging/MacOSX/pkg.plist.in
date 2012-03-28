@@ -4,11 +4,11 @@
 <plist version="1.0">
    <dict>
       <key>CFBundleGetInfoString</key>
-      <string>@VERSION@, OpenNX Client for MacOSX</string>
+      <string>@FULLVERSION@, OpenNX Client for MacOSX</string>
       <key>CFBundleIdentifier</key>
       <string>org.opennx.OpenNX</string>
       <key>CFBundleShortVersionString</key>
-      <string>@VERSION@</string>
+      <string>@FULLVERSION@</string>
 
       <key>IFPkgFlagAllowBackRev</key>
       <false/>

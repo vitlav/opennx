@@ -40,6 +40,7 @@
 #include <wx/config.h>
 #include <wx/wfstream.h>
 #include <wx/sysopt.h>
+#include <wx/utils.h>
 
 #include "pulseTest.h"
 #include "PulseAudio.h"
@@ -94,6 +95,7 @@ bool pulseTest::OnCmdLineParsed(wxCmdLineParser& parser)
 {
     wxString traceTags;
     if (parser.Found(wxT("trace"), &traceTags)) {
+        CheckAllTrace(traceTags);
         wxStringTokenizer t(traceTags, wxT(","));
         while (t.HasMoreTokens()) {
             wxString tag = t.GetNextToken();
@@ -159,6 +161,18 @@ bool pulseTest::OnInit()
 
     if (!wxApp::OnInit())
         return false;
+
+    if (::wxGetEnv(wxT("WXTRACE"), &tmp)) {
+        CheckAllTrace(tmp);
+        wxStringTokenizer t(tmp, wxT(",:"));
+        while (t.HasMoreTokens()) {
+            wxString tag = t.GetNextToken();
+            if (allTraceTags.Index(tag) != wxNOT_FOUND) {
+                ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
+                wxLog::AddTraceMask(tag);
+            }
+        }
+    }
 
     PulseAudio pa;
     if (pa.IsAvailable()) {

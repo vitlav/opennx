@@ -33,7 +33,7 @@ class MyXmlConfig;
 
 class MySession : public wxEvtHandler
 {
-    DECLARE_CLASS(MySession);
+    DECLARE_DYNAMIC_CLASS(MySession);
     DECLARE_EVENT_TABLE();
 
 public:
@@ -117,12 +117,13 @@ private:
     void initversion(const wxString &s = wxEmptyString);
     bool prepareCups();
     bool isCupsRunning();
-    void printSsh(const wxString &s, bool doLog = true);
+    void printSsh(const wxString &s, bool doLog = true, const wxString &reason = wxT(""));
     void cleanupOldSessions();
     void clearSshKeys(const wxString &);
     ArrayOfShareGroups getActiveCupsPrinters();
     virtual void OnSshEvent(wxCommandEvent &);
     virtual void OnSessionEvent(wxCommandEvent &);
+    void SshLog(const wxChar *fmt, ...);
 
 #ifdef __WXMSW__
     wxString getXfontPath(tXarch);
@@ -143,6 +144,7 @@ private:
     bool m_bCollectConfig;
     bool m_bCollectResources;
     bool m_bIsShadow;
+    bool m_bInParseSessions;
     bool m_bCupsRunning;
     bool m_bRemoveKey;
     bool m_bNextCmd;

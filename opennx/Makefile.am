@@ -1,8 +1,8 @@
 AM_LIBTOOLFLAGS = --silent
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = po $(PLATFORM_SUBDIRS)
-DIST_SUBDIRS = po packaging/win32 packaging/MacOSX
+SUBDIRS = po docs $(PLATFORM_SUBDIRS)
+DIST_SUBDIRS = po docs packaging/win32 packaging/MacOSX
 
 noinst_PROGRAMS = bin2hdr pulsetest $(TESTXAUTH) $(MACTESTKBD)
 
@@ -28,7 +28,8 @@ opennx_SOURCES = AboutDialog.cpp AsyncProcess.cpp LibOpenSC.cpp \
 	UnixImageSettingsDialog.cpp UsbFilterDetailsDialog.cpp \
 	UsbIp.cpp VncImageSettingsDialog.cpp VncPropertyDialog.cpp \
 	wxprec.cpp WinShare.cpp X11PropertyDialog.cpp xh_richtext.cpp \
-	MacOSX.c WrappedStatic.cpp SupressibleMessageDialog.cpp
+	MacOSX.c WrappedStatic.cpp SupressibleMessageDialog.cpp \
+	XdmPropertyDialog.cpp
 
 noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	LibOpenSC.h CardWaiterDialog.h CardWaiterDialog_symbols.h \
@@ -55,15 +56,18 @@ noinst_HEADERS = AboutDialog.h AboutDialog_symbols.h AsyncProcess.h \
 	X11PropertyDialog.h X11PropertyDialog_symbols.h trace.h tracelogApp.h \
 	watchReaderApp.h watchUsbIpApp.h xh_richtext.h MacUninstallApp.h \
 	WrappedStatic.h SupressibleMessageDialog.h SupressibleMessageDialog_symbols.h \
+	TraceLogRemote_symbols.h TraceLogRemote.h \
 	opensc/errors.h opensc/opensc.h opensc/scconf.h opensc/types.h opensc/pkcs15.h \
-	libsmbclient.h
+	libsmbclient.h \
+	XdmPropertyDialog.h XdmPropertyDialog_symbols.h
 
 pconnect_SOURCES = pconnect.c
 pconnect_LDADD = $(WS2LIB) $(RESLIB)
 
-pulsetest_SOURCES = pulseTest.cpp PulseAudio.cpp MyDynlib.cpp mylog.cpp
-pulsetest_LDADD = $(WX_LIBS)
-pulsetest_CPPFLAGS = $(WX_CPPFLAGS) -DAPP_PULSETEST
+pulsetest_SOURCES = pulseTest.cpp PulseAudio.cpp MyDynlib.cpp mylog.cpp osdep.c MacOSX.c
+pulsetest_LDADD = $(WX_LIBS) $(X_LIBS) $(X_PRE_LIBS) $(X_EXTRA_LIBS) $(APP_LDADD)
+pulsetest_CPPFLAGS = $(WX_CPPFLAGS) $(PLATFORM_INCLUDES) -DAPP_PULSETEST
+pulsetest_DEPENDENCIES = $(OPENNX_RES) $(PLATFORM_DEPENDENCIES)
 pulsetest_CXXFLAGS = $(WX_CXXFLAGS)
 pulsetest_CFLAGS = $(WX_CFLAGS)
 
@@ -92,7 +96,7 @@ watchusbip_CXXFLAGS = $(WX_CXXFLAGS)
 watchusbip_CFLAGS = $(WX_CFLAGS)
 
 tracelog_SOURCES = tracelogApp.cpp TraceLogFrame.cpp \
-	DebugStringGrabber.cpp wxprec.cpp Icon.cpp
+	DebugStringGrabber.cpp wxprec.cpp Icon.cpp TraceLogRemote.cpp
 tracelog_LDADD = $(TRACELOG_RES) $(WX_LIBS)
 tracelog_DEPENDENCIES = $(TRACELOG_RES)
 tracelog_CPPFLAGS = $(WX_CPPFLAGS) -DAPP_TRACELOG
@@ -100,7 +104,7 @@ tracelog_CXXFLAGS = $(WX_CXXFLAGS)
 tracelog_CFLAGS = $(WX_CFLAGS)
 
 macfindreader_SOURCES = macfindreader.c
-macfindreader_CFLAGS = $(UNIFLAGS)
+macfindreader_CFLAGS = $(UNIFLAGS) $(OSX_SDKFLAGS)
 macfindreader_LDADD = -ldl
 
 macuninstall_SOURCES = MacUninstallApp.cpp MacOSX.c
@@ -123,8 +127,8 @@ EXTRA_watchreader_SOURCES = watchreader.rc
 
 opennx_LDADD = $(OPENNX_RES) $(WX_LIBS) $(X_LIBS) $(X_PRE_LIBS) \
 	$(X_EXTRA_LIBS) $(APP_LDADD) $(LIBCURL)
-opennx_DEPENDENCIES = $(OPENNX_RES)
-opennx_CPPFLAGS = $(WX_CPPFLAGS) $(X_CFLAGS) -DAPP_OPENNX
+opennx_DEPENDENCIES = $(OPENNX_RES) $(PLATFORM_DEPENDENCIES)
+opennx_CPPFLAGS = $(WX_CPPFLAGS) $(PLATFORM_INCLUDES) $(X_CFLAGS) -DAPP_OPENNX
 opennx_CXXFLAGS = $(WX_CXXFLAGS)
 opennx_CFLAGS = $(WX_CFLAGS)
 
@@ -144,9 +148,7 @@ bootstrap:
 #	YES, i've read them at least a dozen times and now, i REALLY
 #	don't want to hit RETURN anymore!
 	test -n "$(GETTEXTIZE)" && \
-		sed -e 's@/dev/tty@/dev/null@' "$(GETTEXTIZE)" > gettextize.local
-	test -f gettextize.local && sh gettextize.local -f --no-changelog
-	rm -f gettextize.local
+		sed -e 's@/dev/tty@/dev/null@' "$(GETTEXTIZE)" | bash -s -- -f --no-changelog
 	test -e conf/mkinstalldirs || touch conf/mkinstalldirs
 	autoreconf -if
 
@@ -180,6 +182,7 @@ distclean-local:
 
 install-wxstdmo-local:
 	for lang in $(shell cat $(top_srcdir)/po/LINGUAS) ; do \
+		$(INSTALL) -d $(DESTDIR)$(localedir)/$$lang/LC_MESSAGES ; \
 		$(INSTALL_DATA) $(WX_PREFIX)/share/locale/$$lang/LC_MESSAGES/wxstd.mo \
 			$(DESTDIR)$(localedir)/$$lang/LC_MESSAGES/ ; \
 	done
@@ -204,6 +207,8 @@ tracelogApp.cpp: memres.h
 
 watchUsbIpApp.cpp: memres.h
 
+PulseAudio.cpp: $(PAHEADER)
+
 SUFFIXES = .rc
 
 .rc.o: $(OSRESDEPS)
@@ -219,7 +224,7 @@ MAINTAINERCLEANFILES = ABOUT-NLS Makefile.in configure aclocal.m4 \
 
 DISTCLEANFILES = mingw32-config.cache res/*.prv.*
 
-man_MANS = man/pconnect.1
+man_MANS = docs/pconnect.1
 
 data_DATA = share/keyboards
 
@@ -279,13 +284,11 @@ dist-hook:
 # Platform specific special targets
 debprep: distcheck
 	tar xfz $(PACKAGE)-$(VERSION).tar.gz
-	cd $(PACKAGE)-$(VERSION) && ./getnxsrcpkg nxesd nxcomp nxproxy nxssh
-	cd $(PACKAGE)-$(VERSION) && tar xzf nxesd-*.tar.gz
+	cd $(PACKAGE)-$(VERSION) && ./getnxsrcpkg nxcomp nxproxy nxssh
 	cd $(PACKAGE)-$(VERSION) && tar xzf nxcomp-*.tar.gz
 	cd $(PACKAGE)-$(VERSION) && tar xzf nxproxy-*.tar.gz
 	cd $(PACKAGE)-$(VERSION) && tar xzf nxssh-*.tar.gz
 	$(RM) $(PACKAGE)-$(VERSION)/*.tar.gz
-	$(RM) $(PACKAGE)-$(VERSION)/nxesd/test.wav
 	$(RM) $(PACKAGE)-$(VERSION)/nxssh/scard/Ssh.bin
 	cd $(PACKAGE)-$(VERSION) && perl debian/mkchangelog.pl $(VERSION) \
 		< ChangeLog > debian/changelog
@@ -315,6 +318,12 @@ unknown:
 	@exit 1
 
 dist-platform: $(PLATFORMDIST)
+
+packaging/MacOSX/pulse/include/pulse/pulseaudio.h:
+	$(MAKE) -C packaging/MacOSX/pulse cachedinstall
+
+packaging/win32/pulse/include/pulse/pulseaudio.h:
+	$(MAKE) -C packaging/win32/pulse tmpinstall
 
 EXTRA_DIST = conf/mkinstalldirs  conf/mkinstalldirs  conf/mkinstalldirs  conf/mkinstalldirs  conf/mkinstalldirs  conf/mkinstalldirs conf/config.rpath conf/authors.xml \
 	INSTALL INSTALL.generic COPYING share etc/60-opennx.rules \

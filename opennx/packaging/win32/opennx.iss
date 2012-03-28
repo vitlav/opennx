@@ -17,8 +17,8 @@ AppName={#=APPNAME}
 AppVersion={#=APPFULLVER}
 AppVerName={#=APPFULLVERNAME}
 AppPublisher=The OpenNX Team
-AppPublisherURL=http://www.sf.net/projects/opennx
-AppCopyright=(C) 2010 The OpenNX Team
+AppPublisherURL=http://opennx.net
+AppCopyright=(C) 2011 The OpenNX Team
 VersionInfoVersion={#=APPFULLVER}
 DefaultDirName={pf}\{#=APPNAME}
 DefaultGroupName={#=APPNAME}
@@ -62,6 +62,7 @@ cwizard=OpenNX Connection Wizard
 sadmin=OpenNX Session Administrator
 uninst_opennx=Uninstall OpenNX
 fwadd=Adding firewall rules
+doc_pconnect=Pconnect Manual
 
 de.dticon=Desktop-Verknüpfung &anlegen
 de.dticon_group=Zusätzliche Verknüpfungen:
@@ -69,6 +70,7 @@ de.cwizard=OpenNX Verbindungs-Assistent
 de.sadmin=OpenNX Sitzungsverwaltung
 de.uninst_opennx=Deinstalliere OpenNX
 de.fwadd=Erstelle Firewall-Regeln
+de.doc_pconnect=Pconnect Handbuch
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:dticon}"; GroupDescription: "{cm:dticon_group}";
@@ -83,6 +85,7 @@ Source: setupdir\bin\opennx.exe; DestDir: {app}; DestName: nxclient.exe; Flags: 
 Name: "{group}\OpenNX"; Filename: "{app}\bin\opennx.exe";
 Name: "{group}\{cm:cwizard}"; Filename: "{app}\bin\opennx.exe"; Parameters: "--wizard"; IconFilename: "{app}\bin\opennx.exe"; IconIndex: 2;
 Name: "{group}\{cm:sadmin}"; Filename: "{app}\bin\opennx.exe"; Parameters: "--admin"; IconFilename: "{app}\bin\opennx.exe"; IconIndex: 3
+Name: "{group}\{cm:doc_pconnect}"; Filename: "{app}\share\pconnect.html";
 Name: "{group}\{cm:uninst_opennx}"; Filename: "{uninstallexe}";
 Name: "{commondesktop}\OpenNX"; Filename: "{app}\bin\opennx.exe"; Tasks: "desktopicon";
 
@@ -104,22 +107,44 @@ Root: HKCU; Subkey: "Software\Classes\OpenNX.session\DefaultIcon"; ValueType: no
 Root: HKCU; Subkey: "Software\Classes\OpenNX.session\shell\open\command"; ValueType: none; Flags: deletekey deletevalue
 
 [Run]
-; Allow nxssh, nxesd and Xming in Windows firewall 
+; Allow nxssh, nxesd, pulseaudio, Xming and NXWin in Windows firewall
+#if FileExists("setupdir\bin\nxssh.exe")
 Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bin\nxssh.exe"" ""OpenNX nxssh"" ENABLE"; StatusMsg: {cm:fwadd}; Flags: runhidden skipifdoesntexist
+#endif
+#if FileExists("setupdir\bin\nxesd.exe")
 Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bin\nxesd.exe"" ""OpenNX nxesd"" ENABLE"; StatusMsg: {cm:fwadd}; Flags: runhidden skipifdoesntexist
-#if BUILDXMING == "yes"
+#endif
+#if FileExists("setupdir\bin\tracelog.exe")
+Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bin\tracelog.exe"" ""OpenNX tracelog"" ENABLE"; StatusMsg: {cm:fwadd}; Flags: runhidden skipifdoesntexist
+#endif
+#if FileExists("setupdir\bin\pulseaudio.exe")
+Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bin\pulseaudio.exe"" ""OpenNX pulseaudio"" ENABLE"; StatusMsg: {cm:fwadd}; Flags: runhidden skipifdoesntexist
+#endif
+#if FileExists("setupdir\bin\Xming.exe")
 Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bin\Xming.exe"" ""OpenNX Xming"" ENABLE"; StatusMsg: {cm:fwadd}; Flags: runhidden skipifdoesntexist
-#else
-Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bin\NXWin.exe"" ""OpenNX Xming"" ENABLE"; StatusMsg: {cm:fwadd}; Flags: runhidden skipifdoesntexist
+#endif
+#if FileExists("setupdir\bin\NXWin.exe")
+Filename: "{sys}\netsh.exe"; Parameters: "firewall add allowedprogram ""{app}\bin\NXWin.exe"" ""OpenNX NXWin"" ENABLE"; StatusMsg: {cm:fwadd}; Flags: runhidden skipifdoesntexist
 #endif
 
 [UninstallRun]
 ; Remove firewall exceptions
+#if FileExists("setupdir\bin\nxssh.exe")
 Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\nxssh.exe"" ALL"; Flags: runhidden skipifdoesntexist; RunOnceId: fwdelnxssh
+#endif
+#if FileExists("setupdir\bin\nxesd.exe")
 Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\nxesd.exe"" ALL"; Flags: runhidden skipifdoesntexist; RunOnceId: fwdelnxesd
-#if BUILDXMING == "yes"
+#endif
+#if FileExists("setupdir\bin\tracelog.exe")
+Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\tracelog.exe"" ALL"; Flags: runhidden skipifdoesntexist; RunOnceId: fwdelnxesd
+#endif
+#if FileExists("setupdir\bin\pulseaudio.exe")
+Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\pulseaudio.exe"" ALL"; Flags: runhidden skipifdoesntexist; RunOnceId: fwdelnxesd
+#endif
+#if FileExists("setupdir\bin\Xming.exe")
 Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\Xming.exe"" ALL"; Flags: runhidden skipifdoesntexist; RunOnceId: fwdelxming
-#else
+#endif
+#if FileExists("setupdir\bin\NXWin.exe")
 Filename: "{sys}\netsh.exe"; Parameters: "firewall delete allowedprogram ""{app}\bin\NXWin.exe"" ALL"; Flags: runhidden skipifdoesntexist; RunOnceId: fwdelnxwin
 #endif
 

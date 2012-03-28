@@ -19,7 +19,7 @@
 // 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
-#define ID_PROXYPROPERTYDIALOG_SYMBOL_0 _("Proxy settings")
+#define ID_PROXYPROPERTYDIALOG_SYMBOL_0 _("Proxy settings - OpenNX")
 #define ID_PROXYPROPERTYDIALOG_SYMBOL_1 _("Connect through internal (NoMachine) HTTP proxy")
 #define ID_PROXYPROPERTYDIALOG_SYMBOL_2 _("Host")
 #define ID_PROXYPROPERTYDIALOG_SYMBOL_3 _("Port")
@@ -28,5 +28,6 @@
 #define ID_PROXYPROPERTYDIALOG_SYMBOL_6 _("Remember proxy password")
 #define ID_PROXYPROPERTYDIALOG_SYMBOL_7 _("Connect through external proxy")
 #define ID_PROXYPROPERTYDIALOG_SYMBOL_8 _("Command")
-#define ID_PROXYPROPERTYDIALOG_SYMBOL_9 _("&OK")
-#define ID_PROXYPROPERTYDIALOG_SYMBOL_10 _("&Cancel")
+#define ID_PROXYPROPERTYDIALOG_SYMBOL_9 _("?")
+#define ID_PROXYPROPERTYDIALOG_SYMBOL_10 _("&OK")
+#define ID_PROXYPROPERTYDIALOG_SYMBOL_11 _("&Cancel")

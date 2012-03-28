@@ -53,6 +53,7 @@
 #include "MySession.h"
 #include "Icon.h"
 #include "opennxApp.h"
+#include "SupressibleMessageDialog.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -174,8 +175,10 @@ void LoginDialog::ReadConfigDirectory()
             m_sLastSessionFilename.StartsWith(wxT("https://")) ||
             m_sLastSessionFilename.StartsWith(wxT("ftp://")) ||
             ((m_aConfigFiles.Index(m_sLastSessionFilename) == wxNOT_FOUND) &&
-             (wxFile::Exists(m_sLastSessionFilename))))
+             (wxFile::Exists(m_sLastSessionFilename)))) {
         m_aConfigFiles.Add(m_sLastSessionFilename);
+        ::myLogTrace(MYTRACETAG, wxT("ReadConfigDirectory: Adding '%s'"), m_sLastSessionFilename.c_str());
+    }
     for (i = 0; i < m_aConfigFiles.GetCount(); i++) {
         MyXmlConfig cfg(m_aConfigFiles[i]);
         if (cfg.IsValid()) {
@@ -215,9 +218,13 @@ void LoginDialog::ReadConfigDirectory()
 #ifdef __WXMAC__
 void LoginDialog::SelectSession(wxString name)
 {
-    m_pCtrlSessionName->SetStringSelection(name);
-    wxCommandEvent event;
-    OnComboboxSessionSelected(event);
+    MyXmlConfig cfg(name);
+    if (cfg.IsValid()) {
+        m_pCtrlSessionName->Append(cfg.sGetName(), (void *)name.c_str());
+        m_pCtrlSessionName->SetStringSelection(cfg.sGetName());
+        wxCommandEvent event;
+        OnComboboxSessionSelected(event);
+    }
 }
 #endif
 
@@ -456,6 +463,19 @@ void LoginDialog::OnComboboxSessionSelected( wxCommandEvent& event )
     m_pCtrlUseSmartCard->Enable(m_pCurrentCfg && m_pCurrentCfg->IsWritable());
     m_pCtrlGuestLogin->Enable(m_pCurrentCfg && m_pCurrentCfg->IsWritable());
     m_pCtrlConfigure->Enable(m_pCurrentCfg && m_pCurrentCfg->IsWritable());
+    if (m_pCurrentCfg && m_pCurrentCfg->WasOldConfig()) {
+        wxString msg;
+        if (m_pCurrentCfg->IsWritable()) {
+            // m_pCurrentCfg->SaveToFile();
+            msg = _("An old session configuration has been detected.\nThe session '%s' has been converted to the new format.\nPlease verify the custom image compression settings.");
+        } else {
+            msg = _("An old session configuration has been detected.\nThe session '%s' has been converted but could not be saved.\nPlease verify the custom image compression settings.");
+        }
+        wxString cfgid(wxT("oldcfg."));
+        SupressibleMessageDialog d(this, wxString::Format(msg, m_pCurrentCfg->sGetName().c_str()),
+                _("Warning - OpenNX"), wxOK|wxICON_EXCLAMATION);
+        d.ShowConditional(cfgid.Append(msg.Left(15)), wxID_OK);
+    }
     if (!m_bGuestLogin)
         SetInitialFocus();
     event.Skip();
@@ -494,6 +514,15 @@ void LoginDialog::OnOkClick(wxCommandEvent& event)
         bool b = s.Create(*m_pCurrentCfg, m_sPassword, this);
         Enable();
         if (!b) {
+            // Clear password after failure or abort.
+            if (!m_bGuestLogin) {
+                bool clpw = true;
+                wxConfigBase::Get()->Read(wxT("Config/ClearPassOnAbort"), &clpw, true);
+                if (clpw) {
+                    m_pCtrlPassword->SetValue(wxEmptyString);
+                    m_pCtrlPassword->SetFocus();
+                }
+            }
 #ifdef SINGLE_SESSION
             m_cNxSshWatchTimer.Start(1000);
             ::myLogTrace(MYTRACETAG, wxT("Starting nxssh watch timer"));

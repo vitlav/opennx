@@ -57,6 +57,7 @@
 #include "RdpImageSettingsDialog.h"
 #include "VncImageSettingsDialog.h"
 #include "X11PropertyDialog.h"
+#include "XdmPropertyDialog.h"
 #include "RdpPropertyDialog.h"
 #include "VncPropertyDialog.h"
 #include "AboutDialog.h"
@@ -194,6 +195,10 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
 
     EVT_CHECKBOX( XRCID("ID_CHECKBOX_NODEFERRED"), SessionProperties::OnCheckboxNodeferredClick )
 
+#if defined(__WXMSW__)
+    EVT_COMBOBOX( XRCID("ID_COMBOBOX_CLIPFILTER"), SessionProperties::OnComboboxClipfilterSelected )
+#endif
+
     EVT_COMBOBOX( XRCID("ID_COMBOBOX_CACHEMEM"), SessionProperties::OnComboboxCachememSelected )
 
     EVT_COMBOBOX( XRCID("ID_COMBOBOX_CACHEDISK"), SessionProperties::OnComboboxCachediskSelected )
@@ -256,6 +261,12 @@ BEGIN_EVENT_TABLE( SessionProperties, wxDialog )
     EVT_CHECKBOX( XRCID("ID_CHECKBOX_CREATEICON"), SessionProperties::OnCheckboxCreateiconClick )
 
     EVT_CHECKBOX( XRCID("ID_CHECKBOX_RESETMSGBOXES"), SessionProperties::OnCheckboxResetmsgboxesClick )
+
+    EVT_CHECKBOX( XRCID("ID_CHECKBOX_LOWERCASE_LOGIN"), SessionProperties::OnCheckboxLowercaseLoginClick )
+
+    EVT_CHECKBOX( XRCID("ID_CHECKBOX_CLEAR_PASSONABORT"), SessionProperties::OnCheckboxClearPassonabortClick )
+
+    EVT_CHECKBOX( XRCID("ID_CHECKBOX_NOMAGICPIXEL"), SessionProperties::OnCheckboxNomagicpixelClick )
 
     EVT_BUTTON( wxID_DELETE, SessionProperties::OnDeleteClick )
 
@@ -364,6 +375,7 @@ SessionProperties::CheckChanged()
         m_pCfg->bSetGrabKeyboard(m_bGrabKeyboard);
         m_pCfg->bSetDisableDirectDraw(m_bDisableDirectDraw);
         m_pCfg->bSetDisableDeferredUpdates(m_bDisableDeferredUpdates);
+        m_pCfg->iSetClipFilter(m_iClipFilter);
 
         // variables on 'Services' tab
         m_pCfg->bSetEnableSmbSharing(m_bEnableSmbSharing);
@@ -389,6 +401,9 @@ SessionProperties::CheckChanged()
         changed |= (m_iSavedUsbLocalPort != m_iUsbLocalPort);
         changed |= (m_bSavedCreateDesktopIcon != m_bCreateDesktopIcon);
         changed |= (m_bSavedResetMessageBoxes != m_bResetMessageBoxes);
+        changed |= (m_bSavedLowercaseLogin != m_bLowercaseLogin);
+        changed |= (m_bSavedClearPassOnAbort != m_bClearPassOnAbort);
+        changed |= (m_bSavedDisableMagicPixel != m_bDisableMagicPixel);
         CheckCfgChanges(changed);
     }
 }
@@ -405,18 +420,25 @@ SessionProperties::KeyTyped() {
 bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxString& WXUNUSED(caption), const wxPoint& WXUNUSED(pos), const wxSize& WXUNUSED(size), long WXUNUSED(style) )
 {
     ////@begin SessionProperties member initialisation
-    m_iUsbLocalPort = 3240;
+    m_bClearPassOnAbort = true;
+    m_bCreateDesktopIcon = false;
+    m_bDisableDeferredUpdates = false;
+    m_bDisableDirectDraw = false;
+    m_bDisableMagicPixel = false;
+    m_bGrabKeyboard = false;
+    m_bLowercaseLogin = false;
+    m_bProxyPassRemember = false;
+    m_bResetMessageBoxes = false;
+    m_bSavedClearPassOnAbort = true;
+    m_bSavedCreateDesktopIcon = false;
+    m_bSavedDisableMagicPixel = false;
+    m_bSavedLowercaseLogin = false;
+    m_bSavedResetMessageBoxes = false;
+    m_iClipFilter = 2;
     m_iPseudoDesktopTypeIndex = -1;
     m_iPseudoDisplayTypeIndex = -1;
-    m_bProxyPassRemember = false;
-    m_bCreateDesktopIcon = false;
-    m_bSavedCreateDesktopIcon = false;
-    m_bDisableDirectDraw = false;
-    m_bGrabKeyboard = false;
-    m_bDisableDeferredUpdates = false;
-    m_bResetMessageBoxes = false;
-    m_bSavedResetMessageBoxes = false;
     m_iSmbPort = 445;
+    m_iUsbLocalPort = 3240;
     m_pNoteBook = NULL;
     m_pCtrlHostname = NULL;
     m_pCtrlPort = NULL;
@@ -497,6 +519,10 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
         m_sProxyPass = m_pCfg->sGetProxyPass();
         m_bProxyPassRemember = m_pCfg->bGetProxyPassRemember();
         m_sProxyCommand = m_pCfg->sGetProxyCommand();
+        m_iClipFilter = m_pCfg->iGetClipFilter();
+
+        m_bGrabKeyboard = m_pCfg->bGetGrabKeyboard();
+        m_bDisableDirectDraw = m_pCfg->bGetDisableDirectDraw();
 
         // variables on 'Services' tab
         m_bEnableSmbSharing = m_pCfg->bGetEnableSmbSharing();
@@ -537,6 +563,9 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     // Global config
     wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &m_sUserNxDir);
     wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &m_sSystemNxDir);
+    wxConfigBase::Get()->Read(wxT("Config/LowercaseLogin"), &m_bLowercaseLogin, false);
+    wxConfigBase::Get()->Read(wxT("Config/ClearPassOnAbort"), &m_bClearPassOnAbort, true);
+    wxConfigBase::Get()->Read(wxT("Config/DisableMagicPixel"), &m_bDisableMagicPixel, false);
 #ifdef SUPPORT_USBIP
     wxConfigBase::Get()->Read(wxT("Config/UsbipdSocket"), &m_sUsbipdSocket);
     wxConfigBase::Get()->Read(wxT("Config/UsbipPort"), &m_iUsbLocalPort);
@@ -544,7 +573,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     m_sUsbipdSocket = wxEmptyString;
 #endif
     // This setting can be used by an admin to disable storing passwords
-    // It has to be set amnually in the global config file.
+    // It has to be set manually in the global config file.
     wxConfigBase::Get()->Read(wxT("Config/StorePasswords"), &m_bStorePasswords, true);
     if (!m_bStorePasswords)
         m_bRememberPassword = false;
@@ -808,7 +837,9 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
             }
             m_pCtrlDesktopType->SetSelection(m_iDesktopTypeDialog);
             m_pCtrlDesktopType->Enable(true);
-            m_pCtrlDesktopSettings->Enable(m_iDesktopTypeDialog == MyXmlConfig::DTYPE_CUSTOM);
+            m_pCtrlDesktopSettings->Enable(
+                    (m_iDesktopTypeDialog == MyXmlConfig::DTYPE_XDM) ||
+                    (m_iDesktopTypeDialog == MyXmlConfig::DTYPE_CUSTOM));
             if (m_iPseudoDisplayTypeIndex != -1) {
                 m_pCtrlDisplayType->Delete(m_iPseudoDisplayTypeIndex);
                 if (m_iDisplayType >= m_iPseudoDisplayTypeIndex)
@@ -1036,6 +1067,10 @@ void SessionProperties::CreateControls()
 #endif
     if (FindWindow(XRCID("ID_CHECKBOX_NODEFERRED")))
         FindWindow(XRCID("ID_CHECKBOX_NODEFERRED"))->SetValidator( wxGenericValidator(& m_bDisableDeferredUpdates) );
+#if defined(__WXMSW__)
+    if (FindWindow(XRCID("ID_COMBOBOX_CLIPFILTER")))
+        FindWindow(XRCID("ID_COMBOBOX_CLIPFILTER"))->SetValidator( wxGenericValidator(& m_iClipFilter) );
+#endif
     if (FindWindow(XRCID("ID_COMBOBOX_CACHEMEM")))
         FindWindow(XRCID("ID_COMBOBOX_CACHEMEM"))->SetValidator( wxGenericValidator(& m_iCacheMem) );
     if (FindWindow(XRCID("ID_COMBOBOX_CACHEDISK")))
@@ -1068,6 +1103,12 @@ void SessionProperties::CreateControls()
         FindWindow(XRCID("ID_CHECKBOX_CREATEICON"))->SetValidator( wxGenericValidator(& m_bCreateDesktopIcon) );
     if (FindWindow(XRCID("ID_CHECKBOX_RESETMSGBOXES")))
         FindWindow(XRCID("ID_CHECKBOX_RESETMSGBOXES"))->SetValidator( wxGenericValidator(& m_bResetMessageBoxes) );
+    if (FindWindow(XRCID("ID_CHECKBOX_LOWERCASE_LOGIN")))
+        FindWindow(XRCID("ID_CHECKBOX_LOWERCASE_LOGIN"))->SetValidator( wxGenericValidator(& m_bLowercaseLogin) );
+    if (FindWindow(XRCID("ID_CHECKBOX_CLEAR_PASSONABORT")))
+        FindWindow(XRCID("ID_CHECKBOX_CLEAR_PASSONABORT"))->SetValidator( wxGenericValidator(& m_bClearPassOnAbort) );
+    if (FindWindow(XRCID("ID_CHECKBOX_NOMAGICPIXEL")))
+        FindWindow(XRCID("ID_CHECKBOX_NOMAGICPIXEL"))->SetValidator( wxGenericValidator(& m_bDisableMagicPixel) );
     ////@end SessionProperties content construction
 
     if ((!m_bStorePasswords) && FindWindow(XRCID("ID_CHECKBOX_PWSAVE")))
@@ -1076,6 +1117,18 @@ void SessionProperties::CreateControls()
     ////@begin SessionProperties content initialisation
     ////@end SessionProperties content initialisation
 
+#ifdef __WXMSW__
+    // wxSpinCtrl is too small on windows
+    wxSize spin_size = m_pCtrlDisplayWidth->GetMinSize();
+    spin_size.IncBy(8, 0);
+    m_pCtrlDisplayWidth->SetSize(spin_size);
+    m_pCtrlDisplayWidth->SetMinSize(spin_size);
+    m_pCtrlDisplayWidth->SetSizeHints(spin_size);
+    m_pCtrlDisplayHeight->SetSize(spin_size);
+    m_pCtrlDisplayHeight->SetMinSize(spin_size);
+    m_pCtrlDisplayHeight->SetSizeHints(spin_size);
+    Layout();
+#endif
     m_pCtrlUseSmartCard->Enable(::wxGetApp().NxSmartCardSupport());
 
     int fs[7];
@@ -1232,7 +1285,10 @@ void SessionProperties::SaveState()
     m_sSavedUsbipdSocket = m_sUsbipdSocket;
     m_iSavedUsbLocalPort = m_iUsbLocalPort;
     m_bSavedCreateDesktopIcon = m_bCreateDesktopIcon;
+    m_bSavedLowercaseLogin = m_bLowercaseLogin;
+    m_bSavedClearPassOnAbort = m_bClearPassOnAbort;
     m_bSavedResetMessageBoxes = m_bResetMessageBoxes = false;
+    m_bSavedDisableMagicPixel = m_bDisableMagicPixel;
 }
 
 // ====================== Event handlers ===============================
@@ -1246,7 +1302,13 @@ void SessionProperties::OnButtonDsettingsClick( wxCommandEvent& event )
     wxUnusedVar(event);
     switch (m_iSessionType) {
         case MyXmlConfig::STYPE_UNIX:
-            {
+            if (MyXmlConfig::DTYPE_XDM == m_iUnixDesktopType) {
+                XdmPropertyDialog d;
+                d.SetConfig(m_pCfg);
+                d.Create(this);
+                d.ShowModal();
+                CheckCfgChanges(false);
+            } else {
                 X11PropertyDialog d;
                 d.SetConfig(m_pCfg);
                 d.Create(this);
@@ -1533,6 +1595,9 @@ void SessionProperties::OnApplyClick( wxCommandEvent& event )
     wxUnusedVar(event);
     wxConfigBase::Get()->Write(wxT("Config/UserNxDir"), m_sUserNxDir);
     wxConfigBase::Get()->Write(wxT("Config/SystemNxDir"), m_sSystemNxDir);
+    wxConfigBase::Get()->Write(wxT("Config/LowercaseLogin"), m_bLowercaseLogin);
+    wxConfigBase::Get()->Write(wxT("Config/ClearPassOnAbort"), m_bClearPassOnAbort);
+    wxConfigBase::Get()->Write(wxT("Config/DisableMagicPixel"), m_bDisableMagicPixel);
 #ifdef SUPPORT_USBIP
     wxConfigBase::Get()->Write(wxT("Config/UsbipdSocket"), m_sUsbipdSocket);
     wxConfigBase::Get()->Write(wxT("Config/UsbipPort"), m_iUsbLocalPort);
@@ -2303,6 +2368,52 @@ void SessionProperties::OnCheckboxImgCustomClick( wxCommandEvent& event )
 {
     wxUnusedVar(event);
     UpdateDialogConstraints(true);
+    CheckChanged();
+}
+
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_LOWERCASE_LOGIN
+ */
+
+void SessionProperties::OnCheckboxLowercaseLoginClick( wxCommandEvent& event )
+{
+    wxUnusedVar(event);
+    CheckChanged();
+}
+
+#if defined(__WXMSW__)
+
+/*!
+ * wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_CLIPFILTER
+ */
+
+void SessionProperties::OnComboboxClipfilterSelected( wxCommandEvent& event )
+{
+    wxUnusedVar(event);
+    CheckChanged();
+}
+#endif
+
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_CLEAR_PASSONABORT
+ */
+
+void SessionProperties::OnCheckboxClearPassonabortClick( wxCommandEvent& event )
+{
+    wxUnusedVar(event);
+    CheckChanged();
+}
+
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_NOMAGICPIXEL
+ */
+
+void SessionProperties::OnCheckboxNomagicpixelClick( wxCommandEvent& event )
+{
+    wxUnusedVar(event);
     CheckChanged();
 }
 

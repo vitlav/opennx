@@ -49,6 +49,8 @@
 #include "trace.h"
 ENABLE_TRACE;
 
+IMPLEMENT_DYNAMIC_CLASS(SharedResource, wxObject);
+
 WX_DEFINE_OBJARRAY(ArrayOfShares);
 
 #ifdef __UNIX__
@@ -80,6 +82,7 @@ typedef struct cups_dest_s		/**** Destination ****/
 # endif
 #endif
 #include <libsmbclient.h>
+#include <errno.h>
 
 typedef int (*SMBC_init)(smbc_get_auth_data_fn fn, int debug);
 typedef int (*SMBC_opendir)(const char *url);
@@ -244,8 +247,11 @@ ArrayOfShares DllData::GetShares()
     if (isSMBC) {
         // Unix, use libsmbclient
         if ((NULL != C_init) && (NULL != C_opendir) && (NULL != C_readdir) && (NULL != C_closedir)) {
+            ::myLogTrace(MYTRACETAG, wxT("Retrieving SAMBA shares"));
             if (C_init(smbc_auth_fn, 0) == 0) {
+                ::myLogTrace(MYTRACETAG, wxT("Retrieving SAMBA shares: C_init done"));
                 int d = C_opendir("smb://127.0.0.1/");
+                ::myLogTrace(MYTRACETAG, wxT("Retrieving SAMBA shares: C_opendir done"));
                 if (d >= 0) {
                     struct smbc_dirent *e;
                     while ((e = C_readdir(d))) {
@@ -369,11 +375,12 @@ bool DllData::IsAvailable()
                     if (d >= 0) {
                         ret = true;
                         C_closedir(d);
+                    } else if (EPERM == errno) {
+                        ret = true;
                     }
-                } else
-                    ::myLogTrace(MYTRACETAG, wxT("C_init returned error"));
-            }
-            ::myLogTrace(MYTRACETAG, wxT("libsmbclient functions not available"));
+                }
+            } else
+                ::myLogTrace(MYTRACETAG, wxT("libsmbclient functions not available"));
         } else {
             // Probe Cups
             return (cupsServer() != NULL);

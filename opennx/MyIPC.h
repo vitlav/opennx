@@ -89,7 +89,7 @@ public:
     void Print(const wxString &s, bool doLog = true);
     int GetResult();
     long GetPID();
-
+    void Detach();
 
 private:
     typedef enum {
@@ -102,20 +102,25 @@ private:
     virtual void OnErrReceived(wxCommandEvent &);
     virtual void OnTerminate(wxCommandEvent &);
 
+    void sendUpEvent(wxCommandEvent &event);
+
 #ifdef __WXMSW__
     unsigned int m_MsgSession;
     unsigned int m_MsgKill;
 #endif
     AsyncProcess *m_pProcess;
     wxEvtHandler *m_pEvtHandler;
+    wxMutex m_cEvhMutex;
     wxRegEx *m_re;
     ProcessType m_eType;
     int m_iSshPid;
     int m_iOutCollect;
     int m_iErrCollect;
+    int m_nLines618;;
     wxString m_sOutMessage;
     wxString m_sErrMessage;
     wxString m_s595msg;
+    wxString m_s618msg;
 };
 
 #endif

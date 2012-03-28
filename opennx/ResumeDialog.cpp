@@ -129,7 +129,6 @@ void ResumeDialog::Init()
     m_lActiveSession = -1;
     m_eMode = New;
     m_bShadow = false;
-    m_iColOffset = 0;
     m_pCtrlSessions = NULL;
     m_pCtrlTerminate = NULL;
     m_pCtrlTakeover = NULL;
@@ -158,12 +157,13 @@ void ResumeDialog::CreateControls()
 ////@end ResumeDialog content initialisation
 //
     m_pCtrlSessions->InsertColumn(0, _("Name"));
-    m_pCtrlSessions->InsertColumn(1, _("State"));
-    m_pCtrlSessions->InsertColumn(2, _("Type"));
-    m_pCtrlSessions->InsertColumn(3, _("Screen"));
-    m_pCtrlSessions->InsertColumn(4, _("Port"));
-    m_pCtrlSessions->InsertColumn(5, _("Options"));
-    m_pCtrlSessions->InsertColumn(6, _("Session ID"));
+    m_pCtrlSessions->InsertColumn(1, _("User"));
+    m_pCtrlSessions->InsertColumn(2, _("State"));
+    m_pCtrlSessions->InsertColumn(3, _("Type"));
+    m_pCtrlSessions->InsertColumn(4, _("Screen"));
+    m_pCtrlSessions->InsertColumn(5, _("Port"));
+    m_pCtrlSessions->InsertColumn(6, _("Options"));
+    m_pCtrlSessions->InsertColumn(7, _("Session ID"));
     for (int i = 0; i < m_pCtrlSessions->GetColumnCount(); i++) 
         m_pCtrlSessions->SetColumnWidth(i, wxLIST_AUTOSIZE);
 }
@@ -173,39 +173,38 @@ ResumeDialog::AddSession(const wxString& name, const wxString& state, const wxSt
         const wxString& size, const wxString& colors,
         const wxString& port, const wxString& opts, const wxString& id, const wxString& user /* = wxT("") */)
 {
-    if ((0 == m_iColOffset) && !user.IsEmpty()) {
-        m_pCtrlSessions->InsertColumn(1, _("User"));
-        m_iColOffset = 1;
-    }
-    long idx = m_pCtrlSessions->InsertItem(0, name, 0);
-    if (1 == m_iColOffset)
+    long idx = m_pCtrlSessions->InsertItem(m_pCtrlSessions->GetItemCount(), name, 0);
+    if (0 <= idx) {
         m_pCtrlSessions->SetItem(idx, 1, user);
-    m_pCtrlSessions->SetItem(idx, 1 + m_iColOffset, state);
-    m_pCtrlSessions->SetItem(idx, 2 + m_iColOffset, type);
-    if (size.IsSameAs(wxT("N/A")) && colors.IsSameAs(wxT("N/A")))
-        m_pCtrlSessions->SetItem(idx, 3 + m_iColOffset, colors);
-    else
-        m_pCtrlSessions->SetItem(idx, 3 + m_iColOffset, size + wxT("x") + colors);
-    m_pCtrlSessions->SetItem(idx, 4 + m_iColOffset, port);
-    m_pCtrlSessions->SetItem(idx, 5 + m_iColOffset, opts);
-    m_pCtrlSessions->SetItem(idx, 6 + m_iColOffset, id);
-    long lPort;
-    port.ToLong(&lPort);
-    m_pCtrlSessions->SetItemData(idx, lPort);
-    for (int i = 0; i < m_pCtrlSessions->GetColumnCount(); i++)
-        m_pCtrlSessions->SetColumnWidth(i, wxLIST_AUTOSIZE);
-    if ((m_lActiveSession < 0) || (name == m_sPreferredSession)) {
-        ::myLogTrace(MYTRACETAG, wxT("autoselect preferred=%d"), idx);
-        wxListItem info;
-        info.m_itemId = idx;
-        info.m_mask = wxLIST_MASK_STATE;
-        info.m_state = wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED;
-        info.m_stateMask = wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED;
-        m_pCtrlSessions->SetItem(info);
-        m_sSelectedPort = port;
-        m_sSelectedName = name;
-        m_sSelectedType = type;
-        m_sSelectedId = id;
+        m_pCtrlSessions->SetItem(idx, 2, state);
+        m_pCtrlSessions->SetItem(idx, 3, type);
+        if (size.IsSameAs(wxT("N/A")) && colors.IsSameAs(wxT("N/A")))
+            m_pCtrlSessions->SetItem(idx, 4, colors);
+        else
+            m_pCtrlSessions->SetItem(idx, 4, size + wxT("x") + colors);
+        m_pCtrlSessions->SetItem(idx, 5, port);
+        m_pCtrlSessions->SetItem(idx, 6, opts);
+        m_pCtrlSessions->SetItem(idx, 7, id);
+        //long lPort;
+        //port.ToLong(&lPort);
+        //m_pCtrlSessions->SetItemData(idx, lPort);
+        for (int i = 0; i < m_pCtrlSessions->GetColumnCount(); i++)
+            m_pCtrlSessions->SetColumnWidth(i, wxLIST_AUTOSIZE);
+        if ((m_lActiveSession < 0) || (name == m_sPreferredSession)) {
+            ::myLogTrace(MYTRACETAG, wxT("autoselect preferred=%d"), idx);
+            wxListItem info;
+            info.m_itemId = idx;
+            info.m_mask = wxLIST_MASK_STATE;
+            info.m_state = wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED;
+            info.m_stateMask = wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED;
+            m_pCtrlSessions->SetItem(info);
+            m_sSelectedPort = port;
+            m_sSelectedName = name;
+            m_sSelectedType = type;
+            m_sSelectedId = id;
+        }
+    } else {
+        ::wxLogError(_("Could not add session list item"));
     }
 }
 
@@ -231,11 +230,12 @@ void ResumeDialog::OnListctrlSessionsSelected( wxListEvent& event )
     m_lActiveSession = event.GetIndex();
     ::myLogTrace(MYTRACETAG, wxT("clickselect=%d"), m_lActiveSession);
     wxListItem info;
-    info.m_itemId = m_lActiveSession;
-    info.m_col = 1 + m_iColOffset;
+    info.SetId(m_lActiveSession);
+    info.SetMask(wxLIST_MASK_TEXT);
+    info.SetColumn(2);
     m_pCtrlSessions->GetItem(info);
     if (m_bShadow) {
-        if (info.m_text == wxT("Suspended")) {
+        if (info.GetText() == wxT("Suspended")) {
             m_pCtrlResume->Enable(false);
             m_pCtrlTakeover->Enable(false);
             m_pCtrlTerminate->Enable(true);
@@ -245,7 +245,7 @@ void ResumeDialog::OnListctrlSessionsSelected( wxListEvent& event )
             m_pCtrlTerminate->Enable(false);
         }
     } else {
-        if (info.m_text == wxT("Suspended")) {
+        if (info.GetText() == wxT("Suspended")) {
             m_pCtrlResume->Enable(true);
             m_pCtrlTakeover->Enable(false);
             m_pCtrlTerminate->Enable(true);
@@ -255,18 +255,19 @@ void ResumeDialog::OnListctrlSessionsSelected( wxListEvent& event )
             m_pCtrlTerminate->Enable(false);
         }
     }
-    info.m_col = 0;
+    info.SetColumn(0);
     m_pCtrlSessions->GetItem(info);
-    m_sSelectedName = info.m_text;
-    info.m_col = 2 + m_iColOffset;
+    m_sSelectedName = info.GetText();
+    info.SetColumn(3);
     m_pCtrlSessions->GetItem(info);
-    m_sSelectedType = info.m_text;
-    info.m_col = 4 + m_iColOffset;
+    m_sSelectedType = info.GetText();
+    info.SetColumn(5);
     m_pCtrlSessions->GetItem(info);
-    m_sSelectedPort = info.m_text;
-    info.m_col = 6 + m_iColOffset;
+    m_sSelectedPort = info.GetText();
+    info.SetColumn(7);
     m_pCtrlSessions->GetItem(info);
-    m_sSelectedId = info.m_text;
+    m_sSelectedId = info.GetText();
+    ::myLogTrace(MYTRACETAG, wxT("Selected session ID=%s"), m_sSelectedId.c_str());
     event.Skip();
 }
 
@@ -276,6 +277,7 @@ void ResumeDialog::OnListctrlSessionsSelected( wxListEvent& event )
 
 void ResumeDialog::OnRefreshClick( wxCommandEvent& event )
 {
+    wxUnusedVar(event);
     m_eMode = Refresh;
     EndModal(wxID_OK);
 }

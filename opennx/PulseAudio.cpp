@@ -43,6 +43,10 @@
 #include <wx/log.h>
 #include <wx/utils.h>
 #include <wx/regex.h>
+#include <wx/config.h>
+#include <wx/wfstream.h>
+#include <wx/txtstrm.h>
+#include <wx/process.h>
 
 #ifdef APP_OPENNX
 # include "opennxApp.h"
@@ -50,12 +54,18 @@
 #ifdef APP_PULSETEST
 # include "pulseTest.h"
 #endif
+#include "osdep.h"
 
 #include "trace.h"
 ENABLE_TRACE;
 
-#ifdef HAVE_PULSE_PULSEAUDIO_H
+#if defined(HAVE_PULSE_PULSEAUDIO_H) || defined(__WXMSW__) || defined(__WXMAC__)
+# define WITH_PULSEAUDIO
+#endif
+
+#ifdef WITH_PULSEAUDIO
 #include <pulse/pulseaudio.h>
+
 
 typedef pa_threaded_mainloop* (*Tpa_threaded_mainloop_new)(void);
 typedef pa_mainloop_api* (*Tpa_threaded_mainloop_get_api)(pa_threaded_mainloop*);
@@ -125,6 +135,16 @@ static int _set_pasyms(MyDynamicLibrary *dll) {
     return 1;
 }
 
+// On windows, calling ::myLogTrace() from within libpulse's
+// connection loop apparently crashes libpulse for some
+// unknown reason. Therefore, we use native OutputDebugStringA
+// in this case.
+#ifdef __WXMSW__
+# define STATE_TRACE(msg) OutputDebugStringA(msg)
+#else
+# define STATE_TRACE(msg) ::myLogTrace(MYTRACETAG, wxT(msg))
+#endif
+
 class pawrapper {
     private:
         typedef enum {
@@ -141,15 +161,24 @@ class pawrapper {
         pawrapper()
             : m_bConnected(false), m_pLoop(NULL), m_pApi(NULL), m_pContext(NULL)
         {
+            m_bError = false;
+            m_bConnected = false;
             m_pLoop = Ppa_threaded_mainloop_new();
             m_pApi = Ppa_threaded_mainloop_get_api(m_pLoop);
             m_pContext = Ppa_context_new(m_pApi, "OpenNX");
             Ppa_context_set_state_callback(m_pContext, context_state_callback_if, this);
-            if (0 <= Ppa_context_connect(m_pContext, NULL /* server */, PA_CONTEXT_NOAUTOSPAWN, NULL)) {
-                Ppa_threaded_mainloop_start(m_pLoop);
-                while (!m_bConnected)
-                    ::wxGetApp().Yield(true);
-            }
+            int retry = 3;
+            do {
+                m_bError = false;
+                ::myLogTrace(MYTRACETAG, wxT("pa_context_connect try %d"), 4 - retry);
+                if (0 <= Ppa_context_connect(m_pContext, NULL /* server */, PA_CONTEXT_NOAUTOSPAWN, NULL)) {
+                    Ppa_threaded_mainloop_start(m_pLoop);
+                    while (!(m_bConnected || m_bError))
+                        ::wxGetApp().Yield(true);
+                }
+                if (m_bConnected)
+                    break;
+            } while (retry-- > 0);
         }
 
         ~pawrapper()
@@ -172,8 +201,8 @@ class pawrapper {
             Ppa_operation_unref(Ppa_context_get_module_info_list(m_pContext, get_module_info_callback_if, this));
             bool ret = waitcmd();
             if (ret && m_bFound) {
-               args = m_sStr;
-               index = m_iIndex;
+                args = m_sStr;
+                index = m_iIndex;
             }
             return ret && m_bFound;
         }
@@ -256,32 +285,32 @@ class pawrapper {
             if (NULL == c)
                 return;
             switch (Ppa_context_get_state(c)) {
+                case PA_CONTEXT_UNCONNECTED:
+                    STATE_TRACE("PA_CONTEXT_UNCONNECTED");
+                    break;
                 case PA_CONTEXT_CONNECTING:
-                    ::myLogTrace(MYTRACETAG, wxT("PA_CONTEXT_CONNECTING"));
+                    STATE_TRACE("PA_CONTEXT_CONNECTING");
                     break;
                 case PA_CONTEXT_AUTHORIZING:
-                    ::myLogTrace(MYTRACETAG, wxT("PA_CONTEXT_AUTHORIZING"));
+                    STATE_TRACE("PA_CONTEXT_AUTHORIZING");
                     break;
                 case PA_CONTEXT_SETTING_NAME:
-                    ::myLogTrace(MYTRACETAG, wxT("PA_CONTEXT_SETTING_NAME"));
+                    STATE_TRACE("PA_CONTEXT_SETTING_NAME");
                     break;
-
                 case PA_CONTEXT_READY:
-                    ::myLogTrace(MYTRACETAG, wxT("PA_CONTEXT_READY"));
+                    STATE_TRACE("PA_CONTEXT_READY");
                     m_bConnected = true;
                     break;
                 case PA_CONTEXT_TERMINATED:
-                    ::myLogTrace(MYTRACETAG, wxT("PA_CONTEXT_TERMINATED"));
+                    STATE_TRACE("PA_CONTEXT_TERMINATED");
                     break;
                 case PA_CONTEXT_FAILED:
-                    ::myLogTrace(MYTRACETAG, wxT("PA_CONTEXT_FAILED"));
+                    STATE_TRACE("PA_CONTEXT_FAILED");
                     m_bError = true;
-                    m_pApi->quit(m_pApi, 0);
                     break;
                 default:
-                    ::myLogTrace(MYTRACETAG, wxT("PA_CONTEXT_default"));
+                    STATE_TRACE("PA_CONTEXT_default");
                     m_bError = true;
-                    m_pApi->quit(m_pApi, 0);
                     break;
             }
         }
@@ -373,11 +402,11 @@ class pawrapper {
             static_cast<pawrapper *>(udata)->context_state_callback(c);
         }
 
-        bool m_bConnected;
-        bool m_bComplete;
-        bool m_bError;
-        bool m_bSearch;
-        bool m_bFound;
+        volatile bool m_bConnected;
+        volatile bool m_bComplete;
+        volatile bool m_bError;
+        volatile bool m_bSearch;
+        volatile bool m_bFound;
         unsigned int m_iIndex;
         pa_threaded_mainloop *m_pLoop;
         pa_mainloop_api *m_pApi;
@@ -386,22 +415,97 @@ class pawrapper {
 
 };
 
-#endif // HAVE_PULSE_PULSEAUDIO_H
+# if defined(__WXMSW__) || defined(__WXMAC__)
+#  ifdef __WXMAC__
+extern "C" {
+    extern const char *getMacMachineID();
+};
+#  endif
+
+static wxString MachineID() {
+#  ifdef __WXMSW__
+    return ::wxGetHostName().Lower();
+#  else
+    return wxString(getMacMachineID(), wxConvUTF8);
+#  endif
+}
+# endif // defined(__WXMSW__) || defined(__WXMAC__)
+#endif // WITH_PULSEAUDIO
+
+bool PulseAudio::AutoSpawn()
+{
+#ifdef WITH_PULSEAUDIO
+# if defined(__WXMSW__) || defined(__WXMAC__)
+    int papid;
+    int retry = 3;
+    // On windows and mac, we do our own autospawn
+    wxString piddir = ::wxGetHomeDir() + wxFileName::GetPathSeparator()
+        + wxT(".pulse") + wxFileName::GetPathSeparator()
+        + MachineID() + wxT("-runtime");
+    wxString pidfile = piddir + wxFileName::GetPathSeparator() + wxT("pid");
+    do {
+        ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: checking '%s'"), pidfile.c_str());
+        wxFileInputStream sPid(pidfile);
+        if (sPid.IsOk()) {
+            ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: PID file exists"));
+            wxTextInputStream tis(sPid);
+            tis >> papid;
+            ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: PID=%d"), papid);
+            if ((papid != 0) && ::wxProcess::Exists(papid)) {
+                ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: process %d is running"), papid);
+                return true;
+            }
+        }
+
+        wxString pacmd;
+        wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &pacmd);
+        pacmd << wxFileName::GetPathSeparator() << wxT("bin")
+            << wxFileName::GetPathSeparator() << wxT("pulseaudio");
+#  ifdef __WXMSW__
+        pacmd << wxT(".exe");
+#  endif
+        ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: trying to start '%s'"), pacmd.c_str());
+#  ifdef __WXMSW__
+        CreateDetachedProcess((const char *)pacmd.mb_str());
+        // Don't report an error here, as CreateDetachedProcess may
+        // fail if pulseaudio is already running
+#  else
+        ::wxExecute(pacmd, wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
+#  endif
+        wxThread::Sleep(500);
+    } while (retry-- > 0);
+    ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: spawn failed"));
+    return false;
+# else
+    ::myLogTrace(MYTRACETAG, wxT("Not spawning pulseaudio on this platform"));
+    return true;
+# endif // defined(__WXMSW__) || defined(__WXMAC__)
+#else
+    return true;
+#endif // WITH_PULSEAUDIO
+}
 
     PulseAudio::PulseAudio()
 : pa(NULL), dll(NULL), m_bPulseAvailable(false)
 {
-#ifdef HAVE_PULSE_PULSEAUDIO_H
+#ifdef WITH_PULSEAUDIO
     wxLogNull ignoreErrors;
-    dll = new MyDynamicLibrary();
-    if (dll->Load(wxT("libpulse"))) {
-        ::myLogTrace(MYTRACETAG, wxT("libpulse loaded"));
-        if (0 != _set_pasyms(dll)) {
-            ::myLogTrace(MYTRACETAG, wxT("libpulse functions loaded"));
-            pa = new pawrapper();
-            if (pa->isConnected()) {
-                m_bPulseAvailable = true;
-                ::myLogTrace(MYTRACETAG, wxT("connected to pulseaudio daemon"));
+    if (AutoSpawn()) {
+        dll = new MyDynamicLibrary();
+# ifdef __WXMSW__
+        wxString pdll = wxT("libpulse-0");
+# else
+        wxString pdll = wxT("libpulse");
+# endif
+        if (dll->Load(pdll)) {
+            ::myLogTrace(MYTRACETAG, wxT("libpulse loaded"));
+            if (0 != _set_pasyms(dll)) {
+                ::myLogTrace(MYTRACETAG, wxT("libpulse functions loaded"));
+                pa = new pawrapper();
+                if (pa->isConnected()) {
+                    m_bPulseAvailable = true;
+                    ::myLogTrace(MYTRACETAG, wxT("connected to pulseaudio daemon"));
+                }
             }
         }
     }
@@ -412,7 +516,7 @@ class pawrapper {
 
 PulseAudio::~PulseAudio()
 {
-#ifdef HAVE_PULSE_PULSEAUDIO_H
+#ifdef WITH_PULSEAUDIO
     delete pa;
     delete dll;
 #endif
@@ -420,6 +524,7 @@ PulseAudio::~PulseAudio()
 
 bool PulseAudio::IsAvailable()
 {
+    ::myLogTrace(MYTRACETAG, wxT("IsAvailable:%s"), m_bPulseAvailable ? wxT("true") : wxT("false"));
     return m_bPulseAvailable;
 }
 
@@ -427,9 +532,9 @@ bool PulseAudio::ActivateEsound(int port)
 {
     if (!m_bPulseAvailable)
         return false;
-#ifdef HAVE_PULSE_PULSEAUDIO_H
+#ifdef WITH_PULSEAUDIO
     wxString ma;
-    unsigned int mi;
+    unsigned int mi = -1;
     if (pa->findmodule(wxT("module-esound-protocol-tcp"), ma, mi)) {
         ::myLogTrace(MYTRACETAG, wxT("found esdmod, idx=%u args='%s'"), mi, ma.c_str());
         long mport = 16001;
@@ -444,7 +549,9 @@ bool PulseAudio::ActivateEsound(int port)
             laddr = reListen.GetMatch(ma, 1);
             ::myLogTrace(MYTRACETAG, wxT("matched listen arg a=%s"), laddr.c_str());
         }
-        if ((mport == port) && (laddr.IsSameAs(wxT("0.0.0.0")) || laddr.IsSameAs(wxT("127.0.0.1"))))
+        // Must disable cookie auth here, because esddsp runs on the NX server
+        // and we don't have access to the user's ~/.esd_auth on that machine.
+        if (ma.Contains(wxT("auth-anonymous=1")) && (mport == port) && (laddr.IsSameAs(wxT("0.0.0.0")) || laddr.IsSameAs(wxT("127.0.0.1"))))
             return true;
         ::myLogTrace(MYTRACETAG, wxT("unloading"));
         if (!pa->unloadmodule(mi))
@@ -452,7 +559,7 @@ bool PulseAudio::ActivateEsound(int port)
     }
     ::myLogTrace(MYTRACETAG, wxT("loading"));
     return pa->loadmodule(wxT("module-esound-protocol-tcp"),
-            wxString::Format(wxT("port=%d listen=127.0.0.1"), port));
+            wxString::Format(wxT("auth-anonymous=1 port=%d listen=127.0.0.1"), port));
 #else
     wxUnusedVar(port);
     return false;

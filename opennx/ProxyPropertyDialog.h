@@ -36,6 +36,7 @@
 #include "wx/valgen.h"
 #include "wx/spinctrl.h"
 #include "wx/valtext.h"
+#include "wx/hyperlink.h"
 #include "wx/statline.h"
 ////@end includes
 
@@ -45,6 +46,7 @@
 
 ////@begin forward declarations
 class wxSpinCtrl;
+class wxHyperlinkCtrl;
 ////@end forward declarations
 
 /*!
@@ -54,7 +56,7 @@ class wxSpinCtrl;
 ////@begin control identifiers
 #define ID_PROXYPROPERTYDIALOG 10083
 #define SYMBOL_PROXYPROPERTYDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxTAB_TRAVERSAL
-#define SYMBOL_PROXYPROPERTYDIALOG_TITLE _("Proxy settings")
+#define SYMBOL_PROXYPROPERTYDIALOG_TITLE _("Proxy settings - OpenNX")
 #define SYMBOL_PROXYPROPERTYDIALOG_IDNAME ID_PROXYPROPERTYDIALOG
 #define SYMBOL_PROXYPROPERTYDIALOG_SIZE wxSize(400, 300)
 #define SYMBOL_PROXYPROPERTYDIALOG_POSITION wxDefaultPosition
@@ -144,6 +146,7 @@ public:
     wxTextCtrl* m_pCtrlProxyPass;
     wxCheckBox* m_pCtrlProxyPassRemember;
     wxTextCtrl* m_pCtrlProxyCommand;
+    wxHyperlinkCtrl* m_pProxyCmdHelp;
 private:
     bool m_bUseProxy;
     wxString m_sProxyHost;

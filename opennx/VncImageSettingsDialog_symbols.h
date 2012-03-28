@@ -1,6 +1,6 @@
 // $Id$
 //
-// Copyright (C) 2010 The OpenNX team
+// Copyright (C) 2011 The OpenNX team
 // Author: Fritz Elfert
 //
 // This program is free software; you can redistribute it and/or modify
@@ -20,9 +20,11 @@
 //
 
 #define ID_DIALOG_IMAGE_VNC_SYMBOL_0 _("VNC Image Settings - OpenNX")
-#define ID_DIALOG_IMAGE_VNC_SYMBOL_1 _("Use RFB Hextile encoding")
-#define ID_DIALOG_IMAGE_VNC_SYMBOL_2 _("Use RFB Tight encoding")
-#define ID_DIALOG_IMAGE_VNC_SYMBOL_3 _("Enable JPEG encoding")
-#define ID_DIALOG_IMAGE_VNC_SYMBOL_4 _("Use plain X bitmaps")
-#define ID_DIALOG_IMAGE_VNC_SYMBOL_5 _("&OK")
-#define ID_DIALOG_IMAGE_VNC_SYMBOL_6 _("&Cancel")
+#define ID_DIALOG_IMAGE_VNC_SYMBOL_1 _("Encoding")
+#define ID_DIALOG_IMAGE_VNC_SYMBOL_2 _("Use JPEG and RGB image compression")
+#define ID_DIALOG_IMAGE_VNC_SYMBOL_3 _("Use JPEG image compression only")
+#define ID_DIALOG_IMAGE_VNC_SYMBOL_4 _("Use RGB image compression only")
+#define ID_DIALOG_IMAGE_VNC_SYMBOL_5 _("Use plain X bitmaps")
+#define ID_DIALOG_IMAGE_VNC_SYMBOL_6 _("Use custom image quality")
+#define ID_DIALOG_IMAGE_VNC_SYMBOL_7 _("&OK")
+#define ID_DIALOG_IMAGE_VNC_SYMBOL_8 _("&Cancel")
