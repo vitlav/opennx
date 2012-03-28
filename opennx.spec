@@ -22,6 +22,7 @@ Requires: usbip2-nxclient
 BuildRequires: gcc-c++ imake libSM-devel libXmu-devel nx ImageMagick-tools
 BuildRequires: libopensc-devel libsmbclient-devel
 BuildRequires: libwxGTK-devel xorg-cf-files zip libcups-devel
+BuildRequires: libXau-devel
 
 %description
 opennx is an OSS replacement for Nomachine's NX client.
