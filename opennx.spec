@@ -4,7 +4,7 @@
 Summary: An OpenSource NX client
 Name: opennx
 Version: 0.16
-Release: alt16.svn634
+Release: alt17.svn708
 License: LGPL/GPL
 Group: Networking/Remote access
 Url: http://sourceforge.net/projects/opennx
@@ -122,6 +122,9 @@ install -m 644 etc/*.rules %buildroot%_sysconfdir/udev/rules.d
 %endif
 
 %changelog
+* Wed Mar 28 2012 Boris Savelev <boris@altlinux.org> 0.16-alt17.svn708
+- update from trunk
+
 * Fri Jun 17 2011 Boris Savelev <boris@altlinux.org> 0.16-alt16.svn634
 - update from trunk
 
