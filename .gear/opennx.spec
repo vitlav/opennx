@@ -4,13 +4,13 @@
 Summary: An OpenSource NX client
 Name: opennx
 Version: 0.16
-Release: alt17.svn708
+Release: eter17.svn708
 License: LGPL/GPL
 Group: Networking/Remote access
 Url: http://sourceforge.net/projects/opennx
-Packager: Boris Savelev <boris@altlinux.org>
+Packager: Denis Baranov <baraka@altlinux.org>
 
-Source: %name-%version.tar
+Source: ftp://ftp.etersoft.ru/pub/Etersoft/RX@Etersoft/1.0.0/sources/tarball/%name-%version.tar
 
 Patch: %name-0.16-disable-opensc.patch
 
@@ -123,8 +123,9 @@ install -m 644 etc/*.rules %buildroot%_sysconfdir/udev/rules.d
 %endif
 
 %changelog
-* Wed Mar 28 2012 Boris Savelev <boris@altlinux.org> 0.16-alt17.svn708
-- update from trunk
+* Fri Jun 01 2012 Denis Baranov <baraka@altlinux.ru> 0.16-eter17.svn708
+- Initial build
+- update from ALTLinux
 
 * Fri Jun 17 2011 Boris Savelev <boris@altlinux.org> 0.16-alt16.svn634
 - update from trunk

@@ -1,2 +1,3 @@
 tar: opennx
 copy: *.patch
+spec:.gear/opennx.spec
