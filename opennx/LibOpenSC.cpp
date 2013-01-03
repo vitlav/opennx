@@ -1,4 +1,4 @@
-// $Id$
+// $Id: LibOpenSC.cpp 451 2010-01-27 12:24:56Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

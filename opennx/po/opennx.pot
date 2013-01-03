@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opennx 0.16\n"
 "Report-Msgid-Bugs-To: felfert@users.sf.net\n"
-"POT-Creation-Date: 2012-03-16 13:46+0100\n"
+"POT-Creation-Date: 2012-08-05 20:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1248,7 +1248,7 @@ msgstr ""
 msgid "Select System CUPS daemon"
 msgstr ""
 
-#: SessionProperties.cpp:2027 opennxApp.cpp:1287
+#: SessionProperties.cpp:2027 opennxApp.cpp:1305
 msgid "libusb is not available. No USB devices will be exported"
 msgstr ""
 
@@ -1877,34 +1877,34 @@ msgstr ""
 msgid "Get a list of available X desktop managers"
 msgstr ""
 
-#: opennxApp.cpp:269
+#: opennxApp.cpp:270
 msgid "Launch NX Session"
 msgstr ""
 
-#: opennxApp.cpp:336
+#: opennxApp.cpp:337
 msgid "Could not create link on Desktop."
 msgstr ""
 
-#: opennxApp.cpp:438
+#: opennxApp.cpp:439
 msgid "Could not get PATH environment"
 msgstr ""
 
-#: opennxApp.cpp:453
+#: opennxApp.cpp:454
 #, c-format
 msgid "Could not find %s in PATH"
 msgstr ""
 
-#: opennxApp.cpp:463
+#: opennxApp.cpp:464
 #, c-format
 msgid "Could not stat %s"
 msgstr ""
 
-#: opennxApp.cpp:469
+#: opennxApp.cpp:470
 #, c-format
 msgid "Could not read link %s"
 msgstr ""
 
-#: opennxApp.cpp:538
+#: opennxApp.cpp:540
 #, c-format
 msgid ""
 "Your System NX directory setting (%s)\n"
@@ -1913,122 +1913,122 @@ msgid ""
 "(%s)?"
 msgstr ""
 
-#: opennxApp.cpp:539
+#: opennxApp.cpp:541
 msgid "Update System NX directory? - OpenNX"
 msgstr ""
 
-#: opennxApp.cpp:589
+#: opennxApp.cpp:592
 #, c-format
 msgid ""
 "Found a CUPS daemon binary in %s, however it is not executable.\n"
 "In order to use CUPS printing, you need to fix its permissions."
 msgstr ""
 
-#: opennxApp.cpp:594
+#: opennxApp.cpp:597
 msgid ""
 "Could not find any CUPS daemon binary.\n"
 "In order to use CUPS printing, you need to install cups."
 msgstr ""
 
-#: opennxApp.cpp:808 watchReaderApp.cpp:125 watchUsbIpApp.cpp:216
+#: opennxApp.cpp:813 watchReaderApp.cpp:125 watchUsbIpApp.cpp:216
 msgid ""
 "\n"
 "\n"
 "Supported trace tags: "
 msgstr ""
 
-#: opennxApp.cpp:811
+#: opennxApp.cpp:816
 msgid "Automatically login to the specified session."
 msgstr ""
 
-#: opennxApp.cpp:813
+#: opennxApp.cpp:818
 msgid "Automatically resume/takeover a session with the same name."
 msgstr ""
 
-#: opennxApp.cpp:815
+#: opennxApp.cpp:820
 msgid "Automatically destroy error dialogs at termination."
 msgstr ""
 
-#: opennxApp.cpp:817
+#: opennxApp.cpp:822
 msgid "Start the session administration tool."
 msgstr ""
 
-#: opennxApp.cpp:819
+#: opennxApp.cpp:824
 msgid "Specify alternate CA cert for fetching configuration via https."
 msgstr ""
 
-#: opennxApp.cpp:821
+#: opennxApp.cpp:826
 msgid "Specify window title for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:823
+#: opennxApp.cpp:828
 msgid "Specify dialog style for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:825
+#: opennxApp.cpp:830
 msgid "Run in dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:827
+#: opennxApp.cpp:832
 msgid "Compatibility option for dialog mode (ignored)."
 msgstr ""
 
-#: opennxApp.cpp:829
+#: opennxApp.cpp:834
 msgid "Export builtin GUI resources to zip file and exit."
 msgstr ""
 
-#: opennxApp.cpp:831
+#: opennxApp.cpp:836
 msgid "Dialog mode proxy."
 msgstr ""
 
-#: opennxApp.cpp:833
+#: opennxApp.cpp:838
 msgid "Specify message for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:835
+#: opennxApp.cpp:840
 msgid "Specify parent PID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:837
+#: opennxApp.cpp:842
 msgid "Run a session importing configuration settings from FILENAME."
 msgstr ""
 
-#: opennxApp.cpp:839
+#: opennxApp.cpp:844
 msgid "Specify window-ID for dialog mode."
 msgstr ""
 
-#: opennxApp.cpp:841 watchReaderApp.cpp:132 watchUsbIpApp.cpp:225
+#: opennxApp.cpp:846 watchReaderApp.cpp:132 watchUsbIpApp.cpp:225
 msgid "Specify wxWidgets trace mask."
 msgstr ""
 
-#: opennxApp.cpp:844
+#: opennxApp.cpp:849
 msgid "Test CardWaiterDialog"
 msgstr ""
 
-#: opennxApp.cpp:847
+#: opennxApp.cpp:852
 msgid "Guide the user through the steps to configure a session."
 msgstr ""
 
-#: opennxApp.cpp:904 watchReaderApp.cpp:261
+#: opennxApp.cpp:909 watchReaderApp.cpp:261
 msgid "Smart card removed"
 msgstr ""
 
-#: opennxApp.cpp:906 watchReaderApp.cpp:260
+#: opennxApp.cpp:911 watchReaderApp.cpp:260
 msgid ""
 "OpenNX session has been suspended, because\n"
 "the authenticating smart card has been removed."
 msgstr ""
 
-#: opennxApp.cpp:1302
+#: opennxApp.cpp:1320
 msgid "USBIP tunnel registration timeout"
 msgstr ""
 
-#: opennxApp.cpp:1306
+#: opennxApp.cpp:1324
 #, c-format
 msgid "Unable to export USB device %s"
 msgstr ""
 
-#: opennxApp.cpp:1312
+#: opennxApp.cpp:1330
 msgid "Could not connect to usbipd2. No USB devices will be exported"
 msgstr ""
 

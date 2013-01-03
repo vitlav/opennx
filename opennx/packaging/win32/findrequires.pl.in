@@ -49,6 +49,13 @@ sub dbg {
     print STDERR @_ if ($DEBUG);
 }
 
+sub ncf($$) {
+    my $dir = shift;
+    my $file = shift;
+    my @a = grep { lc("$dir/$file") eq lc($_) } glob("$dir/*");
+    return (scalar(@a)) ? $a[0] : undef;
+}
+
 sub finddeps($$);
 
 sub finddeps($$) {
@@ -78,11 +85,11 @@ sub finddeps($$) {
             $cdll =~ s/\.drv$//;
             next if grep { $cdll eq $_ } @sysdlls;
             dbg $indent, " Depends on ", $dll, "\n";
-            next if (-f ($dstdir ."/" . $dll));
+            next if (ncf($dstdir, $dll));
             my $absdll = '';
             foreach my $dir (split(/:/, $dllpath)) {
-                if (-f "$dir/$dll") {
-                    $absdll = "$dir/$dll";
+                if (ncf($dir, $dll)) {
+                    $absdll = ncf($dir, $dll);
                     last;
                 }
             }

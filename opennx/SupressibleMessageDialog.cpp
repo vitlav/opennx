@@ -1,4 +1,4 @@
-// $Id$
+// $Id: SupressibleMessageDialog.cpp 587 2010-10-21 22:35:37Z felfert $
 //
 // Copyright (C) 2010 The OpenNX team
 // Author: Fritz Elfert

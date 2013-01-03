@@ -1,4 +1,4 @@
-// $Id$
+// $Id: RdpPropertyDialog_symbols.h 674 2012-02-05 05:55:40Z felfert $
 //
 // Copyright (C) 2011 The OpenNX team
 // Author: Fritz Elfert

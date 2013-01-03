@@ -1,4 +1,4 @@
-// $Id$
+// $Id: mylog.h 709 2012-05-12 22:06:14Z felfert $
 //
 // Copyright (C) 2006 The OpenNX team
 // Author: Fritz Elfert
@@ -24,9 +24,16 @@
 
 #include <wx/log.h>
 
+// Compatibility with patched wxWidgets 2.8.12 on Ubuntu
+#ifndef WX_ATTRIBUTE_PRINTF_2
+# ifdef ATTRIBUTE_PRINTF_2
+#  define WX_ATTRIBUTE_PRINTF_2 ATTRIBUTE_PRINTF_2
+# endif
+#endif
+
 extern void myLogDebug(const wxChar *szFormat, ...);
-extern void myLogTrace(const wxChar *mask, const wxChar *szFormat, ...) ATTRIBUTE_PRINTF_2;
-extern void myLogTrace(wxTraceMask mask, const wxChar *szFormat, ...) ATTRIBUTE_PRINTF_2;
+extern void myLogTrace(const wxChar *mask, const wxChar *szFormat, ...) WX_ATTRIBUTE_PRINTF_2;
+extern void myLogTrace(wxTraceMask mask, const wxChar *szFormat, ...) WX_ATTRIBUTE_PRINTF_2;
 
 #endif
     // _MYLOG_H_

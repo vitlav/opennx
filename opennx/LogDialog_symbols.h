@@ -1,4 +1,4 @@
-// $Id$
+// $Id: LogDialog_symbols.h 689 2012-02-19 00:30:54Z felfert $
 //
 // Copyright (C) 2011 The OpenNX team
 // Author: Fritz Elfert

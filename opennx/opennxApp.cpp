@@ -1,4 +1,4 @@
-// $Id$
+// $Id: opennxApp.cpp 713 2012-07-02 15:56:54Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert
@@ -105,6 +105,7 @@ IMPLEMENT_APP(opennxApp);
     ,m_bAutoLogin(false)
     ,m_bAutoResume(false)
     ,m_bKillErrors(false)
+    ,m_bNoGui(false)
     ,m_pLoginDialog(NULL)
 {
     SetAppName(wxT("OpenNX"));
@@ -535,11 +536,13 @@ opennxApp::preInit()
         wxString cfgsysdir;
         if (wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &cfgsysdir)) {
             if (!thissysdir.IsSameAs(cfgsysdir)) {
-                wxString msg(wxString::Format(_("Your System NX directory setting (%s)\nappears to be incorrect.\nDo you want to change it to the correct default value\n(%s)?"), cfgsysdir.c_str(), thissysdir.c_str()));
-                int response = wxMessageBox(msg, _("Update System NX directory? - OpenNX"), wxYES_NO|wxICON_QUESTION);
-                if (wxYES == response) {
-                    wxConfigBase::Get()->Write(wxT("Config/SystemNxDir"), thissysdir);
-                    wxConfigBase::Get()->Flush();
+                if (!m_bNoGui) {
+                    wxString msg(wxString::Format(_("Your System NX directory setting (%s)\nappears to be incorrect.\nDo you want to change it to the correct default value\n(%s)?"), cfgsysdir.c_str(), thissysdir.c_str()));
+                    int response = wxMessageBox(msg, _("Update System NX directory? - OpenNX"), wxYES_NO|wxICON_QUESTION);
+                    if (wxYES == response) {
+                        wxConfigBase::Get()->Write(wxT("Config/SystemNxDir"), thissysdir);
+                        wxConfigBase::Get()->Flush();
+                    }
                 }
             }
         }
@@ -596,8 +599,10 @@ opennxApp::preInit()
             }
         }
 #endif
-        wxConfigBase::Get()->Write(wxT("Config/CupsPath"), tmp);
-        wxConfigBase::Get()->Flush();
+        if (!tmp.IsEmpty()) {
+            wxConfigBase::Get()->Write(wxT("Config/CupsPath"), tmp);
+            wxConfigBase::Get()->Flush();
+        }
     }
 #ifdef SUPPORT_USBIP
     if (!wxConfigBase::Get()->Read(wxT("Config/UsbipdSocket"), &tmp)) {
@@ -645,9 +650,9 @@ opennxApp::preInit()
     ldpath += tmp + wxFileName::GetPathSeparator() + archlib;
 # ifdef __WXMAC__
     if (wxFileName::DirExists(wxT("/Library/OpenSC/lib")))
-            ldpath.Append(wxT(":/Library/OpenSC/lib"));
+        ldpath.Append(wxT(":/Library/OpenSC/lib"));
     if (wxFileName::DirExists(wxT("/usr/lib/samba")))
-            ldpath.Append(wxT(":/usr/lib/samba"));
+        ldpath.Append(wxT(":/usr/lib/samba"));
 # else
     // If libjpeg-turbo is installed, prepend it's path in
     // order to speed-up image compression.
@@ -1259,11 +1264,24 @@ bool opennxApp::realInit()
 // 'Main program' equivalent: the program execution "starts" here
 bool opennxApp::OnInit()
 {
-    bool ret = realInit();
-    if (m_bKillErrors) {
+    for (int i = 1; i < argc; ++i) {
+        wxString tmp(argv[i]);
+        if (tmp.StartsWith(wxT("--exportres"))) {
+            m_bNoGui = true;
+            break;
+        }
+        if (tmp.IsSameAs(wxT("--killerrors"))) {
+            m_bKillErrors = true;
+            break;
+        }
+    }
+    if (m_bKillErrors || m_bNoGui) {
         wxLog::SetActiveTarget(new wxLogStderr());
+    }
+    if (m_bKillErrors) {
         wxLog::SetLogLevel(0);
     }
+    bool ret = realInit();
 #ifdef SUPPORT_USBIP
     if (m_bRequireStartUsbIp) {
         long usessionTO = wxConfigBase::Get()->Read(wxT("Config/UsbipTunnelTimeout"), 20);

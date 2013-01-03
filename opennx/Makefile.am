@@ -7,6 +7,7 @@ DIST_SUBDIRS = po docs packaging/win32 packaging/MacOSX
 noinst_PROGRAMS = bin2hdr pulsetest $(TESTXAUTH) $(MACTESTKBD)
 
 bin2hdr_SOURCES = bin2hdr.cpp
+bin2hdr_LDFLAGS = -all-static
 
 bin_PROGRAMS = opennx pconnect $(TRACELOG) $(WATCHREADER) $(WATCHUSBIP) \
 	       $(MACFINDREADER) $(MACUNINSTALL)
@@ -308,7 +309,7 @@ dmg:
 	$(MAKE) -C packaging/MacOSX dmg
 
 rpm: distcheck
-	$(RPMBUILD) -ta --with fetchnx $(PACKAGE)-$(VERSION).tar.gz
+	$(RPMBUILD) $(RPMBUILD_OPTS) -ta --with fetchnx $(PACKAGE)-$(VERSION).tar.gz
 
 setup: all
 	$(MAKE) -C packaging/win32 setup

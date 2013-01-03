@@ -1,4 +1,4 @@
-// $Id$
+// $Id: ProxyPasswordDialog.h 449 2010-01-24 21:43:59Z felfert $
 //
 // Copyright (C) 2010 The OpenNX team
 // Author: Fritz Elfert

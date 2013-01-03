@@ -73,7 +73,7 @@ checktarball: $(TARBALL)
 
 $(TARBALL):
 	@echo downloading tarball $(TARBALL)
-	@$(WGET) "$(DLURL)"
+	@$(WGET) -O $@ "$(DLURL)"
 
 ccdir:
 	@echo creating CROSSCOMPILEDIR

@@ -1,4 +1,4 @@
-// $Id$
+// $Id: MyValidator.cpp 557 2010-09-03 18:18:04Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

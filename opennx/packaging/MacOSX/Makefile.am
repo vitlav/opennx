@@ -65,7 +65,7 @@ pkg: pkgdir pkg.plist
 	touch $@
 
 clean-local:
-	sudo rm -rf pkgroot
+	test -d pkgroot && sudo rm -rf pkgroot || :
 
 MAINTAINERCLEANFILES = Makefile.in
 CLEANFILES = -rf pkg pkgdir dmg dmgroot nxbuild OpenNX.pkg scbuild

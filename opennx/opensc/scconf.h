@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: scconf.h 620 2011-05-25 14:49:04Z felfert $
  *
  * Copyright (C) 2002
  *  Antti Tapaninen <aet@cc.hut.fi>

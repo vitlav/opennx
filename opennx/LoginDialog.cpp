@@ -1,4 +1,4 @@
-// $Id$
+// $Id: LoginDialog.cpp 692 2012-02-20 10:35:37Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

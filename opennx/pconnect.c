@@ -21,7 +21,7 @@
  * PROJECT:  My Test Program
  * AUTHOR:   Shun-ichi GOTO <gotoh@taiyo.co.jp>
  * CREATE:   Wed Jun 21, 2000
- * REVISION: $Revision$
+ * REVISION: $Revision: 619 $
  * ---------------------------------------------------------
  *
  * Get Source:
@@ -1844,7 +1844,7 @@ main( int argc, char **argv )
 
     /* initialization */
     getarg( argc, argv );
-    debug("Program is $Revision$\n");
+    debug("Program is $Revision: 619 $\n");
 
     /* Open local_in and local_out if forwarding a port */
     if ( local_type == LOCAL_SOCKET ) {

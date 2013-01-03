@@ -1,4 +1,4 @@
-// $Id$
+// $Id: DebugStringGrabber.cpp 484 2010-02-20 20:33:35Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

@@ -1,4 +1,4 @@
-// $Id$
+// $Id: PanicDialog_symbols.h 216 2009-04-16 01:46:25Z felfert $
 //
 // Copyright (C) 2009 The OpenNX team
 // Author: Fritz Elfert

@@ -1,4 +1,4 @@
-// $Id$
+// $Id: wxprec.cpp 52 2006-12-08 15:19:38Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

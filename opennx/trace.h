@@ -1,4 +1,4 @@
-// $Id$
+// $Id: trace.h 631 2011-06-12 19:20:21Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

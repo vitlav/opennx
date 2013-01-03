@@ -1,4 +1,4 @@
-// $Id$
+// $Id: PanicDialog.h 683 2012-02-09 23:37:19Z felfert $
 //
 // Copyright (C) 2006 The OpenNX team
 // Author: Fritz Elfert

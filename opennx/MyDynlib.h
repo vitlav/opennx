@@ -1,4 +1,4 @@
-// $Id$
+// $Id: MyDynlib.h 222 2009-04-17 12:06:07Z felfert $
 //
 // Copyright (C) 2009 The OpenNX Team
 // Author: Fritz Elfert

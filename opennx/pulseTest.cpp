@@ -1,4 +1,4 @@
-// $Id$
+// $Id: pulseTest.cpp 654 2011-12-09 18:07:38Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

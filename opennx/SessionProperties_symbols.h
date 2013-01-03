@@ -1,4 +1,4 @@
-// $Id$
+// $Id: SessionProperties_symbols.h 705 2012-03-16 13:01:13Z felfert $
 //
 // Copyright (C) 2011 The OpenNX team
 // Author: Fritz Elfert

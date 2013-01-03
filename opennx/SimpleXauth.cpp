@@ -1,4 +1,4 @@
-// $Id$
+// $Id: SimpleXauth.cpp 501 2010-03-01 08:10:39Z felfert $
 //
 // Copyright (C) 2010 The OpenNX Team
 // Author: Fritz Elfert

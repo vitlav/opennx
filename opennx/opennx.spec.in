@@ -283,9 +283,9 @@ ln -s %{_prefix}/bin/opennx %{buildroot}/usr/bin/nxclient
 %clean
 %{__rm} -rf %{buildroot}
 
-%triggerin -- opensc, libsmbclient, samba-common, libusb, libusb-0_1-4, cups-libs
+%triggerin -- opensc, libsmbclient, samba-common, libusb, libusb-0_1-4, cups-libs, pulseaudio-libs
 # Create symlinks with plain .so extension under %{_prefix}/lib[64]
-for lname in usb-0 opensc smbclient cups ; do
+for lname in usb-0 opensc smbclient cups pulse ; do
     LPATH=`/sbin/ldconfig -p|awk '/lib'$lname'[\.-]/ {print $4}'|head -1`
     if test -n "$LPATH" ; then
         blname=`echo $lname|sed -e 's/[-0-9]//g'`
@@ -313,7 +313,7 @@ fi
 rm -rf /usr/NX
 ln -snf %{_prefix} /usr/NX
 # Create symlinks with plain .so extension under %{_prefix}/lib[64]
-for lname in usb-0 opensc smbclient cups ; do
+for lname in usb-0 opensc smbclient cups pulse ; do
     LPATH=`/sbin/ldconfig -p|awk '/lib'$lname'[\.-]/ {print $4}'|head -1`
     if test -n "$LPATH" ; then
         blname=`echo $lname|sed -e 's/[-0-9]//g'`

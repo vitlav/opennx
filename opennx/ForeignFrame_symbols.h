@@ -1,4 +1,4 @@
-// $Id$
+// $Id: ForeignFrame_symbols.h 97 2006-12-21 09:18:48Z felfert $
 //
 // Copyright (C) 2006 The OpenNX team
 // Author: Fritz Elfert

@@ -1,4 +1,4 @@
-// $Id$
+// $Id: SessionList.cpp 687 2012-02-18 00:00:24Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

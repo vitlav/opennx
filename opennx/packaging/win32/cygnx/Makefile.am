@@ -16,7 +16,7 @@ tmpinstall: '{app}'
 	$(WINE) innounp.exe -x -q -y nxsetup.exe
 
 $(IURAR):
-	$(WGET) -q 'http://sourceforge.net/projects/innounp/files/innounp/$(IUDIR)/$(IURAR)/download'
+	$(WGET) -O $@ -q 'http://sourceforge.net/projects/innounp/files/innounp/$(IUDIR)/$(IURAR)/download'
 
 innounp.exe: unrar.available $(IURAR)
 	$(UNRAR) e -o+ -idcd $(IURAR) $@

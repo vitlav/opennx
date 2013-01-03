@@ -1,4 +1,4 @@
-/* $Id$
+/* $Id: MacOSX.c 680 2012-02-09 23:31:11Z felfert $
  *
  * Copyright (C) 2006 The OpenNX Team
  * Author: Fritz Elfert

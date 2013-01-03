@@ -1,4 +1,4 @@
-// $Id$
+// $Id: testxauth.cpp 494 2010-02-28 05:36:15Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

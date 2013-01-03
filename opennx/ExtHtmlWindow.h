@@ -1,4 +1,4 @@
-// $Id$
+// $Id: ExtHtmlWindow.h 193 2009-03-19 09:52:42Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

@@ -1,4 +1,4 @@
-// $Id$
+// $Id: ForeignFrame.cpp 591 2010-10-24 23:58:47Z felfert $
 //
 // Copyright (C) 2006 The OpenNX team
 // Author: Fritz Elfert

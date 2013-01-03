@@ -1,4 +1,4 @@
-// $Id$
+// $Id: MyIPC.cpp 700 2012-02-22 11:56:52Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

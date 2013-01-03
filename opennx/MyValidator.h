@@ -1,4 +1,4 @@
-// $Id$
+// $Id: MyValidator.h 175 2009-02-22 04:11:02Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

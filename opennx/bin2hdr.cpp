@@ -1,4 +1,4 @@
-// $Id$
+// $Id: bin2hdr.cpp 457 2010-02-04 22:02:58Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

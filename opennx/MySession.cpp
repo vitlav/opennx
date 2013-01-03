@@ -1,4 +1,4 @@
-// $Id$
+// $Id: MySession.cpp 705 2012-03-16 13:01:13Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert
@@ -1926,7 +1926,6 @@ MySession::prepareCups()
     if (::wxExecute(cmd, wxEXEC_ASYNC) <= 0)
         return false;
     wxThread::Sleep(500);
-    isCupsRunning();
     return isCupsRunning();
 }
 

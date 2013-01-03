@@ -1,4 +1,4 @@
-// $Id$
+// $Id: MyXmlConfig.h 679 2012-02-09 23:29:53Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

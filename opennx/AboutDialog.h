@@ -1,4 +1,4 @@
-// $Id$
+// $Id: AboutDialog.h 151 2009-02-10 22:30:59Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert
