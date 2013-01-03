@@ -1,4 +1,4 @@
-From 7ac8cf083288a51b4c47c0738b914164e4ad7554 Mon Sep 17 00:00:00 2001
+From f99959f8a838e0061da2fc0c199327b1c96dd2e3 Mon Sep 17 00:00:00 2001
 From: Denis Baranov <baraka@etersoft.ru>
 Date: Fri, 1 Jun 2012 21:17:02 +0400
 Subject: [PATCH 2/2] Initial build with gitum
