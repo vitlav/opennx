@@ -54,6 +54,7 @@
 #include "Icon.h"
 #include "opennxApp.h"
 #include "SupressibleMessageDialog.h"
+#include "MyWizard.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -90,6 +91,8 @@ BEGIN_EVENT_TABLE( LoginDialog, wxDialog )
     EVT_BUTTON( XRCID("ID_BUTTON_CONFIGURE"), LoginDialog::OnButtonConfigureClick )
 
     EVT_BUTTON( wxID_OK, LoginDialog::OnOkClick )
+    
+    EVT_BUTTON( XRCID("wxID_WIZARD"), LoginDialog::OnButtonWizardClick )
 
     ////@end LoginDialog event table entries
 
@@ -244,6 +247,7 @@ bool LoginDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
     m_pCtrlGuestLogin = NULL;
     m_pCtrlConfigure = NULL;
     m_pCtrlLoginButton = NULL;
+    m_pCtrlWizardButton = NULL;
     ////@end LoginDialog member initialisation
 
     ////@begin LoginDialog creation
@@ -267,7 +271,7 @@ bool LoginDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
 
 void LoginDialog::CreateControls()
 {
-
+	
     ////@begin LoginDialog content construction
     if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), _T("ID_DIALOG_LOGIN")))
         wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
@@ -278,6 +282,7 @@ void LoginDialog::CreateControls()
     m_pCtrlGuestLogin = XRCCTRL(*this, "ID_CHECKBOX_GUESTLOGIN", wxCheckBox);
     m_pCtrlConfigure = XRCCTRL(*this, "ID_BUTTON_CONFIGURE", wxButton);
     m_pCtrlLoginButton = XRCCTRL(*this, "wxID_OK", wxButton);
+    m_pCtrlWizardButton = XRCCTRL(*this, "wxID_WIZARD", wxButton);
     // Set validators
     if (FindWindow(XRCID("ID_TEXTCTRL_USERNAME")))
         FindWindow(XRCID("ID_TEXTCTRL_USERNAME"))->SetValidator( wxGenericValidator(& m_sUsername) );
@@ -378,6 +383,21 @@ wxIcon LoginDialog::GetIconResource( const wxString& name )
     // Icon retrieval
     return CreateIconFromFile(name);
 }
+
+void LoginDialog::OnButtonWizardClick( wxCommandEvent& event )
+{
+	MyWizard wz(NULL);
+	if(!wz.Run())
+	     return;
+	ReadConfigDirectory();
+	m_sSessionName = wz.sGetConfigName();
+	MyXmlConfig cfg(m_sSessionName);
+	m_pCtrlSessionName->Append(cfg.sGetName(), (void *)m_sSessionName.c_str());
+    m_pCtrlSessionName->SetStringSelection(cfg.sGetName());
+    wxCommandEvent event2;
+    OnComboboxSessionSelected(event2);
+}
+
 
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_CONFIGURE

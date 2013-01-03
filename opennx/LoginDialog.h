@@ -119,6 +119,8 @@ private:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
     void OnOkClick( wxCommandEvent& event );
+    
+    void OnButtonWizardClick( wxCommandEvent& event );
 
 ////@end LoginDialog event handler declarations
 
@@ -160,6 +162,8 @@ private:
     wxCheckBox* m_pCtrlGuestLogin;
     wxButton* m_pCtrlConfigure;
     wxButton* m_pCtrlLoginButton;
+    wxButton* m_pCtrlWizardButton;
+    
 private:
     wxString m_sUsername;
     wxString m_sPassword;
