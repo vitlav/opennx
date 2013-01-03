@@ -1,4 +1,4 @@
-// $Id$
+// $Id: WrappedStatic.h 508 2010-03-07 13:30:36Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

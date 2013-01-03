@@ -1,4 +1,4 @@
-// $Id$
+// $Id: LogDialog.cpp 688 2012-02-18 02:36:07Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

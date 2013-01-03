@@ -1,4 +1,4 @@
-// $Id$
+// $Id: ShareProperties.cpp 707 2012-03-22 13:53:19Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

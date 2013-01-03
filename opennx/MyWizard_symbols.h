@@ -1,4 +1,4 @@
-// $Id$
+// $Id: MyWizard_symbols.h 657 2011-12-09 20:41:21Z felfert $
 //
 // Copyright (C) 2010 The OpenNX team
 // Author: Fritz Elfert

@@ -1,4 +1,4 @@
-// $Id$
+// $Id: SupressibleMessageDialog_symbols.h 549 2010-08-20 21:38:00Z felfert $
 //
 // Copyright (C) 2010 The OpenNX team
 // Author: Fritz Elfert

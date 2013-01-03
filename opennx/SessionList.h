@@ -1,4 +1,4 @@
-// $Id$
+// $Id: SessionList.h 399 2009-09-09 19:35:12Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

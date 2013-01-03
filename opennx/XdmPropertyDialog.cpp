@@ -1,4 +1,4 @@
-// $Id$
+// $Id: XdmPropertyDialog.cpp 663 2012-01-04 04:53:13Z felfert $
 //
 // Copyright (C) 2011 The OpenNX team
 // Author: Fritz Elfert

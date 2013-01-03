@@ -53,7 +53,7 @@ nativesetup: .setupdir .dlldeps .stripsetup
 	"$(ISCC)" "$(srcdir)/opennx.iss" -dBUILDXMING=$(BUILDXMING)
 
 crosssetup: .setupdir .dlldeps .stripsetup isccwrap.sh
-	sh isccwrap.sh "$(srcdir)/opennx.iss" -dBUILDXMING=$(BUILDXMING)
+	"$(ISCC)" "$(srcdir)/opennx.iss" -dBUILDXMING=$(BUILDXMING)
 
 setup: $(SETUP)
 

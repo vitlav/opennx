@@ -1,4 +1,4 @@
-// $Id$
+// $Id: WinShare.cpp 681 2012-02-09 23:33:34Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

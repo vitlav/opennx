@@ -1,4 +1,4 @@
-// $Id$
+// $Id: UsbFilterDetailsDialog.cpp 605 2011-02-22 04:00:58Z felfert $
 //
 // Copyright (C) 2009 The OpenNX team
 // Author: Fritz Elfert

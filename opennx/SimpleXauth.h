@@ -1,4 +1,4 @@
-// $Id$
+// $Id: SimpleXauth.h 494 2010-02-28 05:36:15Z felfert $
 //
 // Copyright (C) 2010 The OpenNX Team
 // Author: Fritz Elfert

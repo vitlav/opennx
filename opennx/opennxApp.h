@@ -1,4 +1,4 @@
-// $Id$
+// $Id: opennxApp.h 713 2012-07-02 15:56:54Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert
@@ -118,6 +118,7 @@ class opennxApp : public wxApp
         bool m_bAutoLogin;
         bool m_bAutoResume;
         bool m_bKillErrors;
+        bool m_bNoGui;
         LoginDialog *m_pLoginDialog;
 
         bool preInit();

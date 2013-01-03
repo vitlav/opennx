@@ -1,4 +1,4 @@
-// $Id$
+// $Id: watchUsbIpApp.cpp 605 2011-02-22 04:00:58Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

@@ -1,4 +1,4 @@
-// $Id$
+// $Id: ResumeDialog.cpp 685 2012-02-15 17:09:07Z felfert $
 //
 // Copyright (C) 2006 The OpenNX team
 // Author: Fritz Elfert

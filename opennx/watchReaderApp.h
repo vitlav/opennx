@@ -1,4 +1,4 @@
-// $Id$
+// $Id: watchReaderApp.h 172 2009-02-20 05:44:20Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

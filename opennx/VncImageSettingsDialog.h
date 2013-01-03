@@ -1,4 +1,4 @@
-// $Id$
+// $Id: VncImageSettingsDialog.h 676 2012-02-05 16:18:21Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

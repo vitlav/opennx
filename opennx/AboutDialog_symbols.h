@@ -1,4 +1,4 @@
-// $Id$
+// $Id: AboutDialog_symbols.h 151 2009-02-10 22:30:59Z felfert $
 //
 // Copyright (C) 2008 The OpenNX team
 // Author: Fritz Elfert

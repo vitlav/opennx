@@ -1,4 +1,4 @@
-// $Id$
+// $Id: pwcrypt.h 102 2007-08-23 11:41:13Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

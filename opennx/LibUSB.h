@@ -1,4 +1,4 @@
-// $Id$
+// $Id: LibUSB.h 277 2009-06-19 12:28:58Z felfert $
 //
 // Copyright (C) 2009 The OpenNX Team
 // Author: Fritz Elfert

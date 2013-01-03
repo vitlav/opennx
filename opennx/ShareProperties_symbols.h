@@ -1,4 +1,4 @@
-// $Id$
+// $Id: ShareProperties_symbols.h 707 2012-03-22 13:53:19Z felfert $
 //
 // Copyright (C) 2011 The OpenNX team
 // Author: Fritz Elfert

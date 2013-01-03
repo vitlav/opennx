@@ -1,4 +1,4 @@
-// $Id$
+// $Id: TraceLogFrame_symbols.h 166 2009-02-18 00:28:24Z felfert $
 //
 // Copyright (C) 2009 The OpenNX team
 // Author: Fritz Elfert

@@ -1,4 +1,4 @@
-// $Id$
+// $Id: KeyDialog.h 590 2010-10-23 22:42:11Z felfert $
 //
 // Copyright (C) 2006 The OpenNX team
 // Author: Fritz Elfert

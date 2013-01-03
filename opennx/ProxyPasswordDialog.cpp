@@ -1,4 +1,4 @@
-// $Id$
+// $Id: ProxyPasswordDialog.cpp 455 2010-01-30 03:26:11Z felfert $
 //
 // Copyright (C) 2010 The OpenNX team
 // Author: Fritz Elfert

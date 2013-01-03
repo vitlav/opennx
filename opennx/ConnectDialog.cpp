@@ -1,4 +1,4 @@
-// $Id$
+// $Id: ConnectDialog.cpp 157 2009-02-12 14:46:23Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

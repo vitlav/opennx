@@ -1,4 +1,4 @@
-// $Id$
+// $Id: LibOpenSC.h 325 2009-07-29 21:38:53Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

@@ -1,4 +1,4 @@
-// $Id$
+// $Id: MyWizard.cpp 686 2012-02-17 21:25:41Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

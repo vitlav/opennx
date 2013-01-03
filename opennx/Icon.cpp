@@ -1,4 +1,4 @@
-// $Id$
+// $Id: Icon.cpp 206 2009-03-24 15:22:10Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

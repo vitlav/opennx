@@ -1,4 +1,4 @@
-// $Id$
+// $Id: TextViewer_symbols.h 186 2009-02-24 13:01:39Z felfert $
 //
 // Copyright (C) 2009 The OpenNX team
 // Author: Fritz Elfert

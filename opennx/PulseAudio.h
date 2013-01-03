@@ -1,4 +1,4 @@
-// $Id$
+// $Id: PulseAudio.h 654 2011-12-09 18:07:38Z felfert $
 //
 // Copyright (C) 2009 The OpenNX Team
 // Author: Fritz Elfert

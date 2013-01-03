@@ -1,4 +1,4 @@
-// $Id$
+// $Id: ProxyPropertyDialog.cpp 647 2011-06-23 17:52:29Z felfert $
 //
 // Copyright (C) 2010 The OpenNX team
 // Author: Fritz Elfert

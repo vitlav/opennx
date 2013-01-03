@@ -1,4 +1,4 @@
-// $Id$
+// $Id: LogDialog.h 84 2006-12-13 06:14:36Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

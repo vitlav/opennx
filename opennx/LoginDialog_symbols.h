@@ -1,4 +1,4 @@
-// $Id$
+// $Id: LoginDialog_symbols.h 476 2010-02-10 00:06:14Z felfert $
 //
 // Copyright (C) 2010 The OpenNX team
 // Author: Fritz Elfert

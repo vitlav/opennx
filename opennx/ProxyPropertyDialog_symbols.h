@@ -1,4 +1,4 @@
-// $Id$
+// $Id: ProxyPropertyDialog_symbols.h 653 2011-12-07 15:39:54Z felfert $
 //
 // Copyright (C) 2010 The OpenNX team
 // Author: Fritz Elfert

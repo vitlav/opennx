@@ -1,4 +1,4 @@
-// $Id$
+// $Id: ConnectDialog_symbols.h 475 2010-02-08 03:01:38Z felfert $
 //
 // Copyright (C) 2010 The OpenNX team
 // Author: Fritz Elfert

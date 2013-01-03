@@ -1,4 +1,4 @@
-// $Id$
+// $Id: CardWaiterDialog.h 209 2009-03-25 14:48:16Z felfert $
 //
 // Copyright (C) 2008 The OpenNX team
 // Author: Fritz Elfert

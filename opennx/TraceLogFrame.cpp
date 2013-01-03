@@ -1,4 +1,4 @@
-// $Id$
+// $Id: TraceLogFrame.cpp 386 2009-09-06 11:59:04Z felfert $
 //
 // Copyright (C) 2006 The OpenNX Team
 // Author: Fritz Elfert

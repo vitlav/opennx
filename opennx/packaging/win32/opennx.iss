@@ -1,5 +1,5 @@
 ;
-; $Id$
+; $Id: opennx.iss 674 2012-02-05 05:55:40Z felfert $
 ;
 #undef DEBUG
 
