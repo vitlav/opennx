@@ -1075,7 +1075,7 @@ msgstr "&Присоединиться"
 
 #: ResumeDialog.cpp:221 ResumeDialog_symbols.h:27
 msgid "&Resume"
-msgstr "&Вернутся"
+msgstr "&Вернуться"
 
 #: ResumeDialog.cpp:311
 msgid "Do you really want to terminate the selected session?"
