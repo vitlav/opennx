@@ -77,9 +77,8 @@ msgid "Select key to import"
 msgstr "Выберите ключ для импорта"
 
 #: KeyDialog.cpp:209
-#, fuzzy
 msgid "SSh key files (*.key)|*.key|All files (*)|*"
-msgstr "SSH-ключи (*.key;*.pub)|*.key;*.pub"
+msgstr "SSH-ключи (*.key)|*.key|Все файлы (*)|*"
 
 #: KeyDialog.h:54 KeyDialog_symbols.h:22
 msgid "Key Management - OpenNX"
@@ -129,6 +128,9 @@ msgid ""
 "The session '%s' has been converted to the new format.\n"
 "Please verify the custom image compression settings."
 msgstr ""
+"Была обнаружен страый файл конфигурации сессии\n"
+"Конфигурационный файл '%s' был преобразован к новому формату.\n"
+"Пожалуйста, проверьте настройки сжатия изображения"
 
 #: LoginDialog.cpp:472
 #, c-format
@@ -137,6 +139,9 @@ msgid ""
 "The session '%s' has been converted but could not be saved.\n"
 "Please verify the custom image compression settings."
 msgstr ""
+"Была обнаружен страый файл конфигурации сессии\n"
+"Конфигурационный файл '%s' был преобразован но не был сохранён.\n"
+"Пожалуйста, проверьте настройки сжатия изображения"
 
 #: LoginDialog.cpp:476 MySession.cpp:792 MySession.cpp:804 MySession.cpp:818
 msgid "Warning - OpenNX"
@@ -345,9 +350,8 @@ msgid "Invalid plist (unexpected type %s) in %s"
 msgstr "Некорректный plist (неожиданный тип %s) в %s"
 
 #: MacUninstallApp.cpp:361
-#, fuzzy, c-format
 msgid "Could not find requested key 'IFPkgFlagRelocatable' in receipt %s"
-msgstr "Не удается найти запрошенный ключ '%s' в спецификации %s"
+msgstr "Не удается найти запрошенный ключ 'IFPkgFlagRelocatable' в спецификации %s"
 
 #: MacUninstallApp.cpp:367
 #, c-format
@@ -416,32 +420,26 @@ msgid "Deleting receipt"
 msgstr "Спецификация удалена"
 
 #: MacUninstallApp.cpp:570
-#, fuzzy, c-format
 msgid "TEST: Would delete receipt: %s"
 msgstr "ТЕСТ: Будет удалена директория %s"
 
 #: MacUninstallApp.cpp:571
-#, fuzzy, c-format
 msgid "TEST: Would delete BOM: %s"
 msgstr "ТЕСТ: Будет удален файл %s"
 
 #: MacUninstallApp.cpp:574
-#, fuzzy, c-format
 msgid "Deleted receipt: %s"
 msgstr "Удаленная директория: %s"
 
 #: MacUninstallApp.cpp:576
-#, fuzzy, c-format
 msgid "Could not delete receipt %s"
 msgstr "Не удалось удалить директорию %s"
 
 #: MacUninstallApp.cpp:579
-#, fuzzy, c-format
 msgid "Deleted BOM: %s"
 msgstr "Удаленный файл: %s"
 
 #: MacUninstallApp.cpp:581
-#, fuzzy, c-format
 msgid "Could not delete BOM %s"
 msgstr "Не удалось удалить файл %s"
 
@@ -535,9 +533,8 @@ msgid "Authentication successful"
 msgstr "Аутентификация завершена"
 
 #: MySession.cpp:885
-#, fuzzy
 msgid "Query server-side features"
-msgstr "Запрос сессий"
+msgstr "Запрос функций"
 
 #: MySession.cpp:897
 msgid "Query server-side sessions"
@@ -548,14 +545,12 @@ msgid "Starting session"
 msgstr "Начало сессии"
 
 #: MySession.cpp:921
-#, fuzzy
 msgid "Attaching to session"
 msgstr "Начало сессии"
 
 #: MySession.cpp:932
-#, fuzzy
 msgid "Resuming session"
-msgstr "Удалить сессию"
+msgstr "Возобновление сессии"
 
 #: MySession.cpp:957
 msgid "Enter PIN for Smart Card access."
@@ -907,7 +902,6 @@ msgid "Please enter your HTTP proxy password"
 msgstr "Пожалуйста, введите пароль вашего HTTP прокси"
 
 #: ProxyPropertyDialog.h:59 ProxyPropertyDialog_symbols.h:22
-#, fuzzy
 msgid "Proxy settings - OpenNX"
 msgstr "Настройки прокси"
 
@@ -970,21 +964,18 @@ msgstr "Кодирование"
 
 #: RdpImageSettingsDialog_symbols.h:29 UnixImageSettingsDialog_symbols.h:24
 #: VncImageSettingsDialog_symbols.h:24
-#, fuzzy
 msgid "Use JPEG and RGB image compression"
-msgstr "Использовать JPEG сжатие"
+msgstr "Использовать JPEG и PNG сжатие"
 
 #: RdpImageSettingsDialog_symbols.h:30 UnixImageSettingsDialog_symbols.h:25
 #: VncImageSettingsDialog_symbols.h:25
-#, fuzzy
 msgid "Use JPEG image compression only"
-msgstr "Использовать JPEG сжатие"
+msgstr "Использовать только JPEG сжатие"
 
 #: RdpImageSettingsDialog_symbols.h:31 UnixImageSettingsDialog_symbols.h:26
 #: VncImageSettingsDialog_symbols.h:26
-#, fuzzy
 msgid "Use RGB image compression only"
-msgstr "Использовать PNG сжатие"
+msgstr "Использовать только PNG сжатие"
 
 #: RdpImageSettingsDialog_symbols.h:32 UnixImageSettingsDialog_symbols.h:27
 #: VncImageSettingsDialog_symbols.h:27
@@ -994,7 +985,7 @@ msgstr "Использовать простые растры X"
 #: RdpImageSettingsDialog_symbols.h:33 UnixImageSettingsDialog_symbols.h:28
 #: VncImageSettingsDialog_symbols.h:28
 msgid "Use custom image quality"
-msgstr "Качество изображения"
+msgstr "Использовать заданное качество изображения"
 
 #: RdpImageSettingsDialog_symbols.h:34 SessionProperties_symbols.h:72
 msgid "Cache"
@@ -1075,7 +1066,6 @@ msgid "Session ID"
 msgstr "ID сессии"
 
 #: ResumeDialog.cpp:207
-#, fuzzy
 msgid "Could not add session list item"
 msgstr "Не удалось загрузить конфигурационный файл сессии"
 
@@ -1343,7 +1333,6 @@ msgid "Modify..."
 msgstr "Изменить..."
 
 #: SessionProperties_symbols.h:57
-#, fuzzy
 msgid "Use custom layout"
 msgstr "Использовать другую раскладку"
 
@@ -1385,7 +1374,7 @@ msgstr "Отключить отложенные обновления экран�
 
 #: SessionProperties_symbols.h:68
 msgid "Clipboard filter"
-msgstr ""
+msgstr "Фильтр буфера обмена"
 
 #: SessionProperties_symbols.h:69
 msgid "Use PRIMARY selection"
@@ -1397,7 +1386,7 @@ msgstr ""
 
 #: SessionProperties_symbols.h:71
 msgid "Use both"
-msgstr ""
+msgstr "Использовать оба"
 
 #: SessionProperties_symbols.h:73
 msgid "In memory"
@@ -1444,14 +1433,12 @@ msgid "On disk"
 msgstr "На диске"
 
 #: SessionProperties_symbols.h:84
-#, fuzzy
 msgid "256 Mb"
-msgstr "16 MB"
+msgstr "256 MB"
 
 #: SessionProperties_symbols.h:85
-#, fuzzy
 msgid "512 Mb"
-msgstr "2 MB"
+msgstr "512 MB"
 
 #: SessionProperties_symbols.h:86
 msgid "Clean all cache files"
@@ -1462,14 +1449,12 @@ msgid "Services"
 msgstr "Сервисы"
 
 #: SessionProperties_symbols.h:88
-#, fuzzy
 msgid "Enable SMB sharing"
-msgstr "Включить проброс USB устройств"
+msgstr "Включить общий доступ с использованием SMB"
 
 #: SessionProperties_symbols.h:89
-#, fuzzy
 msgid "Default port"
-msgstr "Принтер по умолчанию"
+msgstr "Порт по умолчанию"
 
 #: SessionProperties_symbols.h:90
 msgid "Enable CUPS printing"
@@ -1541,15 +1526,15 @@ msgstr "Сбросить скрытые сообщения"
 
 #: SessionProperties_symbols.h:108
 msgid "Always use lowercase login name"
-msgstr ""
+msgstr "Всегда использовать login, написанный символами в нижнем регистре"
 
 #: SessionProperties_symbols.h:109
 msgid "Clear password entry on abort"
-msgstr ""
+msgstr "Очищать поле ввода пароля при отмене"
 
 #: SessionProperties_symbols.h:110
 msgid "Disable magic pixel in fullscreen mode"
-msgstr ""
+msgstr "Отключить magic pixel в полноэкранном режиме"
 
 #: SessionProperties_symbols.h:111
 msgid "About"
@@ -1940,9 +1925,8 @@ msgid "Disable taint of X replies"
 msgstr "Отключить taint of X replies"
 
 #: XdmPropertyDialog.h:56 XdmPropertyDialog_symbols.h:22
-#, fuzzy
 msgid "XDM Session Settings - OpenNX"
-msgstr "Настройка RDP сессии - OpenNX"
+msgstr "Настройка XDM сессии - OpenNX"
 
 #: XdmPropertyDialog_symbols.h:24
 msgid "Let the NX server decide"
@@ -1996,8 +1980,7 @@ msgid ""
 "(%s)?"
 msgstr ""
 
-#: opennxApp.cpp:541
-#, fuzzy
+#: opennxApp.cpp:539
 msgid "Update System NX directory? - OpenNX"
 msgstr "Системный каталог NX"
 
