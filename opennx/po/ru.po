@@ -177,6 +177,10 @@ msgstr "Настройка..."
 msgid "L&ogin"
 msgstr "Подключиться"
 
+#: LoginDialog_symbols.h:31
+msgid "&Wizard"
+msgstr "Добавить"
+
 #: MacUninstallApp.cpp:60 MacUninstallApp.cpp:508
 #, c-format
 msgid "TEST: Would delete file: %s"
