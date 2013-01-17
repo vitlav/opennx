@@ -1,7 +1,7 @@
-From 514f8eca9daf6b2293a1f719a7cfde069d22ac1f Mon Sep 17 00:00:00 2001
+From e165ebc0bd58f818a89da49378113d3d9fcc2aed Mon Sep 17 00:00:00 2001
 From: Sergey Mitrofanov <sergeym@etersoft.ru>
 Date: Tue, 15 Jan 2013 15:02:56 +0400
-Subject: [PATCH] Update translations
+Subject: [PATCH 9/9] Update translations
 
 Conflicts:
 	opennx/po/ru.po
