@@ -86,15 +86,15 @@ subst "s|/usr/NX/bin|%_bindir|g" %buildroot%_desktopdir/*
 
 install -d %buildroot{%_niconsdir,%_miconsdir,%_liconsdir}
 for f in nx opennx-admin opennx-wizard ; do
-    convert -size 16x16 ./extres/scalable/apps/$f.svg %buildroot%_miconsdir/$f.png
-    convert -size 32x32 ./extres/scalable/apps/$f.svg %buildroot%_niconsdir/$f.png
-    convert -size 48x48 ./extres/scalable/apps/$f.svg %buildroot%_liconsdir/$f.png
+    install -m 644 ./extres/16x16/apps/$f.png %buildroot%_miconsdir/$f.png
+    install -m 644 ./extres/32x32/apps/$f.png %buildroot%_niconsdir/$f.png
+    install -m 644 ./extres/48x48/apps/$f.png %buildroot%_liconsdir/$f.png
 done
 
 install -d %buildroot%_iconsdir/hicolor/{16x16,32x32,48x48}/mimetypes/
-convert -background none -size 16x16 ./extres/scalable/mimetypes/nx-desktop.svg %buildroot%_iconsdir/hicolor/16x16/mimetypes/nx-desktop.png
-convert -background none -size 32x32 ./extres/scalable/mimetypes/nx-desktop.svg %buildroot%_iconsdir/hicolor/32x32/mimetypes/nx-desktop.png
-convert -background none -size 48x48 ./extres/scalable/mimetypes/nx-desktop.svg %buildroot%_iconsdir/hicolor/48x48/mimetypes/nx-desktop.png
+install -m 644 ./extres/16x16/mimetypes/nx-desktop.png %buildroot%_iconsdir/hicolor/16x16/mimetypes/nx-desktop.png
+install -m 644 ./extres/32x32/mimetypes/nx-desktop.png %buildroot%_iconsdir/hicolor/32x32/mimetypes/nx-desktop.png
+install -m 644 ./extres/48x48/mimetypes/nx-desktop.png %buildroot%_iconsdir/hicolor/48x48/mimetypes/nx-desktop.png
 
 %if %with_usbip
 install -d -m 755 %buildroot%_sysconfdir/udev/rules.d
