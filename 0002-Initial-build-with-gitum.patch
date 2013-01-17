@@ -1,7 +1,7 @@
 From f99959f8a838e0061da2fc0c199327b1c96dd2e3 Mon Sep 17 00:00:00 2001
 From: Denis Baranov <baraka@etersoft.ru>
 Date: Fri, 1 Jun 2012 21:17:02 +0400
-Subject: [PATCH 2/5] Initial build with gitum
+Subject: [PATCH 2/6] Initial build with gitum
 
 ---
  .gear/opennx.spec | 188 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -407,5 +407,5 @@ index 0519fbc..0000000
 -* Sun Jan  7 2007 Fritz Elfert <fritz@fritz-elfert.de>
 -- Initial package
 -- 
-1.7.12.4
+1.8.1.1
 

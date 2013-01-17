@@ -1,7 +1,7 @@
 From 0d49647ef1b92838effe60d96fbc9c57403e89e3 Mon Sep 17 00:00:00 2001
 From: Denis Baranov <baraka@etersoft.ru>
 Date: Thu, 3 Jan 2013 22:28:32 +0400
-Subject: [PATCH 3/5] Build new version opennx-0.16-eter17.svn724
+Subject: [PATCH 3/6] Build new version opennx-0.16-eter17.svn724
 
 ---
  .gear/opennx.spec | 7 +++++--
@@ -38,5 +38,5 @@ index 2876a4c..f89c79f 100644
  - Initial build
  - update from ALTLinux
 -- 
-1.7.12.4
+1.8.1.1
 
