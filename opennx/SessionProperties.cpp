@@ -1012,9 +1012,10 @@ void SessionProperties::CreateControls()
     m_pCtrlUsbAdd = XRCCTRL(*this, "ID_BUTTON_USBADD", wxButton);
     m_pCtrlUsbModify = XRCCTRL(*this, "ID_BUTTON_USBMODIFY", wxButton);
     m_pCtrlUsbDelete = XRCCTRL(*this, "ID_BUTTON_USBDELETE", wxButton);
-    m_pCtrlUserNxDir = XRCCTRL(*this, "ID_TEXTCTRL_USERDIR", wxTextCtrl);
-    m_pCtrlSystemNxDir = XRCCTRL(*this, "ID_TEXTCTRL_SYSDIR", wxTextCtrl);
-    m_pCtrlCupsPath = XRCCTRL(*this, "ID_TEXTCTRL_CUPSPATH", wxTextCtrl);
+    //sergeym
+    //m_pCtrlUserNxDir = XRCCTRL(*this, "ID_TEXTCTRL_USERDIR", wxTextCtrl);
+    //m_pCtrlSystemNxDir = XRCCTRL(*this, "ID_TEXTCTRL_SYSDIR", wxTextCtrl);
+    //m_pCtrlCupsPath = XRCCTRL(*this, "ID_TEXTCTRL_CUPSPATH", wxTextCtrl);
     m_pCtrlCupsBrowse = XRCCTRL(*this, "ID_BUTTON_BROWSE_CUPSPATH", wxButton);
     m_pCtrlUsbipdDaemon = XRCCTRL(*this, "ID_PANEL_USBIP_DAEMON", wxPanel);
     m_pCtrlUsbIpdSocket = XRCCTRL(*this, "ID_TEXTCTRL_USBIPD_SOCKET", wxTextCtrl);
@@ -1087,14 +1088,14 @@ void SessionProperties::CreateControls()
         FindWindow(XRCID("ID_CHECKBOX_MMEDIA"))->SetValidator( wxGenericValidator(& m_bEnableMultimedia) );
     if (FindWindow(XRCID("ID_CHECKBOX_USBENABLE")))
         FindWindow(XRCID("ID_CHECKBOX_USBENABLE"))->SetValidator( wxGenericValidator(& m_bEnableUSBIP) );
-    if (FindWindow(XRCID("ID_TEXTCTRL_USERDIR")))
-        FindWindow(XRCID("ID_TEXTCTRL_USERDIR"))->SetValidator( MyValidator(& m_sUserNxDir) );
+//    if (FindWindow(XRCID("ID_TEXTCTRL_USERDIR")))
+  //      FindWindow(XRCID("ID_TEXTCTRL_USERDIR"))->SetValidator( MyValidator(& m_sUserNxDir) );
     if (FindWindow(XRCID("ID_CHECKBOX_REMOVEOLDSF")))
         FindWindow(XRCID("ID_CHECKBOX_REMOVEOLDSF"))->SetValidator( wxGenericValidator(& m_bRemoveOldSessionFiles) );
-    if (FindWindow(XRCID("ID_TEXTCTRL_SYSDIR")))
-        FindWindow(XRCID("ID_TEXTCTRL_SYSDIR"))->SetValidator( MyValidator(& m_sSystemNxDir) );
-    if (FindWindow(XRCID("ID_TEXTCTRL_CUPSPATH")))
-        FindWindow(XRCID("ID_TEXTCTRL_CUPSPATH"))->SetValidator( MyValidator(& m_sCupsPath) );
+//    if (FindWindow(XRCID("ID_TEXTCTRL_SYSDIR")))
+  //      FindWindow(XRCID("ID_TEXTCTRL_SYSDIR"))->SetValidator( MyValidator(& m_sSystemNxDir) );
+ //   if (FindWindow(XRCID("ID_TEXTCTRL_CUPSPATH")))
+   //     FindWindow(XRCID("ID_TEXTCTRL_CUPSPATH"))->SetValidator( MyValidator(& m_sCupsPath) );
     if (FindWindow(XRCID("ID_TEXTCTRL_USBIPD_SOCKET")))
         FindWindow(XRCID("ID_TEXTCTRL_USBIPD_SOCKET"))->SetValidator( MyValidator(& m_sUsbipdSocket) );
     if (FindWindow(XRCID("ID_SPINCTRL_USB_LOCALPORT")))

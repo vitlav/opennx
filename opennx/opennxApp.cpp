@@ -400,8 +400,9 @@ opennxApp::CheckDesktopEntry(MyXmlConfig *cfg)
 opennxApp::setUserDir()
 {
     wxString tmp;
-    if (!wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &tmp))
-        tmp = ::wxGetHomeDir() + wxFileName::GetPathSeparator() + wxT(".nx");
+    //sergeym
+    //if (!wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &tmp))
+    tmp = ::wxGetHomeDir() + wxFileName::GetPathSeparator() + wxT(".nx");
     wxFileName::Mkdir(tmp, 0750, wxPATH_MKDIR_FULL);
     wxFileName fn(tmp);
     wxConfigBase::Get()->Write(wxT("Config/UserNxDir"), fn.GetFullPath());
@@ -522,8 +523,9 @@ opennxApp::preInit()
     wxString appver;
     wxString thisver(wxT(PACKAGE_VERSION));
     thisver.Append(wxT(".")).Append(wxT(SVNREV));
+    //sergeym
     wxConfigBase::Get()->Read(wxT("Config/CurrentVersion"), &appver, thisver);
-    if (!thisver.IsSameAs(appver)) {
+    //if (!thisver.IsSameAs(appver)) {
         wxFileName fn(GetSelfPath());
         if (fn.GetDirs().Last().IsSameAs(wxT("bin")))
             fn.RemoveLastDir();
@@ -534,7 +536,9 @@ opennxApp::preInit()
         if (thissysdir.EndsWith(sep, &rest))
             thissysdir = rest;
         wxString cfgsysdir;
-        if (wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &cfgsysdir)) {
+        wxConfigBase::Get()->Write(wxT("Config/SystemNxDir"), thissysdir);
+        wxConfigBase::Get()->Flush();
+       /* if (wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &cfgsysdir)) {
             if (!thissysdir.IsSameAs(cfgsysdir)) {
                 if (!m_bNoGui) {
                     wxString msg(wxString::Format(_("Your System NX directory setting (%s)\nappears to be incorrect.\nDo you want to change it to the correct default value\n(%s)?"), cfgsysdir.c_str(), thissysdir.c_str()));
@@ -544,9 +548,9 @@ opennxApp::preInit()
                         wxConfigBase::Get()->Flush();
                     }
                 }
-            }
-        }
-    }
+            //}
+        }*/
+    //}
     wxConfigBase::Get()->Write(wxT("Config/CurrentVersion"), thisver);
     wxConfigBase::Get()->Flush();
 
@@ -570,7 +574,8 @@ opennxApp::preInit()
     m_cLocale.Init();
     m_cLocale.AddCatalog(wxT("opennx"));
 
-    if (!wxConfigBase::Get()->Read(wxT("Config/CupsPath"), &tmp)) {
+   //sergeym
+  //  if (!wxConfigBase::Get()->Read(wxT("Config/CupsPath"), &tmp)) {
 #if defined(__LINUX__) || defined(__OPENBSD__) || defined(__WXMAC__)
         tmp = findExecutable(wxT("cupsd"));
         if (tmp.IsEmpty()) {
@@ -599,11 +604,9 @@ opennxApp::preInit()
             }
         }
 #endif
-        if (!tmp.IsEmpty()) {
-            wxConfigBase::Get()->Write(wxT("Config/CupsPath"), tmp);
-            wxConfigBase::Get()->Flush();
-        }
-    }
+        wxConfigBase::Get()->Write(wxT("Config/CupsPath"), tmp);
+        wxConfigBase::Get()->Flush();
+  //  }
 #ifdef SUPPORT_USBIP
     if (!wxConfigBase::Get()->Read(wxT("Config/UsbipdSocket"), &tmp)) {
         tmp = wxT("/var/run/usbipd2.socket");
