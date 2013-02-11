@@ -1,7 +1,7 @@
-From 3dffb1b832e575eb00e3a76903f9cc6ad2eea8e5 Mon Sep 17 00:00:00 2001
+From bfd603a91b15539fb7c816f1f882eafdb38e48cf Mon Sep 17 00:00:00 2001
 From: Denis Baranov <baraka@etersoft.ru>
 Date: Thu, 17 Jan 2013 19:51:12 +0400
-Subject: [PATCH 07/11] Build new version opennx-0.16-eter19.svn724
+Subject: [PATCH 07/12] Build new version opennx-0.16-eter19.svn724
 
 ---
  .gear/opennx.spec | 5 ++++-
@@ -31,5 +31,5 @@ index 7612f31..f368023 100644
  - Add wizard button to start menu
  
 -- 
-1.8.1.1
+1.8.1.2
 
