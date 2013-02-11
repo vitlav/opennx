@@ -1,7 +1,7 @@
 From 90d78fca3988f3a811cdb786b5522cbfc115e4af Mon Sep 17 00:00:00 2001
 From: Sergey Mitrofanov <sergeym@etersoft.ru>
 Date: Tue, 15 Jan 2013 13:28:35 +0400
-Subject: [PATCH 08/12] Add translate for Wizard button
+Subject: [PATCH 08/13] Add translate for Wizard button
 
 ---
  opennx/LoginDialog_symbols.h | 1 +
