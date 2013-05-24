@@ -180,9 +180,9 @@ msgstr "Настройка..."
 
 #: LoginDialog_symbols.h:29
 msgid "L&ogin"
-msgstr "Подключиться"
+msgstr "Подк2222"
 
-#: LoginDialog_symbols.h:31
+#: LoginDialog_symbols.h:31 
 msgid "&Wizard"
 msgstr "Добавить"
 
@@ -692,7 +692,7 @@ msgstr "Любой"
 msgid "As on server"
 msgstr "Как на сервере"
 
-#: MyWizard.cpp:1193
+#: My&amp;.cpp:1193
 #, c-format
 msgid ""
 "Congratulations. The connection to '%s' will be saved as '%s'. You may "
@@ -712,7 +712,7 @@ msgid ""
 "start."
 msgstr ""
 "Добро пожаловать в мастер настройки клиента OpenNX, с помощью которого вы "
-"сможете настроить подключение. Нажмите 'Next' для продолжения."
+"сможете настроить подключение. Нажмите 'Далее' для продолжения."
 
 #: MyWizard_symbols.h:24
 msgid ""
@@ -845,6 +845,7 @@ msgstr "Ш"
 msgid "H"
 msgstr "В"
 
+
 #: MyWizard_symbols.h:55
 msgid ""
 "OpenNX Client supports authentication using a variety of USB SmartCard "
@@ -872,6 +873,18 @@ msgstr "Создать ярлык на рабочем столе"
 #: MyWizard_symbols.h:60
 msgid "Show the Advanced Configuration dialog"
 msgstr "Открыть диалог настройки"
+
+#: MyWizard_symbols.h:61
+msgid "Back"
+msgstr "Назад"
+
+#: MyWizard_symbols.h:62
+msgid "Next"
+msgstr "Далее"
+
+#: MyWizard_symbols.h:63
+msgid "Finish"
+msgstr "Закончить"
 
 #: MyXmlConfig.cpp:584
 msgid "Could not find application window"
@@ -1322,7 +1335,7 @@ msgstr "Рабочий стол"
 
 #: SessionProperties_symbols.h:47
 msgid "Display and Keyboard"
-msgstr ""
+msgstr "Изображение и раскладка"
 
 #: SessionProperties_symbols.h:55
 msgid "Use custom settings"

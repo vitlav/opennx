@@ -58,3 +58,6 @@
 #define ID_WIZARD_SYMBOL_36 _("Enable SSL encryption of all traffic")
 #define ID_WIZARD_SYMBOL_37 _("Create shortcut on desktop")
 #define ID_WIZARD_SYMBOL_38 _("Show the Advanced Configuration dialog")
+#define ID_WIZARD_SYMBOL_39 _("Back")
+#define ID_WIZARD_SYMBOL_40 _("Next")
+#define ID_WIZARD_SYMBOL_41 _("Finish")
