@@ -1,7 +1,7 @@
 From 8e0038dd81b0a4de9403f0d06bbeeb8dc24e82c1 Mon Sep 17 00:00:00 2001
 From: "mdevaev@etersoft.ru" <mdevaev@etersoft.ru>
 Date: Thu, 3 Dec 2009 20:52:00 +0300
-Subject: [PATCH 01/15] Change logo
+Subject: [PATCH 01/16] Change logo
 
 ---
  opennx/res/opennx.png | Bin 6814 -> 44165 bytes
