@@ -1,7 +1,7 @@
 From 5f5f37296f43a7a704e9212fe4414978c8c04d1f Mon Sep 17 00:00:00 2001
 From: Sergey Mitrofanov <sergeym@etersoft.ru>
 Date: Wed, 30 Jan 2013 15:28:50 +0400
-Subject: [PATCH 12/13] Now all paths write to config after start.
+Subject: [PATCH 12/14] Now all paths write to config after start.
 
 Conflicts:
 	opennx/opennxApp.cpp
@@ -230,5 +230,5 @@ index 27936ac..5697a0e 100644
                                              <border>5</border>
                                              <object class="wxPanel" name="ID_PANEL_USBIP_DAEMON">
 -- 
-1.8.1.2
+1.8.1.6
 

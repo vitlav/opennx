@@ -1,7 +1,7 @@
 From a9623f64fe31d6c92baeb5d7fac6694211ca5c13 Mon Sep 17 00:00:00 2001
 From: Denis Baranov <baraka@etersoft.ru>
 Date: Thu, 17 Jan 2013 19:49:45 +0400
-Subject: [PATCH 06/13] Add copy icon in spec
+Subject: [PATCH 06/14] Add copy icon in spec
 
 ---
  .gear/opennx.spec | 12 ++++++------
@@ -34,5 +34,5 @@ index bc8aff1..7612f31 100644
  %if %with_usbip
  install -d -m 755 %buildroot%_sysconfdir/udev/rules.d
 -- 
-1.8.1.2
+1.8.1.6
 

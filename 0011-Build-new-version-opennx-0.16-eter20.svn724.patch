@@ -1,7 +1,7 @@
 From 795b22867e4a34dda0d64b7e98d0772358a01596 Mon Sep 17 00:00:00 2001
 From: Denis Baranov <baraka@etersoft.ru>
 Date: Fri, 18 Jan 2013 00:50:20 +0400
-Subject: [PATCH 11/13] Build new version opennx-0.16-eter20.svn724
+Subject: [PATCH 11/14] Build new version opennx-0.16-eter20.svn724
 
 ---
  .gear/opennx.spec | 7 ++++++-
@@ -33,5 +33,5 @@ index f368023..2986f32 100644
  - Add copy icon in spec
  
 -- 
-1.8.1.2
+1.8.1.6
 
