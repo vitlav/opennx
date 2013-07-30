@@ -1,7 +1,7 @@
 From d7a6c24e9cc7704b9a815f7bcde094c60e32f780 Mon Sep 17 00:00:00 2001
 From: Denis Baranov <baraka@etersoft.ru>
 Date: Thu, 17 Jan 2013 19:51:12 +0400
-Subject: [PATCH 07/17] Build new version opennx-0.16-eter19.svn724
+Subject: [PATCH 07/18] Build new version opennx-0.16-eter19.svn724
 
 ---
  .gear/opennx.spec | 5 ++++-

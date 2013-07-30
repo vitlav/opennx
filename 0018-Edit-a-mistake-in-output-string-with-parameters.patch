@@ -1,0 +1,25 @@
+From e25d3ad3b5e3915c9941dbf86eb40b25fec3e9ca Mon Sep 17 00:00:00 2001
+From: Victor Korablin <korablin@etersoft.ru>
+Date: Tue, 30 Jul 2013 13:19:26 +0400
+Subject: [PATCH 18/18] Edit a mistake in output string with parameters
+
+---
+ opennx/MyXmlConfig.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/opennx/MyXmlConfig.cpp b/opennx/MyXmlConfig.cpp
+index df49916..1f75be5 100644
+--- a/opennx/MyXmlConfig.cpp
++++ b/opennx/MyXmlConfig.cpp
+@@ -913,7 +913,7 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
+ 	ret << wxT("--numlock=\"on\"");
+     }
+     else{
+-	ret << wxT(" --numlock=\off\"");
++	ret << wxT(" --numlock=\"off\"");
+     }
+     
+     return ret;
+-- 
+1.8.3.4
+

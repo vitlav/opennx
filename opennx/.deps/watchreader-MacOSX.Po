@@ -1,0 +1,9 @@
+watchreader-MacOSX.o: MacOSX.c /usr/include/wx-2.8/wx/platform.h \
+ /usr/lib/wx/include/gtk2-unicode-release-2.8/wx/setup.h \
+ /usr/include/wx-2.8/wx/chkconf.h
+
+/usr/include/wx-2.8/wx/platform.h:
+
+/usr/lib/wx/include/gtk2-unicode-release-2.8/wx/setup.h:
+
+/usr/include/wx-2.8/wx/chkconf.h:

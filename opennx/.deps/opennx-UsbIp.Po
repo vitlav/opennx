@@ -1,0 +1,3 @@
+opennx-UsbIp.o: UsbIp.cpp config.h
+
+config.h:
