@@ -913,7 +913,7 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
 	ret << wxT("--numlock=\"on\"");
     }
     else{
-	ret << wxT(" --numlock=\off\"");
+	ret << wxT(" --numlock=\"off\"");
     }
     
     return ret;
