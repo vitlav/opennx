@@ -447,6 +447,7 @@ class MyXmlConfig
         bool m_bDisableDirectDraw;
         bool m_bGrabKeyboard;
         bool m_bDisableDeferredUpdates;
+        bool m_bNumLockEnabled;
 
         int m_iCupsPort;
         int m_iDisplayHeight;

@@ -48,6 +48,8 @@
 #include <wx/url.h>
 #include <wx/config.h>
 #include <wx/display.h>
+#include <wx/utils.h>
+#include <wx/defs.h>
 
 class wxConfigBase;
 
@@ -905,6 +907,15 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
         // so we simply leave it out for shadow sessions.
         ret << wxT(" --aux=\"1\"");
     }
+    
+    m_bNumLockEnabled = wxGetKeyState (::WXK_NUMLOCK);
+    if(m_bNumLockEnabled){
+	ret << wxT("--numlock=\"on\"");
+    }
+    else{
+	ret << wxT(" --numlock=\off\"");
+    }
+    
     return ret;
 }
 
