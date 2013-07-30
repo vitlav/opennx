@@ -1,7 +1,7 @@
-From ad285a5eb834ddeb8b6c93d75ccce660771af0e8 Mon Sep 17 00:00:00 2001
+From cb4c30d5b39aaa9978f7fc50d682a882504cb081 Mon Sep 17 00:00:00 2001
 From: Denis Baranov <baraka@etersoft.ru>
 Date: Mon, 10 Jun 2013 15:40:18 +0400
-Subject: [PATCH 14/16] Fix build process
+Subject: [PATCH 14/17] Fix build process
 
 ---
  .gear/opennx.spec | 20 --------------------
@@ -39,5 +39,5 @@ index 4d3041c..0d7318b 100644
  %configure \
      --bindir=%_libdir/%name/bin \
 -- 
-1.8.1.6
+1.8.3.4
 

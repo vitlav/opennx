@@ -1,7 +1,7 @@
-From 2975dd69d501534363df00d843edcc7a380c948e Mon Sep 17 00:00:00 2001
+From b973712d782418517e776b5e38d2c5d24adc33b6 Mon Sep 17 00:00:00 2001
 From: Denis Baranov <baraka@etersoft.ru>
 Date: Fri, 4 Jan 2013 19:05:06 +0400
-Subject: [PATCH 05/16] Build new version opennx-0.16-eter18.svn724
+Subject: [PATCH 05/17] Build new version opennx-0.16-eter18.svn724
 
 ---
  .gear/opennx.spec | 5 ++++-
@@ -31,5 +31,5 @@ index f89c79f..bc8aff1 100644
  - update from trunk opennx-0.16.0.724
  
 -- 
-1.8.1.6
+1.8.3.4
 

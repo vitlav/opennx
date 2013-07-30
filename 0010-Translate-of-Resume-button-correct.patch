@@ -1,7 +1,7 @@
-From 79ebab630907e2974b6c0b9defed7d74b80af2d0 Mon Sep 17 00:00:00 2001
+From 04167eb32a5e257902c4b0d4fcf71de359828217 Mon Sep 17 00:00:00 2001
 From: Sergey Mitrofanov <sergeym@etersoft.ru>
 Date: Tue, 15 Jan 2013 15:17:54 +0400
-Subject: [PATCH 10/16] Translate of Resume button correct
+Subject: [PATCH 10/17] Translate of Resume button correct
 
 ---
  opennx/po/ru.po | 2 +-
@@ -21,5 +21,5 @@ index 42a5865..f37a90e 100644
  #: ResumeDialog.cpp:311
  msgid "Do you really want to terminate the selected session?"
 -- 
-1.8.1.6
+1.8.3.4
 

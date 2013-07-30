@@ -1,7 +1,7 @@
-From 747baf18c0befc4d0c660bc27302d9c746a40b0c Mon Sep 17 00:00:00 2001
+From fe5198e663f876856e87641d71f898b86f4b8a5a Mon Sep 17 00:00:00 2001
 From: Sergey Mitrofanov <sergeym@etersoft.ru>
 Date: Tue, 15 Jan 2013 15:02:56 +0400
-Subject: [PATCH 09/16] Update translations
+Subject: [PATCH 09/17] Update translations
 
 Conflicts:
 	opennx/po/ru.po
@@ -266,5 +266,5 @@ index f7ed7c3..42a5865 100644
  msgstr "Системный каталог NX"
  
 -- 
-1.8.1.6
+1.8.3.4
 
