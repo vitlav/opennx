@@ -1,13 +1,16 @@
 # Enable USBIP support
 %define with_usbip %{?_with_usbip: 1} %{?!_with_usbip: 0}
 
-Summary: An OpenSource NX client
 Name: opennx
 Version: 0.16
-Release: eter22.svn724
+Release: eter23.svn724
+
+Summary: An OpenSource NX client
+
 License: LGPL/GPL
 Group: Networking/Remote access
 Url: http://sourceforge.net/projects/opennx
+
 Packager: Denis Baranov <baraka@altlinux.org>
 
 Source: ftp://ftp.etersoft.ru/pub/Etersoft/RX@Etersoft/1.1/sources/tarball/%name-%version.tar
@@ -103,6 +106,9 @@ install -m 644 etc/*.rules %buildroot%_sysconfdir/udev/rules.d
 %endif
 
 %changelog
+* Mon Aug 05 2013 Vitaly Lipatov <lav@altlinux.ru> 0.16-eter23.svn724
+- add Num Lock state as a parameter to be send
+
 * Mon Jun 10 2013 Denis Baranov <baraka@altlinux.ru> 0.16-eter22.svn724
 - Add patch for translate
 
