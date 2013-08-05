@@ -92,7 +92,6 @@ install -m 644 etc/*.rules %buildroot%_sysconfdir/udev/rules.d
 %endif
 
 %files -f %name.lang
-%doc COPYING INSTALL
 %_bindir/%name
 %_libdir/%name
 %_datadir/%name
