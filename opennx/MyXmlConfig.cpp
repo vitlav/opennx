@@ -910,7 +910,7 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
     
     m_bNumLockEnabled = wxGetKeyState (::WXK_NUMLOCK);
     if(m_bNumLockEnabled){
-	ret << wxT("--numlock=\"on\"");
+	ret << wxT(" --numlock=\"on\"");
     }
     else{
 	ret << wxT(" --numlock=\"off\"");
