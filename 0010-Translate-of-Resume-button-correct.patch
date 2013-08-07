@@ -1,7 +1,7 @@
-From 04167eb32a5e257902c4b0d4fcf71de359828217 Mon Sep 17 00:00:00 2001
+From 87e3742331b205ed78a81affc229e9e5931baabf Mon Sep 17 00:00:00 2001
 From: Sergey Mitrofanov <sergeym@etersoft.ru>
 Date: Tue, 15 Jan 2013 15:17:54 +0400
-Subject: [PATCH 10/18] Translate of Resume button correct
+Subject: [PATCH 10/19] Translate of Resume button correct
 
 ---
  opennx/po/ru.po | 2 +-

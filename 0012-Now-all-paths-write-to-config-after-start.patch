@@ -1,7 +1,7 @@
-From 67535fdeccc73aa5aeb4504f863cf0dab59d0ffd Mon Sep 17 00:00:00 2001
+From 178836fc0769c9b241bf094247f872547128f3fa Mon Sep 17 00:00:00 2001
 From: Sergey Mitrofanov <sergeym@etersoft.ru>
 Date: Wed, 30 Jan 2013 15:28:50 +0400
-Subject: [PATCH 12/18] Now all paths write to config after start.
+Subject: [PATCH 12/19] Now all paths write to config after start.
 
 Conflicts:
 	opennx/opennxApp.cpp

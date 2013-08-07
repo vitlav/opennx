@@ -1,7 +1,7 @@
-From 506e928e3875f5b458055ab385218f76218bb19e Mon Sep 17 00:00:00 2001
+From 66e7e5c19ab7197da620806cb2899aab3c419fc6 Mon Sep 17 00:00:00 2001
 From: Victor Korablin <korablin@etersoft.ru>
 Date: Fri, 24 May 2013 13:49:54 +0400
-Subject: [PATCH 15/18] Added translation of another few phrases
+Subject: [PATCH 15/19] Added translation of another few phrases
 
 ---
  opennx/MyWizard_symbols.h          |  3 +++
