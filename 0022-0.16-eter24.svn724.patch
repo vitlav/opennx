@@ -1,7 +1,7 @@
-From 8ac726c0fb4472b4aafdf41b621e56b02804cf48 Mon Sep 17 00:00:00 2001
+From 0fbc135d835f90fa333fa12f27934770334466d2 Mon Sep 17 00:00:00 2001
 From: Vitaly Lipatov <lav@etersoft.ru>
 Date: Mon, 12 Aug 2013 12:11:09 +0400
-Subject: [PATCH] 0.16-eter24.svn724
+Subject: [PATCH 22/22] 0.16-eter24.svn724
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 

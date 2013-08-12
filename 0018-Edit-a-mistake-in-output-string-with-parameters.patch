@@ -1,7 +1,7 @@
 From abbe59172daac00ac685497167c4c14119a7ad0f Mon Sep 17 00:00:00 2001
 From: Victor Korablin <korablin@etersoft.ru>
 Date: Tue, 30 Jul 2013 13:19:26 +0400
-Subject: [PATCH 18/21] Edit a mistake in output string with parameters
+Subject: [PATCH 18/22] Edit a mistake in output string with parameters
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 
