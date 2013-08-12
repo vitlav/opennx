@@ -1,7 +1,9 @@
-From c96088b3402020f8b4b0005daffb1ba1ad354694 Mon Sep 17 00:00:00 2001
+From d5f6f301b18f391f2e90c9a3f3fb711f0ccf4eb4 Mon Sep 17 00:00:00 2001
 From: "mdevaev@etersoft.ru" <mdevaev@etersoft.ru>
 Date: Thu, 3 Dec 2009 20:52:00 +0300
-Subject: [PATCH 01/19] Change logo
+Subject: [PATCH 01/20] Change logo
+To: wine-patches <wine-patches@winehq.org>
+Reply-To: wine-devel <wine-devel@winehq.org>
 
 ---
  opennx/res/opennx.png | Bin 6814 -> 44165 bytes

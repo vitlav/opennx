@@ -1,7 +1,9 @@
-From f57d0ed69150e20e8a053c076619fdeae1da47df Mon Sep 17 00:00:00 2001
+From c3f890da7af5022c4a974017395f8409685c802a Mon Sep 17 00:00:00 2001
 From: Sergey Mitrofanov <sergeym@etersoft.ru>
 Date: Tue, 15 Jan 2013 15:02:56 +0400
-Subject: [PATCH 09/19] Update translations
+Subject: [PATCH 09/20] Update translations
+To: wine-patches <wine-patches@winehq.org>
+Reply-To: wine-devel <wine-devel@winehq.org>
 
 Conflicts:
 	opennx/po/ru.po
