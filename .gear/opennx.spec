@@ -3,7 +3,7 @@
 
 Name: opennx
 Version: 0.16
-Release: eter23.svn724
+Release: eter24.svn724
 
 Summary: An OpenSource NX client
 
@@ -22,7 +22,7 @@ Requires: usbip2-nxclient
 %endif
 
 # Automatically added by buildreq on Sat Sep 19 2009
-BuildRequires: gcc-c++ imake libSM-devel libXmu-devel nx ImageMagick-tools
+BuildRequires: gcc-c++ imake libSM-devel libXmu-devel nx
 BuildRequires: libopensc-devel libsmbclient-devel
 BuildRequires: libwxGTK-devel xorg-cf-files zip libcups-devel
 BuildRequires: libXau-devel
@@ -50,10 +50,11 @@ opennx is an OSS replacement for Nomachine's NX client.
 
 mkdir -p %buildroot{%_bindir,%_desktopdir}
 
-ln -s ../..%_libdir/%name/bin/%name %buildroot%_bindir/%name
-ln -s ../../share/%name %buildroot%_libdir/%name/share
+# FIXME: drop using these symlinks
+ln -s %_libdir/%name/bin/%name %buildroot%_bindir/%name
+ln -s %_datadir/%name %buildroot%_libdir/%name/share
 for f in nxesd nxssh nxservice nxproxy ; do
-    ln -s  ../../../bin/$f %buildroot%_libdir/%name/bin/$f
+    ln -s  %_bindir/$f %buildroot%_libdir/%name/bin/$f
 done
 
 mkdir -p %buildroot%_libdir/%name/%_lib
@@ -105,6 +106,9 @@ install -m 644 etc/*.rules %buildroot%_sysconfdir/udev/rules.d
 %endif
 
 %changelog
+* Mon Aug 12 2013 Vitaly Lipatov <lav@altlinux.ru> 0.16-eter24.svn724
+- use absolute path for links, fix requires
+
 * Mon Aug 05 2013 Vitaly Lipatov <lav@altlinux.ru> 0.16-eter23.svn724
 - add Num Lock state as a parameter to be send
 
