@@ -1,7 +1,7 @@
 From 18d38fcd5f5f72c765cf6f22e257344773a7a873 Mon Sep 17 00:00:00 2001
 From: Victor Korablin <korablin@etersoft.ru>
 Date: Tue, 30 Jul 2013 12:57:57 +0400
-Subject: [PATCH 17/20] Add Num Lock state as a parameter to be send
+Subject: [PATCH 17/21] Add Num Lock state as a parameter to be send
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 

@@ -1,7 +1,7 @@
 From 4c161cfe2b09c819380d95ba521ae479eb664fe0 Mon Sep 17 00:00:00 2001
 From: Denis Baranov <baraka@etersoft.ru>
 Date: Thu, 17 Jan 2013 19:49:45 +0400
-Subject: [PATCH 06/20] Add copy icon in spec
+Subject: [PATCH 06/21] Add copy icon in spec
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 

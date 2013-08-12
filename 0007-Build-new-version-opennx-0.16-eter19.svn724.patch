@@ -1,7 +1,7 @@
 From 7cf3278f97169caae3a2137a028f0bbcaa9b6806 Mon Sep 17 00:00:00 2001
 From: Denis Baranov <baraka@etersoft.ru>
 Date: Thu, 17 Jan 2013 19:51:12 +0400
-Subject: [PATCH 07/20] Build new version opennx-0.16-eter19.svn724
+Subject: [PATCH 07/21] Build new version opennx-0.16-eter19.svn724
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 

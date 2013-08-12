@@ -1,7 +1,7 @@
 From 6222579eade82bbf15a54b53c982cca52cb8746f Mon Sep 17 00:00:00 2001
 From: Denis Baranov <baraka@etersoft.ru>
 Date: Mon, 10 Jun 2013 15:40:18 +0400
-Subject: [PATCH 14/20] Fix build process
+Subject: [PATCH 14/21] Fix build process
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 
