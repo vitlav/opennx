@@ -3,7 +3,7 @@
 
 Name: opennx
 Version: 0.16
-Release: eter24.svn724
+Release: eter25.svn724
 
 Summary: An OpenSource NX client
 
@@ -106,6 +106,9 @@ install -m 644 etc/*.rules %buildroot%_sysconfdir/udev/rules.d
 %endif
 
 %changelog
+* Thu Oct 03 2013 Vitaly Lipatov <lav@altlinux.ru> 0.16-eter25.svn724
+- remove PidFile option from cups config (eterbug #9490)
+
 * Mon Aug 12 2013 Vitaly Lipatov <lav@altlinux.ru> 0.16-eter24.svn724
 - use absolute path for links, fix requires
 
