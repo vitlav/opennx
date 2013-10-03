@@ -1872,7 +1872,6 @@ MySession::prepareCups()
         tos << wxT("ErrorLog ") << sCupsDir << wxT("error_log") << endl;
         tos << wxT("PageLog ") << sCupsDir << wxT("page_log") << endl;
         tos << wxT("AccessLog ") << sCupsDir << wxT("access_log") << endl;
-        tos << wxT("PidFile ") << sCupsDir << wxT("cupsd.pid") << endl;
 #ifdef __WXDEBUG__
         tos << wxT("LogLevel debug") << endl;
 #else
