@@ -1,7 +1,7 @@
 From 803cf2a5192502760e8563a3ef66ccb712d594cc Mon Sep 17 00:00:00 2001
 From: Vitaly Lipatov <lav@etersoft.ru>
 Date: Mon, 5 Aug 2013 13:55:05 +0400
-Subject: [PATCH 21/22] 0.16-eter23.svn724
+Subject: [PATCH 21/23] 0.16-eter23.svn724
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 

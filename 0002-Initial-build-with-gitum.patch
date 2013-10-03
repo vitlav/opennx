@@ -1,7 +1,7 @@
 From 73554d91c4e4d84117a1444051878fbcf75dac3d Mon Sep 17 00:00:00 2001
 From: Denis Baranov <baraka@etersoft.ru>
 Date: Fri, 1 Jun 2012 21:17:02 +0400
-Subject: [PATCH 02/22] Initial build with gitum
+Subject: [PATCH 02/23] Initial build with gitum
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 
