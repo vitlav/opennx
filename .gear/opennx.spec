@@ -3,7 +3,7 @@
 
 Name: opennx
 Version: 0.16
-Release: eter25.svn724
+Release: eter26.svn724
 
 Summary: An OpenSource NX client
 
@@ -60,7 +60,8 @@ done
 mkdir -p %buildroot%_libdir/%name/%_lib
 
 for lib in libsmbclient.so libcups.so ; do
-    ln -s %_libdir/`readlink %_libdir/$lib` %buildroot%_libdir/%name/%_lib/$lib
+    test -r %_libdir/$lib.? || exit
+    ln -s %_libdir/$lib.? %buildroot%_libdir/%name/%_lib/$lib
 done
 
 cp %buildroot%_datadir/%name/applnk/xdg/*.desktop %buildroot%_desktopdir
@@ -106,6 +107,9 @@ install -m 644 etc/*.rules %buildroot%_sysconfdir/udev/rules.d
 %endif
 
 %changelog
+* Sun Jan 26 2014 Vitaly Lipatov <lav@altlinux.ru> 0.16-eter26.svn724
+- fix build with libsmbclient from samba 4.0, fix symlink to libsmbclient
+
 * Thu Oct 03 2013 Vitaly Lipatov <lav@altlinux.ru> 0.16-eter25.svn724
 - remove PidFile option from cups config (eterbug #9490)
 

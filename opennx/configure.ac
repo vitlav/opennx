@@ -452,7 +452,7 @@ FE_SVNREV([SVNREV])
 AC_DEFINE_UNQUOTED(SVNREV,"$SVNREV",[SVN revision])
 FE_RCVERSION
 
-AC_CHECK_HEADERS([cups/cups.h cups.h libsmbclient.h usb.h])
+AC_CHECK_HEADERS([cups/cups.h cups.h samba-4.0/libsmbclient.h libsmbclient.h usb.h])
 
 if test "$ac_cv_enable_usbip" = "YES" -a "$ac_cv_header_usb_h" != "yes"; then
     AC_MSG_ERROR([Need usb.h when compiling with usbip support])
