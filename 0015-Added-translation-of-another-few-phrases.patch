@@ -1,7 +1,7 @@
 From cafa3a6a95344746ed3c969f8919d5bd97cf93d7 Mon Sep 17 00:00:00 2001
 From: Victor Korablin <korablin@etersoft.ru>
 Date: Fri, 24 May 2013 13:49:54 +0400
-Subject: [PATCH 15/24] Added translation of another few phrases
+Subject: [PATCH 15/25] Added translation of another few phrases
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 
@@ -104,5 +104,5 @@ index f37a90e..c2bb173 100644
  #: SessionProperties_symbols.h:55
  msgid "Use custom settings"
 -- 
-1.8.3.4
+1.8.4.3
 

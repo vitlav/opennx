@@ -1,7 +1,7 @@
 From 230a2ccc066508cedc70104b7c354d41102d520b Mon Sep 17 00:00:00 2001
 From: Denis Baranov <baraka@etersoft.ru>
 Date: Fri, 18 Jan 2013 00:50:20 +0400
-Subject: [PATCH 11/24] Build new version opennx-0.16-eter20.svn724
+Subject: [PATCH 11/25] Build new version opennx-0.16-eter20.svn724
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 
@@ -35,5 +35,5 @@ index f368023..2986f32 100644
  - Add copy icon in spec
  
 -- 
-1.8.3.4
+1.8.4.3
 

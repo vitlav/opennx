@@ -1,7 +1,7 @@
 From 88a00f5293798e48e14ee47bf1dc29118bae606a Mon Sep 17 00:00:00 2001
 From: Sergey Mitrofanov <sergeym@etersoft.ru>
 Date: Tue, 15 Jan 2013 15:17:54 +0400
-Subject: [PATCH 10/24] Translate of Resume button correct
+Subject: [PATCH 10/25] Translate of Resume button correct
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 
@@ -23,5 +23,5 @@ index 42a5865..f37a90e 100644
  #: ResumeDialog.cpp:311
  msgid "Do you really want to terminate the selected session?"
 -- 
-1.8.3.4
+1.8.4.3
 

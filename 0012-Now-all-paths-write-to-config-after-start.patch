@@ -1,7 +1,7 @@
 From 7558edf49d1717d43b822834a5b0899b92fee612 Mon Sep 17 00:00:00 2001
 From: Sergey Mitrofanov <sergeym@etersoft.ru>
 Date: Wed, 30 Jan 2013 15:28:50 +0400
-Subject: [PATCH 12/24] Now all paths write to config after start.
+Subject: [PATCH 12/25] Now all paths write to config after start.
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 
@@ -232,5 +232,5 @@ index 27936ac..5697a0e 100644
                                              <border>5</border>
                                              <object class="wxPanel" name="ID_PANEL_USBIP_DAEMON">
 -- 
-1.8.3.4
+1.8.4.3
 

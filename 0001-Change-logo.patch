@@ -1,7 +1,7 @@
 From d5f6f301b18f391f2e90c9a3f3fb711f0ccf4eb4 Mon Sep 17 00:00:00 2001
 From: "mdevaev@etersoft.ru" <mdevaev@etersoft.ru>
 Date: Thu, 3 Dec 2009 20:52:00 +0300
-Subject: [PATCH 01/24] Change logo
+Subject: [PATCH 01/25] Change logo
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 
@@ -998,5 +998,5 @@ z{6G<$`~Fw$z^$48-KPO7;s5N@fLk;FQx^HYJU&_O=_z=F@Bx7i0E)6unM&yopZ*`g
 Cdvg8&
 
 -- 
-1.8.3.4
+1.8.4.3
 
