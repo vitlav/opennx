@@ -1,0 +1,25 @@
+From 19992c3a5b71d42a1b399711021409e86496ceff Mon Sep 17 00:00:00 2001
+From: Sergey Bolotov <sbol@etersoft.ru>
+Date: Mon, 27 Jul 2015 17:00:34 +0300
+Subject: [PATCH 32/37] changed int to enum
+
+---
+ opennx/TextViewer.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/opennx/TextViewer.cpp b/opennx/TextViewer.cpp
+index 63c9ff9..b439d58 100644
+--- a/opennx/TextViewer.cpp
++++ b/opennx/TextViewer.cpp
+@@ -56,7 +56,7 @@ DECLARE_DYNAMIC_CLASS(myRichTextCtrl);
+ 
+     public:
+ 
+-    bool DoLoadFile(const wxString& filename, int fileType = wxRICHTEXT_TYPE_XML)
++    bool DoLoadFile(const wxString& filename, wxRichTextFileType fileType = wxRICHTEXT_TYPE_XML)
+     {
+         bool success = false;
+         wxFileSystem fs;
+-- 
+2.1.4
+

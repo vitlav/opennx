@@ -1,0 +1,48 @@
+From a7abb748f1693e3eb81bbac07638de0e8e341cfa Mon Sep 17 00:00:00 2001
+From: Sergey Bolotov <sbol@etersoft.ru>
+Date: Mon, 27 Jul 2015 16:34:21 +0300
+Subject: [PATCH 30/37] Fixed some cWX2MB calls
+
+---
+ opennx/AsyncProcess.cpp | 2 +-
+ opennx/pwcrypt.cpp      | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/opennx/AsyncProcess.cpp b/opennx/AsyncProcess.cpp
+index 1c34117..7be0029 100644
+--- a/opennx/AsyncProcess.cpp
++++ b/opennx/AsyncProcess.cpp
+@@ -212,7 +212,7 @@ AsyncProcess::Print(const wxString &s, bool doLog)
+         else
+             ::myLogTrace(MYTRACETAG, wxT("Sending (hidden): '************'"));
+         wxString sbuf = s + wxT("\n");
+-        const wxWX2MBbuf buf = wxConvCurrent->cWX2MB(static_cast<const wchar_t*>(sbuf.c_str()));
++        const wxWX2MBbuf buf = wxConvCurrent->cWX2MB(sbuf.wc_str());
+         os->Write(buf, strlen(buf));
+         return true;
+     }
+diff --git a/opennx/pwcrypt.cpp b/opennx/pwcrypt.cpp
+index a4670bb..7756ada 100644
+--- a/opennx/pwcrypt.cpp
++++ b/opennx/pwcrypt.cpp
+@@ -163,7 +163,7 @@ md5sum(const wxString &s)
+     md5_byte_t digest[16];
+ 
+     md5_init(&state);
+-    const wxWX2MBbuf buf = wxConvCurrent->cWX2MB(s);
++    const wxWX2MBbuf buf = wxConvCurrent->cWX2MB(s.wc_str());
+     const char *cc = wx_static_cast(const char*, buf);
+     md5_append(&state, wx_reinterpret_cast(const md5_byte_t *, cc), s.Length());
+     md5_finish(&state, digest);
+@@ -185,7 +185,7 @@ Md5OfFile(const wxString &name)
+     if (tf.Exists() && tf.Open()) {
+         wxString line;
+         for (line = tf.GetFirstLine(); !tf.Eof(); line = tf.GetNextLine()) {
+-            const wxWX2MBbuf buf = wxConvCurrent->cWX2MB(line);
++            const wxWX2MBbuf buf = wxConvCurrent->cWX2MB(line.wc_str());
+             const char *cc = wx_static_cast(const char*, buf);
+             md5_append(&state, wx_reinterpret_cast(const md5_byte_t *, cc), line.Length());
+         }
+-- 
+2.1.4
+

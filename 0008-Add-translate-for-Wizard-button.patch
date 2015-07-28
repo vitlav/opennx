@@ -1,9 +1,7 @@
-From 3e56f059fbadf9c4fea0f5e941c9c65f8575f534 Mon Sep 17 00:00:00 2001
+From de36f36925ddd0c6cc2f518114ef69e13b4b8801 Mon Sep 17 00:00:00 2001
 From: Sergey Mitrofanov <sergeym@etersoft.ru>
 Date: Tue, 15 Jan 2013 13:28:35 +0400
-Subject: [PATCH 08/25] Add translate for Wizard button
-To: wine-patches <wine-patches@winehq.org>
-Reply-To: wine-devel <wine-devel@winehq.org>
+Subject: [PATCH 08/37] Add translate for Wizard button
 
 ---
  opennx/LoginDialog_symbols.h | 1 +
@@ -35,5 +33,5 @@ index c4d95c3..f7ed7c3 100644
  #, c-format
  msgid "TEST: Would delete file: %s"
 -- 
-1.8.4.3
+2.1.4
 

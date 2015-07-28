@@ -1,0 +1,25 @@
+From a16fb420abe572b0a13caa60c909600b263231ed Mon Sep 17 00:00:00 2001
+From: Sergey Bolotov <sbol@etersoft.ru>
+Date: Mon, 27 Jul 2015 17:00:50 +0300
+Subject: [PATCH 33/37] fixed previous commit (::)
+
+---
+ opennx/xh_richtext.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/opennx/xh_richtext.cpp b/opennx/xh_richtext.cpp
+index 409a58c..cde45c3 100644
+--- a/opennx/xh_richtext.cpp
++++ b/opennx/xh_richtext.cpp
+@@ -27,7 +27,7 @@
+ 
+ IMPLEMENT_DYNAMIC_CLASS(wxRichTextCtrlXmlHandler, wxXmlResourceHandler)
+ 
+-wxRichTextCtrlXmlHandlerwxRichTextCtrlXmlHandler() : wxXmlResourceHandler()
++wxRichTextCtrlXmlHandler::wxRichTextCtrlXmlHandler() : wxXmlResourceHandler()
+ {
+     XRC_ADD_STYLE(wxTE_PROCESS_ENTER);
+     XRC_ADD_STYLE(wxTE_PROCESS_TAB);
+-- 
+2.1.4
+

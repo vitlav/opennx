@@ -1,9 +1,7 @@
-From 4c161cfe2b09c819380d95ba521ae479eb664fe0 Mon Sep 17 00:00:00 2001
+From 2995edb09232976edf4c1b910e628205fb65d71e Mon Sep 17 00:00:00 2001
 From: Denis Baranov <baraka@etersoft.ru>
 Date: Thu, 17 Jan 2013 19:49:45 +0400
-Subject: [PATCH 06/25] Add copy icon in spec
-To: wine-patches <wine-patches@winehq.org>
-Reply-To: wine-devel <wine-devel@winehq.org>
+Subject: [PATCH 06/37] Add copy icon in spec
 
 ---
  .gear/opennx.spec | 12 ++++++------
@@ -36,5 +34,5 @@ index bc8aff1..7612f31 100644
  %if %with_usbip
  install -d -m 755 %buildroot%_sysconfdir/udev/rules.d
 -- 
-1.8.4.3
+2.1.4
 

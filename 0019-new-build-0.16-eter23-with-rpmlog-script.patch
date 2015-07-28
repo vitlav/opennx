@@ -1,9 +1,7 @@
-From 5510ab43cb3489db899fc411a17596a5fb9e4d63 Mon Sep 17 00:00:00 2001
+From c4ba217a60e9a644d4cce1a81a9f39d2303b5c82 Mon Sep 17 00:00:00 2001
 From: Vitaly Lipatov <lav@etersoft.ru>
 Date: Mon, 5 Aug 2013 13:54:20 +0400
-Subject: [PATCH 20/25] new build 0.16-eter23 (with rpmlog script)
-To: wine-patches <wine-patches@winehq.org>
-Reply-To: wine-devel <wine-devel@winehq.org>
+Subject: [PATCH 19/37] new build 0.16-eter23 (with rpmlog script)
 
 ---
  .gear/opennx.spec | 10 ++++++++--
@@ -43,5 +41,5 @@ index e3baf6b..35613df 100644
  - Add patch for translate
  
 -- 
-1.8.4.3
+2.1.4
 

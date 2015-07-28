@@ -1,0 +1,71 @@
+From bccf4098b0f5cf4d5cac3077090a02265ccbe02a Mon Sep 17 00:00:00 2001
+From: Sergey Bolotov <sbol@etersoft.ru>
+Date: Mon, 27 Jul 2015 16:02:24 +0300
+Subject: [PATCH 28/37] changed Node to compatibility_iterator
+
+---
+ opennx/MyWizard.cpp          | 6 +++---
+ opennx/MyXmlConfig.cpp       | 2 +-
+ opennx/SessionProperties.cpp | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/opennx/MyWizard.cpp b/opennx/MyWizard.cpp
+index e8e628c..eb77983 100644
+--- a/opennx/MyWizard.cpp
++++ b/opennx/MyWizard.cpp
+@@ -138,7 +138,7 @@ void MyWizard::CreateControls()
+     if (!wxXmlResource::Get()->LoadObject(this, GetParent(), _T("ID_WIZARD"), wxT("wxWizard")))
+         wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
+ 
+-    for (wxWindowList::Node* node = GetChildren().GetFirst(); node; node = node->GetNext())
++    for (wxWindowList::compatibility_iterator node = GetChildren().GetFirst(); node; node = node->GetNext())
+     {
+         wxWizardPage* page = wxDynamicCast(node->GetData(), wxWizardPage);
+         if (page)
+@@ -163,7 +163,7 @@ void MyWizard::CreateControls()
+     m_pPageSecurity->Create(NULL);
+     m_pPageFinish->Create(NULL);
+ 
+-    for (wxWindowList::Node* n = GetChildren().GetFirst(); n; n = n->GetNext()) {
++    for (wxWindowList::compatibility_iterator n = GetChildren().GetFirst(); n; n = n->GetNext()) {
+         wxWizardPage* p = wxDynamicCast(n->GetData(), wxWizardPage);
+         if (p) {
+             int w, h;
+@@ -210,7 +210,7 @@ wxSize MyWizard::GetPageSize() const
+ 
+ bool MyWizard::Run()
+ {
+-    wxWindowListNode* node = GetChildren().GetFirst();
++    wxWindowList::compatibility_iterator node = GetChildren().GetFirst();
+     while (node)
+     {
+         wxWizardPage* startPage = wxDynamicCast(node->GetData(), wxWizardPage);
+diff --git a/opennx/MyXmlConfig.cpp b/opennx/MyXmlConfig.cpp
+index 2237111..95762fa 100644
+--- a/opennx/MyXmlConfig.cpp
++++ b/opennx/MyXmlConfig.cpp
+@@ -557,7 +557,7 @@ MyXmlConfig::UrlEsc(const wxString &s)
+     size_t len = s.Length();
+     wxString ret;
+     for (size_t i = 0; i < len; i++) {
+-        switch (s[i]) {
++        switch (s[i].GetValue()) {
+             case wxT(' '):
+             case wxT(':'):
+             case wxT('"'):
+diff --git a/opennx/SessionProperties.cpp b/opennx/SessionProperties.cpp
+index befe1f7..9a4e542 100644
+--- a/opennx/SessionProperties.cpp
++++ b/opennx/SessionProperties.cpp
+@@ -788,7 +788,7 @@ SessionProperties::InstallOnCharHandlers(wxWindow *w /* = NULL*/)
+     if (!w)
+         w = this;
+     wxWindowList& children = w->GetChildren();
+-    wxWindowList::Node *node;
++    wxWindowList::compatibility_iterator node;
+     for (node = children.GetFirst(); node; node = node->GetNext()) {
+         w = node->GetData();
+         if (w->IsKindOf(CLASSINFO(wxTextCtrl)) || w->IsKindOf(CLASSINFO(wxSpinCtrl))) {
+-- 
+2.1.4
+

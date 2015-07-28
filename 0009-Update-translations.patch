@@ -1,9 +1,7 @@
-From c3f890da7af5022c4a974017395f8409685c802a Mon Sep 17 00:00:00 2001
+From 72c85bfa88a068eb1afb78b96ac3efff48627cf8 Mon Sep 17 00:00:00 2001
 From: Sergey Mitrofanov <sergeym@etersoft.ru>
 Date: Tue, 15 Jan 2013 15:02:56 +0400
-Subject: [PATCH 09/25] Update translations
-To: wine-patches <wine-patches@winehq.org>
-Reply-To: wine-devel <wine-devel@winehq.org>
+Subject: [PATCH 09/37] Update translations
 
 Conflicts:
 	opennx/po/ru.po
@@ -268,5 +266,5 @@ index f7ed7c3..42a5865 100644
  msgstr "Системный каталог NX"
  
 -- 
-1.8.4.3
+2.1.4
 

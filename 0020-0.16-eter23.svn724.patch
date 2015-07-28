@@ -1,9 +1,7 @@
-From 803cf2a5192502760e8563a3ef66ccb712d594cc Mon Sep 17 00:00:00 2001
+From e4d3c7f25ebdd396abab07c54995eb9c5e59c673 Mon Sep 17 00:00:00 2001
 From: Vitaly Lipatov <lav@etersoft.ru>
 Date: Mon, 5 Aug 2013 13:55:05 +0400
-Subject: [PATCH 21/25] 0.16-eter23.svn724
-To: wine-patches <wine-patches@winehq.org>
-Reply-To: wine-devel <wine-devel@winehq.org>
+Subject: [PATCH 20/37] 0.16-eter23.svn724
 
 - add Num Lock state as a parameter to be send
 ---
@@ -23,5 +21,5 @@ index 35613df..00c80f5 100644
  %_libdir/%name
  %_datadir/%name
 -- 
-1.8.4.3
+2.1.4
 

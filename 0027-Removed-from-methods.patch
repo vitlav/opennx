@@ -1,0 +1,2955 @@
+From 5ca6b983b4d40d579ca8a63d003a178f3002df69 Mon Sep 17 00:00:00 2001
+From: Sergey Bolotov <sbol@etersoft.ru>
+Date: Mon, 27 Jul 2015 15:54:02 +0300
+Subject: [PATCH 27/37] Removed :: from methods
+
+---
+ opennx/AboutDialog.cpp             |   6 +-
+ opennx/AsyncProcess.cpp            |  12 +-
+ opennx/ExtHtmlWindow.cpp           |   2 +-
+ opennx/ForeignFrame.cpp            |   4 +-
+ opennx/Icon.cpp                    |   2 +-
+ opennx/KeyDialog.cpp               |   6 +-
+ opennx/LibOpenSC.cpp               |  14 +--
+ opennx/LoginDialog.cpp             |  39 ++++---
+ opennx/MacUninstallApp.cpp         | 142 +++++++++++------------
+ opennx/MyDynlib.cpp                |   2 +-
+ opennx/MySession.cpp               | 231 +++++++++++++++++++------------------
+ opennx/MySession.h                 |   7 ++
+ opennx/MyValidator.cpp             |   4 +-
+ opennx/MyValidator.h               |   1 +
+ opennx/MyWizard.cpp                |  12 +-
+ opennx/MyXmlConfig.cpp             |  20 ++--
+ opennx/ProxyPropertyDialog.cpp     |   2 +-
+ opennx/PulseAudio.cpp              |  12 +-
+ opennx/RdpImageSettingsDialog.cpp  |   2 +-
+ opennx/RdpPropertyDialog.cpp       |   2 +-
+ opennx/ResumeDialog.cpp            |   4 +-
+ opennx/SessionAdmin.cpp            |   4 +-
+ opennx/SessionList.cpp             |   6 +-
+ opennx/SessionProperties.cpp       |  48 ++++----
+ opennx/ShareProperties.cpp         |  16 +--
+ opennx/SimpleXauth.cpp             |   6 +-
+ opennx/TraceLogFrame.cpp           |   2 +-
+ opennx/UnixImageSettingsDialog.cpp |   2 +-
+ opennx/UsbFilterDetailsDialog.cpp  |   2 +-
+ opennx/UsbIp.cpp                   |  10 +-
+ opennx/VncImageSettingsDialog.cpp  |   2 +-
+ opennx/VncPropertyDialog.cpp       |   2 +-
+ opennx/WinShare.cpp                |   2 +-
+ opennx/X11PropertyDialog.cpp       |   2 +-
+ opennx/mylog.cpp                   |   3 +-
+ opennx/mylog.h                     |   2 +
+ opennx/opennxApp.cpp               |  70 +++++------
+ opennx/pulseTest.cpp               |  14 +--
+ opennx/pwcrypt.cpp                 |   4 +-
+ opennx/tracelogApp.cpp             |  20 ++--
+ opennx/watchReaderApp.cpp          |  24 ++--
+ opennx/watchUsbIpApp.cpp           |  36 +++---
+ opennx/xh_richtext.cpp             |   2 +-
+ 43 files changed, 415 insertions(+), 390 deletions(-)
+
+diff --git a/opennx/AboutDialog.cpp b/opennx/AboutDialog.cpp
+index 9661a37..76d83ad 100644
+--- a/opennx/AboutDialog.cpp
++++ b/opennx/AboutDialog.cpp
+@@ -111,17 +111,17 @@ bool AboutDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
+     m_pHtmlWindow->SetBorders(0);
+ 
+     wxString version = _("Version") + wxString::Format(wxT(" <B>%s</B>"),
+-        ::wxGetApp().GetVersion().c_str());
++        wxGetApp().GetVersion().c_str());
+ #ifdef __WXDEBUG__
+     version += wxT(" (DEBUG)");
+ #else
+     version += wxT(" (RELEASE)");
+ #endif
+ 
+-    wxString content = ::wxGetApp().LoadFileFromResource(wxT("res/about.html"));
++    wxString content = wxGetApp().LoadFileFromResource(wxT("res/about.html"));
+     content.Replace(wxT("<VERSION>"), version);
+     content.Replace(wxT("<WXVERSION>"), wxVERSION_STRING);
+-    content.Replace(wxT("\"res:"), wxT("\"") + ::wxGetApp().GetResourcePrefix());
++    content.Replace(wxT("\"res:"), wxT("\"") + wxGetApp().GetResourcePrefix());
+ 
+     m_pHtmlWindow->SetPage(content);
+     m_pHtmlWindow->SetBackgroundColour(GetBackgroundColour());
+diff --git a/opennx/AsyncProcess.cpp b/opennx/AsyncProcess.cpp
+index 971969a..1c34117 100644
+--- a/opennx/AsyncProcess.cpp
++++ b/opennx/AsyncProcess.cpp
+@@ -97,7 +97,7 @@ AsyncProcess::AsyncProcess(const wxString& cmd, wxEvtHandler *h /* = NULL */)
+     wxThreadHelper(),
+     m_pEvtHandler(h),
+     m_sCmd(cmd),
+-    m_sDir(::wxGetCwd())
++    m_sDir(wxGetCwd())
+ {
+     Redirect();
+ }
+@@ -208,11 +208,11 @@ AsyncProcess::Print(const wxString &s, bool doLog)
+     wxOutputStream *os = GetOutputStream();
+     if (os) {
+         if (doLog)
+-            ::myLogTrace(MYTRACETAG, wxT("Sending: '%s'"), s.c_str());
++            ::myLogTrace(MYTRACETAG, wxT("Sending: '%s'"), s.wx_str());
+         else
+             ::myLogTrace(MYTRACETAG, wxT("Sending (hidden): '************'"));
+         wxString sbuf = s + wxT("\n");
+-        const wxWX2MBbuf buf = wxConvCurrent->cWX2MB(sbuf);
++        const wxWX2MBbuf buf = wxConvCurrent->cWX2MB(static_cast<const wchar_t*>(sbuf.c_str()));
+         os->Write(buf, strlen(buf));
+         return true;
+     }
+@@ -248,13 +248,13 @@ AsyncProcess::Start()
+     bool ret = false;
+ 
+     if (!m_sCmd.IsEmpty()) {
+-        wxString cwd = ::wxGetCwd();
+-        ::myLogTrace(MYTRACETAG, wxT("Starting '%s'"), m_sCmd.c_str());
++        wxString cwd = wxGetCwd();
++        ::myLogTrace(MYTRACETAG, wxT("Starting '%s'"), m_sCmd.wx_str());
+         if (!m_sDir.IsEmpty())
+             wxFileName::SetCwd(m_sDir);
+         m_sOutBuf.Empty();
+         m_sErrBuf.Empty();
+-        m_pid = ::wxExecute(m_sCmd, wxEXEC_ASYNC, this);
++        m_pid = wxExecute(m_sCmd, wxEXEC_ASYNC, this);
+         ::myLogTrace(MYTRACETAG, wxT("wxExecute returned %d"), m_pid);
+         ret = (m_pid > 0);
+         if (!m_sDir.IsEmpty())
+diff --git a/opennx/ExtHtmlWindow.cpp b/opennx/ExtHtmlWindow.cpp
+index c14f33c..2b54975 100644
+--- a/opennx/ExtHtmlWindow.cpp
++++ b/opennx/ExtHtmlWindow.cpp
+@@ -61,6 +61,6 @@ void extHtmlWindow::OnLinkClicked(const wxHtmlLinkInfo& link)
+ #ifdef __WXMSW__
+     ShellExecute((HWND)GetHandle(), wxT("open"), href.c_str(), NULL, NULL, SW_SHOWNORMAL);
+ #else
+-    ::wxLaunchDefaultBrowser(href, wxBROWSER_NEW_WINDOW);
++    wxLaunchDefaultBrowser(href, wxBROWSER_NEW_WINDOW);
+ #endif
+ }
+diff --git a/opennx/ForeignFrame.cpp b/opennx/ForeignFrame.cpp
+index 69e7ff1..10529d5 100644
+--- a/opennx/ForeignFrame.cpp
++++ b/opennx/ForeignFrame.cpp
+@@ -200,7 +200,7 @@ void ForeignFrame::OnForeignSuspendClick( wxCommandEvent& event )
+ {
+     Close();
+     event.Skip();
+-    ::wxKill(getppid(), wxSIGHUP);
++    wxKill(getppid(), wxSIGHUP);
+ }
+ 
+ /*!
+@@ -211,7 +211,7 @@ void ForeignFrame::OnForeignTerminateClick( wxCommandEvent& event )
+ {
+     Close();
+     event.Skip();
+-    ::wxKill(m_nOtherPID, wxSIGTERM);
++    wxKill(m_nOtherPID, wxSIGTERM);
+ }
+ 
+ /*!
+diff --git a/opennx/Icon.cpp b/opennx/Icon.cpp
+index 471f1b7..859befa 100644
+--- a/opennx/Icon.cpp
++++ b/opennx/Icon.cpp
+@@ -115,7 +115,7 @@ wxBitmap CreateBitmapFromFile(const wxString &filename, int width, int height)
+             if (t != -1) {
+                 wxBitmap rbm;
+                 wxFileSystem fs;
+-                wxFSFile *f = fs.OpenFile(::wxGetApp().GetResourcePrefix() + filename);
++                wxFSFile *f = fs.OpenFile(wxGetApp().GetResourcePrefix() + filename);
+                 if (f) {
+                     wxInputStream *s = f->GetStream();
+                     if (s && s->IsOk()) {
+diff --git a/opennx/KeyDialog.cpp b/opennx/KeyDialog.cpp
+index 6b43af8..0cbf3d1 100644
+--- a/opennx/KeyDialog.cpp
++++ b/opennx/KeyDialog.cpp
+@@ -115,7 +115,7 @@ bool KeyDialog::Create( wxWindow* parent, wxWindowID id, const wxString& caption
+     wxUnusedVar(pos);
+     wxUnusedVar(caption);
+     wxUnusedVar(id);
+-    ::wxGetApp().EnableContextHelp(this);
++    wxGetApp().EnableContextHelp(this);
+     return true;
+ }
+ 
+@@ -201,9 +201,9 @@ void KeyDialog::OnButtonImportClick( wxCommandEvent& event )
+ {
+     wxString keyDir;
+     if (!wxConfigBase::Get()->Read(wxT("Recent/KeyImport"), &keyDir)) {
+-        keyDir = ::wxGetHomeDir() + wxFileName::GetPathSeparator() + wxT(".ssh");
++        keyDir = wxGetHomeDir() + wxFileName::GetPathSeparator() + wxT(".ssh");
+         if (!wxFileName(keyDir).IsDirReadable())
+-            keyDir = ::wxGetHomeDir();
++            keyDir = wxGetHomeDir();
+     }
+     wxFileDialog d(this, _("Select key to import"), keyDir, wxEmptyString,
+             _("SSh key files (*.key)|*.key|All files (*)|*"), wxFD_OPEN|wxFD_FILE_MUST_EXIST);
+diff --git a/opennx/LibOpenSC.cpp b/opennx/LibOpenSC.cpp
+index 5851227..97a8c22 100644
+--- a/opennx/LibOpenSC.cpp
++++ b/opennx/LibOpenSC.cpp
+@@ -349,8 +349,8 @@ bool LibOpenSC::WatchHotRemove(unsigned int ridx, long sshpid) {
+         int trycount = 10;
+         while (wxProcess::Exists(sshpid) && (0 < trycount)) {
+             wxProcess::Kill(sshpid, wxSIGHUP);
+-            while (::wxGetApp().Pending())
+-                ::wxGetApp().Dispatch();
++            while (wxGetApp().Pending())
++                wxGetApp().Dispatch();
+             wxThread::Sleep(500);
+             trycount--;
+         }
+@@ -361,8 +361,8 @@ bool LibOpenSC::WatchHotRemove(unsigned int ridx, long sshpid) {
+         trycount = 10;
+         while (wxProcess::Exists(sshpid) && (0 < trycount)) {
+             wxProcess::Kill(sshpid, wxSIGTERM);
+-            while (::wxGetApp().Pending())
+-                ::wxGetApp().Dispatch();
++            while (wxGetApp().Pending())
++                wxGetApp().Dispatch();
+             wxThread::Sleep(500);
+             trycount--;
+         }
+@@ -373,14 +373,14 @@ bool LibOpenSC::WatchHotRemove(unsigned int ridx, long sshpid) {
+         trycount = 10;
+         while (wxProcess::Exists(sshpid) && (0 < trycount)) {
+             wxProcess::Kill(sshpid, wxSIGKILL);
+-            while (::wxGetApp().Pending())
+-                ::wxGetApp().Dispatch();
++            while (wxGetApp().Pending())
++                wxGetApp().Dispatch();
+             wxThread::Sleep(500);
+             trycount--;
+         }
+         if (!wxProcess::Exists(sshpid))
+             return true;
+-        ::wxLogError(_("Could not terminate nxssh"));
++//        wxLogError(wxT("Could not terminate nxssh"));
+     } else
+         return true;
+     return false;
+diff --git a/opennx/LoginDialog.cpp b/opennx/LoginDialog.cpp
+index a62a935..0d06a38 100644
+--- a/opennx/LoginDialog.cpp
++++ b/opennx/LoginDialog.cpp
+@@ -166,7 +166,14 @@ void LoginDialog::ReadConfigDirectory()
+     cfgdir = cfgdir + wxFileName::GetPathSeparator() + wxT("config");
+     m_aConfigFiles.Empty();
+ 
+-    wxDir::GetAllFiles(cfgdir, &m_aConfigFiles, wxT("*.nxs"), wxDIR_FILES);
++    wxArrayString c;
++    for(int i = 0; i < m_aConfigFiles.GetCount(); i++)
++    {
++        wxString x(m_aConfigFiles[i]);
++        c.Add(x);
++    }
++
++    wxDir::GetAllFiles(cfgdir, &c, wxT("*.nxs"), wxDIR_FILES);
+     size_t i;
+     m_sSessionName.Empty();
+     if (m_pCurrentCfg)
+@@ -185,7 +192,7 @@ void LoginDialog::ReadConfigDirectory()
+     for (i = 0; i < m_aConfigFiles.GetCount(); i++) {
+         MyXmlConfig cfg(m_aConfigFiles[i]);
+         if (cfg.IsValid()) {
+-            m_pCtrlSessionName->Append(cfg.sGetName(), (void *)m_aConfigFiles[i].c_str());
++            m_pCtrlSessionName->Append(cfg.sGetName(), const_cast<char *>(m_aConfigFiles[i].c_str().AsChar()));
+             if ((cfg.sGetFileName() == m_sLastSessionFilename) ||
+                     (cfg.sGetName() == m_sLastSessionFilename)) {
+                 m_pCurrentCfg = new MyXmlConfig(m_aConfigFiles[i]);
+@@ -200,7 +207,7 @@ void LoginDialog::ReadConfigDirectory()
+                     m_sUsername = cfg.sGetUsername();
+                     m_sPassword = cfg.sGetPassword();
+                 }
+-                m_bUseSmartCard = ::wxGetApp().NxSmartCardSupport() && cfg.bGetUseSmartCard();
++                m_bUseSmartCard = wxGetApp().NxSmartCardSupport() && cfg.bGetUseSmartCard();
+             }
+         }
+     }
+@@ -261,7 +268,7 @@ bool LoginDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
+     }
+     Centre();
+     ////@end LoginDialog creation
+-    ::wxGetApp().EnableContextHelp(this);
++    wxGetApp().EnableContextHelp(this);
+     return TRUE;
+ }
+ 
+@@ -302,9 +309,9 @@ void LoginDialog::CreateControls()
+     ////@end LoginDialog content initialisation
+ 
+     ReadConfigDirectory();
+-    m_bUseSmartCard = ::wxGetApp().NxSmartCardSupport() && m_pCurrentCfg && m_pCurrentCfg->bGetUseSmartCard();
++    m_bUseSmartCard = wxGetApp().NxSmartCardSupport() && m_pCurrentCfg && m_pCurrentCfg->bGetUseSmartCard();
+     m_pCtrlUseSmartCard->SetValue(m_bUseSmartCard);
+-    m_pCtrlUseSmartCard->Enable(::wxGetApp().NxSmartCardSupport() && m_pCurrentCfg && m_pCurrentCfg->IsWritable());
++    m_pCtrlUseSmartCard->Enable(wxGetApp().NxSmartCardSupport() && m_pCurrentCfg && m_pCurrentCfg->IsWritable());
+     if (m_bGuestLogin) {
+         m_pCtrlUsername->Enable(false);
+         m_pCtrlPassword->Enable(false);
+@@ -392,7 +399,7 @@ void LoginDialog::OnButtonWizardClick( wxCommandEvent& event )
+ 	ReadConfigDirectory();
+ 	m_sSessionName = wz.sGetConfigName();
+ 	MyXmlConfig cfg(m_sSessionName);
+-	m_pCtrlSessionName->Append(cfg.sGetName(), (void *)m_sSessionName.c_str());
++    m_pCtrlSessionName->Append(cfg.sGetName(), const_cast<char *>(m_sSessionName.c_str().AsChar()));
+     m_pCtrlSessionName->SetStringSelection(cfg.sGetName());
+     wxCommandEvent event2;
+     OnComboboxSessionSelected(event2);
+@@ -417,11 +424,11 @@ void LoginDialog::OnButtonConfigureClick( wxCommandEvent& event )
+                 break;
+             case wxID_CLEAR:
+                 ::myLogTrace(MYTRACETAG, wxT("deleting '%s'"), fn.c_str());
+-                ::wxRemoveFile(fn);
++                wxRemoveFile(fn);
+                 ReadConfigDirectory();
+                 break;
+             case wxID_OK:
+-                m_bUseSmartCard = ::wxGetApp().NxSmartCardSupport() &&
++                m_bUseSmartCard = wxGetApp().NxSmartCardSupport() &&
+                     m_pCurrentCfg->bGetUseSmartCard();
+                 m_pCtrlUseSmartCard->SetValue(m_bUseSmartCard);
+                 if (!m_pCurrentCfg->SaveToFile())
+@@ -434,12 +441,12 @@ void LoginDialog::OnButtonConfigureClick( wxCommandEvent& event )
+                 wxConfigBase::Get()->Write(wxT("Config/UsbipdSocket"), d.GetUsbipdSocket());
+                 wxConfigBase::Get()->Write(wxT("Config/UsbipPort"), d.GetUsbLocalPort());
+ #endif
+-                bool bDTI = ::wxGetApp().CheckDesktopEntry(m_pCurrentCfg);
++                bool bDTI = wxGetApp().CheckDesktopEntry(m_pCurrentCfg);
+                 if (d.GetbCreateDesktopIcon() != bDTI) {
+                     if (d.GetbCreateDesktopIcon())
+-                        ::wxGetApp().CreateDesktopEntry(m_pCurrentCfg);
++                        wxGetApp().CreateDesktopEntry(m_pCurrentCfg);
+                     else
+-                        ::wxGetApp().RemoveDesktopEntry(m_pCurrentCfg);
++                        wxGetApp().RemoveDesktopEntry(m_pCurrentCfg);
+                 }
+                 break;
+         }
+@@ -477,7 +484,7 @@ void LoginDialog::OnComboboxSessionSelected( wxCommandEvent& event )
+                 m_pCtrlPassword->Enable(true);
+                 m_pCtrlUsername->Enable(true);
+             }
+-            m_pCtrlUseSmartCard->SetValue(::wxGetApp().NxSmartCardSupport() && cfg.bGetUseSmartCard());
++            m_pCtrlUseSmartCard->SetValue(wxGetApp().NxSmartCardSupport() && cfg.bGetUseSmartCard());
+         }
+     }
+     m_pCtrlUseSmartCard->Enable(m_pCurrentCfg && m_pCurrentCfg->IsWritable());
+@@ -516,7 +523,7 @@ void LoginDialog::OnOkClick(wxCommandEvent& event)
+                 m_pCurrentCfg->sSetPassword(m_sPassword);
+         }
+         m_pCurrentCfg->bSetUseSmartCard(m_bUseSmartCard);
+-        if (m_bUseSmartCard || (!::wxGetApp().NxProxyAvailable()))
++        if (m_bUseSmartCard || (!wxGetApp().NxProxyAvailable()))
+             m_pCurrentCfg->bSetEnableSSL(true);
+ 
+         // Workaround for a bug-compatibility to original nxclient:
+@@ -592,7 +599,7 @@ void LoginDialog::OnTimer(wxTimerEvent&)
+     bool enable = (cmdout.GetCount() == 0);
+     if (NULL != m_pCtrlLoginButton)
+         m_pCtrlLoginButton->Enable(enable);
+-    if (enable && ::wxGetApp().AutoLogin()) {
++    if (enable && wxGetApp().AutoLogin()) {
+         wxCommandEvent ev(wxEVT_COMMAND_BUTTON_CLICKED, wxID_OK);
+         AddPendingEvent(ev);
+     }
+@@ -608,7 +615,7 @@ void LoginDialog::OnInitDialog( wxInitDialogEvent& event )
+ {
+     wxDialog::OnInitDialog(event);
+ #ifndef SINGLE_SESSION
+-    if (::wxGetApp().AutoLogin())
++    if (wxGetApp().AutoLogin())
+         m_cAutoLoginTimer.Start(1000, wxTIMER_ONE_SHOT);
+ #endif
+     event.Skip();
+diff --git a/opennx/MacUninstallApp.cpp b/opennx/MacUninstallApp.cpp
+index b33e2a6..b3c036b 100644
+--- a/opennx/MacUninstallApp.cpp
++++ b/opennx/MacUninstallApp.cpp
+@@ -57,13 +57,13 @@ class RmRfTraverser : public wxDirTraverser
+             while (n >= 0) {
+                 fn = m_aFiles[n--];
+                 if (m_bTestMode) {
+-                    ::wxLogMessage(_("TEST: Would delete file: %s"), fn.c_str());
++                    wxLogMessage(_("TEST: Would delete file: %s"), fn.c_str());
+                 } else {
+-                    if (::wxRemoveFile(fn))
+-                        ::wxLogMessage(_("Deleted file: %s"), fn.c_str());
++                    if (wxRemoveFile(fn))
++                        wxLogMessage(_("Deleted file: %s"), fn.c_str());
+                     else {
+                         failed_files++;
+-                        ::wxLogWarning(_("Could not delete file %s"), fn.c_str());
++                        wxLogWarning(_("Could not delete file %s"), fn.c_str());
+                     }
+                 }
+             }
+@@ -71,13 +71,13 @@ class RmRfTraverser : public wxDirTraverser
+             while (n >= 0) {
+                 fn = m_aDirs[n--];
+                 if (m_bTestMode) {
+-                    ::wxLogMessage(_("TEST: Would delete diretory %s"), fn.c_str());
++                    wxLogMessage(_("TEST: Would delete diretory %s"), fn.c_str());
+                 } else {
+-                    if (::wxRmdir(fn))
+-                        ::wxLogMessage(_("Deleted diretory %s"), fn.c_str());
++                    if (wxRmdir(fn))
++                        wxLogMessage(_("Deleted diretory %s"), fn.c_str());
+                     else {
+                         failed_dirs++;
+-                        ::wxLogWarning(_("Could not delete directory %s"), fn.c_str());
++                        wxLogWarning(_("Could not delete directory %s"), fn.c_str());
+                     }
+                 }
+             }
+@@ -168,7 +168,7 @@ bool MacUninstallApp::OnInit()
+     m_sLogName << wxT("/tmp/uninstall-") << targetPkgId << wxT(".log");
+     if (m_bBatchMode) {
+         if ((!m_bTestMode) && (0 != geteuid())) {
+-            ::wxMessageBox(_("Batch uninstall needs to be started as root."),
++            wxMessageBox(_("Batch uninstall needs to be started as root."),
+                     wxString::Format(_("Uninstall %s"), targetPkg.c_str()),
+                     wxOK|wxICON_ERROR);
+             while (Pending())
+@@ -176,22 +176,22 @@ bool MacUninstallApp::OnInit()
+             return false;
+         }
+         bool ok = DoUninstall(targetPkg, targetPkgId);
+-        ::wxLogMessage(_("Uninstall finished at %s"), wxDateTime::Now().Format().c_str());
+-        ::wxLogMessage(_("Status: %s, failed files: %lu, failed dirs: %lu"),
++        wxLogMessage(_("Uninstall finished at %s"), wxDateTime::Now().Format().c_str());
++        wxLogMessage(_("Status: %s, failed files: %lu, failed dirs: %lu"),
+             (ok ? _("OK") : _("FAILED")), failed_files, failed_dirs);
+         // Print result to stdout for parent (elevation wrapper)
+         wxString ptmp;
+-        if (::wxGetEnv(wxT("MACUNINST_ELEVATION_PID"), &ptmp)) {
++        if (wxGetEnv(wxT("MACUNINST_ELEVATION_PID"), &ptmp)) {
+             long epid;
+             if (ptmp.ToLong(&epid)) {
+                 if (getppid() == epid) {
+-                    ::wxLogMessage(_("Reporting result to elevation wrapper %s"), ptmp.c_str());
++                    wxLogMessage(_("Reporting result to elevation wrapper %s"), ptmp.c_str());
+                     printf("%d %lu %lu\n", ok ? 0 : 1, failed_files, failed_dirs);
+                 }
+             }
+         }
+     } else {
+-        int r = ::wxMessageBox(
++        int r = wxMessageBox(
+                 wxString::Format(
+                     _("This operation can not be undone!\nDo you really want to uninstall %s?"),
+                     targetPkg.c_str()),
+@@ -206,12 +206,12 @@ bool MacUninstallApp::OnInit()
+             if (ElevatedUninstall(targetPkg, targetPkgId)) {
+                 if (!m_bCancelled) {
+                     if (0 == (failed_files + failed_dirs)) {
+-                        ::wxMessageBox(
++                        wxMessageBox(
+                                 wxString::Format(_("%s has been removed successfully."),
+                                     targetPkg.c_str()),
+                                 _("Uninstallation complete"), wxOK|wxICON_INFORMATION);
+                     } else {
+-                        ::wxMessageBox(
++                        wxMessageBox(
+                                 wxString::Format(
+                                     _("%s could not be removed completely.\nSome files or directories could not be deleted.\nPlease investigate the log file\n%s\n for more information."),
+                                     targetPkg.c_str(), m_sLogName.c_str()),
+@@ -219,7 +219,7 @@ bool MacUninstallApp::OnInit()
+                     }
+                 }
+             } else
+-                ::wxMessageBox(
++                wxMessageBox(
+                         wxString::Format(
+                             _("Uninstallation has failed.\nThe reason should have been logged in the file\n%s"),
+                             m_sLogName.c_str()),
+@@ -242,12 +242,12 @@ wxVariant MacUninstallApp::GetPlistValue(
+     wxVariant ret;
+     ret.Clear();
+     if (doc.GetRoot()->GetName() != wxT("plist")) {
+-        ::wxLogError(_("Not an XML plist: %s"), docname.c_str());
++        wxLogError(_("Not an XML plist: %s"), docname.c_str());
+         return ret;
+     }
+     wxXmlNode *child = doc.GetRoot()->GetChildren();
+     if (child->GetName() != wxT("dict")) {
+-        ::wxLogError(
++        wxLogError(
+                 _("Invalid plist (missing toplevel <dict> in %s"),
+                 docname.c_str());
+         return ret;
+@@ -258,7 +258,7 @@ wxVariant MacUninstallApp::GetPlistValue(
+     while (child) {
+         if (needkey) {
+             if (child->GetName() != wxT("key")) {
+-                ::wxLogError(
++                wxLogError(
+                         _("Invalid plist (expected a key) in %s"),
+                         docname.c_str());
+                 return ret;
+@@ -268,14 +268,14 @@ wxVariant MacUninstallApp::GetPlistValue(
+         } else {
+             if (found) {
+                 if (child->GetName().IsSameAs(wxT("array"))) {
+-                    ::wxLogError(
++                    wxLogError(
+                             _("Unsupported type array in %s"), docname.c_str());
+                     return ret;
+                 }
+                 if (child->GetName().IsSameAs(wxT("real"))) {
+                     double val;
+                     if (!child->GetNodeContent().ToDouble(&val)) {
+-                        ::wxLogError(
++                        wxLogError(
+                                 _("Invalid plist (invalid real value %s) in %s"),
+                                 child->GetNodeContent().c_str(), docname.c_str());
+                     } else
+@@ -285,7 +285,7 @@ wxVariant MacUninstallApp::GetPlistValue(
+                 if (child->GetName().IsSameAs(wxT("integer"))) {
+                     long val;
+                     if (!child->GetNodeContent().ToLong(&val)) {
+-                        ::wxLogError(
++                        wxLogError(
+                                 _("Invalid plist (invalid integer value %s) in %s"),
+                                 child->GetNodeContent().c_str(), docname.c_str());
+                     } else
+@@ -304,14 +304,14 @@ wxVariant MacUninstallApp::GetPlistValue(
+                 if (child->GetName().IsSameAs(wxT("date"))) {
+                     wxDateTime dt;
+                     if (NULL == dt.ParseDateTime(child->GetNodeContent())) {
+-                        ::wxLogError(
++                        wxLogError(
+                                 _("Invalid plist (invalid date value %s) in %s"),
+                                 child->GetNodeContent().c_str(), docname.c_str());
+                     } else
+                         ret = dt;
+                     return ret;
+                 }
+-                ::wxLogError(
++                wxLogError(
+                         _("Invalid plist (unexpected type %s) in %s"),
+                         child->GetName().c_str(), docname.c_str());
+                 return ret;
+@@ -337,11 +337,11 @@ wxString MacUninstallApp::GetInstalledPath(const wxString &rcpt)
+             wxString cmd(wxT("plutil -convert xml1 -o - "));
+             cmd << rcpt;
+             wxArrayString lines;
+-            if (0 == ::wxExecute(cmd, lines)) {
++            if (0 == wxExecute(cmd, lines)) {
+                 size_t i;
+                 wxString fbuf;
+                 for (i = 0; i < lines.GetCount(); ++i) {
+-                    // ::wxLogMessage(_("RLINE: %s"), lines[i].c_str());
++                    // wxLogMessage(_("RLINE: %s"), lines[i].c_str());
+                     fbuf.Append(lines[i]).Append(wxT("\n"));
+                 }
+                 wxMemoryInputStream mis(fbuf.mb_str(), fbuf.Length());
+@@ -358,13 +358,13 @@ wxString MacUninstallApp::GetInstalledPath(const wxString &rcpt)
+             // Old variant
+             v = GetPlistValue(doc, rcpt, wxT("IFPkgFlagRelocatable"));
+             if (v.IsNull()) {
+-                ::wxLogError(_("Could not find requested key 'IFPkgFlagRelocatable' in receipt %s"),
++                wxLogError(_("Could not find requested key 'IFPkgFlagRelocatable' in receipt %s"),
+                         rcpt.c_str());
+                 return wxEmptyString;
+             }
+             wxString t = v.GetType();
+             if (t != wxT("bool")) {
+-                ::wxLogError(_("Unexpected type '%s' of 'IFPkgFlagRelocatable' in receipt %s"),
++                wxLogError(_("Unexpected type '%s' of 'IFPkgFlagRelocatable' in receipt %s"),
+                         t.c_str(), rcpt.c_str());
+                 return wxEmptyString;
+             }
+@@ -372,13 +372,13 @@ wxString MacUninstallApp::GetInstalledPath(const wxString &rcpt)
+                     wxT("IFPkgRelocatedPath") : wxT("IFPkgFlagDefaultLocation"));
+             v = GetPlistValue(doc, rcpt, pkey);
+             if (v.IsNull()) {
+-                ::wxLogError(_("Could not find requested key '%s' in receipt %s"),
++                wxLogError(_("Could not find requested key '%s' in receipt %s"),
+                         pkey.c_str(), rcpt.c_str());
+                 return wxEmptyString;
+             }
+             t = v.GetType();
+             if (t != wxT("string")) {
+-                ::wxLogError(_("Unexpected type '%s' of '%s' in receipt %s"),
++                wxLogError(_("Unexpected type '%s' of '%s' in receipt %s"),
+                         t.c_str(), pkey.c_str(), rcpt.c_str());
+                 return wxEmptyString;
+             }
+@@ -388,7 +388,7 @@ wxString MacUninstallApp::GetInstalledPath(const wxString &rcpt)
+             return v.GetString().Append(wxT("/"));
+         }
+     } else
+-        ::wxLogError(_("Could not read package receipt %s"), rcpt.c_str());
++        wxLogError(_("Could not read package receipt %s"), rcpt.c_str());
+     return wxEmptyString;
+ }
+ 
+@@ -396,33 +396,33 @@ bool MacUninstallApp::FetchBOM(const wxString &bom,
+         wxArrayString &dirs, wxArrayString &files)
+ {
+     if (!wxFileName::FileExists(bom)) {
+-        ::wxLogError(
++        wxLogError(
+                 _("Missing BOM (Bill Of Materials) '%s'. Already unistalled?"), bom.c_str());
+         return false;
+     }
+     wxString cmd(wxT("lsbom -fbcl -p f "));
+     cmd << bom;
+     wxArrayString err;
+-    if (0 != ::wxExecute(cmd, files, err)) {
+-        ::wxLogError(
++    if (0 != wxExecute(cmd, files, err)) {
++        wxLogError(
+                 _("Could not list BOM (Bill Of Materials) '%s'. Already unistalled?"), bom.c_str());
+         return false;
+     }
+     if (0 != err.GetCount() != 0) {
+-        ::wxLogError(
++        wxLogError(
+                 _("Invalid BOM (Bill Of Materials) '%s'. Already unistalled?"), bom.c_str());
+         return false;
+     }
+     cmd = wxT("lsbom -d -p f ");
+     cmd << bom;
+     err.Empty();
+-    if (0 != ::wxExecute(cmd, dirs, err)) {
+-        ::wxLogError(
++    if (0 != wxExecute(cmd, dirs, err)) {
++        wxLogError(
+                 _("Could not list BOM (Bill Of Materials) '%s'. Already unistalled?"), bom.c_str());
+         return false;
+     }
+     if (0 != err.GetCount() != 0) {
+-        ::wxLogError(
++        wxLogError(
+                 _("Invalid BOM (Bill Of Materials) '%s'. Already unistalled?"), bom.c_str());
+         return false;
+     }
+@@ -446,7 +446,7 @@ bool MacUninstallApp::TestReceipt(const wxString &pkg, const wxString &pkgid)
+             proot = GetInstalledPath(rpath);
+             bompath.Append(pkgid).Append(wxT(".bom"));
+         } else {
+-            ::wxLogWarning(
++            wxLogWarning(
+                     _("The package receipt does not exist. Already unistalled?"));
+             return false;
+         }
+@@ -454,7 +454,7 @@ bool MacUninstallApp::TestReceipt(const wxString &pkg, const wxString &pkgid)
+     if (proot.IsEmpty())
+         return false;
+     if (!wxFileName::DirExists(proot)) {
+-        ::wxLogWarning(
++        wxLogWarning(
+                 _("The package install path does not exist. Already unistalled?"));
+         return false;
+     }
+@@ -470,7 +470,7 @@ bool MacUninstallApp::DoUninstall(const wxString &pkg, const wxString &pkgid)
+     std::ofstream *log = new std::ofstream();
+     log->open(m_sLogName.mb_str());
+     delete wxLog::SetActiveTarget(new wxLogStream(log));
+-    ::wxLogMessage(_("Uninstall started at %s"), wxDateTime::Now().Format().c_str());
++    wxLogMessage(_("Uninstall started at %s"), wxDateTime::Now().Format().c_str());
+     wxString rpath = wxT("/Library/Receipts/");
+     wxString proot;
+     wxString bompath;
+@@ -494,7 +494,7 @@ bool MacUninstallApp::DoUninstall(const wxString &pkg, const wxString &pkgid)
+     if (!FetchBOM(bompath, d, f))
+         return false;
+     size_t i;
+-    ::wxLogMessage(_("Deleting package content"));
++    wxLogMessage(_("Deleting package content"));
+     for (i = 0; i < f.GetCount(); i++) {
+         if (m_nodelete.find(f[i]) != m_nodelete.end()) {
+             f.RemoveAt(i--);
+@@ -505,14 +505,14 @@ bool MacUninstallApp::DoUninstall(const wxString &pkg, const wxString &pkgid)
+             wxString name = fn.GetFullPath();
+             if (m_bTestMode) {
+                 f.RemoveAt(i--);
+-                ::wxLogMessage(_("TEST: Would delete file: %s"), name.c_str());
++                wxLogMessage(_("TEST: Would delete file: %s"), name.c_str());
+             } else {
+-                if (::wxRemoveFile(name) || (!fn.FileExists())) {
++                if (wxRemoveFile(name) || (!fn.FileExists())) {
+                     f.RemoveAt(i--);
+-                    ::wxLogMessage(_("Deleted file: %s"), name.c_str());
++                    wxLogMessage(_("Deleted file: %s"), name.c_str());
+                 } else {
+                     failed_files++;
+-                    ::wxLogWarning(_("Could not delete file %s"), name.c_str());
++                    wxLogWarning(_("Could not delete file %s"), name.c_str());
+                 }
+             }
+         }
+@@ -530,11 +530,11 @@ bool MacUninstallApp::DoUninstall(const wxString &pkg, const wxString &pkgid)
+                 wxString name = fn.GetFullPath();
+                 if (m_bTestMode) {
+                     d.RemoveAt(i--);
+-                    ::wxLogMessage(_("TEST: Would delete directory: %s"), name.c_str());
++                    wxLogMessage(_("TEST: Would delete directory: %s"), name.c_str());
+                 } else {
+-                    if (::wxRmdir(name) || (!fn.DirExists())) {
++                    if (wxRmdir(name) || (!fn.DirExists())) {
+                         d.RemoveAt(i--);
+-                        ::wxLogMessage(_("Deleted directory: %s"), name.c_str());
++                        wxLogMessage(_("Deleted directory: %s"), name.c_str());
+                     }
+                 }
+             }
+@@ -543,12 +543,12 @@ bool MacUninstallApp::DoUninstall(const wxString &pkg, const wxString &pkgid)
+     if (0 < d.GetCount()) {
+         for (i = 0; i < d.GetCount(); i++) {
+             failed_dirs++;
+-            ::wxLogWarning(_("Could not delete directory %s"), d[i].c_str());
++            wxLogWarning(_("Could not delete directory %s"), d[i].c_str());
+         }
+     }
+     if (0 == (d.GetCount() + f.GetCount())) {
+         // Finally delete the receipe itself
+-        ::wxLogMessage(_("Deleting receipt"));
++        wxLogMessage(_("Deleting receipt"));
+         if (oldreceipt) {
+             {
+                 wxDir d(rpath);
+@@ -556,34 +556,34 @@ bool MacUninstallApp::DoUninstall(const wxString &pkg, const wxString &pkgid)
+                 d.Traverse(t);
+             }
+             if (m_bTestMode) {
+-                ::wxLogMessage(_("TEST: Would delete directory: %s"), rpath.c_str());
++                wxLogMessage(_("TEST: Would delete directory: %s"), rpath.c_str());
+             } else {
+-                if (::wxRmdir(rpath))
+-                    ::wxLogMessage(_("Deleted directory: %s"), rpath.c_str());
++                if (wxRmdir(rpath))
++                    wxLogMessage(_("Deleted directory: %s"), rpath.c_str());
+                 else {
+                     failed_dirs++;
+-                    ::wxLogWarning(_("Could not delete directory %s"), rpath.c_str());
++                    wxLogWarning(_("Could not delete directory %s"), rpath.c_str());
+                 }
+             }
+         } else {
+             if (m_bTestMode) {
+-                ::wxLogMessage(_("TEST: Would delete receipt: %s"), rpath.c_str());
+-                ::wxLogMessage(_("TEST: Would delete BOM: %s"), bompath.c_str());
++                wxLogMessage(_("TEST: Would delete receipt: %s"), rpath.c_str());
++                wxLogMessage(_("TEST: Would delete BOM: %s"), bompath.c_str());
+             } else {
+-                if (::wxRemoveFile(rpath)) {
+-                    ::wxLogMessage(_("Deleted receipt: %s"), rpath.c_str());
++                if (wxRemoveFile(rpath)) {
++                    wxLogMessage(_("Deleted receipt: %s"), rpath.c_str());
+                 } else {
+-                    ::wxLogWarning(_("Could not delete receipt %s"), rpath.c_str());
++                    wxLogWarning(_("Could not delete receipt %s"), rpath.c_str());
+                 }
+-                if (::wxRemoveFile(bompath)) {
+-                    ::wxLogMessage(_("Deleted BOM: %s"), bompath.c_str());
++                if (wxRemoveFile(bompath)) {
++                    wxLogMessage(_("Deleted BOM: %s"), bompath.c_str());
+                 } else {
+-                    ::wxLogWarning(_("Could not delete BOM %s"), bompath.c_str());
++                    wxLogWarning(_("Could not delete BOM %s"), bompath.c_str());
+                 }
+             }
+         }
+     } else
+-        ::wxLogMessage(_("Receipt NOT deleted, because package files have been left."));
++        wxLogMessage(_("Receipt NOT deleted, because package files have been left."));
+     return true;
+ }
+ 
+@@ -612,7 +612,7 @@ bool MacUninstallApp::ElevatedUninstall(const wxString &pkg, const wxString &pkg
+     st = AuthorizationCreate(NULL, kAuthorizationEmptyEnvironment,
+             kAuthorizationFlagDefaults, &aRef);
+     if (errAuthorizationSuccess != st) {
+-        ::wxLogError(_("Authorization could not be created: %s"), MacAuthError(st).c_str());
++        wxLogError(_("Authorization could not be created: %s"), MacAuthError(st).c_str());
+         return true;
+     }
+     AuthorizationItem aItems = { kAuthorizationRightExecute, 0, NULL, 0 };
+@@ -628,9 +628,9 @@ bool MacUninstallApp::ElevatedUninstall(const wxString &pkg, const wxString &pkg
+         char *args[] = { "--batch", NULL };
+         FILE *pout = NULL;
+ 
+-        if (!::wxGetEnv(wxT("TMPDIR"), NULL))
+-            ::wxSetEnv(wxT("TMPDIR"), wxFileName::GetTempDir());
+-        ::wxSetEnv(wxT("MACUNINST_ELEVATION_PID"), wxString::Format(wxT("%d"), ::wxGetProcessId()));
++        if (!wxGetEnv(wxT("TMPDIR"), NULL))
++            wxSetEnv(wxT("TMPDIR"), wxFileName::GetTempDir());
++        wxSetEnv(wxT("MACUNINST_ELEVATION_PID"), wxString::Format(wxT("%d"), wxGetProcessId()));
+         st = AuthorizationExecuteWithPrivileges(aRef,
+                 executable, kAuthorizationFlagDefaults, args, &pout);
+         if (errAuthorizationSuccess == st) {
+@@ -638,12 +638,12 @@ bool MacUninstallApp::ElevatedUninstall(const wxString &pkg, const wxString &pkg
+             fscanf(pout, "%d %lu %lu", &status, &failed_files, &failed_dirs);
+             ret = (0 == status);
+         } else
+-            ::wxLogError(_("Could not execute with administrative rights:\n%s"), MacAuthError(st).c_str());
++            wxLogError(_("Could not execute with administrative rights:\n%s"), MacAuthError(st).c_str());
+     } else {
+         if (st) {
+             m_bCancelled = (errAuthorizationCanceled == st);
+             if (!m_bCancelled)
+-                ::wxLogError(_("Authorization failed: %s"), MacAuthError(st).c_str());
++                wxLogError(_("Authorization failed: %s"), MacAuthError(st).c_str());
+         }
+     }
+     AuthorizationFree(aRef, kAuthorizationFlagDefaults);
+diff --git a/opennx/MyDynlib.cpp b/opennx/MyDynlib.cpp
+index 86f0e93..d95db31 100644
+--- a/opennx/MyDynlib.cpp
++++ b/opennx/MyDynlib.cpp
+@@ -60,7 +60,7 @@ bool MyDynamicLibrary::Load(const wxString& name, int flags /* = wxDL_DEFAULT */
+     return wxDynamicLibrary::Load(name, flags);
+ #else
+     wxString ldpath;
+-    if (::wxGetEnv(LD_LIBRARY_PATH, &ldpath)) {
++    if (wxGetEnv(LD_LIBRARY_PATH, &ldpath)) {
+         wxStringTokenizer t(ldpath, wxT(":"));
+         while (t.HasMoreTokens()) {
+             wxString abslib = t.GetNextToken() + wxFileName::GetPathSeparator() + name;
+diff --git a/opennx/MySession.cpp b/opennx/MySession.cpp
+index 90f4bd5..c27f2c7 100644
+--- a/opennx/MySession.cpp
++++ b/opennx/MySession.cpp
+@@ -123,7 +123,7 @@ class FontpathTraverser : public wxDirTraverser
+                     return m_sFontPath;
+                     break;
+                 default:
+-                    ::wxLogError(_("Invalid X11 server platform"));
++                    wxLogError(_("Invalid X11 server platform"));
+                     break;
+             }
+             return wxEmptyString;
+@@ -196,10 +196,10 @@ class SessionCleaner : public wxDirTraverser
+         {
+             int n = m_aFiles.GetCount() - 1;
+             while (n >= 0)
+-                ::wxRemoveFile(m_aFiles[n--]);
++                wxRemoveFile(m_aFiles[n--]);
+             n = m_aDirs.GetCount() - 1;
+             while (n >= 0)
+-                ::wxRmdir(m_aDirs[n--]);
++                wxRmdir(m_aDirs[n--]);
+         }
+ 
+         virtual wxDirTraverseResult OnFile(const wxString &name)
+@@ -397,6 +397,11 @@ class MyHTTP : public wxHTTP {
+             ParseHeaders();
+             return ret;
+         }
++private:
++    //  wxWidgets lib > 3.0
++    wxProtocolError m_perr;
++    wxString m_post_buf;
++    //  end wxWidgets lib > 3.0
+ 
+ };
+ 
+@@ -711,7 +716,7 @@ MySession::getXauthPath(tXarch xarch)
+             fn.Assign(m_sUserDir, wxT(".Xauthority"));
+             return fn.GetFullPath();
+         default:
+-            ::wxLogError(_("Invalid X11 server platform"));
++            wxLogError(_("Invalid X11 server platform"));
+             return wxEmptyString;
+     }
+ #endif
+@@ -744,7 +749,7 @@ MySession::SshLog(const wxChar *fmt, ...)
+         va_list args;
+         va_start(args, fmt);
+         wxLog *oldLog = wxLog::SetActiveTarget(m_pSshLog);
+-        ::wxVLogMessage(fmt, args);
++        wxVLogMessage(fmt, args);
+         wxLog::SetActiveTarget(oldLog);
+         va_end(args);
+     }
+@@ -776,14 +781,14 @@ MySession::OnSshEvent(wxCommandEvent &event)
+             if (m_bCollectConfig) {
+                 m_sConfigBuffer << msg << wxT("\n");
+                 if (m_sConfigBuffer.Length() >= m_nSessionPushLength) {
+-                    ::wxLogInfo(wxT("session override finished"));
++                    wxLogInfo(wxT("session override finished"));
+                     m_bCollectConfig = false;
+                     m_pCfg->LoadFromString(m_sConfigBuffer, true);
+                     if (m_pCfg->IsWritable())
+                         m_pCfg->SaveToFile();
+                 }
+             }
+-            SshLog(msg);
++            SshLog(msg.wc_str());
+             break;
+         case MyIPC::ActionWarning:
+             {
+@@ -794,7 +799,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
+             }
+             break;
+         case MyIPC::ActionError:
+-            ::wxLogError(msg);
++            wxLogError(msg);
+             m_bGotError = true;
+             break;
+         case MyIPC::ActionPromptYesNo:
+@@ -831,7 +836,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
+                 wxLogNull logdummy;
+                 wxFileName fn;
+                 fn.Assign(m_sTempDir, wxT("keylog"));
+-                ::wxRemoveFile(fn.GetFullPath());
++                wxRemoveFile(fn.GetFullPath());
+             }
+             m_pDlg->SetStatusText(_("Sending username"));
+             printSsh(m_pCfg->sGetSessionUser());
+@@ -855,7 +860,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
+         case MyIPC::ActionSessionPushStart:
+             m_sConfigBuffer.Empty();
+             m_bCollectConfig = true;
+-            ::wxLogInfo(wxT("receiving %d bytes of session override"),
++            wxLogInfo(wxT("receiving %d bytes of session override"),
+                     m_nSessionPushLength);
+             break;
+         case MyIPC::ActionNextCommand:
+@@ -890,7 +895,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
+                 case STATE_PARSE_RESOURCES:
+                     // Server has sent list of attachable sessions
+                     m_bCollectResources = false;
+-                    ::wxLogInfo(wxT("received end of feature list"));
++                    wxLogInfo(wxT("received end of feature list"));
+                     parseResources();
+                     // intentionally fall thru
+                 case STATE_LIST_SESSIONS:
+@@ -906,7 +911,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
+                     if (m_bIsShadow) {
+                         // Server has sent list of attachable sessions
+                         m_bCollectSessions = false;
+-                        ::wxLogInfo(wxT("received end of attachable session list"));
++                        wxLogInfo(wxT("received end of attachable session list"));
+                         parseSessions(false);
+                     }
+                     break;
+@@ -958,7 +963,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
+                         wxEmptyString, m_pParent), false);
+             break;
+         case MyIPC::ActionPassphraseDialog:
+-            scmd = ::wxGetPasswordFromUser(::wxGetTranslation(msg),
++            scmd = wxGetPasswordFromUser(wxGetTranslation(msg),
+                     _("Enter passphrase"), wxEmptyString, m_pParent);
+             if (scmd.IsEmpty()) {
+                 msg = _("Empty passphrase");
+@@ -1038,7 +1043,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
+         case MyIPC::ActionTerminated:
+             if ((m_eConnectState <= STATE_PARSE_SESSIONS) && (!m_bGotError) && (!m_bRemoveKey) && (m_sOffendingKey.IsEmpty())) {
+                 msg = _("Unexpected termination of nxssh");
+-                ::wxLogError(msg);
++                wxLogError(msg);
+                 m_bGotError = true;
+             }
+             break;
+@@ -1060,19 +1065,19 @@ MySession::OnSshEvent(wxCommandEvent &event)
+             break;
+         case MyIPC::ActionSessionListStart:
+             // Server starts sending session list
+-            ::wxLogInfo(wxT("receiving session list .."));
++            wxLogInfo(wxT("receiving session list .."));
+             m_aParseBuffer.Empty();
+             m_bCollectSessions = true;
+             break;
+         case MyIPC::ActionSessionListEnd:
+             // Server has sent list of running & suspended sessions
+             m_bCollectSessions = false;
+-            ::wxLogInfo(wxT("received end of session list"));
++            wxLogInfo(wxT("received end of session list"));
+             parseSessions((event.GetExtraLong() == 148) && (!m_bIsShadow));
+             break;
+         case MyIPC::ActionResList:
+             // NX4: Server starts sending resource info
+-            ::wxLogInfo(wxT("receiving resource info .."));
++            wxLogInfo(wxT("receiving resource info .."));
+             m_aParseBuffer.Empty();
+             m_bCollectResources = true;
+             break;
+@@ -1083,7 +1088,7 @@ MySession::OnSshEvent(wxCommandEvent &event)
+ MySession::initversion(const wxString &s /* = wxEmptyString */)
+ {
+     m_lProtocolVersion = 0;
+-    if (!::wxGetEnv(wxT("NX_PROTOCOL_VERSION"), &m_sProtocolVersion))
++    if (!wxGetEnv(wxT("NX_PROTOCOL_VERSION"), &m_sProtocolVersion))
+         m_sProtocolVersion = wxT(NX_PROTOCOL_VERSION);
+     if (!s.IsEmpty())
+         m_sProtocolVersion = s;
+@@ -1237,7 +1242,7 @@ MySession::parseSessions(bool moreAllowed)
+     if (bFound) {
+         d.EnableNew(moreAllowed);
+         if ((!m_bIsShadow) && wxGetApp().AutoResume() && (iSessionCount == 1) && (sName.IsSameAs(m_pCfg->sGetName()))) {
+-            ::wxLogInfo(wxT("RESUME"));
++            wxLogInfo(wxT("RESUME"));
+             m_sResumeName = sName;
+             m_sResumeType = d.GetSelectedType();
+             m_sResumeId = d.GetSelectedId();
+@@ -1248,16 +1253,16 @@ MySession::parseSessions(bool moreAllowed)
+                     ::myLogTrace(MYTRACETAG, wxT("ResumeDialog returned OK"));
+                     switch (d.GetMode()) {
+                         case ResumeDialog::Refresh:
+-                            ::wxLogInfo(wxT("REFRESH"));
++                            wxLogInfo(wxT("REFRESH"));
+                             m_eConnectState = STATE_LIST_SESSIONS;
+                             break;
+                         case ResumeDialog::Terminate:
+-                            ::wxLogInfo(wxT("TERMINATE"));
++                            wxLogInfo(wxT("TERMINATE"));
+                             m_sKillId = d.GetSelectedId();
+                             m_eConnectState = STATE_KILL_SESSION;
+                             break;
+                         case ResumeDialog::Resume:
+-                            ::wxLogInfo(wxT("RESUME"));
++                            wxLogInfo(wxT("RESUME"));
+                             m_sResumeName = d.GetSelectedName();
+                             m_sResumeType = d.GetSelectedType();
+                             m_sResumeId = d.GetSelectedId();
+@@ -1265,7 +1270,7 @@ MySession::parseSessions(bool moreAllowed)
+                             m_eConnectState = m_bIsShadow ? STATE_ATTACH_SESSION : STATE_RESUME_SESSION;
+                             break;
+                         case ResumeDialog::Takeover:
+-                            ::wxLogInfo(wxT("TAKEOVER"));
++                            wxLogInfo(wxT("TAKEOVER"));
+                             m_sResumeName = d.GetSelectedName();
+                             m_sResumeType = d.GetSelectedType();
+                             m_sResumeId = d.GetSelectedId();
+@@ -1364,7 +1369,7 @@ MySession::startSharing()
+                     << MyXmlConfig::UrlEsc(sg[i].m_sPassword) << wxT("\"") 
+                     << wxT(" --share=\"") << MyXmlConfig::UrlEsc(sn) << wxT("\"") 
+                     << wxT(" --computername=\"")
+-                    << MyXmlConfig::UrlEsc(::wxGetFullHostName()) << wxT("\"") 
++                    << MyXmlConfig::UrlEsc(wxGetFullHostName()) << wxT("\"")
+                     << wxT(" --session_id=\"") << m_sSessionID.Right(32) << wxT("\"") 
+                     << wxT(" --dir=\"")
+                     << MyXmlConfig::UrlEsc(sg[i].m_sAlias) << wxT("\"");
+@@ -1380,7 +1385,7 @@ MySession::startSharing()
+                     << wxT(" --port=\"") << (int)smbport << wxT("\"") 
+                     << wxT(" --share=\"") << MyXmlConfig::UrlEsc(sn) << wxT("\"") 
+                     << wxT(" --computername=\"")
+-                    << MyXmlConfig::UrlEsc(::wxGetHostName()) << wxT("\"") 
++                    << MyXmlConfig::UrlEsc(wxGetHostName()) << wxT("\"")
+                     << wxT(" --session_id=\"") << m_sSessionID.Right(32) << wxT("\"") 
+                     << wxT(" --model=\"") << sg[i].m_sDriver << wxT("\"");
+                 if (sg[i].m_bDefault)
+@@ -1496,7 +1501,7 @@ MySession::startXserver()
+         case XARCH_CYGWIN:
+             m_sXauthCookie = getXauthCookie(display, wxT("/unix"));
+             if (m_sXauthCookie.IsEmpty()) {
+-                ::wxLogError(_("Could not create X11 authentication cookie"));
++                wxLogError(_("Could not create X11 authentication cookie"));
+                 return false;
+             }
+             wxWinCmd = fn.GetShortPath();
+@@ -1530,8 +1535,8 @@ MySession::startXserver()
+                 if (0 != xdpy) {
+                     dpyStr = wxT("127.0.0.1:");
+                     dpyStr << xdpy - X_PORT_OFFSET;
+-                    ::wxSetEnv(wxT("DISPLAY"), dpyStr);
+-                    ::wxLogInfo(wxT("env: DISPLAY='%s'"), dpyStr.c_str());
++                    wxSetEnv(wxT("DISPLAY"), dpyStr);
++                    wxLogInfo(wxT("env: DISPLAY='%s'"), dpyStr.c_str());
+                     // Xauth cookie and X<dpy>.hosts are still existing
+                     // from initial startup
+                     return true;
+@@ -1540,7 +1545,7 @@ MySession::startXserver()
+             fn.SetFullName(wxT("Xming.exe"));
+             m_sXauthCookie = getXauthCookie(display, wxEmptyString);
+             if (m_sXauthCookie.IsEmpty()) {
+-                ::wxLogError(_("Could not create X11 authentication cookie"));
++                wxLogError(_("Could not create X11 authentication cookie"));
+                 return false;
+             }
+             wxWinCmd = fn.GetShortPath();
+@@ -1571,26 +1576,26 @@ MySession::startXserver()
+             fn.AppendDir(wxT("share"));
+             fn.AppendDir(wxT("Xming"));
+             fn.MakeAbsolute();
+-            ::wxSetEnv(wxT("XMING_BASEDIR"), fn.GetPath());
+-            ::wxLogInfo(wxT("env: XMING_BASEDIR='%s'"), fn.GetPath().c_str());
++            wxSetEnv(wxT("XMING_BASEDIR"), fn.GetPath());
++            wxLogInfo(wxT("env: XMING_BASEDIR='%s'"), fn.GetPath().c_str());
+             dpyStr.Prepend(wxT("127.0.0.1"));
+             break;
+         default:
+-            ::wxLogError(_("No X server found."));
++            wxLogError(_("No X server found."));
+             return false;
+             break;
+     }
+ 
+-    ::wxLogInfo(wxT("Executing %s"), wxWinCmd.c_str());
++    wxLogInfo(wxT("Executing %s"), wxWinCmd.c_str());
+     int r = CreateDetachedProcess((const char *)wxWinCmd.mb_str());
+     if (r != 0) {
+-        ::wxLogError(_("Could not execute %s: %s\n"), wxWinCmd.c_str(), wxSysErrorMsg(r));
++        wxLogError(_("Could not execute %s: %s\n"), wxWinCmd.c_str(), wxSysErrorMsg(r));
+         return false;
+     }
+     m_iXserverPID = GetDetachedPID();
+     AllowSetForegroundWindow(m_iXserverPID);
+-    ::wxSetEnv(wxT("DISPLAY"), dpyStr);
+-    ::wxLogInfo(wxT("env: DISPLAY='%s'"), dpyStr.c_str());
++    wxSetEnv(wxT("DISPLAY"), dpyStr);
++    wxLogInfo(wxT("env: DISPLAY='%s'"), dpyStr.c_str());
+     return true;
+ }
+ #endif
+@@ -1677,7 +1682,7 @@ MySession::startProxy()
+         << wxT("S-") << m_sSessionID;
+     {
+         if (!wxFileName::Mkdir(m_sSessionDir, 0700, wxPATH_MKDIR_FULL)) {
+-            ::wxLogSysError(_("Could not create session directory\n%s\n"),
++            wxLogSysError(_("Could not create session directory\n%s\n"),
+                     m_sSessionDir.c_str());
+             m_bGotError = true;
+         }
+@@ -1687,8 +1692,8 @@ MySession::startProxy()
+         if (f.Open(m_sOptFilename, wxFile::write, wxS_IRUSR|wxS_IWUSR)) {
+             f.Write(popts + wxT("\n"));
+             f.Close();
+-            ::wxLogInfo(wxT("Option file='%s'\n"), m_sOptFilename.c_str());
+-            ::wxLogInfo(wxT("Session options='%s'\n"), popts.c_str());
++            wxLogInfo(wxT("Option file='%s'\n"), m_sOptFilename.c_str());
++            wxLogInfo(wxT("Session options='%s'\n"), popts.c_str());
+             wxString pcmd;
+             wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &pcmd);
+             pcmd << wxFileName::GetPathSeparator() << wxT("bin")
+@@ -1696,19 +1701,19 @@ MySession::startProxy()
+                 << cygPath(m_sOptFilename) << wxT(":") << m_sSessionDisplay;
+             printSsh(wxT("bye"), true, wxT("Options file written, "));
+             if ((m_lProtocolVersion <= 0x00020000) || (!m_bSslTunneling)) {
+-                ::wxLogInfo(wxT("Executing %s"), pcmd.c_str());
++                wxLogInfo(wxT("Executing %s"), pcmd.c_str());
+ #ifdef __WXMSW__
+                 CreateDetachedProcess((const char *)pcmd.mb_str());
+                 if (m_iXserverPID)
+                     AllowSetForegroundWindow(m_iXserverPID);
+ #else
+                 setTurboPath(true);
+-                ::wxExecute(pcmd, wxEXEC_ASYNC);
++                wxExecute(pcmd, wxEXEC_ASYNC);
+                 setTurboPath(false);
+ #endif
+             }
+         } else {
+-            ::wxLogSysError(_("Could not write session options\n%s\n"),
++            wxLogSysError(_("Could not write session options\n%s\n"),
+                     m_sOptFilename.c_str());
+             m_bGotError = true;
+         }
+@@ -1774,7 +1779,7 @@ MySession::isCupsRunning()
+         wxHTTP http;
+         wxString cupspw = decodeString(wxConfigBase::Get()->Read(wxT("Config/CupsPasswd"), wxEmptyString));
+         if (!cupspw.IsEmpty()) {
+-            http.SetUser(::wxGetUserId());
++            http.SetUser(wxGetUserId());
+             http.SetPassword(cupspw);
+         }
+         http.Connect(wxT("127.0.0.1"), cupsport);
+@@ -1798,7 +1803,7 @@ MySession::prepareCups()
+     if (cupsport == -1) {
+         cupsport = getFirstFreePort(20000);
+         if (0 == cupsport) {
+-            ::wxLogWarning(_("Could not assign a free port for CUPS printing"));
++            wxLogWarning(_("Could not assign a free port for CUPS printing"));
+             return false;
+         }
+         wxConfigBase::Get()->Write(wxT("Config/CupsPort"), cupsport);
+@@ -1812,7 +1817,7 @@ MySession::prepareCups()
+     // have failed. In that case, we must start our own new instance of cupsd.
+     cupsport = getFirstFreePort(20000);
+     if (0 == cupsport) {
+-        ::wxLogWarning(_("Could not assign a free port for CUPS printing"));
++        wxLogWarning(_("Could not assign a free port for CUPS printing"));
+         return false;
+     }
+     wxConfigBase::Get()->Write(wxT("Config/CupsPort"), cupsport);
+@@ -1858,17 +1863,17 @@ MySession::prepareCups()
+     tmp << wxFileName::GetPathSeparator() << wxT("share")
+         << wxFileName::GetPathSeparator() << wxT("cups")
+         << wxFileName::GetPathSeparator();
+-    ::wxCopyFile(tmp + wxT("mime.convs"), sCupsDir + wxT("mime.convs"));
+-    ::wxCopyFile(tmp + wxT("mime.types"), sCupsDir + wxT("mime.types"));
++    wxCopyFile(tmp + wxT("mime.convs"), sCupsDir + wxT("mime.convs"));
++    wxCopyFile(tmp + wxT("mime.types"), sCupsDir + wxT("mime.types"));
+     {
+         wxFileOutputStream fos(sCupsDir + wxT("cupsd.conf"));
+         wxTextOutputStream tos(fos);
+         tos << wxT("CacheDir ") << sCupsDir << wxT("cache") << endl;
+         tos << wxT("TempDir ") << sCupsDir << wxT("spool")
+-            << wxFileName::GetPathSeparator() << wxT("tmp") << endl;
++            << wxString(wxFileName::GetPathSeparator()) << wxT("tmp") << endl;
+         tos << wxT("RequestRoot ") << sCupsDir << wxT("spool") << endl;
+         tos << wxT("ServerRoot ") << m_sUserDir
+-            << wxFileName::GetPathSeparator() << wxT("cups") << endl;
++            << wxString(wxFileName::GetPathSeparator()) << wxT("cups") << endl;
+         tos << wxT("ErrorLog ") << sCupsDir << wxT("error_log") << endl;
+         tos << wxT("PageLog ") << sCupsDir << wxT("page_log") << endl;
+         tos << wxT("AccessLog ") << sCupsDir << wxT("access_log") << endl;
+@@ -1884,7 +1889,7 @@ MySession::prepareCups()
+         tos << wxT("<Location />") << endl;
+         tos << wxT("  Order Deny,Allow") << endl;
+         tos << wxT("  Deny From All") << endl;
+-        tos << wxT("  Require user ") << ::wxGetUserId() << endl;
++        tos << wxT("  Require user ") << wxGetUserId() << endl;
+         tos << wxT("  AuthType BasicDigest") << endl;
+         tos << wxT("  Allow from 127.0.0.0/8") << endl;
+         tos << wxT("</Location>") << endl;
+@@ -1900,16 +1905,16 @@ MySession::prepareCups()
+         wxFileOutputStream fos(sCupsDir + wxT("passwd.md5"));
+         wxTextOutputStream tos(fos);
+ #ifdef __WXMSW__
+-        tos << ::wxGetUserId() << wxT(":") << ::wxGetUserId();
++        tos << wxGetUserId() << wxT(":") << wxGetUserId();
+ #else
+         struct group *g = getgrgid(getgid());
+         wxString sGroupId = wxConvLocal.cMB2WX(g->gr_name);
+-        tos << ::wxGetUserId() << wxT(":") << sGroupId;
++        tos << wxGetUserId() << wxT(":") << sGroupId;
+ #endif
+         wxDateTime now = wxDateTime::Now();
+         wxString cupspw = decodeString(wxConfigBase::Get()->Read(wxT("Config/CupsPasswd"), wxEmptyString));
+         if (cupspw.IsEmpty()) {
+-            cupspw << ::wxGetUserId()
++            cupspw << wxGetUserId()
+                 << wxT("NX")
+                 << now.FormatISODate()
+                 << wxT("T")
+@@ -1917,12 +1922,12 @@ MySession::prepareCups()
+             cupspw = md5sum(cupspw).Left(16);
+             wxConfigBase::Get()->Write(wxT("Config/CupsPasswd"), encodeString(cupspw));
+         }
+-        tos << wxT(":") << md5sum(::wxGetUserId()+ wxT(":CUPS:") + cupspw) << endl;
++        tos << wxT(":") << md5sum(wxGetUserId()+ wxT(":CUPS:") + cupspw) << endl;
+     }
+     wxString cmd = m_pCfg->sGetCupsPath();
+     cmd << wxT(" -c ") << sCupsDir << wxT("cupsd.conf");
+     ::myLogTrace(MYTRACETAG, wxT("Starting '%s'"), cmd.c_str());
+-    if (::wxExecute(cmd, wxEXEC_ASYNC) <= 0)
++    if (wxExecute(cmd, wxEXEC_ASYNC) <= 0)
+         return false;
+     wxThread::Sleep(500);
+     return isCupsRunning();
+@@ -1934,7 +1939,7 @@ MySession::setTurboPath(bool enable)
+ #ifdef __WXMAC__
+     return;
+     wxString ldpath;
+-    bool isset = ::wxGetEnv(wxT("DYLD_LIBRARY_PATH"), &ldpath);
++    bool isset = wxGetEnv(wxT("DYLD_LIBRARY_PATH"), &ldpath);
+     bool contains = isset && ldpath.Contains(wxT("libjpeg-turbo"));
+     if (enable) {
+         if (!contains) {
+@@ -1965,8 +1970,8 @@ MySession::setTurboPath(bool enable)
+                 ldpath.Prepend(turbopath);
+             }
+             ::myLogDebug(wxT("DYLD_LIBRARY_PATH='%s'"), ldpath.c_str());
+-            if (!::wxSetEnv(wxT("DYLD_LIBRARY_PATH"), ldpath)) {
+-                ::wxLogSysError(wxT("Cannot set DYLD_LIBRARY_PATH"));
++            if (!wxSetEnv(wxT("DYLD_LIBRARY_PATH"), ldpath)) {
++                wxLogSysError(wxT("Cannot set DYLD_LIBRARY_PATH"));
+             }
+         }
+     } else {
+@@ -1982,11 +1987,11 @@ MySession::setTurboPath(bool enable)
+                 }
+             }
+             if (newpath.IsEmpty()) {
+-                ::wxUnsetEnv(wxT("DYLD_LIBRARY_PATH"));
++                wxUnsetEnv(wxT("DYLD_LIBRARY_PATH"));
+             } else {
+                 ::myLogDebug(wxT("DYLD_LIBRARY_PATH='%s'"), newpath.c_str());
+-                if (!::wxSetEnv(wxT("DYLD_LIBRARY_PATH"), newpath)) {
+-                    ::wxLogSysError(wxT("Cannot set DYLD_LIBRARY_PATH"));
++                if (!wxSetEnv(wxT("DYLD_LIBRARY_PATH"), newpath)) {
++                    wxLogSysError(wxT("Cannot set DYLD_LIBRARY_PATH"));
+                 }
+             }
+         }
+@@ -2096,7 +2101,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
+             << wxT(" -o 'PubkeyAuthentication yes'");
+         m_sTempDir = m_sUserDir;
+         m_sTempDir << wxFileName::GetPathSeparator() << wxT("temp")
+-            << wxFileName::GetPathSeparator() << ::wxGetProcessId();
++            << wxFileName::GetPathSeparator() << wxGetProcessId();
+         wxFileName::Mkdir(m_sTempDir, 0700, wxPATH_MKDIR_FULL);
+ 
+         wxString logfn = m_sTempDir +
+@@ -2139,12 +2144,12 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
+             } else {
+                 fn.Assign(m_sTempDir, wxT("keylog"));
+                 wxFile f;
+-                ::wxRemoveFile(fn.GetFullPath());
++                wxRemoveFile(fn.GetFullPath());
+                 if (f.Open(fn.GetFullPath(), wxFile::write_excl, wxS_IRUSR|wxS_IWUSR)) {
+                     f.Write(m_pCfg->sGetSshKey());
+                     f.Close();
+                 } else {
+-                    ::wxLogSysError(_("Could not write %s"), fn.GetFullPath().c_str());
++                    wxLogSysError(_("Could not write %s"), fn.GetFullPath().c_str());
+                     return false;
+                 }
+             }
+@@ -2183,7 +2188,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
+         m_sHost = m_pCfg->sGetServerHost();
+ 
+         wxString stmp;
+-        ::wxGetEnv(wxT("PATH"), &stmp);
++        wxGetEnv(wxT("PATH"), &stmp);
+         // Prepend our system directory, so that pconnect can be found by nxssh (if necessary)
+         fn.Assign(m_sSysDir, wxT("bin"));
+         if (!stmp.Contains(fn.GetFullPath())) {
+@@ -2195,33 +2200,33 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
+ #ifdef __WXMAC__
+             stmp.Append(wxT(":/usr/X11R6/bin:/usr/X11/bin"));
+ #endif
+-            ::wxSetEnv(wxT("PATH"), stmp);
++            wxSetEnv(wxT("PATH"), stmp);
+         }
+-        ::wxLogInfo(wxT("env: PATH='%s'"), stmp.c_str());
++        wxLogInfo(wxT("env: PATH='%s'"), stmp.c_str());
+         fn.Assign(wxFileName::GetHomeDir());
+-        ::wxSetEnv(wxT("NX_HOME"), cygPath(fn.GetFullPath()));
+-        ::wxLogInfo(wxT("env: NX_HOME='%s'"), cygPath(fn.GetFullPath()).c_str());
+-        ::wxSetEnv(wxT("NX_ROOT"), cygPath(m_sUserDir));
+-        ::wxLogInfo(wxT("env: NX_ROOT='%s'"), cygPath(m_sUserDir).c_str());
+-        ::wxSetEnv(wxT("NX_SYSTEM"), cygPath(m_sSysDir));
+-        ::wxLogInfo(wxT("env: NX_SYSTEM='%s'"), cygPath(m_sSysDir).c_str());
+-        ::wxSetEnv(wxT("NX_CLIENT"), cygPath(::wxGetApp().GetSelfPath()));
+-        ::wxLogInfo(wxT("env: NX_CLIENT='%s'"), cygPath(::wxGetApp().GetSelfPath()).c_str());
+-        ::wxSetEnv(wxT("NX_VERSION"), m_sProtocolVersion);
+-        ::wxLogInfo(wxT("env: NX_VERSION='%s'"), m_sProtocolVersion.c_str());
++        wxSetEnv(wxT("NX_HOME"), cygPath(fn.GetFullPath()));
++        wxLogInfo(wxT("env: NX_HOME='%s'"), cygPath(fn.GetFullPath()).c_str());
++        wxSetEnv(wxT("NX_ROOT"), cygPath(m_sUserDir));
++        wxLogInfo(wxT("env: NX_ROOT='%s'"), cygPath(m_sUserDir).c_str());
++        wxSetEnv(wxT("NX_SYSTEM"), cygPath(m_sSysDir));
++        wxLogInfo(wxT("env: NX_SYSTEM='%s'"), cygPath(m_sSysDir).c_str());
++        wxSetEnv(wxT("NX_CLIENT"), cygPath(wxGetApp().GetSelfPath()));
++        wxLogInfo(wxT("env: NX_CLIENT='%s'"), cygPath(wxGetApp().GetSelfPath()).c_str());
++        wxSetEnv(wxT("NX_VERSION"), m_sProtocolVersion);
++        wxLogInfo(wxT("env: NX_VERSION='%s'"), m_sProtocolVersion.c_str());
+         if (m_pCfg->eGetDisplayType() == MyXmlConfig::DPTYPE_FULLSCREEN) {
+             bool bVal = false;
+             wxConfigBase::Get()->Read(wxT("Config/DisableMagicPixel"), &bVal, false);
+             if (bVal) {
+                 int dspw, dsph;
+-                ::wxDisplaySize(&dspw, &dsph);
++                wxDisplaySize(&dspw, &dsph);
+                 wxString w = wxString::Format(wxT("%d"), dspw);
+-                ::wxSetEnv(wxT("NX_KIOSK_X"), w);
+-                ::wxLogInfo(wxT("env: NX_KIOSK_X='%s'"), w.c_str());
++                wxSetEnv(wxT("NX_KIOSK_X"), w);
++                wxLogInfo(wxT("env: NX_KIOSK_X='%s'"), w.c_str());
+             }
+         }
+-        ::wxSetEnv(wxT("XAUTHORITY"), getXauthPath(m_eXarch));
+-        ::wxLogInfo(wxT("env: XAUTHORITY='%s'"), getXauthPath(m_eXarch).c_str());
++        wxSetEnv(wxT("XAUTHORITY"), getXauthPath(m_eXarch));
++        wxLogInfo(wxT("env: XAUTHORITY='%s'"), getXauthPath(m_eXarch).c_str());
+ #ifdef __UNIX__
+         // NX needs TEMP or NX_TEMP to be set to the same dir
+         // where .X11-unix resides (typically /tmp)
+@@ -2230,27 +2235,27 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
+             fn.Assign(stmp);
+             fn.RemoveLastDir();
+             fn.SetName(wxEmptyString);
+-            ::wxSetEnv(wxT("NX_TEMP"), cygPath(fn.GetFullPath()));
+-            ::wxLogInfo(wxT("env: NX_TEMP='%s'"), cygPath(fn.GetShortPath()).c_str());
++            wxSetEnv(wxT("NX_TEMP"), cygPath(fn.GetFullPath()));
++            wxLogInfo(wxT("env: NX_TEMP='%s'"), cygPath(fn.GetShortPath()).c_str());
+         } else {
+-            ::wxSetEnv(wxT("NX_TEMP"), wxT("/tmp"));
+-            ::wxLogInfo(wxT("env: NX_TEMP='/tmp'"));
++            wxSetEnv(wxT("NX_TEMP"), wxT("/tmp"));
++            wxLogInfo(wxT("env: NX_TEMP='/tmp'"));
+         }
+ #else
+-        ::wxSetEnv(wxT("NX_TEMP"), cygPath(m_sTempDir));
+-        ::wxLogInfo(wxT("env: NX_TEMP='%s'"), cygPath(m_sTempDir).c_str());
++        wxSetEnv(wxT("NX_TEMP"), cygPath(m_sTempDir));
++        wxLogInfo(wxT("env: NX_TEMP='%s'"), cygPath(m_sTempDir).c_str());
+ #endif
+ 
+ #ifdef __WXMSW__
+         if (!startXserver()) {
+-            ::wxLogError(_("Could not start local X server"));
++            wxLogError(_("Could not start local X server"));
+             return false;
+         }
+         if (XARCH_XMING == m_eXarch) {
+             // Now, that the X server has been started, // set XAUTHORITY
+             // again, but this time in cygwin notation (for nxssh).
+-            ::wxSetEnv(wxT("XAUTHORITY"), getXauthPath(XARCH_CYGWIN));
+-            ::wxLogInfo(wxT("env: XAUTHORITY='%s'"), getXauthPath(XARCH_CYGWIN).c_str());
++            wxSetEnv(wxT("XAUTHORITY"), getXauthPath(XARCH_CYGWIN));
++            wxLogInfo(wxT("env: XAUTHORITY='%s'"), getXauthPath(XARCH_CYGWIN).c_str());
+             // Configure XMing's special clipboard filter
+             HWND clpWnd = FindWindow(NULL ,wxT("OpenNXWinClip"));
+             if (NULL != clpWnd) {
+@@ -2271,21 +2276,21 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
+             dlg.SetStatusText(_("Preparing multimedia service ..."));
+             PulseAudio pa;
+             if (pa.IsAvailable()) {
+-                ::wxLogInfo(wxT("using existing pulseaudio"));
++                wxLogInfo(wxT("using existing pulseaudio"));
+                 m_lEsdPort = wxConfigBase::Get()->Read(wxT("State/nxesdPort"), -1);
+                 if (m_lEsdPort < 0)
+                     m_lEsdPort = getFirstFreePort(6000);
+                 if (0 < m_lEsdPort) {
+-                    ::wxLogInfo(wxT("Activating ESD Module in pulseaudio on port %ld"), m_lEsdPort);
++                    wxLogInfo(wxT("Activating ESD Module in pulseaudio on port %ld"), m_lEsdPort);
+                     if (pa.ActivateEsound(m_lEsdPort)) {
+                         m_bEsdRunning = true;
+                         wxConfigBase::Get()->Write(wxT("State/nxesdPort"), m_lEsdPort);
+                         wxConfigBase::Get()->Write(wxT("State/nxesdPID"), -1);
+                     } else {
+-                        ::wxLogWarning(_("Could not start multimedia support"));
++                        wxLogWarning(_("Could not start multimedia support"));
+                     }
+                 } else
+-                    ::wxLogWarning(_("Could not assign a free port for multimedia support"));
++                    wxLogWarning(_("Could not assign a free port for multimedia support"));
+             }
+ #ifndef __WXMSW__
+             if (!m_bEsdRunning) {
+@@ -2303,14 +2308,14 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
+                         m_lEsdPort = getFirstFreePort(6000);
+                         if (0 < m_lEsdPort) {
+                             esdcmd << wxT(" -tcp -nobeeps -bind 127.0.0.1 -spawnfd 1 -port ") << m_lEsdPort;
+-                            ::wxLogInfo(wxT("starting in background: %s"), esdcmd.c_str());
++                            wxLogInfo(wxT("starting in background: %s"), esdcmd.c_str());
+                             wxProcess *nxesd = wxProcess::Open(esdcmd,
+                                     wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
+                             if (nxesd) {
+                                 nxesd->CloseOutput();
+                                 wxStopWatch sw;
+                                 while (!(dlg.bGetAbort() || nxesd->IsInputAvailable())) {
+-                                    ::wxGetApp().Yield(true);
++                                    wxGetApp().Yield(true);
+                                     wxLog::FlushActive();
+                                     // Timeout after 10 sec
+                                     if (sw.Time() > 10000)
+@@ -2328,11 +2333,11 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
+                                 }
+                             }
+                             if (!m_bEsdRunning)
+-                                ::wxLogWarning(_("Could not start multimedia support"));
++                                wxLogWarning(_("Could not start multimedia support"));
+                         } else
+-                            ::wxLogWarning(_("Could not assign a free port for multimedia support"));
++                            wxLogWarning(_("Could not assign a free port for multimedia support"));
+                     } else
+-                        ::wxLogWarning(_("Could not start multimedia support"));
++                        wxLogWarning(_("Could not start multimedia support"));
+                 }
+             }
+ #endif
+@@ -2349,7 +2354,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
+         if (getActiveCupsPrinters().GetCount() > 0) {
+             dlg.SetStatusText(_("Preparing CUPS service ..."));
+             if (!prepareCups())
+-                ::wxLogWarning(_("Could not start CUPS printing"));
++                wxLogWarning(_("Could not start CUPS printing"));
+             dlg.SetStatusText(wxString::Format(_("Connecting to %s ..."),
+                         m_pCfg->sGetServerHost().c_str()));
+         }
+@@ -2357,7 +2362,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
+         MyIPC nxssh;
+         m_pNxSsh = &nxssh;
+ 
+-        ::wxLogInfo(wxT("Starting %s"), nxsshcmd.c_str());
++        wxLogInfo(wxT("Starting %s"), nxsshcmd.c_str());
+         do {
+             m_bRemoveKey = false;
+             m_sOffendingKey = wxEmptyString;
+@@ -2369,7 +2374,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
+                 while (!(dlg.bGetAbort() || m_bGotError || m_bAbort ||
+                             (m_bSessionRunning && m_bSessionEstablished))) {
+                     wxLog::FlushActive();
+-                    ::wxGetApp().Yield(true);
++                    wxGetApp().Yield(true);
+ #ifdef __WXMSW__
+                     if (m_iXserverPID)
+                         AllowSetForegroundWindow(m_iXserverPID);
+@@ -2379,7 +2384,7 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
+                     if (m_bRemoveKey) {
+                         while (m_sOffendingKey.IsEmpty()) {
+                             wxLog::FlushActive();
+-                            ::wxGetApp().Yield(true);
++                            wxGetApp().Yield(true);
+                         }
+                     } else {
+                         nxssh.Kill();
+@@ -2401,8 +2406,8 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
+ #endif
+             } else {
+                 setTurboPath(false);
+-                ::wxLogError(_("Called command was: ") + nxsshcmd);
+-                ::wxLogError(_("Could not start nxssh."));
++                wxLogError(_("Called command was: ") + nxsshcmd);
++                wxLogError(_("Could not start nxssh."));
+ #ifdef __WXMSW__
+                 terminateXserver();
+ #endif
+@@ -2420,16 +2425,16 @@ MySession::Create(MyXmlConfig &cfgpar, const wxString password, wxWindow *parent
+ 
+         if (m_pCfg->bGetEnableUSBIP()) {
+             ::myLogTrace(MYTRACETAG, wxT("Enabling UsbIp"));
+-            ::wxGetApp().SetNxSshPID(nxssh.GetPID());
+-            ::wxGetApp().SetSessionCfg(*m_pCfg);
+-            ::wxGetApp().SetSessionID(m_sSessionID.Right(32));
+-            ::wxGetApp().SetRequireStartUsbIp(true);
++            wxGetApp().SetNxSshPID(nxssh.GetPID());
++            wxGetApp().SetSessionCfg(*m_pCfg);
++            wxGetApp().SetSessionID(m_sSessionID.Right(32));
++            wxGetApp().SetRequireStartUsbIp(true);
+         } else {
+             if (m_pCfg->bGetUseSmartCard()) {
+                 ::myLogTrace(MYTRACETAG, wxT("Enabling WatchReader %d"), m_iReader);
+-                ::wxGetApp().SetNxSshPID(nxssh.GetPID());
+-                ::wxGetApp().SetReader(m_iReader);
+-                ::wxGetApp().SetRequireWatchReader(true);
++                wxGetApp().SetNxSshPID(nxssh.GetPID());
++                wxGetApp().SetReader(m_iReader);
++                wxGetApp().SetRequireWatchReader(true);
+             }
+         }
+ #ifdef __WXMSW__
+diff --git a/opennx/MySession.h b/opennx/MySession.h
+index e77af70..ad73a55 100644
+--- a/opennx/MySession.h
++++ b/opennx/MySession.h
+@@ -22,10 +22,17 @@
+ #ifndef _MYSESSION_H_
+ #define _MYSESSION_H_
+ 
++#include <wx/protocol/http.h>
+ #include <wx/regex.h>
+ 
+ #include "MyXmlConfig.h"
+ 
++//  wxWidgets lib > 3.0
++#define wxHTTP_Req wxString
++#define wxHTTP_GET wxString("GET")
++#define wxHTTP_POST wxString("POST")
++//  end wxWidgets lib > 3.0
++
+ class ConnectDialog;
+ class MyIPC;
+ class SessionWatch;
+diff --git a/opennx/MyValidator.cpp b/opennx/MyValidator.cpp
+index cdc4bf4..7acdd39 100644
+--- a/opennx/MyValidator.cpp
++++ b/opennx/MyValidator.cpp
+@@ -653,7 +653,9 @@ void MyValidator::OnChar(wxKeyEvent& event)
+                     chOk = (wxIsalnum(keyCode) || (keyCode == _T('.')) || (keyCode == _T('-')));
+                     break;
+                 case MYVAL_FILENAME:
+-                    chOk = (wxFileName::GetForbiddenChars().Find(keyCode) == -1);
++                    wxString str;
++                    str << keyCode;
++                    chOk = (wxFileName::GetForbiddenChars().Find(str) == -1);
+                     break;
+             }
+             if (!chOk) {
+diff --git a/opennx/MyValidator.h b/opennx/MyValidator.h
+index d4cad13..ed858d3 100644
+--- a/opennx/MyValidator.h
++++ b/opennx/MyValidator.h
+@@ -26,6 +26,7 @@
+ #pragma interface "MyValidator.h"
+ #endif
+ 
++#include <string>
+ #include "wx/validate.h"
+ 
+ class KeyTypeCallback
+diff --git a/opennx/MyWizard.cpp b/opennx/MyWizard.cpp
+index 2d649e1..e8e628c 100644
+--- a/opennx/MyWizard.cpp
++++ b/opennx/MyWizard.cpp
+@@ -890,7 +890,7 @@ bool WizardPageSecurity::Create( wxWizard* parent )
+     m_pCtrlUseSmartCard = NULL;
+     m_pCtrlEnableSSL = NULL;
+     ////@end WizardPageSecurity member initialisation
+-    m_bUseSmartCard = ::wxGetApp().NxSmartCardSupport();
++    m_bUseSmartCard = wxGetApp().NxSmartCardSupport();
+ 
+     ////@begin WizardPageSecurity creation
+     SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY);
+@@ -920,8 +920,8 @@ void WizardPageSecurity::CreateControls()
+ 
+     ////@begin WizardPageSecurity content initialisation
+     ////@end WizardPageSecurity content initialisation
+-    m_pCtrlUseSmartCard->Enable(::wxGetApp().NxSmartCardSupport());
+-    if (m_bUseSmartCard || (!::wxGetApp().NxProxyAvailable())) {
++    m_pCtrlUseSmartCard->Enable(wxGetApp().NxSmartCardSupport());
++    if (m_bUseSmartCard || (!wxGetApp().NxProxyAvailable())) {
+         m_pCtrlEnableSSL->SetValue(true);
+         m_pCtrlEnableSSL->Enable(false);
+     }
+@@ -1128,7 +1128,7 @@ void WizardPageDesktop::OnComboboxDisptypeSelected( wxCommandEvent& event )
+ 
+ void WizardPageSecurity::OnCheckboxScardClick( wxCommandEvent& event )
+ {
+-    if (event.IsChecked() || (!::wxGetApp().NxProxyAvailable())) {
++    if (event.IsChecked() || (!wxGetApp().NxProxyAvailable())) {
+         m_pCtrlEnableSSL->SetValue(true);
+         m_pCtrlEnableSSL->Enable(false);
+     } else
+@@ -1357,7 +1357,7 @@ void WizardPageFinish::OnWizardpageFinishPageChanging( wxWizardEvent& event )
+                     break;
+                 case wxID_CLEAR:
+                     ::myLogTrace(MYTRACETAG, _T("deleting '%s'"), fn.c_str());
+-                    ::wxRemoveFile(fn);
++                    wxRemoveFile(fn);
+                     // actually we were not cancelled but we want to behave
+                     // as if we were, because the just created session has
+                     // been deleted.
+@@ -1378,7 +1378,7 @@ void WizardPageFinish::OnWizardpageFinishPageChanging( wxWizardEvent& event )
+             }
+         }
+         if (m_bCreateShortcut)
+-            ::wxGetApp().CreateDesktopEntry(cfg);
++            wxGetApp().CreateDesktopEntry(cfg);
+     }
+     event.Skip();
+ }
+diff --git a/opennx/MyXmlConfig.cpp b/opennx/MyXmlConfig.cpp
+index 4ee5152..2237111 100644
+--- a/opennx/MyXmlConfig.cpp
++++ b/opennx/MyXmlConfig.cpp
+@@ -543,9 +543,9 @@ MyXmlConfig::sGetListParams(const long protocolVersion)
+             break;
+     }
+     int w, h;
+-    ::wxDisplaySize(&w, &h);
++    wxDisplaySize(&w, &h);
+     ret << wxT(" --geometry=\"") << w << wxT("x") << h << wxT("x")
+-        << ::wxDisplayDepth() << (m_bDisableRender ? wxEmptyString : wxT("+render"))
++        << wxDisplayDepth() << (m_bDisableRender ? wxEmptyString : wxT("+render"))
+         << ((m_eDisplayType == DPTYPE_FULLSCREEN) ? wxT("+fullscreen") : wxEmptyString)
+         << wxT("\"");
+     return ret;
+@@ -581,9 +581,9 @@ MyXmlConfig::getDesktopSize(int &dw, int &dh, int &ww, int &wh)
+     // Fetch the size of the display and the workarea
+     // (workarea == display size reduced by the size of the taskbar and window
+     // decorations) where our toplevel dialog are shown.
+-    wxWindow *tlw = ::wxGetApp().GetTopWindow();
++    wxWindow *tlw = wxGetApp().GetTopWindow();
+     if (NULL == tlw) {
+-        ::wxLogError(_("Could not find application window"));
++        wxLogError(_("Could not find application window"));
+         return;
+     }
+     int dspidx = wxDisplay::GetFromWindow(tlw);
+@@ -854,7 +854,7 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
+     }
+     if (m_eSessionType != STYPE_SHADOW) {
+         ret << wxT(" --screeninfo=\"") << dspw << wxT("x") << dsph << wxT("x")
+-            << ::wxDisplayDepth() << (m_bDisableRender ? wxEmptyString : wxT("+render"))
++            << wxDisplayDepth() << (m_bDisableRender ? wxEmptyString : wxT("+render"))
+             << ((m_eDisplayType == DPTYPE_FULLSCREEN) ? wxT("+fullscreen") : wxEmptyString)
+             << wxT("\"");
+     }
+@@ -908,7 +908,7 @@ MyXmlConfig::sGetSessionParams(const long protocolVersion, bool bNew, const wxSt
+         ret << wxT(" --aux=\"1\"");
+     }
+     
+-    m_bNumLockEnabled = wxGetKeyState (::WXK_NUMLOCK);
++    m_bNumLockEnabled = wxGetKeyState (WXK_NUMLOCK);
+     if(m_bNumLockEnabled){
+ 	ret << wxT(" --numlock=\"on\"");
+     }
+@@ -1216,8 +1216,8 @@ MyXmlConfig::LoadFromURL(const wxString &filename)
+     curl_easy_setopt(c, CURLOPT_TIMEOUT, 10);
+     curl_easy_setopt(c, CURLOPT_SSL_VERIFYPEER, 1);
+     curl_easy_setopt(c, CURLOPT_SSL_VERIFYHOST, 2);
+-    if (!::wxGetApp().GetCaCert().IsEmpty())
+-        curl_easy_setopt(c, CURLOPT_CAINFO, (const char *)::wxGetApp().GetCaCert().mb_str());
++    if (!wxGetApp().GetCaCert().IsEmpty())
++        curl_easy_setopt(c, CURLOPT_CAINFO, (const char *)wxGetApp().GetCaCert().mb_str());
+     curl_easy_setopt(c, CURLOPT_WRITEDATA, &mos);
+     curl_easy_setopt(c, CURLOPT_ERRORBUFFER, ebuf);
+     curl_easy_setopt(c, CURLOPT_WRITEFUNCTION, CurlWriteCallback);
+@@ -1250,12 +1250,12 @@ MyXmlConfig::LoadFromURL(const wxString &filename)
+                 }
+                 delete data;
+             } else {
+-                ::wxLogError(_("Error %d while fetching session configuration"), rcode);
++                wxLogError(_("Error %d while fetching session configuration"), rcode);
+             }
+         }
+     } else {
+         wxString msg(ebuf, *wxConvCurrent);
+-        ::wxLogError(_("Error while fetching session configuration:\n%s"), msg.c_str());
++        wxLogError(_("Error while fetching session configuration:\n%s"), msg.c_str());
+     }
+     curl_easy_cleanup(c);
+ # else
+diff --git a/opennx/ProxyPropertyDialog.cpp b/opennx/ProxyPropertyDialog.cpp
+index d565d14..0fd242c 100644
+--- a/opennx/ProxyPropertyDialog.cpp
++++ b/opennx/ProxyPropertyDialog.cpp
+@@ -109,7 +109,7 @@ bool ProxyPropertyDialog::Create( wxWindow* parent, wxWindowID, const wxString&,
+     }
+     Centre();
+ ////@end ProxyPropertyDialog creation
+-    ::wxGetApp().EnableContextHelp(this);
++    wxGetApp().EnableContextHelp(this);
+     wxString d;
+     wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &d);
+     wxFileName hfile(d, wxT("pconnect.html"));
+diff --git a/opennx/PulseAudio.cpp b/opennx/PulseAudio.cpp
+index 9b6ed8d..172d1fa 100644
+--- a/opennx/PulseAudio.cpp
++++ b/opennx/PulseAudio.cpp
+@@ -174,7 +174,7 @@ class pawrapper {
+                 if (0 <= Ppa_context_connect(m_pContext, NULL /* server */, PA_CONTEXT_NOAUTOSPAWN, NULL)) {
+                     Ppa_threaded_mainloop_start(m_pLoop);
+                     while (!(m_bConnected || m_bError))
+-                        ::wxGetApp().Yield(true);
++                        wxGetApp().Yield(true);
+                 }
+                 if (m_bConnected)
+                     break;
+@@ -232,7 +232,7 @@ class pawrapper {
+ 
+         bool waitcmd() {
+             while (!(m_bError || m_bComplete)) {
+-                ::wxGetApp().Yield(true);
++                wxGetApp().Yield(true);
+             }
+             return !m_bError;
+         }
+@@ -424,7 +424,7 @@ extern "C" {
+ 
+ static wxString MachineID() {
+ #  ifdef __WXMSW__
+-    return ::wxGetHostName().Lower();
++    return wxGetHostName().Lower();
+ #  else
+     return wxString(getMacMachineID(), wxConvUTF8);
+ #  endif
+@@ -439,7 +439,7 @@ bool PulseAudio::AutoSpawn()
+     int papid;
+     int retry = 3;
+     // On windows and mac, we do our own autospawn
+-    wxString piddir = ::wxGetHomeDir() + wxFileName::GetPathSeparator()
++    wxString piddir = wxGetHomeDir() + wxFileName::GetPathSeparator()
+         + wxT(".pulse") + wxFileName::GetPathSeparator()
+         + MachineID() + wxT("-runtime");
+     wxString pidfile = piddir + wxFileName::GetPathSeparator() + wxT("pid");
+@@ -451,7 +451,7 @@ bool PulseAudio::AutoSpawn()
+             wxTextInputStream tis(sPid);
+             tis >> papid;
+             ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: PID=%d"), papid);
+-            if ((papid != 0) && ::wxProcess::Exists(papid)) {
++            if ((papid != 0) && wxProcess::Exists(papid)) {
+                 ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: process %d is running"), papid);
+                 return true;
+             }
+@@ -470,7 +470,7 @@ bool PulseAudio::AutoSpawn()
+         // Don't report an error here, as CreateDetachedProcess may
+         // fail if pulseaudio is already running
+ #  else
+-        ::wxExecute(pacmd, wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
++        wxExecute(pacmd, wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
+ #  endif
+         wxThread::Sleep(500);
+     } while (retry-- > 0);
+diff --git a/opennx/RdpImageSettingsDialog.cpp b/opennx/RdpImageSettingsDialog.cpp
+index 8ebaac2..1028b6c 100644
+--- a/opennx/RdpImageSettingsDialog.cpp
++++ b/opennx/RdpImageSettingsDialog.cpp
+@@ -178,7 +178,7 @@ bool RdpImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id),
+     }
+     Centre();
+ ////@end RdpImageSettingsDialog creation
+-    ::wxGetApp().EnableContextHelp(this);
++    wxGetApp().EnableContextHelp(this);
+     return TRUE;
+ }
+ 
+diff --git a/opennx/RdpPropertyDialog.cpp b/opennx/RdpPropertyDialog.cpp
+index b4e7a59..ff6feff 100644
+--- a/opennx/RdpPropertyDialog.cpp
++++ b/opennx/RdpPropertyDialog.cpp
+@@ -160,7 +160,7 @@ bool RdpPropertyDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
+     }
+     Centre();
+ ////@end RdpPropertyDialog creation
+-    ::wxGetApp().EnableContextHelp(this);
++    wxGetApp().EnableContextHelp(this);
+     return TRUE;
+ }
+ 
+diff --git a/opennx/ResumeDialog.cpp b/opennx/ResumeDialog.cpp
+index 9ca4d00..2f7b4c0 100644
+--- a/opennx/ResumeDialog.cpp
++++ b/opennx/ResumeDialog.cpp
+@@ -204,7 +204,7 @@ ResumeDialog::AddSession(const wxString& name, const wxString& state, const wxSt
+             m_sSelectedId = id;
+         }
+     } else {
+-        ::wxLogError(_("Could not add session list item"));
++        wxLogError(_("Could not add session list item"));
+     }
+ }
+ 
+@@ -308,7 +308,7 @@ void ResumeDialog::OnButtonResumeClick( wxCommandEvent& )
+ 
+ void ResumeDialog::OnButtonTerminateClick( wxCommandEvent& )
+ {
+-    if (wxYES != ::wxMessageBox(_("Do you really want to terminate the selected session?"),
++    if (wxYES != wxMessageBox(_("Do you really want to terminate the selected session?"),
+                 _("Terminate session - OpenNX"), wxYES_NO|wxICON_QUESTION, this))
+         return;
+     m_eMode = Terminate;
+diff --git a/opennx/SessionAdmin.cpp b/opennx/SessionAdmin.cpp
+index 756edd9..4402ac2 100644
+--- a/opennx/SessionAdmin.cpp
++++ b/opennx/SessionAdmin.cpp
+@@ -268,7 +268,7 @@ void SessionAdmin::ShowSessionStats(long item, bool full)
+                 md5stats2 = Md5OfFile(fn.GetFullPath());
+                 if (md5stats1 != md5stats2)
+                     break;
+-                ::wxGetApp().Yield(true);
++                wxGetApp().Yield(true);
+                 wxThread::Sleep(100);
+             }
+             // Wait until file stopped changing
+@@ -279,7 +279,7 @@ void SessionAdmin::ShowSessionStats(long item, bool full)
+                 if (md5stats1 == md5stats2)
+                     break;
+                 md5stats2 = md5stats1;
+-                ::wxGetApp().Yield(true);
++                wxGetApp().Yield(true);
+                 wxThread::Sleep(100);
+             }
+             if (ok) {
+diff --git a/opennx/SessionList.cpp b/opennx/SessionList.cpp
+index 2b67f6a..c9a9ef7 100644
+--- a/opennx/SessionList.cpp
++++ b/opennx/SessionList.cpp
+@@ -80,12 +80,12 @@ class RmRfTraverser : public wxDirTraverser
+             int n = m_aFiles.GetCount() - 1;
+             while (n >= 0) {
+                 ::myLogTrace(MYTRACETAG, wxT("Removing file %s"), m_aFiles[n].c_str());
+-                ::wxRemoveFile(m_aFiles[n--]);
++                wxRemoveFile(m_aFiles[n--]);
+             }
+             n = m_aDirs.GetCount() - 1;
+             while (n >= 0) {
+                 ::myLogTrace(MYTRACETAG, wxT("Removing dir %s"), m_aDirs[n].c_str());
+-                ::wxRmdir(m_aDirs[n--]);
++                wxRmdir(m_aDirs[n--]);
+             }
+         }
+ 
+@@ -290,7 +290,7 @@ SessionList::CleanupDir(wxString &dir)
+             RmRfTraverser t;
+             d.Traverse(t);
+         }
+-        ::wxRmdir(dir);
++        wxRmdir(dir);
+     }
+ }
+ 
+diff --git a/opennx/SessionProperties.cpp b/opennx/SessionProperties.cpp
+index 564b5c4..befe1f7 100644
+--- a/opennx/SessionProperties.cpp
++++ b/opennx/SessionProperties.cpp
+@@ -100,10 +100,10 @@ class CacheCleaner : public wxDirTraverser
+         {
+             int n = m_aFiles.GetCount() - 1;
+             while (n >= 0)
+-                ::wxRemoveFile(m_aFiles[n--]);
++                wxRemoveFile(m_aFiles[n--]);
+             n = m_aDirs.GetCount() - 1;
+             while (n >= 0)
+-                ::wxRmdir(m_aDirs[n--]);
++                wxRmdir(m_aDirs[n--]);
+         }
+ 
+         virtual wxDirTraverseResult OnFile(const wxString &name)
+@@ -490,7 +490,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
+     if (m_pCfg) {
+         // variables on 'General' Tab
+         m_bRememberPassword = m_pCfg->bGetRememberPassword();
+-        m_bUseSmartCard = ::wxGetApp().NxSmartCardSupport() && m_pCfg->bGetUseSmartCard();
++        m_bUseSmartCard = wxGetApp().NxSmartCardSupport() && m_pCfg->bGetUseSmartCard();
+         m_bUseCustomImageEncoding = m_pCfg->bGetUseCustomImageEncoding();
+         m_iPort = m_pCfg->iGetServerPort();
+         m_iSessionType = m_pCfg->eGetSessionType();
+@@ -558,7 +558,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
+         m_bRemoveOldSessionFiles = m_pCfg->bGetRemoveOldSessionFiles();
+         m_sCupsPath = m_pCfg->sGetCupsPath();
+         m_bCreateDesktopIcon = m_bSavedCreateDesktopIcon =
+-            ::wxGetApp().CheckDesktopEntry(m_pCfg);
++            wxGetApp().CheckDesktopEntry(m_pCfg);
+     }
+     // Global config
+     wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &m_sUserNxDir);
+@@ -726,7 +726,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
+ #endif
+ 
+ 
+-    ::wxGetApp().EnableContextHelp(this);
++    wxGetApp().EnableContextHelp(this);
+     return TRUE;
+ }
+ 
+@@ -797,7 +797,7 @@ SessionProperties::InstallOnCharHandlers(wxWindow *w /* = NULL*/)
+                 if (v->IsKindOf(CLASSINFO(MyValidator)))
+                     wxDynamicCast(v, MyValidator)->SetKeyTyped(this);
+                 else
+-                    ::wxLogError(wxT("Detected %s window with validator other than MyValidator!"),
++                    wxLogError(wxT("Detected %s window with validator other than MyValidator!"),
+                             w->IsKindOf(CLASSINFO(wxTextCtrl)) ? wxT("wxTextCtrl") : wxT("wxSpinCtrl"));
+             } else {
+ #ifdef __WXMAC__
+@@ -805,7 +805,7 @@ SessionProperties::InstallOnCharHandlers(wxWindow *w /* = NULL*/)
+                 if (w->GetName().IsEmpty() || w->GetName().IsSameAs(wxT("text")))
+                     continue;
+ #endif
+-                ::wxLogError(wxT("Detected %s (name=%s) window without validator!"),
++                wxLogError(wxT("Detected %s (name=%s) window without validator!"),
+                         (w->IsKindOf(CLASSINFO(wxTextCtrl)) ? wxT("wxTextCtrl") : wxT("wxSpinCtrl")),
+                         (w->GetName().IsEmpty() ? wxEmptyString : w->GetName().c_str()));
+             }
+@@ -940,7 +940,7 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
+             m_pCtrlDisplayHeight->Enable(false);
+             break;
+     }
+-    if (m_bUseSmartCard || (!::wxGetApp().NxProxyAvailable())) {
++    if (m_bUseSmartCard || (!wxGetApp().NxProxyAvailable())) {
+         m_pCtrlEnableSSL->SetValue(true);
+         m_pCtrlEnableSSL->Enable(false);
+         m_bEnableSSL = true;
+@@ -1130,7 +1130,7 @@ void SessionProperties::CreateControls()
+     m_pCtrlDisplayHeight->SetSizeHints(spin_size);
+     Layout();
+ #endif
+-    m_pCtrlUseSmartCard->Enable(::wxGetApp().NxSmartCardSupport());
++    m_pCtrlUseSmartCard->Enable(wxGetApp().NxSmartCardSupport());
+ 
+     int fs[7];
+     wxFont fv = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
+@@ -1142,17 +1142,17 @@ void SessionProperties::CreateControls()
+     m_pHtmlWindow->SetBorders(0);
+ 
+     wxString version = _("Version") + wxString::Format(wxT(" <B>%s</B>"),
+-            ::wxGetApp().GetVersion().c_str());
++            wxGetApp().GetVersion().c_str());
+ #ifdef __WXDEBUG__
+     version += wxT(" (DEBUG)");
+ #else
+     version += wxT(" (RELEASE)");
+ #endif
+ 
+-    wxString content = ::wxGetApp().LoadFileFromResource(wxT("res/about.html"));
++    wxString content = wxGetApp().LoadFileFromResource(wxT("res/about.html"));
+     content.Replace(wxT("<VERSION>"), version);
+     content.Replace(wxT("<WXVERSION>"), wxVERSION_STRING);
+-    content.Replace(wxT("\"res:"), wxT("\"") + ::wxGetApp().GetResourcePrefix());
++    content.Replace(wxT("\"res:"), wxT("\"") + wxGetApp().GetResourcePrefix());
+ 
+     m_pHtmlWindow->SetPage(content);
+     m_pHtmlWindow->SetBackgroundColour(GetBackgroundColour());
+@@ -1239,7 +1239,7 @@ SessionProperties::readKbdLayouts()
+         << wxFileName::GetPathSeparator() << wxT("keyboards");
+     wxFileInputStream fis(kbdCfg);
+     if (!fis.IsOk()) {
+-        ::wxLogError(_("Error while reading keyboard table"));
++        wxLogError(_("Error while reading keyboard table"));
+         return false;
+     }
+     wxTextInputStream tis(fis);
+@@ -1411,7 +1411,7 @@ void SessionProperties::OnCheckboxSmbClick( wxCommandEvent& event )
+         UpdateDialogConstraints(true);
+         CheckChanged();
+     } else {
+-        ::wxLogWarning(_("No local samba server is running."));
++        wxLogWarning(_("No local samba server is running."));
+         wxDynamicCast(event.GetEventObject(), wxCheckBox)->SetValue(false);
+         wxDynamicCast(event.GetEventObject(), wxCheckBox)->Enable(false);
+     }
+@@ -1467,7 +1467,7 @@ void SessionProperties::OnButtonSmbAddClick( wxCommandEvent& event )
+         }
+         CheckChanged();
+     } else {
+-        ::wxLogWarning(_("No sharable resources found"));
++        wxLogWarning(_("No sharable resources found"));
+     }
+ }
+ 
+@@ -1580,9 +1580,9 @@ void SessionProperties::OnDeleteClick( wxCommandEvent& event )
+     if (wxMessageBox(wxString::Format(_("Really delete Session '%s' ?"),
+                     m_pCfg->sGetName().c_str()), _("Delete Session"),
+                 wxICON_QUESTION|wxYES_NO|wxNO_DEFAULT) == wxYES) {
+-        ::wxGetApp().RemoveDesktopEntry(m_pCfg);
++        wxGetApp().RemoveDesktopEntry(m_pCfg);
+         ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), m_pCfg->sGetFileName().c_str());
+-        ::wxRemoveFile(m_pCfg->sGetFileName());
++        wxRemoveFile(m_pCfg->sGetFileName());
+         EndModal(wxID_CLEAR);
+     }
+ }
+@@ -1607,9 +1607,9 @@ void SessionProperties::OnApplyClick( wxCommandEvent& event )
+     if (m_bSavedCreateDesktopIcon != m_bCreateDesktopIcon) {
+         if (NULL != m_pCfg) {
+             if (m_bCreateDesktopIcon)
+-                ::wxGetApp().CreateDesktopEntry(m_pCfg);
++                wxGetApp().CreateDesktopEntry(m_pCfg);
+             else
+-                ::wxGetApp().RemoveDesktopEntry(m_pCfg);
++                wxGetApp().RemoveDesktopEntry(m_pCfg);
+         }
+     }
+     if (m_bSavedResetMessageBoxes != m_bResetMessageBoxes) {
+@@ -1852,7 +1852,7 @@ void SessionProperties::OnCheckboxCupsenableClick( wxCommandEvent& event )
+         UpdateDialogConstraints(true);
+         CheckChanged();
+     } else {
+-        ::wxLogWarning(_("No cups server available."));
++        wxLogWarning(_("No cups server available."));
+         wxDynamicCast(event.GetEventObject(), wxCheckBox)->SetValue(false);
+         wxDynamicCast(event.GetEventObject(), wxCheckBox)->Enable(false);
+         m_bUseCups = false;
+@@ -1867,7 +1867,7 @@ void SessionProperties::OnButtonBrowseCupspathClick( wxCommandEvent& event )
+ {
+     wxUnusedVar(event);
+     wxFileName fn(m_sCupsPath);
+-    const wxString& file = ::wxFileSelector(_("Select System CUPS daemon"),
++    const wxString& file = wxFileSelector(_("Select System CUPS daemon"),
+             fn.GetPath(), fn.GetName(), wxEmptyString, wxT("*"), wxFD_OPEN|wxFD_FILE_MUST_EXIST, this);
+     if (!file.IsEmpty()) {
+         m_pCtrlCupsPath->SetValue(file);
+@@ -2025,12 +2025,12 @@ void SessionProperties::OnButtonUsbaddClick( wxCommandEvent& event )
+ #ifdef SUPPORT_USBIP
+     USB u;
+     if (!u.IsAvailable()) {
+-        ::wxLogWarning(_("libusb is not available. No USB devices will be exported"));
++        wxLogWarning(_("libusb is not available. No USB devices will be exported"));
+         return;
+     }
+     ArrayOfUSBDevices a = u.GetDevices();
+     if (a.IsEmpty()) {
+-        ::wxLogWarning(_("No USB devices available."));
++        wxLogWarning(_("No USB devices available."));
+         return;
+     }
+     UsbFilterDetailsDialog d(this);
+@@ -2242,7 +2242,7 @@ void SessionProperties::OnButtonBrowseUsbipdSocketClick( wxCommandEvent& event )
+ {
+     wxUnusedVar(event);
+     wxFileName fn(m_sUsbipdSocket);
+-    const wxString& file = ::wxFileSelector(_("Select path of USBIPD socket"),
++    const wxString& file = wxFileSelector(_("Select path of USBIPD socket"),
+             fn.GetPath(), fn.GetName(), wxEmptyString, wxT("*"), wxFD_OPEN|wxFD_FILE_MUST_EXIST, this);
+     if (!file.IsEmpty()) {
+         m_pCtrlUsbIpdSocket->SetValue(file);
+diff --git a/opennx/ShareProperties.cpp b/opennx/ShareProperties.cpp
+index 6fc9a43..2592e25 100644
+--- a/opennx/ShareProperties.cpp
++++ b/opennx/ShareProperties.cpp
+@@ -125,8 +125,8 @@ bool ShareProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const w
+     m_bCupsPublic = false;
+     m_bSmbPublic = false;
+     m_sCupsDriver = wxT("cups driver");
+-    m_sSmbDiskUsername = ::wxGetUserId();
+-    m_sSmbPrintUsername = ::wxGetUserId();
++    m_sSmbDiskUsername = wxGetUserId();
++    m_sSmbPrintUsername = wxGetUserId();
+     m_pCtrlLocalShares = NULL;
+     m_pCtrlSmbPrintOptions = NULL;
+     m_pCtrlSmbDriver = NULL;
+@@ -155,7 +155,7 @@ bool ShareProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const w
+     }
+     Centre();
+     ////@end ShareProperties creation
+-    ::wxGetApp().EnableContextHelp(this);
++    wxGetApp().EnableContextHelp(this);
+     return TRUE;
+ }
+ 
+@@ -267,7 +267,7 @@ void ShareProperties::CreateControls()
+                 m_sMountPoint = sg.m_sAlias;
+                 m_sSmbDiskUsername = sg.m_sUsername;
+                 if (m_sSmbDiskUsername.IsEmpty())
+-                    m_sSmbDiskUsername = ::wxGetUserId();
++                    m_sSmbDiskUsername = wxGetUserId();
+                 m_sSmbDiskPassword = sg.m_sPassword;
+                 Layout();
+                 break;
+@@ -278,7 +278,7 @@ void ShareProperties::CreateControls()
+                 m_sSmbDriver = sg.m_sDriver;
+                 m_sSmbPrintUsername = sg.m_sUsername;
+                 if (m_sSmbPrintUsername.IsEmpty())
+-                    m_sSmbPrintUsername = ::wxGetUserId();
++                    m_sSmbPrintUsername = wxGetUserId();
+                 m_sSmbPrintPassword = sg.m_sPassword;
+                 if (sg.m_bPublic)
+                     m_pCtrlSmbPublic->SetValue(true);
+@@ -367,7 +367,7 @@ void ShareProperties::CreateControls()
+                     break;
+             }
+         } else {
+-            ::wxLogMessage(_("No shares found"));
++            wxLogMessage(_("No shares found"));
+             m_pCtrlLocalShares->Enable(false);
+             m_pCtrlMountPoint->Enable(false);
+             m_pCtrlUsername->Enable(false);
+@@ -487,7 +487,7 @@ void ShareProperties::OnOkClick( wxCommandEvent& event )
+                     askForDefault(sg, sg[m_iCurrentShare]);
+                 break;
+             case SharedResource::SHARE_CUPS_PRINTER:
+-                sg[m_iCurrentShare].m_sUsername = ::wxGetUserId();
++                sg[m_iCurrentShare].m_sUsername = wxGetUserId();
+                 sg[m_iCurrentShare].m_sDriver = m_sCupsDriver;
+                 sg[m_iCurrentShare].m_bPublic = m_bCupsPublic;
+                 if (nPrinters > 0)
+@@ -522,7 +522,7 @@ void ShareProperties::OnOkClick( wxCommandEvent& event )
+                     askForDefault(sg, g);
+                 break;
+             case SharedResource::SHARE_CUPS_PRINTER:
+-                g.m_sUsername = ::wxGetUserId();
++                g.m_sUsername = wxGetUserId();
+                 g.m_sDriver = wxT("cups driver");
+                 g.m_bPublic = m_bCupsPublic;
+                 if (nPrinters > 0)
+diff --git a/opennx/SimpleXauth.cpp b/opennx/SimpleXauth.cpp
+index f7a2620..eab9e5b 100644
+--- a/opennx/SimpleXauth.cpp
++++ b/opennx/SimpleXauth.cpp
+@@ -350,7 +350,7 @@ class SimpleXauthEntryHash
+ 
+         unsigned long operator()(const SimpleXauthEntry & k) const
+         {
+-            return wxStringHash::wxCharStringHash(k.GetKey());
++            return wxStringHashwxCharStringHash(k.GetKey());
+         }
+ 
+         SimpleXauthEntryHash& operator=(const SimpleXauthEntryHash&) { return *this; }
+@@ -377,7 +377,7 @@ class SimpleXauthPrivate
+ {
+     public:
+         SimpleXauthPrivate() {
+-            cookie = md5sum(::wxGetUserId() + wxDateTime::Now().Format());
++            cookie = md5sum(wxGetUserId() + wxDateTime::Now().Format());
+         };
+         wxString filename;
+         wxString cookie;
+@@ -437,7 +437,7 @@ void SimpleXauth::AddDisplay(int displayNum)
+     //   ipaddress:X
+     //   localname/unix:X
+ 
+-    wxString host = ::wxGetFullHostName();
++    wxString host = wxGetFullHostName();
+     wxIPV4address a;
+     a.Hostname(host);
+     SimpleXauthEntry e(m_pPrivate->cookie);
+diff --git a/opennx/TraceLogFrame.cpp b/opennx/TraceLogFrame.cpp
+index 59ccc5b..23290a6 100644
+--- a/opennx/TraceLogFrame.cpp
++++ b/opennx/TraceLogFrame.cpp
+@@ -234,7 +234,7 @@ void TraceLogFrame::OnCLOSEClick( wxCommandEvent& event )
+ void TraceLogFrame::OnEXITClick( wxCommandEvent& event )
+ {
+     Close(true);
+-    ::wxGetApp().Terminate();
++    wxGetApp().Terminate();
+ }
+ 
+ 
+diff --git a/opennx/UnixImageSettingsDialog.cpp b/opennx/UnixImageSettingsDialog.cpp
+index b2dd606..7e1a537 100644
+--- a/opennx/UnixImageSettingsDialog.cpp
++++ b/opennx/UnixImageSettingsDialog.cpp
+@@ -173,7 +173,7 @@ bool UnixImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id),
+     SetIcon(GetIconResource(wxT("res/nx.png")));
+     Centre();
+     ////@end UnixImageSettingsDialog creation
+-    ::wxGetApp().EnableContextHelp(this);
++    wxGetApp().EnableContextHelp(this);
+     return TRUE;
+ }
+ 
+diff --git a/opennx/UsbFilterDetailsDialog.cpp b/opennx/UsbFilterDetailsDialog.cpp
+index 5ed69dd..8662e47 100644
+--- a/opennx/UsbFilterDetailsDialog.cpp
++++ b/opennx/UsbFilterDetailsDialog.cpp
+@@ -122,7 +122,7 @@ bool UsbFilterDetailsDialog::Create( wxWindow* parent, wxWindowID id, const wxSt
+     }
+     Centre();
+     ////@end UsbFilterDetailsDialog creation
+-    ::wxGetApp().EnableContextHelp(this);
++    wxGetApp().EnableContextHelp(this);
+     return true;
+ }
+ 
+diff --git a/opennx/UsbIp.cpp b/opennx/UsbIp.cpp
+index 981a637..f597708 100644
+--- a/opennx/UsbIp.cpp
++++ b/opennx/UsbIp.cpp
+@@ -157,7 +157,7 @@ bool UsbIp::WaitForSession(int secs /* = 10 */)
+     wxStopWatch sw;
+     ::myLogTrace(MYTRACETAG, wxT("waiting for session ..."));
+     while (!findsession(m_sSid)) {
+-        ::wxGetApp().Yield(true);
++        wxGetApp().Yield(true);
+         wxLog::FlushActive();
+         m_pSocketClient->Wait(0, 1000);
+         if (0 < timeout) {
+@@ -191,7 +191,7 @@ bool UsbIp::ExportDevice(const wxString &busid)
+     if (!waitforstate(Exported)) {
+         m_eState = Idle;
+         if (404 == m_iLastError) {
+-            ::wxLogWarning(_("USB device is already exported in another session"));
++            wxLogWarning(_("USB device is already exported in another session"));
+             return true; // Prevent calling app from showing an error.
+         }
+         return false;
+@@ -319,7 +319,7 @@ bool UsbIp::waitforstate(tStates state, long timeout /* = 5000 */)
+ {
+     wxStopWatch watch;
+     while (m_eState != state) {
+-        ::wxGetApp().Yield(true);
++        wxGetApp().Yield(true);
+         wxLog::FlushActive();
+         m_pSocketClient->Wait(0, 100);
+         if (0 < timeout) {
+@@ -336,7 +336,7 @@ void UsbIp::parsehev(const wxString &line)
+     wxRegEx re(wxT("([a-f\\d]+)\\s+(\\d+-[\\d\\.]+)\\s+(\\d+)\\s+(\\d+)\\s+([a-f\\d]+)\\s+([a-f\\d]+)"),
+             wxRE_ADVANCED);
+     if (!re.IsValid()) {
+-        ::wxLogFatalError(_("Invalid regular expression in %s %d"), __FILE__, __LINE__);
++        wxLogFatalError(_("Invalid regular expression in %s %d"), __FILE__, __LINE__);
+         return;
+     }
+     if (re.Matches(line)) {
+@@ -368,7 +368,7 @@ void UsbIp::parsesession(const wxString &line)
+     wxRegEx re(wxT("\\[\\d+\\.\\d+\\.\\d+\\.\\d+\\]:\\d+\\s+\\(SID:\\s+([0-9,A-F]+)\\)"),
+             wxRE_ADVANCED);
+     if (!re.IsValid()) {
+-        ::wxLogFatalError(_("Invalid regular expression %s %d"), __FILE__, __LINE__);
++        wxLogFatalError(_("Invalid regular expression %s %d"), __FILE__, __LINE__);
+         return;
+     }
+     if (re.Matches(line))
+diff --git a/opennx/VncImageSettingsDialog.cpp b/opennx/VncImageSettingsDialog.cpp
+index 96cc951..1485ef0 100644
+--- a/opennx/VncImageSettingsDialog.cpp
++++ b/opennx/VncImageSettingsDialog.cpp
+@@ -165,7 +165,7 @@ bool VncImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id),
+     SetIcon(GetIconResource(wxT("res/nx.png")));
+     Centre();
+ ////@end VncImageSettingsDialog creation
+-    ::wxGetApp().EnableContextHelp(this);
++    wxGetApp().EnableContextHelp(this);
+     return TRUE;
+ }
+ 
+diff --git a/opennx/VncPropertyDialog.cpp b/opennx/VncPropertyDialog.cpp
+index ac39430..8974163 100644
+--- a/opennx/VncPropertyDialog.cpp
++++ b/opennx/VncPropertyDialog.cpp
+@@ -132,7 +132,7 @@ bool VncPropertyDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
+     Centre();
+ ////@end VncPropertyDialog creation
+     
+-    ::wxGetApp().EnableContextHelp(this);
++    wxGetApp().EnableContextHelp(this);
+     return TRUE;
+ }
+ 
+diff --git a/opennx/WinShare.cpp b/opennx/WinShare.cpp
+index a886fc1..078faf4 100644
+--- a/opennx/WinShare.cpp
++++ b/opennx/WinShare.cpp
+@@ -395,7 +395,7 @@ bool DllData::IsAvailable()
+ {
+     int vMajor, vMinor;
+ 
+-    int osType = ::wxGetOsVersion(&vMajor, &vMinor);
++    int osType = wxGetOsVersion(&vMajor, &vMinor);
+     if (osType & (wxOS_UNIX | wxOS_MAC_OSX_DARWIN))
+         dllPrivate = new DllData(DllData::SmbClientUnix);
+     else if (osType & wxOS_WINDOWS) {
+diff --git a/opennx/X11PropertyDialog.cpp b/opennx/X11PropertyDialog.cpp
+index 5a8005f..f8aec9a 100644
+--- a/opennx/X11PropertyDialog.cpp
++++ b/opennx/X11PropertyDialog.cpp
+@@ -130,7 +130,7 @@ bool X11PropertyDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
+     SetIcon(GetIconResource(wxT("res/nx.png")));
+     Centre();
+ ////@end X11PropertyDialog creation
+-    ::wxGetApp().EnableContextHelp(this);
++    wxGetApp().EnableContextHelp(this);
+     return TRUE;
+ }
+ 
+diff --git a/opennx/mylog.cpp b/opennx/mylog.cpp
+index 126848f..aec1a92 100644
+--- a/opennx/mylog.cpp
++++ b/opennx/mylog.cpp
+@@ -116,6 +116,7 @@ void myLogTrace(wxTraceMask mask, const wxChar *szFormat, ...)
+     va_end(argptr);
+ }
+ 
++//  wxWidgets lib > 3.0
+ static void myLogTrace(wxString mask, const wxChar *szFormat, va_list argptr)
+ {
+ //    myLogTrace(mask.wc_str(), szFormat, argptr);
+@@ -125,4 +126,4 @@ void myLogTrace(wxString mask, const wxChar *szFormat, ...)
+ {
+ //    myLogTrace(mask.wc_str(), szFormat);
+ }
+-
++//  end wxWidgets lib > 3.0
+diff --git a/opennx/mylog.h b/opennx/mylog.h
+index 5686422..290b277 100644
+--- a/opennx/mylog.h
++++ b/opennx/mylog.h
+@@ -36,7 +36,9 @@ extern void myLogDebug(const wxChar *szFormat, ...);
+ extern void myLogTrace(const wxChar *mask, const wxChar *szFormat, ...) WX_ATTRIBUTE_PRINTF_2;
+ extern void myLogTrace(wxTraceMask mask, const wxChar *szFormat, ...) WX_ATTRIBUTE_PRINTF_2;
+ 
++//  wxWidgets lib > 3.0
+ extern void myLogTrace(wxString mask, const wxChar *szFormat, ...) WX_ATTRIBUTE_PRINTF_2;
++//  end wxWidgets lib > 3.0
+ 
+ #endif
+     // _MYLOG_H_
+diff --git a/opennx/opennxApp.cpp b/opennx/opennxApp.cpp
+index 3a5f83e..2c320ab 100644
+--- a/opennx/opennxApp.cpp
++++ b/opennx/opennxApp.cpp
+@@ -161,12 +161,12 @@ IMPLEMENT_APP(opennxApp);
+ 
+         // If KDE_LANG is set, then it has precedence over kdeglobals.
+         wxString lang;
+-        if (::wxGetEnv(wxT("KDE_LANG"), &lang)) {
++        if (wxGetEnv(wxT("KDE_LANG"), &lang)) {
+             myLogDebug(wxT("Overriding LANG from KDE_LANG environment to: '%s'"), lang.c_str());
+-            ::wxSetEnv(wxT("LANG"), lang);
++            wxSetEnv(wxT("LANG"), lang);
+         } else {
+             // Try to get KDE language settings and override locale accordingly
+-            wxFileInputStream fis(::wxGetHomeDir() +
++            wxFileInputStream fis(wxGetHomeDir() +
+                     wxFileName::GetPathSeparator() + wxT(".kde") + 
+                     wxFileName::GetPathSeparator() + wxT("share") + 
+                     wxFileName::GetPathSeparator() + wxT("config") + 
+@@ -182,7 +182,7 @@ IMPLEMENT_APP(opennxApp);
+                         lang << wxT("_") << country.Upper();
+                     lang << wxT(".UTF-8");
+                     myLogDebug(wxT("Overriding LANG from kdeglobals to: '%s'"), lang.c_str());
+-                    ::wxSetEnv(wxT("LANG"), lang);
++                    wxSetEnv(wxT("LANG"), lang);
+                 }
+             }
+         }
+@@ -318,7 +318,7 @@ opennxApp::CreateDesktopEntry(MyXmlConfig *cfg)
+     const wxChar **p = desktopDirs;
+     while (*p) {
+         wxString path = wxGetHomeDir() + wxT("/") + *p;
+-        if (::wxDirExists(path)) {
++        if (wxDirExists(path)) {
+             wxFile f;
+             wxString fn = path + wxT("/") + cfg->sGetName() + wxT(".desktop");
+             ::myLogTrace(MYTRACETAG, wxT("Creating '%s'"), fn.c_str());
+@@ -347,19 +347,19 @@ opennxApp::RemoveDesktopEntry(MyXmlConfig *cfg)
+         wxString lpath = wxString::Format(wxT("%s\\%s.lnk"),
+                 dtPath, cfg->sGetName().c_str());
+         ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), lpath.c_str());
+-        ::wxRemoveFile(lpath);
++        wxRemoveFile(lpath);
+     }
+ #endif
+ #ifdef __UNIX__
+ # ifdef __WXMAC__
+     wxString fn = wxGetHomeDir() + wxT("/Desktop/") + cfg->sGetName();
+-    ::wxRemoveFile(fn);
++    wxRemoveFile(fn);
+ # else
+     const wxChar **p = desktopDirs;
+ 
+     while (*p) {
+-        ::wxRemoveFile(wxString::Format(wxT("%s/%s/%s.desktop"),
+-                    ::wxGetHomeDir().c_str(), *p,cfg->sGetName().c_str()));
++        wxRemoveFile(wxString::Format(wxT("%s/%s/%s.desktop"),
++                    wxGetHomeDir().c_str(), *p,cfg->sGetName().c_str()));
+         p++;
+     }
+ # endif
+@@ -388,7 +388,7 @@ opennxApp::CheckDesktopEntry(MyXmlConfig *cfg)
+ 
+     while (*p) {
+         ret |= wxFileName::FileExists((wxString::Format(wxT("%s/%s/%s.desktop"),
+-                    ::wxGetHomeDir().c_str(), *p,cfg->sGetName().c_str())));
++                    wxGetHomeDir().c_str(), *p,cfg->sGetName().c_str())));
+         p++;
+     }
+ # endif
+@@ -402,7 +402,7 @@ opennxApp::setUserDir()
+     wxString tmp;
+     //sergeym
+     //if (!wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &tmp))
+-    tmp = ::wxGetHomeDir() + wxFileName::GetPathSeparator() + wxT(".nx");
++    tmp = wxGetHomeDir() + wxFileName::GetPathSeparator() + wxT(".nx");
+     wxFileName::Mkdir(tmp, 0750, wxPATH_MKDIR_FULL);
+     wxFileName fn(tmp);
+     wxConfigBase::Get()->Write(wxT("Config/UserNxDir"), fn.GetFullPath());
+@@ -427,7 +427,7 @@ opennxApp::setSelfPath()
+     // FIXME: How to get one's own exe path on OpenBSD?
+     // for now, we resemble sh's actions
+     tmp = this->argv[0];
+-    if (!::wxIsAbsolutePath(tmp)) {
++    if (!wxIsAbsolutePath(tmp)) {
+         if (tmp.StartsWith(wxT("."))) {
+             // a relative path
+             fn.Assign(tmp);
+@@ -435,7 +435,7 @@ opennxApp::setSelfPath()
+             tmp = fn.GetFullPath();
+         } else {
+             bool found = false;
+-            ::wxGetEnv(wxT("PATH"), &tmp);
++            wxGetEnv(wxT("PATH"), &tmp);
+             if (tmp.IsEmpty()) {
+                 wxLogError(_("Could not get PATH environment"));
+                 return false;
+@@ -497,7 +497,7 @@ wxString opennxApp::findExecutable(wxString name)
+ {
+     wxString ret = wxEmptyString;
+     wxString path;
+-    if (::wxGetEnv(wxT("PATH"), &path)) {
++    if (wxGetEnv(wxT("PATH"), &path)) {
+         if (path.IsEmpty())
+             return ret;
+         wxStringTokenizer t(path, wxT(":"));
+@@ -594,12 +594,12 @@ opennxApp::preInit()
+                 for (i = 0; candidates[i]; i++) {
+                     if (wxFileName::FileExists(candidates[i])) {
+                         tmp = candidates[i];
+-                        ::wxLogWarning(_("Found a CUPS daemon binary in %s, however it is not executable.\nIn order to use CUPS printing, you need to fix its permissions."), tmp.c_str());
++                        wxLogWarning(_("Found a CUPS daemon binary in %s, however it is not executable.\nIn order to use CUPS printing, you need to fix its permissions."), tmp.c_str());
+                         break;
+                     }
+                 }
+                 if (tmp.IsEmpty())
+-                    ::wxLogWarning(_("Could not find any CUPS daemon binary.\nIn order to use CUPS printing, you need to install cups."));
++                    wxLogWarning(_("Could not find any CUPS daemon binary.\nIn order to use CUPS printing, you need to install cups."));
+                 tmp = wxEmptyString;
+             }
+         }
+@@ -626,11 +626,11 @@ opennxApp::preInit()
+     wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp);
+ #ifdef __WXMSW__
+     wxString ldpath;
+-    if (::wxGetEnv(wxT("PATH"), &ldpath))
++    if (wxGetEnv(wxT("PATH"), &ldpath))
+         ldpath += wxT(";");
+     ldpath = tmp + wxT("\\bin");
+-    if (!::wxSetEnv(wxT("PATH"), ldpath)) {
+-        ::wxLogSysError(wxT("Can not set PATH"));
++    if (!wxSetEnv(wxT("PATH"), ldpath)) {
++        wxLogSysError(wxT("Can not set PATH"));
+         return false;
+     }
+ #endif
+@@ -648,7 +648,7 @@ opennxApp::preInit()
+     wxString archlib = wxT("lib");
+ # endif
+     wxString ldpath;
+-    if (::wxGetEnv(LD_LIBRARY_PATH, &ldpath))
++    if (wxGetEnv(LD_LIBRARY_PATH, &ldpath))
+         ldpath += wxT(":");
+     ldpath += tmp + wxFileName::GetPathSeparator() + archlib;
+ # ifdef __WXMAC__
+@@ -678,13 +678,13 @@ opennxApp::preInit()
+     }
+ # endif
+     ::myLogDebug(wxT("%s='%s'"), LD_LIBRARY_PATH, ldpath.c_str());
+-    if (!::wxSetEnv(LD_LIBRARY_PATH, ldpath)) {
+-        ::wxLogSysError(wxT("Cannot set LD_LIBRARY_PATH"));
++    if (!wxSetEnv(LD_LIBRARY_PATH, ldpath)) {
++        wxLogSysError(wxT("Cannot set LD_LIBRARY_PATH"));
+         return false;
+     }
+ #endif
+ 
+-    if (::wxGetEnv(wxT("WXTRACE"), &tmp)) {
++    if (wxGetEnv(wxT("WXTRACE"), &tmp)) {
+         CheckAllTrace(tmp);
+         wxStringTokenizer t(tmp, wxT(",:"));
+         while (t.HasMoreTokens()) {
+@@ -1116,7 +1116,7 @@ bool opennxApp::realInit()
+                 wxMessageDialog d(NULL, m_sDialogMessage, m_sDialogCaption, m_iDialogStyle);
+                 d.SetIcon(CreateIconFromFile(wxT("res/nx.png")));
+                 if (d.ShowModal() == wxYES)
+-                    ::wxKill(m_nOtherPID, wxSIGTERM);
++                    wxKill(m_nOtherPID, wxSIGTERM);
+                 return false;
+             }
+             break;
+@@ -1133,7 +1133,7 @@ bool opennxApp::realInit()
+                 wxMessageDialog d(NULL, m_sDialogMessage, m_sDialogCaption, m_iDialogStyle);
+                 d.SetIcon(CreateIconFromFile(wxT("res/nx.png")));
+                 d.ShowModal();
+-                ::wxKill(m_nOtherPID, wxSIGTERM);
++                wxKill(m_nOtherPID, wxSIGTERM);
+                 return false;
+             }
+             break;
+@@ -1144,7 +1144,7 @@ bool opennxApp::realInit()
+                 d.SetDialogClass(m_iDialogStyle);
+                 d.Create(NULL, wxID_ANY, m_sDialogCaption);
+                 if (d.ShowModal() == wxID_OK)
+-                    ::wxKill(m_nOtherPID, wxSIGTERM);
++                    wxKill(m_nOtherPID, wxSIGTERM);
+                 return false;
+             }
+             break;
+@@ -1212,7 +1212,7 @@ bool opennxApp::realInit()
+         m_eMode = MODE_MAC_WAITOPEN;
+         time_t start = time(NULL) + 3;
+         while (MODE_MAC_WAITOPEN == m_eMode) {
+-            ::wxYield();
++            wxYield();
+             if (time(NULL) > start)
+                 break;
+         }
+@@ -1305,7 +1305,7 @@ bool opennxApp::OnInit()
+             for (i = 0; i < af.GetCount(); i++)
+                 if (SharedUsbDevice::MODE_REMOTE == af[i].m_eMode) {
+                     if (!LibUSBAvailable()) {
+-                        ::wxLogError(_("libusb is not available. No USB devices will be exported"));
++                        wxLogError(_("libusb is not available. No USB devices will be exported"));
+                         m_bRequireStartUsbIp = false;
+                         break;
+                     }
+@@ -1320,17 +1320,17 @@ bool opennxApp::OnInit()
+                                     ::myLogTrace(MYTRACETAG, wxT("Exporting usbup-busid %s (libusb-busid %s)"),
+                                             exBusID.c_str(), ad[j].GetBusID().c_str());
+                                     if (!usbip.WaitForSession(usessionTO)) {
+-                                        ::wxLogError(_("USBIP tunnel registration timeout"));
++                                        wxLogError(_("USBIP tunnel registration timeout"));
+                                         m_bRequireStartUsbIp = false;
+                                     }
+                                     if (!usbip.ExportDevice(exBusID))
+-                                        ::wxLogError(_("Unable to export USB device %s"), af[i].toShortString().c_str());
++                                        wxLogError(_("Unable to export USB device %s"), af[i].toShortString().c_str());
+                                 }
+                             }
+                         }
+                 }
+         } else {
+-            ::wxLogError(_("Could not connect to usbipd2. No USB devices will be exported"));
++            wxLogError(_("Could not connect to usbipd2. No USB devices will be exported"));
+             m_bRequireStartUsbIp = false;
+         }
+     }
+@@ -1367,7 +1367,7 @@ bool opennxApp::OnInit()
+         ::myLogTrace(MYTRACETAG, wxT("starting %s"), watchcmd.c_str());
+         {
+             wxLogNull noerrors;
+-            ::wxExecute(watchcmd);
++            wxExecute(watchcmd);
+         }
+         while (Pending())
+             Dispatch();
+@@ -1389,11 +1389,11 @@ bool opennxApp::OnInit()
+             wxString watchcmd = fn.GetShortPath();
+             watchcmd << wxT(" -r ") << m_iReader << wxT(" -p ") << m_nNxSshPID;
+             ::myLogTrace(MYTRACETAG, wxT("executing %s"), watchcmd.c_str());
+-            ::wxExecute(watchcmd);
++            wxExecute(watchcmd);
+         }
+     }
+-    while (::wxGetApp().Pending())
+-        ::wxGetApp().Dispatch();
++    while (wxGetApp().Pending())
++        wxGetApp().Dispatch();
+     if (!ret) {
+         wxLogNull lognull;
+         wxMemoryFSHandler::RemoveFile(wxT("memrsc"));
+diff --git a/opennx/pulseTest.cpp b/opennx/pulseTest.cpp
+index 8f8fdc0..c00a1af 100644
+--- a/opennx/pulseTest.cpp
++++ b/opennx/pulseTest.cpp
+@@ -126,11 +126,11 @@ bool pulseTest::OnInit()
+ 
+ #ifdef __WXMSW__
+     wxString ldpath;
+-    if (::wxGetEnv(wxT("PATH"), &ldpath))
++    if (wxGetEnv(wxT("PATH"), &ldpath))
+         ldpath += wxT(";");
+     ldpath = tmp + wxT("\\bin");
+-    if (!::wxSetEnv(wxT("PATH"), ldpath)) {
+-        ::wxLogSysError(wxT("Can not set PATH"));
++    if (!wxSetEnv(wxT("PATH"), ldpath)) {
++        wxLogSysError(wxT("Can not set PATH"));
+         return false;
+     }
+ #endif
+@@ -143,7 +143,7 @@ bool pulseTest::OnInit()
+ # endif
+ 
+     wxString ldpath;
+-    if (::wxGetEnv(LD_LIBRARY_PATH, &ldpath))
++    if (wxGetEnv(LD_LIBRARY_PATH, &ldpath))
+         ldpath += wxT(":");
+ # if defined(__x86_64) || defined(__IA64__)
+     ldpath += tmp + wxT("/lib64");
+@@ -153,8 +153,8 @@ bool pulseTest::OnInit()
+ # ifdef __WXMAC__
+     ldpath += wxT(":/Library/OpenSC/lib");
+ # endif
+-    if (!::wxSetEnv(LD_LIBRARY_PATH, ldpath)) {
+-        ::wxLogSysError(wxT("Can not set LD_LIBRARY_PATH"));
++    if (!wxSetEnv(LD_LIBRARY_PATH, ldpath)) {
++        wxLogSysError(wxT("Can not set LD_LIBRARY_PATH"));
+         return false;
+     }
+ #endif
+@@ -162,7 +162,7 @@ bool pulseTest::OnInit()
+     if (!wxApp::OnInit())
+         return false;
+ 
+-    if (::wxGetEnv(wxT("WXTRACE"), &tmp)) {
++    if (wxGetEnv(wxT("WXTRACE"), &tmp)) {
+         CheckAllTrace(tmp);
+         wxStringTokenizer t(tmp, wxT(",:"));
+         while (t.HasMoreTokens()) {
+diff --git a/opennx/pwcrypt.cpp b/opennx/pwcrypt.cpp
+index 57aa15c..a4670bb 100644
+--- a/opennx/pwcrypt.cpp
++++ b/opennx/pwcrypt.cpp
+@@ -47,7 +47,7 @@ encodeString(const wxString &s)
+     if (s.Length()) {
+         ret = wxT(":");
+         for (i = 0; i < s.Length(); i++)
+-            ret += wxString::Format(wxT("%d:"), s[i] + i + 1);
++            ret += wxString::Format(wxT("%d:"), s[i].GetValue() + i + 1);
+     }
+     return ret;
+ }
+@@ -125,7 +125,7 @@ decryptString(const wxString &s)
+     sRet = s;
+     sRet.Truncate(s.Length() - 1);
+     
+-    int n = (sRet.c_str()[0] + sRet.Length()) - 3;
++    int n = (sRet[0].GetValue() + sRet.Length()) - 3;
+     
+     for (i = 1; i < sRet.Length(); i++) {
+         int j = validChars.Find(sRet[i]);
+diff --git a/opennx/tracelogApp.cpp b/opennx/tracelogApp.cpp
+index 1ba3b7d..6b8fb8e 100644
+--- a/opennx/tracelogApp.cpp
++++ b/opennx/tracelogApp.cpp
+@@ -58,10 +58,10 @@
+ ////@begin XPM images
+ ////@end XPM images
+ 
+-static int TB_SHOWTRACE = ::wxNewId();
+-static int TB_REMOTE = ::wxNewId();
+-static int SERVER_ID = ::wxNewId();
+-static int SOCKET_ID = ::wxNewId();
++static int TB_SHOWTRACE = wxNewId();
++static int TB_REMOTE = wxNewId();
++static int SERVER_ID = wxNewId();
++static int SOCKET_ID = wxNewId();
+ 
+ class DebugEntry {
+     public:
+@@ -82,31 +82,31 @@ class MyTaskBarIcon : public wxTaskBarIcon {
+             menu->Append(TB_SHOWTRACE, _("Show Trace Log"));
+             menu->AppendCheckItem(TB_REMOTE, _("Enable remote debug"));
+             menu->Append(wxID_EXIT, _("E&xit"));
+-            menu->Check(TB_REMOTE, ::wxGetApp().ServerEnabled());
++            menu->Check(TB_REMOTE, wxGetApp().ServerEnabled());
+             return menu;
+         }
+ 
+         void OnMenuShowTrace(wxCommandEvent &evt) {
+-            ::wxGetApp().GetTopWindow()->Show(true);
++            wxGetApp().GetTopWindow()->Show(true);
+             evt.Skip();
+         }
+ 
+         void OnMenuRemote(wxCommandEvent &evt) {
+             if (evt.IsChecked()) {
+-                ::wxGetApp().StartSocketServer();
++                wxGetApp().StartSocketServer();
+             } else {
+-                ::wxGetApp().StopSocketServer();
++                wxGetApp().StopSocketServer();
+             }
+             evt.Skip();
+         }
+ 
+         void OnShowTrace(wxTaskBarIconEvent &evt) {
+-            ::wxGetApp().GetTopWindow()->Show(true);
++            wxGetApp().GetTopWindow()->Show(true);
+             evt.Skip();
+         }
+ 
+         void OnMenuExit(wxCommandEvent &evt) {
+-            ::wxGetApp().Terminate();
++            wxGetApp().Terminate();
+             evt.Skip();
+         }
+ 
+diff --git a/opennx/watchReaderApp.cpp b/opennx/watchReaderApp.cpp
+index d74e89a..3febf56 100644
+--- a/opennx/watchReaderApp.cpp
++++ b/opennx/watchReaderApp.cpp
+@@ -78,12 +78,12 @@ watchReaderApp::watchReaderApp()
+ 
+         // If KDE_LANG is set, then it has precedence over kdeglobals.
+         wxString lang;
+-        if (::wxGetEnv(wxT("KDE_LANG"), &lang)) {
++        if (wxGetEnv(wxT("KDE_LANG"), &lang)) {
+             myLogDebug(wxT("Overriding LANG from KDE_LANG environment to: '%s'"), lang.c_str());
+-            ::wxSetEnv(wxT("LANG"), lang);
++            wxSetEnv(wxT("LANG"), lang);
+         } else {
+             // Try to get KDE language settings and override locale accordingly
+-            wxFileInputStream fis(::wxGetHomeDir() +
++            wxFileInputStream fis(wxGetHomeDir() +
+                     wxFileName::GetPathSeparator() + wxT(".kde") + 
+                     wxFileName::GetPathSeparator() + wxT("share") + 
+                     wxFileName::GetPathSeparator() + wxT("config") + 
+@@ -99,7 +99,7 @@ watchReaderApp::watchReaderApp()
+                         lang << wxT("_") << country.Upper();
+                     lang << wxT(".UTF-8");
+                     myLogDebug(wxT("Overriding LANG from kdeglobals to: '%s'"), lang.c_str());
+-                    ::wxSetEnv(wxT("LANG"), lang);
++                    wxSetEnv(wxT("LANG"), lang);
+                 }
+             }
+         }
+@@ -198,11 +198,11 @@ bool watchReaderApp::OnInit()
+ 
+ #ifdef __WXMSW__
+     wxString ldpath;
+-    if (::wxGetEnv(wxT("PATH"), &ldpath))
++    if (wxGetEnv(wxT("PATH"), &ldpath))
+         ldpath += wxT(";");
+     ldpath = tmp + wxT("\\bin");
+-    if (!::wxSetEnv(wxT("PATH"), ldpath)) {
+-        ::wxLogSysError(wxT("Can not set PATH"));
++    if (!wxSetEnv(wxT("PATH"), ldpath)) {
++        wxLogSysError(wxT("Can not set PATH"));
+         return false;
+     }
+ #endif
+@@ -215,7 +215,7 @@ bool watchReaderApp::OnInit()
+ # endif
+ 
+     wxString ldpath;
+-    if (::wxGetEnv(LD_LIBRARY_PATH, &ldpath))
++    if (wxGetEnv(LD_LIBRARY_PATH, &ldpath))
+         ldpath += wxT(":");
+ # if defined(__x86_64) || defined(__IA64__)
+     ldpath += tmp + wxT("/lib64");
+@@ -225,8 +225,8 @@ bool watchReaderApp::OnInit()
+ # ifdef __WXMAC__
+     ldpath += wxT(":/Library/OpenSC/lib");
+ # endif
+-    if (!::wxSetEnv(LD_LIBRARY_PATH, ldpath)) {
+-        ::wxLogSysError(wxT("Can not set LD_LIBRARY_PATH"));
++    if (!wxSetEnv(LD_LIBRARY_PATH, ldpath)) {
++        wxLogSysError(wxT("Can not set LD_LIBRARY_PATH"));
+         return false;
+     }
+ #endif
+@@ -234,7 +234,7 @@ bool watchReaderApp::OnInit()
+     if (!wxApp::OnInit())
+         return false;
+ 
+-    if (::wxGetEnv(wxT("WXTRACE"), &tmp)) {
++    if (wxGetEnv(wxT("WXTRACE"), &tmp)) {
+         CheckAllTrace(tmp);
+         wxStringTokenizer t(tmp, wxT(",:"));
+         while (t.HasMoreTokens()) {
+@@ -253,7 +253,7 @@ bool watchReaderApp::OnInit()
+         wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp);
+         tmp << wxFileName::GetPathSeparator() << wxT("Message.app");
+         ::myLogTrace(MYTRACETAG, wxT("Executing %s"), tmp.c_str());
+-        ::wxExecute(tmp);
++        wxExecute(tmp);
+ #else
+         ::myLogTrace(MYTRACETAG, wxT("Showing info dialog"));
+         wxMessageBox(
+diff --git a/opennx/watchUsbIpApp.cpp b/opennx/watchUsbIpApp.cpp
+index 6aaff35..440e585 100644
+--- a/opennx/watchUsbIpApp.cpp
++++ b/opennx/watchUsbIpApp.cpp
+@@ -77,7 +77,7 @@ END_EVENT_TABLE()
+ # include <signal.h>
+ static void terminate(int sig __attribute((unused)))
+ {
+-    ::wxGetApp().Terminate();
++    wxGetApp().Terminate();
+     signal(SIGTERM, terminate);
+     signal(SIGINT, terminate);
+ }
+@@ -172,12 +172,12 @@ class ProcessWatcher : public wxThreadHelper
+ 
+         // If KDE_LANG is set, then it has precedence over kdeglobals.
+         wxString lang;
+-        if (::wxGetEnv(wxT("KDE_LANG"), &lang)) {
++        if (wxGetEnv(wxT("KDE_LANG"), &lang)) {
+             myLogDebug(wxT("Overriding LANG from KDE_LANG environment to: '%s'"), lang.c_str());
+-            ::wxSetEnv(wxT("LANG"), lang);
++            wxSetEnv(wxT("LANG"), lang);
+         } else {
+             // Try to get KDE language settings and override locale accordingly
+-            wxFileInputStream fis(::wxGetHomeDir() +
++            wxFileInputStream fis(wxGetHomeDir() +
+                     wxFileName::GetPathSeparator() + wxT(".kde") + 
+                     wxFileName::GetPathSeparator() + wxT("share") + 
+                     wxFileName::GetPathSeparator() + wxT("config") + 
+@@ -193,7 +193,7 @@ class ProcessWatcher : public wxThreadHelper
+                         lang << wxT("_") << country.Upper();
+                     lang << wxT(".UTF-8");
+                     myLogDebug(wxT("Overriding LANG from kdeglobals to: '%s'"), lang.c_str());
+-                    ::wxSetEnv(wxT("LANG"), lang);
++                    wxSetEnv(wxT("LANG"), lang);
+                 }
+             }
+         }
+@@ -257,7 +257,7 @@ bool watchUsbIpApp::OnInit()
+     wxString tmp;
+ 
+     initWxTraceTags();
+-    if (::wxGetEnv(wxT("WXTRACE"), &tmp)) {
++    if (wxGetEnv(wxT("WXTRACE"), &tmp)) {
+         wxStringTokenizer t(tmp, wxT(",:"));
+         while (t.HasMoreTokens()) {
+             wxString tag = t.GetNextToken();
+@@ -327,7 +327,7 @@ bool watchUsbIpApp::OnInit()
+         resok = true;
+     }
+     if (!resok) {
+-        ::wxLogFatalError(wxT("Could not load application resource."));
++        wxLogFatalError(wxT("Could not load application resource."));
+         return false;
+     }
+ 
+@@ -339,19 +339,19 @@ bool watchUsbIpApp::OnInit()
+         return false;
+ 
+     if (m_sSessionID.IsEmpty()) {
+-        ::wxLogError(_("An empty session ID is not allowed"));
++        wxLogError(_("An empty session ID is not allowed"));
+         return false;
+     }
+ 
+     if ((!m_pSessionCfg) || (!m_pSessionCfg->IsValid())) {
+-        ::wxLogError(_("Could not load session config file"));
++        wxLogError(_("Could not load session config file"));
+         return false;
+     }
+     wxFileName tmpfn(m_pSessionCfg->sGetFileName());
+     if (tmpfn.GetName().IsSameAs(m_sSessionID)) {
+         // If the basename of the session config is the sessionID, then
+         // this file is temporary and can be deleted now.
+-        ::wxRemoveFile(tmpfn.GetFullPath());   
++        wxRemoveFile(tmpfn.GetFullPath());   
+     }
+ 
+     if (!m_pSessionCfg->bGetEnableUSBIP()) {
+@@ -370,14 +370,14 @@ bool watchUsbIpApp::OnInit()
+             // SetTopWindow(m_pDialog);
+             usbip->SetEventHandler(m_pDialog);
+             if (!usbip->RegisterHotplug()) {
+-                ::wxLogError(_("Could not register at usbipd2! No hotplugging functionality."));
++                wxLogError(_("Could not register at usbipd2! No hotplugging functionality."));
+                 m_pDialog->Destroy();
+                 return false;
+             }
+             m_pUsbIp = usbip;
+         }
+     } else
+-        ::wxLogError(_("Could not connect to usbipd2! No hotplugging functionality."));
++        wxLogError(_("Could not connect to usbipd2! No hotplugging functionality."));
+ #ifdef __UNIX__
+     signal(SIGTERM, terminate);
+     signal(SIGINT, terminate);
+@@ -430,7 +430,7 @@ void watchUsbIpApp::OnHotplug(HotplugEvent &event)
+     }
+     if (NULL == sdev) {
+         m_pUsbIp->SendHotplugResponse(event.GetCookie());
+-        ::wxLogError(_("Got hotplug event, but device is not available in libusb"));
++        wxLogError(_("Got hotplug event, but device is not available in libusb"));
+         return;
+     }
+     if (found) {
+@@ -438,7 +438,7 @@ void watchUsbIpApp::OnHotplug(HotplugEvent &event)
+         ::myLogTrace(MYTRACETAG, wxT("Found device in session config action=%s"),
+                 doexport ? wxT("export") : wxT("local"));
+         if (!m_pUsbIp->SendHotplugResponse(event.GetCookie()))
+-            ::wxLogError(_("Could not send hotplug response"));
++            wxLogError(_("Could not send hotplug response"));
+     } else {
+         // Device not in session config. Ask user
+         m_pDialog->SetVendorID(wxString::Format(wxT("%04X"), sdev->m_iVendorID));
+@@ -494,7 +494,7 @@ void watchUsbIpApp::OnHotplug(HotplugEvent &event)
+                     m_pSessionCfg->aSetUsbForwards(a);
+                     ::myLogTrace(MYTRACETAG, wxT("saving to %s"), m_pSessionCfg->sGetFileName().c_str());
+                     if (!m_pSessionCfg->SaveToFile())
+-                        ::wxLogError(_("Could not save session config"));
++                        wxLogError(_("Could not save session config"));
+                 }
+             }
+             ::myLogTrace(MYTRACETAG, wxT("action=%s"), doexport ? wxT("export") : wxT("local"));
+@@ -503,18 +503,18 @@ void watchUsbIpApp::OnHotplug(HotplugEvent &event)
+     delete sdev;
+     if (doexport) {
+         if (!m_pUsbIp->ExportDevice(event.GetBusID()))
+-            ::wxLogError(_("Could not export USB device"));
++            wxLogError(_("Could not export USB device"));
+     }
+ }
+ 
+ void watchUsbIpApp::Terminate()
+ {
+-    ::wxMutexGuiEnter();
++    wxMutexGuiEnter();
+     ::myLogTrace(MYTRACETAG, wxT("Terminate()"));
+     wxCommandEvent ev(wxEVT_PROCESS_DIED, wxID_ANY);
+     ev.SetInt(0);
+     AddPendingEvent(ev);
+-    ::wxMutexGuiLeave();
++    wxMutexGuiLeave();
+ }
+ 
+ int watchUsbIpApp::OnExit()
+diff --git a/opennx/xh_richtext.cpp b/opennx/xh_richtext.cpp
+index cde45c3..409a58c 100644
+--- a/opennx/xh_richtext.cpp
++++ b/opennx/xh_richtext.cpp
+@@ -27,7 +27,7 @@
+ 
+ IMPLEMENT_DYNAMIC_CLASS(wxRichTextCtrlXmlHandler, wxXmlResourceHandler)
+ 
+-wxRichTextCtrlXmlHandler::wxRichTextCtrlXmlHandler() : wxXmlResourceHandler()
++wxRichTextCtrlXmlHandlerwxRichTextCtrlXmlHandler() : wxXmlResourceHandler()
+ {
+     XRC_ADD_STYLE(wxTE_PROCESS_ENTER);
+     XRC_ADD_STYLE(wxTE_PROCESS_TAB);
+-- 
+2.1.4
+

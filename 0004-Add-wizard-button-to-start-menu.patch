@@ -1,9 +1,7 @@
-From 5ea0b7a0cabd8903d3bfa70d00b0317785d64b0b Mon Sep 17 00:00:00 2001
+From 210dcec10d0ee3da04a6903381ad761423b462db Mon Sep 17 00:00:00 2001
 From: Sergey Mitrofanov <sergeym@etersoft.ru>
 Date: Thu, 3 Jan 2013 15:40:00 +0400
-Subject: [PATCH 04/25] Add wizard button to start menu
-To: wine-patches <wine-patches@winehq.org>
-Reply-To: wine-devel <wine-devel@winehq.org>
+Subject: [PATCH 04/37] Add wizard button to start menu
 
 ---
  opennx/LoginDialog.cpp | 22 +++++++++++++++++++++-
@@ -121,5 +119,5 @@ index fe684a9..27936ac 100644
                              <label>L&amp;ogin</label>
                              <default>1</default>
 -- 
-1.8.4.3
+2.1.4
 

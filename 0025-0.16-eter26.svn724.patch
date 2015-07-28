@@ -1,9 +1,7 @@
-From 0b0f9df512b7b5551ffd2cb285f2425e975f2f07 Mon Sep 17 00:00:00 2001
+From fbc86e60b0c2a973e1e63dc72ec23e1d2567e79f Mon Sep 17 00:00:00 2001
 From: Vitaly Lipatov <lav@etersoft.ru>
 Date: Sun, 26 Jan 2014 19:53:36 +0400
-Subject: [PATCH 25/25] 0.16-eter26.svn724
-To: wine-patches <wine-patches@winehq.org>
-Reply-To: wine-devel <wine-devel@winehq.org>
+Subject: [PATCH 25/37] 0.16-eter26.svn724
 
 - fix build with libsmbclient from samba 4.0, fix symlink to libsmbclient
 ---
@@ -72,5 +70,5 @@ index 41a9ffe..dd729e0 100644
  if test "$ac_cv_enable_usbip" = "YES" -a "$ac_cv_header_usb_h" != "yes"; then
      AC_MSG_ERROR([Need usb.h when compiling with usbip support])
 -- 
-1.8.4.3
+2.1.4
 

@@ -1,9 +1,7 @@
-From 18d38fcd5f5f72c765cf6f22e257344773a7a873 Mon Sep 17 00:00:00 2001
+From c9285c3180670f9095c09591779bcff4050a5123 Mon Sep 17 00:00:00 2001
 From: Victor Korablin <korablin@etersoft.ru>
 Date: Tue, 30 Jul 2013 12:57:57 +0400
-Subject: [PATCH 17/25] Add Num Lock state as a parameter to be send
-To: wine-patches <wine-patches@winehq.org>
-Reply-To: wine-devel <wine-devel@winehq.org>
+Subject: [PATCH 17/37] Add Num Lock state as a parameter to be send
 
 ---
  opennx/MyXmlConfig.cpp | 11 +++++++++++
@@ -52,5 +50,5 @@ index 7e0b1df..27f9194 100644
          int m_iCupsPort;
          int m_iDisplayHeight;
 -- 
-1.8.4.3
+2.1.4
 

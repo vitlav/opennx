@@ -1,9 +1,7 @@
-From 6222579eade82bbf15a54b53c982cca52cb8746f Mon Sep 17 00:00:00 2001
+From 669054641d6b97d47720a813ca942f146fe57baf Mon Sep 17 00:00:00 2001
 From: Denis Baranov <baraka@etersoft.ru>
 Date: Mon, 10 Jun 2013 15:40:18 +0400
-Subject: [PATCH 14/25] Fix build process
-To: wine-patches <wine-patches@winehq.org>
-Reply-To: wine-devel <wine-devel@winehq.org>
+Subject: [PATCH 14/37] Fix build process
 
 ---
  .gear/opennx.spec | 20 --------------------
@@ -41,5 +39,5 @@ index 4d3041c..0d7318b 100644
  %configure \
      --bindir=%_libdir/%name/bin \
 -- 
-1.8.4.3
+2.1.4
 

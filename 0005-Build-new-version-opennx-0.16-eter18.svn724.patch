@@ -1,9 +1,7 @@
-From 87bf7f3a210ffb51f780f8980ca122834bbf8c24 Mon Sep 17 00:00:00 2001
+From 6019a562145b5f25568270930dd2c9b09f32796f Mon Sep 17 00:00:00 2001
 From: Denis Baranov <baraka@etersoft.ru>
 Date: Fri, 4 Jan 2013 19:05:06 +0400
-Subject: [PATCH 05/25] Build new version opennx-0.16-eter18.svn724
-To: wine-patches <wine-patches@winehq.org>
-Reply-To: wine-devel <wine-devel@winehq.org>
+Subject: [PATCH 05/37] Build new version opennx-0.16-eter18.svn724
 
 ---
  .gear/opennx.spec | 5 ++++-
@@ -33,5 +31,5 @@ index f89c79f..bc8aff1 100644
  - update from trunk opennx-0.16.0.724
  
 -- 
-1.8.4.3
+2.1.4
 

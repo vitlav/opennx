@@ -1,9 +1,7 @@
-From 73554d91c4e4d84117a1444051878fbcf75dac3d Mon Sep 17 00:00:00 2001
+From 593440e1050a0f6e4d2d664d75cedf8e63a8d0a1 Mon Sep 17 00:00:00 2001
 From: Denis Baranov <baraka@etersoft.ru>
 Date: Fri, 1 Jun 2012 21:17:02 +0400
-Subject: [PATCH 02/25] Initial build with gitum
-To: wine-patches <wine-patches@winehq.org>
-Reply-To: wine-devel <wine-devel@winehq.org>
+Subject: [PATCH 02/37] Initial build with gitum
 
 ---
  .gear/opennx.spec | 188 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -409,5 +407,5 @@ index 0519fbc..0000000
 -* Sun Jan  7 2007 Fritz Elfert <fritz@fritz-elfert.de>
 -- Initial package
 -- 
-1.8.4.3
+2.1.4
 
