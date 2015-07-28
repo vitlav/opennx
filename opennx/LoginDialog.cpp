@@ -166,26 +166,33 @@ void LoginDialog::ReadConfigDirectory()
     cfgdir = cfgdir + wxFileName::GetPathSeparator() + wxT("config");
     m_aConfigFiles.Empty();
 
-    wxDir::GetAllFiles(cfgdir, &m_aConfigFiles, wxT("*.nxs"), wxDIR_FILES);
+    wxArrayString c;
+    for(int i = 0; i < m_aConfigFiles.GetCount(); i++)
+    {
+        wxString x(m_aConfigFiles[i]);
+        c.Add(x);
+    }
+
+    wxDir::GetAllFiles(cfgdir, &c, wxT("*.nxs"), wxDIR_FILES);
     size_t i;
     m_sSessionName.Empty();
     if (m_pCurrentCfg)
         delete m_pCurrentCfg;
     m_pCurrentCfg = NULL;
     m_pCtrlSessionName->Clear();
-    ::myLogTrace(MYTRACETAG, wxT("ReadConfigDirectory: LastSession='%s'"), m_sLastSessionFilename.c_str());
+    ::myLogTrace(MYTRACETAG, wxT("ReadConfigDirectory: LastSession='%s'"), m_sLastSessionFilename.c_str().AsChar());
     if (m_sLastSessionFilename.StartsWith(wxT("http://")) ||
             m_sLastSessionFilename.StartsWith(wxT("https://")) ||
             m_sLastSessionFilename.StartsWith(wxT("ftp://")) ||
             ((m_aConfigFiles.Index(m_sLastSessionFilename) == wxNOT_FOUND) &&
              (wxFile::Exists(m_sLastSessionFilename)))) {
         m_aConfigFiles.Add(m_sLastSessionFilename);
-        ::myLogTrace(MYTRACETAG, wxT("ReadConfigDirectory: Adding '%s'"), m_sLastSessionFilename.c_str());
+        ::myLogTrace(MYTRACETAG, wxT("ReadConfigDirectory: Adding '%s'"), m_sLastSessionFilename.c_str().AsChar());
     }
     for (i = 0; i < m_aConfigFiles.GetCount(); i++) {
         MyXmlConfig cfg(m_aConfigFiles[i]);
         if (cfg.IsValid()) {
-            m_pCtrlSessionName->Append(cfg.sGetName(), (void *)m_aConfigFiles[i].c_str());
+            m_pCtrlSessionName->Append(cfg.sGetName(), const_cast<char *>(m_aConfigFiles[i].c_str().AsChar()));
             if ((cfg.sGetFileName() == m_sLastSessionFilename) ||
                     (cfg.sGetName() == m_sLastSessionFilename)) {
                 m_pCurrentCfg = new MyXmlConfig(m_aConfigFiles[i]);
@@ -200,17 +207,17 @@ void LoginDialog::ReadConfigDirectory()
                     m_sUsername = cfg.sGetUsername();
                     m_sPassword = cfg.sGetPassword();
                 }
-                m_bUseSmartCard = ::wxGetApp().NxSmartCardSupport() && cfg.bGetUseSmartCard();
+                m_bUseSmartCard = wxGetApp().NxSmartCardSupport() && cfg.bGetUseSmartCard();
             }
         }
     }
     if (m_pCurrentCfg) {
-        ::myLogTrace(MYTRACETAG, wxT("SS1='%s'"), m_sSessionName.c_str());
+        ::myLogTrace(MYTRACETAG, wxT("SS1='%s'"), m_sSessionName.c_str().AsChar());
         m_pCtrlSessionName->SetStringSelection(m_sSessionName);
         wxCommandEvent event;
         OnComboboxSessionSelected(event);
     } else {
-        ::myLogTrace(MYTRACETAG, wxT("SS2='%s'"), m_sLastSessionFilename.c_str());
+        ::myLogTrace(MYTRACETAG, wxT("SS2='%s'"), m_sLastSessionFilename.c_str().AsChar());
         // Last session name might be a plain session name (backward compatibility)
         m_pCtrlSessionName->SetStringSelection(m_sLastSessionFilename);
         wxCommandEvent event;
@@ -261,7 +268,7 @@ bool LoginDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
     }
     Centre();
     ////@end LoginDialog creation
-    ::wxGetApp().EnableContextHelp(this);
+    wxGetApp().EnableContextHelp(this);
     return TRUE;
 }
 
@@ -302,9 +309,9 @@ void LoginDialog::CreateControls()
     ////@end LoginDialog content initialisation
 
     ReadConfigDirectory();
-    m_bUseSmartCard = ::wxGetApp().NxSmartCardSupport() && m_pCurrentCfg && m_pCurrentCfg->bGetUseSmartCard();
+    m_bUseSmartCard = wxGetApp().NxSmartCardSupport() && m_pCurrentCfg && m_pCurrentCfg->bGetUseSmartCard();
     m_pCtrlUseSmartCard->SetValue(m_bUseSmartCard);
-    m_pCtrlUseSmartCard->Enable(::wxGetApp().NxSmartCardSupport() && m_pCurrentCfg && m_pCurrentCfg->IsWritable());
+    m_pCtrlUseSmartCard->Enable(wxGetApp().NxSmartCardSupport() && m_pCurrentCfg && m_pCurrentCfg->IsWritable());
     if (m_bGuestLogin) {
         m_pCtrlUsername->Enable(false);
         m_pCtrlPassword->Enable(false);
@@ -392,7 +399,7 @@ void LoginDialog::OnButtonWizardClick( wxCommandEvent& event )
 	ReadConfigDirectory();
 	m_sSessionName = wz.sGetConfigName();
 	MyXmlConfig cfg(m_sSessionName);
-	m_pCtrlSessionName->Append(cfg.sGetName(), (void *)m_sSessionName.c_str());
+    m_pCtrlSessionName->Append(cfg.sGetName(), const_cast<char *>(m_sSessionName.c_str().AsChar()));
     m_pCtrlSessionName->SetStringSelection(cfg.sGetName());
     wxCommandEvent event2;
     OnComboboxSessionSelected(event2);
@@ -416,12 +423,12 @@ void LoginDialog::OnButtonConfigureClick( wxCommandEvent& event )
                 m_pCurrentCfg = new MyXmlConfig(fn);
                 break;
             case wxID_CLEAR:
-                ::myLogTrace(MYTRACETAG, wxT("deleting '%s'"), fn.c_str());
-                ::wxRemoveFile(fn);
+                ::myLogTrace(MYTRACETAG, wxT("deleting '%s'"), fn.c_str().AsChar());
+                wxRemoveFile(fn);
                 ReadConfigDirectory();
                 break;
             case wxID_OK:
-                m_bUseSmartCard = ::wxGetApp().NxSmartCardSupport() &&
+                m_bUseSmartCard = wxGetApp().NxSmartCardSupport() &&
                     m_pCurrentCfg->bGetUseSmartCard();
                 m_pCtrlUseSmartCard->SetValue(m_bUseSmartCard);
                 if (!m_pCurrentCfg->SaveToFile())
@@ -434,12 +441,12 @@ void LoginDialog::OnButtonConfigureClick( wxCommandEvent& event )
                 wxConfigBase::Get()->Write(wxT("Config/UsbipdSocket"), d.GetUsbipdSocket());
                 wxConfigBase::Get()->Write(wxT("Config/UsbipPort"), d.GetUsbLocalPort());
 #endif
-                bool bDTI = ::wxGetApp().CheckDesktopEntry(m_pCurrentCfg);
+                bool bDTI = wxGetApp().CheckDesktopEntry(m_pCurrentCfg);
                 if (d.GetbCreateDesktopIcon() != bDTI) {
                     if (d.GetbCreateDesktopIcon())
-                        ::wxGetApp().CreateDesktopEntry(m_pCurrentCfg);
+                        wxGetApp().CreateDesktopEntry(m_pCurrentCfg);
                     else
-                        ::wxGetApp().RemoveDesktopEntry(m_pCurrentCfg);
+                        wxGetApp().RemoveDesktopEntry(m_pCurrentCfg);
                 }
                 break;
         }
@@ -477,7 +484,7 @@ void LoginDialog::OnComboboxSessionSelected( wxCommandEvent& event )
                 m_pCtrlPassword->Enable(true);
                 m_pCtrlUsername->Enable(true);
             }
-            m_pCtrlUseSmartCard->SetValue(::wxGetApp().NxSmartCardSupport() && cfg.bGetUseSmartCard());
+            m_pCtrlUseSmartCard->SetValue(wxGetApp().NxSmartCardSupport() && cfg.bGetUseSmartCard());
         }
     }
     m_pCtrlUseSmartCard->Enable(m_pCurrentCfg && m_pCurrentCfg->IsWritable());
@@ -516,7 +523,7 @@ void LoginDialog::OnOkClick(wxCommandEvent& event)
                 m_pCurrentCfg->sSetPassword(m_sPassword);
         }
         m_pCurrentCfg->bSetUseSmartCard(m_bUseSmartCard);
-        if (m_bUseSmartCard || (!::wxGetApp().NxProxyAvailable()))
+        if (m_bUseSmartCard || (!wxGetApp().NxProxyAvailable()))
             m_pCurrentCfg->bSetEnableSSL(true);
 
         // Workaround for a bug-compatibility to original nxclient:
@@ -592,7 +599,7 @@ void LoginDialog::OnTimer(wxTimerEvent&)
     bool enable = (cmdout.GetCount() == 0);
     if (NULL != m_pCtrlLoginButton)
         m_pCtrlLoginButton->Enable(enable);
-    if (enable && ::wxGetApp().AutoLogin()) {
+    if (enable && wxGetApp().AutoLogin()) {
         wxCommandEvent ev(wxEVT_COMMAND_BUTTON_CLICKED, wxID_OK);
         AddPendingEvent(ev);
     }
@@ -608,7 +615,7 @@ void LoginDialog::OnInitDialog( wxInitDialogEvent& event )
 {
     wxDialog::OnInitDialog(event);
 #ifndef SINGLE_SESSION
-    if (::wxGetApp().AutoLogin())
+    if (wxGetApp().AutoLogin())
         m_cAutoLoginTimer.Start(1000, wxTIMER_ONE_SHOT);
 #endif
     event.Skip();

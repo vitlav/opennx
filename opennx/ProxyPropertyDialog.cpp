@@ -109,7 +109,7 @@ bool ProxyPropertyDialog::Create( wxWindow* parent, wxWindowID, const wxString&,
     }
     Centre();
 ////@end ProxyPropertyDialog creation
-    ::wxGetApp().EnableContextHelp(this);
+    wxGetApp().EnableContextHelp(this);
     wxString d;
     wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &d);
     wxFileName hfile(d, wxT("pconnect.html"));

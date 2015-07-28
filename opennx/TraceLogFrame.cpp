@@ -234,7 +234,7 @@ void TraceLogFrame::OnCLOSEClick( wxCommandEvent& event )
 void TraceLogFrame::OnEXITClick( wxCommandEvent& event )
 {
     Close(true);
-    ::wxGetApp().Terminate();
+    wxGetApp().Terminate();
 }
 
 

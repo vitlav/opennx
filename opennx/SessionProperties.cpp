@@ -100,10 +100,10 @@ class CacheCleaner : public wxDirTraverser
         {
             int n = m_aFiles.GetCount() - 1;
             while (n >= 0)
-                ::wxRemoveFile(m_aFiles[n--]);
+                wxRemoveFile(m_aFiles[n--]);
             n = m_aDirs.GetCount() - 1;
             while (n >= 0)
-                ::wxRmdir(m_aDirs[n--]);
+                wxRmdir(m_aDirs[n--]);
         }
 
         virtual wxDirTraverseResult OnFile(const wxString &name)
@@ -490,7 +490,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     if (m_pCfg) {
         // variables on 'General' Tab
         m_bRememberPassword = m_pCfg->bGetRememberPassword();
-        m_bUseSmartCard = ::wxGetApp().NxSmartCardSupport() && m_pCfg->bGetUseSmartCard();
+        m_bUseSmartCard = wxGetApp().NxSmartCardSupport() && m_pCfg->bGetUseSmartCard();
         m_bUseCustomImageEncoding = m_pCfg->bGetUseCustomImageEncoding();
         m_iPort = m_pCfg->iGetServerPort();
         m_iSessionType = m_pCfg->eGetSessionType();
@@ -558,7 +558,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
         m_bRemoveOldSessionFiles = m_pCfg->bGetRemoveOldSessionFiles();
         m_sCupsPath = m_pCfg->sGetCupsPath();
         m_bCreateDesktopIcon = m_bSavedCreateDesktopIcon =
-            ::wxGetApp().CheckDesktopEntry(m_pCfg);
+            wxGetApp().CheckDesktopEntry(m_pCfg);
     }
     // Global config
     wxConfigBase::Get()->Read(wxT("Config/UserNxDir"), &m_sUserNxDir);
@@ -657,19 +657,19 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
                             case SharedResource::SHARE_UNKNOWN:
                                 break;
                             case SharedResource::SHARE_SMB_DISK:
-                                ::myLogTrace(MYTRACETAG, wxT("%s"), sg[i].toString().c_str());
+                                ::myLogTrace(MYTRACETAG, wxT("%s"), sg[i].toString().c_str().AsChar());
                                 lidx = m_pCtrlSmbShares->InsertItem(0, sg[i].m_sShareName, 1);
                                 m_pCtrlSmbShares->SetItem(lidx, 1, sg[i].m_sAlias);
                                 m_pCtrlSmbShares->SetItem(lidx, 2, comment);
                                 break;
                             case SharedResource::SHARE_SMB_PRINTER:
-                                ::myLogTrace(MYTRACETAG, wxT("%s"), sg[i].toString().c_str());
+                                ::myLogTrace(MYTRACETAG, wxT("%s"), sg[i].toString().c_str().AsChar());
                                 lidx = m_pCtrlSmbShares->InsertItem(0, sg[i].m_sShareName, 2);
                                 m_pCtrlSmbShares->SetItem(lidx, 1, sg[i].m_sDriver);
                                 m_pCtrlSmbShares->SetItem(lidx, 2, comment);
                                 break;
                             case SharedResource::SHARE_CUPS_PRINTER:
-                                ::myLogTrace(MYTRACETAG, wxT("%s"), sg[i].toString().c_str());
+                                ::myLogTrace(MYTRACETAG, wxT("%s"), sg[i].toString().c_str().AsChar());
                                 lidx = m_pCtrlSmbShares->InsertItem(0, sg[i].m_sShareName, 3);
                                 m_pCtrlSmbShares->SetItem(lidx, 1, sg[i].m_sDriver);
                                 m_pCtrlSmbShares->SetItem(lidx, 2, comment);
@@ -679,7 +679,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
                     }
                 }
                 if (0 > lidx) {
-                    ::myLogTrace(MYTRACETAG, wxT("Broken '%s'"), sg[i].toString().c_str());
+                    ::myLogTrace(MYTRACETAG, wxT("Broken '%s'"), sg[i].toString().c_str().AsChar());
                     lidx = m_pCtrlSmbShares->InsertItem(0, sg[i].m_sShareName, 0);
                     m_pCtrlSmbShares->SetItem(lidx, 1, sg[i].m_sAlias);
                     m_pCtrlSmbShares->SetItem(lidx, 2, comment);
@@ -726,7 +726,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
 #endif
 
 
-    ::wxGetApp().EnableContextHelp(this);
+    wxGetApp().EnableContextHelp(this);
     return TRUE;
 }
 
@@ -788,7 +788,7 @@ SessionProperties::InstallOnCharHandlers(wxWindow *w /* = NULL*/)
     if (!w)
         w = this;
     wxWindowList& children = w->GetChildren();
-    wxWindowList::Node *node;
+    wxWindowList::compatibility_iterator node;
     for (node = children.GetFirst(); node; node = node->GetNext()) {
         w = node->GetData();
         if (w->IsKindOf(CLASSINFO(wxTextCtrl)) || w->IsKindOf(CLASSINFO(wxSpinCtrl))) {
@@ -797,7 +797,7 @@ SessionProperties::InstallOnCharHandlers(wxWindow *w /* = NULL*/)
                 if (v->IsKindOf(CLASSINFO(MyValidator)))
                     wxDynamicCast(v, MyValidator)->SetKeyTyped(this);
                 else
-                    ::wxLogError(wxT("Detected %s window with validator other than MyValidator!"),
+                    wxLogError(wxT("Detected %s window with validator other than MyValidator!"),
                             w->IsKindOf(CLASSINFO(wxTextCtrl)) ? wxT("wxTextCtrl") : wxT("wxSpinCtrl"));
             } else {
 #ifdef __WXMAC__
@@ -805,7 +805,7 @@ SessionProperties::InstallOnCharHandlers(wxWindow *w /* = NULL*/)
                 if (w->GetName().IsEmpty() || w->GetName().IsSameAs(wxT("text")))
                     continue;
 #endif
-                ::wxLogError(wxT("Detected %s (name=%s) window without validator!"),
+                wxLogError(wxT("Detected %s (name=%s) window without validator!"),
                         (w->IsKindOf(CLASSINFO(wxTextCtrl)) ? wxT("wxTextCtrl") : wxT("wxSpinCtrl")),
                         (w->GetName().IsEmpty() ? wxEmptyString : w->GetName().c_str()));
             }
@@ -940,7 +940,7 @@ void SessionProperties::UpdateDialogConstraints(bool getValues)
             m_pCtrlDisplayHeight->Enable(false);
             break;
     }
-    if (m_bUseSmartCard || (!::wxGetApp().NxProxyAvailable())) {
+    if (m_bUseSmartCard || (!wxGetApp().NxProxyAvailable())) {
         m_pCtrlEnableSSL->SetValue(true);
         m_pCtrlEnableSSL->Enable(false);
         m_bEnableSSL = true;
@@ -1130,7 +1130,7 @@ void SessionProperties::CreateControls()
     m_pCtrlDisplayHeight->SetSizeHints(spin_size);
     Layout();
 #endif
-    m_pCtrlUseSmartCard->Enable(::wxGetApp().NxSmartCardSupport());
+    m_pCtrlUseSmartCard->Enable(wxGetApp().NxSmartCardSupport());
 
     int fs[7];
     wxFont fv = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
@@ -1142,17 +1142,17 @@ void SessionProperties::CreateControls()
     m_pHtmlWindow->SetBorders(0);
 
     wxString version = _("Version") + wxString::Format(wxT(" <B>%s</B>"),
-            ::wxGetApp().GetVersion().c_str());
+            wxGetApp().GetVersion().c_str());
 #ifdef __WXDEBUG__
     version += wxT(" (DEBUG)");
 #else
     version += wxT(" (RELEASE)");
 #endif
 
-    wxString content = ::wxGetApp().LoadFileFromResource(wxT("res/about.html"));
+    wxString content = wxGetApp().LoadFileFromResource(wxT("res/about.html"));
     content.Replace(wxT("<VERSION>"), version);
     content.Replace(wxT("<WXVERSION>"), wxVERSION_STRING);
-    content.Replace(wxT("\"res:"), wxT("\"") + ::wxGetApp().GetResourcePrefix());
+    content.Replace(wxT("\"res:"), wxT("\"") + wxGetApp().GetResourcePrefix());
 
     m_pHtmlWindow->SetPage(content);
     m_pHtmlWindow->SetBackgroundColour(GetBackgroundColour());
@@ -1239,7 +1239,7 @@ SessionProperties::readKbdLayouts()
         << wxFileName::GetPathSeparator() << wxT("keyboards");
     wxFileInputStream fis(kbdCfg);
     if (!fis.IsOk()) {
-        ::wxLogError(_("Error while reading keyboard table"));
+        wxLogError(_("Error while reading keyboard table"));
         return false;
     }
     wxTextInputStream tis(fis);
@@ -1411,7 +1411,7 @@ void SessionProperties::OnCheckboxSmbClick( wxCommandEvent& event )
         UpdateDialogConstraints(true);
         CheckChanged();
     } else {
-        ::wxLogWarning(_("No local samba server is running."));
+        wxLogWarning(_("No local samba server is running."));
         wxDynamicCast(event.GetEventObject(), wxCheckBox)->SetValue(false);
         wxDynamicCast(event.GetEventObject(), wxCheckBox)->Enable(false);
     }
@@ -1467,7 +1467,7 @@ void SessionProperties::OnButtonSmbAddClick( wxCommandEvent& event )
         }
         CheckChanged();
     } else {
-        ::wxLogWarning(_("No sharable resources found"));
+        wxLogWarning(_("No sharable resources found"));
     }
 }
 
@@ -1580,9 +1580,9 @@ void SessionProperties::OnDeleteClick( wxCommandEvent& event )
     if (wxMessageBox(wxString::Format(_("Really delete Session '%s' ?"),
                     m_pCfg->sGetName().c_str()), _("Delete Session"),
                 wxICON_QUESTION|wxYES_NO|wxNO_DEFAULT) == wxYES) {
-        ::wxGetApp().RemoveDesktopEntry(m_pCfg);
-        ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), m_pCfg->sGetFileName().c_str());
-        ::wxRemoveFile(m_pCfg->sGetFileName());
+        wxGetApp().RemoveDesktopEntry(m_pCfg);
+        ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), m_pCfg->sGetFileName().c_str().AsChar());
+        wxRemoveFile(m_pCfg->sGetFileName());
         EndModal(wxID_CLEAR);
     }
 }
@@ -1607,9 +1607,9 @@ void SessionProperties::OnApplyClick( wxCommandEvent& event )
     if (m_bSavedCreateDesktopIcon != m_bCreateDesktopIcon) {
         if (NULL != m_pCfg) {
             if (m_bCreateDesktopIcon)
-                ::wxGetApp().CreateDesktopEntry(m_pCfg);
+                wxGetApp().CreateDesktopEntry(m_pCfg);
             else
-                ::wxGetApp().RemoveDesktopEntry(m_pCfg);
+                wxGetApp().RemoveDesktopEntry(m_pCfg);
         }
     }
     if (m_bSavedResetMessageBoxes != m_bResetMessageBoxes) {
@@ -1852,7 +1852,7 @@ void SessionProperties::OnCheckboxCupsenableClick( wxCommandEvent& event )
         UpdateDialogConstraints(true);
         CheckChanged();
     } else {
-        ::wxLogWarning(_("No cups server available."));
+        wxLogWarning(_("No cups server available."));
         wxDynamicCast(event.GetEventObject(), wxCheckBox)->SetValue(false);
         wxDynamicCast(event.GetEventObject(), wxCheckBox)->Enable(false);
         m_bUseCups = false;
@@ -1867,7 +1867,7 @@ void SessionProperties::OnButtonBrowseCupspathClick( wxCommandEvent& event )
 {
     wxUnusedVar(event);
     wxFileName fn(m_sCupsPath);
-    const wxString& file = ::wxFileSelector(_("Select System CUPS daemon"),
+    const wxString& file = wxFileSelector(_("Select System CUPS daemon"),
             fn.GetPath(), fn.GetName(), wxEmptyString, wxT("*"), wxFD_OPEN|wxFD_FILE_MUST_EXIST, this);
     if (!file.IsEmpty()) {
         m_pCtrlCupsPath->SetValue(file);
@@ -2025,12 +2025,12 @@ void SessionProperties::OnButtonUsbaddClick( wxCommandEvent& event )
 #ifdef SUPPORT_USBIP
     USB u;
     if (!u.IsAvailable()) {
-        ::wxLogWarning(_("libusb is not available. No USB devices will be exported"));
+        wxLogWarning(_("libusb is not available. No USB devices will be exported"));
         return;
     }
     ArrayOfUSBDevices a = u.GetDevices();
     if (a.IsEmpty()) {
-        ::wxLogWarning(_("No USB devices available."));
+        wxLogWarning(_("No USB devices available."));
         return;
     }
     UsbFilterDetailsDialog d(this);
@@ -2242,7 +2242,7 @@ void SessionProperties::OnButtonBrowseUsbipdSocketClick( wxCommandEvent& event )
 {
     wxUnusedVar(event);
     wxFileName fn(m_sUsbipdSocket);
-    const wxString& file = ::wxFileSelector(_("Select path of USBIPD socket"),
+    const wxString& file = wxFileSelector(_("Select path of USBIPD socket"),
             fn.GetPath(), fn.GetName(), wxEmptyString, wxT("*"), wxFD_OPEN|wxFD_FILE_MUST_EXIST, this);
     if (!file.IsEmpty()) {
         m_pCtrlUsbIpdSocket->SetValue(file);

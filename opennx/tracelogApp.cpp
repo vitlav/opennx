@@ -58,10 +58,10 @@
 ////@begin XPM images
 ////@end XPM images
 
-static int TB_SHOWTRACE = ::wxNewId();
-static int TB_REMOTE = ::wxNewId();
-static int SERVER_ID = ::wxNewId();
-static int SOCKET_ID = ::wxNewId();
+static int TB_SHOWTRACE = wxNewId();
+static int TB_REMOTE = wxNewId();
+static int SERVER_ID = wxNewId();
+static int SOCKET_ID = wxNewId();
 
 class DebugEntry {
     public:
@@ -82,31 +82,31 @@ class MyTaskBarIcon : public wxTaskBarIcon {
             menu->Append(TB_SHOWTRACE, _("Show Trace Log"));
             menu->AppendCheckItem(TB_REMOTE, _("Enable remote debug"));
             menu->Append(wxID_EXIT, _("E&xit"));
-            menu->Check(TB_REMOTE, ::wxGetApp().ServerEnabled());
+            menu->Check(TB_REMOTE, wxGetApp().ServerEnabled());
             return menu;
         }
 
         void OnMenuShowTrace(wxCommandEvent &evt) {
-            ::wxGetApp().GetTopWindow()->Show(true);
+            wxGetApp().GetTopWindow()->Show(true);
             evt.Skip();
         }
 
         void OnMenuRemote(wxCommandEvent &evt) {
             if (evt.IsChecked()) {
-                ::wxGetApp().StartSocketServer();
+                wxGetApp().StartSocketServer();
             } else {
-                ::wxGetApp().StopSocketServer();
+                wxGetApp().StopSocketServer();
             }
             evt.Skip();
         }
 
         void OnShowTrace(wxTaskBarIconEvent &evt) {
-            ::wxGetApp().GetTopWindow()->Show(true);
+            wxGetApp().GetTopWindow()->Show(true);
             evt.Skip();
         }
 
         void OnMenuExit(wxCommandEvent &evt) {
-            ::wxGetApp().Terminate();
+            wxGetApp().Terminate();
             evt.Skip();
         }
 

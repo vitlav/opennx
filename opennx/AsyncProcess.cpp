@@ -97,7 +97,7 @@ AsyncProcess::AsyncProcess(const wxString& cmd, wxEvtHandler *h /* = NULL */)
     wxThreadHelper(),
     m_pEvtHandler(h),
     m_sCmd(cmd),
-    m_sDir(::wxGetCwd())
+    m_sDir(wxGetCwd())
 {
     Redirect();
 }
@@ -208,11 +208,11 @@ AsyncProcess::Print(const wxString &s, bool doLog)
     wxOutputStream *os = GetOutputStream();
     if (os) {
         if (doLog)
-            ::myLogTrace(MYTRACETAG, wxT("Sending: '%s'"), s.c_str());
+            ::myLogTrace(MYTRACETAG, wxT("Sending: '%s'"), s.wx_str());
         else
             ::myLogTrace(MYTRACETAG, wxT("Sending (hidden): '************'"));
         wxString sbuf = s + wxT("\n");
-        const wxWX2MBbuf buf = wxConvCurrent->cWX2MB(sbuf);
+        const wxWX2MBbuf buf = wxConvCurrent->cWX2MB(sbuf.wc_str());
         os->Write(buf, strlen(buf));
         return true;
     }
@@ -248,13 +248,13 @@ AsyncProcess::Start()
     bool ret = false;
 
     if (!m_sCmd.IsEmpty()) {
-        wxString cwd = ::wxGetCwd();
-        ::myLogTrace(MYTRACETAG, wxT("Starting '%s'"), m_sCmd.c_str());
+        wxString cwd = wxGetCwd();
+        ::myLogTrace(MYTRACETAG, wxT("Starting '%s'"), m_sCmd.wx_str());
         if (!m_sDir.IsEmpty())
             wxFileName::SetCwd(m_sDir);
         m_sOutBuf.Empty();
         m_sErrBuf.Empty();
-        m_pid = ::wxExecute(m_sCmd, wxEXEC_ASYNC, this);
+        m_pid = wxExecute(m_sCmd, wxEXEC_ASYNC, this);
         ::myLogTrace(MYTRACETAG, wxT("wxExecute returned %d"), m_pid);
         ret = (m_pid > 0);
         if (!m_sDir.IsEmpty())

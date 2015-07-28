@@ -122,7 +122,7 @@ bool UsbFilterDetailsDialog::Create( wxWindow* parent, wxWindowID id, const wxSt
     }
     Centre();
     ////@end UsbFilterDetailsDialog creation
-    ::wxGetApp().EnableContextHelp(this);
+    wxGetApp().EnableContextHelp(this);
     return true;
 }
 

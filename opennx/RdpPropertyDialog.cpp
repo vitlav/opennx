@@ -160,7 +160,7 @@ bool RdpPropertyDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     }
     Centre();
 ////@end RdpPropertyDialog creation
-    ::wxGetApp().EnableContextHelp(this);
+    wxGetApp().EnableContextHelp(this);
     return TRUE;
 }
 

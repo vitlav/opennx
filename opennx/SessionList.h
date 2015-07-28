@@ -27,10 +27,13 @@
 #endif
 
 #include <wx/thread.h>
+#include "MySession.h"
 
 class wxDir;
 class wxRegEx;
-class SessionHash;
+//class SessionHash;
+
+WX_DECLARE_STRING_HASH_MAP(MySession, SessionHash);
 
 DECLARE_LOCAL_EVENT_TYPE(wxEVT_SESSIONLIST_ACTION, -1)
 

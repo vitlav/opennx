@@ -204,7 +204,7 @@ ResumeDialog::AddSession(const wxString& name, const wxString& state, const wxSt
             m_sSelectedId = id;
         }
     } else {
-        ::wxLogError(_("Could not add session list item"));
+        wxLogError(_("Could not add session list item"));
     }
 }
 
@@ -267,7 +267,7 @@ void ResumeDialog::OnListctrlSessionsSelected( wxListEvent& event )
     info.SetColumn(7);
     m_pCtrlSessions->GetItem(info);
     m_sSelectedId = info.GetText();
-    ::myLogTrace(MYTRACETAG, wxT("Selected session ID=%s"), m_sSelectedId.c_str());
+    ::myLogTrace(MYTRACETAG, wxT("Selected session ID=%s"), m_sSelectedId.c_str().AsChar());
     event.Skip();
 }
 
@@ -308,7 +308,7 @@ void ResumeDialog::OnButtonResumeClick( wxCommandEvent& )
 
 void ResumeDialog::OnButtonTerminateClick( wxCommandEvent& )
 {
-    if (wxYES != ::wxMessageBox(_("Do you really want to terminate the selected session?"),
+    if (wxYES != wxMessageBox(_("Do you really want to terminate the selected session?"),
                 _("Terminate session - OpenNX"), wxYES_NO|wxICON_QUESTION, this))
         return;
     m_eMode = Terminate;

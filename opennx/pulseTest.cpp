@@ -103,7 +103,7 @@ bool pulseTest::OnCmdLineParsed(wxCmdLineParser& parser)
                 OnCmdLineError(parser);
                 return false;
             }
-            ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
+            ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str().AsChar());
             wxLog::AddTraceMask(tag);
         }
     }
@@ -126,11 +126,11 @@ bool pulseTest::OnInit()
 
 #ifdef __WXMSW__
     wxString ldpath;
-    if (::wxGetEnv(wxT("PATH"), &ldpath))
+    if (wxGetEnv(wxT("PATH"), &ldpath))
         ldpath += wxT(";");
     ldpath = tmp + wxT("\\bin");
-    if (!::wxSetEnv(wxT("PATH"), ldpath)) {
-        ::wxLogSysError(wxT("Can not set PATH"));
+    if (!wxSetEnv(wxT("PATH"), ldpath)) {
+        wxLogSysError(wxT("Can not set PATH"));
         return false;
     }
 #endif
@@ -143,7 +143,7 @@ bool pulseTest::OnInit()
 # endif
 
     wxString ldpath;
-    if (::wxGetEnv(LD_LIBRARY_PATH, &ldpath))
+    if (wxGetEnv(LD_LIBRARY_PATH, &ldpath))
         ldpath += wxT(":");
 # if defined(__x86_64) || defined(__IA64__)
     ldpath += tmp + wxT("/lib64");
@@ -153,8 +153,8 @@ bool pulseTest::OnInit()
 # ifdef __WXMAC__
     ldpath += wxT(":/Library/OpenSC/lib");
 # endif
-    if (!::wxSetEnv(LD_LIBRARY_PATH, ldpath)) {
-        ::wxLogSysError(wxT("Can not set LD_LIBRARY_PATH"));
+    if (!wxSetEnv(LD_LIBRARY_PATH, ldpath)) {
+        wxLogSysError(wxT("Can not set LD_LIBRARY_PATH"));
         return false;
     }
 #endif
@@ -162,13 +162,13 @@ bool pulseTest::OnInit()
     if (!wxApp::OnInit())
         return false;
 
-    if (::wxGetEnv(wxT("WXTRACE"), &tmp)) {
+    if (wxGetEnv(wxT("WXTRACE"), &tmp)) {
         CheckAllTrace(tmp);
         wxStringTokenizer t(tmp, wxT(",:"));
         while (t.HasMoreTokens()) {
             wxString tag = t.GetNextToken();
             if (allTraceTags.Index(tag) != wxNOT_FOUND) {
-                ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
+                ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str().AsChar());
                 wxLog::AddTraceMask(tag);
             }
         }

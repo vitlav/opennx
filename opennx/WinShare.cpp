@@ -395,7 +395,7 @@ bool DllData::IsAvailable()
 {
     int vMajor, vMinor;
 
-    int osType = ::wxGetOsVersion(&vMajor, &vMinor);
+    int osType = wxGetOsVersion(&vMajor, &vMinor);
     if (osType & (wxOS_UNIX | wxOS_MAC_OSX_DARWIN))
         dllPrivate = new DllData(DllData::SmbClientUnix);
     else if (osType & wxOS_WINDOWS) {

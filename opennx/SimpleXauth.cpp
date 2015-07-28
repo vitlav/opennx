@@ -350,7 +350,7 @@ class SimpleXauthEntryHash
 
         unsigned long operator()(const SimpleXauthEntry & k) const
         {
-            return wxStringHash::wxCharStringHash(k.GetKey());
+            return wxStringHashwxCharStringHash(k.GetKey());
         }
 
         SimpleXauthEntryHash& operator=(const SimpleXauthEntryHash&) { return *this; }
@@ -377,7 +377,7 @@ class SimpleXauthPrivate
 {
     public:
         SimpleXauthPrivate() {
-            cookie = md5sum(::wxGetUserId() + wxDateTime::Now().Format());
+            cookie = md5sum(wxGetUserId() + wxDateTime::Now().Format());
         };
         wxString filename;
         wxString cookie;
@@ -437,7 +437,7 @@ void SimpleXauth::AddDisplay(int displayNum)
     //   ipaddress:X
     //   localname/unix:X
 
-    wxString host = ::wxGetFullHostName();
+    wxString host = wxGetFullHostName();
     wxIPV4address a;
     a.Hostname(host);
     SimpleXauthEntry e(m_pPrivate->cookie);

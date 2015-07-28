@@ -173,7 +173,7 @@ bool UnixImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id),
     SetIcon(GetIconResource(wxT("res/nx.png")));
     Centre();
     ////@end UnixImageSettingsDialog creation
-    ::wxGetApp().EnableContextHelp(this);
+    wxGetApp().EnableContextHelp(this);
     return TRUE;
 }
 

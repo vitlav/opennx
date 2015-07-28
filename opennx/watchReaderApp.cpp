@@ -78,12 +78,12 @@ watchReaderApp::watchReaderApp()
 
         // If KDE_LANG is set, then it has precedence over kdeglobals.
         wxString lang;
-        if (::wxGetEnv(wxT("KDE_LANG"), &lang)) {
-            myLogDebug(wxT("Overriding LANG from KDE_LANG environment to: '%s'"), lang.c_str());
-            ::wxSetEnv(wxT("LANG"), lang);
+        if (wxGetEnv(wxT("KDE_LANG"), &lang)) {
+            myLogDebug(wxT("Overriding LANG from KDE_LANG environment to: '%s'"), lang.c_str().AsChar());
+            wxSetEnv(wxT("LANG"), lang);
         } else {
             // Try to get KDE language settings and override locale accordingly
-            wxFileInputStream fis(::wxGetHomeDir() +
+            wxFileInputStream fis(wxGetHomeDir() +
                     wxFileName::GetPathSeparator() + wxT(".kde") + 
                     wxFileName::GetPathSeparator() + wxT("share") + 
                     wxFileName::GetPathSeparator() + wxT("config") + 
@@ -98,8 +98,8 @@ watchReaderApp::watchReaderApp()
                     if (lang.Length() < 3)
                         lang << wxT("_") << country.Upper();
                     lang << wxT(".UTF-8");
-                    myLogDebug(wxT("Overriding LANG from kdeglobals to: '%s'"), lang.c_str());
-                    ::wxSetEnv(wxT("LANG"), lang);
+                    myLogDebug(wxT("Overriding LANG from kdeglobals to: '%s'"), lang.c_str().AsChar());
+                    wxSetEnv(wxT("LANG"), lang);
                 }
             }
         }
@@ -141,7 +141,14 @@ void watchReaderApp::OnInitCmdLine(wxCmdLineParser& parser)
     // On Unix, --display is a toolkit option
     wxRegEx re(wxT("^--((reader)|(pid)|(trace))$"));
 #endif
-    wxArrayString as(argc, (const wxChar **)argv);
+    //  wxWidgets > 3.0
+    wxArrayString as;
+    for(int i = 0; i < argc; i++)
+    {
+        wxString str(argv[i]);
+        as.Add(str);
+    }
+    //  end wxWidgets > 3.0
     for (i = 1; i < as.GetCount(); i++) {
         if (re.Matches(as[i])) {
             if ((i + 1) < as.GetCount()) {
@@ -152,7 +159,7 @@ void watchReaderApp::OnInitCmdLine(wxCmdLineParser& parser)
     }
     wxChar **xargv = new wxChar* [as.GetCount()];
     for (i = 0; i < as.GetCount(); i++)
-        xargv[i] = wxStrdup(as[i].c_str());
+        xargv[i] = wxStrdup(as[i].wc_str());
     parser.SetCmdLine(as.GetCount(), xargv);
 }
 
@@ -175,7 +182,7 @@ bool watchReaderApp::OnCmdLineParsed(wxCmdLineParser& parser)
                 OnCmdLineError(parser);
                 return false;
             }
-            ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
+            ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str().AsChar());
             wxLog::AddTraceMask(tag);
         }
     }
@@ -198,11 +205,11 @@ bool watchReaderApp::OnInit()
 
 #ifdef __WXMSW__
     wxString ldpath;
-    if (::wxGetEnv(wxT("PATH"), &ldpath))
+    if (wxGetEnv(wxT("PATH"), &ldpath))
         ldpath += wxT(";");
     ldpath = tmp + wxT("\\bin");
-    if (!::wxSetEnv(wxT("PATH"), ldpath)) {
-        ::wxLogSysError(wxT("Can not set PATH"));
+    if (!wxSetEnv(wxT("PATH"), ldpath)) {
+        wxLogSysError(wxT("Can not set PATH"));
         return false;
     }
 #endif
@@ -215,7 +222,7 @@ bool watchReaderApp::OnInit()
 # endif
 
     wxString ldpath;
-    if (::wxGetEnv(LD_LIBRARY_PATH, &ldpath))
+    if (wxGetEnv(LD_LIBRARY_PATH, &ldpath))
         ldpath += wxT(":");
 # if defined(__x86_64) || defined(__IA64__)
     ldpath += tmp + wxT("/lib64");
@@ -225,8 +232,8 @@ bool watchReaderApp::OnInit()
 # ifdef __WXMAC__
     ldpath += wxT(":/Library/OpenSC/lib");
 # endif
-    if (!::wxSetEnv(LD_LIBRARY_PATH, ldpath)) {
-        ::wxLogSysError(wxT("Can not set LD_LIBRARY_PATH"));
+    if (!wxSetEnv(LD_LIBRARY_PATH, ldpath)) {
+        wxLogSysError(wxT("Can not set LD_LIBRARY_PATH"));
         return false;
     }
 #endif
@@ -234,13 +241,13 @@ bool watchReaderApp::OnInit()
     if (!wxApp::OnInit())
         return false;
 
-    if (::wxGetEnv(wxT("WXTRACE"), &tmp)) {
+    if (wxGetEnv(wxT("WXTRACE"), &tmp)) {
         CheckAllTrace(tmp);
         wxStringTokenizer t(tmp, wxT(",:"));
         while (t.HasMoreTokens()) {
             wxString tag = t.GetNextToken();
             if (allTraceTags.Index(tag) != wxNOT_FOUND) {
-                ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
+                ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str().AsChar());
                 wxLog::AddTraceMask(tag);
             }
         }
@@ -252,8 +259,8 @@ bool watchReaderApp::OnInit()
         // on MacOS, we use the --dialog functionality of opennx
         wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp);
         tmp << wxFileName::GetPathSeparator() << wxT("Message.app");
-        ::myLogTrace(MYTRACETAG, wxT("Executing %s"), tmp.c_str());
-        ::wxExecute(tmp);
+        ::myLogTrace(MYTRACETAG, wxT("Executing %s"), tmp.c_str().AsChar());
+        wxExecute(tmp);
 #else
         ::myLogTrace(MYTRACETAG, wxT("Showing info dialog"));
         wxMessageBox(

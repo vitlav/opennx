@@ -138,7 +138,7 @@ void MyWizard::CreateControls()
     if (!wxXmlResource::Get()->LoadObject(this, GetParent(), _T("ID_WIZARD"), wxT("wxWizard")))
         wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
 
-    for (wxWindowList::Node* node = GetChildren().GetFirst(); node; node = node->GetNext())
+    for (wxWindowList::compatibility_iterator node = GetChildren().GetFirst(); node; node = node->GetNext())
     {
         wxWizardPage* page = wxDynamicCast(node->GetData(), wxWizardPage);
         if (page)
@@ -163,7 +163,7 @@ void MyWizard::CreateControls()
     m_pPageSecurity->Create(NULL);
     m_pPageFinish->Create(NULL);
 
-    for (wxWindowList::Node* n = GetChildren().GetFirst(); n; n = n->GetNext()) {
+    for (wxWindowList::compatibility_iterator n = GetChildren().GetFirst(); n; n = n->GetNext()) {
         wxWizardPage* p = wxDynamicCast(n->GetData(), wxWizardPage);
         if (p) {
             int w, h;
@@ -210,7 +210,7 @@ wxSize MyWizard::GetPageSize() const
 
 bool MyWizard::Run()
 {
-    wxWindowListNode* node = GetChildren().GetFirst();
+    wxWindowList::compatibility_iterator node = GetChildren().GetFirst();
     while (node)
     {
         wxWizardPage* startPage = wxDynamicCast(node->GetData(), wxWizardPage);
@@ -890,7 +890,7 @@ bool WizardPageSecurity::Create( wxWizard* parent )
     m_pCtrlUseSmartCard = NULL;
     m_pCtrlEnableSSL = NULL;
     ////@end WizardPageSecurity member initialisation
-    m_bUseSmartCard = ::wxGetApp().NxSmartCardSupport();
+    m_bUseSmartCard = wxGetApp().NxSmartCardSupport();
 
     ////@begin WizardPageSecurity creation
     SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY);
@@ -920,8 +920,8 @@ void WizardPageSecurity::CreateControls()
 
     ////@begin WizardPageSecurity content initialisation
     ////@end WizardPageSecurity content initialisation
-    m_pCtrlUseSmartCard->Enable(::wxGetApp().NxSmartCardSupport());
-    if (m_bUseSmartCard || (!::wxGetApp().NxProxyAvailable())) {
+    m_pCtrlUseSmartCard->Enable(wxGetApp().NxSmartCardSupport());
+    if (m_bUseSmartCard || (!wxGetApp().NxProxyAvailable())) {
         m_pCtrlEnableSSL->SetValue(true);
         m_pCtrlEnableSSL->Enable(false);
     }
@@ -1128,7 +1128,7 @@ void WizardPageDesktop::OnComboboxDisptypeSelected( wxCommandEvent& event )
 
 void WizardPageSecurity::OnCheckboxScardClick( wxCommandEvent& event )
 {
-    if (event.IsChecked() || (!::wxGetApp().NxProxyAvailable())) {
+    if (event.IsChecked() || (!wxGetApp().NxProxyAvailable())) {
         m_pCtrlEnableSSL->SetValue(true);
         m_pCtrlEnableSSL->Enable(false);
     } else
@@ -1344,7 +1344,7 @@ void WizardPageFinish::OnWizardpageFinishPageChanging( wxWizardEvent& event )
 {
     if (event.GetDirection()) {
         MyXmlConfig *cfg = wxDynamicCast(GetParent(), MyWizard)->pGetConfig();
-        ::myLogTrace(MYTRACETAG, _T("MyWizard: creating new config %s"), cfg->sGetFileName().c_str());
+        ::myLogTrace(MYTRACETAG, _T("MyWizard: creating new config %s"), cfg->sGetFileName().c_str().AsChar());
         cfg->SaveToFile();
         TransferDataFromWindow();
         if (m_bShowAdvancedConfig) {
@@ -1356,8 +1356,8 @@ void WizardPageFinish::OnWizardpageFinishPageChanging( wxWizardEvent& event )
                 case wxID_CANCEL:
                     break;
                 case wxID_CLEAR:
-                    ::myLogTrace(MYTRACETAG, _T("deleting '%s'"), fn.c_str());
-                    ::wxRemoveFile(fn);
+                    ::myLogTrace(MYTRACETAG, _T("deleting '%s'"), fn.c_str().AsChar());
+                    wxRemoveFile(fn);
                     // actually we were not cancelled but we want to behave
                     // as if we were, because the just created session has
                     // been deleted.
@@ -1378,7 +1378,7 @@ void WizardPageFinish::OnWizardpageFinishPageChanging( wxWizardEvent& event )
             }
         }
         if (m_bCreateShortcut)
-            ::wxGetApp().CreateDesktopEntry(cfg);
+            wxGetApp().CreateDesktopEntry(cfg);
     }
     event.Skip();
 }

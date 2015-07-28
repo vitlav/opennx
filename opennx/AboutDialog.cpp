@@ -111,17 +111,17 @@ bool AboutDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const wxStr
     m_pHtmlWindow->SetBorders(0);
 
     wxString version = _("Version") + wxString::Format(wxT(" <B>%s</B>"),
-        ::wxGetApp().GetVersion().c_str());
+        wxGetApp().GetVersion().c_str());
 #ifdef __WXDEBUG__
     version += wxT(" (DEBUG)");
 #else
     version += wxT(" (RELEASE)");
 #endif
 
-    wxString content = ::wxGetApp().LoadFileFromResource(wxT("res/about.html"));
+    wxString content = wxGetApp().LoadFileFromResource(wxT("res/about.html"));
     content.Replace(wxT("<VERSION>"), version);
     content.Replace(wxT("<WXVERSION>"), wxVERSION_STRING);
-    content.Replace(wxT("\"res:"), wxT("\"") + ::wxGetApp().GetResourcePrefix());
+    content.Replace(wxT("\"res:"), wxT("\"") + wxGetApp().GetResourcePrefix());
 
     m_pHtmlWindow->SetPage(content);
     m_pHtmlWindow->SetBackgroundColour(GetBackgroundColour());

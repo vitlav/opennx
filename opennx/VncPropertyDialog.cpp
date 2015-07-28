@@ -132,7 +132,7 @@ bool VncPropertyDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     Centre();
 ////@end VncPropertyDialog creation
     
-    ::wxGetApp().EnableContextHelp(this);
+    wxGetApp().EnableContextHelp(this);
     return TRUE;
 }
 

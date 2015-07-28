@@ -125,8 +125,8 @@ bool ShareProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const w
     m_bCupsPublic = false;
     m_bSmbPublic = false;
     m_sCupsDriver = wxT("cups driver");
-    m_sSmbDiskUsername = ::wxGetUserId();
-    m_sSmbPrintUsername = ::wxGetUserId();
+    m_sSmbDiskUsername = wxGetUserId();
+    m_sSmbPrintUsername = wxGetUserId();
     m_pCtrlLocalShares = NULL;
     m_pCtrlSmbPrintOptions = NULL;
     m_pCtrlSmbDriver = NULL;
@@ -155,7 +155,7 @@ bool ShareProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const w
     }
     Centre();
     ////@end ShareProperties creation
-    ::wxGetApp().EnableContextHelp(this);
+    wxGetApp().EnableContextHelp(this);
     return TRUE;
 }
 
@@ -267,7 +267,7 @@ void ShareProperties::CreateControls()
                 m_sMountPoint = sg.m_sAlias;
                 m_sSmbDiskUsername = sg.m_sUsername;
                 if (m_sSmbDiskUsername.IsEmpty())
-                    m_sSmbDiskUsername = ::wxGetUserId();
+                    m_sSmbDiskUsername = wxGetUserId();
                 m_sSmbDiskPassword = sg.m_sPassword;
                 Layout();
                 break;
@@ -278,7 +278,7 @@ void ShareProperties::CreateControls()
                 m_sSmbDriver = sg.m_sDriver;
                 m_sSmbPrintUsername = sg.m_sUsername;
                 if (m_sSmbPrintUsername.IsEmpty())
-                    m_sSmbPrintUsername = ::wxGetUserId();
+                    m_sSmbPrintUsername = wxGetUserId();
                 m_sSmbPrintPassword = sg.m_sPassword;
                 if (sg.m_bPublic)
                     m_pCtrlSmbPublic->SetValue(true);
@@ -367,7 +367,7 @@ void ShareProperties::CreateControls()
                     break;
             }
         } else {
-            ::wxLogMessage(_("No shares found"));
+            wxLogMessage(_("No shares found"));
             m_pCtrlLocalShares->Enable(false);
             m_pCtrlMountPoint->Enable(false);
             m_pCtrlUsername->Enable(false);
@@ -487,7 +487,7 @@ void ShareProperties::OnOkClick( wxCommandEvent& event )
                     askForDefault(sg, sg[m_iCurrentShare]);
                 break;
             case SharedResource::SHARE_CUPS_PRINTER:
-                sg[m_iCurrentShare].m_sUsername = ::wxGetUserId();
+                sg[m_iCurrentShare].m_sUsername = wxGetUserId();
                 sg[m_iCurrentShare].m_sDriver = m_sCupsDriver;
                 sg[m_iCurrentShare].m_bPublic = m_bCupsPublic;
                 if (nPrinters > 0)
@@ -522,7 +522,7 @@ void ShareProperties::OnOkClick( wxCommandEvent& event )
                     askForDefault(sg, g);
                 break;
             case SharedResource::SHARE_CUPS_PRINTER:
-                g.m_sUsername = ::wxGetUserId();
+                g.m_sUsername = wxGetUserId();
                 g.m_sDriver = wxT("cups driver");
                 g.m_bPublic = m_bCupsPublic;
                 if (nPrinters > 0)

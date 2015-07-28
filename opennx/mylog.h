@@ -23,6 +23,7 @@
 #define _MYLOG_H_
 
 #include <wx/log.h>
+#include <wx/string.h>
 
 // Compatibility with patched wxWidgets 2.8.12 on Ubuntu
 #ifndef WX_ATTRIBUTE_PRINTF_2
@@ -32,8 +33,8 @@
 #endif
 
 extern void myLogDebug(const wxChar *szFormat, ...);
-extern void myLogTrace(const wxChar *mask, const wxChar *szFormat, ...) WX_ATTRIBUTE_PRINTF_2;
-extern void myLogTrace(wxTraceMask mask, const wxChar *szFormat, ...) WX_ATTRIBUTE_PRINTF_2;
+
+extern void myLogTrace(wxString mask, const wxChar *szFormat, ...) WX_ATTRIBUTE_PRINTF_2;
 
 #endif
     // _MYLOG_H_

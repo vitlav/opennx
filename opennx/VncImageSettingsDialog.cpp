@@ -165,7 +165,7 @@ bool VncImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), 
     SetIcon(GetIconResource(wxT("res/nx.png")));
     Centre();
 ////@end VncImageSettingsDialog creation
-    ::wxGetApp().EnableContextHelp(this);
+    wxGetApp().EnableContextHelp(this);
     return TRUE;
 }
 

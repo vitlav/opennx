@@ -56,7 +56,7 @@ DECLARE_DYNAMIC_CLASS(myRichTextCtrl);
 
     public:
 
-    bool DoLoadFile(const wxString& filename, int fileType = wxRICHTEXT_TYPE_XML)
+    bool DoLoadFile(const wxString& filename, wxRichTextFileType fileType = wxRICHTEXT_TYPE_XML)
     {
         bool success = false;
         wxFileSystem fs;

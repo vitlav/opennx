@@ -268,7 +268,7 @@ void SessionAdmin::ShowSessionStats(long item, bool full)
                 md5stats2 = Md5OfFile(fn.GetFullPath());
                 if (md5stats1 != md5stats2)
                     break;
-                ::wxGetApp().Yield(true);
+                wxGetApp().Yield(true);
                 wxThread::Sleep(100);
             }
             // Wait until file stopped changing
@@ -279,7 +279,7 @@ void SessionAdmin::ShowSessionStats(long item, bool full)
                 if (md5stats1 == md5stats2)
                     break;
                 md5stats2 = md5stats1;
-                ::wxGetApp().Yield(true);
+                wxGetApp().Yield(true);
                 wxThread::Sleep(100);
             }
             if (ok) {

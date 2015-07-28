@@ -174,7 +174,7 @@ class pawrapper {
                 if (0 <= Ppa_context_connect(m_pContext, NULL /* server */, PA_CONTEXT_NOAUTOSPAWN, NULL)) {
                     Ppa_threaded_mainloop_start(m_pLoop);
                     while (!(m_bConnected || m_bError))
-                        ::wxGetApp().Yield(true);
+                        wxGetApp().Yield(true);
                 }
                 if (m_bConnected)
                     break;
@@ -232,7 +232,7 @@ class pawrapper {
 
         bool waitcmd() {
             while (!(m_bError || m_bComplete)) {
-                ::wxGetApp().Yield(true);
+                wxGetApp().Yield(true);
             }
             return !m_bError;
         }
@@ -331,7 +331,7 @@ class pawrapper {
                 wxString name(i->name, wxConvUTF8);
                 wxString args(i->argument ? i->argument : "", wxConvUTF8);
                 ::myLogTrace(MYTRACETAG, wxT("module[%u] %s %s"),
-                        i->index, name.c_str(), args.c_str());
+                        i->index, name.c_str().AsChar(), args.c_str().AsChar());
                 if (m_bSearch) {
                     if (name.IsSameAs(m_sStr)) {
                         m_bSearch = false;
@@ -424,7 +424,7 @@ extern "C" {
 
 static wxString MachineID() {
 #  ifdef __WXMSW__
-    return ::wxGetHostName().Lower();
+    return wxGetHostName().Lower();
 #  else
     return wxString(getMacMachineID(), wxConvUTF8);
 #  endif
@@ -439,19 +439,19 @@ bool PulseAudio::AutoSpawn()
     int papid;
     int retry = 3;
     // On windows and mac, we do our own autospawn
-    wxString piddir = ::wxGetHomeDir() + wxFileName::GetPathSeparator()
+    wxString piddir = wxGetHomeDir() + wxFileName::GetPathSeparator()
         + wxT(".pulse") + wxFileName::GetPathSeparator()
         + MachineID() + wxT("-runtime");
     wxString pidfile = piddir + wxFileName::GetPathSeparator() + wxT("pid");
     do {
-        ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: checking '%s'"), pidfile.c_str());
+        ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: checking '%s'"), pidfile.c_str().AsChar());
         wxFileInputStream sPid(pidfile);
         if (sPid.IsOk()) {
             ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: PID file exists"));
             wxTextInputStream tis(sPid);
             tis >> papid;
             ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: PID=%d"), papid);
-            if ((papid != 0) && ::wxProcess::Exists(papid)) {
+            if ((papid != 0) && wxProcess::Exists(papid)) {
                 ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: process %d is running"), papid);
                 return true;
             }
@@ -464,13 +464,13 @@ bool PulseAudio::AutoSpawn()
 #  ifdef __WXMSW__
         pacmd << wxT(".exe");
 #  endif
-        ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: trying to start '%s'"), pacmd.c_str());
+        ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: trying to start '%s'"), pacmd.c_str().AsChar());
 #  ifdef __WXMSW__
         CreateDetachedProcess((const char *)pacmd.mb_str());
         // Don't report an error here, as CreateDetachedProcess may
         // fail if pulseaudio is already running
 #  else
-        ::wxExecute(pacmd, wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
+        wxExecute(pacmd, wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
 #  endif
         wxThread::Sleep(500);
     } while (retry-- > 0);
@@ -536,7 +536,7 @@ bool PulseAudio::ActivateEsound(int port)
     wxString ma;
     unsigned int mi = -1;
     if (pa->findmodule(wxT("module-esound-protocol-tcp"), ma, mi)) {
-        ::myLogTrace(MYTRACETAG, wxT("found esdmod, idx=%u args='%s'"), mi, ma.c_str());
+        ::myLogTrace(MYTRACETAG, wxT("found esdmod, idx=%u args='%s'"), mi, ma.c_str().AsChar());
         long mport = 16001;
         wxString laddr(wxT("0.0.0.0"));
         wxRegEx rePort(wxT("port=(\\d+)"), wxRE_ADVANCED);
@@ -547,7 +547,7 @@ bool PulseAudio::ActivateEsound(int port)
         wxRegEx reListen(wxT("listen=(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})"), wxRE_ADVANCED);
         if (reListen.Matches(ma)) {
             laddr = reListen.GetMatch(ma, 1);
-            ::myLogTrace(MYTRACETAG, wxT("matched listen arg a=%s"), laddr.c_str());
+            ::myLogTrace(MYTRACETAG, wxT("matched listen arg a=%s"), laddr.c_str().AsChar());
         }
         // Must disable cookie auth here, because esddsp runs on the NX server
         // and we don't have access to the user's ~/.esd_auth on that machine.

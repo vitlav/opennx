@@ -130,7 +130,7 @@ bool X11PropertyDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
     SetIcon(GetIconResource(wxT("res/nx.png")));
     Centre();
 ////@end X11PropertyDialog creation
-    ::wxGetApp().EnableContextHelp(this);
+    wxGetApp().EnableContextHelp(this);
     return TRUE;
 }
 

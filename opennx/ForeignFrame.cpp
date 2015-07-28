@@ -200,7 +200,7 @@ void ForeignFrame::OnForeignSuspendClick( wxCommandEvent& event )
 {
     Close();
     event.Skip();
-    ::wxKill(getppid(), wxSIGHUP);
+    wxKill(getppid(), wxSIGHUP);
 }
 
 /*!
@@ -211,7 +211,7 @@ void ForeignFrame::OnForeignTerminateClick( wxCommandEvent& event )
 {
     Close();
     event.Skip();
-    ::wxKill(m_nOtherPID, wxSIGTERM);
+    wxKill(m_nOtherPID, wxSIGTERM);
 }
 
 /*!

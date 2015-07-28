@@ -77,7 +77,7 @@ END_EVENT_TABLE()
 # include <signal.h>
 static void terminate(int sig __attribute((unused)))
 {
-    ::wxGetApp().Terminate();
+    wxGetApp().Terminate();
     signal(SIGTERM, terminate);
     signal(SIGINT, terminate);
 }
@@ -172,12 +172,12 @@ class ProcessWatcher : public wxThreadHelper
 
         // If KDE_LANG is set, then it has precedence over kdeglobals.
         wxString lang;
-        if (::wxGetEnv(wxT("KDE_LANG"), &lang)) {
-            myLogDebug(wxT("Overriding LANG from KDE_LANG environment to: '%s'"), lang.c_str());
-            ::wxSetEnv(wxT("LANG"), lang);
+        if (wxGetEnv(wxT("KDE_LANG"), &lang)) {
+            myLogDebug(wxT("Overriding LANG from KDE_LANG environment to: '%s'"), lang.c_str().AsChar());
+            wxSetEnv(wxT("LANG"), lang);
         } else {
             // Try to get KDE language settings and override locale accordingly
-            wxFileInputStream fis(::wxGetHomeDir() +
+            wxFileInputStream fis(wxGetHomeDir() +
                     wxFileName::GetPathSeparator() + wxT(".kde") + 
                     wxFileName::GetPathSeparator() + wxT("share") + 
                     wxFileName::GetPathSeparator() + wxT("config") + 
@@ -192,8 +192,8 @@ class ProcessWatcher : public wxThreadHelper
                     if (lang.Length() < 3)
                         lang << wxT("_") << country.Upper();
                     lang << wxT(".UTF-8");
-                    myLogDebug(wxT("Overriding LANG from kdeglobals to: '%s'"), lang.c_str());
-                    ::wxSetEnv(wxT("LANG"), lang);
+                    myLogDebug(wxT("Overriding LANG from kdeglobals to: '%s'"), lang.c_str().AsChar());
+                    wxSetEnv(wxT("LANG"), lang);
                 }
             }
         }
@@ -245,7 +245,7 @@ bool watchUsbIpApp::OnCmdLineParsed(wxCmdLineParser& parser)
                 OnCmdLineError(parser);
                 return false;
             }
-            ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
+            ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str().AsChar());
             wxLog::AddTraceMask(tag);
         }
     }
@@ -257,12 +257,12 @@ bool watchUsbIpApp::OnInit()
     wxString tmp;
 
     initWxTraceTags();
-    if (::wxGetEnv(wxT("WXTRACE"), &tmp)) {
+    if (wxGetEnv(wxT("WXTRACE"), &tmp)) {
         wxStringTokenizer t(tmp, wxT(",:"));
         while (t.HasMoreTokens()) {
             wxString tag = t.GetNextToken();
             if (allTraceTags.Index(tag) != wxNOT_FOUND) {
-                ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
+                ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str().AsChar());
                 wxLog::AddTraceMask(tag);
             }
         }
@@ -327,7 +327,7 @@ bool watchUsbIpApp::OnInit()
         resok = true;
     }
     if (!resok) {
-        ::wxLogFatalError(wxT("Could not load application resource."));
+        wxLogFatalError(wxT("Could not load application resource."));
         return false;
     }
 
@@ -339,19 +339,19 @@ bool watchUsbIpApp::OnInit()
         return false;
 
     if (m_sSessionID.IsEmpty()) {
-        ::wxLogError(_("An empty session ID is not allowed"));
+        wxLogError(_("An empty session ID is not allowed"));
         return false;
     }
 
     if ((!m_pSessionCfg) || (!m_pSessionCfg->IsValid())) {
-        ::wxLogError(_("Could not load session config file"));
+        wxLogError(_("Could not load session config file"));
         return false;
     }
     wxFileName tmpfn(m_pSessionCfg->sGetFileName());
     if (tmpfn.GetName().IsSameAs(m_sSessionID)) {
         // If the basename of the session config is the sessionID, then
         // this file is temporary and can be deleted now.
-        ::wxRemoveFile(tmpfn.GetFullPath());   
+        wxRemoveFile(tmpfn.GetFullPath());   
     }
 
     if (!m_pSessionCfg->bGetEnableUSBIP()) {
@@ -370,14 +370,14 @@ bool watchUsbIpApp::OnInit()
             // SetTopWindow(m_pDialog);
             usbip->SetEventHandler(m_pDialog);
             if (!usbip->RegisterHotplug()) {
-                ::wxLogError(_("Could not register at usbipd2! No hotplugging functionality."));
+                wxLogError(_("Could not register at usbipd2! No hotplugging functionality."));
                 m_pDialog->Destroy();
                 return false;
             }
             m_pUsbIp = usbip;
         }
     } else
-        ::wxLogError(_("Could not connect to usbipd2! No hotplugging functionality."));
+        wxLogError(_("Could not connect to usbipd2! No hotplugging functionality."));
 #ifdef __UNIX__
     signal(SIGTERM, terminate);
     signal(SIGINT, terminate);
@@ -430,7 +430,7 @@ void watchUsbIpApp::OnHotplug(HotplugEvent &event)
     }
     if (NULL == sdev) {
         m_pUsbIp->SendHotplugResponse(event.GetCookie());
-        ::wxLogError(_("Got hotplug event, but device is not available in libusb"));
+        wxLogError(_("Got hotplug event, but device is not available in libusb"));
         return;
     }
     if (found) {
@@ -438,7 +438,7 @@ void watchUsbIpApp::OnHotplug(HotplugEvent &event)
         ::myLogTrace(MYTRACETAG, wxT("Found device in session config action=%s"),
                 doexport ? wxT("export") : wxT("local"));
         if (!m_pUsbIp->SendHotplugResponse(event.GetCookie()))
-            ::wxLogError(_("Could not send hotplug response"));
+            wxLogError(_("Could not send hotplug response"));
     } else {
         // Device not in session config. Ask user
         m_pDialog->SetVendorID(wxString::Format(wxT("%04X"), sdev->m_iVendorID));
@@ -492,9 +492,9 @@ void watchUsbIpApp::OnHotplug(HotplugEvent &event)
                 if (!found) {
                     a.Add(dev);
                     m_pSessionCfg->aSetUsbForwards(a);
-                    ::myLogTrace(MYTRACETAG, wxT("saving to %s"), m_pSessionCfg->sGetFileName().c_str());
+                    ::myLogTrace(MYTRACETAG, wxT("saving to %s"), m_pSessionCfg->sGetFileName().c_str().AsChar());
                     if (!m_pSessionCfg->SaveToFile())
-                        ::wxLogError(_("Could not save session config"));
+                        wxLogError(_("Could not save session config"));
                 }
             }
             ::myLogTrace(MYTRACETAG, wxT("action=%s"), doexport ? wxT("export") : wxT("local"));
@@ -503,18 +503,18 @@ void watchUsbIpApp::OnHotplug(HotplugEvent &event)
     delete sdev;
     if (doexport) {
         if (!m_pUsbIp->ExportDevice(event.GetBusID()))
-            ::wxLogError(_("Could not export USB device"));
+            wxLogError(_("Could not export USB device"));
     }
 }
 
 void watchUsbIpApp::Terminate()
 {
-    ::wxMutexGuiEnter();
+    wxMutexGuiEnter();
     ::myLogTrace(MYTRACETAG, wxT("Terminate()"));
     wxCommandEvent ev(wxEVT_PROCESS_DIED, wxID_ANY);
     ev.SetInt(0);
     AddPendingEvent(ev);
-    ::wxMutexGuiLeave();
+    wxMutexGuiLeave();
 }
 
 int watchUsbIpApp::OnExit()

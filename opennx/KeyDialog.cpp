@@ -115,7 +115,7 @@ bool KeyDialog::Create( wxWindow* parent, wxWindowID id, const wxString& caption
     wxUnusedVar(pos);
     wxUnusedVar(caption);
     wxUnusedVar(id);
-    ::wxGetApp().EnableContextHelp(this);
+    wxGetApp().EnableContextHelp(this);
     return true;
 }
 
@@ -201,9 +201,9 @@ void KeyDialog::OnButtonImportClick( wxCommandEvent& event )
 {
     wxString keyDir;
     if (!wxConfigBase::Get()->Read(wxT("Recent/KeyImport"), &keyDir)) {
-        keyDir = ::wxGetHomeDir() + wxFileName::GetPathSeparator() + wxT(".ssh");
+        keyDir = wxGetHomeDir() + wxFileName::GetPathSeparator() + wxT(".ssh");
         if (!wxFileName(keyDir).IsDirReadable())
-            keyDir = ::wxGetHomeDir();
+            keyDir = wxGetHomeDir();
     }
     wxFileDialog d(this, _("Select key to import"), keyDir, wxEmptyString,
             _("SSh key files (*.key)|*.key|All files (*)|*"), wxFD_OPEN|wxFD_FILE_MUST_EXIST);

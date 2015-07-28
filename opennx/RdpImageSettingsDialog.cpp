@@ -178,7 +178,7 @@ bool RdpImageSettingsDialog::Create( wxWindow* parent, wxWindowID WXUNUSED(id), 
     }
     Centre();
 ////@end RdpImageSettingsDialog creation
-    ::wxGetApp().EnableContextHelp(this);
+    wxGetApp().EnableContextHelp(this);
     return TRUE;
 }
 

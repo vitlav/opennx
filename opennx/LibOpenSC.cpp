@@ -349,8 +349,8 @@ bool LibOpenSC::WatchHotRemove(unsigned int ridx, long sshpid) {
         int trycount = 10;
         while (wxProcess::Exists(sshpid) && (0 < trycount)) {
             wxProcess::Kill(sshpid, wxSIGHUP);
-            while (::wxGetApp().Pending())
-                ::wxGetApp().Dispatch();
+            while (wxGetApp().Pending())
+                wxGetApp().Dispatch();
             wxThread::Sleep(500);
             trycount--;
         }
@@ -361,8 +361,8 @@ bool LibOpenSC::WatchHotRemove(unsigned int ridx, long sshpid) {
         trycount = 10;
         while (wxProcess::Exists(sshpid) && (0 < trycount)) {
             wxProcess::Kill(sshpid, wxSIGTERM);
-            while (::wxGetApp().Pending())
-                ::wxGetApp().Dispatch();
+            while (wxGetApp().Pending())
+                wxGetApp().Dispatch();
             wxThread::Sleep(500);
             trycount--;
         }
@@ -373,14 +373,14 @@ bool LibOpenSC::WatchHotRemove(unsigned int ridx, long sshpid) {
         trycount = 10;
         while (wxProcess::Exists(sshpid) && (0 < trycount)) {
             wxProcess::Kill(sshpid, wxSIGKILL);
-            while (::wxGetApp().Pending())
-                ::wxGetApp().Dispatch();
+            while (wxGetApp().Pending())
+                wxGetApp().Dispatch();
             wxThread::Sleep(500);
             trycount--;
         }
         if (!wxProcess::Exists(sshpid))
             return true;
-        ::wxLogError(_("Could not terminate nxssh"));
+//        wxLogError(wxT("Could not terminate nxssh"));
     } else
         return true;
     return false;

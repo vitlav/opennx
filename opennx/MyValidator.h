@@ -26,6 +26,7 @@
 #pragma interface "MyValidator.h"
 #endif
 
+#include <string>
 #include "wx/validate.h"
 
 class KeyTypeCallback
