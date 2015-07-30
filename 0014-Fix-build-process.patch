@@ -1,7 +1,7 @@
 From 669054641d6b97d47720a813ca942f146fe57baf Mon Sep 17 00:00:00 2001
 From: Denis Baranov <baraka@etersoft.ru>
 Date: Mon, 10 Jun 2013 15:40:18 +0400
-Subject: [PATCH 14/37] Fix build process
+Subject: [PATCH 14/34] Fix build process
 
 ---
  .gear/opennx.spec | 20 --------------------

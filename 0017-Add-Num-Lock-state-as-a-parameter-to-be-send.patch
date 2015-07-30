@@ -1,7 +1,7 @@
 From c9285c3180670f9095c09591779bcff4050a5123 Mon Sep 17 00:00:00 2001
 From: Victor Korablin <korablin@etersoft.ru>
 Date: Tue, 30 Jul 2013 12:57:57 +0400
-Subject: [PATCH 17/37] Add Num Lock state as a parameter to be send
+Subject: [PATCH 17/34] Add Num Lock state as a parameter to be send
 
 ---
  opennx/MyXmlConfig.cpp | 11 +++++++++++

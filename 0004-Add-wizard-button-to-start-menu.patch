@@ -1,7 +1,7 @@
 From 210dcec10d0ee3da04a6903381ad761423b462db Mon Sep 17 00:00:00 2001
 From: Sergey Mitrofanov <sergeym@etersoft.ru>
 Date: Thu, 3 Jan 2013 15:40:00 +0400
-Subject: [PATCH 04/37] Add wizard button to start menu
+Subject: [PATCH 04/34] Add wizard button to start menu
 
 ---
  opennx/LoginDialog.cpp | 22 +++++++++++++++++++++-

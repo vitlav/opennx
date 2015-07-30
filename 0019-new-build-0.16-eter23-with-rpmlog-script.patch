@@ -1,7 +1,7 @@
 From c4ba217a60e9a644d4cce1a81a9f39d2303b5c82 Mon Sep 17 00:00:00 2001
 From: Vitaly Lipatov <lav@etersoft.ru>
 Date: Mon, 5 Aug 2013 13:54:20 +0400
-Subject: [PATCH 19/37] new build 0.16-eter23 (with rpmlog script)
+Subject: [PATCH 19/34] new build 0.16-eter23 (with rpmlog script)
 
 ---
  .gear/opennx.spec | 10 ++++++++--

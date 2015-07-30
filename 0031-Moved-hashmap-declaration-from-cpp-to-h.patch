@@ -1,7 +1,7 @@
 From 560d5ad4efbf402d87a9aa60d5440603d787b1f2 Mon Sep 17 00:00:00 2001
 From: Sergey Bolotov <sbol@etersoft.ru>
 Date: Mon, 27 Jul 2015 16:50:12 +0300
-Subject: [PATCH 31/37] Moved hashmap declaration from cpp to h
+Subject: [PATCH 31/34] Moved hashmap declaration from cpp to h
 
 ---
  opennx/SessionList.cpp | 2 --

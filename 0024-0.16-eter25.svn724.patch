@@ -1,7 +1,7 @@
 From ea4bac06c01670d935da13d0ec32678dfabbd9d1 Mon Sep 17 00:00:00 2001
 From: Vitaly Lipatov <lav@etersoft.ru>
 Date: Thu, 3 Oct 2013 14:41:16 +0400
-Subject: [PATCH 24/37] 0.16-eter25.svn724
+Subject: [PATCH 24/34] 0.16-eter25.svn724
 
 - remove PidFile option from cups config (eterbug #9490)
 ---

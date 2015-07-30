@@ -1,7 +1,7 @@
 From 79a5f1bbb3d32ee81564aa3c5a1fd88fa9579bd0 Mon Sep 17 00:00:00 2001
 From: Victor Korablin <korablin@etersoft.ru>
 Date: Tue, 30 Jul 2013 13:19:26 +0400
-Subject: [PATCH 18/37] Edit a mistake in output string with parameters
+Subject: [PATCH 18/34] Edit a mistake in output string with parameters
 
 ---
  opennx/MyXmlConfig.cpp | 2 +-

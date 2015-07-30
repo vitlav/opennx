@@ -1,7 +1,7 @@
 From 9e3f206c5715fcc221795b9dba8b88016d72a61a Mon Sep 17 00:00:00 2001
 From: Victor Korablin <korablin@etersoft.ru>
 Date: Wed, 7 Aug 2013 14:25:15 +0400
-Subject: [PATCH 21/37] (eterbug 9384) Add space for parameters to be separated
+Subject: [PATCH 21/34] (eterbug 9384) Add space for parameters to be separated
  in the stream
 
 ---

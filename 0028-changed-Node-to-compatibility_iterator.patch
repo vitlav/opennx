@@ -1,7 +1,7 @@
 From bccf4098b0f5cf4d5cac3077090a02265ccbe02a Mon Sep 17 00:00:00 2001
 From: Sergey Bolotov <sbol@etersoft.ru>
 Date: Mon, 27 Jul 2015 16:02:24 +0300
-Subject: [PATCH 28/37] changed Node to compatibility_iterator
+Subject: [PATCH 28/34] changed Node to compatibility_iterator
 
 ---
  opennx/MyWizard.cpp          | 6 +++---

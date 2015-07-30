@@ -1,7 +1,7 @@
 From 65bea04868d4cfb8d290d005ab3a0a8eb13fb061 Mon Sep 17 00:00:00 2001
 From: Vitaly Lipatov <lav@etersoft.ru>
 Date: Mon, 12 Aug 2013 12:11:09 +0400
-Subject: [PATCH 22/37] 0.16-eter24.svn724
+Subject: [PATCH 22/34] 0.16-eter24.svn724
 
 - use absolute path for links, fix requires
 ---

@@ -1,0 +1,1025 @@
+From 30e11ebbe223672d5c63dd66747716146e6695cb Mon Sep 17 00:00:00 2001
+From: Sergey Bolotov <sbol@etersoft.ru>
+Date: Thu, 30 Jul 2015 14:48:02 +0300
+Subject: [PATCH 34/34] Added function to convert wxString to char. Converted
+ all wxStrings in myLogFuncs to char
+
+---
+ opennx/LibUSB.cpp            |  2 +-
+ opennx/LogDialog.cpp         |  2 +-
+ opennx/LoginDialog.cpp       | 10 +++----
+ opennx/MyDynlib.cpp          | 10 +++----
+ opennx/MyIPC.cpp             |  8 +++---
+ opennx/MySession.cpp         | 64 +++++++++++++++++++++-----------------------
+ opennx/MyWizard.cpp          |  4 +--
+ opennx/MyXmlConfig.cpp       | 12 ++++-----
+ opennx/PulseAudio.cpp        | 10 +++----
+ opennx/ResumeDialog.cpp      |  2 +-
+ opennx/SessionList.cpp       | 16 +++++------
+ opennx/SessionProperties.cpp | 10 +++----
+ opennx/UsbIp.cpp             |  4 +--
+ opennx/mylog.cpp             | 43 +++++++----------------------
+ opennx/mylog.h               |  6 +----
+ opennx/opennxApp.cpp         | 29 ++++++++++----------
+ opennx/pulseTest.cpp         |  4 +--
+ opennx/watchReaderApp.cpp    | 10 +++----
+ opennx/watchUsbIpApp.cpp     | 10 +++----
+ 19 files changed, 112 insertions(+), 144 deletions(-)
+
+diff --git a/opennx/LibUSB.cpp b/opennx/LibUSB.cpp
+index 647bc04..6d4f140 100644
+--- a/opennx/LibUSB.cpp
++++ b/opennx/LibUSB.cpp
+@@ -171,7 +171,7 @@ void USB::adddev(MyDynamicLibrary *dll, struct usb_device *dev, unsigned char dc
+         d.m_sSerial = readSysfs(d.m_iBusNum, d.m_iDevNum, wxT("serial"));
+     }
+ 
+-    ::myLogTrace(MYTRACETAG, wxT("Device found: %s"), d.toString().c_str());
++    ::myLogTrace(MYTRACETAG, wxT("Device found: %s"), to_c_str(d.toString()));
+     m_aDevices.Add(d);
+     pfnusb_close(udev);
+ #else
+diff --git a/opennx/LogDialog.cpp b/opennx/LogDialog.cpp
+index 70b51b6..2a3d004 100644
+--- a/opennx/LogDialog.cpp
++++ b/opennx/LogDialog.cpp
+@@ -126,7 +126,7 @@ void LogDialog::CreateControls()
+ ////@end LogDialog content initialisation
+ 
+     wxFont ff(10, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+-    ::myLogTrace(MYTRACETAG, wxT("Font=%s"), ff.GetNativeFontInfoDesc().c_str());
++    ::myLogTrace(MYTRACETAG, wxT("Font=%s"), to_c_str(ff.GetNativeFontInfoDesc()));
+     m_TextCtrl->SetFont(ff);
+ }
+ 
+diff --git a/opennx/LoginDialog.cpp b/opennx/LoginDialog.cpp
+index 0d06a38..ac93a5e 100644
+--- a/opennx/LoginDialog.cpp
++++ b/opennx/LoginDialog.cpp
+@@ -180,14 +180,14 @@ void LoginDialog::ReadConfigDirectory()
+         delete m_pCurrentCfg;
+     m_pCurrentCfg = NULL;
+     m_pCtrlSessionName->Clear();
+-    ::myLogTrace(MYTRACETAG, wxT("ReadConfigDirectory: LastSession='%s'"), m_sLastSessionFilename.c_str());
++    ::myLogTrace(MYTRACETAG, wxT("ReadConfigDirectory: LastSession='%s'"), to_c_str(m_sLastSessionFilename));
+     if (m_sLastSessionFilename.StartsWith(wxT("http://")) ||
+             m_sLastSessionFilename.StartsWith(wxT("https://")) ||
+             m_sLastSessionFilename.StartsWith(wxT("ftp://")) ||
+             ((m_aConfigFiles.Index(m_sLastSessionFilename) == wxNOT_FOUND) &&
+              (wxFile::Exists(m_sLastSessionFilename)))) {
+         m_aConfigFiles.Add(m_sLastSessionFilename);
+-        ::myLogTrace(MYTRACETAG, wxT("ReadConfigDirectory: Adding '%s'"), m_sLastSessionFilename.c_str());
++        ::myLogTrace(MYTRACETAG, wxT("ReadConfigDirectory: Adding '%s'"), to_c_str(m_sLastSessionFilename));
+     }
+     for (i = 0; i < m_aConfigFiles.GetCount(); i++) {
+         MyXmlConfig cfg(m_aConfigFiles[i]);
+@@ -212,12 +212,12 @@ void LoginDialog::ReadConfigDirectory()
+         }
+     }
+     if (m_pCurrentCfg) {
+-        ::myLogTrace(MYTRACETAG, wxT("SS1='%s'"), m_sSessionName.c_str());
++        ::myLogTrace(MYTRACETAG, wxT("SS1='%s'"), to_c_str(m_sSessionName));
+         m_pCtrlSessionName->SetStringSelection(m_sSessionName);
+         wxCommandEvent event;
+         OnComboboxSessionSelected(event);
+     } else {
+-        ::myLogTrace(MYTRACETAG, wxT("SS2='%s'"), m_sLastSessionFilename.c_str());
++        ::myLogTrace(MYTRACETAG, wxT("SS2='%s'"), to_c_str(m_sLastSessionFilename));
+         // Last session name might be a plain session name (backward compatibility)
+         m_pCtrlSessionName->SetStringSelection(m_sLastSessionFilename);
+         wxCommandEvent event;
+@@ -423,7 +423,7 @@ void LoginDialog::OnButtonConfigureClick( wxCommandEvent& event )
+                 m_pCurrentCfg = new MyXmlConfig(fn);
+                 break;
+             case wxID_CLEAR:
+-                ::myLogTrace(MYTRACETAG, wxT("deleting '%s'"), fn.c_str());
++                ::myLogTrace(MYTRACETAG, wxT("deleting '%s'"), to_c_str(fn));
+                 wxRemoveFile(fn);
+                 ReadConfigDirectory();
+                 break;
+diff --git a/opennx/MyDynlib.cpp b/opennx/MyDynlib.cpp
+index d95db31..8ee6638 100644
+--- a/opennx/MyDynlib.cpp
++++ b/opennx/MyDynlib.cpp
+@@ -55,7 +55,7 @@ ENABLE_TRACE;
+ 
+ bool MyDynamicLibrary::Load(const wxString& name, int flags /* = wxDL_DEFAULT */)
+ {
+-    ::myLogTrace(MYTRACETAG, wxT("Load(%s, 0x%0x)"), name.c_str(), flags);
++    ::myLogTrace(MYTRACETAG, wxT("Load(%s, 0x%0x)"), to_c_str(name), flags);
+ #ifdef __WXMSW__
+     return wxDynamicLibrary::Load(name, flags);
+ #else
+@@ -64,13 +64,13 @@ bool MyDynamicLibrary::Load(const wxString& name, int flags /* = wxDL_DEFAULT */
+         wxStringTokenizer t(ldpath, wxT(":"));
+         while (t.HasMoreTokens()) {
+             wxString abslib = t.GetNextToken() + wxFileName::GetPathSeparator() + name;
+-            ::myLogTrace(MYTRACETAG, wxT("Trying to load(%s 0x%0x)"), abslib.c_str(), flags);
++            ::myLogTrace(MYTRACETAG, wxT("Trying to load(%s 0x%0x)"), to_c_str(abslib), flags);
+             if (wxDynamicLibrary::Load(abslib, flags))
+                 return true;
+ #ifdef __WXMAC__
+             if (!abslib.EndsWith(wxT(".dylib"))) {
+                 abslib += wxT(".dylib");
+-                ::myLogTrace(MYTRACETAG, wxT("Trying to load(%s, 0x%0x)"), abslib.c_str(), flags|wxDL_VERBATIM);
++                ::myLogTrace(MYTRACETAG, wxT("Trying to load(%s, 0x%0x)"), to_c_str(abslib), flags|wxDL_VERBATIM);
+                 if (wxDynamicLibrary::Load(abslib, flags|wxDL_VERBATIM))
+                     return true;
+             }
+@@ -84,12 +84,12 @@ bool MyDynamicLibrary::Load(const wxString& name, int flags /* = wxDL_DEFAULT */
+     if (!name.EndsWith(wxT(".dylib"))) {
+         wxString dlib(name);
+         dlib.Append(wxT(".dylib"));
+-        ::myLogTrace(MYTRACETAG, wxT("Trying to load(%s, 0x%0x)"), dlib.c_str(), flags|wxDL_VERBATIM);
++        ::myLogTrace(MYTRACETAG, wxT("Trying to load(%s, 0x%0x)"), to_c_str(dlib), flags|wxDL_VERBATIM);
+         if (wxDynamicLibrary::Load(dlib, flags|wxDL_VERBATIM))
+             return true;
+     }
+ #endif
+-    ::myLogTrace(MYTRACETAG, wxT("Failed to load %s"), name.c_str());
++    ::myLogTrace(MYTRACETAG, wxT("Failed to load %s"), to_c_str(name));
+     return false;
+ #endif
+ }
+diff --git a/opennx/MyIPC.cpp b/opennx/MyIPC.cpp
+index 7cc9246..e1ca9d6 100644
+--- a/opennx/MyIPC.cpp
++++ b/opennx/MyIPC.cpp
+@@ -227,7 +227,7 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
+ 
+     switch (m_eType) {
+         case TypeNone:
+-            ::myLogTrace(MYTRACETAG, wxT("process O: '%s'"), msg.c_str());
++            ::myLogTrace(MYTRACETAG, wxT("process O: '%s'"), to_c_str(msg));
+             if (m_pEvtHandler) {
+                 wxCommandEvent upevent(wxEVT_GENERIC, wxID_ANY);
+                 upevent.SetInt(ActionStdout);
+@@ -241,7 +241,7 @@ MyIPC::OnOutReceived(wxCommandEvent &event)
+             if (msg.StartsWith(wxT("FREENX>")))
+                     msg = msg.Mid(4);
+             code = parseCode(msg);
+-            ::myLogTrace(MYTRACETAG, wxT("nxssh O[%04d]: '%s'"), code, msg.c_str());
++            ::myLogTrace(MYTRACETAG, wxT("nxssh O[%04d]: '%s'"), code, to_c_str(msg));
+             if (m_pEvtHandler) {
+                 wxCommandEvent upevent(wxEVT_NXSSH, wxID_ANY);
+                 upevent.SetInt(ActionLog);
+@@ -662,7 +662,7 @@ MyIPC::OnErrReceived(wxCommandEvent &event)
+ 
+     switch (m_eType) {
+         case TypeNone:
+-            ::myLogTrace(MYTRACETAG, wxT("process E: '%s'"), msg.c_str());
++            ::myLogTrace(MYTRACETAG, wxT("process E: '%s'"), to_c_str(msg));
+             if (m_pEvtHandler) {
+                 wxCommandEvent upevent(wxEVT_GENERIC, wxID_ANY);
+                 upevent.SetInt(ActionStderr);
+@@ -672,7 +672,7 @@ MyIPC::OnErrReceived(wxCommandEvent &event)
+             break;
+         case TypeSsh:
+             code = parseCode(msg);
+-            ::myLogTrace(MYTRACETAG, wxT("nxssh E[%04d]: '%s'"), code, msg.c_str());
++            ::myLogTrace(MYTRACETAG, wxT("nxssh E[%04d]: '%s'"), code, to_c_str(msg));
+             if (m_pEvtHandler) {
+                 wxCommandEvent upevent(wxEVT_NXSSH, wxID_ANY);
+                 upevent.SetInt(ActionLog);
+diff --git a/opennx/MySession.cpp b/opennx/MySession.cpp
+index c27f2c7..3fd0020 100644
+--- a/opennx/MySession.cpp
++++ b/opennx/MySession.cpp
+@@ -206,7 +206,7 @@ class SessionCleaner : public wxDirTraverser
+         {
+             for (size_t i = 0; i < m_aDirs.GetCount(); i++) {
+                 if (name.StartsWith(m_aDirs[i])) {
+-                    ::myLogTrace(MYTRACETAG, wxT("adding file '%s'"), name.c_str());
++                    ::myLogTrace(MYTRACETAG, wxT("adding file '%s'"), to_c_str(name));
+                     m_aFiles.Add(name);
+                     return wxDIR_CONTINUE;
+                 }
+@@ -217,7 +217,7 @@ class SessionCleaner : public wxDirTraverser
+         virtual wxDirTraverseResult OnDir(const wxString &name)
+         {
+             if (name.StartsWith(m_sTopLevel + wxT("S-"))) {
+-                ::myLogTrace(MYTRACETAG, wxT("Session dir: '%s'"), name.c_str());
++                ::myLogTrace(MYTRACETAG, wxT("Session dir: '%s'"), to_c_str(name));
+                 wxTextFile tf(name + wxFileName::GetPathSeparator() + wxT("session"));
+                 if (tf.Exists()) {
+                     wxString line;
+@@ -228,7 +228,7 @@ class SessionCleaner : public wxDirTraverser
+                                 line.AfterFirst(wxT('\'')).BeforeLast(wxT('\'')).ToLong(&pid);
+                                 ::myLogTrace(MYTRACETAG, wxT("Proxy-PID: %d"), pid);
+                                 if (!wxProcess::Exists(pid)) {
+-                                    ::myLogTrace(MYTRACETAG, wxT("PID does not exist, adding '%s'"), name.c_str());
++                                    ::myLogTrace(MYTRACETAG, wxT("PID does not exist, adding '%s'"), to_c_str(name));
+                                     m_aDirs.Add(name);
+                                     return wxDIR_CONTINUE;
+                                 }
+@@ -236,10 +236,10 @@ class SessionCleaner : public wxDirTraverser
+                         }
+                     }
+                 }
+-                ::myLogTrace(MYTRACETAG, wxT("Keeping '%s'"), name.c_str());
++                ::myLogTrace(MYTRACETAG, wxT("Keeping '%s'"), to_c_str(name));
+             }
+             if (name.StartsWith(m_sTopLevel + wxT("D-"))) {
+-                ::myLogTrace(MYTRACETAG, wxT("Service dir: '%s'"), name.c_str());
++                ::myLogTrace(MYTRACETAG, wxT("Service dir: '%s'"), to_c_str(name));
+                 wxTextFile tf(name + wxFileName::GetPathSeparator() + wxT("pid"));
+                 if (tf.Exists()) {
+                     long pid;
+@@ -247,21 +247,21 @@ class SessionCleaner : public wxDirTraverser
+                         tf.GetFirstLine().ToLong(&pid);
+                         ::myLogTrace(MYTRACETAG, wxT("Service-PID: %d"), pid);
+                         if (!wxProcess::Exists(pid)) {
+-                            ::myLogTrace(MYTRACETAG, wxT("PID does not exist, adding '%s'"), name.c_str());
++                            ::myLogTrace(MYTRACETAG, wxT("PID does not exist, adding '%s'"), to_c_str(name));
+                             m_aDirs.Add(name);
+                             return wxDIR_CONTINUE;
+                         }
+                     }
+                 }
+-                ::myLogTrace(MYTRACETAG, wxT("Keeping '%s'"), name.c_str());
++                ::myLogTrace(MYTRACETAG, wxT("Keeping '%s'"), to_c_str(name));
+             }
+             if (name.StartsWith(m_sTopLevel + wxT("F-"))) {
+-                ::myLogTrace(MYTRACETAG, wxT("Failed session dir: '%s'"), name.c_str());
++                ::myLogTrace(MYTRACETAG, wxT("Failed session dir: '%s'"), to_c_str(name));
+                 m_aDirs.Add(name);
+                 return wxDIR_CONTINUE;
+             }
+             if (m_cRegex.Matches(name)) {
+-                ::myLogTrace(MYTRACETAG, wxT("Temp dir: '%s'"), name.c_str());
++                ::myLogTrace(MYTRACETAG, wxT("Temp dir: '%s'"), to_c_str(name));
+                 long mpid = 0;
+                 long spid = 0;
+                 m_cRegex.GetMatch(name, 1).ToLong(&mpid);
+@@ -275,11 +275,11 @@ class SessionCleaner : public wxDirTraverser
+                     }
+                 }
+                 if (mpid && (!wxProcess::Exists(mpid)) && ((!spid) || (!wxProcess::Exists(spid)))) {
+-                    ::myLogTrace(MYTRACETAG, wxT("PIDs do not exist, adding '%s'"), name.c_str());
++                    ::myLogTrace(MYTRACETAG, wxT("PIDs do not exist, adding '%s'"), to_c_str(name));
+                     m_aDirs.Add(name);
+                     return wxDIR_CONTINUE;
+                 }
+-                ::myLogTrace(MYTRACETAG, wxT("Keeping '%s'"), name.c_str());
++                ::myLogTrace(MYTRACETAG, wxT("Keeping '%s'"), to_c_str(name));
+                 return wxDIR_IGNORE;
+             }
+             if (name.StartsWith(m_sTopLevel + wxT("temp")))
+@@ -1110,7 +1110,7 @@ MySession::initversion(const wxString &s /* = wxEmptyString */)
+ MySession::printSsh(const wxString &s, bool doLog /* = true */, const wxString &reason /* = wxT("") */)
+ {
+     if (m_pNxSsh) {
+-        ::myLogTrace(MYTRACETAG, wxT("%ssending '%s'"), reason.c_str(), (doLog ? s.c_str() : wxT("********")));
++        ::myLogTrace(MYTRACETAG, wxT("%ssending '%s'"), to_c_str(reason), to_c_str((doLog ? s : wxT("********"))));
+         m_pNxSsh->Print(s, doLog);
+     }
+ }
+@@ -1129,8 +1129,7 @@ MySession::parseResources()
+                 wxString sClass(re.GetMatch(line, 1));
+                 wxString sType(re.GetMatch(line, 2));
+                 wxString sValue(re.GetMatch(line, 3));
+-                ::myLogTrace(MYTRACETAG, wxT("parseResources: match c='%s' t='%s', v='%s'"),
+-                        sClass.c_str(), sType.c_str(), sValue.c_str());
++                ::myLogTrace(MYTRACETAG, wxT("parseResources: match c='%s' t='%s', v='%s'"), to_c_str(sClass), to_c_str(sType), to_c_str(sValue));
+                 if (sClass.IsSameAs(wxT("session"))) {
+                     // Not yet clear what to do with that data.
+                 }
+@@ -1142,7 +1141,7 @@ MySession::parseResources()
+                 }
+             }
+         } else
+-            ::myLogTrace(MYTRACETAG, wxT("parseResources: NO match line='%s'"), line.c_str());
++            ::myLogTrace(MYTRACETAG, wxT("parseResources: NO match line='%s'"), to_c_str(line));
+     }
+ }
+ 
+@@ -1178,7 +1177,7 @@ MySession::parseSessions(bool moreAllowed)
+     }
+     for (size_t i = 0; i < n; i++) {
+         wxString line = m_aParseBuffer[i].Trim();
+-        ::myLogTrace(MYTRACETAG, wxT("parseSessions: line='%s'"), line.c_str());
++        ::myLogTrace(MYTRACETAG, wxT("parseSessions: line='%s'"), to_c_str(line));
+         if (re.Matches(line)) {
+             ::myLogTrace(MYTRACETAG, wxT("parseSessions: re match"));
+             wxString sPort(re.GetMatch(line, 1));
+@@ -1344,14 +1343,14 @@ MySession::startSharing()
+             continue;
+         bool bAvailable = false;
+         wxString sn = sg[i].m_sShareName;
+-        ::myLogTrace(MYTRACETAG, wxT("startSharing: considering share '%s'"), sn.c_str());
++        ::myLogTrace(MYTRACETAG, wxT("startSharing: considering share '%s'"), to_c_str(sn));
+         for (size_t j = 0; j < sa.GetCount(); j++) {
+             if ((sa[j].sharetype == sg[i].m_eType) && (sa[j].name == sn)) {
+                 bAvailable = true;
+                 break;
+             }
+         }
+-        ::myLogTrace(MYTRACETAG, wxT("'%s' is %savailable"), sn.c_str(),
++        ::myLogTrace(MYTRACETAG, wxT("'%s' is %savailable"), to_c_str(sn),
+                 (bAvailable ? wxEmptyString : wxT("not ")));
+         if (!bAvailable)
+             continue;
+@@ -1735,30 +1734,28 @@ MySession::getActiveCupsPrinters()
+             size_t idx = i - 1;
+             if (used.Index(ret[idx].m_sGroupName) == wxNOT_FOUND) {
+                 ::myLogTrace(MYTRACETAG, wxT("removing[%d] '%s'"),
+-                        idx, ret[idx].m_sShareName.c_str());
++                        idx, to_c_str(ret[idx].m_sShareName));
+                 ret.RemoveAt(idx);
+                 continue;
+             }
+             if (ret[idx].m_eType != SharedResource::SHARE_CUPS_PRINTER) {
+                 ::myLogTrace(MYTRACETAG, wxT("removing[%d] '%s'"),
+-                        idx, ret[idx].m_sShareName.c_str());
++                        idx, to_c_str(ret[idx].m_sShareName));
+                 ret.RemoveAt(idx);
+                 continue;
+             }
+             bool bAvailable = false;
+-            ::myLogTrace(MYTRACETAG, wxT("Considering CUPS printer '%s' %d"),
+-                    ret[idx].m_sShareName.c_str(), idx);
++            ::myLogTrace(MYTRACETAG, wxT("Considering CUPS printer '%s' %d"), to_c_str(ret[idx].m_sShareName), idx);
+             for (size_t j = 0; j < sa.GetCount(); j++) {
+                 if (sa[j].name == ret[idx].m_sShareName) {
+                     bAvailable = true;
+                     break;
+                 }
+             }
+-            ::myLogTrace(MYTRACETAG, wxT("'%s' is %savailable"),
+-                    ret[idx].m_sShareName.c_str(), (bAvailable ? wxEmptyString : wxT("not ")));
++            ::myLogTrace(MYTRACETAG, wxT("'%s' is %savailable"), to_c_str(ret[idx].m_sShareName), (bAvailable ? wxEmptyString : wxT("not ")));
+             if (!bAvailable) {
+                 ::myLogTrace(MYTRACETAG, wxT("removing[%d] '%s'"),
+-                        idx, ret[idx].m_sShareName.c_str());
++                        idx, to_c_str(ret[idx].m_sShareName));
+                 ret.RemoveAt(idx);
+             }
+         }
+@@ -1786,7 +1783,7 @@ MySession::isCupsRunning()
+         wxInputStream *is = http.GetInputStream(wxT("/"));
+         int res = http.GetResponse();
+         wxString svr = http.GetHeader(wxT("server"));
+-        ::myLogTrace(MYTRACETAG, wxT("isCupsRunning RC=%d SVR=%s"), res, svr.c_str());
++        ::myLogTrace(MYTRACETAG, wxT("isCupsRunning RC=%d SVR=%s"), res, to_c_str(svr));
+         if ((res == 200) && svr.Contains(wxT("CUPS")))
+             ret = true;
+         delete is;
+@@ -1926,7 +1923,7 @@ MySession::prepareCups()
+     }
+     wxString cmd = m_pCfg->sGetCupsPath();
+     cmd << wxT(" -c ") << sCupsDir << wxT("cupsd.conf");
+-    ::myLogTrace(MYTRACETAG, wxT("Starting '%s'"), cmd.c_str());
++    ::myLogTrace(MYTRACETAG, wxT("Starting '%s'"), to_c_str(cmd));
+     if (wxExecute(cmd, wxEXEC_ASYNC) <= 0)
+         return false;
+     wxThread::Sleep(500);
+@@ -1969,7 +1966,7 @@ MySession::setTurboPath(bool enable)
+                     ldpath.Prepend(wxT(":"));
+                 ldpath.Prepend(turbopath);
+             }
+-            ::myLogDebug(wxT("DYLD_LIBRARY_PATH='%s'"), ldpath.c_str());
++            ::myLogDebug(wxT("DYLD_LIBRARY_PATH='%s'"), to_c_str(ldpath));
+             if (!wxSetEnv(wxT("DYLD_LIBRARY_PATH"), ldpath)) {
+                 wxLogSysError(wxT("Cannot set DYLD_LIBRARY_PATH"));
+             }
+@@ -1989,7 +1986,7 @@ MySession::setTurboPath(bool enable)
+             if (newpath.IsEmpty()) {
+                 wxUnsetEnv(wxT("DYLD_LIBRARY_PATH"));
+             } else {
+-                ::myLogDebug(wxT("DYLD_LIBRARY_PATH='%s'"), newpath.c_str());
++                ::myLogDebug(wxT("DYLD_LIBRARY_PATH='%s'"), to_c_str(newpath));
+                 if (!wxSetEnv(wxT("DYLD_LIBRARY_PATH"), newpath)) {
+                     wxLogSysError(wxT("Cannot set DYLD_LIBRARY_PATH"));
+                 }
+@@ -2015,14 +2012,13 @@ MySession::cleanupOldSessions()
+     void
+ MySession::clearSshKeys(const wxString &keyloc)
+ {
+-    ::myLogTrace(MYTRACETAG, wxT("Clearing keys for %s at %s"),
+-            m_pCfg->sGetServerHost().c_str(), keyloc.c_str());
++    ::myLogTrace(MYTRACETAG, wxT("Clearing keys for %s at %s"), to_c_str(m_pCfg->sGetServerHost()), to_c_str(keyloc));
+     wxString keyfile = keyloc.BeforeLast(wxT(':'));
+ #ifdef __WXMSW__
+     if (keyfile.StartsWith(wxT("/cygdrive/"), &keyfile)) {
+         keyfile = keyfile.BeforeFirst(wxT('/')).Upper().Append(wxT(":/")).Append(keyfile.AfterFirst(wxT('/')));
+         keyfile.Replace(wxT("/"), wxT("\\"));
+-        ::myLogTrace(MYTRACETAG, wxT("Keyfile: %s"), keyfile.c_str());
++        ::myLogTrace(MYTRACETAG, wxT("Keyfile: %s"), to_c_str(keyfile));
+     }
+ #endif
+     long n;
+@@ -2031,7 +2027,7 @@ MySession::clearSshKeys(const wxString &keyloc)
+         wxTextFile tf(keyfile);
+         if (tf.Exists()) {
+             if (tf.Open()) {
+-                ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), tf[n].c_str());
++                ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), to_c_str(tf[n]));
+                 tf.RemoveLine(n);
+                 wxIPV4address ip;
+                 if (ip.Hostname(m_pCfg->sGetServerHost())) {
+@@ -2039,7 +2035,7 @@ MySession::clearSshKeys(const wxString &keyloc)
+                     wxString line;
+                     for (line = tf.GetFirstLine(); !tf.Eof(); line = tf.GetNextLine()) {
+                         if (line.Contains(ipnum)) {
+-                            ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), line.c_str());
++                            ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), to_c_str(line));
+                             tf.RemoveLine(tf.GetCurrentLine());
+                         }
+                     }
+diff --git a/opennx/MyWizard.cpp b/opennx/MyWizard.cpp
+index eb77983..969b08c 100644
+--- a/opennx/MyWizard.cpp
++++ b/opennx/MyWizard.cpp
+@@ -1344,7 +1344,7 @@ void WizardPageFinish::OnWizardpageFinishPageChanging( wxWizardEvent& event )
+ {
+     if (event.GetDirection()) {
+         MyXmlConfig *cfg = wxDynamicCast(GetParent(), MyWizard)->pGetConfig();
+-        ::myLogTrace(MYTRACETAG, _T("MyWizard: creating new config %s"), cfg->sGetFileName().c_str());
++        ::myLogTrace(MYTRACETAG, _T("MyWizard: creating new config %s"), to_c_str(cfg->sGetFileName()));
+         cfg->SaveToFile();
+         TransferDataFromWindow();
+         if (m_bShowAdvancedConfig) {
+@@ -1356,7 +1356,7 @@ void WizardPageFinish::OnWizardpageFinishPageChanging( wxWizardEvent& event )
+                 case wxID_CANCEL:
+                     break;
+                 case wxID_CLEAR:
+-                    ::myLogTrace(MYTRACETAG, _T("deleting '%s'"), fn.c_str());
++                    ::myLogTrace(MYTRACETAG, _T("deleting '%s'"), to_c_str(fn));
+                     wxRemoveFile(fn);
+                     // actually we were not cancelled but we want to behave
+                     // as if we were, because the just created session has
+diff --git a/opennx/MyXmlConfig.cpp b/opennx/MyXmlConfig.cpp
+index 95762fa..6fbd465 100644
+--- a/opennx/MyXmlConfig.cpp
++++ b/opennx/MyXmlConfig.cpp
+@@ -1166,7 +1166,7 @@ MyXmlConfig::LoadFromFile(const wxString &filename)
+         }
+         delete f;
+     }
+-    ::myLogTrace(MYTRACETAG, wxT("Reading %s"), filename.c_str());
++    ::myLogTrace(MYTRACETAG, wxT("Reading %s"), to_c_str(filename));
+     wxFileInputStream fis(filename);
+     if (loadFromStream(fis, false)) {
+         m_sName = wxFileName(filename).GetName();
+@@ -1221,7 +1221,7 @@ MyXmlConfig::LoadFromURL(const wxString &filename)
+     curl_easy_setopt(c, CURLOPT_WRITEDATA, &mos);
+     curl_easy_setopt(c, CURLOPT_ERRORBUFFER, ebuf);
+     curl_easy_setopt(c, CURLOPT_WRITEFUNCTION, CurlWriteCallback);
+-    ::myLogTrace(MYTRACETAG, wxT("Fetching %s"), filename.c_str());
++    ::myLogTrace(MYTRACETAG, wxT("Fetching %s"), to_c_str(filename));
+     CURLcode r = curl_easy_perform(c);
+     if (0 == r) {
+         off_t len = mos.TellO();
+@@ -1231,7 +1231,7 @@ MyXmlConfig::LoadFromURL(const wxString &filename)
+                 curl_easy_getinfo(c, CURLINFO_RESPONSE_CODE, &rcode);
+             }
+             if (200 == rcode) {
+-                ::myLogTrace(MYTRACETAG, wxT("Fetching %s"), filename.c_str());
++                ::myLogTrace(MYTRACETAG, wxT("Fetching %s"), to_c_str(filename));
+                 char * const data = new char[len];
+                 mos.CopyTo(data, len);
+                 wxMemoryInputStream mis(data, len);
+@@ -1265,7 +1265,7 @@ MyXmlConfig::LoadFromURL(const wxString &filename)
+         if (!url.IsOk())
+             return false;
+     }
+-    ::myLogTrace(MYTRACETAG, wxT("Fetching %s"), filename.c_str());
++    ::myLogTrace(MYTRACETAG, wxT("Fetching %s"), to_c_str(filename));
+     wxInputStream *is = url.GetInputStream();
+     if (is && loadFromStream(*is, false)) {
+         wxURI uri(filename);
+@@ -1390,7 +1390,7 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
+ 
+                         tmp = getString(opt, wxT("Clipboard filter"), wxEmptyString);
+                         if (!tmp.IsEmpty()) {
+-                            ::myLogTrace(MYTRACETAG, wxT("read: Clipboard filter '%s'"), tmp.c_str());
++                            ::myLogTrace(MYTRACETAG, wxT("read: Clipboard filter '%s'"), to_c_str(tmp));
+                             if (tmp.CmpNoCase(wxT("primary")) == 0) {
+                                 m_iClipFilter = 0;
+                             }
+@@ -2446,7 +2446,7 @@ MyXmlConfig::SaveToFile()
+         if (secondline++) {
+             // Replace 1st line with non-standard NXclient doctype
+             len -= (secondline - data);
+-            ::myLogTrace(MYTRACETAG, wxT("Writing '%s'"), m_sFileName.c_str());
++            ::myLogTrace(MYTRACETAG, wxT("Writing '%s'"), to_c_str(m_sFileName));
+             wxFile f;
+             if (!f.Create(m_sFileName, true, wxS_IRUSR|wxS_IWUSR)) {
+                 delete data;
+diff --git a/opennx/PulseAudio.cpp b/opennx/PulseAudio.cpp
+index 172d1fa..a5b4bb7 100644
+--- a/opennx/PulseAudio.cpp
++++ b/opennx/PulseAudio.cpp
+@@ -331,7 +331,7 @@ class pawrapper {
+                 wxString name(i->name, wxConvUTF8);
+                 wxString args(i->argument ? i->argument : "", wxConvUTF8);
+                 ::myLogTrace(MYTRACETAG, wxT("module[%u] %s %s"),
+-                        i->index, name.c_str(), args.c_str());
++                        i->index, to_c_str(name), to_c_str(args));
+                 if (m_bSearch) {
+                     if (name.IsSameAs(m_sStr)) {
+                         m_bSearch = false;
+@@ -444,7 +444,7 @@ bool PulseAudio::AutoSpawn()
+         + MachineID() + wxT("-runtime");
+     wxString pidfile = piddir + wxFileName::GetPathSeparator() + wxT("pid");
+     do {
+-        ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: checking '%s'"), pidfile.c_str());
++        ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: checking '%s'"), to_c_str(pidfile));
+         wxFileInputStream sPid(pidfile);
+         if (sPid.IsOk()) {
+             ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: PID file exists"));
+@@ -464,7 +464,7 @@ bool PulseAudio::AutoSpawn()
+ #  ifdef __WXMSW__
+         pacmd << wxT(".exe");
+ #  endif
+-        ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: trying to start '%s'"), pacmd.c_str());
++        ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: trying to start '%s'"), to_c_str(pacmd));
+ #  ifdef __WXMSW__
+         CreateDetachedProcess((const char *)pacmd.mb_str());
+         // Don't report an error here, as CreateDetachedProcess may
+@@ -536,7 +536,7 @@ bool PulseAudio::ActivateEsound(int port)
+     wxString ma;
+     unsigned int mi = -1;
+     if (pa->findmodule(wxT("module-esound-protocol-tcp"), ma, mi)) {
+-        ::myLogTrace(MYTRACETAG, wxT("found esdmod, idx=%u args='%s'"), mi, ma.c_str());
++        ::myLogTrace(MYTRACETAG, wxT("found esdmod, idx=%u args='%s'"), mi, to_c_str(ma));
+         long mport = 16001;
+         wxString laddr(wxT("0.0.0.0"));
+         wxRegEx rePort(wxT("port=(\\d+)"), wxRE_ADVANCED);
+@@ -547,7 +547,7 @@ bool PulseAudio::ActivateEsound(int port)
+         wxRegEx reListen(wxT("listen=(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})"), wxRE_ADVANCED);
+         if (reListen.Matches(ma)) {
+             laddr = reListen.GetMatch(ma, 1);
+-            ::myLogTrace(MYTRACETAG, wxT("matched listen arg a=%s"), laddr.c_str());
++            ::myLogTrace(MYTRACETAG, wxT("matched listen arg a=%s"), to_c_str(laddr));
+         }
+         // Must disable cookie auth here, because esddsp runs on the NX server
+         // and we don't have access to the user's ~/.esd_auth on that machine.
+diff --git a/opennx/ResumeDialog.cpp b/opennx/ResumeDialog.cpp
+index 2f7b4c0..f984c62 100644
+--- a/opennx/ResumeDialog.cpp
++++ b/opennx/ResumeDialog.cpp
+@@ -267,7 +267,7 @@ void ResumeDialog::OnListctrlSessionsSelected( wxListEvent& event )
+     info.SetColumn(7);
+     m_pCtrlSessions->GetItem(info);
+     m_sSelectedId = info.GetText();
+-    ::myLogTrace(MYTRACETAG, wxT("Selected session ID=%s"), m_sSelectedId.c_str());
++    ::myLogTrace(MYTRACETAG, wxT("Selected session ID=%s"), to_c_str(m_sSelectedId));
+     event.Skip();
+ }
+ 
+diff --git a/opennx/SessionList.cpp b/opennx/SessionList.cpp
+index 491c2ce..6200823 100644
+--- a/opennx/SessionList.cpp
++++ b/opennx/SessionList.cpp
+@@ -79,26 +79,26 @@ class RmRfTraverser : public wxDirTraverser
+         {
+             int n = m_aFiles.GetCount() - 1;
+             while (n >= 0) {
+-                ::myLogTrace(MYTRACETAG, wxT("Removing file %s"), m_aFiles[n].c_str());
++                ::myLogTrace(MYTRACETAG, wxT("Removing file %s"), to_c_str(m_aFiles[n]));
+                 wxRemoveFile(m_aFiles[n--]);
+             }
+             n = m_aDirs.GetCount() - 1;
+             while (n >= 0) {
+-                ::myLogTrace(MYTRACETAG, wxT("Removing dir %s"), m_aDirs[n].c_str());
++                ::myLogTrace(MYTRACETAG, wxT("Removing dir %s"), to_c_str(m_aDirs[n]));
+                 wxRmdir(m_aDirs[n--]);
+             }
+         }
+ 
+         virtual wxDirTraverseResult OnFile(const wxString& filename)
+         {
+-            ::myLogTrace(MYTRACETAG, wxT("going to delete file %s"), filename.c_str());
++            ::myLogTrace(MYTRACETAG, wxT("going to delete file %s"), to_c_str(filename));
+             m_aFiles.Add(filename);
+             return wxDIR_CONTINUE;
+         }
+ 
+         virtual wxDirTraverseResult OnDir(const wxString& dirpath)
+         {
+-            ::myLogTrace(MYTRACETAG, wxT("going to delete dir %s"), dirpath.c_str());
++            ::myLogTrace(MYTRACETAG, wxT("going to delete dir %s"), to_c_str(dirpath));
+             m_aDirs.Add(dirpath);
+             return wxDIR_CONTINUE;
+         }
+@@ -210,8 +210,8 @@ void SessionList::ScanDir()
+                 m_re->GetMatch(tmp,5).ToLong(&port);
+                 ::myLogTrace(MYTRACETAG,
+                         wxT("State='%s', Type='%s', Host='%s', Port=%d, MD5='%s'"),
+-                        m_re->GetMatch(tmp,2).c_str(), m_re->GetMatch(tmp,3).c_str(),
+-                        m_re->GetMatch(tmp,4).c_str(), port, md5.c_str());
++                        to_c_str(m_re->GetMatch(tmp, 2)), to_c_str(m_re->GetMatch(tmp, 3)),
++                        to_c_str(m_re->GetMatch(tmp, 4)), port, to_c_str(md5));
+                 // Create new hash entry
+                 MySession s(m_dirName + wxFileName::GetPathSeparator() + tmp,
+                         m_re->GetMatch(tmp,2), m_re->GetMatch(tmp,3),
+@@ -249,7 +249,7 @@ void SessionList::ScanDir()
+                 }
+             } else {
+                 wxString md5 = it->second.sGetMd5();
+-                ::myLogTrace(MYTRACETAG, wxT("Session '%s' disappeared"), md5.c_str());
++                ::myLogTrace(MYTRACETAG, wxT("Session '%s' disappeared"), to_c_str(md5));
+                 finished = false;
+                 if (m_pAdminHandler) {
+                     wxCommandEvent ev(wxEVT_SESSIONLIST_ACTION, wxID_ANY);
+@@ -283,7 +283,7 @@ SessionList::CleanupDir(wxString &dir)
+ {
+     if (!dir.IsEmpty()) {
+         {
+-            ::myLogTrace(MYTRACETAG, wxT("CleanupDir '%s'"), dir.c_str());
++            ::myLogTrace(MYTRACETAG, wxT("CleanupDir '%s'"), to_c_str(dir));
+             wxDir d(dir);
+             RmRfTraverser t;
+             d.Traverse(t);
+diff --git a/opennx/SessionProperties.cpp b/opennx/SessionProperties.cpp
+index 9a4e542..75ba0d5 100644
+--- a/opennx/SessionProperties.cpp
++++ b/opennx/SessionProperties.cpp
+@@ -657,19 +657,19 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
+                             case SharedResource::SHARE_UNKNOWN:
+                                 break;
+                             case SharedResource::SHARE_SMB_DISK:
+-                                ::myLogTrace(MYTRACETAG, wxT("%s"), sg[i].toString().c_str());
++                                ::myLogTrace(MYTRACETAG, wxT("%s"), to_c_str(sg[i].toString()));
+                                 lidx = m_pCtrlSmbShares->InsertItem(0, sg[i].m_sShareName, 1);
+                                 m_pCtrlSmbShares->SetItem(lidx, 1, sg[i].m_sAlias);
+                                 m_pCtrlSmbShares->SetItem(lidx, 2, comment);
+                                 break;
+                             case SharedResource::SHARE_SMB_PRINTER:
+-                                ::myLogTrace(MYTRACETAG, wxT("%s"), sg[i].toString().c_str());
++                                ::myLogTrace(MYTRACETAG, wxT("%s"), to_c_str(sg[i].toString()));
+                                 lidx = m_pCtrlSmbShares->InsertItem(0, sg[i].m_sShareName, 2);
+                                 m_pCtrlSmbShares->SetItem(lidx, 1, sg[i].m_sDriver);
+                                 m_pCtrlSmbShares->SetItem(lidx, 2, comment);
+                                 break;
+                             case SharedResource::SHARE_CUPS_PRINTER:
+-                                ::myLogTrace(MYTRACETAG, wxT("%s"), sg[i].toString().c_str());
++                                ::myLogTrace(MYTRACETAG, wxT("%s"), to_c_str(sg[i].toString()));
+                                 lidx = m_pCtrlSmbShares->InsertItem(0, sg[i].m_sShareName, 3);
+                                 m_pCtrlSmbShares->SetItem(lidx, 1, sg[i].m_sDriver);
+                                 m_pCtrlSmbShares->SetItem(lidx, 2, comment);
+@@ -679,7 +679,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
+                     }
+                 }
+                 if (0 > lidx) {
+-                    ::myLogTrace(MYTRACETAG, wxT("Broken '%s'"), sg[i].toString().c_str());
++                    ::myLogTrace(MYTRACETAG, wxT("Broken '%s'"), to_c_str(sg[i].toString()));
+                     lidx = m_pCtrlSmbShares->InsertItem(0, sg[i].m_sShareName, 0);
+                     m_pCtrlSmbShares->SetItem(lidx, 1, sg[i].m_sAlias);
+                     m_pCtrlSmbShares->SetItem(lidx, 2, comment);
+@@ -1581,7 +1581,7 @@ void SessionProperties::OnDeleteClick( wxCommandEvent& event )
+                     m_pCfg->sGetName().c_str()), _("Delete Session"),
+                 wxICON_QUESTION|wxYES_NO|wxNO_DEFAULT) == wxYES) {
+         wxGetApp().RemoveDesktopEntry(m_pCfg);
+-        ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), m_pCfg->sGetFileName().c_str());
++        ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), to_c_str(m_pCfg->sGetFileName()));
+         wxRemoveFile(m_pCfg->sGetFileName());
+         EndModal(wxID_CLEAR);
+     }
+diff --git a/opennx/UsbIp.cpp b/opennx/UsbIp.cpp
+index f597708..fe1e07c 100644
+--- a/opennx/UsbIp.cpp
++++ b/opennx/UsbIp.cpp
+@@ -125,7 +125,7 @@ bool UsbIp::Connect(const wxString &socketPath)
+ #else
+     wxUNIXaddress addr;
+     addr.Filename(socketPath);
+-    ::myLogTrace(MYTRACETAG, wxT("Connecting to %s"), socketPath.c_str());
++    ::myLogTrace(MYTRACETAG, wxT("Connecting to %s"), to_c_str(socketPath));
+     m_pSocketClient->Connect(addr, false);
+     // It's a local unix socket and the server must be running already,
+     // so 5 secs should be more than enough.
+@@ -410,7 +410,7 @@ void UsbIp::parse(const wxString &line)
+         long code;
+         if (cs.ToLong(&code)) {
+             if (200 != code)
+-                ::myLogTrace(MYTRACETAG, wxT("Got Line: '%s'"), line.c_str());
++                ::myLogTrace(MYTRACETAG, wxT("Got Line: '%s'"), to_c_str(line));
+             switch (code) {
+                 case 100:
+                     if (m_eState == Initializing)
+diff --git a/opennx/mylog.cpp b/opennx/mylog.cpp
+index aec1a92..8a683e8 100644
+--- a/opennx/mylog.cpp
++++ b/opennx/mylog.cpp
+@@ -82,48 +82,25 @@ void myLogDebug(const wxChar *szFormat, ...)
+     va_end(argptr);
+ }
+ 
+-static void myVLogTrace(const wxChar *mask, const wxChar *szFormat, va_list argptr)
++const char* to_c_str(wxString str)
+ {
+-    if (wxLog::IsAllowedTraceMask(mask) ) {
+-        wxString msg;
+-        msg << _T("(") << mask << _T(") ") << wxString::FormatV(szFormat, argptr);
+-        logit(msg.wc_str(), time(NULL));
+-    }
+-}
+-
+-void myLogTrace(const wxChar *mask, const wxChar *szFormat, ...)
+-{
+-    va_list argptr;
+-    va_start(argptr, szFormat);
+-    myVLogTrace(mask, szFormat, argptr);
+-    va_end(argptr);
++#if wxCHECK_VERSION(2,9,0)
++	return str.c_str().AsChar();
++#else
++	return str.c_str();
++#endif
+ }
+ 
+-static void myVLogTrace(wxTraceMask mask, const wxChar *szFormat, va_list argptr)
++static void myVLogTrace(wxString mask, const wxChar *szFormat, va_list argptr)
+ {
+-    if ((wxLog::GetTraceMask() & mask) == mask)
+-    {
+-        wxString format = wxString::FormatV(szFormat, argptr);
+-        logit(format.wc_str(), time(NULL));
+-    }
++	wxString format = wxString::FormatV(szFormat, argptr);
++    logit(format.wc_str(), time(NULL));
+ }
+ 
+-void myLogTrace(wxTraceMask mask, const wxChar *szFormat, ...)
++void myLogTrace(wxString mask, const wxChar *szFormat, ...)
+ {
+     va_list argptr;
+     va_start(argptr, szFormat);
+     myVLogTrace(mask, szFormat, argptr);
+     va_end(argptr);
+ }
+-
+-//  wxWidgets lib > 3.0
+-static void myLogTrace(wxString mask, const wxChar *szFormat, va_list argptr)
+-{
+-//    myLogTrace(mask.wc_str(), szFormat, argptr);
+-}
+-
+-void myLogTrace(wxString mask, const wxChar *szFormat, ...)
+-{
+-//    myLogTrace(mask.wc_str(), szFormat);
+-}
+-//  end wxWidgets lib > 3.0
+diff --git a/opennx/mylog.h b/opennx/mylog.h
+index 290b277..41e18d0 100644
+--- a/opennx/mylog.h
++++ b/opennx/mylog.h
+@@ -33,12 +33,8 @@
+ #endif
+ 
+ extern void myLogDebug(const wxChar *szFormat, ...);
+-extern void myLogTrace(const wxChar *mask, const wxChar *szFormat, ...) WX_ATTRIBUTE_PRINTF_2;
+-extern void myLogTrace(wxTraceMask mask, const wxChar *szFormat, ...) WX_ATTRIBUTE_PRINTF_2;
+-
+-//  wxWidgets lib > 3.0
+ extern void myLogTrace(wxString mask, const wxChar *szFormat, ...) WX_ATTRIBUTE_PRINTF_2;
+-//  end wxWidgets lib > 3.0
++const char* to_c_str(const wxString str);
+ 
+ #endif
+     // _MYLOG_H_
+diff --git a/opennx/opennxApp.cpp b/opennx/opennxApp.cpp
+index e4d82fa..639cea8 100644
+--- a/opennx/opennxApp.cpp
++++ b/opennx/opennxApp.cpp
+@@ -162,7 +162,7 @@ IMPLEMENT_APP(opennxApp);
+         // If KDE_LANG is set, then it has precedence over kdeglobals.
+         wxString lang;
+         if (wxGetEnv(wxT("KDE_LANG"), &lang)) {
+-            myLogDebug(wxT("Overriding LANG from KDE_LANG environment to: '%s'"), lang.c_str());
++            myLogDebug(wxT("Overriding LANG from KDE_LANG environment to: '%s'"), to_c_str(lang));
+             wxSetEnv(wxT("LANG"), lang);
+         } else {
+             // Try to get KDE language settings and override locale accordingly
+@@ -181,7 +181,7 @@ IMPLEMENT_APP(opennxApp);
+                     if (lang.Length() < 3)
+                         lang << wxT("_") << country.Upper();
+                     lang << wxT(".UTF-8");
+-                    myLogDebug(wxT("Overriding LANG from kdeglobals to: '%s'"), lang.c_str());
++                    myLogDebug(wxT("Overriding LANG from kdeglobals to: '%s'"), to_c_str(lang));
+                     wxSetEnv(wxT("LANG"), lang);
+                 }
+             }
+@@ -321,7 +321,7 @@ opennxApp::CreateDesktopEntry(MyXmlConfig *cfg)
+         if (wxDirExists(path)) {
+             wxFile f;
+             wxString fn = path + wxT("/") + cfg->sGetName() + wxT(".desktop");
+-            ::myLogTrace(MYTRACETAG, wxT("Creating '%s'"), fn.c_str());
++            ::myLogTrace(MYTRACETAG, wxT("Creating '%s'"), to_c_str(fn));
+             if (f.Create(fn, true,
+                         wxS_IRUSR|wxS_IWUSR|wxS_IXUSR|wxS_IRGRP|wxS_IROTH)) {
+                 f.Write(dtEntry);
+@@ -346,7 +346,7 @@ opennxApp::RemoveDesktopEntry(MyXmlConfig *cfg)
+     if (SHGetSpecialFolderPath(NULL, dtPath, CSIDL_DESKTOPDIRECTORY, FALSE)) {
+         wxString lpath = wxString::Format(wxT("%s\\%s.lnk"),
+                 dtPath, cfg->sGetName().c_str());
+-        ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), lpath.c_str());
++        ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), to_c_str(lpath));
+         wxRemoveFile(lpath);
+     }
+ #endif
+@@ -677,7 +677,7 @@ opennxApp::preInit()
+         }
+     }
+ # endif
+-    ::myLogDebug(wxT("%s='%s'"), LD_LIBRARY_PATH, ldpath.c_str());
++    ::myLogDebug(wxT("%s='%s'"), LD_LIBRARY_PATH, to_c_str(ldpath));
+     if (!wxSetEnv(LD_LIBRARY_PATH, ldpath)) {
+         wxLogSysError(wxT("Cannot set LD_LIBRARY_PATH"));
+         return false;
+@@ -690,7 +690,7 @@ opennxApp::preInit()
+         while (t.HasMoreTokens()) {
+             wxString tag = t.GetNextToken();
+             if (allTraceTags.Index(tag) != wxNOT_FOUND) {
+-                ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
++                ::myLogDebug(wxT("Trace for '%s' enabled"), to_c_str(tag));
+                 wxLog::AddTraceMask(tag);
+             }
+         }
+@@ -1016,7 +1016,7 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
+                 OnCmdLineError(parser);
+                 return false;
+             }
+-            ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
++            ::myLogDebug(wxT("Trace for '%s' enabled"), to_c_str(tag));
+             wxLog::AddTraceMask(tag);
+         }
+     }
+@@ -1318,15 +1318,14 @@ bool opennxApp::OnInit()
+                         break;
+                     }
+                     ::myLogTrace(MYTRACETAG, wxT("possibly exported USB device: %04x/%04x %s"),
+-                            af[i].m_iVendorID, af[i].m_iProductID, af[i].toShortString().c_str());
++                            af[i].m_iVendorID, af[i].m_iProductID, to_c_str(af[i].toShortString()));
+                     for (j = 0; j < ad.GetCount(); j++)
+                         if (af[i].MatchHotplug(ad[j])) {
+-                            ::myLogTrace(MYTRACETAG, wxT("Match on USB dev %s"), ad[j].toString().c_str());
++                            ::myLogTrace(MYTRACETAG, wxT("Match on USB dev %s"), to_c_str(ad[j].toString()));
+                             for (k = 0; k < aid.GetCount(); k++) {
+                                 if (aid[k].GetUsbBusID().IsSameAs(ad[j].GetBusID())) {
+                                     wxString exBusID = aid[k].GetUsbIpBusID();
+-                                    ::myLogTrace(MYTRACETAG, wxT("Exporting usbup-busid %s (libusb-busid %s)"),
+-                                            exBusID.c_str(), ad[j].GetBusID().c_str());
++                                    ::myLogTrace(MYTRACETAG, wxT("Exporting usbup-busid %s (libusb-busid %s)"), to_c_str(exBusID), to_c_str(ad[j].GetBusID()));
+                                     if (!usbip.WaitForSession(usessionTO)) {
+                                         wxLogError(_("USBIP tunnel registration timeout"));
+                                         m_bRequireStartUsbIp = false;
+@@ -1366,13 +1365,13 @@ bool opennxApp::OnInit()
+             m_pSessionCfg->sSetFileName(cfgname);
+             m_pSessionCfg->SaveToFile();
+         }
+-        ::myLogTrace(MYTRACETAG, wxT("cfgfile='%s'"), cfgname.c_str());
++        ::myLogTrace(MYTRACETAG, wxT("cfgfile='%s'"), to_c_str(cfgname));
+         watchcmd << wxT(" -s ") << m_sSessionID << wxT(" -p ")
+             << m_nNxSshPID << wxT(" -c \"") << cfgname << wxT("\"");
+ #ifdef __WXDEBUG__
+         watchcmd << wxT(" --trace=UsbIp,watchUsbIpApp");
+ #endif
+-        ::myLogTrace(MYTRACETAG, wxT("starting %s"), watchcmd.c_str());
++        ::myLogTrace(MYTRACETAG, wxT("starting %s"), to_c_str(watchcmd));
+         {
+             wxLogNull noerrors;
+             wxExecute(watchcmd);
+@@ -1396,7 +1395,7 @@ bool opennxApp::OnInit()
+ #endif
+             wxString watchcmd = fn.GetShortPath();
+             watchcmd << wxT(" -r ") << m_iReader << wxT(" -p ") << m_nNxSshPID;
+-            ::myLogTrace(MYTRACETAG, wxT("executing %s"), watchcmd.c_str());
++            ::myLogTrace(MYTRACETAG, wxT("executing %s"), to_c_str(watchcmd));
+             wxExecute(watchcmd);
+         }
+     }
+@@ -1433,7 +1432,7 @@ void opennxApp::SetSessionCfg(MyXmlConfig &cfg)
+ /// Respond to Apple Event for opening a document
+ void opennxApp::MacOpenFile(const wxString& filename)
+ {
+-    ::myLogTrace(MYTRACETAG, wxT("MacOpen '%s'"), filename.c_str());
++    ::myLogTrace(MYTRACETAG, wxT("MacOpen '%s'"), to_c_str(filename));
+     m_sSessionName = filename;
+     if (MODE_MAC_WAITOPEN == m_eMode) {
+         ::myLogTrace(MYTRACETAG, wxT("MacOpen finishing wait"));
+diff --git a/opennx/pulseTest.cpp b/opennx/pulseTest.cpp
+index c00a1af..b372cb5 100644
+--- a/opennx/pulseTest.cpp
++++ b/opennx/pulseTest.cpp
+@@ -103,7 +103,7 @@ bool pulseTest::OnCmdLineParsed(wxCmdLineParser& parser)
+                 OnCmdLineError(parser);
+                 return false;
+             }
+-            ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
++            ::myLogDebug(wxT("Trace for '%s' enabled"), to_c_str(tag));
+             wxLog::AddTraceMask(tag);
+         }
+     }
+@@ -168,7 +168,7 @@ bool pulseTest::OnInit()
+         while (t.HasMoreTokens()) {
+             wxString tag = t.GetNextToken();
+             if (allTraceTags.Index(tag) != wxNOT_FOUND) {
+-                ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
++                ::myLogDebug(wxT("Trace for '%s' enabled"), to_c_str(tag));
+                 wxLog::AddTraceMask(tag);
+             }
+         }
+diff --git a/opennx/watchReaderApp.cpp b/opennx/watchReaderApp.cpp
+index 8ce8eef..735a4df 100644
+--- a/opennx/watchReaderApp.cpp
++++ b/opennx/watchReaderApp.cpp
+@@ -79,7 +79,7 @@ watchReaderApp::watchReaderApp()
+         // If KDE_LANG is set, then it has precedence over kdeglobals.
+         wxString lang;
+         if (wxGetEnv(wxT("KDE_LANG"), &lang)) {
+-            myLogDebug(wxT("Overriding LANG from KDE_LANG environment to: '%s'"), lang.c_str());
++            myLogDebug(wxT("Overriding LANG from KDE_LANG environment to: '%s'"), to_c_str(lang));
+             wxSetEnv(wxT("LANG"), lang);
+         } else {
+             // Try to get KDE language settings and override locale accordingly
+@@ -98,7 +98,7 @@ watchReaderApp::watchReaderApp()
+                     if (lang.Length() < 3)
+                         lang << wxT("_") << country.Upper();
+                     lang << wxT(".UTF-8");
+-                    myLogDebug(wxT("Overriding LANG from kdeglobals to: '%s'"), lang.c_str());
++                    myLogDebug(wxT("Overriding LANG from kdeglobals to: '%s'"), to_c_str(lang));
+                     wxSetEnv(wxT("LANG"), lang);
+                 }
+             }
+@@ -182,7 +182,7 @@ bool watchReaderApp::OnCmdLineParsed(wxCmdLineParser& parser)
+                 OnCmdLineError(parser);
+                 return false;
+             }
+-            ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
++            ::myLogDebug(wxT("Trace for '%s' enabled"), to_c_str(tag));
+             wxLog::AddTraceMask(tag);
+         }
+     }
+@@ -247,7 +247,7 @@ bool watchReaderApp::OnInit()
+         while (t.HasMoreTokens()) {
+             wxString tag = t.GetNextToken();
+             if (allTraceTags.Index(tag) != wxNOT_FOUND) {
+-                ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
++                ::myLogDebug(wxT("Trace for '%s' enabled"), to_c_str(tag));
+                 wxLog::AddTraceMask(tag);
+             }
+         }
+@@ -259,7 +259,7 @@ bool watchReaderApp::OnInit()
+         // on MacOS, we use the --dialog functionality of opennx
+         wxConfigBase::Get()->Read(wxT("Config/SystemNxDir"), &tmp);
+         tmp << wxFileName::GetPathSeparator() << wxT("Message.app");
+-        ::myLogTrace(MYTRACETAG, wxT("Executing %s"), tmp.c_str());
++        ::myLogTrace(MYTRACETAG, wxT("Executing %s"), to_c_str(tmp));
+         wxExecute(tmp);
+ #else
+         ::myLogTrace(MYTRACETAG, wxT("Showing info dialog"));
+diff --git a/opennx/watchUsbIpApp.cpp b/opennx/watchUsbIpApp.cpp
+index 440e585..8dac2c0 100644
+--- a/opennx/watchUsbIpApp.cpp
++++ b/opennx/watchUsbIpApp.cpp
+@@ -173,7 +173,7 @@ class ProcessWatcher : public wxThreadHelper
+         // If KDE_LANG is set, then it has precedence over kdeglobals.
+         wxString lang;
+         if (wxGetEnv(wxT("KDE_LANG"), &lang)) {
+-            myLogDebug(wxT("Overriding LANG from KDE_LANG environment to: '%s'"), lang.c_str());
++            myLogDebug(wxT("Overriding LANG from KDE_LANG environment to: '%s'"), to_c_str(lang));
+             wxSetEnv(wxT("LANG"), lang);
+         } else {
+             // Try to get KDE language settings and override locale accordingly
+@@ -192,7 +192,7 @@ class ProcessWatcher : public wxThreadHelper
+                     if (lang.Length() < 3)
+                         lang << wxT("_") << country.Upper();
+                     lang << wxT(".UTF-8");
+-                    myLogDebug(wxT("Overriding LANG from kdeglobals to: '%s'"), lang.c_str());
++                    myLogDebug(wxT("Overriding LANG from kdeglobals to: '%s'"), to_c_str(lang));
+                     wxSetEnv(wxT("LANG"), lang);
+                 }
+             }
+@@ -245,7 +245,7 @@ bool watchUsbIpApp::OnCmdLineParsed(wxCmdLineParser& parser)
+                 OnCmdLineError(parser);
+                 return false;
+             }
+-            ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
++            ::myLogDebug(wxT("Trace for '%s' enabled"), to_c_str(tag));
+             wxLog::AddTraceMask(tag);
+         }
+     }
+@@ -262,7 +262,7 @@ bool watchUsbIpApp::OnInit()
+         while (t.HasMoreTokens()) {
+             wxString tag = t.GetNextToken();
+             if (allTraceTags.Index(tag) != wxNOT_FOUND) {
+-                ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str());
++                ::myLogDebug(wxT("Trace for '%s' enabled"), to_c_str(tag));
+                 wxLog::AddTraceMask(tag);
+             }
+         }
+@@ -492,7 +492,7 @@ void watchUsbIpApp::OnHotplug(HotplugEvent &event)
+                 if (!found) {
+                     a.Add(dev);
+                     m_pSessionCfg->aSetUsbForwards(a);
+-                    ::myLogTrace(MYTRACETAG, wxT("saving to %s"), m_pSessionCfg->sGetFileName().c_str());
++                    ::myLogTrace(MYTRACETAG, wxT("saving to %s"), to_c_str(m_pSessionCfg->sGetFileName()));
+                     if (!m_pSessionCfg->SaveToFile())
+                         wxLogError(_("Could not save session config"));
+                 }
+-- 
+2.1.4
+

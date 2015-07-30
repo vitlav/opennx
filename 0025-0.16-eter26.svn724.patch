@@ -1,7 +1,7 @@
 From fbc86e60b0c2a973e1e63dc72ec23e1d2567e79f Mon Sep 17 00:00:00 2001
 From: Vitaly Lipatov <lav@etersoft.ru>
 Date: Sun, 26 Jan 2014 19:53:36 +0400
-Subject: [PATCH 25/37] 0.16-eter26.svn724
+Subject: [PATCH 25/34] 0.16-eter26.svn724
 
 - fix build with libsmbclient from samba 4.0, fix symlink to libsmbclient
 ---

@@ -1,7 +1,7 @@
 From 2995edb09232976edf4c1b910e628205fb65d71e Mon Sep 17 00:00:00 2001
 From: Denis Baranov <baraka@etersoft.ru>
 Date: Thu, 17 Jan 2013 19:49:45 +0400
-Subject: [PATCH 06/37] Add copy icon in spec
+Subject: [PATCH 06/34] Add copy icon in spec
 
 ---
  .gear/opennx.spec | 12 ++++++------
