@@ -657,19 +657,19 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
                             case SharedResource::SHARE_UNKNOWN:
                                 break;
                             case SharedResource::SHARE_SMB_DISK:
-                                ::myLogTrace(MYTRACETAG, wxT("%s"), sg[i].toString().c_str().AsChar());
+                                ::myLogTrace(MYTRACETAG, wxT("%s"), to_c_str(sg[i].toString()));
                                 lidx = m_pCtrlSmbShares->InsertItem(0, sg[i].m_sShareName, 1);
                                 m_pCtrlSmbShares->SetItem(lidx, 1, sg[i].m_sAlias);
                                 m_pCtrlSmbShares->SetItem(lidx, 2, comment);
                                 break;
                             case SharedResource::SHARE_SMB_PRINTER:
-                                ::myLogTrace(MYTRACETAG, wxT("%s"), sg[i].toString().c_str().AsChar());
+                                ::myLogTrace(MYTRACETAG, wxT("%s"), to_c_str(sg[i].toString()));
                                 lidx = m_pCtrlSmbShares->InsertItem(0, sg[i].m_sShareName, 2);
                                 m_pCtrlSmbShares->SetItem(lidx, 1, sg[i].m_sDriver);
                                 m_pCtrlSmbShares->SetItem(lidx, 2, comment);
                                 break;
                             case SharedResource::SHARE_CUPS_PRINTER:
-                                ::myLogTrace(MYTRACETAG, wxT("%s"), sg[i].toString().c_str().AsChar());
+                                ::myLogTrace(MYTRACETAG, wxT("%s"), to_c_str(sg[i].toString()));
                                 lidx = m_pCtrlSmbShares->InsertItem(0, sg[i].m_sShareName, 3);
                                 m_pCtrlSmbShares->SetItem(lidx, 1, sg[i].m_sDriver);
                                 m_pCtrlSmbShares->SetItem(lidx, 2, comment);
@@ -679,7 +679,7 @@ bool SessionProperties::Create( wxWindow* parent, wxWindowID WXUNUSED(id), const
                     }
                 }
                 if (0 > lidx) {
-                    ::myLogTrace(MYTRACETAG, wxT("Broken '%s'"), sg[i].toString().c_str().AsChar());
+                    ::myLogTrace(MYTRACETAG, wxT("Broken '%s'"), to_c_str(sg[i].toString()));
                     lidx = m_pCtrlSmbShares->InsertItem(0, sg[i].m_sShareName, 0);
                     m_pCtrlSmbShares->SetItem(lidx, 1, sg[i].m_sAlias);
                     m_pCtrlSmbShares->SetItem(lidx, 2, comment);
@@ -1581,7 +1581,7 @@ void SessionProperties::OnDeleteClick( wxCommandEvent& event )
                     m_pCfg->sGetName().c_str()), _("Delete Session"),
                 wxICON_QUESTION|wxYES_NO|wxNO_DEFAULT) == wxYES) {
         wxGetApp().RemoveDesktopEntry(m_pCfg);
-        ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), m_pCfg->sGetFileName().c_str().AsChar());
+        ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), to_c_str(m_pCfg->sGetFileName()));
         wxRemoveFile(m_pCfg->sGetFileName());
         EndModal(wxID_CLEAR);
     }

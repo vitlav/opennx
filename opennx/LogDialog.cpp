@@ -126,7 +126,7 @@ void LogDialog::CreateControls()
 ////@end LogDialog content initialisation
 
     wxFont ff(10, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-    ::myLogTrace(MYTRACETAG, wxT("Font=%s"), ff.GetNativeFontInfoDesc().c_str().AsChar());
+    ::myLogTrace(MYTRACETAG, wxT("Font=%s"), to_c_str(ff.GetNativeFontInfoDesc()));
     m_TextCtrl->SetFont(ff);
 }
 

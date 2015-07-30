@@ -1166,7 +1166,7 @@ MyXmlConfig::LoadFromFile(const wxString &filename)
         }
         delete f;
     }
-    ::myLogTrace(MYTRACETAG, wxT("Reading %s"), filename.c_str().AsChar());
+    ::myLogTrace(MYTRACETAG, wxT("Reading %s"), to_c_str(filename));
     wxFileInputStream fis(filename);
     if (loadFromStream(fis, false)) {
         m_sName = wxFileName(filename).GetName();
@@ -1221,7 +1221,7 @@ MyXmlConfig::LoadFromURL(const wxString &filename)
     curl_easy_setopt(c, CURLOPT_WRITEDATA, &mos);
     curl_easy_setopt(c, CURLOPT_ERRORBUFFER, ebuf);
     curl_easy_setopt(c, CURLOPT_WRITEFUNCTION, CurlWriteCallback);
-    ::myLogTrace(MYTRACETAG, wxT("Fetching %s"), filename.c_str().AsChar());
+    ::myLogTrace(MYTRACETAG, wxT("Fetching %s"), to_c_str(filename));
     CURLcode r = curl_easy_perform(c);
     if (0 == r) {
         off_t len = mos.TellO();
@@ -1231,7 +1231,7 @@ MyXmlConfig::LoadFromURL(const wxString &filename)
                 curl_easy_getinfo(c, CURLINFO_RESPONSE_CODE, &rcode);
             }
             if (200 == rcode) {
-                ::myLogTrace(MYTRACETAG, wxT("Fetching %s"), filename.c_str().AsChar());
+                ::myLogTrace(MYTRACETAG, wxT("Fetching %s"), to_c_str(filename));
                 char * const data = new char[len];
                 mos.CopyTo(data, len);
                 wxMemoryInputStream mis(data, len);
@@ -1265,7 +1265,7 @@ MyXmlConfig::LoadFromURL(const wxString &filename)
         if (!url.IsOk())
             return false;
     }
-    ::myLogTrace(MYTRACETAG, wxT("Fetching %s"), filename.c_str().AsChar());
+    ::myLogTrace(MYTRACETAG, wxT("Fetching %s"), to_c_str(filename));
     wxInputStream *is = url.GetInputStream();
     if (is && loadFromStream(*is, false)) {
         wxURI uri(filename);
@@ -1390,7 +1390,7 @@ MyXmlConfig::loadFromStream(wxInputStream &is, bool isPush)
 
                         tmp = getString(opt, wxT("Clipboard filter"), wxEmptyString);
                         if (!tmp.IsEmpty()) {
-                            ::myLogTrace(MYTRACETAG, wxT("read: Clipboard filter '%s'"), tmp.c_str().AsChar());
+                            ::myLogTrace(MYTRACETAG, wxT("read: Clipboard filter '%s'"), to_c_str(tmp));
                             if (tmp.CmpNoCase(wxT("primary")) == 0) {
                                 m_iClipFilter = 0;
                             }
@@ -2446,7 +2446,7 @@ MyXmlConfig::SaveToFile()
         if (secondline++) {
             // Replace 1st line with non-standard NXclient doctype
             len -= (secondline - data);
-            ::myLogTrace(MYTRACETAG, wxT("Writing '%s'"), m_sFileName.c_str().AsChar());
+            ::myLogTrace(MYTRACETAG, wxT("Writing '%s'"), to_c_str(m_sFileName));
             wxFile f;
             if (!f.Create(m_sFileName, true, wxS_IRUSR|wxS_IWUSR)) {
                 delete data;

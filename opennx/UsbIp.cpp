@@ -125,7 +125,7 @@ bool UsbIp::Connect(const wxString &socketPath)
 #else
     wxUNIXaddress addr;
     addr.Filename(socketPath);
-    ::myLogTrace(MYTRACETAG, wxT("Connecting to %s"), socketPath.c_str().AsChar());
+    ::myLogTrace(MYTRACETAG, wxT("Connecting to %s"), to_c_str(socketPath));
     m_pSocketClient->Connect(addr, false);
     // It's a local unix socket and the server must be running already,
     // so 5 secs should be more than enough.
@@ -410,7 +410,7 @@ void UsbIp::parse(const wxString &line)
         long code;
         if (cs.ToLong(&code)) {
             if (200 != code)
-                ::myLogTrace(MYTRACETAG, wxT("Got Line: '%s'"), line.c_str().AsChar());
+                ::myLogTrace(MYTRACETAG, wxT("Got Line: '%s'"), to_c_str(line));
             switch (code) {
                 case 100:
                     if (m_eState == Initializing)

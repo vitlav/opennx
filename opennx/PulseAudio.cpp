@@ -331,7 +331,7 @@ class pawrapper {
                 wxString name(i->name, wxConvUTF8);
                 wxString args(i->argument ? i->argument : "", wxConvUTF8);
                 ::myLogTrace(MYTRACETAG, wxT("module[%u] %s %s"),
-                        i->index, name.c_str().AsChar(), args.c_str().AsChar());
+                        i->index, to_c_str(name), to_c_str(args));
                 if (m_bSearch) {
                     if (name.IsSameAs(m_sStr)) {
                         m_bSearch = false;
@@ -444,7 +444,7 @@ bool PulseAudio::AutoSpawn()
         + MachineID() + wxT("-runtime");
     wxString pidfile = piddir + wxFileName::GetPathSeparator() + wxT("pid");
     do {
-        ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: checking '%s'"), pidfile.c_str().AsChar());
+        ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: checking '%s'"), to_c_str(pidfile));
         wxFileInputStream sPid(pidfile);
         if (sPid.IsOk()) {
             ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: PID file exists"));
@@ -464,7 +464,7 @@ bool PulseAudio::AutoSpawn()
 #  ifdef __WXMSW__
         pacmd << wxT(".exe");
 #  endif
-        ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: trying to start '%s'"), pacmd.c_str().AsChar());
+        ::myLogTrace(MYTRACETAG, wxT("PulseAudio::AutoSpawn: trying to start '%s'"), to_c_str(pacmd));
 #  ifdef __WXMSW__
         CreateDetachedProcess((const char *)pacmd.mb_str());
         // Don't report an error here, as CreateDetachedProcess may
@@ -536,7 +536,7 @@ bool PulseAudio::ActivateEsound(int port)
     wxString ma;
     unsigned int mi = -1;
     if (pa->findmodule(wxT("module-esound-protocol-tcp"), ma, mi)) {
-        ::myLogTrace(MYTRACETAG, wxT("found esdmod, idx=%u args='%s'"), mi, ma.c_str().AsChar());
+        ::myLogTrace(MYTRACETAG, wxT("found esdmod, idx=%u args='%s'"), mi, to_c_str(ma));
         long mport = 16001;
         wxString laddr(wxT("0.0.0.0"));
         wxRegEx rePort(wxT("port=(\\d+)"), wxRE_ADVANCED);
@@ -547,7 +547,7 @@ bool PulseAudio::ActivateEsound(int port)
         wxRegEx reListen(wxT("listen=(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})"), wxRE_ADVANCED);
         if (reListen.Matches(ma)) {
             laddr = reListen.GetMatch(ma, 1);
-            ::myLogTrace(MYTRACETAG, wxT("matched listen arg a=%s"), laddr.c_str().AsChar());
+            ::myLogTrace(MYTRACETAG, wxT("matched listen arg a=%s"), to_c_str(laddr));
         }
         // Must disable cookie auth here, because esddsp runs on the NX server
         // and we don't have access to the user's ~/.esd_auth on that machine.

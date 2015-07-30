@@ -82,9 +82,18 @@ void myLogDebug(const wxChar *szFormat, ...)
     va_end(argptr);
 }
 
+const char* to_c_str(wxString str)
+{
+#if wxCHECK_VERSION(2,9,0)
+	return str.c_str().AsChar();
+#else
+	return str.c_str();
+#endif
+}
+
 static void myVLogTrace(wxString mask, const wxChar *szFormat, va_list argptr)
 {
-    wxString format = wxString::FormatV(szFormat, argptr);
+	wxString format = wxString::FormatV(szFormat, argptr);
     logit(format.wc_str(), time(NULL));
 }
 

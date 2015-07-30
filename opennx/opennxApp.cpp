@@ -162,7 +162,7 @@ IMPLEMENT_APP(opennxApp);
         // If KDE_LANG is set, then it has precedence over kdeglobals.
         wxString lang;
         if (wxGetEnv(wxT("KDE_LANG"), &lang)) {
-            myLogDebug(wxT("Overriding LANG from KDE_LANG environment to: '%s'"), lang.c_str().AsChar());
+            myLogDebug(wxT("Overriding LANG from KDE_LANG environment to: '%s'"), to_c_str(lang));
             wxSetEnv(wxT("LANG"), lang);
         } else {
             // Try to get KDE language settings and override locale accordingly
@@ -181,7 +181,7 @@ IMPLEMENT_APP(opennxApp);
                     if (lang.Length() < 3)
                         lang << wxT("_") << country.Upper();
                     lang << wxT(".UTF-8");
-                    myLogDebug(wxT("Overriding LANG from kdeglobals to: '%s'"), lang.c_str().AsChar());
+                    myLogDebug(wxT("Overriding LANG from kdeglobals to: '%s'"), to_c_str(lang));
                     wxSetEnv(wxT("LANG"), lang);
                 }
             }
@@ -321,7 +321,7 @@ opennxApp::CreateDesktopEntry(MyXmlConfig *cfg)
         if (wxDirExists(path)) {
             wxFile f;
             wxString fn = path + wxT("/") + cfg->sGetName() + wxT(".desktop");
-            ::myLogTrace(MYTRACETAG, wxT("Creating '%s'"), fn.c_str().AsChar());
+            ::myLogTrace(MYTRACETAG, wxT("Creating '%s'"), to_c_str(fn));
             if (f.Create(fn, true,
                         wxS_IRUSR|wxS_IWUSR|wxS_IXUSR|wxS_IRGRP|wxS_IROTH)) {
                 f.Write(dtEntry);
@@ -346,7 +346,7 @@ opennxApp::RemoveDesktopEntry(MyXmlConfig *cfg)
     if (SHGetSpecialFolderPath(NULL, dtPath, CSIDL_DESKTOPDIRECTORY, FALSE)) {
         wxString lpath = wxString::Format(wxT("%s\\%s.lnk"),
                 dtPath, cfg->sGetName().c_str());
-        ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), lpath.c_str().AsChar());
+        ::myLogTrace(MYTRACETAG, wxT("Removing '%s'"), to_c_str(lpath));
         wxRemoveFile(lpath);
     }
 #endif
@@ -677,7 +677,7 @@ opennxApp::preInit()
         }
     }
 # endif
-    ::myLogDebug(wxT("%s='%s'"), LD_LIBRARY_PATH, ldpath.c_str().AsChar());
+    ::myLogDebug(wxT("%s='%s'"), LD_LIBRARY_PATH, to_c_str(ldpath));
     if (!wxSetEnv(LD_LIBRARY_PATH, ldpath)) {
         wxLogSysError(wxT("Cannot set LD_LIBRARY_PATH"));
         return false;
@@ -690,7 +690,7 @@ opennxApp::preInit()
         while (t.HasMoreTokens()) {
             wxString tag = t.GetNextToken();
             if (allTraceTags.Index(tag) != wxNOT_FOUND) {
-                ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str().AsChar());
+                ::myLogDebug(wxT("Trace for '%s' enabled"), to_c_str(tag));
                 wxLog::AddTraceMask(tag);
             }
         }
@@ -1016,7 +1016,7 @@ bool opennxApp::OnCmdLineParsed(wxCmdLineParser& parser)
                 OnCmdLineError(parser);
                 return false;
             }
-            ::myLogDebug(wxT("Trace for '%s' enabled"), tag.c_str().AsChar());
+            ::myLogDebug(wxT("Trace for '%s' enabled"), to_c_str(tag));
             wxLog::AddTraceMask(tag);
         }
     }
@@ -1318,15 +1318,14 @@ bool opennxApp::OnInit()
                         break;
                     }
                     ::myLogTrace(MYTRACETAG, wxT("possibly exported USB device: %04x/%04x %s"),
-                            af[i].m_iVendorID, af[i].m_iProductID, af[i].toShortString().c_str());
+                            af[i].m_iVendorID, af[i].m_iProductID, to_c_str(af[i].toShortString()));
                     for (j = 0; j < ad.GetCount(); j++)
                         if (af[i].MatchHotplug(ad[j])) {
-                            ::myLogTrace(MYTRACETAG, wxT("Match on USB dev %s"), ad[j].toString().c_str().AsChar());
+                            ::myLogTrace(MYTRACETAG, wxT("Match on USB dev %s"), to_c_str(ad[j].toString()));
                             for (k = 0; k < aid.GetCount(); k++) {
                                 if (aid[k].GetUsbBusID().IsSameAs(ad[j].GetBusID())) {
                                     wxString exBusID = aid[k].GetUsbIpBusID();
-                                    ::myLogTrace(MYTRACETAG, wxT("Exporting usbup-busid %s (libusb-busid %s)"),
-                                            exBusID.c_str(), ad[j].GetBusID().c_str());
+                                    ::myLogTrace(MYTRACETAG, wxT("Exporting usbup-busid %s (libusb-busid %s)"), to_c_str(exBusID), to_c_str(ad[j].GetBusID()));
                                     if (!usbip.WaitForSession(usessionTO)) {
                                         wxLogError(_("USBIP tunnel registration timeout"));
                                         m_bRequireStartUsbIp = false;
@@ -1366,13 +1365,13 @@ bool opennxApp::OnInit()
             m_pSessionCfg->sSetFileName(cfgname);
             m_pSessionCfg->SaveToFile();
         }
-        ::myLogTrace(MYTRACETAG, wxT("cfgfile='%s'"), cfgname.c_str().AsChar());
+        ::myLogTrace(MYTRACETAG, wxT("cfgfile='%s'"), to_c_str(cfgname));
         watchcmd << wxT(" -s ") << m_sSessionID << wxT(" -p ")
             << m_nNxSshPID << wxT(" -c \"") << cfgname << wxT("\"");
 #ifdef __WXDEBUG__
         watchcmd << wxT(" --trace=UsbIp,watchUsbIpApp");
 #endif
-        ::myLogTrace(MYTRACETAG, wxT("starting %s"), watchcmd.c_str().AsChar());
+        ::myLogTrace(MYTRACETAG, wxT("starting %s"), to_c_str(watchcmd));
         {
             wxLogNull noerrors;
             wxExecute(watchcmd);
@@ -1396,7 +1395,7 @@ bool opennxApp::OnInit()
 #endif
             wxString watchcmd = fn.GetShortPath();
             watchcmd << wxT(" -r ") << m_iReader << wxT(" -p ") << m_nNxSshPID;
-            ::myLogTrace(MYTRACETAG, wxT("executing %s"), watchcmd.c_str().AsChar());
+            ::myLogTrace(MYTRACETAG, wxT("executing %s"), to_c_str(watchcmd));
             wxExecute(watchcmd);
         }
     }
@@ -1433,7 +1432,7 @@ void opennxApp::SetSessionCfg(MyXmlConfig &cfg)
 /// Respond to Apple Event for opening a document
 void opennxApp::MacOpenFile(const wxString& filename)
 {
-    ::myLogTrace(MYTRACETAG, wxT("MacOpen '%s'"), filename.c_str().AsChar());
+    ::myLogTrace(MYTRACETAG, wxT("MacOpen '%s'"), to_c_str(filename));
     m_sSessionName = filename;
     if (MODE_MAC_WAITOPEN == m_eMode) {
         ::myLogTrace(MYTRACETAG, wxT("MacOpen finishing wait"));

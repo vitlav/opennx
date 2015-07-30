@@ -180,14 +180,14 @@ void LoginDialog::ReadConfigDirectory()
         delete m_pCurrentCfg;
     m_pCurrentCfg = NULL;
     m_pCtrlSessionName->Clear();
-    ::myLogTrace(MYTRACETAG, wxT("ReadConfigDirectory: LastSession='%s'"), m_sLastSessionFilename.c_str().AsChar());
+    ::myLogTrace(MYTRACETAG, wxT("ReadConfigDirectory: LastSession='%s'"), to_c_str(m_sLastSessionFilename));
     if (m_sLastSessionFilename.StartsWith(wxT("http://")) ||
             m_sLastSessionFilename.StartsWith(wxT("https://")) ||
             m_sLastSessionFilename.StartsWith(wxT("ftp://")) ||
             ((m_aConfigFiles.Index(m_sLastSessionFilename) == wxNOT_FOUND) &&
              (wxFile::Exists(m_sLastSessionFilename)))) {
         m_aConfigFiles.Add(m_sLastSessionFilename);
-        ::myLogTrace(MYTRACETAG, wxT("ReadConfigDirectory: Adding '%s'"), m_sLastSessionFilename.c_str().AsChar());
+        ::myLogTrace(MYTRACETAG, wxT("ReadConfigDirectory: Adding '%s'"), to_c_str(m_sLastSessionFilename));
     }
     for (i = 0; i < m_aConfigFiles.GetCount(); i++) {
         MyXmlConfig cfg(m_aConfigFiles[i]);
@@ -212,12 +212,12 @@ void LoginDialog::ReadConfigDirectory()
         }
     }
     if (m_pCurrentCfg) {
-        ::myLogTrace(MYTRACETAG, wxT("SS1='%s'"), m_sSessionName.c_str().AsChar());
+        ::myLogTrace(MYTRACETAG, wxT("SS1='%s'"), to_c_str(m_sSessionName));
         m_pCtrlSessionName->SetStringSelection(m_sSessionName);
         wxCommandEvent event;
         OnComboboxSessionSelected(event);
     } else {
-        ::myLogTrace(MYTRACETAG, wxT("SS2='%s'"), m_sLastSessionFilename.c_str().AsChar());
+        ::myLogTrace(MYTRACETAG, wxT("SS2='%s'"), to_c_str(m_sLastSessionFilename));
         // Last session name might be a plain session name (backward compatibility)
         m_pCtrlSessionName->SetStringSelection(m_sLastSessionFilename);
         wxCommandEvent event;
@@ -423,7 +423,7 @@ void LoginDialog::OnButtonConfigureClick( wxCommandEvent& event )
                 m_pCurrentCfg = new MyXmlConfig(fn);
                 break;
             case wxID_CLEAR:
-                ::myLogTrace(MYTRACETAG, wxT("deleting '%s'"), fn.c_str().AsChar());
+                ::myLogTrace(MYTRACETAG, wxT("deleting '%s'"), to_c_str(fn));
                 wxRemoveFile(fn);
                 ReadConfigDirectory();
                 break;
