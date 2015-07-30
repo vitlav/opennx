@@ -27,11 +27,11 @@
 
 #include "MyXmlConfig.h"
 
-//  wxWidgets lib > 3.0
+#if wxCHECK_VERSION(2,9,0)
 #define wxHTTP_Req wxString
 #define wxHTTP_GET wxString("GET")
 #define wxHTTP_POST wxString("POST")
-//  end wxWidgets lib > 3.0
+#endif
 
 class ConnectDialog;
 class MyIPC;

@@ -192,7 +192,7 @@ void LoginDialog::ReadConfigDirectory()
     for (i = 0; i < m_aConfigFiles.GetCount(); i++) {
         MyXmlConfig cfg(m_aConfigFiles[i]);
         if (cfg.IsValid()) {
-            m_pCtrlSessionName->Append(cfg.sGetName(), const_cast<char *>(m_aConfigFiles[i].c_str().AsChar()));
+            m_pCtrlSessionName->Append(cfg.sGetName(), const_cast<char*>(to_c_str(m_aConfigFiles[i])));
             if ((cfg.sGetFileName() == m_sLastSessionFilename) ||
                     (cfg.sGetName() == m_sLastSessionFilename)) {
                 m_pCurrentCfg = new MyXmlConfig(m_aConfigFiles[i]);
@@ -399,7 +399,7 @@ void LoginDialog::OnButtonWizardClick( wxCommandEvent& event )
 	ReadConfigDirectory();
 	m_sSessionName = wz.sGetConfigName();
 	MyXmlConfig cfg(m_sSessionName);
-    m_pCtrlSessionName->Append(cfg.sGetName(), const_cast<char *>(m_sSessionName.c_str().AsChar()));
+    m_pCtrlSessionName->Append(cfg.sGetName(), const_cast<char*>(to_c_str(m_sSessionName)));
     m_pCtrlSessionName->SetStringSelection(cfg.sGetName());
     wxCommandEvent event2;
     OnComboboxSessionSelected(event2);

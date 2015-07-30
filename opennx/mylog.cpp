@@ -82,19 +82,14 @@ void myLogDebug(const wxChar *szFormat, ...)
     va_end(argptr);
 }
 
-const char* to_c_str(wxString str)
-{
-#if wxCHECK_VERSION(2,9,0)
-	return str.c_str().AsChar();
-#else
-	return str.c_str();
-#endif
-}
-
 static void myVLogTrace(wxString mask, const wxChar *szFormat, va_list argptr)
 {
-	wxString format = wxString::FormatV(szFormat, argptr);
-    logit(format.wc_str(), time(NULL));
+    if(wxLog::IsAllowedTraceMask(mask))
+    {
+        wxString format;
+        format << wxT("(") << mask << wxT(") ") << wxString::FormatV(szFormat, argptr);
+		logit(format.wc_str(), time(NULL));
+    }
 }
 
 void myLogTrace(wxString mask, const wxChar *szFormat, ...)
@@ -103,4 +98,13 @@ void myLogTrace(wxString mask, const wxChar *szFormat, ...)
     va_start(argptr, szFormat);
     myVLogTrace(mask, szFormat, argptr);
     va_end(argptr);
+}
+
+const char* to_c_str(wxString str)
+{
+#if wxCHECK_VERSION(2,9,0)
+	return str.c_str().AsChar();
+#else
+	return str.mb_str();
+#endif
 }

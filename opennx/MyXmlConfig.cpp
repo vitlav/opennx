@@ -557,7 +557,11 @@ MyXmlConfig::UrlEsc(const wxString &s)
     size_t len = s.Length();
     wxString ret;
     for (size_t i = 0; i < len; i++) {
+#if wxCHECK_VERSION(2,9,0)
         switch (s[i].GetValue()) {
+#else
+        switch (s[i]) {
+#endif
             case wxT(' '):
             case wxT(':'):
             case wxT('"'):
