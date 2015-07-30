@@ -1,4 +1,4 @@
-From 19992c3a5b71d42a1b399711021409e86496ceff Mon Sep 17 00:00:00 2001
+From b8786e33ffbbc02ea9daad8de0ca5995f9c99e43 Mon Sep 17 00:00:00 2001
 From: Sergey Bolotov <sbol@etersoft.ru>
 Date: Mon, 27 Jul 2015 17:00:34 +0300
 Subject: [PATCH 32/34] changed int to enum

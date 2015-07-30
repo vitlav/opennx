@@ -1,4 +1,4 @@
-From ec9875cd129d5d86ed05a6fec48036389778917c Mon Sep 17 00:00:00 2001
+From f9d69fd34e139a9699bc33304ee4a89bb9c41dc9 Mon Sep 17 00:00:00 2001
 From: Sergey Bolotov <sbol@etersoft.ru>
 Date: Mon, 27 Jul 2015 16:32:51 +0300
 Subject: [PATCH 29/34] Fixed wxchar** to wxArrayString conversion

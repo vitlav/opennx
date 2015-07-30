@@ -1,0 +1,85 @@
+From 972911f77c2b0153d3d8991be6adbceafbb2114a Mon Sep 17 00:00:00 2001
+From: Sergey Bolotov <sbol@etersoft.ru>
+Date: Thu, 30 Jul 2015 15:59:06 +0300
+Subject: [PATCH 26/34] added myLogTrace functions
+
+---
+ opennx/mylog.cpp | 30 +++++++++---------------------
+ opennx/mylog.h   |  3 +++
+ 2 files changed, 12 insertions(+), 21 deletions(-)
+
+diff --git a/opennx/mylog.cpp b/opennx/mylog.cpp
+index f4dd75f..c048a7a 100644
+--- a/opennx/mylog.cpp
++++ b/opennx/mylog.cpp
+@@ -70,7 +70,8 @@ static void logit(const wxChar *szString, time_t WXUNUSED(t))
+ 
+ static void myVLogDebug(const wxChar *szFormat, va_list argptr)
+ {
+-    logit(wxString::FormatV(szFormat, argptr), time(NULL));
++    wxString format = wxString::FormatV(szFormat, argptr);
++    logit(format.wc_str(), time(NULL));
+ }
+ 
+ void myLogDebug(const wxChar *szFormat, ...)
+@@ -81,30 +82,17 @@ void myLogDebug(const wxChar *szFormat, ...)
+     va_end(argptr);
+ }
+ 
+-static void myVLogTrace(const wxChar *mask, const wxChar *szFormat, va_list argptr)
++static void myVLogTrace(wxString mask, const wxChar *szFormat, va_list argptr)
+ {
+-    if (wxLog::IsAllowedTraceMask(mask) ) {
+-        wxString msg;
+-        msg << _T("(") << mask << _T(") ") << wxString::FormatV(szFormat, argptr);
+-        logit(msg, time(NULL));
++    if(wxLog::IsAllowedTraceMask(mask))
++    {
++        wxString format;
++        format << wxT("(") << mask << wxT(") ") << wxString::FormatV(szFormat, argptr);
++		logit(format.wc_str(), time(NULL));
+     }
+ }
+ 
+-void myLogTrace(const wxChar *mask, const wxChar *szFormat, ...)
+-{
+-    va_list argptr;
+-    va_start(argptr, szFormat);
+-    myVLogTrace(mask, szFormat, argptr);
+-    va_end(argptr);
+-}
+-
+-static void myVLogTrace(wxTraceMask mask, const wxChar *szFormat, va_list argptr)
+-{
+-    if ((wxLog::GetTraceMask() & mask) == mask)
+-        logit(wxString::FormatV(szFormat, argptr), time(NULL));
+-}
+-
+-void myLogTrace(wxTraceMask mask, const wxChar *szFormat, ...)
++void myLogTrace(wxString mask, const wxChar *szFormat, ...)
+ {
+     va_list argptr;
+     va_start(argptr, szFormat);
+diff --git a/opennx/mylog.h b/opennx/mylog.h
+index a0f6f35..5686422 100644
+--- a/opennx/mylog.h
++++ b/opennx/mylog.h
+@@ -23,6 +23,7 @@
+ #define _MYLOG_H_
+ 
+ #include <wx/log.h>
++#include <wx/string.h>
+ 
+ // Compatibility with patched wxWidgets 2.8.12 on Ubuntu
+ #ifndef WX_ATTRIBUTE_PRINTF_2
+@@ -35,5 +36,7 @@ extern void myLogDebug(const wxChar *szFormat, ...);
+ extern void myLogTrace(const wxChar *mask, const wxChar *szFormat, ...) WX_ATTRIBUTE_PRINTF_2;
+ extern void myLogTrace(wxTraceMask mask, const wxChar *szFormat, ...) WX_ATTRIBUTE_PRINTF_2;
+ 
++extern void myLogTrace(wxString mask, const wxChar *szFormat, ...) WX_ATTRIBUTE_PRINTF_2;
++
+ #endif
+     // _MYLOG_H_
+-- 
+2.1.4
+

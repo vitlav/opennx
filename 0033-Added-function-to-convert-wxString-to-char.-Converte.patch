@@ -1,7 +1,7 @@
-From 30e11ebbe223672d5c63dd66747716146e6695cb Mon Sep 17 00:00:00 2001
+From 78001490076b3a566d9835b69a07b56800387e4f Mon Sep 17 00:00:00 2001
 From: Sergey Bolotov <sbol@etersoft.ru>
-Date: Thu, 30 Jul 2015 14:48:02 +0300
-Subject: [PATCH 34/34] Added function to convert wxString to char. Converted
+Date: Thu, 30 Jul 2015 15:53:21 +0300
+Subject: [PATCH 33/34] Added function to convert wxString to char. Converted
  all wxStrings in myLogFuncs to char
 
 ---
@@ -18,13 +18,13 @@ Subject: [PATCH 34/34] Added function to convert wxString to char. Converted
  opennx/SessionList.cpp       | 16 +++++------
  opennx/SessionProperties.cpp | 10 +++----
  opennx/UsbIp.cpp             |  4 +--
- opennx/mylog.cpp             | 43 +++++++----------------------
+ opennx/mylog.cpp             |  9 +++++++
  opennx/mylog.h               |  6 +----
  opennx/opennxApp.cpp         | 29 ++++++++++----------
  opennx/pulseTest.cpp         |  4 +--
  opennx/watchReaderApp.cpp    | 10 +++----
  opennx/watchUsbIpApp.cpp     | 10 +++----
- 19 files changed, 112 insertions(+), 144 deletions(-)
+ 19 files changed, 111 insertions(+), 111 deletions(-)
 
 diff --git a/opennx/LibUSB.cpp b/opennx/LibUSB.cpp
 index 647bc04..6d4f140 100644
@@ -700,68 +700,22 @@ index f597708..fe1e07c 100644
                  case 100:
                      if (m_eState == Initializing)
 diff --git a/opennx/mylog.cpp b/opennx/mylog.cpp
-index aec1a92..8a683e8 100644
+index c048a7a..24c0e0d 100644
 --- a/opennx/mylog.cpp
 +++ b/opennx/mylog.cpp
-@@ -82,48 +82,25 @@ void myLogDebug(const wxChar *szFormat, ...)
+@@ -99,3 +99,12 @@ void myLogTrace(wxString mask, const wxChar *szFormat, ...)
+     myVLogTrace(mask, szFormat, argptr);
      va_end(argptr);
  }
- 
--static void myVLogTrace(const wxChar *mask, const wxChar *szFormat, va_list argptr)
++
 +const char* to_c_str(wxString str)
- {
--    if (wxLog::IsAllowedTraceMask(mask) ) {
--        wxString msg;
--        msg << _T("(") << mask << _T(") ") << wxString::FormatV(szFormat, argptr);
--        logit(msg.wc_str(), time(NULL));
--    }
--}
--
--void myLogTrace(const wxChar *mask, const wxChar *szFormat, ...)
--{
--    va_list argptr;
--    va_start(argptr, szFormat);
--    myVLogTrace(mask, szFormat, argptr);
--    va_end(argptr);
++{
 +#if wxCHECK_VERSION(2,9,0)
 +	return str.c_str().AsChar();
 +#else
 +	return str.c_str();
 +#endif
- }
- 
--static void myVLogTrace(wxTraceMask mask, const wxChar *szFormat, va_list argptr)
-+static void myVLogTrace(wxString mask, const wxChar *szFormat, va_list argptr)
- {
--    if ((wxLog::GetTraceMask() & mask) == mask)
--    {
--        wxString format = wxString::FormatV(szFormat, argptr);
--        logit(format.wc_str(), time(NULL));
--    }
-+	wxString format = wxString::FormatV(szFormat, argptr);
-+    logit(format.wc_str(), time(NULL));
- }
- 
--void myLogTrace(wxTraceMask mask, const wxChar *szFormat, ...)
-+void myLogTrace(wxString mask, const wxChar *szFormat, ...)
- {
-     va_list argptr;
-     va_start(argptr, szFormat);
-     myVLogTrace(mask, szFormat, argptr);
-     va_end(argptr);
- }
--
--//  wxWidgets lib > 3.0
--static void myLogTrace(wxString mask, const wxChar *szFormat, va_list argptr)
--{
--//    myLogTrace(mask.wc_str(), szFormat, argptr);
--}
--
--void myLogTrace(wxString mask, const wxChar *szFormat, ...)
--{
--//    myLogTrace(mask.wc_str(), szFormat);
--}
--//  end wxWidgets lib > 3.0
++}
 diff --git a/opennx/mylog.h b/opennx/mylog.h
 index 290b277..41e18d0 100644
 --- a/opennx/mylog.h

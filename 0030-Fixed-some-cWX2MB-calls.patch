@@ -1,4 +1,4 @@
-From a7abb748f1693e3eb81bbac07638de0e8e341cfa Mon Sep 17 00:00:00 2001
+From b0d16f29cc380d753934008d96f3a15201bbc085 Mon Sep 17 00:00:00 2001
 From: Sergey Bolotov <sbol@etersoft.ru>
 Date: Mon, 27 Jul 2015 16:34:21 +0300
 Subject: [PATCH 30/34] Fixed some cWX2MB calls
