@@ -1,7 +1,7 @@
 From a334c853d7590930b9f2154fdd311d69057230c3 Mon Sep 17 00:00:00 2001
 From: Sergey Bolotov <sbol@etersoft.ru>
 Date: Thu, 30 Jul 2015 15:53:21 +0300
-Subject: [PATCH 20/23] Added function to convert wxString to char. Converted
+Subject: [PATCH 20/22] Added function to convert wxString to char. Converted
  all wxStrings in myLogFuncs to char
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>

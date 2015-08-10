@@ -1,7 +1,7 @@
 From 95fd3db145b9c25a41e6c422843adfc77724848e Mon Sep 17 00:00:00 2001
 From: Vitaly Lipatov <lav@etersoft.ru>
 Date: Thu, 3 Oct 2013 14:35:56 +0400
-Subject: [PATCH 12/23] remove PidFile option from cups config (eterbug #9490)
+Subject: [PATCH 12/22] remove PidFile option from cups config (eterbug #9490)
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 

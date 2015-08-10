@@ -1,7 +1,7 @@
 From f2e82223e7b8208ba17d02469decf38bd838aee0 Mon Sep 17 00:00:00 2001
 From: Sergey Bolotov <sbol@etersoft.ru>
 Date: Mon, 27 Jul 2015 17:00:34 +0300
-Subject: [PATCH 19/23] changed int to enum
+Subject: [PATCH 19/22] changed int to enum
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 
