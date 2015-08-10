@@ -1,7 +1,7 @@
-From 477888ed5e2bc4de17fd447a48dd447a4d0fa82e Mon Sep 17 00:00:00 2001
+From 2a9cf6ed9544f79ab63e3d6e891d70a1c84e551d Mon Sep 17 00:00:00 2001
 From: Sergey Bolotov <sbol@etersoft.ru>
 Date: Mon, 27 Jul 2015 16:02:24 +0300
-Subject: [PATCH 17/23] changed Node to compatibility_iterator
+Subject: [PATCH 15/23] changed Node to compatibility_iterator
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 

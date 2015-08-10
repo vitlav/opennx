@@ -1,7 +1,7 @@
-From 8608960532264aba8d2282e128209ef4296b69da Mon Sep 17 00:00:00 2001
+From 0764228defbc42c5809353380e5823ceb4b33489 Mon Sep 17 00:00:00 2001
 From: Sergey Mitrofanov <sergeym@etersoft.ru>
 Date: Wed, 30 Jan 2013 15:28:50 +0400
-Subject: [PATCH 09/23] Now all paths write to config after start.
+Subject: [PATCH 07/23] Now all paths write to config after start.
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 

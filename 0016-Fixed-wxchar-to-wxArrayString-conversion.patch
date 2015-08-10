@@ -1,7 +1,7 @@
-From 727db4e314f0364a57556321ac34f9310998ba7d Mon Sep 17 00:00:00 2001
+From 9bc8f6df96781b8bb284b7803cdb171a6762cf58 Mon Sep 17 00:00:00 2001
 From: Sergey Bolotov <sbol@etersoft.ru>
 Date: Mon, 27 Jul 2015 16:32:51 +0300
-Subject: [PATCH 18/23] Fixed wxchar** to wxArrayString conversion
+Subject: [PATCH 16/23] Fixed wxchar** to wxArrayString conversion
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 

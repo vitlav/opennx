@@ -1,7 +1,7 @@
-From 67fff31c0827348adbdba554bb7b7812604a5db5 Mon Sep 17 00:00:00 2001
+From e6ff160af86fd7e6bdbd5718d650c9be073aaa3d Mon Sep 17 00:00:00 2001
 From: Victor Korablin <korablin@etersoft.ru>
 Date: Wed, 7 Aug 2013 14:25:15 +0400
-Subject: [PATCH 13/23] (eterbug 9384) Add space for parameters to be separated
+Subject: [PATCH 11/23] (eterbug 9384) Add space for parameters to be separated
  in the stream
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>

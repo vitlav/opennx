@@ -1,7 +1,7 @@
-From 75cc6ed191bb8ec5fcecf622c2eb4e922f449229 Mon Sep 17 00:00:00 2001
+From fbb636aef5284f7e48e160f9064662d4c7b8a872 Mon Sep 17 00:00:00 2001
 From: Vitaly Lipatov <lav@etersoft.ru>
 Date: Tue, 11 Aug 2015 01:05:29 +0300
-Subject: [PATCH 02/23] 0.16-alt17.svn724     - update from trunk
+Subject: [PATCH 01/23] 0.16-alt17.svn724     - update from trunk
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 

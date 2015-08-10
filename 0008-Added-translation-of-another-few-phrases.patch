@@ -1,7 +1,7 @@
-From 6848d785a655abe1d981daa0f1049e8271e58992 Mon Sep 17 00:00:00 2001
+From 3d90977cf3b9308797b9328f6aa759c7db2ef9e2 Mon Sep 17 00:00:00 2001
 From: Victor Korablin <korablin@etersoft.ru>
 Date: Fri, 24 May 2013 13:49:54 +0400
-Subject: [PATCH 10/23] Added translation of another few phrases
+Subject: [PATCH 08/23] Added translation of another few phrases
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 

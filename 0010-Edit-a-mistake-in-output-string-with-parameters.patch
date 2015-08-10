@@ -1,7 +1,7 @@
-From 81e3384eb9944b0d06e063c5e20e880c6da6a57c Mon Sep 17 00:00:00 2001
+From 67b6f35996e91c5dcfaa5671667d4844abaf034d Mon Sep 17 00:00:00 2001
 From: Victor Korablin <korablin@etersoft.ru>
 Date: Tue, 30 Jul 2013 13:19:26 +0400
-Subject: [PATCH 12/23] Edit a mistake in output string with parameters
+Subject: [PATCH 10/23] Edit a mistake in output string with parameters
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 
