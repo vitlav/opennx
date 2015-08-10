@@ -1,8 +1,10 @@
-From 9e3f206c5715fcc221795b9dba8b88016d72a61a Mon Sep 17 00:00:00 2001
+From 67fff31c0827348adbdba554bb7b7812604a5db5 Mon Sep 17 00:00:00 2001
 From: Victor Korablin <korablin@etersoft.ru>
 Date: Wed, 7 Aug 2013 14:25:15 +0400
-Subject: [PATCH 21/34] (eterbug 9384) Add space for parameters to be separated
+Subject: [PATCH 13/23] (eterbug 9384) Add space for parameters to be separated
  in the stream
+To: wine-patches <wine-patches@winehq.org>
+Reply-To: wine-devel <wine-devel@winehq.org>
 
 ---
  opennx/MyXmlConfig.cpp | 2 +-

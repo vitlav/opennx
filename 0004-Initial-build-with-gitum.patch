@@ -1,35 +1,42 @@
-From 593440e1050a0f6e4d2d664d75cedf8e63a8d0a1 Mon Sep 17 00:00:00 2001
+From 99d18122d49b32d9e6b4216c036e00b9be444db9 Mon Sep 17 00:00:00 2001
 From: Denis Baranov <baraka@etersoft.ru>
 Date: Fri, 1 Jun 2012 21:17:02 +0400
-Subject: [PATCH 02/34] Initial build with gitum
+Subject: [PATCH 04/23] Initial build with gitum
+To: wine-patches <wine-patches@winehq.org>
+Reply-To: wine-devel <wine-devel@winehq.org>
 
 ---
- .gear/opennx.spec | 188 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
- .gear/rules       |   1 +
- opennx.spec       | 187 -----------------------------------------------------
- 3 files changed, 189 insertions(+), 187 deletions(-)
+ .gear/opennx.spec   | 204 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ .gear/rules         |   1 +
+ opennx.spec         | 187 -----------------------------------------------
+ opennx/configure    |   2 +-
+ opennx/configure.ac |   2 +-
+ 5 files changed, 207 insertions(+), 189 deletions(-)
  create mode 100644 .gear/opennx.spec
  delete mode 100644 opennx.spec
 
 diff --git a/.gear/opennx.spec b/.gear/opennx.spec
 new file mode 100644
-index 0000000..2876a4c
+index 0000000..bfa1c70
 --- /dev/null
 +++ b/.gear/opennx.spec
-@@ -0,0 +1,188 @@
+@@ -0,0 +1,204 @@
 +# Enable USBIP support
 +%define with_usbip %{?_with_usbip: 1} %{?!_with_usbip: 0}
 +
-+Summary: An OpenSource NX client
 +Name: opennx
 +Version: 0.16
-+Release: eter17.svn708
++Release: eter26.svn724
++
++Summary: An OpenSource NX client
++
 +License: LGPL/GPL
 +Group: Networking/Remote access
 +Url: http://sourceforge.net/projects/opennx
++
 +Packager: Denis Baranov <baraka@altlinux.org>
 +
-+Source: ftp://ftp.etersoft.ru/pub/Etersoft/RX@Etersoft/1.0.0/sources/tarball/%name-%version.tar
++Source: ftp://ftp.etersoft.ru/pub/Etersoft/RX@Etersoft/1.1/sources/tarball/%name-%version.tar
 +
 +Patch: %name-0.16-disable-opensc.patch
 +
@@ -38,7 +45,7 @@ index 0000000..2876a4c
 +%endif
 +
 +# Automatically added by buildreq on Sat Sep 19 2009
-+BuildRequires: gcc-c++ imake libSM-devel libXmu-devel nx ImageMagick-tools
++BuildRequires: gcc-c++ imake libSM-devel libXmu-devel nx
 +BuildRequires: libopensc-devel libsmbclient-devel
 +BuildRequires: libwxGTK-devel xorg-cf-files zip libcups-devel
 +BuildRequires: libXau-devel
@@ -48,26 +55,6 @@ index 0000000..2876a4c
 +
 +%prep
 +%setup
-+
-+#patch0 -p1
-+
-+test -d conf || mkdir conf
-+#Convince gettextize not to modify EXTRA_DIST
-+test -f conf/config.rpath || touch conf/config.rpath
-+#Convince gettextize not to modify AC_CONFIG_FILES
-+test -f po/Makefile.in.in || touch po/Makefile.in.in
-+#Tweak gettextize
-+#Stupid gettextize uses /dev/tty for interactively getting a
-+#confirm of it's "oh so incredibly important notes".
-+#YES, i've read them at least a dozen times and now, i REALLY
-+#don't want to hit RETURN anymore!
-+GETTEXTIZE=`which gettextize`
-+test -n "$GETTEXTIZE" && \
-+    sed -e 's@/dev/tty@/dev/null@' "$GETTEXTIZE" > gettextize.local
-+test -f gettextize.local && sh gettextize.local -f --no-changelog
-+rm -f gettextize.local
-+test -e conf/mkinstalldirs || touch conf/mkinstalldirs
-+%autoreconf
 +
 +%build
 +%configure \
@@ -86,16 +73,18 @@ index 0000000..2876a4c
 +
 +mkdir -p %buildroot{%_bindir,%_desktopdir}
 +
-+ln -s ../..%_libdir/%name/bin/%name %buildroot%_bindir/%name
-+ln -s ../../share/%name %buildroot%_libdir/%name/share
++# FIXME: drop using these symlinks
++ln -s %_libdir/%name/bin/%name %buildroot%_bindir/%name
++ln -s %_datadir/%name %buildroot%_libdir/%name/share
 +for f in nxesd nxssh nxservice nxproxy ; do
-+    ln -s  ../../../bin/$f %buildroot%_libdir/%name/bin/$f
++    ln -s  %_bindir/$f %buildroot%_libdir/%name/bin/$f
 +done
 +
 +mkdir -p %buildroot%_libdir/%name/%_lib
 +
 +for lib in libsmbclient.so libcups.so ; do
-+    ln -s %_libdir/`readlink %_libdir/$lib` %buildroot%_libdir/%name/%_lib/$lib
++    test -r %_libdir/$lib.? || exit
++    ln -s %_libdir/$lib.? %buildroot%_libdir/%name/%_lib/$lib
 +done
 +
 +cp %buildroot%_datadir/%name/applnk/xdg/*.desktop %buildroot%_desktopdir
@@ -105,15 +94,15 @@ index 0000000..2876a4c
 +
 +install -d %buildroot{%_niconsdir,%_miconsdir,%_liconsdir}
 +for f in nx opennx-admin opennx-wizard ; do
-+    convert -size 16x16 ./extres/scalable/apps/$f.svg %buildroot%_miconsdir/$f.png
-+    convert -size 32x32 ./extres/scalable/apps/$f.svg %buildroot%_niconsdir/$f.png
-+    convert -size 48x48 ./extres/scalable/apps/$f.svg %buildroot%_liconsdir/$f.png
++    install -m 644 ./extres/16x16/apps/$f.png %buildroot%_miconsdir/$f.png
++    install -m 644 ./extres/32x32/apps/$f.png %buildroot%_niconsdir/$f.png
++    install -m 644 ./extres/48x48/apps/$f.png %buildroot%_liconsdir/$f.png
 +done
 +
 +install -d %buildroot%_iconsdir/hicolor/{16x16,32x32,48x48}/mimetypes/
-+convert -background none -size 16x16 ./extres/scalable/mimetypes/nx-desktop.svg %buildroot%_iconsdir/hicolor/16x16/mimetypes/nx-desktop.png
-+convert -background none -size 32x32 ./extres/scalable/mimetypes/nx-desktop.svg %buildroot%_iconsdir/hicolor/32x32/mimetypes/nx-desktop.png
-+convert -background none -size 48x48 ./extres/scalable/mimetypes/nx-desktop.svg %buildroot%_iconsdir/hicolor/48x48/mimetypes/nx-desktop.png
++install -m 644 ./extres/16x16/mimetypes/nx-desktop.png %buildroot%_iconsdir/hicolor/16x16/mimetypes/nx-desktop.png
++install -m 644 ./extres/32x32/mimetypes/nx-desktop.png %buildroot%_iconsdir/hicolor/32x32/mimetypes/nx-desktop.png
++install -m 644 ./extres/48x48/mimetypes/nx-desktop.png %buildroot%_iconsdir/hicolor/48x48/mimetypes/nx-desktop.png
 +
 +%if %with_usbip
 +install -d -m 755 %buildroot%_sysconfdir/udev/rules.d
@@ -128,7 +117,6 @@ index 0000000..2876a4c
 +%endif
 +
 +%files -f %name.lang
-+%doc COPYING INSTALL
 +%_bindir/%name
 +%_libdir/%name
 +%_datadir/%name
@@ -142,6 +130,38 @@ index 0000000..2876a4c
 +%endif
 +
 +%changelog
++* Sun Jan 26 2014 Vitaly Lipatov <lav@altlinux.ru> 0.16-eter26.svn724
++- fix build with libsmbclient from samba 4.0, fix symlink to libsmbclient
++
++* Thu Oct 03 2013 Vitaly Lipatov <lav@altlinux.ru> 0.16-eter25.svn724
++- remove PidFile option from cups config (eterbug #9490)
++
++* Mon Aug 12 2013 Vitaly Lipatov <lav@altlinux.ru> 0.16-eter24.svn724
++- use absolute path for links, fix requires
++
++* Mon Aug 05 2013 Vitaly Lipatov <lav@altlinux.ru> 0.16-eter23.svn724
++- add Num Lock state as a parameter to be send
++
++* Mon Jun 10 2013 Denis Baranov <baraka@altlinux.ru> 0.16-eter22.svn724
++- Add patch for translate
++
++* Mon Feb 11 2013 Denis Baranov <baraka@altlinux.ru> 0.16-eter21.svn724
++- Now all paths write to config after start
++
++* Fri Jan 18 2013 Denis Baranov <baraka@altlinux.ru> 0.16-eter20.svn724
++- Translate of Resume button correct
++- Update translations
++- Add translate for Wizard button
++
++* Thu Jan 17 2013 Denis Baranov <baraka@altlinux.ru> 0.16-eter19.svn724
++- Add copy icon in spec
++
++* Fri Jan 04 2013 Denis Baranov <baraka@altlinux.ru> 0.16-eter18.svn724
++- Add wizard button to start menu
++
++* Thu Jan 03 2013 Denis Baranov <baraka@altlinux.ru> 0.16-eter17.svn724
++- update from trunk opennx-0.16.0.724
++
 +* Fri Jun 01 2012 Denis Baranov <baraka@altlinux.ru> 0.16-eter17.svn708
 +- Initial build
 +- update from ALTLinux
@@ -406,6 +426,32 @@ index 0519fbc..0000000
 -- Fixes for SuSE Plattform (openSuSE/SLES)
 -* Sun Jan  7 2007 Fritz Elfert <fritz@fritz-elfert.de>
 -- Initial package
+diff --git a/opennx/configure b/opennx/configure
+index 80a4342..f1117b7 100755
+--- a/opennx/configure
++++ b/opennx/configure
+@@ -20575,7 +20575,7 @@ FULLVERSION=$_ver
+ 
+ 
+ 
+-for ac_header in cups/cups.h cups.h libsmbclient.h usb.h
++for ac_header in cups/cups.h cups.h samba-4.0/libsmbclient.h libsmbclient.h usb.h
+ do :
+   as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
+ ac_fn_c_check_header_mongrel "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"
+diff --git a/opennx/configure.ac b/opennx/configure.ac
+index 41a9ffe..dd729e0 100644
+--- a/opennx/configure.ac
++++ b/opennx/configure.ac
+@@ -452,7 +452,7 @@ FE_SVNREV([SVNREV])
+ AC_DEFINE_UNQUOTED(SVNREV,"$SVNREV",[SVN revision])
+ FE_RCVERSION
+ 
+-AC_CHECK_HEADERS([cups/cups.h cups.h libsmbclient.h usb.h])
++AC_CHECK_HEADERS([cups/cups.h cups.h samba-4.0/libsmbclient.h libsmbclient.h usb.h])
+ 
+ if test "$ac_cv_enable_usbip" = "YES" -a "$ac_cv_header_usb_h" != "yes"; then
+     AC_MSG_ERROR([Need usb.h when compiling with usbip support])
 -- 
 2.1.4
 

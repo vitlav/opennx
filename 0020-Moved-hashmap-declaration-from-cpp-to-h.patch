@@ -1,7 +1,9 @@
-From e2178f9e9f56723c3ef691037f52b2a3c0510580 Mon Sep 17 00:00:00 2001
+From 4b23d7e02528eb31306be198845a2f623feb8f98 Mon Sep 17 00:00:00 2001
 From: Sergey Bolotov <sbol@etersoft.ru>
 Date: Mon, 27 Jul 2015 16:50:12 +0300
-Subject: [PATCH 31/34] Moved hashmap declaration from cpp to h
+Subject: [PATCH 20/23] Moved hashmap declaration from cpp to h
+To: wine-patches <wine-patches@winehq.org>
+Reply-To: wine-devel <wine-devel@winehq.org>
 
 ---
  opennx/SessionList.cpp | 2 --

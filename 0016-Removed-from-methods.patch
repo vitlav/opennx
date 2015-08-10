@@ -1,7 +1,9 @@
-From 2750c5ccdba894a0c4a164d0cbb3dd92024f18f1 Mon Sep 17 00:00:00 2001
+From 945189f3a4401821cc5db0d0a445170bb657b68e Mon Sep 17 00:00:00 2001
 From: Sergey Bolotov <sbol@etersoft.ru>
 Date: Mon, 27 Jul 2015 15:54:02 +0300
-Subject: [PATCH 27/34] Removed :: from methods
+Subject: [PATCH 16/23] Removed :: from methods
+To: wine-patches <wine-patches@winehq.org>
+Reply-To: wine-devel <wine-devel@winehq.org>
 
 ---
  opennx/AboutDialog.cpp             |   6 +-

@@ -1,7 +1,9 @@
-From be198ab9b4f469a3ffde22248cb00f90e3b3f217 Mon Sep 17 00:00:00 2001
+From 8608960532264aba8d2282e128209ef4296b69da Mon Sep 17 00:00:00 2001
 From: Sergey Mitrofanov <sergeym@etersoft.ru>
 Date: Wed, 30 Jan 2013 15:28:50 +0400
-Subject: [PATCH 12/34] Now all paths write to config after start.
+Subject: [PATCH 09/23] Now all paths write to config after start.
+To: wine-patches <wine-patches@winehq.org>
+Reply-To: wine-devel <wine-devel@winehq.org>
 
 Conflicts:
 	opennx/opennxApp.cpp
