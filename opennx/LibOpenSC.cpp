@@ -65,10 +65,12 @@ ENABLE_TRACE;
 # define OPENSC_CTXNAME "opennx"
 #endif
 
+#ifdef SUPPORT_OPENSC
 #include <opensc/opensc.h>
 typedef int (*Tsc_establish_context)(sc_context_t **ctx, const char *app_name);
 typedef int (*Tsc_release_context)(sc_context_t *ctx);
 typedef int (*Tsc_detect_card_presence)(sc_reader_t *reader, int slot_id);
+#endif // SUPPORT_OPENSC
 
 #ifdef APP_OPENNX
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_CARDINSERTED);
@@ -130,6 +132,7 @@ CardWaitThread::~CardWaitThread()
     wxThread::ExitCode
 CardWaitThread::Entry()
 {
+#ifdef SUPPORT_OPENSC
 #ifdef __WXMAC__
     m_bOk = true;
     wxString cmd;
@@ -232,6 +235,8 @@ CardWaitThread::Entry()
     }
     pfnsc_release_context(ctx);
 #endif
+#endif // SUPPORT_OPENSC
+
     m_bOk = false;
     ::myLogTrace(MYTRACETAG, wxT("terminating waiter thread"));
     return 0;
@@ -249,6 +254,7 @@ LibOpenSC::~LibOpenSC()
 }
 
 bool LibOpenSC::HasOpenSC() {
+#ifdef SUPPORT_OPENSC
     wxLogNull ignoreErrors;
     MyDynamicLibrary dll;
     if (!dll.Load(wxT("libopensc")))
@@ -263,6 +269,9 @@ bool LibOpenSC::HasOpenSC() {
     if (!pfnsc_detect_card_presence)
         return false;
     return true;
+#else // SUPPORT_OPENSC
+    return false;
+#endif // SUPPORT_OPENSC
 }
 
 #ifdef APP_OPENNX
@@ -277,6 +286,7 @@ int LibOpenSC::WaitForCard(CardWaiterDialog *d) {
 
 bool LibOpenSC::WatchHotRemove(unsigned int ridx, long sshpid) {
 
+#ifdef SUPPORT_OPENSC
     MyDynamicLibrary dll;
     ::myLogTrace(MYTRACETAG, wxT("WatchHotRemove loading OpenSC"));
     {
@@ -383,5 +393,6 @@ bool LibOpenSC::WatchHotRemove(unsigned int ridx, long sshpid) {
 //        wxLogError(wxT("Could not terminate nxssh"));
     } else
         return true;
+#endif // SUPPORT_OPENSC
     return false;
 }

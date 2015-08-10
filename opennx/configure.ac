@@ -164,6 +164,16 @@ if test "$ac_cv_enable_singlesession" = "YES" ; then
     AC_DEFINE(SINGLE_SESSION,1,[Set to 1 for enabling single session support])
 fi
 
+ac_cv_enable_opensc=NO
+AC_ARG_ENABLE([opensc],
+	AS_HELP_STRING([--enable-opensc],
+		[Enable opensc support (Default: NO, opensc upstream does not provide headers anymore)]),
+	[ test "$enableval" = "yes" && ac_cv_enable_opensc=YES ]
+)
+if test "$ac_cv_enable_opensc" = "YES" ; then
+    AC_DEFINE(SUPPORT_OPENSC,1,[Set to 1 for enabling OPENSC support])
+fi
+
 ac_cv_enable_usbip=NO
 AC_ARG_ENABLE([usbip],
 	AS_HELP_STRING([--enable-usbip],
@@ -453,6 +463,10 @@ AC_DEFINE_UNQUOTED(SVNREV,"$SVNREV",[SVN revision])
 FE_RCVERSION
 
 AC_CHECK_HEADERS([cups/cups.h cups.h samba-4.0/libsmbclient.h libsmbclient.h usb.h])
+
+if test "$ac_cv_enable_opensc" = "YES" -a "$ac_cv_header_opensc_opensc_h" != "yes"; then
+    AC_MSG_ERROR([Need opensc/opensc.h when compiling with opensc support])
+fi
 
 if test "$ac_cv_enable_usbip" = "YES" -a "$ac_cv_header_usb_h" != "yes"; then
     AC_MSG_ERROR([Need usb.h when compiling with usbip support])
