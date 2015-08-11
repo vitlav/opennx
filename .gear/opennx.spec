@@ -2,8 +2,8 @@
 %define with_usbip %{?_with_usbip: 1} %{?!_with_usbip: 0}
 
 Name: opennx
-Version: 0.16
-Release: eter27.svn724
+Version: 0.16.e
+Release: alt27.svn724
 
 Summary: An OpenSource NX client
 
@@ -106,6 +106,9 @@ install -m 644 etc/*.rules %buildroot%_sysconfdir/udev/rules.d
 %endif
 
 %changelog
+* Tue Aug 11 2015 Vitaly Lipatov <lav@altlinux.ru> 0.16.e-alt27.svn724
+- fix release for build in ALT Linux
+
 * Tue Aug 11 2015 Vitaly Lipatov <lav@altlinux.ru> 0.16-eter27.svn724
 - add .gear in sisyphus branch
 - fix compiles in all versions of wxWidgets (2.8, 2.9, 3.0, 3.1)
