@@ -1,7 +1,7 @@
 From e3219c6afb2947050fe6a9e1271e167717a44551 Mon Sep 17 00:00:00 2001
 From: Sergey Mitrofanov <sergeym@etersoft.ru>
 Date: Thu, 3 Jan 2013 15:40:00 +0400
-Subject: [PATCH 02/21] Add wizard button to start menu
+Subject: [PATCH 02/22] Add wizard button to start menu
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 

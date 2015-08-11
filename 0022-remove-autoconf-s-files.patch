@@ -1,7 +1,7 @@
-From 93c90617eab9f280823c63bf93a0a8f9d984eca9 Mon Sep 17 00:00:00 2001
+From 5636e672b629888d6cec57ab57de71734b710301 Mon Sep 17 00:00:00 2001
 From: Vitaly Lipatov <lav@etersoft.ru>
 Date: Tue, 11 Aug 2015 15:12:33 +0300
-Subject: [PATCH] remove autoconf's files
+Subject: [PATCH 22/22] remove autoconf's files
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 

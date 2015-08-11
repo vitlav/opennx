@@ -1,7 +1,7 @@
 From d89996c554933bb55cbbba92aa8adc68896aebeb Mon Sep 17 00:00:00 2001
 From: Boris Savelev <boris@altlinux.org>
 Date: Wed, 28 Mar 2012 12:41:34 +0400
-Subject: [PATCH 21/21] build with gitum and remove .gear from rebased branch
+Subject: [PATCH 21/22] build with gitum and remove .gear from rebased branch
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 

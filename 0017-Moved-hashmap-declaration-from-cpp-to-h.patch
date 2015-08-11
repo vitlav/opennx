@@ -1,7 +1,7 @@
 From 89dc3f7e3328cce1535ba3206f01e8844c382039 Mon Sep 17 00:00:00 2001
 From: Sergey Bolotov <sbol@etersoft.ru>
 Date: Mon, 27 Jul 2015 16:50:12 +0300
-Subject: [PATCH 17/21] Moved hashmap declaration from cpp to h
+Subject: [PATCH 17/22] Moved hashmap declaration from cpp to h
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 
