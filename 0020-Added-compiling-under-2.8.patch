@@ -1,7 +1,7 @@
-From deb8df0ed354ed65ec9688798cac3d3ec837e0ef Mon Sep 17 00:00:00 2001
+From 33f3a9b2bd3cd292fd0855b0d3c9397f92e0bda9 Mon Sep 17 00:00:00 2001
 From: Sergey Bolotov <sbol@etersoft.ru>
 Date: Thu, 30 Jul 2015 18:29:10 +0300
-Subject: [PATCH 21/22] Added compiling under 2.8
+Subject: [PATCH 20/21] Added compiling under 2.8
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 

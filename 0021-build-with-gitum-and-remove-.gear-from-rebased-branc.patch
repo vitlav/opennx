@@ -1,18 +1,18 @@
-From ba042722989fb90d352f578bc42c4717f603d8dc Mon Sep 17 00:00:00 2001
+From d89996c554933bb55cbbba92aa8adc68896aebeb Mon Sep 17 00:00:00 2001
 From: Boris Savelev <boris@altlinux.org>
 Date: Wed, 28 Mar 2012 12:41:34 +0400
-Subject: [PATCH 22/22] build with gitum and remove .gear from rebased branch
+Subject: [PATCH 21/21] build with gitum and remove .gear from rebased branch
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 
 ---
  .gear/rules                      |   2 -
  opennx-0.16-disable-opensc.patch |  95 --------------------
- opennx.spec                      | 183 ---------------------------------------
+ opennx.spec                      | 187 ---------------------------------------
  opennx/LibOpenSC.cpp             |  11 +++
  opennx/configure                 |   2 +-
  opennx/configure.ac              |  16 +++-
- 6 files changed, 27 insertions(+), 282 deletions(-)
+ 6 files changed, 27 insertions(+), 286 deletions(-)
  delete mode 100644 .gear/rules
  delete mode 100644 opennx-0.16-disable-opensc.patch
  delete mode 100644 opennx.spec
@@ -128,17 +128,17 @@ index 4b7094a..0000000
 -     AC_MSG_ERROR([Need usb.h when compiling with usbip support])
 diff --git a/opennx.spec b/opennx.spec
 deleted file mode 100644
-index 817de71..0000000
+index 0519fbc..0000000
 --- a/opennx.spec
 +++ /dev/null
-@@ -1,183 +0,0 @@
+@@ -1,187 +0,0 @@
 -# Enable USBIP support
 -%define with_usbip %{?_with_usbip: 1} %{?!_with_usbip: 0}
 -
 -Summary: An OpenSource NX client
 -Name: opennx
 -Version: 0.16
--Release: alt16.svn634
+-Release: alt17.svn708
 -License: LGPL/GPL
 -Group: Networking/Remote access
 -Url: http://sourceforge.net/projects/opennx
@@ -156,6 +156,7 @@ index 817de71..0000000
 -BuildRequires: gcc-c++ imake libSM-devel libXmu-devel nx ImageMagick-tools
 -BuildRequires: libopensc-devel libsmbclient-devel
 -BuildRequires: libwxGTK-devel xorg-cf-files zip libcups-devel
+-BuildRequires: libXau-devel
 -
 -%description
 -opennx is an OSS replacement for Nomachine's NX client.
@@ -256,6 +257,9 @@ index 817de71..0000000
 -%endif
 -
 -%changelog
+-* Wed Mar 28 2012 Boris Savelev <boris@altlinux.org> 0.16-alt17.svn708
+-- update from trunk
+-
 -* Fri Jun 17 2011 Boris Savelev <boris@altlinux.org> 0.16-alt16.svn634
 -- update from trunk
 -

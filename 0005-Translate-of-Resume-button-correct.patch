@@ -1,7 +1,7 @@
-From 9a4eb5f7bc35cab8f781f50f25351ba0256518b9 Mon Sep 17 00:00:00 2001
+From a42023cb5002f498802e9a6e78d338b998ffa48f Mon Sep 17 00:00:00 2001
 From: Sergey Mitrofanov <sergeym@etersoft.ru>
 Date: Tue, 15 Jan 2013 15:17:54 +0400
-Subject: [PATCH 06/22] Translate of Resume button correct
+Subject: [PATCH 05/21] Translate of Resume button correct
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 

@@ -1,7 +1,7 @@
-From e21dc3ddb1314d088254a476a38fb7daf521ba3f Mon Sep 17 00:00:00 2001
+From 054d6ae03b78c5594137e3e77a0e7ff09b878acd Mon Sep 17 00:00:00 2001
 From: Sergey Bolotov <sbol@etersoft.ru>
 Date: Mon, 27 Jul 2015 16:34:21 +0300
-Subject: [PATCH 17/22] Fixed some cWX2MB calls
+Subject: [PATCH 16/21] Fixed some cWX2MB calls
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 
