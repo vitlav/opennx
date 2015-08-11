@@ -1,12 +1,11 @@
-From ee8ff2222ea7ce0d5c6d5493bb40c64800bab021 Mon Sep 17 00:00:00 2001
+From 871f2581cf3b09b9545cd0ea1ebcc5cd31ad2e34 Mon Sep 17 00:00:00 2001
 From: Vitaly Lipatov <lav@etersoft.ru>
-Date: Tue, 11 Aug 2015 15:15:20 +0300
+Date: Tue, 11 Aug 2015 15:18:15 +0300
 Subject: [PATCH 22/22] remove autoconf's files
 To: wine-patches <wine-patches@winehq.org>
 Reply-To: wine-devel <wine-devel@winehq.org>
 
 ---
- .gitignore                                         |     3 +
  opennx/Makefile.in                                 |  2989 ---
  opennx/aclocal.m4                                  |  1465 --
  opennx/config.h.in                                 |   271 -
@@ -64,8 +63,7 @@ Reply-To: wine-devel <wine-devel@winehq.org>
  packaging/openbsd-ports/nxclient/pkg/PFRAG.shared  |     3 -
  packaging/openbsd-ports/nxclient/pkg/PLIST         |    76 -
  web/.htaccess                                      |     1 -
- 58 files changed, 3 insertions(+), 43068 deletions(-)
- create mode 100644 .gitignore
+ 57 files changed, 43068 deletions(-)
  delete mode 100644 opennx/Makefile.in
  delete mode 100644 opennx/aclocal.m4
  delete mode 100644 opennx/config.h.in
@@ -124,15 +122,6 @@ Reply-To: wine-devel <wine-devel@winehq.org>
  delete mode 100644 packaging/openbsd-ports/nxclient/pkg/PLIST
  delete mode 100644 web/.htaccess
 
-diff --git a/.gitignore b/.gitignore
-new file mode 100644
-index 0000000..ecdc4cb
---- /dev/null
-+++ b/.gitignore
-@@ -0,0 +1,3 @@
-+Makefile.in
-+configure
-+memres.h
 diff --git a/opennx/Makefile.in b/opennx/Makefile.in
 deleted file mode 100644
 index 367d9b5..0000000
